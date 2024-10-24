@@ -101,8 +101,8 @@ function PlayerBipod:_husk_bipod_data()
 	local body_pos = Vector3(self._m_pos.x, self._m_pos.y, self._m_pos.z)
 
 	managers.player:set_bipod_data_for_peer({
-		peer_id = nil,
 		body_pos = nil,
+		peer_id = nil,
 		bipod_pos = nil,
 		peer_id = peer_id,
 		bipod_pos = bipod_pos,

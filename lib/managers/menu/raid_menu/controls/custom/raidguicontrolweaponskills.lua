@@ -28,8 +28,8 @@ end
 function RaidGUIControlWeaponSkills:_create_items()
 	self._rows = {}
 	local row_params = {
-		toggle_select_item_callback = nil,
 		on_unselected_weapon_skill_callback = nil,
+		toggle_select_item_callback = nil,
 		on_selected_weapon_skill_callback = nil,
 		on_click_weapon_skill_callback = nil,
 		get_available_points_callback = nil,
@@ -70,14 +70,14 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS do
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
-			font_size = nil,
 			font = nil,
 			color = nil,
 			vertical = "bottom",
-			name = nil,
-			align = "center",
 			text = nil,
+			align = "center",
+			name = nil,
 			alpha = nil,
+			font_size = nil,
 			name = "tier_" .. tostring(i) .. "_label",
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_24,

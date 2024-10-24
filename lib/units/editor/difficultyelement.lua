@@ -15,6 +15,7 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 	local difficulty_params = {
 		ctrlr_proportions = 2,
+		name = "Difficulty:",
 		panel = nil,
 		name_proportions = 1,
 		max = 1,
@@ -23,7 +24,6 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 		floats = 2,
 		value = nil,
 		sizer = nil,
-		name = "Difficulty:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.difficulty
@@ -31,13 +31,13 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 	local difficulty = CoreEWS.number_controller(difficulty_params)
 
 	difficulty:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "difficulty",
 		ctrlr = nil,
+		value = "difficulty",
 		ctrlr = difficulty
 	})
 	difficulty:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "difficulty",
 		ctrlr = nil,
+		value = "difficulty",
 		ctrlr = difficulty
 	})
 

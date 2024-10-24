@@ -11,16 +11,16 @@ function EditLadder:init(editor)
 	})
 	self._panel = panel
 	self._width_params = {
-		floats = 0,
-		value = 0,
-		events = nil,
-		name = "Width [cm]:",
-		sizer = nil,
 		panel = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
+		events = nil,
 		tooltip = "Sets the width of the ladder in cm",
+		floats = 0,
+		value = 0,
+		name = "Width [cm]:",
+		sizer = nil,
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -40,16 +40,16 @@ function EditLadder:init(editor)
 	CoreEws.number_controller(self._width_params)
 
 	self._height_params = {
-		floats = 0,
-		value = 0,
-		events = nil,
-		name = "Height [cm]:",
-		sizer = nil,
 		panel = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
+		events = nil,
 		tooltip = "Sets the height of the ladder in cm",
+		floats = 0,
+		value = 0,
+		name = "Height [cm]:",
+		sizer = nil,
 		panel = panel,
 		sizer = sizer,
 		events = {

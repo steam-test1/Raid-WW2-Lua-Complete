@@ -67,9 +67,9 @@ function CoreSpawnUnitUnitElement:update_editing(time, rel_time)
 	local from = self._unit:position()
 	local to = from + self._hed.unit_spawn_dir * 100000
 	local ray = managers.editor:unit_by_raycast({
+		mask = nil,
 		to = nil,
 		from = nil,
-		mask = nil,
 		from = from,
 		to = to,
 		mask = managers.slot:get_mask("statics_layer")
@@ -115,8 +115,8 @@ end
 function CoreSpawnUnitUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		continent = nil,
-		category = "units",
 		name = nil,
+		category = "units",
 		name = self._hed.unit_name,
 		continent = self._unit:unit_data().continent
 	})

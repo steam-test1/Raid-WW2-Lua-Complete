@@ -23,19 +23,19 @@ end
 function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 	local coord_y = 200
 	local loot_reward_card_params = {
-		x = 0,
 		loot_list = nil,
 		item_params = nil,
 		h = nil,
 		w = nil,
 		y = nil,
+		x = 0,
 		y = coord_y,
 		w = self._root_panel:w(),
 		h = self._root_panel:h() - coord_y,
 		item_params = {
+			item_w = 256,
 			wrapper_h = 600,
-			item_h = 352,
-			item_w = 256
+			item_h = 352
 		},
 		loot_list = loot_list
 	}

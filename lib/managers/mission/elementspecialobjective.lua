@@ -55,6 +55,7 @@ ElementSpecialObjective._HASTES = {
 	"run"
 }
 ElementSpecialObjective._DEFAULT_VALUES = {
+	ai_group = 1,
 	action_duration_max = 0,
 	action_duration_min = 0,
 	interaction_voice = 1,
@@ -63,8 +64,7 @@ ElementSpecialObjective._DEFAULT_VALUES = {
 	chance_inc = 0,
 	base_chance = 1,
 	interval = -1,
-	path_style = 1,
-	ai_group = 1
+	path_style = 1
 }
 
 function ElementSpecialObjective:init(...)
@@ -361,17 +361,17 @@ function ElementSpecialObjective:on_executed(instigator)
 			local search_dis_sq = self._values.search_distance
 			search_dis_sq = search_dis_sq and search_dis_sq * search_dis_sq or nil
 			local so_descriptor = {
-				search_dis_sq = nil,
-				usage_amount = nil,
-				chance_inc = nil,
-				repeatable = nil,
-				objective = nil,
-				admin_clbk = nil,
 				access = nil,
-				AI_group = nil,
+				usage_amount = nil,
+				search_pos = nil,
+				repeatable = nil,
+				admin_clbk = nil,
+				search_dis_sq = nil,
+				objective = nil,
+				chance_inc = nil,
 				base_chance = nil,
 				interval = nil,
-				search_pos = nil,
+				AI_group = nil,
 				objective = objective,
 				base_chance = self:_get_default_value_if_nil("base_chance"),
 				chance_inc = self:_get_default_value_if_nil("chance_inc"),
@@ -419,22 +419,22 @@ function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		haste = nil,
-		pose = nil,
+		element = nil,
+		scan = nil,
+		forced = nil,
 		verification_clbk = nil,
 		complete_clbk = nil,
 		fail_clbk = nil,
 		action_start_clbk = nil,
 		followup_SO = nil,
 		action_duration = nil,
-		element = nil,
 		attitude = nil,
+		pose = nil,
+		haste = nil,
 		interrupt_health = nil,
 		rot = nil,
 		pos = nil,
 		stance = nil,
-		scan = nil,
-		forced = nil,
 		trigger_on = nil,
 		interaction_voice = nil,
 		interrupt_dis = nil,
@@ -525,19 +525,19 @@ function ElementSpecialObjective:get_objective(instigator)
 
 		if self._values.so_action then
 			action = {
+				needs_full_blend = true,
+				align_sync = true,
+				variant = nil,
 				body_part = 1,
 				blocks = nil,
 				type = "act",
-				variant = nil,
-				needs_full_blend = true,
-				align_sync = true,
 				variant = self._values.so_action,
 				blocks = {
-					light_hurt = -1,
-					walk = -1,
 					action = -1,
+					hurt = -1,
 					heavy_hurt = -1,
-					hurt = -1
+					walk = -1,
+					light_hurt = -1
 				}
 			}
 			objective.type = "act"

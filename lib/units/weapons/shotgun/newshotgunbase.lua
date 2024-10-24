@@ -126,8 +126,8 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 				local spread_direction = mvector3.copy(mvec_spread_direction)
 
 				table.insert(col_rays, {
-					ray = nil,
 					position = nil,
+					ray = nil,
 					position = ray_to,
 					ray = spread_direction
 				})
@@ -245,9 +245,9 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	if next(hit_enemies) then
 		if true or false then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
 				weapon_unit = nil,
+				hit = true,
 				weapon_unit = self._unit
 			})
 		end

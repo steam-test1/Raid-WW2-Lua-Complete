@@ -19,11 +19,11 @@ function OverlayEffectManager:init()
 	self._presets = {}
 
 	self:add_preset("custom", {
-		color = nil,
+		blend_mode = "normal",
 		fade_out = 0,
 		fade_in = 0,
 		sustain = 0,
-		blend_mode = "normal",
+		color = nil,
 		color = Color(1, 0, 0, 0)
 	})
 	self:set_default_layer(1999)
@@ -156,8 +156,8 @@ function OverlayEffectManager:play_effect(data)
 
 		if data.gradient_points then
 			rectangle = self._ws:panel():gradient({
-				w = nil,
 				color = nil,
+				w = nil,
 				orientation = nil,
 				h = nil,
 				gradient_points = nil,
@@ -188,16 +188,16 @@ function OverlayEffectManager:play_effect(data)
 		end
 
 		local text = self._ws:panel():text({
+			blend_mode = nil,
+			layer = nil,
+			color = nil,
+			vertical = "center",
 			valign = "center",
 			halign = "center",
 			text = nil,
-			layer = nil,
 			align = "center",
 			font_size = nil,
-			blend_mode = nil,
 			font = nil,
-			color = nil,
-			vertical = "center",
 			text = data.text or "",
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,
@@ -211,12 +211,12 @@ function OverlayEffectManager:play_effect(data)
 		end
 
 		local effect = {
-			start_t = nil,
 			current_alpha = nil,
 			text = nil,
 			rectangle = nil,
 			gradient_points = nil,
 			data = nil,
+			start_t = nil,
 			rectangle = rectangle,
 			text = text,
 			start_t = (data.timer or TimerManager:game()):time(),
@@ -286,8 +286,8 @@ function OverlayEffectManager:change_resolution()
 
 	for _, effect in pairs(self._playing_effects) do
 		effect.rectangle:configure({
-			h = nil,
 			w = nil,
+			h = nil,
 			w = res.x,
 			h = res.y
 		})

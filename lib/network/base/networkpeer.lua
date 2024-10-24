@@ -84,7 +84,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 
 	self._profile = {
 		outfit_string = "",
-		chat = nil
+		size = nil
 	}
 	self._handshakes = {}
 	self._streaming_status = 0
@@ -109,6 +109,23 @@ end
 
 function NetworkPeer:set_active_warcry(warcry)
 	self._active_warcry = warcry
+	local warcry_tweak = tweak_data.warcry[self._active_warcry]
+
+	if not warcry_tweak or not warcry_tweak.activation_equip_weapon then
+		return
+	end
+
+	local projectile_tweak = tweak_data.projectiles[warcry_tweak.activation_equip_weapon]
+
+	if not projectile_tweak or not projectile_tweak.unit then
+		return
+	end
+
+	local ids_projectile = Idstring(projectile_tweak.unit)
+
+	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, ids_projectile, managers.dyn_resource.DYN_RESOURCES_PACKAGE) then
+		managers.dyn_resource:load(IDS_UNIT, ids_projectile, managers.dyn_resource.DYN_RESOURCES_PACKAGE)
+	end
 end
 
 function NetworkPeer:active_warcry()
@@ -777,12 +794,12 @@ end
 
 function NetworkPeer:set_statistics(kills, specials_kills, head_shots, accuracy, downs, revives)
 	self._statistics = {
-		revives = nil,
-		downs = nil,
 		accuracy = nil,
 		head_shots = nil,
 		specials_kills = nil,
 		kills = nil,
+		revives = nil,
+		downs = nil,
 		kills = kills,
 		specials_kills = specials_kills,
 		head_shots = head_shots,
@@ -1207,7 +1224,6 @@ function NetworkPeer:set_profile(level)
 end
 
 function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_signature)
-	print("[NetworkPeer:set_outfit_string] ID", self._id, outfit_string, outfit_version)
 	Application:stack_dump()
 
 	local old_outfit_string = self._profile.outfit_string

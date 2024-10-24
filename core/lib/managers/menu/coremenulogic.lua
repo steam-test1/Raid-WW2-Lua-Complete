@@ -39,8 +39,8 @@ end
 
 function Logic:_queue_action(action_name, ...)
 	table.insert(self._action_queue, {
-		action_name = nil,
 		parameters = nil,
+		action_name = nil,
 		action_name = action_name,
 		parameters = {
 			...

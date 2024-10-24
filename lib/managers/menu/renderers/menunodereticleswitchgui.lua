@@ -72,9 +72,9 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self.box_panel:set_layer(151)
 
 	self._texture_panel = self.box_panel:panel({
-		layer = 10,
 		h = 128,
-		w = 128
+		w = 128,
+		layer = 10
 	})
 
 	self._texture_panel:set_center(self.box_panel:w() / 2, self.box_panel:h() / 2)
@@ -93,9 +93,9 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_clipping(false)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
+		alpha = 0.6,
 		rotation = 360,
 		color = nil,
-		alpha = 0.6,
 		color = Color.black
 	})
 	self._align_data.panel:set_left(self.box_panel:left())
@@ -178,10 +178,10 @@ end
 function MenuNodeReticleSwitchGui:_texture_done_callback(texture_ids)
 	if self and alive(self._texture_panel) then
 		self._texture_panel:bitmap({
-			texture = nil,
-			blend_mode = "add",
 			h = nil,
 			w = nil,
+			texture = nil,
+			blend_mode = "add",
 			texture = texture_ids,
 			w = self._texture_panel:w(),
 			h = self._texture_panel:h()

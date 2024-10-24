@@ -148,11 +148,11 @@ function GreedTweakData:_init_cache_items()
 	}
 	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
-		number_of_circles = 3,
 		sounds = nil,
 		circle_difficulty = nil,
 		circle_rotation_direction = nil,
 		circle_rotation_speed = nil,
+		number_of_circles = 3,
 		circle_rotation_speed = {
 			240,
 			260,
@@ -169,12 +169,12 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
-			dialog_success = "player_gen_lock_picked",
-			circles = nil,
 			dialog_enter = "player_gen_picking_lock",
-			failed = "lock_fail",
-			success = "success",
 			dialog_fail = "player_gen_lockpick_fail",
+			failed = "lock_fail",
+			circles = nil,
+			dialog_success = "player_gen_lock_picked",
+			success = "success",
 			circles = {
 				{
 					lock = "lock_a",
@@ -212,60 +212,60 @@ function GreedTweakData:_init_value_weights()
 		pickpocket = {
 			{
 				{
-					value = 0,
-					chance = 55
+					chance = 55,
+					value = 0
 				},
 				{
-					value = nil,
 					chance = 45,
+					value = nil,
 					value = self.item_value.low_end
 				}
 			},
 			{
 				{
-					value = 0,
-					chance = 60
+					chance = 60,
+					value = 0
 				},
 				{
-					value = nil,
 					chance = 43,
+					value = nil,
 					value = self.item_value.low_end
 				}
 			},
 			{
 				{
-					value = 0,
-					chance = 55
+					chance = 55,
+					value = 0
 				},
 				{
-					value = nil,
 					chance = 35,
+					value = nil,
 					value = self.item_value.low_end
 				},
 				{
-					value = nil,
 					chance = 10,
+					value = nil,
 					value = self.item_value.mid_end
 				}
 			},
 			{
 				{
-					value = 0,
-					chance = 50
+					chance = 50,
+					value = 0
 				},
 				{
-					value = nil,
 					chance = 32,
+					value = nil,
 					value = self.item_value.low_end
 				},
 				{
-					value = nil,
 					chance = 12,
+					value = nil,
 					value = self.item_value.mid_end
 				},
 				{
-					value = nil,
 					chance = 6,
+					value = nil,
 					value = self.item_value.high_end
 				}
 			}

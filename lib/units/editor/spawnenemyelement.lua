@@ -149,9 +149,9 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 		min = 0
 	}, "Used to specify how often this spawn can be used. 0 means no interval")
 	self:_build_value_number(panel, panel_sizer, "voice", {
+		min = 0,
 		floats = 0,
-		max = 5,
-		min = 0
+		max = 5
 	}, "Voice variant. 1-5. 0 for random.")
 	self:_build_value_combobox(panel, panel_sizer, "accessibility", ElementSpawnEnemyDummy.ACCESSIBILITIES, "Only units with this movement type will be spawned from this element.")
 
@@ -177,9 +177,9 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
 		managers.editor:add_to_world_package({
+			name = nil,
 			continent = nil,
 			category = "units",
-			name = nil,
 			name = unit_name:s(),
 			continent = self._unit:unit_data().continent
 		})
@@ -190,10 +190,10 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
-				init = true,
-				category = "script_data",
-				continent = nil,
 				name = nil,
+				continent = nil,
+				category = "script_data",
+				init = true,
 				name = file:s() .. ".sequence_manager",
 				continent = self._unit:unit_data().continent
 			})

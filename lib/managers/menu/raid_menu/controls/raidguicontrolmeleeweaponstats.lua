@@ -6,10 +6,10 @@ end
 
 function RaidGUIControlMeleeWeaponStats:_set_default_values()
 	self._values = {
-		range = nil,
-		damage = nil,
 		charge_time = nil,
 		knockback = nil,
+		range = nil,
+		damage = nil,
 		damage = {
 			value = "00-000",
 			text = nil,
@@ -36,30 +36,30 @@ end
 function RaidGUIControlMeleeWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
+			text = nil,
 			value = nil,
 			name = "damage",
-			text = nil,
 			text = self._values.damage.text,
 			value = self._values.damage.value
 		},
 		{
+			text = nil,
 			value = nil,
 			name = "knockback",
-			text = nil,
 			text = self._values.knockback.text,
 			value = self._values.knockback.value
 		},
 		{
+			text = nil,
 			value = nil,
 			name = "range",
-			text = nil,
 			text = self._values.range.text,
 			value = self._values.range.value
 		},
 		{
+			text = nil,
 			value = nil,
 			name = "charge_time",
-			text = nil,
 			text = self._values.charge_time.text,
 			value = self._values.charge_time.value
 		}

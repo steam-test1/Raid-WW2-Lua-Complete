@@ -22,11 +22,11 @@ end
 
 function RaidGuiControlDifficultyStars:_create_panel()
 	local panel_params = {
+		name = nil,
 		h = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		name = nil,
 		name = self._params.name or "difficulty_stars_panel",
 		x = self._params.x or 0,
 		y = self._params.y or 0,
@@ -42,10 +42,10 @@ function RaidGuiControlDifficultyStars:_create_stars()
 
 	for i = 1, self._number_of_stars do
 		local star_params = {
-			color = nil,
-			texture = nil,
 			name = nil,
 			texture_rect = nil,
+			color = nil,
+			texture = nil,
 			name = "difficulty_star_" .. tostring(i),
 			texture = tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_UNAVAILABLE_ICON].texture,
 			texture_rect = tweak_data.gui.icons[RaidGuiControlDifficultyStars.STAR_UNAVAILABLE_ICON].texture_rect,

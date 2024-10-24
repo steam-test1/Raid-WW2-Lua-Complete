@@ -9,41 +9,41 @@ function StatisticsTweakData:init()
 		cop = nil,
 		security = nil,
 		civilian = {
-			total = nil,
 			session = nil,
+			total = nil,
 			head_shots = nil,
 			total = {
-				type = "normal",
-				count = 0
+				count = 0,
+				type = "normal"
 			},
 			head_shots = {
-				type = "normal",
-				count = 0
+				count = 0,
+				type = "normal"
 			},
 			session = {
-				type = "session",
-				count = 0
+				count = 0,
+				type = "session"
 			}
 		},
 		civilian = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		security = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		cop = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		swat = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		total = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		}
 	}
 
@@ -249,7 +249,10 @@ function StatisticsTweakData:statistics_table()
 		"d343",
 		"mills",
 		"decoy_coin",
-		"betty"
+		"betty",
+		"gold_bar",
+		"thermite",
+		"anti_tank"
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

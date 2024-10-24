@@ -39,9 +39,9 @@ function Renderer:init(logic, parameters)
 		layer = self._base_layer
 	})
 	self.safe_rect_panel = self.ws:panel():panel({
+		w = nil,
 		layer = nil,
 		h = nil,
-		w = nil,
 		w = safe_rect_pixels.width,
 		h = safe_rect_pixels.height,
 		layer = self._base_layer

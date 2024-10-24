@@ -25,12 +25,12 @@ end
 
 function HUDBigPrompt:_create_panel(hud)
 	self._object = hud.panel:panel({
-		alpha = 0,
-		h = nil,
 		w = nil,
 		name = "big_prompt_panel",
 		halign = "center",
 		valign = "center",
+		alpha = 0,
+		h = nil,
 		w = HUDBigPrompt.W,
 		h = HUDBigPrompt.H
 	})
@@ -38,12 +38,12 @@ end
 
 function HUDBigPrompt:_create_background()
 	self._background = self._object:bitmap({
-		texture = nil,
-		layer = 1,
 		w = nil,
 		name = "big_prompt_background",
 		h = nil,
 		texture_rect = nil,
+		texture = nil,
+		layer = 1,
 		w = HUDBigPrompt.W,
 		h = HUDBigPrompt.BACKGROUND_H,
 		texture = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture,
@@ -56,16 +56,16 @@ end
 
 function HUDBigPrompt:_create_title()
 	self._title = self._object:text({
-		vertical = "center",
+		text = "TITLE",
+		name = "big_prompt_text",
+		halign = "scale",
 		layer = nil,
 		font_size = nil,
 		font = nil,
-		halign = "scale",
+		vertical = "center",
 		align = "center",
 		valign = "scale",
 		h = nil,
-		text = "TITLE",
-		name = "big_prompt_text",
 		layer = self._background:layer() + 1,
 		h = HUDBigPrompt.BACKGROUND_H,
 		font = tweak_data.gui:get_font_path(HUDBigPrompt.TEXT_FONT, HUDBigPrompt.TEXT_FONT_SIZE),
@@ -77,18 +77,18 @@ end
 
 function HUDBigPrompt:_create_description()
 	self._description = self._object:text({
+		text = "DESCRIPTION",
+		name = "big_prompt_description",
 		w = nil,
+		color = nil,
+		vertical = "bottom",
 		layer = nil,
 		font_size = nil,
-		vertical = "bottom",
 		font = nil,
 		halign = "scale",
 		align = "center",
 		valign = "scale",
 		h = nil,
-		text = "DESCRIPTION",
-		name = "big_prompt_description",
-		color = nil,
 		layer = self._background:layer() + 1,
 		w = self._object:w(),
 		h = self._object:h(),
@@ -100,12 +100,12 @@ end
 
 function HUDBigPrompt:_create_icon()
 	self._icon = self._object:bitmap({
-		h = nil,
-		layer = nil,
 		w = nil,
 		name = "big_prompt_icon",
+		h = nil,
 		halign = "scale",
 		valign = "scale",
+		layer = nil,
 		layer = self._background:layer(),
 		w = HUDBigPrompt.ICON_SIZE,
 		h = HUDBigPrompt.ICON_SIZE
@@ -118,10 +118,10 @@ end
 function HUDBigPrompt:_create_flares(color)
 	color = color or HUDBigPrompt.DEFAULT_TEXT_COLOR:with_alpha(0.65)
 	self._flare_panel = self._object:panel({
-		h = nil,
-		layer = nil,
 		w = nil,
 		name = "big_prompt_flare_panel",
+		h = nil,
+		layer = nil,
 		layer = self._icon:layer() - 1,
 		w = HUDBigPrompt.FLARES_SIZE,
 		h = HUDBigPrompt.FLARES_SIZE
@@ -130,15 +130,15 @@ function HUDBigPrompt:_create_flares(color)
 	self._flare_panel:set_center(self._icon:center())
 
 	self._lens_glint = self._flare_panel:bitmap({
-		texture = nil,
-		blend_mode = "add",
-		texture_rect = nil,
-		alpha = 0.65,
-		h = nil,
 		w = nil,
 		name = "big_prompt_glint",
+		texture = nil,
 		color = nil,
 		rotation = 360,
+		texture_rect = nil,
+		blend_mode = "add",
+		alpha = 0.65,
+		h = nil,
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -146,14 +146,14 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	})
 	self._lens_orbs = self._flare_panel:bitmap({
-		blend_mode = "add",
-		h = nil,
 		w = nil,
 		name = "loot_screen_orbs",
 		texture = nil,
 		color = nil,
 		rotation = 360,
 		texture_rect = nil,
+		blend_mode = "add",
+		h = nil,
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -161,14 +161,14 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	})
 	self._lens_shimmer = self._flare_panel:bitmap({
-		blend_mode = "add",
-		h = nil,
 		w = nil,
 		name = "big_prompt_iris",
 		texture = nil,
 		color = nil,
 		rotation = 360,
 		texture_rect = nil,
+		blend_mode = "add",
+		h = nil,
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -176,14 +176,14 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	})
 	self._lens_spike_ball = self._flare_panel:bitmap({
-		blend_mode = "add",
-		h = nil,
 		w = nil,
 		name = "big_prompt_spike_ball",
 		texture = nil,
 		color = nil,
 		rotation = 360,
 		texture_rect = nil,
+		blend_mode = "add",
+		h = nil,
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),

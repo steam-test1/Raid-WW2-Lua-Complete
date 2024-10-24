@@ -23,11 +23,11 @@ end
 
 function RaidGUIControlLootRewardCards:layout()
 	self._object = self._panel:panel({
+		x = nil,
 		name = "loot_rewards_cards_panel",
 		h = nil,
 		w = nil,
 		y = nil,
-		x = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -77,16 +77,16 @@ function RaidGUIControlLootRewardCards:_create_title()
 	}
 	self._title_panel = self._object:panel(title_panel_params)
 	local title_description_params = {
-		name = "title_description",
-		alpha = 0,
-		h = nil,
-		text = nil,
-		y = nil,
 		vertical = "center",
 		align = "left",
-		color = nil,
+		name = "title_description",
 		font_size = nil,
 		font = nil,
+		color = nil,
+		text = nil,
+		alpha = 0,
+		h = nil,
+		y = nil,
 		y = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlLootRewardCards.FONT,
@@ -100,15 +100,15 @@ function RaidGUIControlLootRewardCards:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
+		vertical = "top",
+		align = "center",
 		name = "pack_title",
+		font_size = nil,
+		font = nil,
+		color = nil,
 		alpha = 0,
 		text = nil,
 		y = nil,
-		vertical = "top",
-		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlLootRewardCards.TITLE_PADDING_TOP,
 		font = RaidGUIControlLootRewardCards.FONT,
 		font_size = RaidGUIControlLootRewardCards.TITLE_FONT_SIZE,
@@ -126,26 +126,26 @@ end
 
 function RaidGUIControlLootRewardCards:_create_card_details()
 	local details_panel_params = {
+		alpha = 0,
 		name = "details_panel",
 		y = nil,
-		alpha = 0,
 		y = RaidGUIControlLootRewardCards.CARD_DETAILS_Y
 	}
 	self._details_panel = self._object:panel(details_panel_params)
 	local bonus_image_params = {
+		texture_rect = nil,
 		name = nil,
 		texture = nil,
-		texture_rect = nil,
 		name = "bonus_image_" .. self._name,
 		texture = tweak_data.gui.icons.ico_bonus.texture,
 		texture_rect = tweak_data.gui.icons.ico_bonus.texture_rect
 	}
 	self._bonus_image = self._details_panel:bitmap(bonus_image_params)
 	local malus_image_params = {
+		texture_rect = nil,
+		texture = nil,
 		name = nil,
 		y = nil,
-		texture = nil,
-		texture_rect = nil,
 		name = "malus_image_" .. self._name,
 		y = self._bonus_image:y() + self._bonus_image:h() + 32,
 		texture = tweak_data.gui.icons.ico_malus.texture,
@@ -153,18 +153,18 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 	}
 	self._malus_image = self._details_panel:bitmap(malus_image_params)
 	local bonus_label_params = {
-		wrap = true,
-		vertical = "center",
-		name = nil,
-		h = 64,
-		text = "",
-		y = nil,
 		x = nil,
-		w = 390,
 		align = "left",
-		color = nil,
+		name = nil,
 		font_size = nil,
 		font = nil,
+		text = "",
+		y = nil,
+		color = nil,
+		wrap = true,
+		h = 64,
+		w = 390,
+		vertical = "center",
 		name = "bonus_label_" .. self._name,
 		x = self._bonus_image:x() + self._bonus_image:w() + 16,
 		y = self._bonus_image:y(),
@@ -174,18 +174,18 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 	}
 	self._bonus_label = self._details_panel:label(bonus_label_params)
 	local malus_label_params = {
-		wrap = true,
-		vertical = "center",
-		name = nil,
-		h = 64,
-		text = "",
-		y = nil,
 		x = nil,
-		w = 390,
 		align = "left",
-		color = nil,
+		name = nil,
 		font_size = nil,
 		font = nil,
+		text = "",
+		y = nil,
+		color = nil,
+		wrap = true,
+		h = 64,
+		w = 390,
+		vertical = "center",
 		name = "malus_label_" .. self._name,
 		x = self._malus_image:x() + self._malus_image:w() + 16,
 		y = self._malus_image:y(),

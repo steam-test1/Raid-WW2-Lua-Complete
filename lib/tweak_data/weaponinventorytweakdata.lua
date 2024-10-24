@@ -130,66 +130,71 @@ function WeaponInventoryTweakData:init()
 		{
 			weapon_id = "betty",
 			slot = 6
+		},
+		{
+			slot = 7,
+			challenge = "candy_gold_bar",
+			weapon_id = "gold_bar"
 		}
 	}
 	self.weapon_melee_index = {
 		{
-			slot = 1,
-			redeemed_gold = 5,
 			weapon_id = "m3_knife",
+			default = true,
+			redeemed_gold = 5,
+			slot = 1,
 			redeemed_xp = 0,
-			droppable = false,
-			default = true
+			droppable = false
 		},
 		{
-			slot = 2,
-			redeemed_gold = 5,
 			weapon_id = "robbins_dudley_trench_push_dagger",
+			redeemed_gold = 5,
+			slot = 2,
 			redeemed_xp = 20,
 			droppable = true
 		},
 		{
-			slot = 3,
-			redeemed_gold = 5,
 			weapon_id = "german_brass_knuckles",
+			redeemed_gold = 5,
+			slot = 3,
 			redeemed_xp = 30,
 			droppable = true
 		},
 		{
-			slot = 4,
-			redeemed_gold = 5,
 			weapon_id = "lockwood_brothers_push_dagger",
+			redeemed_gold = 5,
+			slot = 4,
 			redeemed_xp = 40,
 			droppable = true
 		},
 		{
-			slot = 5,
-			redeemed_gold = 5,
 			weapon_id = "bc41_knuckle_knife",
+			redeemed_gold = 5,
+			slot = 5,
 			redeemed_xp = 50,
 			droppable = true
 		},
 		{
-			slot = 6,
-			redeemed_gold = 5,
 			weapon_id = "km_dagger",
+			redeemed_gold = 5,
+			slot = 6,
 			redeemed_xp = 60,
 			droppable = false
 		},
 		{
-			slot = 7,
-			redeemed_gold = 5,
 			weapon_id = "marching_mace",
+			redeemed_gold = 5,
+			slot = 7,
 			redeemed_xp = 70,
 			droppable = false
 		},
 		{
-			slot = 8,
-			redeemed_gold = 5,
 			weapon_id = "lc14b",
+			redeemed_gold = 5,
+			is_challenge_reward = true,
+			slot = 8,
 			redeemed_xp = 80,
-			droppable = true,
-			is_challenge_reward = true
+			droppable = true
 		}
 	}
 end

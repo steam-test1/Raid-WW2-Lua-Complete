@@ -13,9 +13,8 @@ end
 
 function HUDObjectiveDescription:_create_text(objectives_panel)
 	local panel_params = {
-		text = nil,
-		font = nil,
 		wrap = true,
+		text = nil,
 		halign = "scale",
 		valign = "top",
 		vertical = "top",
@@ -23,6 +22,7 @@ function HUDObjectiveDescription:_create_text(objectives_panel)
 		w = nil,
 		name = nil,
 		font_size = nil,
+		font = nil,
 		name = "objective_" .. tostring(self._id) .. "_description",
 		w = HUDObjectiveDescription.W,
 		font = tweak_data.gui:get_font_path(HUDObjectiveDescription.DESCRIPTION_TEXT_FONT, HUDObjectiveDescription.DESCRIPTION_TEXT_FONT_SIZE),

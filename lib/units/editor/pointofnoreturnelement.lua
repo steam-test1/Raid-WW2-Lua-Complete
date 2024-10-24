@@ -30,15 +30,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 
 	local time_params_easy = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on easy:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_easy
@@ -46,26 +46,26 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_easy = CoreEWS.number_controller(time_params_easy)
 
 	time_easy:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_easy",
+		ctrlr = nil,
 		ctrlr = time_easy
 	})
 	time_easy:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_easy",
+		ctrlr = nil,
 		ctrlr = time_easy
 	})
 
 	local time_params_normal = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on normal:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_normal
@@ -73,26 +73,26 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_normal = CoreEWS.number_controller(time_params_normal)
 
 	time_normal:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_normal",
+		ctrlr = nil,
 		ctrlr = time_normal
 	})
 	time_normal:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_normal",
+		ctrlr = nil,
 		ctrlr = time_normal
 	})
 
 	local time_params_hard = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on hard:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_hard
@@ -100,26 +100,26 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_hard = CoreEWS.number_controller(time_params_hard)
 
 	time_hard:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_hard",
+		ctrlr = nil,
 		ctrlr = time_hard
 	})
 	time_hard:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_hard",
+		ctrlr = nil,
 		ctrlr = time_hard
 	})
 
 	local time_params_overkill = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on overkill:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill
@@ -127,26 +127,26 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_overkill = CoreEWS.number_controller(time_params_overkill)
 
 	time_overkill:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill",
+		ctrlr = nil,
 		ctrlr = time_overkill
 	})
 	time_overkill:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill",
+		ctrlr = nil,
 		ctrlr = time_overkill
 	})
 
 	local time_params_overkill_145 = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on overkill 145:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_145
@@ -154,26 +154,26 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_overkill_145 = CoreEWS.number_controller(time_params_overkill_145)
 
 	time_overkill_145:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill_145",
+		ctrlr = nil,
 		ctrlr = time_overkill_145
 	})
 	time_overkill_145:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill_145",
+		ctrlr = nil,
 		ctrlr = time_overkill_145
 	})
 
 	local time_params_overkill_290 = {
+		value = nil,
 		sizer = nil,
+		min = 1,
 		name = "Time left on overkill 290:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		min = 1,
+		panel = nil,
 		tooltip = "Set the time left",
 		floats = 0,
-		value = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_290
@@ -181,13 +181,13 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	local time_overkill_290 = CoreEWS.number_controller(time_params_overkill_290)
 
 	time_overkill_290:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill_290",
+		ctrlr = nil,
 		ctrlr = time_overkill_290
 	})
 	time_overkill_290:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "time_overkill_290",
+		ctrlr = nil,
 		ctrlr = time_overkill_290
 	})
 end
@@ -206,11 +206,11 @@ function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				from_unit = nil,
+				b = 0.75,
 				g = 0,
 				r = 0.75,
 				to_unit = nil,
-				from_unit = nil,
-				b = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
 			})

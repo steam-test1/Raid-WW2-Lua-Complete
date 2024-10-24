@@ -53,8 +53,8 @@ function FleePointElement:test_element()
 	enemy:movement():set_root_blend(false)
 
 	local t = {
-		editor_name = nil,
 		id = nil,
+		editor_name = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()

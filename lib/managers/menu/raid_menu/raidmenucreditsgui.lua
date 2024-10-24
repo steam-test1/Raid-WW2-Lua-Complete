@@ -96,6 +96,12 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
+				x = 0,
+				color = nil,
+				font = nil,
+				vertical = "top",
+				halign = "left",
+				h = nil,
 				align = "center",
 				w = nil,
 				y = nil,
@@ -104,12 +110,6 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 				word_wrap = true,
 				wrap = true,
 				layer = 3,
-				color = nil,
-				x = 0,
-				font = nil,
-				vertical = "top",
-				halign = "left",
-				h = nil,
 				text = data.text,
 				y = ypos,
 				w = text_width,
@@ -447,15 +447,15 @@ end
 
 function RaidMenuCreditsGui:bind_controller_inputs()
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = nil,
+				key = "footer_back",
 				callback = callback(self, self, "back_pressed", nil)
 			}
 		}

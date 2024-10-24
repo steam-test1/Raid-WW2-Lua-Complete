@@ -17,6 +17,7 @@ ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE = "positive_effect"
 ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE = "negative_effect"
 ChallengeCardsTweakData.CARD_SELECTION_TIMER = 60
 ChallengeCardsTweakData.PACK_TYPE_REGULAR = 1
+ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN = 2
 ChallengeCardsTweakData.STACKABLE_AREA = {
 	width = 500,
 	height = 680
@@ -100,12 +101,12 @@ function ChallengeCardsTweakData:init(tweak_data)
 	}
 	self.rarity_definition = {
 		loot_rarity_common = {
-			texture_rect = nil,
 			texture_gui = nil,
-			texture = nil,
-			color = nil,
+			texture_rect = nil,
 			texture_path_id = nil,
+			color = nil,
 			texture_gui_dirty = nil,
+			texture = nil,
 			texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 			texture_rect = {
 				0,
@@ -119,12 +120,12 @@ function ChallengeCardsTweakData:init(tweak_data)
 			color = Color("ececec")
 		},
 		loot_rarity_uncommon = {
-			texture_rect = nil,
 			texture_gui = nil,
-			texture = nil,
-			color = nil,
+			texture_rect = nil,
 			texture_path_id = nil,
+			color = nil,
 			texture_gui_dirty = nil,
+			texture = nil,
 			texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 			texture_rect = {
 				0,
@@ -138,12 +139,12 @@ function ChallengeCardsTweakData:init(tweak_data)
 			color = Color("71b35b")
 		},
 		loot_rarity_rare = {
-			texture_rect = nil,
 			texture_gui = nil,
-			texture = nil,
-			color = nil,
+			texture_rect = nil,
 			texture_path_id = nil,
+			color = nil,
 			texture_gui_dirty = nil,
+			texture = nil,
 			texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 			texture_rect = {
 				0,
@@ -157,12 +158,12 @@ function ChallengeCardsTweakData:init(tweak_data)
 			color = Color("718c9e")
 		},
 		loot_rarity_halloween = {
-			texture_rect = nil,
 			texture_gui = nil,
-			texture = nil,
-			color = nil,
+			texture_rect = nil,
 			texture_path_id = nil,
+			color = nil,
 			texture_gui_dirty = nil,
+			texture = nil,
 			texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 			texture_rect = {
 				0,
@@ -177,10 +178,10 @@ function ChallengeCardsTweakData:init(tweak_data)
 		},
 		loot_rarity_none = {
 			texture_gui = nil,
-			texture = nil,
 			texture_rect = nil,
 			color = nil,
 			texture_gui_dirty = nil,
+			texture = nil,
 			texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 			texture_rect = {
 				0,
@@ -194,25 +195,25 @@ function ChallengeCardsTweakData:init(tweak_data)
 	}
 	self.type_definition = {
 		card_type_raid = {
+			texture_gui_dirty = nil,
 			texture_path_id = nil,
 			texture_gui = nil,
-			texture_gui_dirty = nil,
 			texture_path_id = LootDropTweakData.CARD_TYPE_RAID,
 			texture_gui = tweak_data.gui.icons.card_type_raid,
 			texture_gui_dirty = tweak_data.gui.icons.card_type_raid_dirty
 		},
 		card_type_operation = {
+			texture_gui_dirty = nil,
 			texture_path_id = nil,
 			texture_gui = nil,
-			texture_gui_dirty = nil,
 			texture_path_id = LootDropTweakData.CARD_TYPE_OPERATION,
 			texture_gui = tweak_data.gui.icons.card_type_operation,
 			texture_gui_dirty = tweak_data.gui.icons.card_type_operation_dirty
 		},
 		card_type_none = {
+			texture_gui_dirty = nil,
 			texture_path_id = nil,
 			texture_gui = nil,
-			texture_gui_dirty = nil,
 			texture_path_id = LootDropTweakData.CARD_TYPE_NONE,
 			texture_gui = tweak_data.gui.icons.card_type_none,
 			texture_gui_dirty = tweak_data.gui.icons.card_type_none_dirty
@@ -251,30 +252,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_on_the_scrounge_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.8,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = nil,
+			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = {
 				EFFECT_VALUE_1 = "20%"
 			}
@@ -292,23 +293,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_no_backups_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_SECONDARY_AMMO_CAPACITY
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_faster_reload",
 			desc_params = nil,
+			desc_id = "effect_player_faster_reload",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -329,30 +330,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_this_is_gonna_hurt_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER
 			}
 		},
 		positive_description = {
-			desc_id = "effect_enemies_take_more_damage",
 			desc_params = nil,
+			desc_id = "effect_enemies_take_more_damage",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_set_bleedout_timer",
 			desc_params = nil,
+			desc_id = "effect_set_bleedout_timer",
 			desc_params = {
 				EFFECT_VALUE_1 = "15"
 			}
@@ -370,23 +371,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_not_in_the_face_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_critical_hit_chance_increase",
 			desc_params = nil,
+			desc_id = "effect_critical_hit_chance_increase",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -407,30 +408,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_loaded_for_bear_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.2,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.85,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_primary_and_secondary_ammo_capacity_increased",
 			desc_params = nil,
+			desc_id = "effect_player_primary_and_secondary_ammo_capacity_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "20%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_player_movement_speed_reduced",
 			desc_params = nil,
+			desc_id = "effect_player_movement_speed_reduced",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -448,23 +449,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_total_carnage_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_EXPLOSION
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_MELEE
 			}
@@ -488,16 +489,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_switch_hitter_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_SHOOTING_SECONDARY_WEAPON_FILLS_PRIMARY_AMMO
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_SHOOTING_PRIMARY_WEAPON_CONSUMES_BOTH_AMMOS
 			}
@@ -521,23 +522,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_gunslingers_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY
 			}
 		},
 		positive_description = {
-			desc_id = "effect_pistol_damage_increased",
 			desc_params = nil,
+			desc_id = "effect_pistol_damage_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -558,30 +559,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_fresh_troops_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.25,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 1.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "25%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_enemies_health_increased",
 			desc_params = nil,
+			desc_id = "effect_enemies_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -599,16 +600,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_dont_you_die_on_me_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 10,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER
 			},
 			{
+				fail_message = nil,
 				type = nil,
 				value = true,
-				fail_message = nil,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_DIED,
@@ -616,8 +617,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_bleedout_timer_increased",
 			desc_params = nil,
+			desc_id = "effect_bleedout_timer_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10"
 			}
@@ -638,16 +639,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_no_second_chances_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH
 			},
 			{
+				fail_message = nil,
 				type = nil,
 				value = true,
-				fail_message = nil,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_BLEEDOUT,
@@ -655,8 +656,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_health_increased",
 			desc_params = nil,
+			desc_id = "effect_player_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10"
 			}
@@ -677,15 +678,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_a_perfect_score_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 2,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_FORCED_CRATE_TIER
 			},
 			{
-				type = nil,
 				fail_message = nil,
+				type = nil,
 				value = true,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
@@ -712,16 +713,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_helmet_shortage_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH
 			}
@@ -730,8 +731,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			desc_id = "effect_headshots_are_instakills"
 		},
 		negative_description = {
-			desc_id = "effect_player_health_reduced",
 			desc_params = nil,
+			desc_id = "effect_player_health_reduced",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -749,30 +750,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_hemorrhaging_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 0.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH
 			},
 			{
+				name = nil,
 				type = nil,
 				value = -0.00333,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN
 			}
 		},
 		positive_description = {
-			desc_id = "effect_melee_kills_regenerate_health",
 			desc_params = nil,
+			desc_id = "effect_melee_kills_regenerate_health",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_health_drain_per_minute",
 			desc_params = nil,
+			desc_id = "effect_health_drain_per_minute",
 			desc_params = {
 				EFFECT_VALUE_1 = "20%"
 			}
@@ -790,16 +791,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_crab_people_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.3,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_CAN_MOVE_ONLY_BACK_AND_SIDE
 			}
@@ -823,37 +824,37 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_slasher_movie_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 0.01666,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 20,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_WARCRIES_DISABLED
 			}
 		},
 		positive_description = {
-			desc_id = "effect_melee_damage_increased_health_regen",
 			desc_params = nil,
+			desc_id = "effect_melee_damage_increased_health_regen",
 			desc_params = {
 				EFFECT_VALUE_1 = "100%"
 			}
@@ -878,30 +879,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_pumpkin_pie_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 3,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PUMKIN_HEADS
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR
 			}
 		},
 		positive_description = {
-			desc_id = "effect_headshots_damage_increased",
 			desc_params = nil,
+			desc_id = "effect_headshots_damage_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "100%"
 			}
@@ -926,16 +927,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_ra_season_of_resurrection_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 4,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE
 			}
@@ -963,30 +964,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_limited_supplies_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.8,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = nil,
+			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = {
 				EFFECT_VALUE_1 = "20%"
 			}
@@ -1004,16 +1005,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_take_the_cannoli_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.85,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE
 			}
@@ -1022,8 +1023,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			desc_id = "effect_no_movement_penalty_for_carrying_heavy_objects"
 		},
 		negative_description = {
-			desc_id = "effect_loot_drop_chance_decreased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_chance_decreased",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -1041,30 +1042,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_everyones_a_tough_guy_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_bleedout_timer_increased",
 			desc_params = nil,
+			desc_id = "effect_bleedout_timer_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "5"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_enemies_health_increased",
 			desc_params = nil,
+			desc_id = "effect_enemies_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -1082,23 +1083,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_nichtsplosions_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_IMPERVIOUS_TO_EXPLOSIVE_DAMAGE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_faster_reload",
 			desc_params = nil,
+			desc_id = "effect_player_faster_reload",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -1119,30 +1120,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_war_weary_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.75,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_enemies_take_more_damage",
 			desc_params = nil,
+			desc_id = "effect_enemies_take_more_damage",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_loot_drop_effect_decreased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_effect_decreased",
 			desc_params = {
 				EFFECT_VALUE_1 = "25%"
 			}
@@ -1160,30 +1161,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_special_for_a_reason_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 1.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_movement_speed_increased",
 			desc_params = nil,
+			desc_id = "effect_player_movement_speed_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_special_enemies_deal_increased_damage",
 			desc_params = nil,
+			desc_id = "effect_special_enemies_deal_increased_damage",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -1201,37 +1202,37 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_dont_blink_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_HEALTH
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_AMMO
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_loot_drop_pickups_desappear",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_pickups_desappear",
 			desc_params = {
 				EFFECT_VALUE_1 = "5"
 			}
@@ -1249,30 +1250,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_bad_coffee_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_faster_reload",
 			desc_params = nil,
+			desc_id = "effect_player_faster_reload",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_set_bleedout_timer",
 			desc_params = nil,
+			desc_id = "effect_set_bleedout_timer",
 			desc_params = {
 				EFFECT_VALUE_1 = "15"
 			}
@@ -1290,30 +1291,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_playing_for_keeps_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.75,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_enemies_take_more_damage",
 			desc_params = nil,
+			desc_id = "effect_enemies_take_more_damage",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_player_health_reduced",
 			desc_params = nil,
+			desc_id = "effect_player_health_reduced",
 			desc_params = {
 				EFFECT_VALUE_1 = "25"
 			}
@@ -1331,16 +1332,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_silent_shout_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 0.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH
 			},
 			{
+				fail_message = nil,
 				type = nil,
 				value = true,
-				fail_message = nil,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYERS_CANT_USE_WARCRIES,
@@ -1348,8 +1349,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_melee_kills_regenerate_health",
 			desc_params = nil,
+			desc_id = "effect_melee_kills_regenerate_health",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -1370,30 +1371,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_blow_me_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 2,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_GRENADE_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 0.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_grenade_damage_increased",
 			desc_params = nil,
+			desc_id = "effect_player_grenade_damage_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "100%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = nil,
+			desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -1411,16 +1412,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_you_only_live_once_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 0.05,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH
 			},
 			{
+				fail_message = nil,
 				type = nil,
 				value = true,
-				fail_message = nil,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_DIED,
@@ -1428,8 +1429,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_health_regenerates_on_every_kill",
 			desc_params = nil,
+			desc_id = "effect_player_health_regenerates_on_every_kill",
 			desc_params = {
 				EFFECT_VALUE_1 = "5%"
 			}
@@ -1450,16 +1451,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_short_controlled_bursts_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.07,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 			},
 			{
+				fail_message = nil,
 				type = nil,
 				value = true,
-				fail_message = nil,
 				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS,
@@ -1467,8 +1468,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_critical_hit_chance_increase",
 			desc_params = nil,
+			desc_id = "effect_critical_hit_chance_increase",
 			desc_params = {
 				EFFECT_VALUE_1 = "7%"
 			}
@@ -1489,30 +1490,30 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_elite_opponents_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.25,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = 1.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_chance_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "25%"
 			}
 		},
 		negative_description = {
-			desc_id = "effect_enemies_health_increased",
 			desc_params = nil,
+			desc_id = "effect_enemies_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -1530,23 +1531,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "card_op_and_headaches_for_all_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE
 			},
 			{
+				name = nil,
 				type = nil,
 				value = true,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT
 			}
 		},
 		positive_description = {
-			desc_id = "effect_headshots_damage_increased",
 			desc_params = nil,
+			desc_id = "effect_headshots_damage_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "50%"
 			}
@@ -1567,16 +1568,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_ra_b_walk_it_off_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER
 			}
 		},
 		positive_description = {
-			desc_id = "effect_bleedout_timer_increased",
 			desc_params = nil,
+			desc_id = "effect_bleedout_timer_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "5"
 			}
@@ -1593,16 +1594,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_ra_b_in_fine_feather_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_health_increased",
 			desc_params = nil,
+			desc_id = "effect_player_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -1619,16 +1620,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_ra_b_precision_fire_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_enemies_take_increased_damage",
 			desc_params = nil,
+			desc_id = "effect_enemies_take_increased_damage",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -1645,16 +1646,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_op_b_recycle_for_victory_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.1,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE
 			}
 		},
 		positive_description = {
-			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = nil,
+			desc_id = "effect_loot_drop_effect_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "10%"
 			}
@@ -1671,16 +1672,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_op_b_will_not_go_quietly_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 7.5,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER
 			}
 		},
 		positive_description = {
-			desc_id = "effect_bleedout_timer_increased",
 			desc_params = nil,
+			desc_id = "effect_bleedout_timer_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "7.5"
 			}
@@ -1697,16 +1698,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 		description = "challenge_card_op_b_on_top_form_desc_id",
 		effects = {
 			{
+				name = nil,
 				type = nil,
 				value = 1.15,
-				name = nil,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH
 			}
 		},
 		positive_description = {
-			desc_id = "effect_player_health_increased",
 			desc_params = nil,
+			desc_id = "effect_player_health_increased",
 			desc_params = {
 				EFFECT_VALUE_1 = "15%"
 			}
@@ -1721,37 +1722,37 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_dooms_day = setup_card("ra_dooms_day")
 	self.cards.ra_dooms_day.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = 1.5,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED
 		},
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY
 		},
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS
 		},
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT
 		}
 	}
 	self.cards.ra_dooms_day.positive_description = {
-		desc_id = nil,
 		desc_params = nil,
+		desc_id = nil,
 		desc_id = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
 		desc_params = {
 			EFFECT_VALUE_1 = "50%"
@@ -1769,9 +1770,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_roulette = setup_card("ra_roulette")
 	self.cards.ra_roulette.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_ROULETTE
 		}
@@ -1789,16 +1790,16 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_holiday_rush = setup_card("ra_holiday_rush")
 	self.cards.ra_holiday_rush.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
 		},
 		{
-			type = nil,
-			value = 4,
 			name = nil,
+			type = nil,
+			value = 16,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE
 		}
@@ -1808,31 +1809,31 @@ function ChallengeCardsTweakData:init(tweak_data)
 		desc_id = BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
 	}
 	self.cards.ra_holiday_rush.negative_description = {
-		desc_id = nil,
 		desc_params = nil,
+		desc_id = nil,
 		desc_id = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
 		desc_params = {
-			EFFECT_VALUE_1 = "400%"
+			EFFECT_VALUE_1 = "1600%"
 		}
 	}
 	self.cards.ra_holiday_rush.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.cards.ra_holiday_rush.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_holiday_rush.achievement_id = ""
 	self.cards.ra_holiday_rush.def_id = 402
-	self.cards.ra_holiday_rush.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.ra_holiday_rush.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.free_crowbar = setup_card("free_crowbar")
 	self.cards.free_crowbar.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = 3,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_FORCED_CRATE_TIER
 		},
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR
 		}
@@ -1848,23 +1849,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.lucky_day = setup_card("lucky_day")
 	self.cards.lucky_day.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = 1.1,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 		},
 		{
+			name = nil,
 			type = nil,
 			value = 1.1,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE
 		}
 	}
 	self.cards.lucky_day.positive_description = {
-		desc_id = nil,
 		desc_params = nil,
+		desc_id = nil,
 		desc_id = BuffEffectManager.EFFECT_LUCKY_DAY,
 		desc_params = {
 			EFFECT_VALUE_1 = "10%"
@@ -1878,23 +1879,23 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_mag_roulette = setup_card("mag_roulette")
 	self.cards.ra_mag_roulette.effects = {
 		{
+			name = nil,
 			type = nil,
 			value = 1.3,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED
 		},
 		{
+			name = nil,
 			type = nil,
 			value = true,
-			name = nil,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD
 		}
 	}
 	self.cards.ra_mag_roulette.positive_description = {
-		desc_id = "effect_player_faster_reload",
 		desc_params = nil,
+		desc_id = "effect_player_faster_reload",
 		desc_params = {
 			EFFECT_VALUE_1 = "30%"
 		}
@@ -1902,11 +1903,55 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_mag_roulette.negative_description = {
 		desc_id = "effect_player_random_reload"
 	}
-	self.cards.ra_mag_roulette.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.cards.ra_mag_roulette.rarity = LootDropTweakData.RARITY_RARE
 	self.cards.ra_mag_roulette.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_mag_roulette.achievement_id = ""
+	self.cards.ra_mag_roulette.bonus_xp = 350
 	self.cards.ra_mag_roulette.def_id = 405
 	self.cards.ra_mag_roulette.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_trick_or_treat = setup_card("trick_or_treat")
+	self.cards.ra_trick_or_treat.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_trick_or_treat.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_trick_or_treat.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.cards.ra_trick_or_treat.def_id = 406
+	self.cards.ra_trick_or_treat.achievement_id = ""
+	self.cards.ra_trick_or_treat.selected_sound = "halloween_challenge_card_chosen"
+	self.cards.ra_trick_or_treat.bonus_xp_multiplier = 1.75
+	self.cards.ra_trick_or_treat.event = true
+	self.cards.ra_trick_or_treat.effects = {
+		{
+			effect_class = "BuffEffectCandy",
+			type = nil,
+			value = true,
+			name = nil,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			name = BuffEffectManager.EFFECT_TRICK_OR_TREAT
+		},
+		{
+			name = nil,
+			type = nil,
+			value = true,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			name = BuffEffectManager.EFFECT_PUMKIN_HEADS
+		},
+		{
+			name = nil,
+			type = nil,
+			value = 1,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			name = BuffEffectManager.EFFECT_FORCED_CRATE_TIER
+		}
+	}
+	self.cards.ra_trick_or_treat.positive_description = {
+		desc_params = nil,
+		desc_id = "effect_trick_or_treat_positive",
+		desc_params = {
+			AMOUNT_XP = "50%"
+		}
+	}
+	self.cards.ra_trick_or_treat.negative_description = {
+		desc_id = "effect_trick_or_treat_malus"
+	}
 	self.cards_index = {
 		"ra_on_the_scrounge",
 		"ra_no_backups",
@@ -1952,7 +1997,8 @@ function ChallengeCardsTweakData:init(tweak_data)
 		"ra_roulette",
 		"free_crowbar",
 		"lucky_day",
-		"ra_mag_roulette"
+		"ra_mag_roulette",
+		"ra_trick_or_treat"
 	}
 	self.playtimegenerator = {}
 	self.bundledefinitions = {}

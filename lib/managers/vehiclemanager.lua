@@ -183,8 +183,8 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				local loot1 = stored_loot[loot_index]
 				loot_index = loot_index + 1
 				local loot2 = {
-					carry_id = nil,
-					multiplier = 0
+					multiplier = 0,
+					carry_id = nil
 				}
 
 				if loot_index <= #stored_loot then
@@ -193,8 +193,8 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 
 				loot_index = loot_index + 1
 				local loot3 = {
-					carry_id = nil,
-					multiplier = 0
+					multiplier = 0,
+					carry_id = nil
 				}
 
 				if loot_index <= #stored_loot then
@@ -227,8 +227,8 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					vehicle_unit = nil,
 					seat = nil,
+					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.driver.name
 				}
@@ -246,8 +246,8 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					vehicle_unit = nil,
 					seat = nil,
+					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_front.name
 				}
@@ -265,8 +265,8 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					vehicle_unit = nil,
 					seat = nil,
+					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_back_left.name
 				}
@@ -284,8 +284,8 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					vehicle_unit = nil,
 					seat = nil,
+					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_back_right.name
 				}

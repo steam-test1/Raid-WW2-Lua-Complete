@@ -36,11 +36,11 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 		local text = managers.localization:text("debug_trade_hostage")
 
 		managers.hud:add_waypoint(wp_id, {
-			icon = "wp_trade",
-			text = nil,
 			distance = nil,
 			position = nil,
+			text = nil,
 			waypoint_type = "hostage_trade",
+			icon = "wp_trade",
 			text = text,
 			position = unit:movement():m_pos(),
 			distance = IS_PC
@@ -67,31 +67,31 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 			if managers.enemy:all_civilians()[unit:key()] then
 				if not unit:brain():is_tied() then
 					action_data = {
+						type = "act",
+						blocks = nil,
 						clamp_to_graph = true,
 						variant = "tied",
 						body_part = 1,
-						type = "act",
-						blocks = nil,
 						blocks = {
+							walk = -1,
 							heavy_hurt = -1,
 							hurt = -1,
-							light_hurt = -1,
-							walk = -1
+							light_hurt = -1
 						}
 					}
 				end
 			else
 				action_data = {
+					type = "act",
+					blocks = nil,
 					clamp_to_graph = true,
 					variant = "tied_all_in_one",
 					body_part = 1,
-					type = "act",
-					blocks = nil,
 					blocks = {
+						walk = -1,
 						heavy_hurt = -1,
 						hurt = -1,
-						light_hurt = -1,
-						walk = -1
+						light_hurt = -1
 					}
 				}
 			end

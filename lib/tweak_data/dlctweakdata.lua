@@ -72,11 +72,11 @@ function DLCTweakData:_init_descriptions()
 	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {
 		content = {
 			melee_weapons = nil,
-			camp_customizations = nil,
-			gold_award = nil,
 			vehicle_skins = nil,
 			weapon_skins = nil,
 			customizations = nil,
+			camp_customizations = nil,
+			gold_award = nil,
 			customizations = {
 				{
 					item = "american_highlander_jacket_upper"

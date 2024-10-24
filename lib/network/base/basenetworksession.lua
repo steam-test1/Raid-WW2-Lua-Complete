@@ -88,9 +88,9 @@ function BaseNetworkSession:load(data)
 
 		for _, report in ipairs(data.dead_con_reports) do
 			local report = {
-				process_t = nil,
 				reported = nil,
 				reporter = nil,
+				process_t = nil,
 				process_t = report.process_t,
 				reporter = self._peers[report.reporter],
 				reported = self._peers[report.reported]
@@ -143,9 +143,9 @@ function BaseNetworkSession:save(data)
 
 		for _, report in ipairs(self._dead_con_reports) do
 			local save_report = {
-				process_t = nil,
 				reported = nil,
 				reporter = nil,
+				process_t = nil,
 				process_t = report.process_t,
 				reporter = report.reporter:id(),
 				reported = report.reported:id()
@@ -465,11 +465,11 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 
 				local unit = managers.groupai:state():spawn_one_teamAI(true, player_character)
 				self._old_players[peer_ident] = {
-					hostages_killed = nil,
-					member_downed = nil,
-					used_deployable = nil,
 					member_dead = nil,
+					member_downed = nil,
+					hostages_killed = nil,
 					respawn_penalty = nil,
+					used_deployable = nil,
 					health = nil,
 					t = nil,
 					t = Application:time(),
@@ -1713,21 +1713,17 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	local total_specials_kills = 0
 	local total_head_shots = 0
 	local best_killer = {
-		peer_id = nil,
 		score = 0
 	}
 	local best_special_killer = {
-		peer_id = nil,
 		score = 0
 	}
 	local best_accuracy = {
-		peer_id = nil,
 		score = 0
 	}
 	local group_accuracy = 0
 	local group_downs = 0
 	local most_downs = {
-		peer_id = nil,
 		score = 0
 	}
 

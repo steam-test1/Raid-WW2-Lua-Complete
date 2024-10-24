@@ -21,13 +21,13 @@ end
 
 function EnvironmentOperatorElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
-		name = nil,
 		category = "script_data",
+		name = nil,
 		name = self._hed.environment .. ".environment"
 	})
 	managers.editor:add_to_world_package({
-		name = nil,
 		category = "scenes",
+		name = nil,
 		name = self._hed.environment
 	})
 end

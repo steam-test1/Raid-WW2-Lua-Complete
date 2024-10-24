@@ -248,8 +248,8 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
-		type = nil,
 		minions = nil,
+		stand = nil,
 		minions = {}
 	}
 end
@@ -268,10 +268,10 @@ end
 
 function GroupAIStateBase:add_alert_listener(id, clbk, filter_num, types, m_pos)
 	local listener_data = {
+		types = nil,
 		filter = nil,
 		clbk = nil,
 		m_pos = nil,
-		types = nil,
 		clbk = clbk,
 		filter = filter_num,
 		types = types,
@@ -434,9 +434,9 @@ function GroupAIStateBase:calm_ai()
 
 				if not crim.unit:anim_data().upper_body_empty then
 					crim.unit:movement():action_request({
+						sync = true,
 						body_part = 3,
-						type = "idle",
-						sync = true
+						type = "idle"
 					})
 				end
 
@@ -525,16 +525,16 @@ function GroupAIStateBase:teleport_team_ai()
 				Application:debug("[GroupAIStateBase:teleport_team_ai] Teleporting teamAI to pos", unit, target_pos, cover)
 
 				local action_desc = {
+					position = nil,
 					body_part = 1,
 					type = "warp",
-					position = nil,
 					position = target_pos
 				}
 				local delay = 1 + math.rand(1)
 
 				managers.queued_tasks:queue(nil, self._do_teleport_ai, self, {
-					unit = nil,
 					action_desc = nil,
+					unit = nil,
 					action_desc = action_desc,
 					unit = unit
 				}, delay)
@@ -661,9 +661,9 @@ function GroupAIStateBase:_clbk_switch_enemies_to_not_cool()
 			if unit_data.unit:brain():is_available_for_assignment() then
 				local new_objective = {
 					attitude = "engage",
-					type = "free",
 					is_default = true,
-					stance = "hos"
+					stance = "hos",
+					type = "free"
 				}
 
 				unit_data.unit:brain():set_objective(new_objective)
@@ -691,9 +691,9 @@ function GroupAIStateBase:_clbk_switch_enemies_to_cool()
 			if unit_data.unit:brain():is_available_for_assignment() then
 				local new_objective = {
 					attitude = "engage",
-					type = "free",
 					is_default = true,
-					stance = "ntl"
+					stance = "ntl",
+					type = "free"
 				}
 
 				Application:debug("[GroupAIStateBase:_clbk_switch_enemies_to_cool]", u_key)
@@ -948,13 +948,6 @@ function GroupAIStateBase:set_debug_draw_state(state)
 		local ws = Overlay:newgui():create_screen_workspace()
 		local panel = ws:panel()
 		self._AI_draw_data = {
-			pen_focus_enemy = nil,
-			brush_focus_player = nil,
-			brush_ai_vision_c3 = nil,
-			brush_ai_vision_c2 = nil,
-			brush_ai_vision_c1 = nil,
-			brush_detection = nil,
-			brush_suppressed = nil,
 			brush_misc = nil,
 			brush_act = nil,
 			brush_free = nil,
@@ -974,6 +967,13 @@ function GroupAIStateBase:set_debug_draw_state(state)
 			logic_name_texts = nil,
 			workspace = nil,
 			pen_group = nil,
+			pen_focus_enemy = nil,
+			brush_focus_player = nil,
+			brush_ai_vision_c3 = nil,
+			brush_ai_vision_c2 = nil,
+			brush_ai_vision_c1 = nil,
+			brush_detection = nil,
+			brush_suppressed = nil,
 			brush_area = Draw:brush(Color(0.33, 1, 1, 1)),
 			brush_guard = Draw:brush(Color(0.5, 0, 0, 1)),
 			brush_investigate = Draw:brush(Color(0.5, 0, 1, 0)),
@@ -1564,23 +1564,23 @@ function GroupAIStateBase:register_criminal(unit)
 	local is_deployable = unit:base().sentry_gun
 	local u_sighting = {
 		m_pos = nil,
-		_last_world_id = nil,
 		tracker = nil,
-		pos = nil,
-		important_enemies = nil,
-		engaged = nil,
-		is_deployable = nil,
-		arrest_timeout = -100,
-		dispatch_t = 0,
-		m_det_pos = nil,
-		ai = nil,
 		important_dis = nil,
+		ai = nil,
+		_last_world_id = nil,
+		important_enemies = nil,
+		is_deployable = nil,
 		unit = nil,
 		det_t = nil,
+		pos = nil,
 		undetected = true,
 		area = nil,
 		seg = nil,
+		engaged = nil,
 		engaged_force = 0,
+		arrest_timeout = -100,
+		dispatch_t = 0,
+		m_det_pos = nil,
 		unit = unit,
 		ai = is_AI,
 		tracker = tracker,
@@ -2076,31 +2076,31 @@ function GroupAIStateBase:set_drama_draw_state(state)
 		local high_zone_l = bg_bottom_l:with_y(bg_bottom_l.y + self._drama_data.high_p * height)
 		local high_zone_r = high_zone_l:with_x(bg_bottom_r.x)
 		self._draw_drama = {
+			bg_top_r = nil,
+			bg_bottom_r = nil,
+			bg_bottom_l = nil,
+			bg_top_l = nil,
+			background_brush = nil,
+			pop_hist = nil,
+			start_t = nil,
+			regroup_hist = nil,
+			drama_pen = nil,
+			offset_y = nil,
+			offset_x = nil,
 			width = nil,
 			height = nil,
-			bg_top_l = nil,
-			pop_hist = nil,
-			regroup_hist = nil,
 			regroup_brush = nil,
-			drama_hist = nil,
+			assault_hist = nil,
 			assault_brush = nil,
+			drama_hist = nil,
+			t_span = 180,
 			high_zone_r = nil,
 			high_zone_l = nil,
 			high_zone_pen = nil,
 			low_zone_r = nil,
 			low_zone_l = nil,
-			assault_hist = nil,
 			low_zone_pen = nil,
 			population_pen = nil,
-			bg_top_r = nil,
-			bg_bottom_r = nil,
-			bg_bottom_l = nil,
-			t_span = 180,
-			background_brush = nil,
-			start_t = nil,
-			drama_pen = nil,
-			offset_y = nil,
-			offset_x = nil,
 			background_brush = Draw:brush(background_color),
 			assault_brush = Draw:brush(assault_color),
 			regroup_brush = Draw:brush(regroup_color),
@@ -2201,10 +2201,10 @@ function GroupAIStateBase:on_objective_failed(unit, objective)
 
 		if u_data and unit:brain():is_active() and not unit:character_damage():dead() then
 			new_objective = {
-				scan = true,
-				type = "free",
-				is_default = true,
 				attitude = nil,
+				scan = true,
+				is_default = true,
+				type = "free",
 				attitude = objective.attitude
 			}
 
@@ -2240,14 +2240,14 @@ function GroupAIStateBase:add_special_objective(id, objective_data)
 	end
 
 	local so = {
-		remaining_usage = nil,
-		interval = nil,
-		chance_inc = nil,
-		delay_t = 0,
-		chance = nil,
 		data = nil,
 		non_repeatable = nil,
+		interval = nil,
+		remaining_usage = nil,
+		delay_t = 0,
+		chance_inc = nil,
 		administered = nil,
+		chance = nil,
 		data = objective_data,
 		chance = objective_data.base_chance,
 		chance_inc = objective_data.chance_inc,
@@ -2384,8 +2384,8 @@ function GroupAIStateBase:_process_SO_group(so_group_id, element)
 
 	if not self._recurring_SO_groups[mode] then
 		self._recurring_SO_groups[mode] = {
-			elements = nil,
 			delay_t = 0,
+			elements = nil,
 			elements = {},
 			interval = tweak_data.group_ai.besiege.recurring_group_SO[mode].interval
 		}
@@ -2719,10 +2719,10 @@ function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit,
 			if not tracker:lost() then
 				local search_pos = player_pos - spawn_fwd * 200
 				local ray_params = {
-					trace = true,
-					pos_to = nil,
 					allow_entry = false,
 					tracker_from = nil,
+					trace = true,
+					pos_to = nil,
 					tracker_from = tracker,
 					pos_to = search_pos
 				}
@@ -2758,9 +2758,9 @@ function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit,
 
 		unit:movement():set_character_anim_variables()
 		unit:brain():set_spawn_ai({
-			init_state = "idle",
 			objective = nil,
 			params = nil,
+			init_state = "idle",
 			params = {
 				scan = true
 			},
@@ -2884,10 +2884,10 @@ function GroupAIStateBase:on_civilian_objective_complete(unit, objective)
 			end
 
 			local action = {
-				type = "act",
-				body_part = 1,
-				align_sync = true,
 				clamp_to_graph = true,
+				align_sync = true,
+				body_part = 1,
+				type = "act",
 				variant = nil,
 				variant = objective.break_so
 			}
@@ -2909,10 +2909,10 @@ function GroupAIStateBase:on_civilian_objective_complete(unit, objective)
 			new_objective = objective.followup_objective
 		else
 			new_objective = {
-				interrupt_health = nil,
-				type = "free",
 				interrupt_dis = nil,
+				interrupt_health = nil,
 				followup_objective = nil,
+				type = "free",
 				followup_objective = objective.followup_objective,
 				interrupt_dis = objective.interrupt_dis,
 				interrupt_health = objective.interrupt_health
@@ -3031,9 +3031,9 @@ function GroupAIStateBase:_determine_spawn_objective_for_criminal_AI()
 		local follow_unit = self._player_criminals[valid_criminals[math.random(#valid_criminals)]].unit
 		new_objective = {
 			scan = true,
-			type = "follow",
-			is_default = true,
 			follow_unit = nil,
+			is_default = true,
+			type = "follow",
 			follow_unit = follow_unit
 		}
 	end
@@ -3061,10 +3061,10 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 
 	if closest_record then
 		objective = {
-			scan = true,
-			type = "follow",
-			is_default = true,
 			follow_unit = nil,
+			scan = true,
+			is_default = true,
+			type = "follow",
 			follow_unit = closest_record.unit
 		}
 		player_pos = closest_record.unit:position()
@@ -3091,9 +3091,9 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 					self._guard_hostage_trade_time_map[unit_key] = time
 
 					return {
-						type = "free",
 						nav_seg = nil,
 						scan = true,
+						type = "free",
 						interrupt_dis = 300,
 						stance = "hos",
 						nav_seg = hostage.tracker:nav_segment()
@@ -3356,8 +3356,8 @@ function GroupAIStateBase:on_AI_criminal_death(criminal_name, unit)
 	managers.notification:add_notification({
 		text = nil,
 		duration = 3,
-		id = "hint_teammate_dead",
 		shelf_life = 5,
+		id = "hint_teammate_dead",
 		text = managers.localization:text("hint_teammate_dead", {
 			TEAMMATE = nil,
 			TEAMMATE = unit:base():nick_name()
@@ -3388,8 +3388,8 @@ function GroupAIStateBase:on_player_criminal_death(peer_id)
 		managers.notification:add_notification({
 			text = nil,
 			duration = 3,
-			id = "hint_teammate_dead",
 			shelf_life = 5,
+			id = "hint_teammate_dead",
 			text = managers.localization:text("hint_teammate_dead", {
 				TEAMMATE = nil,
 				TEAMMATE = unit:base():nick_name()
@@ -3746,8 +3746,8 @@ function GroupAIStateBase:chk_say_enemy_chatter(unit, unit_pos, chatter_type)
 
 	if not chatter_type_hist then
 		chatter_type_hist = {
-			cooldown_t = 0,
 			events = nil,
+			cooldown_t = 0,
 			events = {}
 		}
 		self._enemy_chatter[chatter_type] = chatter_type_hist
@@ -3790,8 +3790,8 @@ function GroupAIStateBase:chk_say_enemy_chatter(unit, unit_pos, chatter_type)
 
 	chatter_type_hist.cooldown_t = t + math.lerp(chatter_tweak.interval[1], chatter_tweak.interval[2], math.random())
 	local new_event = {
-		epicenter = nil,
 		expire_t = nil,
+		epicenter = nil,
 		epicenter = mvector3.copy(unit_pos),
 		expire_t = t + math.lerp(chatter_tweak.duration[1], chatter_tweak.duration[2], math.random())
 	}
@@ -3823,8 +3823,8 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		skip_idle_check = true,
-		position = nil
+		position = nil,
+		skip_idle_check = true
 	})
 end
 
@@ -3906,15 +3906,15 @@ function GroupAIStateBase:_map_spawn_points_to_respective_areas(id, spawn_points
 		local area = self:get_area_from_nav_seg_id(nav_seg)
 		local accessibility = new_spawn_point:accessibility()
 		local new_spawn_point_data = {
-			amount = nil,
-			nav_seg = nil,
 			pos = nil,
-			accessibility = nil,
-			interval = nil,
 			spawn_point = nil,
+			nav_seg = nil,
 			area = nil,
-			delay_t = -1,
+			interval = nil,
+			accessibility = nil,
+			amount = nil,
 			id = nil,
+			delay_t = -1,
 			id = id,
 			pos = pos,
 			nav_seg = nav_seg,
@@ -3970,16 +3970,16 @@ function GroupAIStateBase:create_spawn_group(id, spawn_group, spawn_points)
 	end
 
 	local new_spawn_group_data = {
-		amount = nil,
-		nav_seg = nil,
-		mission_element = nil,
 		pos = nil,
+		nav_seg = nil,
 		spawn_pts = nil,
-		team_id = nil,
-		interval = nil,
 		area = nil,
-		delay_t = -1,
+		interval = nil,
+		mission_element = nil,
+		amount = nil,
 		id = nil,
+		delay_t = -1,
+		team_id = nil,
 		id = id,
 		pos = Vector3(),
 		nav_seg = nav_seg,
@@ -4002,12 +4002,12 @@ function GroupAIStateBase:create_spawn_group(id, spawn_group, spawn_points)
 
 		local accessibility = spawn_pt_element:accessibility()
 		local sp_data = {
-			interval = nil,
-			amount = nil,
-			mission_element = nil,
 			pos = nil,
-			delay_t = -1,
 			accessibility = nil,
+			amount = nil,
+			interval = nil,
+			delay_t = -1,
+			mission_element = nil,
 			pos = spawn_pt_element:value("position"),
 			interval = interval,
 			amount = amount,
@@ -4125,10 +4125,10 @@ end
 function GroupAIStateBase:register_AI_attention_object(unit, handler, nav_tracker, team, SO_access)
 	self._attention_objects.all[unit:key()] = {
 		SO_access = nil,
-		team = nil,
-		nav_tracker = nil,
-		unit = nil,
 		handler = nil,
+		nav_tracker = nil,
+		team = nil,
+		unit = nil,
 		unit = unit,
 		handler = handler,
 		nav_tracker = nav_tracker,
@@ -4202,13 +4202,13 @@ end
 function GroupAIStateBase:_create_group(group_desc)
 	local id = self:_get_new_group_id(group_desc.type)
 	local new_group = {
+		type = nil,
 		initial_size = nil,
 		size = 0,
-		has_spawned = false,
-		units = nil,
-		type = nil,
 		id = nil,
+		units = nil,
 		casualties = 0,
+		has_spawned = false,
 		id = id,
 		type = group_desc.type,
 		initial_size = group_desc.size,
@@ -4327,11 +4327,11 @@ end
 
 function GroupAIStateBase:_empty_area_data()
 	return {
-		nav_segs = nil,
+		neighbours = nil,
 		factors = nil,
 		police = nil,
+		nav_segs = nil,
 		criminal = nil,
-		neighbours = nil,
 		police = {
 			units = nil,
 			units = {}
@@ -4890,8 +4890,8 @@ end
 function GroupAIStateBase:register_ecm_jammer(unit, jam_settings)
 	local was_jammer_active = next(self._ecm_jammers) and true or false
 	self._ecm_jammers[unit:key()] = jam_settings and {
-		unit = nil,
 		settings = nil,
+		unit = nil,
 		unit = unit,
 		settings = jam_settings
 	} or nil
@@ -5047,20 +5047,20 @@ function GroupAIStateBase:_init_unit_type_filters()
 	non_special_enemies_filter = convert_f(nav_manager, non_special_enemies_filter)
 	local all_filter = convert_f(nav_manager, managers.navigation.ACCESS_FLAGS)
 	self._unit_type_filter = {
-		all_enemy = nil,
-		combatant = nil,
-		civilian = nil,
 		non_combatant = nil,
+		civilian = nil,
+		civilians_enemies = nil,
+		criminals_and_enemies = nil,
+		all_enemy = nil,
+		law_enforcer = nil,
+		none = 0,
+		criminals_enemies_civilians = nil,
+		all = nil,
+		combatant = nil,
+		gangster = nil,
 		criminal = nil,
 		non_special_enemies = nil,
 		murderer = nil,
-		all = nil,
-		criminals_enemies_civilians = nil,
-		civilians_enemies = nil,
-		criminals_and_enemies = nil,
-		gangster = nil,
-		law_enforcer = nil,
-		none = 0,
 		all = all_filter,
 		civilian = civ_filter,
 		law_enforcer = law_enforcer_filter,
@@ -5104,9 +5104,8 @@ function GroupAIStateBase:sync_event(event_id, blame_id)
 end
 
 GroupAIStateBase.blame_triggers = {
-	civilian = "civ",
-	sniper = "cop",
 	escort = "civ",
+	german_og_commander = "cop",
 	german_spotter = "cop",
 	german_flamer = "cop",
 	german_gebirgsjager_light = "cop",
@@ -5121,10 +5120,11 @@ GroupAIStateBase.blame_triggers = {
 	german_grunt_mid = "cop",
 	german_grunt_light = "cop",
 	german_officer = "cop",
-	german_og_commander = "cop",
+	civilian = "civ",
 	german_commander = "cop",
 	patrol = "cop",
-	civilian_female = "civ"
+	civilian_female = "civ",
+	sniper = "cop"
 }
 
 function GroupAIStateBase:fetch_highest_giveaway(...)
@@ -5481,9 +5481,9 @@ function GroupAIStateBase._create_hud_suspicion_icon(obs_key, u_observer, u_susp
 	managers.hud:show_suspicion()
 
 	local suspicion_indicator_params = {
-		state = nil,
-		position = nil,
 		suspect = nil,
+		position = nil,
+		state = nil,
 		unit = nil,
 		unit = u_observer,
 		suspect = suspect,
@@ -5513,18 +5513,18 @@ function GroupAIStateBase._create_hud_spotter_icon(obs_key, u_observer, u_suspec
 	end
 
 	local icon = managers.hud:add_waypoint(icon_id, {
-		state = "sneak_present",
-		suspect = nil,
-		radius = 146,
 		position = nil,
+		icon = nil,
+		state = "sneak_present",
+		radius = 146,
 		color = nil,
 		unit = nil,
+		suspect = nil,
 		blend_mode = "add",
+		distance = false,
 		present_timer = 0,
 		no_sync = true,
-		distance = false,
 		waypoint_type = "spotter",
-		icon = nil,
 		icon = icon_name,
 		unit = u_observer,
 		suspect = suspect,
@@ -5585,10 +5585,10 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			managers.hud:set_suspicion_indicator_state(u_observer:id(), "calling")
 
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -5628,10 +5628,10 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			managers.hud:set_suspicion_indicator_state(u_observer:id(), "calling")
 
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -5659,10 +5659,10 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			u_observer:unit_data().suspicion_icon_id = u_observer:id()
 			local icon_pos = self._create_hud_suspicion_icon(u_observer:id(), u_observer, u_suspect, "wp_detected", tweak_data.hud.detected_color, icon_id, "alarmed")
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -5726,10 +5726,10 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			u_observer:unit_data().suspicion_icon_id = u_observer:id()
 			local icon_pos = self._create_hud_suspicion_icon(u_observer:id(), u_observer, u_suspect, "wp_suspicious", tweak_data.hud.suspicion_color, icon_id)
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -5783,10 +5783,10 @@ function GroupAIStateBase:on_spotter_detection_progress(u_suspect, u_observer, s
 		local icon_id = "spotter1" .. tostring(obs_key)
 		local icon_pos = self._create_hud_spotter_icon(obs_key, u_observer, u_suspect, "wp_spotter_barrage", tweak_data.hud.detected_color, icon_id)
 		obs_susp_data = {
-			icon_pos = nil,
-			observer_id = nil,
 			u_observer = nil,
 			icon_id = nil,
+			icon_pos = nil,
+			observer_id = nil,
 			u_observer = u_observer,
 			observer_id = u_observer:id(),
 			icon_id = icon_id,
@@ -5809,10 +5809,10 @@ function GroupAIStateBase:on_spotter_detection_progress(u_suspect, u_observer, s
 			local icon_id = "spotter1" .. tostring(obs_key)
 			local icon_pos = self._create_hud_spotter_icon(obs_key, u_observer, u_suspect, "wp_spotter_progress", tweak_data.hud.suspicion_color, icon_id)
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -5846,10 +5846,10 @@ function GroupAIStateBase:on_spotter_detection_progress(u_suspect, u_observer, s
 			local icon_id = "spotter1" .. tostring(obs_key)
 			local icon_pos = self._create_hud_spotter_icon(obs_key, u_observer, u_suspect, "wp_spotter_progress", tweak_data.hud.suspicion_color, icon_id)
 			obs_susp_data = {
-				icon_pos = nil,
-				observer_id = nil,
 				u_observer = nil,
 				icon_id = nil,
+				icon_pos = nil,
+				observer_id = nil,
 				u_observer = u_observer,
 				observer_id = u_observer:id(),
 				icon_id = icon_id,
@@ -6040,8 +6040,8 @@ function GroupAIStateBase:hide_aiming_icon(unit)
 	if susp_data then
 		managers.hud:set_aiming_icon(susp_data.icon_id, false)
 		managers.dialog:queue_dialog("player_gen_not_spotted_sentry", {
-			instigator = nil,
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = managers.player:local_player()
 		})
 	end
@@ -6058,10 +6058,10 @@ function GroupAIStateBase:show_investigate_icon(u_observer)
 		u_observer:unit_data().suspicion_icon_id = u_observer:id()
 		local icon_pos = self._create_hud_suspicion_icon(u_observer:id(), u_observer, nil, "wp_suspicious", tweak_data.hud.suspicion_color, icon_id, "investigating")
 		obs_susp_data = {
-			icon_pos = nil,
-			observer_id = nil,
 			u_observer = nil,
 			icon_id = nil,
+			icon_pos = nil,
+			observer_id = nil,
 			u_observer = u_observer,
 			observer_id = u_observer:id(),
 			icon_id = icon_id,

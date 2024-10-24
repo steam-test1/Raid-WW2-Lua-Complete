@@ -84,12 +84,12 @@ end
 
 function ChatManager:_cache_message(channel_id, name, peer_id, message, color, icon, system_message)
 	table.insert(self._message_buffer[channel_id], {
-		peer_id = nil,
-		name = nil,
 		system_message = nil,
 		icon = nil,
 		color = nil,
 		message = nil,
+		peer_id = nil,
+		name = nil,
 		name = name,
 		peer_id = peer_id,
 		message = message,

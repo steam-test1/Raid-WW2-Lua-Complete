@@ -49,23 +49,23 @@ end
 function PlayerTweakData:init()
 	self.killzones = {
 		fire = {
-			timer = 0.15,
-			damage = 4
+			damage = 4,
+			timer = 0.15
 		},
 		inferno = {
-			damage = 8,
 			death_on_down = true,
+			damage = 8,
 			timer = 0.15
 		},
 		gas = {
-			timer = 0.25,
-			damage = 3
+			damage = 3,
+			timer = 0.25
 		},
 		sniper = {
+			damage = 50,
 			warning_chance = 0.75,
 			warning_timer = 4,
-			timer = 1.5,
-			damage = 50
+			timer = 1.5
 		}
 	}
 	self.run_move_dir_treshold = 0.7
@@ -117,10 +117,10 @@ function PlayerTweakData:init()
 	self.SUSPICION_OFFSET_LERP = 0.75
 	self.MANTLE_PRECISION = 3
 	self.long_dis_interaction = {
+		intimidate_range_civilians = 1000,
 		intimidate_range_enemies = 1,
 		highlight_range = 8000,
-		intimidate_strength = 0.5,
-		intimidate_range_civilians = 1000
+		intimidate_strength = 0.5
 	}
 	self.suppression = {
 		tolerance = 1,
@@ -146,21 +146,21 @@ function PlayerTweakData:init()
 	self.stances = {
 		default = nil,
 		default = {
+			crouched = nil,
 			steelsight = nil,
 			standard = nil,
-			crouched = nil,
 			standard = {
-				head = nil,
 				vel_overshot = nil,
 				shoulders = nil,
+				head = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}
 			},
 			crouched = {
-				head = nil,
 				vel_overshot = nil,
 				shoulders = nil,
+				head = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}

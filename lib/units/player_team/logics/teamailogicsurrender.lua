@@ -21,9 +21,9 @@ function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 
 	local action_data = {
+		variant = "tied",
 		body_part = 1,
-		type = "act",
-		variant = "tied"
+		type = "act"
 	}
 
 	data.unit:brain():action_request(action_data)

@@ -9,25 +9,25 @@ function HUDCombatDebug:init(hud)
 	end
 
 	self._combat_debug_panel = self._hud_panel:panel({
+		valign = "center",
+		h = 265,
+		w = 300,
 		name = "combat_debug_panel",
 		visible = false,
 		layer = 99,
-		halign = "center",
-		valign = "center",
-		h = 265,
-		w = 300
+		halign = "center"
 	})
 
 	self._combat_debug_panel:set_center(0.8888888888888888 * self._combat_debug_panel:parent():w() / 2, self._combat_debug_panel:parent():h() / 2)
 	self._combat_debug_panel:set_right(self._combat_debug_panel:parent():w())
 
 	local background = self._combat_debug_panel:rect({
+		h = nil,
+		w = nil,
 		name = "combat_debug_bg",
 		color = nil,
 		y = 0,
 		x = 0,
-		h = nil,
-		w = nil,
 		w = self._combat_debug_panel:w(),
 		h = self._combat_debug_panel:h(),
 		color = Color.black:with_alpha(0.7)
@@ -35,15 +35,15 @@ function HUDCombatDebug:init(hud)
 	self._default_font_size = tweak_data.gui.font_sizes.size_16
 	self._default_font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, self._default_font_size)
 	self._game_intensity = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_intensity",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_intensity",
+		align = "left",
 		color = nil,
 		y = 20,
 		text = "Game intensity:",
@@ -53,15 +53,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._current_phase = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_phase",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase",
+		align = "left",
 		color = nil,
 		y = 40,
 		text = "Current phase:",
@@ -71,15 +71,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._current_phase_duration = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_phase_duration",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_duration",
+		align = "left",
 		color = nil,
 		y = 60,
 		text = "Current phase - time elapsed:",
@@ -89,15 +89,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._phase_number = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_phase_number",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_number",
+		align = "left",
 		color = nil,
 		y = 80,
 		text = "Phase number:",
@@ -107,15 +107,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._spawned_phase = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_phase_enemies_spawned",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_enemies_spawned",
+		align = "left",
 		color = nil,
 		y = 100,
 		text = "Enemies spawned (phase):",
@@ -125,15 +125,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._killed_phase = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_phase_enemies_killed",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_enemies_killed",
+		align = "left",
 		color = nil,
 		y = 120,
 		text = "Enemies killed (phase):",
@@ -143,15 +143,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._spawned_lifetime = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_lifetime_enemies_spawned",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_lifetime_enemies_spawned",
+		align = "left",
 		color = nil,
 		y = 140,
 		text = "Enemies spawned (lifetime):",
@@ -161,15 +161,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._killed_lifetime = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_lifetime_enemies_killed",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_lifetime_enemies_killed",
+		align = "left",
 		color = nil,
 		y = 160,
 		text = "Enemies killed (lifetime):",
@@ -179,15 +179,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._enemies_alive = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_enemies_alive",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_enemies_alive",
+		align = "left",
 		color = nil,
 		y = 180,
 		text = "Enemies alive:",
@@ -197,15 +197,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._music_state = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_music_state",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_music_state",
+		align = "left",
 		color = nil,
 		y = 200,
 		text = "Music state:",
@@ -215,15 +215,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._player_world = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_wrld_players",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_wrld_players",
+		align = "left",
 		color = nil,
 		y = 220,
 		text = "Player in world:",
@@ -233,15 +233,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._wrld_alarm_state = self._combat_debug_panel:text({
-		align = "left",
+		name = "combat_debug_wrld_alarm_state",
 		visible = true,
+		x = 10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = 10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_wrld_alarm_state",
+		align = "left",
 		color = nil,
 		y = 240,
 		text = "Alarm state:",
@@ -251,15 +251,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._game_intensity_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_intensity_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_intensity_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "",
@@ -270,15 +270,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._current_phase_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_phase_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "reenforce",
@@ -289,15 +289,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._current_phase_duration_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_phase_duration_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_duration_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -309,15 +309,15 @@ function HUDCombatDebug:init(hud)
 	})
 	self._current_phase_timer = 0
 	self._phase_number_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_phase_number_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_number_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -328,15 +328,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._spawned_phase_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_phase_enemies_spawned_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_enemies_spawned_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -347,15 +347,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._killed_phase_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_phase_enemies_killed_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_phase_enemies_killed_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -366,15 +366,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._spawned_lifetime_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_lifetime_enemies_spawned_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_lifetime_enemies_spawned_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -385,15 +385,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._killed_lifetime_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_lifetime_enemies_killed_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_lifetime_enemies_killed_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -404,15 +404,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._enemies_alive_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_enemies_alive_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_enemies_alive_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "0",
@@ -423,15 +423,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._music_state_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_music_state_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_music_state_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "none",
@@ -442,15 +442,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._player_world_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_player_world_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_player_world_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "none",
@@ -461,15 +461,15 @@ function HUDCombatDebug:init(hud)
 		layer = background:layer() + 1
 	})
 	self._wrld_alarm_state_val = self._combat_debug_panel:text({
-		align = "right",
+		name = "combat_debug_wrld_alarm_state_val",
 		visible = true,
+		x = -10,
+		layer = nil,
 		blend_mode = "normal",
 		font_size = nil,
 		font = nil,
-		x = -10,
 		vertical = "top",
-		layer = nil,
-		name = "combat_debug_wrld_alarm_state_val",
+		align = "right",
 		color = nil,
 		y = nil,
 		text = "none",

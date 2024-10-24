@@ -52,8 +52,8 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
+			SavefileInfo = nil,
 			meta_data_list = nil,
-			_resave_required = nil,
 			meta_data_list = {}
 		}
 	end
@@ -157,11 +157,11 @@ function SavefileManager:storage_changed()
 			all = true
 		}
 		local task_data = {
-			user_index = nil,
-			task_type = nil,
 			last_slot = nil,
 			first_slot = nil,
 			queued_in_save_manager = true,
+			user_index = nil,
+			task_type = nil,
 			task_type = self.ENUMERATE_SLOTS_TASK_TYPE,
 			user_index = managers.user:get_platform_id(),
 			first_slot = self.MIN_SLOT,
@@ -181,11 +181,11 @@ end
 
 function SavefileManager:check_space_required()
 	local task_data = {
-		user_index = nil,
-		task_type = nil,
 		last_slot = nil,
 		first_slot = nil,
 		queued_in_save_manager = true,
+		user_index = nil,
+		task_type = nil,
 		task_type = self.CHECK_SPACE_REQUIRED_TASK_TYPE,
 		user_index = managers.user:get_platform_id(),
 		first_slot = self.MIN_SLOT,
@@ -347,9 +347,9 @@ function SavefileManager:get_save_info_list(include_empty_slot)
 	for slot, meta_data in pairs(Global.savefile_manager.meta_data_list) do
 		if meta_data.is_synched_text and (not include_empty_slot or slot ~= self.AUTO_SAVE_SLOT) and slot ~= self.SETTING_SLOT and slot ~= self:get_save_progress_slot() then
 			table.insert(data_list, {
-				sort_list = nil,
 				text = nil,
 				slot = nil,
+				sort_list = nil,
 				slot = slot,
 				text = meta_data.text,
 				sort_list = meta_data.sort_list
@@ -487,12 +487,12 @@ function SavefileManager:_save(slot, cache_only, save_system)
 	else
 		local meta_data = self:_meta_data(slot)
 		local task_data = {
+			max_queue_size = 1,
+			first_slot = nil,
+			queued_in_save_manager = true,
+			date_format = "%c",
 			user_index = nil,
 			task_type = nil,
-			first_slot = nil,
-			date_format = "%c",
-			max_queue_size = 1,
-			queued_in_save_manager = true,
 			first_slot = slot,
 			task_type = self.SAVE_TASK_TYPE,
 			user_index = managers.user:get_platform_id()
@@ -962,9 +962,9 @@ function SavefileManager:_load_cache(slot)
 			managers.raid_job:load_game(cache)
 			managers.statistics:load(cache, version)
 			self:_set_setting_changed(false)
-			managers.weapon_inventory:load_account_wide_info(cache)
 			managers.skilltree:load_profile_slot(cache, version)
 			managers.challenge:load_profile_slot(cache, version)
+			managers.weapon_inventory:load_account_wide_info(cache)
 			managers.breadcrumb:load_profile_slot(cache, version)
 			managers.consumable_missions:load(cache, version)
 			managers.gold_economy:load(cache, version)
@@ -993,13 +993,13 @@ function SavefileManager:_meta_data(slot)
 
 	if not meta_data then
 		meta_data = {
-			is_synched_text = false,
-			is_synched_cache = false,
-			cache = nil,
 			slot = nil,
+			cache = nil,
 			is_corrupt = false,
-			is_load_done = false,
+			is_synched_cache = false,
 			is_cached_slot = false,
+			is_load_done = false,
+			is_synched_text = false,
 			slot = slot
 		}
 		Global.savefile_manager.meta_data_list[slot] = meta_data

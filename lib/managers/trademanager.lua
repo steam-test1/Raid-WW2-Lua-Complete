@@ -26,8 +26,8 @@ function TradeManager:save(save_data)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.peer_id then
 			my_save_data.outfits[crim.peer_id] = {
-				outfit = nil,
 				version = nil,
+				outfit = nil,
 				outfit = managers.network:session():peer(crim.peer_id):profile("outfit_string"),
 				version = managers.network:session():peer(crim.peer_id):outfit_version()
 			}
@@ -234,8 +234,8 @@ function TradeManager:play_custody_voice(criminal_name)
 
 		if alive(criminal_left) then
 			managers.dialog:queue_dialog("player_gen_only_survivor", {
-				instigator = nil,
 				skip_idle_check = true,
+				instigator = nil,
 				instigator = criminal_left
 			})
 		end
@@ -261,8 +261,8 @@ function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hosta
 	local crim = {
 		ai = true,
 		id = nil,
-		respawn_penalty = nil,
 		hostages_killed = nil,
+		respawn_penalty = nil,
 		id = criminal_name,
 		respawn_penalty = respawn_penalty,
 		hostages_killed = hostages_killed
@@ -303,11 +303,11 @@ function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, h
 
 	local peer_id = managers.criminals:character_peer_id_by_name(criminal_name)
 	local crim = {
-		hostages_killed = nil,
 		ai = false,
-		respawn_penalty = nil,
 		id = nil,
 		peer_id = nil,
+		hostages_killed = nil,
+		respawn_penalty = nil,
 		id = criminal_name,
 		respawn_penalty = respawn_penalty,
 		hostages_killed = hostages_killed,
@@ -649,17 +649,17 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 
 	if hint_id then
 		local notification_text = managers.localization:text(hint_id, {
-			HELPER = nil,
 			TEAMMATE = nil,
+			HELPER = nil,
 			TEAMMATE = helped_unit:base():nick_name(),
 			HELPER = helping_unit:base():nick_name()
 		})
 
 		managers.notification:add_notification({
+			shelf_life = 5,
 			id = nil,
 			duration = 3,
 			text = nil,
-			shelf_life = 5,
 			id = hint_id,
 			text = notification_text
 		})

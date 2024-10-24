@@ -16,10 +16,10 @@ NavLinkUnitElement._AI_SO_types = {
 }
 NavLinkUnitElement.PRESETS = {
 	security = nil,
-	civilians = nil,
 	team_ai = nil,
 	acrobats = nil,
 	heavies = nil,
+	civilians = nil,
 	civilians = {
 		"civ_male",
 		"civ_female"
@@ -127,8 +127,8 @@ function NavLinkUnitElement:test_element()
 	self._test_unit:movement():set_root_blend(false)
 
 	local t = {
-		id = nil,
 		editor_name = nil,
+		id = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
@@ -255,11 +255,11 @@ function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					b = 0,
-					g = 0.75,
 					r = 0,
 					to_unit = nil,
 					from_unit = nil,
+					b = 0,
+					g = 0.75,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -447,14 +447,14 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		name = "Preset:",
-		tooltip = "Select a preset.",
-		options = nil,
 		sizer = nil,
 		ctrlr_proportions = 2,
-		sorted = true,
+		name = "Preset:",
 		panel = nil,
 		name_proportions = 1,
+		sorted = true,
+		tooltip = "Select a preset.",
+		options = nil,
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -520,8 +520,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

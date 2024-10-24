@@ -32,15 +32,15 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 		tweak_data.gui.icons[self._params.left].texture_rect[4]
 	}
 	local left_params = {
+		y = nil,
+		x = 0,
 		h = nil,
 		layer = nil,
+		texture_rect = nil,
+		name = nil,
 		color = nil,
 		texture = nil,
 		w = nil,
-		y = nil,
-		x = 0,
-		texture_rect = nil,
-		name = nil,
 		name = self._name .. "_left",
 		y = self._h / 2 - tweak_data.gui.icons[self._params.left].texture_rect[4] / 2,
 		w = tweak_data.gui.icons[self._params.left].texture_rect[3] - 1,
@@ -58,15 +58,15 @@ function RaidGUIControlThreeCutBitmap:_layout_parts()
 		tweak_data.gui.icons[self._params.right].texture_rect[4]
 	}
 	local right_params = {
+		y = nil,
+		x = nil,
 		h = nil,
 		layer = nil,
+		texture_rect = nil,
+		name = nil,
 		color = nil,
 		texture = nil,
 		w = nil,
-		y = nil,
-		x = nil,
-		texture_rect = nil,
-		name = nil,
 		name = self._name .. "_right",
 		x = self._object:w() - tweak_data.gui.icons[self._params.right].texture_rect[3],
 		y = self._h / 2 - tweak_data.gui.icons[self._params.right].texture_rect[4] / 2,

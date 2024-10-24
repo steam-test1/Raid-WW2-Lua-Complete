@@ -62,9 +62,9 @@ end
 
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
 	self._world_spawns[world_id] = {
-		editor_name = nil,
-		plant_loot = nil,
 		active = true,
+		plant_loot = nil,
+		editor_name = nil,
 		editor_name = editor_name,
 		plant_loot = spawn_loot
 	}
@@ -234,12 +234,12 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	Application:debug("[CoreWorldCollection:prepare_world()] world_id:", world_id, spawn_counter)
 
 	local params = {
-		world_dir = nil,
-		excluded_continents = nil,
 		file_path = nil,
 		world_id = nil,
 		file_type = "world",
+		world_dir = nil,
 		translation = nil,
+		excluded_continents = nil,
 		file_path = file_path,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -296,8 +296,8 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 
 	self._missions[index] = MissionManager:new()
 	self._mission_params[index] = {
-		file_path = nil,
 		worlddefinition = nil,
+		file_path = nil,
 		sync_id = nil,
 		file_path = self._mission_paths[index],
 		worlddefinition = definition,
@@ -478,8 +478,8 @@ end
 
 function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	local params = {
-		world_id = nil,
 		stage = nil,
+		world_id = nil,
 		world_id = world_id,
 		stage = stage
 	}
@@ -926,8 +926,8 @@ function CoreWorldCollection:sync_save(data)
 
 	for world_id, world in pairs(self._world_definitions) do
 		table.insert(state.synced_units, {
-			world_id = nil,
 			units = nil,
+			world_id = nil,
 			world_id = world_id,
 			units = world._units_synced_on_dropin
 		})
@@ -1347,6 +1347,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.warcry:deactivate_warcry(true)
 	managers.hud:clear_hit_direction_indicators()
 	managers.hud:clear_suspicion_direction_indicators()
+	managers.hud:clear_all_status_effects()
 	managers.hud:clear_waypoints()
 	managers.hud:pd_cancel_progress()
 	managers.hud:hide_interaction_bar(false, false)
@@ -1425,7 +1426,7 @@ function CoreWorldCollection:level_transition_ended()
 
 	if Network:is_server() then
 		managers.network:session():set_state("in_game")
-		self:_plant_loot_on_spawned_levels()
+		managers.queued_tasks:queue(nil, self._plant_loot_on_spawned_levels, self, nil, 2)
 		managers.queued_tasks:queue(nil, self._do_spawn_players, self, nil, 0.1)
 		managers.gold_economy:layout_camp()
 		managers.progression:layout_camp()
@@ -1455,7 +1456,7 @@ end
 
 function CoreWorldCollection:_fire_level_loaded_event()
 	Application:trace("[CoreWorldCollection:_fire_level_loaded_event()]")
-	managers.global_state:fire_event("system_level_loaded")
+	managers.global_state:fire_event(GlobalStateManager.EVENT_LEVEL_LOADED)
 end
 
 function CoreWorldCollection:world_spawn(world_id)

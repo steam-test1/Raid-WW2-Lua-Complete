@@ -46,11 +46,11 @@ end
 
 function RaidGUIControlListItemOperations:_layout_panel(params)
 	local panel_params = {
+		name = nil,
+		h = nil,
+		w = nil,
 		y = nil,
 		x = nil,
-		w = nil,
-		h = nil,
-		name = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -62,13 +62,13 @@ end
 
 function RaidGUIControlListItemOperations:_layout_background(params)
 	local background_params = {
-		y = 1,
-		x = 0,
-		w = nil,
+		name = nil,
 		color = nil,
 		visible = false,
 		h = nil,
-		name = nil,
+		w = nil,
+		y = 1,
+		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = self._object:h() - 2,
@@ -79,13 +79,13 @@ end
 
 function RaidGUIControlListItemOperations:_layout_highlight_marker()
 	local marker_params = {
-		y = 1,
-		x = 0,
-		w = 3,
+		name = nil,
 		color = nil,
 		visible = false,
 		h = nil,
-		name = nil,
+		w = 3,
+		y = 1,
+		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
 		color = self._selected_color
@@ -95,12 +95,12 @@ end
 
 function RaidGUIControlListItemOperations:_layout_icon(params, data)
 	local icon_params = {
-		y = nil,
-		x = nil,
+		name = nil,
 		color = nil,
 		texture = nil,
 		texture_rect = nil,
-		name = nil,
+		y = nil,
+		x = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemOperations.ICON_PADDING,
 		y = (RaidGUIControlListItemOperations.HEIGHT - data.icon.texture_rect[4]) / 2,
@@ -116,16 +116,16 @@ end
 
 function RaidGUIControlListItemOperations:_layout_operation_name(params, data)
 	local raid_name_params = {
+		name = nil,
+		font_size = nil,
+		vertical = "center",
+		color = nil,
+		h = nil,
+		w = nil,
 		y = 0,
 		x = nil,
 		font = nil,
-		w = nil,
-		font_size = nil,
 		text = nil,
-		color = nil,
-		vertical = "center",
-		h = nil,
-		name = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		w = params.w,
@@ -154,8 +154,8 @@ end
 
 function RaidGUIControlListItemOperations:_layout_breadcrumb()
 	local breadcrumb_params = {
-		identifiers = nil,
 		category = nil,
+		identifiers = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

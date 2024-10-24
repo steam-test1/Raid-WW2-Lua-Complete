@@ -121,8 +121,8 @@ end
 function UpgradeStats.get_info_display_data(info_id)
 	local desc, desc_colors = UpgradeStats.get_formatted_description(info_id)
 	local info_data = {
-		description = nil,
 		color_ranges = nil,
+		description = nil,
 		description = desc,
 		color_ranges = desc_colors
 	}

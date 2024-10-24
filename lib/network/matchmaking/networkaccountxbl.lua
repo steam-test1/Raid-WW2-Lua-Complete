@@ -81,8 +81,8 @@ function NetworkAccountXBL:_clbk_inventory_load(error, list)
 	local filtered_list = self:_verify_filter_cards(list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
-		error = nil,
 		list = nil,
+		error = nil,
 		error = error,
 		list = filtered_list
 	})

@@ -138,8 +138,8 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 					local spread_direction = mvector3.copy(mvec_spread_direction)
 
 					table.insert(col_rays, {
-						ray = nil,
 						position = nil,
+						ray = nil,
 						position = ray_to,
 						ray = spread_direction
 					})
@@ -207,17 +207,17 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	end
 
 	managers.statistics:shot_fired({
-		weapon_unit = nil,
 		hit = false,
+		weapon_unit = nil,
 		weapon_unit = self._unit
 	})
 
 	if next(hit_enemies) then
 		if true or false then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				weapon_unit = nil,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = self._unit
 			})
 		end

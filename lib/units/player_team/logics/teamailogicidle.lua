@@ -86,8 +86,8 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.revive_complete_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_revive_complete", data), revive_t)
 				managers.dialog:queue_dialog("player_gen_revive_start", {
-					skip_idle_check = true,
 					instigator = nil,
+					skip_idle_check = true,
 					instigator = data.unit
 				})
 			else
@@ -150,16 +150,16 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 
 		my_data.performing_act_objective = nil
 		local crouch_action = {
-			type = "act",
 			variant = "crouch",
-			body_part = 1,
+			type = "act",
 			blocks = nil,
+			body_part = 1,
 			blocks = {
+				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
-				action = -1,
-				aim = -1
+				action = -1
 			}
 		}
 
@@ -317,9 +317,9 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 
 	if objective_type == "follow" then
 		objective = {
-			type = nil,
-			scan = true,
 			follow_unit = nil,
+			scan = true,
+			type = nil,
 			destroy_clbk_key = false,
 			called = true,
 			type = objective_type,
@@ -331,45 +331,45 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			type = "act",
 			scan = true,
 			action = {
-				type = "act",
 				variant = "crouch",
-				body_part = 1,
+				type = "act",
 				blocks = nil,
+				body_part = 1,
 				blocks = {
+					aim = -1,
 					heavy_hurt = -1,
 					hurt = -1,
 					walk = -1,
-					action = -1,
-					aim = -1
+					action = -1
 				}
 			}
 		}
 		objective = {
-			action_duration = nil,
-			action = nil,
-			followup_objective = nil,
-			nav_seg = nil,
 			follow_unit = nil,
+			scan = true,
+			action_duration = nil,
+			type = "revive",
+			action = nil,
+			nav_seg = nil,
+			followup_objective = nil,
 			destroy_clbk_key = false,
 			called = true,
-			type = "revive",
-			scan = true,
 			follow_unit = other_unit,
 			nav_seg = other_unit:movement():nav_tracker():nav_segment(),
 			action = {
+				variant = nil,
+				body_part = 1,
 				align_sync = true,
 				type = "act",
 				blocks = nil,
-				variant = nil,
-				body_part = 1,
 				variant = objective_action,
 				blocks = {
+					light_hurt = -1,
+					aim = -1,
 					heavy_hurt = -1,
 					hurt = -1,
 					walk = -1,
-					action = -1,
-					light_hurt = -1,
-					aim = -1
+					action = -1
 				}
 			},
 			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
@@ -590,10 +590,10 @@ function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_a
 
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
-			align_sync = true,
 			variant = nil,
 			type = "act",
 			body_part = 3,
+			align_sync = true,
 			variant = act_name
 		}
 
@@ -979,10 +979,10 @@ function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, pl
 
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
-			align_sync = true,
 			variant = "arrest",
 			type = "act",
-			body_part = 3
+			body_part = 3,
+			align_sync = true
 		}
 
 		if criminal:brain():action_request(new_action) then

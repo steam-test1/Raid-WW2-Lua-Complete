@@ -588,8 +588,8 @@ function WorldDefinition:parse_continents(node, t)
 				local path = self:world_dir() .. name .. "/" .. name
 				local pkg_key = self:next_key()
 				self._package_load_params[pkg_key] = {
-					name = nil,
 					pkg = nil,
+					name = nil,
 					name = name,
 					pkg = path
 				}
@@ -1266,9 +1266,9 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
-					effect = nil,
 					position = nil,
 					rotation = nil,
+					effect = nil,
 					effect = name,
 					position = unit_effect.position,
 					rotation = unit_effect.rotation
@@ -1486,8 +1486,8 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 
 	if Network:is_server() and need_sync then
 		table.insert(self._units_synced_on_dropin, {
-			editor_id = nil,
 			unit_id = nil,
+			editor_id = nil,
 			unit_id = unit:id(),
 			editor_id = unit:editor_id()
 		})
@@ -2103,8 +2103,8 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 	end
 
 	local params = {
-		init_pkg = nil,
 		key = nil,
+		init_pkg = nil,
 		dep_pkg = nil,
 		key = key,
 		dep_pkg = dep_pkg,
@@ -2179,8 +2179,8 @@ end
 function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
 	table.insert(self._temp_units_synced, {
 		unit_id = nil,
-		dropin = true,
 		synced_editor_id = nil,
+		dropin = true,
 		synced_editor_id = editor_id,
 		unit_id = unit_id
 	})

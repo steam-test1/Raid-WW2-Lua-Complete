@@ -40,11 +40,11 @@ function CoreVisualFXCutsceneKey:play(player, undo, fast_forward)
 		local effect_manager = World:effect_manager()
 		local parent_object = self:_unit_object(self:unit_name(), self:object_name(), true)
 		local effect_id = effect_manager:spawn({
-			parent = nil,
-			force_synch = nil,
 			position = nil,
+			parent = nil,
 			effect = nil,
 			rotation = nil,
+			force_synch = nil,
 			effect = self:effect(),
 			parent = parent_object,
 			position = self:offset(),

@@ -116,8 +116,8 @@ end
 function LootDropTweakData:_init_card_packs()
 	self.card_packs = {
 		regular = {
-			pack_type = nil,
 			reward_type = nil,
+			pack_type = nil,
 			reward_type = LootDropTweakData.REWARD_CARD_PACK,
 			pack_type = ChallengeCardsTweakData.PACK_TYPE_REGULAR
 		}
@@ -127,26 +127,26 @@ end
 function LootDropTweakData:_init_customization_rewards()
 	self.customization_rewards = {
 		common = {
-			rarity = nil,
 			reward_type = nil,
+			rarity = nil,
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 			rarity = LootDropTweakData.RARITY_COMMON
 		},
 		uncommon = {
-			rarity = nil,
 			reward_type = nil,
+			rarity = nil,
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 			rarity = LootDropTweakData.RARITY_UNCOMMON
 		},
 		rare = {
-			rarity = nil,
 			reward_type = nil,
+			rarity = nil,
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 			rarity = LootDropTweakData.RARITY_RARE
 		},
 		halloween = {
-			rarity = nil,
 			reward_type = nil,
+			rarity = nil,
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 			rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 		}
@@ -156,51 +156,51 @@ end
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {
 		tiny_raid = {
-			gold_bars_min = 1,
 			gold_bars_max = 1,
 			reward_type = nil,
+			gold_bars_min = 1,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_raid = {
-			gold_bars_min = 2,
 			gold_bars_max = 4,
 			reward_type = nil,
+			gold_bars_min = 2,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_raid = {
-			gold_bars_min = 5,
 			gold_bars_max = 10,
 			reward_type = nil,
+			gold_bars_min = 5,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_raid = {
-			gold_bars_min = 11,
 			gold_bars_max = 15,
 			reward_type = nil,
+			gold_bars_min = 11,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		tiny_operation = {
-			gold_bars_min = 25,
 			gold_bars_max = 35,
 			reward_type = nil,
+			gold_bars_min = 25,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_operation = {
-			gold_bars_min = 35,
 			gold_bars_max = 50,
 			reward_type = nil,
+			gold_bars_min = 35,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_operation = {
-			gold_bars_min = 50,
 			gold_bars_max = 100,
 			reward_type = nil,
+			gold_bars_min = 50,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_operation = {
-			gold_bars_min = 100,
 			gold_bars_max = 200,
 			reward_type = nil,
+			gold_bars_min = 100,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		}
 	}
@@ -211,91 +211,91 @@ function LootDropTweakData:_init_categories()
 		category_xp_min = {}
 	}
 	self.loot_categories.category_xp_min[1] = {
-		chance = 100,
 		value = nil,
+		chance = 100,
 		value = self.xp_packs.tiny
 	}
 	self.loot_categories.category_xp_low = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.xp_packs.small
 		}
 	}
 	self.loot_categories.category_xp_mid = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.xp_packs.medium
 		}
 	}
 	self.loot_categories.category_xp_high = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.xp_packs.large
 		}
 	}
 	self.loot_categories.category_gold_tiny = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.tiny_raid
 		}
 	}
 	self.loot_categories.category_gold_low = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.small_raid
 		}
 	}
 	self.loot_categories.category_gold_mid = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.medium_raid
 		}
 	}
 	self.loot_categories.category_gold_high = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.large_raid
 		}
 	}
 	self.loot_categories.category_gold_tiny_operation = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.tiny_operation
 		}
 	}
 	self.loot_categories.category_gold_low_operation = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.small_operation
 		}
 	}
 	self.loot_categories.category_gold_mid_operation = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.medium_operation
 		}
 	}
 	self.loot_categories.category_gold_high_operation = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.gold_bar_rewards.large_operation
 		}
 	}
 	self.loot_categories.category_melee = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = {
 				reward_type = nil,
 				reward_type = LootDropTweakData.REWARD_MELEE_WEAPON
@@ -304,41 +304,41 @@ function LootDropTweakData:_init_categories()
 	}
 	self.loot_categories.category_cards_pack = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.card_packs.regular
 		}
 	}
 	self.loot_categories.category_cosmetics = {
 		{
-			chance = 50,
 			value = nil,
+			chance = 50,
 			value = self.customization_rewards.common
 		},
 		{
-			chance = 30,
 			value = nil,
+			chance = 30,
 			value = self.customization_rewards.uncommon
 		},
 		{
-			chance = 15,
 			value = nil,
+			chance = 15,
 			value = self.customization_rewards.rare
 		}
 	}
 	self.loot_categories.category_halloween_2017 = {
 		{
-			chance = 20,
 			value = nil,
+			chance = 20,
 			value = {
-				weapon_id = "lc14b",
 				reward_type = nil,
+				weapon_id = "lc14b",
 				reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017
 			}
 		},
 		{
-			chance = 80,
 			value = nil,
+			chance = 80,
 			value = self.customization_rewards.halloween
 		}
 	}
@@ -359,8 +359,8 @@ function LootDropTweakData:_init_groups_basic()
 	self.loot_groups_doubles_fallback.loot_group_basic = {}
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
@@ -368,8 +368,8 @@ function LootDropTweakData:_init_groups_basic()
 		value = self.loot_categories.category_xp_min
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 30,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_RAID
@@ -377,8 +377,8 @@ function LootDropTweakData:_init_groups_basic()
 		value = self.loot_categories.category_gold_tiny
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 30,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_OPERATION
@@ -393,8 +393,8 @@ function LootDropTweakData:_init_groups_bronze()
 	self.loot_groups_doubles_fallback.loot_group_bronze = {}
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 20,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
@@ -402,8 +402,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_xp_min
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 20,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
@@ -411,8 +411,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_xp_low
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 30,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_RAID
@@ -420,8 +420,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_gold_low
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_RAID
@@ -429,8 +429,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_gold_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 30,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_OPERATION
@@ -438,8 +438,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_gold_low_operation
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_OPERATION
@@ -447,8 +447,8 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_gold_mid_operation
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		chance = 5,
 		value = nil,
+		chance = 5,
 		value = self.loot_categories.category_cards_pack
 	})
 
@@ -459,8 +459,8 @@ function LootDropTweakData:_init_groups_silver()
 	self.loot_groups_doubles_fallback.loot_group_silver = {}
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 40,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
@@ -468,8 +468,8 @@ function LootDropTweakData:_init_groups_silver()
 		value = self.loot_categories.category_xp_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_RAID
@@ -477,8 +477,8 @@ function LootDropTweakData:_init_groups_silver()
 		value = self.loot_categories.category_gold_mid
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 60,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_OPERATION
@@ -486,21 +486,21 @@ function LootDropTweakData:_init_groups_silver()
 		value = self.loot_categories.category_gold_mid_operation
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		chance = 15,
 		value = nil,
+		chance = 15,
 		value = self.loot_categories.category_cards_pack
 	})
 
 	self.loot_groups.loot_group_silver = clone(self.loot_groups_doubles_fallback.loot_group_silver)
 
 	table.insert(self.loot_groups.loot_group_silver, {
-		chance = 20,
 		value = nil,
+		chance = 20,
 		value = self.loot_categories.category_melee
 	})
 	table.insert(self.loot_groups.loot_group_silver, {
-		chance = 10,
 		value = nil,
+		chance = 10,
 		value = self.loot_categories.category_cosmetics
 	})
 end
@@ -509,8 +509,8 @@ function LootDropTweakData:_init_groups_gold()
 	self.loot_groups_doubles_fallback.loot_group_gold = {}
 
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 40,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
@@ -518,8 +518,8 @@ function LootDropTweakData:_init_groups_gold()
 		value = self.loot_categories.category_xp_high
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 90,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_RAID
@@ -527,8 +527,8 @@ function LootDropTweakData:_init_groups_gold()
 		value = self.loot_categories.category_gold_high
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
-		conditions = nil,
 		value = nil,
+		conditions = nil,
 		chance = 90,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_IS_OPERATION
@@ -536,21 +536,21 @@ function LootDropTweakData:_init_groups_gold()
 		value = self.loot_categories.category_gold_high_operation
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
-		chance = 20,
 		value = nil,
+		chance = 20,
 		value = self.loot_categories.category_cards_pack
 	})
 
 	self.loot_groups.loot_group_gold = clone(self.loot_groups_doubles_fallback.loot_group_gold)
 
 	table.insert(self.loot_groups.loot_group_gold, {
-		chance = 30,
 		value = nil,
+		chance = 30,
 		value = self.loot_categories.category_melee
 	})
 	table.insert(self.loot_groups.loot_group_gold, {
-		chance = 20,
 		value = nil,
+		chance = 20,
 		value = self.loot_categories.category_cosmetics
 	})
 end
@@ -558,8 +558,8 @@ end
 function LootDropTweakData:_init_groups_challenges()
 	self.loot_groups.loot_group_halloween_2017 = {
 		{
-			chance = 100,
 			value = nil,
+			chance = 100,
 			value = self.loot_categories.category_halloween_2017
 		},
 		min_loot_value = 9999998,

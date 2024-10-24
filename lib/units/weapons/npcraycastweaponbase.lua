@@ -48,16 +48,16 @@ function NPCRaycastWeaponBase:init(unit)
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
-			parent = nil,
 			effect = nil,
+			parent = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
 	end
 
 	self._trail_effect_table = {
-		normal = nil,
 		position = nil,
+		normal = nil,
 		effect = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
@@ -110,10 +110,6 @@ function NPCRaycastWeaponBase:_setup_contours()
 			m:set_variable(idstr_contour_opacity, 0)
 		end
 	end
-end
-
-function NPCRaycastWeaponBase:get_contour_materials()
-	return self._contour_materials
 end
 
 function NPCRaycastWeaponBase:setup(setup_data)

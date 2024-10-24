@@ -23,9 +23,9 @@ end
 
 function FlashGrenade:_play_sound_and_effects()
 	World:effect_manager():spawn({
+		position = nil,
 		normal = nil,
 		effect = nil,
-		position = nil,
 		effect = tweak_data.common_effects.flash_grenade_bang,
 		position = self._unit:position(),
 		normal = self._unit:rotation():y()

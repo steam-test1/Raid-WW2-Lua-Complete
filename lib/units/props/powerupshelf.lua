@@ -28,16 +28,6 @@ function PowerupShelf:spawn_pickups()
 	end
 
 	local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(self._unit:id())
-	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
-	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
-	local difficulty_multipliers = tweak_data.drop_loot[self._tweak_table].difficulty_multipliers
-	local chances = difficulty_multipliers and difficulty_multipliers[difficulty_index] or 1
-
-	if chances < 1 then
-		chances = math.rand(chances, 1)
-	end
-
-	chances = math.clamp(chances, 0, 1)
 	local loot_locator_objs = {}
 	local locator_name = tweak_data.drop_loot[self._tweak_table].locator_name or "item_"
 
@@ -59,17 +49,12 @@ function PowerupShelf:spawn_pickups()
 		end
 	end
 
-	loot_locator_objs = table.shuffled(loot_locator_objs)
-	local a = math.ceil(#loot_locator_objs * chances)
+	for _, loot_locator in ipairs(loot_locator_objs) do
+		local drop = managers.drop_loot:drop_item(self._tweak_table, loot_locator:position(), loot_locator:rotation(), world_id)
 
-	for i = 1, a do
-		local loot_locator = table.remove(loot_locator_objs)
-
-		repeat
-			local drop = managers.drop_loot:drop_item(self._tweak_table, loot_locator:position(), loot_locator:rotation(), world_id)
-
+		if alive(drop) then
 			table.insert(self._pickups_spawned, drop)
-		until drop
+		end
 	end
 end
 

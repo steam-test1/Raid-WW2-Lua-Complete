@@ -12,11 +12,11 @@ end
 function RaidGUIControlIntelOppositeForces:_layout()
 	self._bg_image = self._object:bitmap({
 		h = nil,
+		texture = nil,
 		w = nil,
 		layer = nil,
 		y = 0,
 		x = 0,
-		texture = nil,
 		texture_rect = nil,
 		layer = self._object:layer() + 1,
 		w = tweak_data.gui.icons.intel_table_opposition_card.texture_rect[3],
@@ -25,15 +25,15 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		texture_rect = tweak_data.gui.icons.intel_table_opposition_card.texture_rect
 	})
 	self._title = self._object:text({
-		text = "",
 		x = 96,
 		color = nil,
-		h = 64,
 		w = 384,
 		layer = nil,
 		y = 96,
 		font_size = nil,
 		font = nil,
+		text = "",
+		h = 64,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -41,21 +41,21 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	})
 	local scrollable_area_description_params = {
 		h = 448,
+		scroll_step = 19,
 		w = 416,
 		layer = nil,
 		y = 160,
 		x = 96,
 		name = "scrollable_area_description",
-		scroll_step = 19,
 		scrollbar_width = 10,
 		layer = self._object:layer() + 2
 	}
 	self._scrollable_area_description = self._object:scrollable_area(scrollable_area_description_params)
 	local content_panel_params = {
+		y = 0,
 		x = 0,
 		w = 384,
 		layer = nil,
-		y = 0,
 		layer = self._object:layer() + 2
 	}
 	self._content_panel = self._scrollable_area_description:get_panel():panel(content_panel_params)
@@ -63,26 +63,26 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._scrollable_area_description:setup_scroll_area()
 
 	self._description = self._content_panel:text({
-		text = "",
-		wrap = true,
 		x = 0,
-		color = nil,
+		wrap = true,
 		w = 380,
 		layer = nil,
 		y = 0,
 		font_size = nil,
+		color = nil,
 		font = nil,
+		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.chat_border
 	})
 	local image_viewer_params = {
-		h = 480,
-		w = 320,
+		visible = true,
 		y = 128,
-		x = 576,
-		visible = true
+		w = 320,
+		h = 480,
+		x = 576
 	}
 	self._image_viewer = self._object:create_custom_control(RaidGUIControlImageViewer, image_viewer_params)
 end

@@ -43,11 +43,11 @@ end
 function HUDSpecialInteractionRoulette:_create_pointer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.POINTER_GUI_ID)
 	self._pointer_texture = self._object:bitmap({
-		layer = nil,
 		valign = "center",
 		color = nil,
 		texture_rect = nil,
 		texture = nil,
+		layer = nil,
 		name = "special_interaction_pointer_texture",
 		halign = "center",
 		texture = gui_data.texture,
@@ -63,13 +63,13 @@ end
 function HUDSpecialInteractionRoulette:_create_timer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.TIMER_GUI_ID)
 	self._timer = CircleBitmapGuiObject:new(self._object, {
-		total = nil,
 		sides = nil,
-		color = nil,
-		image = nil,
 		radius = 128,
+		image = nil,
+		color = nil,
 		layer = nil,
 		use_bg = false,
+		total = nil,
 		image = gui_data.texture,
 		color = gui_data.color,
 		sides = self._sides,
@@ -83,14 +83,14 @@ end
 function HUDSpecialInteractionRoulette:_create_wheel()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.WHEEL_GUI_ID)
 	local circle = self._object:bitmap({
-		rotation = nil,
 		valign = "center",
 		color = nil,
 		texture_rect = nil,
 		texture = nil,
-		layer = nil,
+		rotation = nil,
 		name = "special_interaction_circle_texture",
 		halign = "center",
+		layer = nil,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		color = gui_data.color,
@@ -101,9 +101,9 @@ function HUDSpecialInteractionRoulette:_create_wheel()
 	circle:set_center(self._object:center())
 
 	self._circle = {
-		valid = true,
 		completed = false,
 		circle = nil,
+		valid = true,
 		circle = circle
 	}
 end

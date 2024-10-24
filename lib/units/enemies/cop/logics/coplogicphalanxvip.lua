@@ -50,8 +50,8 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 
@@ -185,10 +185,10 @@ function CopLogicPhalanxVip.breakup(remote_call)
 		if flee_pos then
 			local flee_nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
 			local new_objective = {
+				type = "flee",
 				pos = nil,
 				attitude = "avoid",
 				nav_seg = nil,
-				type = "flee",
 				pos = flee_pos,
 				nav_seg = flee_nav_seg
 			}

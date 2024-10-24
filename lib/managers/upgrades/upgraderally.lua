@@ -28,8 +28,8 @@ local UpgradeRally = {
 			self._headshot_multiplier = nil
 
 			managers.hud:set_player_special_health({
-				total = 0,
-				current = 0
+				current = 0,
+				total = 0
 			})
 		end
 	end,
@@ -44,8 +44,8 @@ local UpgradeRally = {
 
 		self._damage_ext:set_reserved_health(self._rally_health)
 		managers.hud:set_player_special_health({
-			total = nil,
 			current = nil,
+			total = nil,
 			current = self._rally_health,
 			total = self._damage_ext:get_max_health()
 		})
@@ -63,8 +63,8 @@ local UpgradeRally = {
 			self._damage_ext:set_reserved_health(self._rally_health)
 			self._damage_ext:change_health(recovery_amount)
 			managers.hud:set_player_special_health({
-				total = nil,
 				current = nil,
+				total = nil,
 				current = self._rally_health,
 				total = self._damage_ext:get_max_health()
 			})
@@ -74,8 +74,8 @@ local UpgradeRally = {
 		self._rally_health = 0
 
 		managers.hud:set_player_special_health({
-			total = 0,
-			current = 0
+			current = 0,
+			total = 0
 		})
 
 		if self._damage_ext then

@@ -48,15 +48,15 @@ function SentryGunWeapon:_init()
 	self._muzzle_effect = Idstring(self._tweak_data.muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
 		{
-			parent = nil,
 			force_synch = false,
+			parent = nil,
 			effect = nil,
 			effect = self._muzzle_effect,
 			parent = self._effect_align[1]
 		},
 		{
-			parent = nil,
 			force_synch = false,
+			parent = nil,
 			effect = nil,
 			effect = self._muzzle_effect,
 			parent = self._effect_align[2]

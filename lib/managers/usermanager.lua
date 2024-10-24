@@ -26,14 +26,14 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
-			setting_map = nil,
-			reset_network_setting_map = nil,
-			initializing = true,
-			[""] = nil,
-			add_setting_changed_callback = nil,
 			user_map = nil,
 			setting_data_id_to_name_map = nil,
 			setting_data_map = nil,
+			setting_map = nil,
+			setting_changed = nil,
+			initializing = true,
+			has_setting_changed = nil,
+			value = nil,
 			setting_map = {},
 			setting_data_map = {},
 			setting_data_id_to_name_map = {},
@@ -167,8 +167,8 @@ function GenericUserManager:setup_setting(id, name, default_value)
 	assert(not Global.user_manager.setting_data_id_to_name_map[id], "[UserManager] Setting id \"" .. tostring(id) .. "\" already exists.")
 
 	local setting_data = {
-		id = nil,
 		default_value = nil,
+		id = nil,
 		id = id,
 		default_value = self:get_clone_value(default_value)
 	}
@@ -444,11 +444,11 @@ end
 function GenericUserManager:set_user_soft(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
 	local old_user_data = self:_get_user_data(user_index)
 	local user_data = {
+		signin_state = nil,
 		username = nil,
 		storage_id = nil,
 		platform_id = nil,
 		user_index = nil,
-		signin_state = nil,
 		user_index = user_index,
 		platform_id = platform_id,
 		storage_id = storage_id,
@@ -461,11 +461,11 @@ end
 function GenericUserManager:set_user(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
 	local old_user_data = self:_get_user_data(user_index)
 	local user_data = {
+		signin_state = nil,
 		username = nil,
 		storage_id = nil,
 		platform_id = nil,
 		user_index = nil,
-		signin_state = nil,
 		user_index = user_index,
 		platform_id = platform_id,
 		storage_id = storage_id,
@@ -730,8 +730,8 @@ function GenericUserManager:confirm_select_user_callback(callback_func, success)
 
 	if success then
 		managers.system_menu:show_select_user({
-			count = 1,
 			callback_func = nil,
+			count = 1,
 			callback_func = callback(self, self, "select_user_callback", callback_func)
 		})
 	elseif callback_func then
@@ -776,10 +776,10 @@ function GenericUserManager:check_storage(callback_func, auto_select)
 		end
 
 		managers.system_menu:show_select_storage({
-			callback_func = nil,
 			min_bytes = nil,
 			count = 1,
 			auto_select = nil,
+			callback_func = nil,
 			min_bytes = managers.savefile.RESERVED_BYTES,
 			callback_func = wrapped_callback_func,
 			auto_select = auto_select

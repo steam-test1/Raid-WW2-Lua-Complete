@@ -1,14 +1,14 @@
 TextBoxGui = TextBoxGui or class()
 TextBoxGui.PRESETS = {
 	system_menu = {
-		h = 270,
-		w = 800
+		w = 800,
+		h = 270
 	},
 	weapon_stats = {
+		bottom = 620,
 		h = 270,
 		w = 700,
-		x = 60,
-		bottom = 620
+		x = 60
 	}
 }
 
@@ -58,11 +58,11 @@ function TextBoxGui:add_background()
 
 	self._fullscreen_ws = Overlay:gui():create_screen_workspace()
 	self._background = self._fullscreen_ws:panel():rect({
+		h = nil,
 		color = nil,
 		w = nil,
 		name = "bg",
 		valign = "grow",
-		h = nil,
 		alpha = 0,
 		layer = 0,
 		color = Color.black,
@@ -143,13 +143,13 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._default_button = content_data.focus_button or 1
 	local main = ws:panel():panel({
 		visible = nil,
-		name = "text_box_gui_panel_main",
-		x = nil,
-		w = nil,
-		h = nil,
 		y = nil,
-		layer = nil,
+		w = nil,
+		name = "text_box_gui_panel_main",
+		h = nil,
 		valign = "center",
+		layer = nil,
+		x = nil,
 		visible = self._visible,
 		x = x,
 		y = y,
@@ -165,17 +165,17 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 		align = "center",
 		word_wrap = false,
 		wrap = false,
-		valign = "top",
-		y = 10,
 		text = nil,
+		valign = "top",
 		x = 10,
-		visible = nil,
 		layer = 1,
-		name = "title",
+		visible = nil,
 		color = nil,
-		font_size = 32,
-		w = nil,
 		font = nil,
+		name = "title",
+		y = 10,
+		w = nil,
+		font_size = 32,
 		vertical = "top",
 		text = title or "none",
 		visible = title and true or false,
@@ -195,11 +195,11 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	end
 
 	local top_line = main:bitmap({
-		color = nil,
 		texture = "core/textures/default_texture_01_df",
+		color = nil,
+		w = nil,
 		name = "top_line",
 		y = 0,
-		w = nil,
 		layer = 0,
 		color = Color.white,
 		w = main:w()
@@ -210,10 +210,10 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local bottom_line = main:bitmap({
 		texture = "core/textures/default_texture_01_df",
 		color = nil,
-		name = "bottom_line",
-		y = 100,
-		rotation = 180,
 		w = nil,
+		name = "bottom_line",
+		rotation = 180,
+		y = 100,
 		layer = 0,
 		color = Color.white,
 		w = main:w()
@@ -224,35 +224,35 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	bottom_line:hide()
 
 	local lower_static_panel = main:panel({
-		y = 0,
-		name = "text_box_gui_lower_static_panel",
-		x = 0,
 		h = 0,
+		y = 0,
 		w = nil,
+		name = "text_box_gui_lower_static_panel",
 		layer = 0,
+		x = 0,
 		w = main:w()
 	})
 
 	self:_create_lower_static_panel(lower_static_panel)
 
 	local info_area = main:panel({
-		y = 0,
-		name = "info_area",
-		x = 0,
 		h = nil,
+		y = 0,
 		w = nil,
+		name = "info_area",
 		layer = 0,
+		x = 0,
 		w = main:w(),
 		h = main:h() - th * 2
 	})
 	local buttons_panel = self:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local scroll_panel = info_area:panel({
-		y = nil,
-		name = "scroll_panel",
-		x = 10,
 		h = nil,
+		y = nil,
 		w = nil,
+		name = "scroll_panel",
 		layer = 1,
+		x = 10,
 		y = math.round(th + 15),
 		w = info_area:w() - 20,
 		h = info_area:h()
@@ -262,19 +262,19 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local text_params = {
 		halign = "center",
 		align = "center",
-		word_wrap = true,
+		w = nil,
 		wrap = true,
-		valign = "top",
-		name = "text_box_gui_text",
 		text = nil,
+		valign = "top",
+		vertical = "top",
 		layer = 1,
 		visible = nil,
 		color = nil,
-		x = nil,
-		font_size = 22,
-		w = nil,
 		font = nil,
-		vertical = "top",
+		name = "text_box_gui_text",
+		word_wrap = true,
+		font_size = 22,
+		x = nil,
 		text = utf8.to_upper(text) or "none",
 		visible = text and true or false,
 		w = scroll_panel:w() - math.round(stats_panel:w()) - (has_stats and 20 or 0),
@@ -360,12 +360,12 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local legend_minimize = main:text({
 		visible = nil,
 		layer = 1,
-		name = "text_box_gui_legend_minimize",
 		font = nil,
+		name = "text_box_gui_legend_minimize",
 		font_size = nil,
+		valign = "top",
 		halign = "left",
 		text = "MINIMIZE",
-		valign = "top",
 		visible = use_minimize_legend,
 		font = tweak_data.gui.font_paths.din_compressed[32],
 		font_size = tweak_data.gui.font_sizes.size_32
@@ -379,12 +379,12 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local legend_close = main:text({
 		visible = nil,
 		layer = 1,
-		name = "text_box_gui_legend_close",
 		font = nil,
+		name = "text_box_gui_legend_close",
 		font_size = nil,
+		valign = "top",
 		halign = "left",
 		text = "CLOSE",
-		valign = "top",
 		visible = not no_close_legend,
 		font = tweak_data.gui.font_paths.din_compressed[32],
 		font_size = tweak_data.gui.font_sizes.size_32
@@ -410,11 +410,11 @@ end
 function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = scroll_panel:panel({
-		x = 10,
-		name = "text_box_gui_stats_panel",
+		layer = 1,
 		h = nil,
 		w = nil,
-		layer = 1,
+		name = "text_box_gui_stats_panel",
+		x = 10,
 		w = has_stats and scroll_panel:w() / 3 or 0,
 		h = scroll_panel:h()
 	})
@@ -424,46 +424,46 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 		for _, stats in ipairs(stats_list) do
 			if stats.type == "bar" then
 				local panel = stats_panel:panel({
+					y = nil,
 					h = 20,
 					w = nil,
 					layer = -1,
-					y = nil,
 					w = stats_panel:w(),
 					y = total_h
 				})
 				local bg = panel:rect({
-					color = nil,
 					layer = -1,
+					color = nil,
 					color = Color.black:with_alpha(0.5)
 				})
 				local w = (bg:w() - 4) * stats.current / stats.total
 				local progress_bar = panel:rect({
-					color = nil,
-					w = nil,
-					x = 1,
-					h = nil,
 					y = 1,
+					h = nil,
+					w = nil,
+					color = nil,
 					layer = 0,
+					x = 1,
 					w = w,
 					h = bg:h() - 2,
 					color = tweak_data.hud.prime_color:with_alpha(0.5)
 				})
 				local text = panel:text({
 					halign = "left",
-					align = "left",
-					font_size = nil,
-					text = nil,
-					valign = "center",
 					y = -1,
-					layer = 1,
-					x = 4,
-					blend_mode = "normal",
-					kern = 0,
-					name = "text_box_gui_stats_text",
-					h = nil,
 					w = nil,
-					font = nil,
+					blend_mode = "normal",
+					align = "left",
+					valign = "center",
 					vertical = "center",
+					layer = 1,
+					font_size = nil,
+					h = nil,
+					font = nil,
+					name = "text_box_gui_stats_text",
+					text = nil,
+					kern = 0,
+					x = 4,
 					text = stats.text,
 					w = panel:w(),
 					h = panel:h(),
@@ -473,18 +473,18 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 				total_h = total_h + panel:h()
 			elseif stats.type == "condition" then
 				local panel = stats_panel:panel({
+					y = nil,
 					h = 22,
 					w = nil,
-					y = nil,
 					w = stats_panel:w(),
 					y = total_h
 				})
 				local texture, rect = tweak_data.hud_icons:get_icon_data("icon_repair")
 				local icon = panel:bitmap({
 					texture = nil,
-					texture_rect = nil,
-					name = "icon",
 					color = nil,
+					name = "icon",
+					texture_rect = nil,
 					layer = 0,
 					texture = texture,
 					texture_rect = rect,
@@ -495,19 +495,19 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 
 				local text = panel:text({
 					halign = "left",
-					align = "left",
-					text = nil,
-					x = nil,
-					valign = "center",
-					blend_mode = "normal",
-					layer = 0,
 					h = nil,
-					kern = 0,
-					name = "text_box_gui_scondition_label",
-					font_size = nil,
 					w = nil,
-					font = nil,
+					blend_mode = "normal",
+					text = nil,
+					valign = "center",
 					vertical = "center",
+					layer = 0,
+					font_size = nil,
+					align = "left",
+					font = nil,
+					name = "text_box_gui_scondition_label",
+					kern = 0,
+					x = nil,
 					text = "CONDITION: " .. stats.value .. "%",
 					w = panel:w(),
 					h = panel:h(),
@@ -521,10 +521,10 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 				total_h = total_h + panel:h()
 			elseif stats.type == "empty" then
 				local panel = stats_panel:panel({
+					y = nil,
 					h = nil,
 					w = nil,
 					name = "text_box_gui_stats_empty_panel",
-					y = nil,
 					w = stats_panel:w(),
 					h = stats.h,
 					y = total_h
@@ -532,19 +532,19 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 				total_h = total_h + panel:h()
 			elseif stats.type == "mods" then
 				local panel = stats_panel:panel({
+					y = nil,
 					h = 22,
 					w = nil,
 					name = "text_box_gui_mods_panel",
-					y = nil,
 					w = stats_panel:w(),
 					y = total_h
 				})
 				local texture, rect = tweak_data.hud_icons:get_icon_data("icon_addon")
 				local icon = panel:bitmap({
 					texture = nil,
-					texture_rect = nil,
-					name = "icon",
 					color = nil,
+					name = "icon",
+					texture_rect = nil,
 					layer = 0,
 					texture = texture,
 					texture_rect = rect,
@@ -555,19 +555,19 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 
 				local text = panel:text({
 					halign = "left",
-					align = "left",
-					text = "ACTIVE MODS:",
-					x = nil,
-					valign = "center",
-					blend_mode = "normal",
-					layer = 0,
 					h = nil,
-					kern = 0,
-					name = "text_box_gui_active_mods_label",
-					font_size = nil,
 					w = nil,
-					font = nil,
+					blend_mode = "normal",
+					text = "ACTIVE MODS:",
+					valign = "center",
 					vertical = "center",
+					layer = 0,
+					font_size = nil,
+					align = "left",
+					font = nil,
+					name = "text_box_gui_active_mods_label",
+					kern = 0,
+					x = nil,
 					w = panel:w(),
 					h = panel:h(),
 					x = icon:right(),
@@ -585,20 +585,20 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 
 				local mods_text = panel:text({
 					halign = "left",
-					align = "left",
-					font_size = nil,
-					text = nil,
-					valign = "top",
 					y = nil,
-					layer = 0,
-					name = "text_box_gui_mods_text",
+					w = nil,
 					blend_mode = "normal",
+					align = "left",
+					valign = "top",
+					vertical = "top",
+					layer = 0,
+					font_size = nil,
+					h = nil,
+					font = nil,
+					name = "text_box_gui_mods_text",
+					text = nil,
 					kern = 0,
 					x = nil,
-					h = nil,
-					w = nil,
-					font = nil,
-					vertical = "top",
 					text = s,
 					w = panel:w(),
 					h = panel:h(),
@@ -618,18 +618,18 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 
 		local stats_text = stats_panel:text({
 			halign = "left",
-			align = "left",
-			word_wrap = true,
-			wrap = true,
-			valign = "top",
 			y = nil,
+			w = nil,
+			wrap = true,
+			word_wrap = true,
+			valign = "top",
 			layer = 0,
 			text = nil,
+			font_size = nil,
+			align = "left",
+			font = nil,
 			blend_mode = "normal",
 			kern = 0,
-			font_size = nil,
-			w = nil,
-			font = nil,
 			vertical = "top",
 			text = stats_text or "Nunc vel diam vel neque sodales gravida et ac quam. Phasellus egestas, arcu in tristique mattis, velit nisi tincidunt lorem, bibendum molestie nunc purus id turpis. Donec sagittis nibh in eros ultrices aliquam. Vestibulum ante mauris, mattis quis commodo a, dictum eget sapien. Maecenas eu diam lorem. Nunc dolor metus, varius sit amet rhoncus vel, iaculis sed massa. Morbi tempus mi quis dolor posuere eu commodo magna eleifend. Pellentesque sit amet mattis nunc. Nunc lectus quam, pretium sit amet consequat sed, vestibulum vitae lorem. Sed bibendum egestas turpis, sit amet viverra risus viverra in. Suspendisse aliquam dapibus urna, posuere fermentum tellus vulputate vitae.",
 			w = stats_panel:w(),
@@ -652,11 +652,11 @@ end
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
 	self._text_box_buttons_panel = info_area:panel({
-		x = 10,
-		name = "buttons_panel",
+		layer = 1,
 		h = 48,
 		w = nil,
-		layer = 1,
+		name = "buttons_panel",
+		x = 10,
 		w = has_buttons and 800 or 0
 	})
 
@@ -667,16 +667,16 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 	if has_buttons then
 		local button_text_config = {
 			halign = "right",
-			name = "button_text",
+			vertical = "center",
 			word_wrap = "true",
 			wrap = "true",
 			blend_mode = "add",
 			layer = 2,
-			color = nil,
-			x = 10,
 			font_size = nil,
+			color = nil,
 			font = nil,
-			vertical = "center",
+			name = "button_text",
+			x = 10,
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
 			color = tweak_data.screen_colors.button_stage_3
@@ -695,10 +695,10 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 				end
 
 				local button_params = {
-					name = nil,
-					font = nil,
 					x = nil,
 					y = 0,
+					font = nil,
+					name = nil,
 					text = nil,
 					name = button.id_name,
 					x = x,
@@ -740,11 +740,11 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 	local y = math.max(0, title:y() + title:h() + padding_up)
 	y = math.max(y, scroll_panel:y() + scroll_panel:h() + padding_up)
 	local textbox_panel_params = {
+		h = 0,
 		y = nil,
+		w = 433,
 		name = "textbox_panel",
 		x = 0,
-		h = 0,
-		w = 433,
 		y = y
 	}
 	local textbox_panel = info_area:panel(textbox_panel_params)
@@ -759,15 +759,15 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 
 	self._input_field = RaidGUIControlInputField:new(textbox_panel, {
 		capitalize = nil,
-		osk_title = nil,
-		text = nil,
-		osk_text = nil,
-		ws = nil,
-		name = "input_field",
-		text_changed_callback = nil,
 		h = nil,
 		w = nil,
+		osk_text = nil,
+		text = nil,
+		ws = nil,
 		font = nil,
+		name = "input_field",
+		osk_title = nil,
+		text_changed_callback = nil,
 		w = textbox_panel:w(),
 		h = textbox_panel:h(),
 		ws = self._ws,

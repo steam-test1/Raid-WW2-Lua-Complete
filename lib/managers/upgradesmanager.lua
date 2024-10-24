@@ -944,18 +944,18 @@ end
 function UpgradesManager:tree_stats()
 	local t = {
 		{
-			a = 0,
 			u = nil,
+			a = 0,
 			u = {}
 		},
 		{
-			a = 0,
 			u = nil,
+			a = 0,
 			u = {}
 		},
 		{
-			a = 0,
 			u = nil,
+			a = 0,
 			u = {}
 		}
 	}

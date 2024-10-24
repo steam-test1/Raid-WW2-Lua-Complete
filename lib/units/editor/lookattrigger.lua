@@ -41,22 +41,22 @@ function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		min = 0.01,
-		floats = 2
+		floats = 2,
+		min = 0.01
 	}, "Set the check interval for the look at, in seconds")
 
 	local sensitivity_params = {
-		min = 0.5,
-		floats = 3,
-		ctrlr_proportions = 2,
-		name_proportions = 1,
 		max = 0.999,
 		value = nil,
 		sizer = nil,
-		panel = nil,
+		ctrlr_proportions = 2,
 		name = "Sensitivity:",
-		slider_ctrlr_proportions = 3,
+		min = 0.5,
+		floats = 3,
 		number_ctrlr_proportions = 1,
+		slider_ctrlr_proportions = 3,
+		panel = nil,
+		name_proportions = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.sensitivity
@@ -84,8 +84,8 @@ function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = sensitivity_params.number_ctrlr
 	})
 	self:_build_value_number(panel, panel_sizer, "distance", {
-		min = 0,
-		floats = 2
+		floats = 2,
+		min = 0
 	}, "(Optional) Sets a distance to use with the check (in meters)")
 	self:_build_value_checkbox(panel, panel_sizer, "in_front", "Only in front")
 	self:_build_value_checkbox(panel, panel_sizer, "raycheck", "Check visible with raycast")

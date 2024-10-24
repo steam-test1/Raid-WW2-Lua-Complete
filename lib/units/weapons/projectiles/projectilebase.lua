@@ -111,19 +111,20 @@ function ProjectileBase:throw(params)
 	local adjust_z = 50
 	local launch_speed = 250
 	local push_at_body_index = nil
+	local tweak_entry = params.projectile_entry and tweak_data.projectiles[type(params.projectile_entry) == "number" and tweak_data.blackmarket:get_projectile_name_from_index(params.projectile_entry) or params.projectile_entry]
 
-	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
-		adjust_z = tweak_data.projectiles[params.projectile_entry].adjust_z or adjust_z
+	if tweak_entry then
+		adjust_z = tweak_entry.adjust_z or adjust_z
 
-		if tweak_data.projectiles[params.projectile_entry].adjust_z_range then
-			local adjust_z_range = tweak_data.projectiles[params.projectile_entry].adjust_z_range
+		if tweak_entry.adjust_z_range then
+			local adjust_z_range = tweak_entry.adjust_z_range
 			adjust_z = math.rand(adjust_z_range[1], adjust_z_range[2])
 		end
 
-		local context_adjust_z = tweak_data.projectiles[params.projectile_entry].context_adjust_z or 0
+		local context_adjust_z = tweak_entry.context_adjust_z or 0
 		adjust_z = adjust_z + context_adjust_z
-		launch_speed = tweak_data.projectiles[params.projectile_entry].launch_speed or launch_speed
-		push_at_body_index = tweak_data.projectiles[params.projectile_entry].push_at_body_index
+		launch_speed = tweak_entry.launch_speed or launch_speed
+		push_at_body_index = tweak_entry.push_at_body_index
 	end
 
 	velocity = velocity * launch_speed
@@ -141,8 +142,7 @@ function ProjectileBase:throw(params)
 		self._velocity = velocity
 	end
 
-	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
-		local tweak_entry = tweak_data.projectiles[params.projectile_entry]
+	if tweak_entry then
 		local physic_effect = tweak_entry.physic_effect
 
 		if physic_effect then
@@ -283,6 +283,11 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	local tweak_entry = tweak_data.projectiles[projectile_entry]
 	local unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.local_unit)
 	local rot_dir = tweak_entry.context_rot_dir or math.UP
+
+	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE) then
+		managers.dyn_resource:load(IDS_UNIT, unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE)
+	end
+
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
 
 	managers.game_play_central:add_spawned_projectiles(unit)

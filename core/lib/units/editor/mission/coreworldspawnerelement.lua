@@ -124,15 +124,15 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	h_sizer:add(world_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
+		value = nil,
+		tooltip = "Select an event from the combobox",
 		panel = nil,
 		options = nil,
 		sizer = nil,
-		value = nil,
 		sorted = true,
 		sizer_proportions = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 0,
-		tooltip = "Select an event from the combobox",
 		panel = panel,
 		sizer = h_sizer,
 		options = events,
@@ -145,11 +145,11 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	toolbar:connect("SELECT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "remove_entry"), event_list_data)
 	toolbar:realize()
 	table.insert(self._guis, {
+		toolbar = nil,
 		world_name = nil,
 		event = nil,
 		name_ctrlr = nil,
 		world_name_ctrlr = nil,
-		toolbar = nil,
 		world_name_ctrlr = world_name_ctrlr,
 		world_name = world_name,
 		event = event,

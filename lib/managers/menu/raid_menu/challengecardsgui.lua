@@ -280,11 +280,12 @@ function ChallengeCardsGui:_layout()
 	self._continue_without_a_card_button:set_right(self._phase_two_panel:right())
 
 	self._filter_type = managers.raid_job:current_job_type()
+	local rm_head = self._node.components.raid_menu_header
 
-	if self._filter_type == OperationsTweakData.JOB_TYPE_RAID then
-		self._node.components.raid_menu_header:set_screen_name("menu_challenge_cards_suggest_raid_title")
-	elseif self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		self._node.components.raid_menu_header:set_screen_name("menu_challenge_cards_suggest_operation_title")
+	if self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
+	else
+		rm_head:set_screen_name("menu_challenge_cards_suggest_raid_title")
 	end
 
 	self:suggestions_changed()
@@ -298,10 +299,10 @@ function ChallengeCardsGui:_layout()
 			h = 36,
 			w = nil,
 			text = nil,
-			x = 0,
+			align = "center",
 			font_size = nil,
 			font = nil,
-			align = "center",
+			x = 0,
 			name = "client_waiting_message",
 			y = self._phase_two_activate_button:y() - 48,
 			w = self._phase_two_panel:w(),
@@ -325,11 +326,9 @@ function ChallengeCardsGui:_layout()
 			h = 60,
 			w = 200,
 			text = "",
-			font = nil,
 			visible = true,
 			font_size = nil,
-			y = 0,
-			x = 0,
+			font = nil,
 			name = "timer_label",
 			color = nil,
 			color = tweak_data.gui.colors.raid_white,
@@ -345,8 +344,8 @@ function ChallengeCardsGui:_layout()
 			w = 34,
 			h = 34,
 			name = "timer_icon",
-			texture = nil,
 			texture_rect = nil,
+			texture = nil,
 			texture = tweak_data.gui.icons.ico_time.texture,
 			texture_rect = tweak_data.gui.icons.ico_time.texture_rect
 		})
@@ -365,12 +364,13 @@ end
 
 function ChallengeCardsGui:_setup_single_player()
 	self._is_single_player = managers.network:session():count_all_peers() == 1
-	self._suggest_button_string_id = "menu_suggest_card_buton"
-	self._disabled_suggest_button_string_id = "menu_suggested"
 
 	if self._is_single_player then
 		self._suggest_button_string_id = "menu_select_card_buton"
 		self._disabled_suggest_button_string_id = "menu_selected"
+	else
+		self._suggest_button_string_id = "menu_suggest_card_buton"
+		self._disabled_suggest_button_string_id = "menu_suggested"
 	end
 
 	self._suggest_card_button:set_text(self:translate(self._suggest_button_string_id, true))
@@ -390,9 +390,9 @@ function ChallengeCardsGui:sync_host_selects_suggested_card(card_key_name, peer_
 		self._host_selected_card = nil
 	else
 		self._host_selected_card = {
-			peer_id = nil,
 			key_name = nil,
 			steam_instance_id = nil,
+			peer_id = nil,
 			key_name = card_key_name,
 			peer_id = peer_id,
 			steam_instance_id = steam_instance_id

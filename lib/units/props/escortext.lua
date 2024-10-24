@@ -27,8 +27,8 @@ function EscortExt:set_logic()
 
 	if not self._unit:brain():objective() or self._unit:brain():objective().type ~= "escort" then
 		self._unit:brain():set_objective({
-			allow_cool = true,
-			type = "escort"
+			type = "escort",
+			allow_cool = true
 		})
 	end
 end
@@ -41,12 +41,12 @@ end
 function EscortExt:_setup_health_bar()
 	self._health_panel = self._ws:panel():panel({})
 	self._health_bar_bg = self._health_panel:bitmap({
-		texture_rect = nil,
-		name = "bg",
-		layer = -1,
 		halign = "center",
 		texture = nil,
 		valign = "center",
+		name = "bg",
+		texture_rect = nil,
+		layer = -1,
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture_rect
 	})
@@ -58,10 +58,10 @@ function EscortExt:_setup_health_bar()
 	self._health_bar_bg:set_center_y(self._health_panel:h() / 2)
 
 	self._health_bar = self._health_panel:rect({
-		name = "fg",
 		h = nil,
 		w = nil,
 		color = nil,
+		name = "fg",
 		w = self._health_bar_bg:w() - 2,
 		h = self._health_bar_bg:h() - 2,
 		color = tweak_data.gui.colors.progress_75
@@ -117,20 +117,20 @@ function EscortExt:add_waypoint()
 	self._position = self._unit:position() + self._wp_offset
 	self._rotation = self._unit:rotation()
 	self._waypoint_data = {
-		waypoint_type = "unit_waypoint",
-		map_icon = "waypoint_escort_crouch",
-		position = nil,
-		icon = "waypoint_escort_crouch",
-		show_on_screen = true,
-		rotation = nil,
-		distance = true,
-		unit = nil,
-		color = nil,
-		blend_mode = "add",
 		waypoint_color = nil,
 		radius = 200,
 		present_timer = 0,
 		no_sync = true,
+		unit = nil,
+		waypoint_type = "unit_waypoint",
+		map_icon = "waypoint_escort_crouch",
+		show_on_screen = true,
+		icon = "waypoint_escort_crouch",
+		distance = true,
+		rotation = nil,
+		position = nil,
+		color = nil,
+		blend_mode = "add",
 		unit = self._unit,
 		position = self._position,
 		rotation = self._rotation,

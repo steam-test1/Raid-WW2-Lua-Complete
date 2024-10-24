@@ -23,12 +23,12 @@ function InventoryGenerator.next_defid(category, defid_list)
 
 	if category then
 		local categories = {
+			weapon_skins = 100000,
+			drills = 70000,
 			safes = 50000,
 			bundles = 30000,
 			contents = 10000,
-			gameplay = 1,
-			weapon_skins = 100000,
-			drills = 70000
+			gameplay = 1
 		}
 
 		if categories[category] then
@@ -162,11 +162,11 @@ function InventoryGenerator._items_content(safe_items, contains)
 					for quality, _ in pairs(tweak_data.economy.qualities) do
 						id = InventoryGenerator._create_id(category, entry, quality, false)
 						safe_items[id] = {
+							category = nil,
 							quality = nil,
 							data = nil,
 							entry = nil,
 							bonus = false,
-							category = nil,
 							category = category,
 							entry = entry,
 							quality = quality,
@@ -177,11 +177,11 @@ function InventoryGenerator._items_content(safe_items, contains)
 					for quality, _ in pairs(tweak_data.economy.qualities) do
 						id = InventoryGenerator._create_id(category, entry, quality, true)
 						safe_items[id] = {
+							category = nil,
 							quality = nil,
 							data = nil,
 							entry = nil,
 							bonus = true,
-							category = nil,
 							category = category,
 							entry = entry,
 							quality = quality,
@@ -191,9 +191,9 @@ function InventoryGenerator._items_content(safe_items, contains)
 				else
 					id = InventoryGenerator._create_id(category, entry)
 					safe_items[id] = {
-						data = nil,
 						entry = nil,
 						category = nil,
+						data = nil,
 						category = category,
 						entry = entry,
 						data = item_data
@@ -207,10 +207,10 @@ end
 function InventoryGenerator._items_add(category, entry, def_id, content_data, safe_items, unique_def_ids)
 	local id = InventoryGenerator._create_id(category, entry)
 	safe_items[id] = {
-		def_id = nil,
-		data = nil,
 		entry = nil,
 		category = nil,
+		def_id = nil,
+		data = nil,
 		entry = entry,
 		category = category,
 		def_id = def_id,
@@ -286,12 +286,12 @@ function InventoryGenerator._probability_list(content, item_list)
 					id = InventoryGenerator._create_id(category, entry, quality, false)
 
 					table.insert(probability_list, {
+						category = nil,
 						quality = nil,
 						weight = nil,
-						entry = nil,
 						bonus = false,
+						entry = nil,
 						id = nil,
-						category = nil,
 						id = id,
 						category = category,
 						entry = entry,
@@ -304,12 +304,12 @@ function InventoryGenerator._probability_list(content, item_list)
 					id = InventoryGenerator._create_id(category, entry, quality, true)
 
 					table.insert(probability_list, {
+						category = nil,
 						quality = nil,
 						weight = nil,
-						entry = nil,
 						bonus = true,
+						entry = nil,
 						id = nil,
-						category = nil,
 						id = id,
 						category = category,
 						entry = entry,
@@ -321,10 +321,10 @@ function InventoryGenerator._probability_list(content, item_list)
 				id = InventoryGenerator._create_id(category, entry)
 
 				table.insert(probability_list, {
-					id = nil,
-					weight = nil,
 					entry = nil,
 					category = nil,
+					id = nil,
+					weight = nil,
 					id = id,
 					category = category,
 					entry = entry,
@@ -665,11 +665,11 @@ function InventoryGenerator._fill_defids(list, json_path)
 
 				defid_list[def_id] = true
 				defid_data[id] = {
+					def_id = nil,
 					quality = nil,
+					category = nil,
 					entry = nil,
 					bonus = nil,
-					def_id = nil,
-					category = nil,
 					category = item.item_slot,
 					entry = item.item_name,
 					quality = item.dsl_quality,
@@ -703,11 +703,11 @@ function InventoryGenerator._fill_defids_OLD(list, json_path)
 
 				defid_list[def_id] = true
 				defid_data[id] = {
+					def_id = nil,
 					quality = nil,
+					category = nil,
 					entry = nil,
 					bonus = nil,
-					def_id = nil,
-					category = nil,
 					category = item.item_slot,
 					entry = item.item_name,
 					quality = item.dsl_quality,

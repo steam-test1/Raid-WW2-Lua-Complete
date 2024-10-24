@@ -52,11 +52,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link({
+				r = 0.75,
+				to_unit = nil,
 				from_unit = nil,
 				b = 0,
 				g = 0,
-				r = 0.75,
-				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -70,11 +70,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(unit) then
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
+						r = 0,
+						to_unit = nil,
 						from_unit = nil,
 						b = 0.75,
 						g = 0.5,
-						r = 0,
-						to_unit = nil,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -96,11 +96,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
+					r = nil,
+					to_unit = nil,
 					from_unit = nil,
 					b = nil,
 					g = nil,
-					r = nil,
-					to_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -119,11 +119,11 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
+					r = nil,
+					to_unit = nil,
 					from_unit = nil,
 					b = nil,
 					g = nil,
-					r = nil,
-					to_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -310,9 +310,9 @@ end
 
 function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
-		height = nil,
 		depth = nil,
 		width = nil,
+		height = nil,
 		width = self._hed.width,
 		depth = self._hed.depth,
 		height = self._hed.height
@@ -490,32 +490,32 @@ function CoreAreaTriggerUnitElement:scale_slider(panel, sizer, number_ctrlr_para
 
 	slider_sizer:add(slider, 2, 0, "EXPAND")
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_size"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_size"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "size_release"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBRELEASE", callback(self, self, "size_release"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		number_ctrlr_params = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
@@ -592,11 +592,11 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0.75,
+				to_unit = nil,
 				from_unit = nil,
 				b = 0.25,
 				g = 0.75,
-				r = 0.75,
-				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -647,9 +647,9 @@ function CoreAreaOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 	CoreAreaTriggerUnitElement.create_values_ctrlrs(self, panel, panel_sizer, {
+		trigger_type = true,
 		amount = true,
-		instigator = true,
-		trigger_type = true
+		instigator = true
 	})
 	panel_sizer:add(EWS:StaticLine(panel, "", "LI_HORIZONTAL"), 0, 5, "EXPAND,TOP,BOTTOM")
 	self:_build_value_combobox(panel, panel_sizer, "operation", {

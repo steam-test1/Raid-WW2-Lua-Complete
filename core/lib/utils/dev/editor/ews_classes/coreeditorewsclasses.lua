@@ -143,72 +143,72 @@ function UnitList:init()
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		state = "ascending",
-		value = "name"
+		value = "name",
+		state = "ascending"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "amount"
+		value = "amount",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "memory"
+		value = "memory",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "models"
+		value = "models",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_bodies"
+		value = "nr_bodies",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "slot"
+		value = "slot",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "mass"
+		value = "mass",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_textures"
+		value = "nr_textures",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_materials"
+		value = "nr_materials",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "vertices_per_tris"
+		value = "vertices_per_tris",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "instanced"
+		value = "instanced",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "author"
+		value = "author",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "unit_filename"
+		value = "unit_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "model_filename"
+		value = "model_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "diesel_filename"
+		value = "diesel_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "material_filename"
+		value = "material_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "last_exported_from"
+		value = "last_exported_from",
+		state = "random"
 	})
 	panel_sizer:add(self._list, 2, 0, "EXPAND,TOP,BOTTOM")
 
@@ -1415,8 +1415,8 @@ function ReplaceUnit:init(name, types)
 	units:thaw()
 	unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
 		names = nil,
-		filter = nil,
 		units = nil,
+		filter = nil,
 		filter = unit_filter,
 		units = units,
 		names = unit_names
@@ -1447,8 +1447,8 @@ function ReplaceUnit:init(name, types)
 		units:thaw()
 		unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
 			names = nil,
-			filter = nil,
 			units = nil,
+			filter = nil,
 			filter = unit_filter,
 			units = units,
 			names = names
@@ -1570,8 +1570,8 @@ function LayerReplaceUnit:init(layer)
 	self:update_list()
 	self._panel_sizer:add(self._units, 1, 0, "EXPAND")
 	self._units:connect("EVT_COMMAND_LISTBOX_DOUBLECLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = false,
+		units = nil,
 		units = self._units
 	})
 	self._units:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1582,8 +1582,8 @@ function LayerReplaceUnit:init(layer)
 	local replace_btn = EWS:Button(self._panel, "Replace", "", "")
 
 	replace_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = false,
+		units = nil,
 		units = self._units
 	})
 	replace_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1592,8 +1592,8 @@ function LayerReplaceUnit:init(layer)
 	local replace_all_btn = EWS:Button(self._panel, "Replace All", "", "")
 
 	replace_all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = true,
+		units = nil,
 		units = self._units
 	})
 	replace_all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1811,16 +1811,16 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = nil,
 		ctrl = nil,
+		step = 0.1,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = nil,
 		ctrl = nil,
+		step = -0.1,
 		ctrl = c,
 		coor = coor
 	})
@@ -1977,16 +1977,16 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = nil,
 		ctrl = nil,
+		step = 0.1,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = nil,
 		ctrl = nil,
+		step = -0.1,
 		ctrl = c,
 		coor = coor
 	})
@@ -2147,16 +2147,16 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = nil,
 		ctrl = nil,
+		step = 0.1,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = nil,
 		ctrl = nil,
+		step = -0.1,
 		ctrl = c,
 		coor = coor
 	})
@@ -2334,16 +2334,16 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_rotation_spin"), {
-			step = 1,
 			coor = nil,
 			ctrl = nil,
+			step = 1,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_rotation_spin"), {
-			step = -1,
 			coor = nil,
 			ctrl = nil,
+			step = -1,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2362,16 +2362,16 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_position_spin"), {
-			step = 10,
 			coor = nil,
 			ctrl = nil,
+			step = 10,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_position_spin"), {
-			step = -10,
 			coor = nil,
 			ctrl = nil,
+			step = -10,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2734,9 +2734,9 @@ function UnitDuality:build_collision(collision)
 	local del1 = EWS:Button(panel, "Del", "", "")
 
 	del1:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
+		text = nil,
 		panel = nil,
 		unit = nil,
-		text = nil,
 		unit = u1,
 		panel = panel,
 		text = text1
@@ -2750,9 +2750,9 @@ function UnitDuality:build_collision(collision)
 	local del2 = EWS:Button(panel, "Del", "", "")
 
 	del2:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
+		text = nil,
 		panel = nil,
 		unit = nil,
-		text = nil,
 		unit = u2,
 		panel = panel,
 		text = text2
@@ -2811,12 +2811,12 @@ function BrushLayerDebug:init(...)
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		state = "ascending",
-		value = "name"
+		value = "name",
+		state = "ascending"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "amount"
+		value = "amount",
+		state = "random"
 	})
 
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")
@@ -2893,8 +2893,8 @@ function BrushLayerDebug:fill_unit_list()
 
 		self._unit_list:set_item(i, 1, "" .. stats.amount)
 		self._unit_list:set_item_data(i, {
-			name = nil,
 			amount = nil,
+			name = nil,
 			name = stats.unit_name:s(),
 			amount = stats.amount
 		})

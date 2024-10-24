@@ -83,11 +83,11 @@ function MenuNodeGui:_setup_panels(node)
 	local safe_rect_pixels = self:_scaled_size()
 	local res = RenderSettings.resolution
 	self._topic_panel2 = self.ws:panel():panel({
+		y = nil,
+		visible = nil,
+		x = nil,
 		h = nil,
 		w = nil,
-		x = nil,
-		visible = nil,
-		y = nil,
 		visible = not self._no_menu_wrapper,
 		x = safe_rect_pixels.x,
 		y = safe_rect_pixels.y,
@@ -95,17 +95,17 @@ function MenuNodeGui:_setup_panels(node)
 		h = tweak_data.load_level.upper_saferect_border
 	})
 	self._topic_text2 = self._topic_panel2:text({
-		y = 0,
 		x = 0,
-		color = nil,
-		layer = nil,
+		y = 0,
 		text = nil,
+		color = nil,
 		align = "right",
 		font = nil,
 		valign = "bottom",
 		w = nil,
 		vertical = "bottom",
 		halign = "right",
+		layer = nil,
 		font_size = nil,
 		text = node:parameters().topic_id and managers.localization:text(node:parameters().topic_id) or "Topic",
 		w = safe_rect_pixels.width,
@@ -126,13 +126,13 @@ function MenuNodeGui:_setup_panels(node)
 	local height = 15
 	local aw = safe_rect_pixels.width - self:_mid_align()
 	self._info_bg_rect = self.safe_rect_panel:rect({
-		h = nil,
-		w = nil,
-		x = 0,
+		y = nil,
 		visible = false,
 		color = nil,
-		y = nil,
+		x = 0,
 		layer = nil,
+		h = nil,
+		w = nil,
 		y = tweak_data.load_level.upper_saferect_border,
 		w = safe_rect_pixels.width * 0.41,
 		h = safe_rect_pixels.height - tweak_data.load_level.upper_saferect_border * 2,
@@ -143,19 +143,19 @@ function MenuNodeGui:_setup_panels(node)
 	self:_create_legends(node)
 
 	local mini_info = self.safe_rect_panel:panel({
-		h = 0,
-		w = 0,
 		y = 0,
-		x = 0
+		x = 0,
+		h = 0,
+		w = 0
 	})
 	local mini_text = mini_info:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = "",
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = "",
 		y = 0,
 		halign = "top",
 		word_wrap = true,
@@ -193,11 +193,11 @@ function MenuNodeGui:_create_legends(node)
 	local visible = not managers.menu:is_pc_controller()
 	local is_pc = managers.menu:is_pc_controller()
 	self._legends_panel = self.ws:panel():panel({
+		y = nil,
+		visible = nil,
+		x = nil,
 		h = nil,
 		w = nil,
-		x = nil,
-		visible = nil,
-		y = nil,
 		visible = visible,
 		x = safe_rect_pixels.x,
 		y = safe_rect_pixels.y,
@@ -220,8 +220,8 @@ function MenuNodeGui:_create_legends(node)
 			has_pc_legend = has_pc_legend or legend.pc
 			local spacing = i > 1 and "  |  " or ""
 			t_text = t_text .. spacing .. utf8.to_upper(managers.localization:text(legend.string_id, {
-				BTN_BACK = nil,
 				BTN_UPDATE = nil,
+				BTN_BACK = nil,
 				BTN_UPDATE = managers.localization:btn_macro("menu_update"),
 				BTN_BACK = managers.localization:btn_macro("back")
 			}))
@@ -233,10 +233,10 @@ function MenuNodeGui:_create_legends(node)
 	end
 
 	local text = self._legends_panel:text({
-		font_size = nil,
 		text = nil,
-		layer = nil,
+		font_size = nil,
 		color = nil,
+		layer = nil,
 		font = nil,
 		text = t_text,
 		font = tweak_data.gui.font_paths.din_compressed[20],
@@ -253,11 +253,11 @@ end
 function MenuNodeGui:_create_align(node)
 	self._align_data = {
 		panel = self._item_panel_parent:panel({
-			h = nil,
-			w = nil,
 			x = nil,
 			y = 0,
 			layer = nil,
+			h = nil,
+			w = nil,
 			x = self:_left_align(),
 			w = self._align_line_padding * 2,
 			h = self._item_panel_parent:h(),
@@ -269,11 +269,11 @@ end
 function MenuNodeGui:_create_marker(node)
 	self._marker_data = {
 		marker = self.item_panel:panel({
-			h = 10,
-			w = 1920,
 			x = 0,
 			y = 0,
 			layer = nil,
+			h = 10,
+			w = 1920,
 			layer = self.layers.marker
 		})
 	}
@@ -335,12 +335,12 @@ function MenuNodeGui:_setup_item_panel(safe_rect, res)
 		local bg_width = self:_get_node_background_width()
 
 		self.item_panel:rect({
-			valign = "scale",
 			alpha = 0,
 			halign = "scale",
 			color = nil,
 			name = "bg_color",
 			width = nil,
+			valign = "scale",
 			color = Color.black,
 			width = bg_width
 		})
@@ -381,16 +381,16 @@ function MenuNodeGui:_create_menu_item(row_item)
 		self:gui_node_custom(row_item)
 	elseif row_item.item:parameters().back then
 		row_item.gui_panel = self._item_panel_parent:panel({
+			layer = nil,
 			h = 30,
 			w = 30,
-			layer = nil,
 			layer = self.layers.items
 		})
 	elseif row_item.item:parameters().pd2_corner then
 		row_item.gui_panel = self._item_panel_parent:panel({
+			layer = nil,
 			h = 3,
 			w = 3,
-			layer = nil,
 			layer = self.layers.items
 		})
 		row_item.gui_pd2_panel = self.ws:panel():panel({
@@ -399,8 +399,8 @@ function MenuNodeGui:_create_menu_item(row_item)
 		})
 		local row_item_panel = managers.menu:is_pc_controller() and row_item.gui_pd2_panel or row_item.gui_panel
 		row_item.gui_text = row_item_panel:bitmap({
-			texture = "ui/main_menu/textures/debug_menu_icons",
 			texture_rect = nil,
+			texture = "ui/main_menu/textures/debug_menu_icons",
 			texture_rect = {
 				448,
 				64,
@@ -421,12 +421,12 @@ function MenuNodeGui:_create_menu_item(row_item)
 		row_item.gui_panel:set_text(utf8.to_upper(row_item.gui_panel:text()))
 
 		row_item.gui_level_panel = self._item_panel_parent:panel({
+			y = 0,
+			visible = false,
+			x = 0,
+			layer = nil,
 			h = nil,
 			w = nil,
-			x = 0,
-			visible = false,
-			y = 0,
-			layer = nil,
 			layer = self.layers.items,
 			w = self:_left_align(),
 			h = self._item_panel_parent:h()
@@ -435,9 +435,9 @@ function MenuNodeGui:_create_menu_item(row_item)
 		level_data = tweak_data.levels[level_data]
 		local description = level_data and level_data.briefing_id and managers.localization:text(level_data.briefing_id) or "Missing description text"
 		row_item.level_title = row_item.gui_level_panel:text({
-			color = nil,
 			font_size = nil,
 			text = nil,
+			color = nil,
 			align = "left",
 			font = nil,
 			h = 128,
@@ -452,9 +452,9 @@ function MenuNodeGui:_create_menu_item(row_item)
 			color = row_item.color
 		})
 		row_item.level_text = row_item.gui_level_panel:text({
-			color = nil,
 			font_size = nil,
 			text = nil,
+			color = nil,
 			align = "left",
 			font = nil,
 			h = 128,
@@ -478,30 +478,30 @@ function MenuNodeGui:_create_menu_item(row_item)
 		})
 		row_item.chat_output = row_item.gui_panel:gui(Idstring("guis/chat/textscroll"), {
 			valign = "grow",
-			w = 500,
-			h = 120,
 			halign = "grow",
 			layer = nil,
+			h = 120,
+			w = 500,
 			layer = self.layers.items
 		})
 		row_item.chat_input = row_item.gui_panel:gui(Idstring("guis/chat/chat_input"), {
-			valign = "bottom",
-			w = 500,
 			y = 125,
 			halign = "grow",
-			h = 25,
+			valign = "bottom",
 			layer = nil,
+			h = 25,
+			w = 500,
 			layer = self.layers.items
 		})
 		row_item.chat_input:script().enter_callback = callback(self, self, "_cb_chat", row_item)
 		row_item.chat_input:script().esc_callback = callback(self, self, "_cb_unlock", row_item)
 		row_item.chat_input:script().typing_callback = callback(self, self, "_cb_lock", row_item)
 		row_item.border = row_item.gui_panel:rect({
-			h = 2,
-			w = 800,
 			visible = false,
 			color = nil,
 			layer = nil,
+			h = 2,
+			w = 800,
 			layer = self.layers.items,
 			color = tweak_data.hud.prime_color
 		})
@@ -561,12 +561,12 @@ end
 
 function MenuNodeGui:_create_info_panel(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
+		y = 0,
+		visible = false,
+		x = 0,
+		layer = nil,
 		h = nil,
 		w = nil,
-		x = 0,
-		visible = false,
-		y = 0,
-		layer = nil,
 		layer = self.layers.first,
 		w = self:_left_align(),
 		h = self._item_panel_parent:h()
@@ -574,11 +574,11 @@ function MenuNodeGui:_create_info_panel(row_item)
 	row_item.help_title = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		font_size = nil,
@@ -591,11 +591,11 @@ function MenuNodeGui:_create_info_panel(row_item)
 	row_item.help_text = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		word_wrap = true,
@@ -622,12 +622,12 @@ end
 
 function MenuNodeGui:_create_lobby_campaign(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
+		y = 0,
+		visible = false,
+		x = 0,
+		layer = nil,
 		h = nil,
 		w = nil,
-		x = 0,
-		visible = false,
-		y = 0,
-		layer = nil,
 		layer = self.layers.items,
 		w = self:_left_align(),
 		h = self._item_panel_parent:h()
@@ -636,11 +636,11 @@ function MenuNodeGui:_create_lobby_campaign(row_item)
 	row_item.level_title = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		font_size = nil,
@@ -654,11 +654,11 @@ function MenuNodeGui:_create_lobby_campaign(row_item)
 	row_item.level_briefing = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		word_wrap = true,
@@ -671,11 +671,11 @@ function MenuNodeGui:_create_lobby_campaign(row_item)
 		text = briefing_text
 	})
 	MenuNodeGui.lobby_campaign = {
+		level_movie = nil,
+		level_id = nil,
+		level_title = nil,
 		gui_info_panel = nil,
 		level_briefing = nil,
-		level_movie = nil,
-		level_title = nil,
-		level_id = nil,
 		level_id = Global.game_settings.level_id,
 		gui_info_panel = row_item.gui_info_panel,
 		level_movie = row_item.level_movie,
@@ -738,11 +738,11 @@ function MenuNodeGui:_reload_lobby_campaign(row_item)
 	row_item.level_briefing:set_h(h)
 
 	MenuNodeGui.lobby_campaign = {
+		level_movie = nil,
+		level_id = nil,
+		level_title = nil,
 		gui_info_panel = nil,
 		level_briefing = nil,
-		level_movie = nil,
-		level_title = nil,
-		level_id = nil,
 		level_id = Global.game_settings.level_id,
 		gui_info_panel = row_item.gui_info_panel,
 		level_movie = row_item.level_movie,
@@ -753,12 +753,12 @@ end
 
 function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
+		y = 0,
+		visible = false,
+		x = 0,
+		layer = nil,
 		h = nil,
 		w = nil,
-		x = 0,
-		visible = false,
-		y = 0,
-		layer = nil,
 		layer = self.layers.items,
 		w = self:_left_align(),
 		h = self._item_panel_parent:h()
@@ -766,11 +766,11 @@ function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.difficulty_title = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		font_size = nil,
@@ -783,11 +783,11 @@ function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.help_text = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		word_wrap = true,
@@ -802,11 +802,11 @@ function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.difficulty_help_text = row_item.gui_info_panel:text({
 		vertical = "top",
 		x = 0,
-		layer = nil,
-		text = nil,
 		color = nil,
+		layer = nil,
 		align = "left",
 		font = nil,
+		text = nil,
 		y = 0,
 		halign = "top",
 		word_wrap = true,
@@ -989,8 +989,8 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 			for name, btn_connection in pairs(connection._btn_connections) do
 				if btn_connection.name == key_name and item:parameters().binding ~= btn_connection.name then
 					managers.menu:show_key_binding_collision({
-						KEY = nil,
 						MAPPED = nil,
+						KEY = nil,
 						KEY = key_name,
 						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)
 					})
@@ -1003,8 +1003,8 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 			for _, b_name in ipairs(connection:get_input_name_list()) do
 				if tostring(b_name) == key_name and item:parameters().binding ~= b_name then
 					managers.menu:show_key_binding_collision({
-						KEY = nil,
 						MAPPED = nil,
+						KEY = nil,
 						KEY = key_name,
 						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)
 					})
@@ -1020,8 +1020,8 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 		connections[item:parameters().axis]._btn_connections[item:parameters().button].name = key_name
 
 		managers.controller:set_user_mod(item:parameters().connection_name, {
-			axis = nil,
 			connection = nil,
+			axis = nil,
 			button = nil,
 			axis = item:parameters().axis,
 			button = item:parameters().button,
@@ -1035,9 +1035,9 @@ function MenuNodeGui:_key_press(o, key, input_id, item, no_add)
 			key_name
 		})
 		managers.controller:set_user_mod(item:parameters().connection_name, {
-			button = nil,
-			connection = nil,
 			controller_id = nil,
+			connection = nil,
+			button = nil,
 			button = item:parameters().button,
 			connection = key_name,
 			controller_id = input_id
@@ -1105,21 +1105,21 @@ end
 
 function MenuNodeGui:_text_item_part(row_item, panel, align_x, text_align)
 	local new_text = panel:text({
-		x = nil,
+		render_template = nil,
 		y = 0,
-		layer = nil,
-		kern = 2,
 		color = nil,
-		text = nil,
+		blend_mode = nil,
 		align = nil,
 		font = nil,
-		render_template = nil,
+		layer = nil,
 		w = nil,
 		vertical = "center",
 		halign = "left",
-		blend_mode = nil,
+		text = nil,
 		name = "row_item_gui_panel_text_item_part",
+		x = nil,
 		font_size = nil,
+		kern = 2,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		x = align_x,
 		w = panel:w(),
@@ -1646,13 +1646,13 @@ function MenuNodeMainGui:_setup_item_rows(node)
 
 	if Application:debug_enabled() or IS_PC then
 		self._version_string = self.ws:panel():text({
-			font_size = nil,
-			alpha = 0.5,
 			vertical = "bottom",
+			font_size = nil,
 			text = nil,
 			name = "version_string",
 			align = nil,
 			font = nil,
+			alpha = 0.5,
 			text = Application:version(),
 			font = tweak_data.gui.font_paths.din_compressed[20],
 			font_size = tweak_data.gui.font_sizes.size_20,

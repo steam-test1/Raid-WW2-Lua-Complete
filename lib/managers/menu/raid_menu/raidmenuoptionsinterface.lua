@@ -170,15 +170,15 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
 	previous_panel = {
+		w = nil,
+		y = nil,
+		x = nil,
+		stepper_w = 280,
 		description = nil,
 		name = "motion_dot",
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
 		data_source_callback = nil,
-		w = nil,
-		y = nil,
-		x = nil,
-		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
@@ -193,15 +193,15 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
 	previous_panel = {
+		w = nil,
+		y = nil,
+		x = nil,
+		stepper_w = 280,
 		description = nil,
 		name = "motion_dot_size",
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
 		data_source_callback = nil,
-		w = nil,
-		y = nil,
-		x = nil,
-		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot_size"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -216,12 +216,12 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
-		x = 1472,
+		layer = nil,
 		on_click_callback = nil,
 		name = "default_interface",
 		y = 832,
+		x = 1472,
 		text = nil,
-		layer = nil,
 		on_menu_move = nil,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_interface"),
@@ -411,9 +411,9 @@ end
 
 function RaidMenuOptionsInterface:on_click_default_interface()
 	local params = {
+		title = nil,
 		callback = nil,
 		message = nil,
-		title = nil,
 		title = managers.localization:text("dialog_reset_interface_title"),
 		message = managers.localization:text("dialog_reset_interface_message"),
 		callback = callback(self, self, "_callback_default_settings")
@@ -430,8 +430,8 @@ end
 function RaidMenuOptionsInterface:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "on_click_default_interface")
 		}
@@ -440,16 +440,16 @@ function RaidMenuOptionsInterface:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_options_controls_default_controller"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back")
 			}
 		}

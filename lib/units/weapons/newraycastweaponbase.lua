@@ -26,15 +26,15 @@ function NewRaycastWeaponBase:init(unit)
 	self._use_shotgun_reload = self:weapon_tweak_data().use_shotgun_reload
 	self._movement_penalty = tweak_data.upgrades.weapon_movement_penalty[self:weapon_tweak_data().category] or 1
 	self._gun_kick = {
-		y = nil,
 		x = nil,
+		y = nil,
 		x = {
-			delta = 0,
-			velocity = 0
+			velocity = 0,
+			delta = 0
 		},
 		y = {
-			delta = 0,
-			velocity = 0
+			velocity = 0,
+			delta = 0
 		}
 	}
 	self._textures = {}
@@ -378,9 +378,9 @@ function NewRaycastWeaponBase:_update_stats_values()
 	end
 
 	self._muzzle_effect_table = {
+		effect = nil,
 		force_synch = nil,
 		parent = nil,
-		effect = nil,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire,
 		force_synch = self._muzzle_effect_table.force_synch or false

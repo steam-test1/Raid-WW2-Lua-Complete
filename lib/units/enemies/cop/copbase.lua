@@ -66,10 +66,122 @@ function CopBase:post_init()
 
 	self._allow_invisible = true
 
-	self:_chk_spawn_gear()
+	self:_init_spawn_gear()
 end
 
-function CopBase:_chk_spawn_gear()
+function CopBase:_init_spawn_gear()
+	if not self._char_tweak or not self._tweak_table then
+		Application:warn("[CopBase:_init_spawn_gear] Bad tweakdata", self._tweak_table, inspect(self._char_tweak))
+
+		return
+	end
+
+	if self._gear_data and self._gear_data.spawned_gear then
+		Application:warn("[CopBase:_init_spawn_gear] Gear already present", inspect(self._gear_data.spawned_gear))
+
+		return
+	end
+
+	self._gear_data = self._char_tweak.gear and deep_clone(self._char_tweak.gear) or {
+		items = nil,
+		run_char_seqs = nil,
+		items = {},
+		run_char_seqs = {}
+	}
+	self._gear_data.spawned_gear = {}
+
+	for buff, char_gear_data in pairs(tweak_data.character.char_buff_gear or {}) do
+		if managers.buff_effect:is_effect_active(buff) and char_gear_data[self._tweak_table] then
+			for bone, items in pairs(char_gear_data[self._tweak_table].items or {}) do
+				for _, item in ipairs(items or {}) do
+					if item then
+						self._gear_data.items[bone] = self._gear_data.items[bone] or {}
+
+						table.insert(self._gear_data.items[bone], item)
+					end
+				end
+			end
+
+			for _, v in ipairs(char_gear_data[self._tweak_table].run_char_seqs or {}) do
+				table.insert(self._gear_data.run_char_seqs, v)
+			end
+		end
+	end
+
+	if self._gear_data.items then
+		for align_key, bone_items in pairs(self._gear_data.items) do
+			for _, path in ipairs(bone_items) do
+				local sp_unit = safe_spawn_unit(path, Vector3(), Rotation())
+
+				if sp_unit then
+					local align_ids = Idstring(align_key)
+
+					self._unit:link(align_ids, sp_unit, sp_unit:orientation_object():name())
+					table.insert(self._gear_data.spawned_gear, {
+						align_key = nil,
+						unit = nil,
+						unit = sp_unit,
+						align_key = align_key
+					})
+				end
+			end
+		end
+	end
+
+	if self._gear_data.run_char_seqs then
+		for _, seq in ipairs(self._gear_data.run_char_seqs) do
+			self._unit:damage():has_then_run_sequence_simple(seq)
+		end
+	end
+end
+
+function CopBase:set_gear_dead()
+	if not self._gear_data or not self._gear_data.spawned_gear then
+		return
+	end
+
+	for _, data in ipairs(self._gear_data.spawned_gear) do
+		if alive(data.unit) then
+			data.unit:damage():has_then_run_sequence_simple("on_dead")
+		end
+	end
+end
+
+function CopBase:set_spawn_gear_visibility_state(state, align_key)
+	if not self._gear_data or not self._gear_data.spawned_gear then
+		return
+	end
+
+	for _, data in ipairs(self._gear_data.spawned_gear) do
+		if alive(data.unit) and (not align_key or align_key == data.align_key) then
+			data.unit:damage():has_then_run_sequence_simple(state and "on_show" or "on_hide")
+			data.unit:set_visible(state)
+		end
+	end
+end
+
+function CopBase:_clear_spawn_gear(align_key)
+	if not self._gear_data or not self._gear_data.spawned_gear then
+		return
+	end
+
+	for i = #self._gear_data.spawned_gear, 1, -1 do
+		local data = self._gear_data.spawned_gear[i]
+
+		if alive(data.unit) and (not align_key or align_key == data.align_key) then
+			data.unit:damage():has_then_run_sequence_simple("on_destroy")
+			data.unit:set_slot(0)
+			table.remove(self._gear_data.spawned_gear, i)
+		end
+	end
+end
+
+function CopBase:get_spawned_gear()
+	if not self._gear_data or not self._gear_data.spawned_gear then
+		return nil
+	end
+
+	return self._gear_data.spawned_gear
 end
 
 function CopBase:default_weapon_name()
@@ -113,34 +225,6 @@ function CopBase:set_visibility_state(stage)
 
 	if self._lod_stage == stage then
 		return
-	end
-
-	local inventory = self._unit:inventory()
-	local weapon = inventory and inventory.get_weapon and inventory:get_weapon()
-
-	if weapon then
-		weapon:base():set_flashlight_light_lod_enabled(stage ~= 2 and not not stage)
-	end
-
-	if self._visibility_state ~= state then
-		local unit = self._unit
-
-		if inventory then
-			inventory:set_visibility_state(state)
-		end
-
-		unit:set_visible(state)
-
-		if self._headwear_unit then
-			self._headwear_unit:set_visible(state)
-		end
-
-		if state or self._ext_anim.can_freeze and (not self._ext_anim.upper_body_active or self._ext_anim.upper_body_empty) then
-			unit:set_animatable_enabled(ids_lod, state)
-			unit:set_animatable_enabled(ids_ik_aim, state)
-		end
-
-		self._visibility_state = state
 	end
 
 	if state then
@@ -268,9 +352,6 @@ function CopBase:pre_destroy(unit)
 		self._unit:movement():anim_clbk_close_parachute()
 	end
 
-	if alive(self._headwear_unit) then
-		self._headwear_unit:set_slot(0)
-	end
-
+	self:_clear_spawn_gear()
 	UnitBase.pre_destroy(self, unit)
 end

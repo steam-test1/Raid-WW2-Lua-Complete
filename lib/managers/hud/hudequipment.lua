@@ -32,11 +32,11 @@ end
 function HUDEquipment:_create_icon(icon)
 	local full_gui = tweak_data.gui:get_full_gui_data(icon)
 	local icon_params = {
-		name = "icon",
 		layer = 1,
 		color = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = "icon",
 		texture = full_gui.texture,
 		texture_rect = full_gui.texture_rect,
 		color = full_gui.color
@@ -48,15 +48,15 @@ end
 
 function HUDEquipment:_create_amount_text()
 	local amount_text_params = {
+		layer = 3,
+		font_size = nil,
+		font = nil,
 		text = "",
 		vertical = "top",
 		align = "right",
 		y = 0,
 		x = 0,
-		font_size = nil,
 		name = "amount_text",
-		layer = 3,
-		font = nil,
 		font = HUDEquipment.FONT,
 		font_size = HUDEquipment.FONT_SIZE
 	}

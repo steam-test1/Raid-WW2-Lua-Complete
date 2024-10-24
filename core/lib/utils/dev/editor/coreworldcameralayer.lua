@@ -31,9 +31,9 @@ end
 function WorldCameraLayer:save(save_params)
 	local file_name = "world_cameras"
 	local t = {
-		single_data_block = true,
 		entry = nil,
 		data = nil,
+		single_data_block = true,
 		entry = self._save_name,
 		data = {
 			file = nil,
@@ -185,26 +185,26 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._duration_params = {
 		name = "Camera Duration [sec]:",
+		panel = nil,
+		sizer = nil,
+		events = nil,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		tooltip = "Specifies the camera lenght in seconds",
 		floats = 2,
 		value = 2.5,
-		sizer = nil,
-		ctrlr_proportions = 1,
-		events = nil,
-		panel = nil,
-		name_proportions = 1,
-		min = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_duration")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_duration")
 			}
 		}
@@ -214,26 +214,26 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._delay_params = {
 		name = "End Delay [sec]:",
+		panel = nil,
+		sizer = nil,
+		events = nil,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
 		floats = 2,
 		value = 0,
-		sizer = nil,
-		ctrlr_proportions = 1,
-		events = nil,
-		panel = nil,
-		name_proportions = 1,
-		min = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_delay")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_delay")
 			}
 		}
@@ -243,27 +243,27 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._dof_paddding_params = {
 		name = "Dof Padding [cm]:",
+		panel = nil,
+		sizer = nil,
+		events = nil,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		tooltip = "The fade distance from max dof to no dof",
 		floats = 0,
 		value = nil,
-		sizer = nil,
-		ctrlr_proportions = 1,
-		events = nil,
-		panel = nil,
-		name_proportions = 1,
-		min = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_padding(),
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_dof_padding")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_dof_padding")
 			}
 		}
@@ -273,28 +273,28 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._dof_clamp_params = {
 		name = "Dof Amount [0-1]:",
+		min = 0,
+		sizer = nil,
+		max = 1,
+		events = nil,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		panel = nil,
 		tooltip = "A value to specify how much dof it should have",
 		floats = 2,
 		value = nil,
-		sizer = nil,
-		ctrlr_proportions = 1,
-		max = 1,
-		events = nil,
-		panel = nil,
-		name_proportions = 1,
-		min = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_clamp(),
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_dof_clamp")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_dof_clamp")
 			}
 		}
@@ -444,26 +444,26 @@ function WorldCameraLayer:build_panel(notebook)
 	keys_sizer:add(key_far_dof_sizer, 0, 0, "EXPAND")
 
 	local roll_params = {
+		name = "Roll:",
+		sizer = nil,
+		events = nil,
+		ctrlr_proportions = 3,
+		name_proportions = 1,
 		panel = nil,
 		tooltip = "An angle value specifying the roll",
 		floats = 0,
 		value = 0,
-		sizer = nil,
-		name = "Roll:",
-		events = nil,
-		ctrlr_proportions = 3,
-		name_proportions = 1,
 		panel = self._ews_panel,
 		sizer = keys_sizer,
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "on_set_roll")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "on_set_roll")
 			}
 		}

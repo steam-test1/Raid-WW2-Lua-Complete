@@ -28,8 +28,8 @@ function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units
 	if to_unit == self._unit then
 		for _, unit in ipairs(self:_get_sequence_units()) do
 			table.insert(links.on_executed, {
-				alternative = "unit",
 				unit = nil,
+				alternative = "unit",
 				unit = unit
 			})
 		end
@@ -65,11 +65,11 @@ end
 function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	for _, unit in ipairs(self:_get_sequence_units()) do
 		local params = {
-			r = nil,
-			g = nil,
+			to_unit = nil,
 			from_unit = nil,
 			b = nil,
-			to_unit = nil,
+			g = nil,
+			r = nil,
 			from_unit = self._unit,
 			to_unit = unit,
 			r = r,
@@ -108,10 +108,10 @@ function CoreUnitSequenceUnitElement:_set_trigger_list()
 					for _, data in ipairs(trigger_data) do
 						table.insert(self._hed.trigger_list, {
 							id = nil,
-							name = nil,
 							notify_unit_sequence = nil,
-							time = nil,
 							notify_unit_id = nil,
+							time = nil,
+							name = nil,
 							name = data.trigger_name,
 							id = data.id,
 							notify_unit_id = data.notify_unit:unit_data().unit_id,

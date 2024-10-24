@@ -41,7 +41,7 @@ function Pickup:sync_pickup()
 	end
 end
 
-function Pickup:_pickup()
+function Pickup:_pickup(unit)
 	Application:error("Pickup didn't have a _pickup() function!")
 end
 

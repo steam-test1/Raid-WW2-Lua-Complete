@@ -32,11 +32,11 @@ function CorePlaySoundUnitElement:update_selected(t, dt, selected_unit, all_unit
 
 		if draw then
 			self:_draw_link({
-				b = 0,
-				g = 0,
 				r = 0.75,
 				to_unit = nil,
 				from_unit = nil,
+				b = 0,
+				g = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -162,12 +162,12 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 
 	local path_value = managers.sound_environment:scene_path(self._hed.sound_event)
 	local _, _ = CoreEws.combobox_and_list({
-		options = nil,
-		sizer = nil,
 		panel = nil,
+		sizer = nil,
 		value = nil,
 		name = "Category:",
 		value_changed_cb = nil,
+		options = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = paths,

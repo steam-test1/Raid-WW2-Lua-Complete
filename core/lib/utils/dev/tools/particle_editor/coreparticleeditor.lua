@@ -149,8 +149,8 @@ function CoreParticleEditor:new_dialog()
 	local description_text = EWS:StaticText(dialog, "", "", "ST_NO_AUTORESIZE")
 
 	type_combo:connect("EVT_COMMAND_TEXT_UPDATED", on_select_type, {
-		desc = nil,
 		combo = nil,
+		desc = nil,
 		combo = type_combo,
 		desc = description_text
 	})
@@ -161,8 +161,8 @@ function CoreParticleEditor:new_dialog()
 	end
 
 	on_select_type({
-		desc = nil,
 		combo = nil,
+		desc = nil,
 		combo = type_combo,
 		desc = description_text
 	})

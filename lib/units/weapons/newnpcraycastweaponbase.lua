@@ -34,9 +34,9 @@ function NewNPCRaycastWeaponBase:init(unit)
 
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
+		parent = nil,
 		effect = nil,
 		force_synch = false,
-		parent = nil,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
@@ -46,41 +46,42 @@ function NewNPCRaycastWeaponBase:init(unit)
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
-			effect = nil,
 			parent = nil,
+			effect = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
 	end
 
 	self._trail_effect_table = {
+		position = nil,
 		effect = nil,
 		normal = nil,
-		position = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
 	}
-	self._flashlight_light_lod_enabled = true
 
 	if self._multivoice then
-		if not NewNPCRaycastWeaponBase._next_i_voice[self._name_id] then
-			NewNPCRaycastWeaponBase._next_i_voice[self._name_id] = 1
-		end
+		local next_i_voice = NewNPCRaycastWeaponBase._next_i_voice[self._name_id]
+		next_i_voice = next_i_voice or 1
+		self._voice = NewNPCRaycastWeaponBase._VOICES[next_i_voice]
 
-		self._voice = NewNPCRaycastWeaponBase._VOICES[NewNPCRaycastWeaponBase._next_i_voice[self._name_id]]
-
-		if NewNPCRaycastWeaponBase._next_i_voice[self._name_id] == #NewNPCRaycastWeaponBase._VOICES then
-			NewNPCRaycastWeaponBase._next_i_voice[self._name_id] = 1
+		if next_i_voice == #NewNPCRaycastWeaponBase._VOICES then
+			next_i_voice = 1
 		else
-			NewNPCRaycastWeaponBase._next_i_voice[self._name_id] = NewNPCRaycastWeaponBase._next_i_voice[self._name_id] + 1
+			next_i_voice = next_i_voice + 1
 		end
 	else
 		self._voice = "a"
 	end
 
+	self._flashlight_light_lod_enabled = true
+
 	if self._unit:get_object(Idstring("ls_flashlight")) then
 		self._flashlight_data = {
+			effect = nil,
+			light = nil,
 			light = self._unit:get_object(Idstring("ls_flashlight")),
 			effect = self._unit:effect_spawner(Idstring("flashlight"))
 		}
@@ -131,9 +132,9 @@ function NewNPCRaycastWeaponBase:assemble(factory_id)
 	if ammo_muzzle_effect then
 		self._muzzle_effect = ammo_muzzle_effect
 		self._muzzle_effect_table = {
+			parent = nil,
 			effect = nil,
 			force_synch = false,
-			parent = nil,
 			effect = self._muzzle_effect,
 			parent = self._obj_fire
 		}

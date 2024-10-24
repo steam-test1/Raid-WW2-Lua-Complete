@@ -116,6 +116,7 @@ require("lib/units/pickups/HealthPackPickup")
 require("lib/units/pickups/GrenadePickup")
 require("lib/units/pickups/GrenadePickupNew")
 require("lib/units/pickups/SpecialEquipmentPickup")
+require("lib/units/pickups/CandyPickup")
 require("lib/units/equipment/ammo_bag/AmmoBagBase")
 require("lib/units/equipment/doctor_bag/DoctorBagBase")
 require("lib/units/equipment/sentry_gun/SentryGunBase")
@@ -201,6 +202,7 @@ require("lib/units/props/ManageSpawnedUnits")
 require("lib/units/characters/CharacterManageSpawnedUnits")
 require("lib/units/props/RevivePumpkinExt")
 require("lib/units/props/FauxContainer")
+require("lib/units/props/AccessoryGear")
 
 GameSetup = GameSetup or class(Setup)
 
@@ -370,9 +372,9 @@ function GameSetup:init_game()
 
 			local level_path = "levels/" .. tostring(level)
 			local t = {
+				file_path = nil,
 				world_setting = nil,
 				file_type = "world",
-				file_path = nil,
 				file_path = level_path .. "/world",
 				world_setting = world_setting
 			}

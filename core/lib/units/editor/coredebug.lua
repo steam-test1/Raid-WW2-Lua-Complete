@@ -47,9 +47,9 @@ end
 
 function CoreDebugUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
 		mask = nil,
 		sample = true,
+		ray_type = "editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -91,11 +91,11 @@ function CoreDebugUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				from_unit = nil,
 				b = 0.75,
 				g = 0.25,
 				r = 0.75,
 				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

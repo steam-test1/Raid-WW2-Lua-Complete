@@ -29,20 +29,20 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local points_present = math.min(content_data.points_present, available_points)
 	local conversion_rate_number = math.round(xp_present / points_present)
 	local small_text = {
+		text = "",
 		font = nil,
 		layer = 1,
 		blend_mode = "add",
 		font_size = nil,
-		text = "",
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size
 	}
 	local medium_text = {
+		text = "",
 		font = nil,
 		layer = 1,
 		blend_mode = "add",
 		font_size = nil,
-		text = "",
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	}
@@ -54,8 +54,8 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 
 	local progress_bg = self._scroll_panel:rect({
 		color = nil,
-		h = nil,
 		alpha = 0.4,
+		h = nil,
 		layer = 1,
 		h = progress_text:h(),
 		color = Color.black
@@ -65,9 +65,9 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	progress_bg:set_w(self._scroll_panel:w() - progress_bg:left() - 5)
 
 	local progress_bar = self._scroll_panel:rect({
-		layer = 2,
 		color = nil,
 		alpha = 1,
+		layer = 2,
 		blend_mode = "add",
 		color = Color.white
 	})
@@ -79,9 +79,9 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	progress_bar:set_center_y(progress_bg:center_y())
 
 	local progress_end = self._scroll_panel:rect({
-		layer = 3,
 		color = nil,
 		alpha = 1,
+		layer = 3,
 		blend_mode = "add",
 		color = Color.white
 	})
@@ -180,17 +180,7 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	self._scroll_panel:set_y(math.round(self._scroll_panel:y()))
 
 	self._anim_data = {
-		points_present = 0,
-		available_points_count_text = nil,
-		points_gained_count_text = nil,
 		progress_bar = nil,
-		exp_count_text = nil,
-		xp_present = nil,
-		goto_end = false,
-		conversion_rate = nil,
-		available_points_present = nil,
-		end_available_points_present = nil,
-		start_available_points_present = nil,
 		end_points_present = nil,
 		start_points_present = 0,
 		end_xp_present = 0,
@@ -198,6 +188,16 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 		end_progress_width = nil,
 		progress_width = 0,
 		start_progress_width = 0,
+		available_points_count_text = nil,
+		points_gained_count_text = nil,
+		points_present = 0,
+		exp_count_text = nil,
+		xp_present = nil,
+		goto_end = false,
+		conversion_rate = nil,
+		available_points_present = nil,
+		end_available_points_present = nil,
+		start_available_points_present = nil,
 		progress_bar = progress_bar,
 		end_progress_width = progress_end:right() - progress_bar:left(),
 		exp_count_text = exp_count_text,

@@ -32,31 +32,31 @@ function RaidMenuOptionsVideo:_layout_video()
 	local previous_panel = nil
 	local on_controller = managers.controller:is_controller_present()
 	previous_panel = {
-		on_click_callback = nil,
 		text = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
+		on_click_callback = nil,
 		name = "btn_advanced_options",
+		on_menu_move = nil,
 		x = start_x,
 		y = start_y - 128,
 		text = managers.localization:to_upper_text("menu_options_video_advanced_button"),
 		on_click_callback = callback(self, self, "on_click_options_video_advanced_button"),
 		on_menu_move = {
-			down = "stepper_menu_resolution",
-			up = "default_video"
+			up = "default_video",
+			down = "stepper_menu_resolution"
 		}
 	}
 	self._btn_advanced_options = self._root_panel:long_tertiary_button(previous_panel)
 	previous_panel = {
-		w = nil,
 		description = nil,
-		y = nil,
+		w = nil,
 		x = nil,
-		on_item_selected_callback = nil,
+		y = nil,
 		name = "stepper_menu_resolution",
-		on_menu_move = nil,
+		on_item_selected_callback = nil,
 		data_source_callback = nil,
+		on_menu_move = nil,
 		x = start_x,
 		y = start_y,
 		w = default_width,
@@ -64,8 +64,8 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_resolution"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_stepper_menu_resolution"),
 		on_menu_move = {
-			down = nil,
 			up = nil,
+			down = nil,
 			up = previous_panel.name,
 			down = on_controller and "stepper_menu_refresh_rate" or "apply_resolution"
 		}
@@ -84,13 +84,13 @@ function RaidMenuOptionsVideo:_layout_video()
 	}, true)
 
 	local apply_resolution = {
-		on_click_callback = nil,
 		text = nil,
 		y = nil,
 		x = nil,
 		layer = nil,
 		name = "apply_resolution",
 		visible = nil,
+		on_click_callback = nil,
 		on_menu_move = nil,
 		x = self._stepper_menu_resolution:w() + RaidGuiBase.PADDING,
 		y = self._stepper_menu_resolution:y(),
@@ -99,22 +99,22 @@ function RaidMenuOptionsVideo:_layout_video()
 		on_click_callback = callback(self, self, "on_click_apply_resolution_refresh_rate"),
 		visible = not on_controller,
 		on_menu_move = {
-			down = "stepper_menu_refresh_rate",
 			up = nil,
+			down = "stepper_menu_refresh_rate",
 			up = previous_panel.name
 		}
 	}
 	previous_panel.name = apply_resolution.name
 	self._button_apply_video_resolution = self._root_panel:small_button(apply_resolution)
 	previous_panel = {
-		w = nil,
 		description = nil,
-		y = nil,
+		w = nil,
 		x = nil,
-		on_item_selected_callback = nil,
+		y = nil,
 		name = "stepper_menu_refresh_rate",
-		on_menu_move = nil,
+		on_item_selected_callback = nil,
 		data_source_callback = nil,
+		on_menu_move = nil,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -122,8 +122,8 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_refresh_rate"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_refresh_rate"),
 		on_menu_move = {
-			down = "window_mode",
 			up = nil,
+			down = "window_mode",
 			up = on_controller and "stepper_menu_resolution" or previous_panel.name
 		}
 	}
@@ -132,15 +132,15 @@ function RaidMenuOptionsVideo:_layout_video()
 	table.insert(self._fullscreen_only_controls, self._stepper_menu_refresh_rate)
 
 	previous_panel = {
-		stepper_w = 280,
-		description = nil,
-		y = nil,
-		x = nil,
 		w = nil,
-		name = "window_mode",
 		on_menu_move = nil,
 		on_item_selected_callback = nil,
 		data_source_callback = nil,
+		description = nil,
+		y = nil,
+		x = nil,
+		stepper_w = 280,
+		name = "window_mode",
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -148,38 +148,38 @@ function RaidMenuOptionsVideo:_layout_video()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_window_mode"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_window_mode"),
 		on_menu_move = {
-			down = "effect_quality",
 			up = nil,
+			down = "effect_quality",
 			up = previous_panel.name
 		}
 	}
 	self._stepper_menu_window_mode = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		value_format = "%02d%%",
-		name = "effect_quality",
 		on_value_change_callback = nil,
+		name = "effect_quality",
+		value_format = "%02d%%",
+		on_menu_move = nil,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		description = managers.localization:to_upper_text("menu_options_video_effect_quality"),
 		on_value_change_callback = callback(self, self, "on_value_change_effect_quality"),
 		on_menu_move = {
-			down = "progress_bar_menu_brightness",
 			up = nil,
+			down = "progress_bar_menu_brightness",
 			up = previous_panel.name
 		}
 	}
 	self._progress_bar_menu_effect_quality = self._root_panel:slider(previous_panel)
 	previous_panel = {
-		value = 0,
 		description = nil,
 		y = nil,
 		x = nil,
-		value_format = "%02d%%",
+		value = 0,
 		name = "progress_bar_menu_brightness",
+		value_format = "%02d%%",
 		on_value_change_callback = nil,
 		on_menu_move = nil,
 		x = start_x,
@@ -187,8 +187,8 @@ function RaidMenuOptionsVideo:_layout_video()
 		description = managers.localization:to_upper_text("menu_options_video_brightness"),
 		on_value_change_callback = callback(self, self, "on_value_change_brightness"),
 		on_menu_move = {
-			down = "use_headbob",
 			up = nil,
+			down = "use_headbob",
 			up = previous_panel.name
 		}
 	}
@@ -199,12 +199,12 @@ function RaidMenuOptionsVideo:_layout_video()
 	start_x = 704
 	start_y = 320
 	previous_panel = {
-		w = nil,
 		description = nil,
-		y = nil,
+		w = nil,
 		x = nil,
-		on_click_callback = nil,
+		y = nil,
 		name = "use_headbob",
+		on_click_callback = nil,
 		on_menu_move = nil,
 		x = start_x,
 		y = start_y,
@@ -212,19 +212,19 @@ function RaidMenuOptionsVideo:_layout_video()
 		description = managers.localization:to_upper_text("menu_options_video_use_headbob"),
 		on_click_callback = callback(self, self, "on_click_headbob"),
 		on_menu_move = {
-			down = "use_camera_accel",
 			up = nil,
+			down = "use_camera_accel",
 			up = previous_panel.name
 		}
 	}
 	self._toggle_menu_headbob = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		w = nil,
 		description = nil,
-		y = nil,
+		w = nil,
 		x = nil,
-		on_click_callback = nil,
+		y = nil,
 		name = "use_camera_accel",
+		on_click_callback = nil,
 		on_menu_move = nil,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -232,38 +232,38 @@ function RaidMenuOptionsVideo:_layout_video()
 		description = managers.localization:to_upper_text("menu_options_video_use_camera_accel"),
 		on_click_callback = callback(self, self, "on_click_camera_accel"),
 		on_menu_move = {
-			down = "camera_shake",
 			up = nil,
+			down = "camera_shake",
 			up = previous_panel.name
 		}
 	}
 	self._toggle_menu_camera_accel = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		value_format = "%02d%%",
-		name = "camera_shake",
 		on_value_change_callback = nil,
+		name = "camera_shake",
+		value_format = "%02d%%",
+		on_menu_move = nil,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		description = managers.localization:to_upper_text("menu_options_video_camera_shake"),
 		on_value_change_callback = callback(self, self, "on_value_change_camera_shake"),
 		on_menu_move = {
-			down = "fov_adjustment",
 			up = nil,
+			down = "fov_adjustment",
 			up = previous_panel.name
 		}
 	}
 	self._progress_bar_menu_camera_shake = self._root_panel:slider(previous_panel)
 	previous_panel = {
-		max_display_value = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		min_display_value = nil,
+		max_display_value = nil,
 		name = "fov_adjustment",
+		min_display_value = nil,
 		on_value_change_callback = nil,
 		on_menu_move = nil,
 		x = start_x,
@@ -273,26 +273,26 @@ function RaidMenuOptionsVideo:_layout_video()
 		max_display_value = math.round(tweak_data.player.stances.default.standard.FOV * tweak_data.player.fov_multiplier.MAX),
 		on_value_change_callback = callback(self, self, "on_value_change_fov_adjustment"),
 		on_menu_move = {
-			down = "default_video",
 			up = nil,
+			down = "default_video",
 			up = previous_panel.name
 		}
 	}
 	self._progress_bar_menu_fov_adjustment = self._root_panel:slider(previous_panel)
 	local default_video_settings_button = {
-		on_click_callback = nil,
-		text = nil,
+		layer = nil,
 		y = 832,
 		x = 1472,
-		layer = nil,
+		text = nil,
 		name = "default_video",
+		on_click_callback = nil,
 		on_menu_move = nil,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_video"),
 		on_menu_move = {
-			down = "btn_advanced_options",
 			up = nil,
+			down = "btn_advanced_options",
 			up = previous_panel.name
 		}
 	}
@@ -322,9 +322,9 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_resolution()
 		local info_text = string.format("%d x %d", resolution.x, resolution.y)
 
 		table.insert(result, {
-			value = nil,
-			text = nil,
 			info = nil,
+			text = nil,
+			value = nil,
 			text = info_text,
 			info = info_text,
 			value = resolution
@@ -338,24 +338,24 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 	local result = {}
 
 	table.insert(result, {
-		value = "WINDOWED",
-		text = nil,
 		info = nil,
+		text = nil,
+		value = "WINDOWED",
 		text = managers.localization:to_upper_text("menu_windowed"),
 		info = managers.localization:to_upper_text("menu_windowed")
 	})
 	table.insert(result, {
-		value = "WINDOWED_FULLSCREEN",
-		text = nil,
 		info = nil,
+		text = nil,
 		selected = true,
+		value = "WINDOWED_FULLSCREEN",
 		text = managers.localization:to_upper_text("menu_windowed_fullscreen"),
 		info = managers.localization:to_upper_text("menu_windowed_fullscreen")
 	})
 	table.insert(result, {
-		value = "FULLSCREEN",
-		text = nil,
 		info = nil,
+		text = nil,
+		value = "FULLSCREEN",
 		text = managers.localization:to_upper_text("menu_fullscreen"),
 		info = managers.localization:to_upper_text("menu_fullscreen")
 	})
@@ -374,8 +374,8 @@ end
 function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 	if #resolutions == 0 then
 		table.insert(resolutions, {
-			y = nil,
 			x = nil,
+			y = nil,
 			x = res.x,
 			y = res.y
 		})
@@ -384,8 +384,8 @@ function RaidMenuOptionsVideo:_add_distinct_resolution(res, resolutions)
 
 		if last_added_resolution.x ~= res.x or last_added_resolution.y ~= res.y then
 			table.insert(resolutions, {
-				y = nil,
 				x = nil,
+				y = nil,
 				x = res.x,
 				y = res.y
 			})
@@ -405,9 +405,9 @@ function RaidMenuOptionsVideo:_get_refresh_rates_for_resolution(resolution)
 			local info_text = string.format("%d Hz", res.z)
 
 			table.insert(result, {
-				value = nil,
-				text = nil,
 				info = nil,
+				text = nil,
+				value = nil,
 				text = info_text,
 				info = info_text,
 				value = res.z
@@ -430,9 +430,9 @@ end
 function RaidMenuOptionsVideo:on_click_apply_resolution_refresh_rate()
 	local settings_changed = false
 	local current = {
-		borderless = nil,
-		resolution = nil,
 		fullscreen = nil,
+		resolution = nil,
+		borderless = nil,
 		resolution = RenderSettings.resolution,
 		fullscreen = managers.viewport:is_fullscreen(),
 		borderless = managers.viewport:is_borderless()
@@ -532,9 +532,9 @@ end
 
 function RaidMenuOptionsVideo:on_click_default_video()
 	local params = {
-		callback = nil,
-		title = nil,
 		message = nil,
+		title = nil,
+		callback = nil,
 		title = managers.localization:text("dialog_reset_video_title"),
 		message = managers.localization:text("dialog_reset_video_message"),
 		callback = callback(self, self, "_callback_default_video")
@@ -573,8 +573,8 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 	for _, res in ipairs(supported_resolutions) do
 		if res.value.x < default_resolution.x or res.value.x == default_resolution.x and res.value.y == default_resolution.y then
 			local refresh_rates = self:_get_refresh_rates_for_resolution({
-				y = nil,
 				x = nil,
+				y = nil,
 				x = res.value.x,
 				y = res.value.y
 			})
@@ -718,14 +718,14 @@ end
 function RaidMenuOptionsVideo:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "on_click_default_video")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "on_click_apply_resolution_refresh_rate")
 		}
@@ -734,8 +734,8 @@ function RaidMenuOptionsVideo:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_options_video_resolution",
@@ -743,8 +743,8 @@ function RaidMenuOptionsVideo:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back")
 			}
 		}

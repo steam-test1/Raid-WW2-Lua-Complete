@@ -207,13 +207,13 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 	h_sizer:add(instance_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
+		options = nil,
+		sizer = nil,
+		tooltip = "Select an event from the combobox",
 		sorted = true,
 		sizer_proportions = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 0,
-		tooltip = "Select an event from the combobox",
-		options = nil,
-		sizer = nil,
 		panel = nil,
 		value = nil,
 		panel = panel,
@@ -631,13 +631,13 @@ end
 
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
+		tooltip = "Set a default number variable.",
+		sizer = nil,
+		floats = 0,
+		name = nil,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Set a default number variable.",
-		sizer = nil,
-		name = nil,
-		floats = 0,
 		panel = nil,
 		value = nil,
 		name = data.var_name,
@@ -667,15 +667,15 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local params = {
+		options = nil,
+		sizer = nil,
+		panel = nil,
+		tooltip = "Select an option from the combobox",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
-		options = nil,
-		sizer = nil,
 		name = nil,
-		panel = nil,
 		value = nil,
 		name = data.var_name,
 		panel = panel,
@@ -696,8 +696,8 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Set from list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_select_name_dialog"), {
-		data = nil,
 		combobox = nil,
+		data = nil,
 		combobox = params,
 		data = data
 	})
@@ -960,9 +960,9 @@ function InstanceSetParamsUnitElement:_build_from_params(params)
 
 		use:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_on_gui_toggle_use"), {
 			var_name = nil,
-			value_ctrlr = nil,
 			ctrlr = nil,
 			value_panel = nil,
+			value_ctrlr = nil,
 			ctrlr = use,
 			var_name = data.var_name,
 			value_panel = value_panel,
@@ -997,13 +997,13 @@ end
 
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
+		tooltip = "Set a number variable.",
+		sizer = nil,
+		floats = 0,
+		name = nil,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Set a number variable.",
-		sizer = nil,
-		name = nil,
-		floats = 0,
 		panel = nil,
 		value = nil,
 		name = data.var_name,
@@ -1035,15 +1035,15 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local combobox_params = {
+		options = nil,
+		sizer = nil,
+		panel = nil,
+		tooltip = "Select an option from the combobox",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
-		options = nil,
-		sizer = nil,
 		name = nil,
-		panel = nil,
 		value = nil,
 		name = data.var_name,
 		panel = panel,
@@ -1064,8 +1064,8 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Set from list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_select_name_dialog"), {
-		var_name = nil,
 		combobox = nil,
+		var_name = nil,
 		combobox = combobox_params,
 		var_name = data.var_name
 	})

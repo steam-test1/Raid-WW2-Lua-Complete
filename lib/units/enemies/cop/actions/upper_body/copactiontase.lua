@@ -269,9 +269,9 @@ function CopActionTase:update(t)
 			end
 
 			self._tase_effect = World:effect_manager():spawn({
-				effect = nil,
 				parent = nil,
 				force_synch = true,
+				effect = nil,
 				effect = tweak_data.common_effects.taser_thread,
 				parent = self._ext_inventory:equipped_unit():get_object(Idstring("fire"))
 			})
@@ -348,8 +348,8 @@ end
 function CopActionTase:get_husk_interrupt_desc()
 	local action_desc = {
 		body_part = 3,
-		type = "tase",
-		block_type = "action"
+		block_type = "action",
+		type = "tase"
 	}
 
 	return action_desc
@@ -363,9 +363,9 @@ function CopActionTase:clbk_malfunction()
 	end
 
 	World:effect_manager():spawn({
-		normal = nil,
 		effect = nil,
 		position = nil,
+		normal = nil,
 		effect = tweak_data.common_effects.taser_stop,
 		position = self._ext_movement:m_head_pos(),
 		normal = math.UP

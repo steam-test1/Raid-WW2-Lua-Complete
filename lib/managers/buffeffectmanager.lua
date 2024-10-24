@@ -59,6 +59,7 @@ BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY = "effect_player_dooms_day"
 BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS = "effect_player_cannot_ads"
 BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT = "effect_player_cannot_sprint"
 BuffEffectManager.EFFECT_PLAYER_ROULETTE = "effect_player_roulette"
+BuffEffectManager.EFFECT_TRICK_OR_TREAT = "effect_trick_or_treat"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_SPENT_AMMO = "challenge_card_effect_failed_message_player_spent_all_ammo"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME = "challenge_card_effect_failed_message_player_failed_interaction_mini_game"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_WENT_TO_BLEEDOUT = "challenge_card_effect_failed_message_player_went_to_bleedout"
@@ -67,6 +68,9 @@ BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_ILEGAL_WEAPON_CATEGORY = "chal
 BuffEffectManager.FAIL_EFFECT_MESSAGE_COMPLETE_RAID_WITHIN_TIME = "challenge_card_effect_failed_message_complete_raid_within_time"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY = "challenge_card_effect_failed_message_player_used_warcry"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP = "challenge_card_effect_failed_message_player_emptied_a_clip"
+BuffEffectManager.EFFECT_CLASSES = {
+	BuffEffectCandy = true
+}
 
 function BuffEffectManager:init()
 	self._active_effects = {}
@@ -76,17 +80,18 @@ function BuffEffectManager:init()
 end
 
 function BuffEffectManager:activate_effect(effect_data)
-	local effect = BuffEffect:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message)
+	local effect_class = effect_data.effect_class and BuffEffectManager.EFFECT_CLASSES[effect_data.effect_class] and CoreSerialize.string_to_classtable(effect_data.effect_class) or BuffEffect
+	local effect = effect_class:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message, effect_data.params)
 	self._effect_id_counter = self._effect_id_counter + 1
 	self._active_effects[self._effect_id_counter] = effect
 	effect.effect_id = self._effect_id_counter
 
 	if effect_data.name == BuffEffectManager.EFFECT_COMPLETE_RAID_WITHIN then
 		self._timers[effect_data.name] = {
-			effect_name = nil,
 			start_time = nil,
-			value = nil,
 			effect_id = nil,
+			value = nil,
+			effect_name = nil,
 			start_time = TimerManager:game():time(),
 			value = effect_data.value,
 			effect_id = effect.effect_id,
@@ -109,6 +114,10 @@ function BuffEffectManager:deactivate_effect(active_effect_id)
 	self:deactivate_special_effect_and_timer(active_effect_id)
 
 	if self._active_effects and self._active_effects[active_effect_id] then
+		if self._active_effects[active_effect_id].destroy then
+			self._active_effects[active_effect_id]:destroy()
+		end
+
 		self._active_effects[active_effect_id] = nil
 	end
 end
@@ -165,6 +174,20 @@ function BuffEffectManager:get_effect_value(effect_name)
 	end
 
 	return result
+end
+
+function BuffEffectManager:get_effect(effect_name)
+	if managers.player:local_player_in_camp() then
+		return 0
+	end
+
+	local result = 0
+
+	for effect_id, effect in pairs(self._active_effects) do
+		if effect_name == effect.effect_name then
+			return effect
+		end
+	end
 end
 
 function BuffEffectManager:update(t, dt)
@@ -227,12 +250,20 @@ function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 end
 
 function BuffEffectManager:save_dropin(data)
+	local active_effects = {}
+
+	for _, effect in pairs(self._active_effects) do
+		local state = effect:save()
+
+		table.insert(active_effects, state)
+	end
+
 	local state = {
+		active_effects = nil,
 		effect_id_counter = nil,
 		dt_sum = nil,
-		active_effects = nil,
 		timers = nil,
-		active_effects = self._active_effects,
+		active_effects = active_effects,
 		dt_sum = self._dt_sum,
 		effect_id_counter = self._effect_id_counter,
 		timers = self._timers
@@ -244,9 +275,19 @@ function BuffEffectManager:load_dropin(data)
 	local state = data.BuffEffectManager
 
 	if state then
-		self._active_effects = state.active_effects or {}
 		self._dt_sum = state.dt_sum or 0
 		self._effect_id_counter = state.effect_id_counter or 0
+		self._active_effects = {}
+		local active_effects = state.active_effects
+
+		if active_effects then
+			self._effect_id_counter = math.max(0, self._effect_id_counter - #active_effects)
+
+			for _, effect_data in pairs(active_effects) do
+				self:activate_effect(effect_data)
+			end
+		end
+
 		self._timers = state.timers or {}
 	end
 

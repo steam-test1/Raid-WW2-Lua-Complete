@@ -11,11 +11,11 @@ end
 
 function HUDCenterPrompt:_create_panel(hud)
 	local panel_params = {
-		w = nil,
 		name = "center_prompt_panel",
 		halign = "center",
 		valign = "center",
 		h = nil,
+		w = nil,
 		w = HUDCenterPrompt.W,
 		h = HUDCenterPrompt.H
 	}
@@ -24,17 +24,17 @@ end
 
 function HUDCenterPrompt:_create_text()
 	local text_params = {
-		text = "",
-		halign = "scale",
-		valign = "scale",
-		h = nil,
-		w = nil,
 		alpha = 0,
 		name = "center_prompt_text",
 		font_size = nil,
 		font = nil,
 		vertical = "center",
 		align = "center",
+		text = "",
+		halign = "scale",
+		valign = "scale",
+		h = nil,
+		w = nil,
 		w = self._object:w(),
 		h = self._object:h(),
 		font = HUDCenterPrompt.TEXT_FONT,

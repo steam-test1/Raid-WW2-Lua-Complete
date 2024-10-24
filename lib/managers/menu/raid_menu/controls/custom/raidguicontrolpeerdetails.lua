@@ -63,10 +63,10 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
-		color = nil,
 		name = "class_icon",
-		texture_rect = nil,
+		color = nil,
 		texture = nil,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons.ico_class_infiltrator.texture,
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 		color = tweak_data.gui.colors.raid_black
@@ -128,8 +128,8 @@ end
 
 function RaidGUIControlPeerDetails:set_nationality(nationality)
 	local params = {
-		icon_h = 48,
 		text_size = nil,
+		icon_h = 48,
 		text_size = RaidGUIControlPeerDetails.ICON_FONT_SIZE
 	}
 

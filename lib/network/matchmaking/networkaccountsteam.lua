@@ -465,8 +465,8 @@ function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
 
 					table.insert(filtered_list[cc_tweakdata.key_name].steam_instances, {
-						instance_id = nil,
 						stack_amount = nil,
+						instance_id = nil,
 						stack_amount = cc_steamdata.amount or 1,
 						instance_id = tostring(instance_id)
 					})

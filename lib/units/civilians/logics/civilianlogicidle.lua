@@ -252,9 +252,9 @@ function CivilianLogicIdle._delayed_alert_clbk(ignore_this, params)
 	data.call_police_delay_t = data.call_police_delay_t or TimerManager:game():time() + 20 + 10 * math.random()
 
 	data.unit:brain():set_objective({
+		alert_data = nil,
 		type = "free",
 		is_default = true,
-		alert_data = nil,
 		alert_data = alert_data
 	})
 end
@@ -274,9 +274,9 @@ function CivilianLogicIdle.on_intimidated(data, amount, aggressor_unit)
 	end
 
 	data.unit:brain():set_objective({
-		amount = nil,
 		type = "surrender",
 		aggressor_unit = nil,
+		amount = nil,
 		amount = amount,
 		aggressor_unit = aggressor_unit
 	})
@@ -291,9 +291,9 @@ function CivilianLogicIdle.damage_clbk(data, damage_info)
 	end
 
 	data.unit:brain():set_objective({
+		dmg_info = nil,
 		type = "free",
 		is_default = true,
-		dmg_info = nil,
 		dmg_info = damage_info
 	})
 end

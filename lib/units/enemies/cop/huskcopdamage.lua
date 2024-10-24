@@ -7,6 +7,8 @@ function HuskCopDamage:die(variant)
 		self._unit:inventory():drop_shield()
 	end
 
+	self._unit:base():set_gear_dead()
+
 	variant = variant or "bullet"
 	self._health = 0
 	self._health_ratio = 0

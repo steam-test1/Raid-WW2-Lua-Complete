@@ -7,11 +7,11 @@ function ImpactDecoy:_setup_from_tweak_data()
 	self._pathing_searches = {}
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
+		feedback_range = nil,
 		effect = nil,
 		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
-		feedback_range = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -86,13 +86,13 @@ function ImpactDecoy:_on_collision(col_ray)
 
 		local search_id = "ImpactDecoy._on_collision" .. tostring(closest_cop:key())
 		local search_params = {
+			pos_from = nil,
 			access_pos = nil,
 			cop = nil,
 			result_clbk = nil,
 			id = nil,
 			pos_to = nil,
 			finished = false,
-			pos_from = nil,
 			pos_from = closest_cop:movement():m_pos(),
 			pos_to = final_lure_position,
 			id = search_id,
@@ -103,6 +103,28 @@ function ImpactDecoy:_on_collision(col_ray)
 		self._pathing_searches[search_id] = search_params
 
 		managers.navigation:search_pos_to_pos(search_params)
+	end
+end
+
+function ImpactDecoy:add_damage_result(unit, attacker, is_dead, damage_percent)
+	local thrower_peer_id = self:get_thrower_peer_id()
+
+	if is_dead and not unit:movement():cool() then
+		self:_award_achievement_decoy_kill(thrower_peer_id)
+	end
+end
+
+function ImpactDecoy:_award_achievement_decoy_kill(thrower_peer_id)
+	Application:info("[ImpactDecoy:achievements] ach_decoy_kill_anyone PEER:", thrower_peer_id)
+
+	local achievement_id = "ach_decoy_kill_anyone"
+
+	if thrower_peer_id == 1 then
+		managers.achievment:award(achievement_id)
+	else
+		local thrower_peer = managers.network:session():peer(thrower_peer_id)
+
+		managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
 	end
 end
 

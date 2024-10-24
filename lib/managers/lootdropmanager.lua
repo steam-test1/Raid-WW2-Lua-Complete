@@ -417,9 +417,9 @@ function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_i
 	Application:trace("[LootDropManager:on_loot_dropped_for_peer]   Loot dropped for peer:  ", loot_type, name, value, peer_id)
 
 	local drop = {
-		peer_name = nil,
-		peer_id = nil,
 		reward_type = nil,
+		peer_id = nil,
+		peer_name = nil,
 		peer_id = peer_id,
 		peer_name = managers.network:session():peer(peer_id) and managers.network:session():peer(peer_id):name() or "",
 		reward_type = loot_type
@@ -479,8 +479,8 @@ function LootDropManager:register_loot(unit, value_type, world_id)
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
 	local loot_data = {
 		value = nil,
-		world_id = nil,
 		unit = nil,
+		world_id = nil,
 		unit = unit,
 		value = value,
 		world_id = world_id

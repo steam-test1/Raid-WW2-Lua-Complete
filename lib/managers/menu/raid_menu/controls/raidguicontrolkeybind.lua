@@ -29,12 +29,12 @@ function RaidGuiControlKeyBind:init(parent, params)
 	self:_create_keybind_layout()
 
 	self._active_line = self._object:rect({
-		w = 3,
-		y = 0,
-		x = 0,
 		visible = false,
 		color = nil,
 		h = 32,
+		w = 3,
+		y = 0,
+		x = 0,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 	self._params.layer = self._params.layer - 1
@@ -198,8 +198,8 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 			for name, btn_connection in pairs(connection._btn_connections) do
 				if btn_connection.name == key_name and self._keybind_params.binding ~= btn_connection.name then
 					managers.menu:show_key_binding_collision({
-						MAPPED = nil,
 						KEY = nil,
+						MAPPED = nil,
 						KEY = key_name,
 						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)
 					})
@@ -212,8 +212,8 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 			for _, b_name in ipairs(connection:get_input_name_list()) do
 				if tostring(b_name) == key_name and self._keybind_params.binding ~= b_name then
 					managers.menu:show_key_binding_collision({
-						MAPPED = nil,
 						KEY = nil,
+						MAPPED = nil,
 						KEY = key_name,
 						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)
 					})
@@ -244,9 +244,9 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 			key_name
 		})
 		managers.controller:set_user_mod(self._keybind_params.connection_name, {
+			controller_id = nil,
 			button = nil,
 			connection = nil,
-			controller_id = nil,
 			button = self._keybind_params.button,
 			connection = key_name,
 			controller_id = input_id
@@ -302,15 +302,15 @@ end
 function RaidGuiControlKeyBind:_create_keybind_layout()
 	local translated_keybind = managers.localization:check_keybind_translation(self._keybind_params.binding)
 	self._keybind = self._object:text({
-		y = 0,
-		text = nil,
-		font_size = nil,
-		color = nil,
-		h = nil,
 		font = nil,
 		vertical = "center",
-		x = nil,
 		align = "center",
+		color = nil,
+		h = nil,
+		text = nil,
+		y = 0,
+		x = nil,
+		font_size = nil,
 		x = RaidGuiControlKeyBind.PADDING,
 		h = RaidGuiControlKeyBind.HEIGHT,
 		text = translated_keybind,
@@ -322,15 +322,15 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	self._keybind:set_text(utf8.to_upper(translated_keybind))
 
 	self._description = self._object:text({
+		font = nil,
+		align = "right",
 		text = nil,
-		w = nil,
-		font_size = nil,
 		color = nil,
 		h = nil,
-		font = nil,
+		w = nil,
 		y = 0,
 		x = nil,
-		align = "right",
+		font_size = nil,
 		x = self._params.keybind_w,
 		w = self._params.w - self._params.keybind_w,
 		h = RaidGuiControlKeyBind.HEIGHT,
@@ -353,10 +353,10 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 
 	self._background_left = self._object:bitmap({
 		texture = nil,
+		h = nil,
+		texture_rect = nil,
 		y = 0,
 		x = nil,
-		texture_rect = nil,
-		h = nil,
 		x = RaidGuiControlKeyBind.PADDING,
 		h = self._params.h,
 		texture = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_LEFT].texture,
@@ -369,12 +369,12 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 		tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_CENTER].texture_rect[4]
 	}
 	self._background_mid = self._object:bitmap({
-		w = nil,
-		y = 0,
-		x = nil,
 		texture = nil,
 		texture_rect = nil,
 		h = nil,
+		w = nil,
+		y = 0,
+		x = nil,
 		x = self._background_left:x() + RaidGuiControlKeyBind.CORNER_WIDTH,
 		w = keybind_width - 2 * RaidGuiControlKeyBind.CORNER_WIDTH,
 		h = self._params.h,
@@ -383,10 +383,10 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	})
 	self._background_right = self._object:bitmap({
 		texture = nil,
+		h = nil,
+		texture_rect = nil,
 		y = 0,
 		x = nil,
-		texture_rect = nil,
-		h = nil,
 		x = self._background_left:x() + keybind_width - RaidGuiControlKeyBind.CORNER_WIDTH,
 		h = self._params.h,
 		texture = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_RIGHT].texture,
@@ -394,24 +394,24 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	})
 	self._background_left_active = self._object:bitmap({
 		texture = nil,
-		y = 0,
-		x = nil,
-		texture_rect = nil,
 		visible = false,
 		h = nil,
+		texture_rect = nil,
+		y = 0,
+		x = nil,
 		x = RaidGuiControlKeyBind.PADDING,
 		h = self._params.h,
 		texture = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_LEFT].texture,
 		texture_rect = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_LEFT].texture_rect
 	})
 	self._background_mid_active = self._object:bitmap({
-		w = nil,
-		y = 0,
-		x = nil,
 		texture = nil,
 		texture_rect = nil,
 		visible = false,
 		h = nil,
+		w = nil,
+		y = 0,
+		x = nil,
 		x = self._background_left_active:x() + RaidGuiControlKeyBind.CORNER_WIDTH,
 		w = keybind_width - 2 * RaidGuiControlKeyBind.CORNER_WIDTH,
 		h = self._params.h,
@@ -420,11 +420,11 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	})
 	self._background_right_active = self._object:bitmap({
 		texture = nil,
-		y = 0,
-		x = nil,
-		texture_rect = nil,
 		visible = false,
 		h = nil,
+		texture_rect = nil,
+		y = 0,
+		x = nil,
 		x = self._background_left_active:x() + keybind_width - RaidGuiControlKeyBind.CORNER_WIDTH,
 		h = self._params.h,
 		texture = tweak_data.gui.icons[RaidGuiControlKeyBind.ICON_RIGHT].texture,
@@ -434,12 +434,12 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	self._keybind:set_w(keybind_width)
 
 	self._active_line = self._object:rect({
-		w = 3,
-		y = 0,
-		x = 0,
 		visible = false,
 		color = nil,
 		h = 32,
+		w = 3,
+		y = 0,
+		x = 0,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 

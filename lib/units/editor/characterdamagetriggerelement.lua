@@ -115,8 +115,8 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(percentage, 0, 0, "EXPAND")
 	self:add_help_text({
 		panel = nil,
-		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
 		sizer = nil,
+		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
 		panel = panel,
 		sizer = panel_sizer
 	})

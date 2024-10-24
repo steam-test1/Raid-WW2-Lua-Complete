@@ -189,11 +189,11 @@ function PlayerTurret:_husk_turret_data()
 
 	managers.player:set_turret_data_for_peer({
 		exit_animation = nil,
-		husk_pos = nil,
-		turret_unit = nil,
-		peer_id = nil,
 		enter_animation = nil,
+		turret_unit = nil,
 		turret_rot = nil,
+		husk_pos = nil,
+		peer_id = nil,
 		peer_id = peer_id,
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
@@ -331,8 +331,8 @@ end
 function PlayerTurret:_play_announce_shooting()
 	if self._firing then
 		managers.dialog:queue_dialog("player_shooting_turret", {
-			skip_idle_check = true,
 			instigator = nil,
+			skip_idle_check = true,
 			instigator = self._unit
 		})
 	else

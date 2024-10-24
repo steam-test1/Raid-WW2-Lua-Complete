@@ -86,9 +86,9 @@ function CharacterCustomization:_attach_unit(slot, name, current_version, loadin
 	self._loading_units[name] = true
 
 	managers.dyn_resource:load(IDS_UNIT, Idstring(name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_part_loaded_callback", {
-		loading_entire_outfit = nil,
 		name = nil,
 		slot = nil,
+		loading_entire_outfit = nil,
 		current_version = nil,
 		name = name,
 		slot = slot,

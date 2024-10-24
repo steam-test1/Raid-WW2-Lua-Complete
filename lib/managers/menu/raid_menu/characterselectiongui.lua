@@ -42,6 +42,7 @@ end
 function CharacterSelectionGui:_layout()
 	self:_disable_dof()
 	self._root_panel:label({
+		name = "subtitle_profiles",
 		font_size = nil,
 		font = nil,
 		text = nil,
@@ -50,13 +51,13 @@ function CharacterSelectionGui:_layout()
 		y = 96,
 		x = 0,
 		color = nil,
-		name = "subtitle_profiles",
 		text = self:translate("character_selection_subtitle", true),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._root_panel:label({
+		name = "subtitle_small_profiles",
 		font_size = nil,
 		font = nil,
 		text = nil,
@@ -65,7 +66,6 @@ function CharacterSelectionGui:_layout()
 		y = 128,
 		x = 0,
 		color = nil,
-		name = "subtitle_small_profiles",
 		text = self:translate("character_selection_subtitle_small", true),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -73,6 +73,8 @@ function CharacterSelectionGui:_layout()
 	})
 
 	self._characters_list = self._root_panel:list_active({
+		name = "characters_list",
+		on_item_selected_callback = nil,
 		data_source_callback = nil,
 		on_item_clicked_callback = nil,
 		special_action_callback = nil,
@@ -85,8 +87,6 @@ function CharacterSelectionGui:_layout()
 		y = 224,
 		x = 0,
 		on_item_double_clicked_callback = nil,
-		name = "characters_list",
-		on_item_selected_callback = nil,
 		item_class = RaidGUIControlListItemCharacterSelect,
 		on_item_clicked_callback = callback(self, self, "_on_item_click"),
 		on_item_selected_callback = callback(self, self, "_on_item_selected"),
@@ -95,24 +95,24 @@ function CharacterSelectionGui:_layout()
 		special_action_callback = callback(self, self, "_character_action_callback")
 	})
 	self._select_character_button = self._root_panel:long_primary_button({
-		text = nil,
+		name = "select_character_button",
 		layer = nil,
+		text = nil,
 		on_click_callback = nil,
+		visible = false,
 		y = 736,
 		x = 0,
-		visible = false,
-		name = "select_character_button",
 		text = self:translate("character_selection_select_character_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "on_select_character_button")
 	})
 	self._select_character_button_disabled = self._root_panel:long_primary_button_disabled({
-		text = nil,
+		name = "select_character_button_disabled",
 		layer = nil,
+		text = nil,
 		visible = nil,
 		y = 736,
 		x = 0,
-		name = "select_character_button_disabled",
 		text = self:translate("character_selection_selected_character_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		visible = not managers.controller:is_controller_present()
@@ -122,13 +122,13 @@ function CharacterSelectionGui:_layout()
 	self._select_character_button_disabled:set_x((416 - self._select_character_button_disabled:w()) / 2)
 
 	self._right_side_info = self._root_panel:create_custom_control(RaidGUIControlCharacterDescription, {
+		name = "right_side_info_panel",
 		h = 720,
 		w = 516,
 		y = 0,
-		x = 1308,
-		name = "right_side_info_panel"
+		x = 1308
 	}, {
-		slot = nil,
+		Vector3 = nil,
 		class = nil
 	})
 
@@ -151,18 +151,18 @@ function CharacterSelectionGui:_data_source_characters_list()
 			local character_name = slot_data.cache.PlayerManager.character_profile_name or ""
 
 			table.insert(characters, {
-				value = nil,
-				text = nil,
 				info = nil,
+				text = nil,
+				value = nil,
 				text = character_name,
 				value = slot_index,
 				info = "Character " .. character_name
 			})
 		else
 			table.insert(characters, {
-				value = nil,
-				text = "",
 				info = "",
+				text = "",
+				value = nil,
 				value = slot_index
 			})
 		end
@@ -191,8 +191,8 @@ function CharacterSelectionGui:_character_action_callback(slot_index, action)
 		local cache = Global.savefile_manager.meta_data_list[slot_index].cache
 		local profile_name = cache.PlayerManager.character_profile_name
 		local params = {
-			textbox_value = nil,
 			callback_yes = nil,
+			textbox_value = nil,
 			callback_yes = callback(self, self, "_callback_yes_function"),
 			textbox_value = profile_name
 		}
@@ -455,13 +455,13 @@ function CharacterSelectionGui:show_selected_character_details(slot_index)
 	else
 		self._right_side_info:set_visible(true)
 		self._right_side_info:set_data({
+			skill_tree = nil,
 			class_name = nil,
 			nationality = nil,
 			profile_name = nil,
 			character_stats = nil,
 			active_warcry = nil,
 			level = nil,
-			skill_tree = nil,
 			class_name = class_name,
 			nationality = nationality,
 			level = level,
@@ -851,8 +851,8 @@ function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = nil,
+				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -891,8 +891,8 @@ function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = nil,
+				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -924,8 +924,8 @@ function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = nil,
+				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -945,8 +945,8 @@ function CharacterSelectionGui:_on_character_rename()
 	local cache = Global.savefile_manager.meta_data_list[self._selected_character_slot].cache
 	local profile_name = cache.PlayerManager.character_profile_name
 	local params = {
-		textbox_value = nil,
 		callback_yes = nil,
+		textbox_value = nil,
 		callback_yes = callback(self, self, "_callback_yes_function"),
 		textbox_value = profile_name
 	}

@@ -98,9 +98,9 @@ end
 
 function NavObstacleElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = self:_select_unit_mask()
 	})
 
@@ -111,9 +111,9 @@ end
 
 function NavObstacleElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = self:_select_unit_mask()
 	})
 
@@ -206,16 +206,16 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
-		panel = nil,
-		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		sizer = nil,
 		tooltip = "Select an object from the combobox",
 		value = nil,
 		options = nil,
-		sizer = nil,
+		panel = nil,
 		name = "Object:",
+		sorted = true,
 		panel = panel,
 		sizer = h_sizer,
 		options = all_object_names,
@@ -232,13 +232,13 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 	toolbar:realize()
 
 	self._guis[self._guis_id] = {
-		guis_id = nil,
-		name_ctrlr = nil,
-		unit = nil,
-		toolbar = nil,
-		unit_id = nil,
-		obj_names = nil,
 		unit_id_ctrlr = nil,
+		guis_id = nil,
+		unit = nil,
+		unit_id = nil,
+		toolbar = nil,
+		name_ctrlr = nil,
+		obj_names = nil,
 		unit_id_ctrlr = unit_id,
 		unit = unit,
 		unit_id = unit:unit_data().unit_id,

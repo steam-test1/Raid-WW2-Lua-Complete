@@ -55,11 +55,11 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	if not path_blocked then
 		Application:debug("[ExplosionManager] Damage player")
 		player:character_damage():damage_explosion({
-			range = nil,
-			damage = nil,
+			position = nil,
 			ignite_character = nil,
 			variant = "explosion",
-			position = nil,
+			damage = nil,
+			range = nil,
 			position = pos,
 			range = range,
 			damage = damage,
@@ -92,11 +92,11 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 	if alive(player) and player_dmg ~= 0 then
 		player:character_damage():damage_explosion({
-			range = nil,
-			damage = nil,
+			position = nil,
 			ignite_character = nil,
 			variant = "explosion",
-			position = nil,
+			damage = nil,
+			range = nil,
 			position = hit_pos,
 			range = range,
 			damage = player_dmg,
@@ -264,9 +264,9 @@ function ExplosionManager:detect_and_give_dmg(params)
 					attacker_unit = user_unit,
 					weapon_unit = owner,
 					col_ray = self._col_ray or {
+						position = nil,
 						body = nil,
 						ray = nil,
-						position = nil,
 						position = hit_body:position(),
 						ray = dir,
 						body = hit_body

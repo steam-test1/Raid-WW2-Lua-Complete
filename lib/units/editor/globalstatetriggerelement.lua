@@ -61,13 +61,13 @@ function GlobalStateTriggerElement:_build_panel(panel, panel_sizer)
 
 	value_sizer:add(value, 2, 0, "ALIGN_CENTER_VERTICAL")
 	value:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = nil,
+		value = "value",
 		ctrlr = value
 	})
 	value:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = nil,
+		value = "value",
 		ctrlr = value
 	})
 

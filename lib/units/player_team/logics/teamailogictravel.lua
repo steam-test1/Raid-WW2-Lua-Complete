@@ -81,8 +81,8 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)
@@ -90,8 +90,8 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	if Application:production_build() then
 		my_data.pathing_debug = {
-			to_pos = nil,
 			from_pos = nil,
+			to_pos = nil,
 			from_pos = Vector3(),
 			to_pos = Vector3()
 		}
@@ -165,8 +165,8 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 				local key = "RemoveAttentionOnUnit" .. tostring(data.key)
 
 				CopLogicBase.queue_task(my_data, key, TeamAILogicTravel._remove_enemy_attention, {
-					target_key = nil,
 					data = nil,
+					target_key = nil,
 					data = data,
 					target_key = civ:key()
 				}, data.t + 1.5)
@@ -219,12 +219,12 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 		for _, p in ipairs(players) do
 			local id = managers.network:session():peer_by_unit(p):id()
 			TeamAILogicTravel._ai_perceptors[id] = {
+				position = nil,
 				is_moving = false,
 				is_rotating = false,
 				last_rotation = nil,
 				last_position = nil,
 				rotation = nil,
-				position = nil,
 				position = Vector3(),
 				rotation = Rotation(),
 				last_position = Vector3(),
@@ -316,9 +316,9 @@ function TeamAILogicTravel._unit_cones(units, cone_depth)
 		local cone_base = cone_top + cone_depth * rot_vec
 		local cone_angle = managers.user:get_setting("fov_standard")
 		local cone = {
+			cone_angle = nil,
 			cone_top = nil,
 			cone_base = nil,
-			cone_angle = nil,
 			cone_top = cone_top,
 			cone_base = cone_base,
 			cone_angle = cone_angle
@@ -336,9 +336,9 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 	if objective.type == "defend_area" then
 		if objective.cover then
 			occupation = {
-				cover = nil,
-				type = "defend",
 				seg = nil,
+				type = "defend",
+				cover = nil,
 				radius = nil,
 				seg = objective.nav_seg,
 				cover = objective.cover,
@@ -346,10 +346,10 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			}
 		elseif objective.pos then
 			occupation = {
-				pos = nil,
-				type = "defend",
 				seg = nil,
+				pos = nil,
 				radius = nil,
+				type = "defend",
 				seg = objective.nav_seg,
 				pos = objective.pos,
 				radius = objective.radius
@@ -363,9 +363,9 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 					cover
 				}
 				occupation = {
-					cover = nil,
-					type = "defend",
 					seg = nil,
+					type = "defend",
+					cover = nil,
 					radius = nil,
 					seg = objective.nav_seg,
 					cover = cover_entry,
@@ -374,10 +374,10 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			else
 				near_pos = CopLogicTravel._get_pos_on_wall(managers.navigation._nav_segments[objective.nav_seg].pos, 700)
 				occupation = {
-					pos = nil,
-					type = "defend",
 					seg = nil,
+					pos = nil,
 					radius = nil,
+					type = "defend",
 					seg = objective.nav_seg,
 					pos = near_pos,
 					radius = objective.radius
@@ -391,19 +391,19 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 
 		local phalanx_circle_pos = logic.calc_initial_phalanx_pos(data.m_pos, objective)
 		occupation = {
-			pos = nil,
-			type = "defend",
 			seg = nil,
+			pos = nil,
 			radius = nil,
+			type = "defend",
 			seg = objective.nav_seg,
 			pos = phalanx_circle_pos,
 			radius = objective.radius
 		}
 	elseif objective.type == "act" then
 		occupation = {
+			seg = nil,
 			pos = nil,
 			type = "act",
-			seg = nil,
 			seg = objective.nav_seg,
 			pos = objective.pos
 		}
@@ -425,8 +425,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 
 		if cover then
 			occupation = {
-				cover = nil,
 				type = "defend",
+				cover = nil,
 				cover = {
 					cover
 				}
@@ -440,8 +440,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 
 			local to_pos = CopLogicTravel._get_pos_on_wall(dest_area.pos, max_dist)
 			occupation = {
-				pos = nil,
 				type = "defend",
+				pos = nil,
 				pos = to_pos
 			}
 		end
@@ -454,8 +454,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local revive_u_right = revive_u_rot:x()
 		local revive_u_pos = revive_u_tracker:lost() and revive_u_tracker:field_position() or revive_u_mv:m_pos()
 		local ray_params = {
-			trace = true,
 			tracker_from = nil,
+			trace = true,
 			tracker_from = revive_u_tracker
 		}
 
@@ -514,8 +514,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local revive_rot = revive_u_pos - revive_pos
 		local revive_rot = Rotation(revive_rot, math.UP)
 		occupation = {
-			pos = nil,
 			type = "revive",
+			pos = nil,
 			rot = nil,
 			pos = revive_pos,
 			rot = revive_rot

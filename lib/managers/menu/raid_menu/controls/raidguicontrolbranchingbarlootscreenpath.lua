@@ -9,17 +9,17 @@ function RaidGUIControlBranchingBarLootScreenPath:init(parent, params)
 	local line_width = params.line_width or 3
 	local layer = params.layer or self._panel:layer() + 1
 	self._line = self._panel:polyline({
-		color = nil,
 		line_width = nil,
 		layer = nil,
+		color = nil,
 		line_width = line_width,
 		color = self.COLOR_ACTIVE,
 		layer = layer
 	})
 	self._active_line = self._panel:polyline({
-		color = nil,
 		line_width = nil,
 		layer = nil,
+		color = nil,
 		line_width = line_width,
 		color = self.COLOR_FILL,
 		layer = layer + 1

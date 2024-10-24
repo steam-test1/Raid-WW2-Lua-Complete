@@ -27,13 +27,13 @@ function PlayerInventory:init(unit)
 	self._use_data_alias = "player"
 	self._align_places = {
 		right_hand = {
-			on_body = false,
 			obj3d_name = nil,
+			on_body = false,
 			obj3d_name = Idstring("a_weapon_right")
 		},
 		left_hand = {
-			on_body = false,
 			obj3d_name = nil,
+			on_body = false,
 			obj3d_name = Idstring("a_weapon_left")
 		}
 	}
@@ -141,15 +141,19 @@ function PlayerInventory:clbk_weapon_unit_destroyed(weap_unit)
 	end
 end
 
+function PlayerInventory:latest_addition()
+	return self._latest_addition
+end
+
 function PlayerInventory:get_latest_addition_hud_data()
 	local unit = self._available_selections[self._latest_addition].unit
 	local _, _, amount = unit:base():ammo_info()
 
 	return {
 		inventory_index = nil,
-		is_equip = nil,
-		amount = nil,
 		unit = nil,
+		amount = nil,
+		is_equip = nil,
 		is_equip = self._latest_addition == self._selected_primary,
 		amount = amount,
 		inventory_index = self._latest_addition,
@@ -163,8 +167,8 @@ function PlayerInventory:recreate_weapon_panels()
 		local hud_data = {
 			inventory_index = nil,
 			unit = nil,
-			is_equip = nil,
 			force = true,
+			is_equip = nil,
 			is_equip = i == self._selected_primary,
 			inventory_index = i,
 			unit = unit

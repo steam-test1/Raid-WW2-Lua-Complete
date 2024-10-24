@@ -130,32 +130,32 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 
 	local label = self.__subtitle_panel:child("label") or self.__subtitle_panel:text({
 		layer = 1,
-		vertical = "top",
-		align = "center",
 		font = nil,
 		y = 1,
 		x = 32,
 		name = "label",
-		font_size = nil,
 		color = nil,
 		wrap = true,
+		font_size = nil,
+		vertical = "top",
+		align = "center",
 		font = self.__font_name,
 		font_size = self.__font_size,
 		color = Color.white
 	})
 	local shadow = self.__subtitle_panel:child("shadow") or self.__subtitle_panel:text({
 		layer = 0,
-		word_wrap = true,
-		vertical = "top",
-		align = "center",
 		font = nil,
 		y = 2,
 		x = 33,
 		name = "shadow",
-		font_size = nil,
+		word_wrap = true,
 		color = nil,
 		visible = false,
 		wrap = true,
+		font_size = nil,
+		vertical = "top",
+		align = "center",
 		font = self.__font_name,
 		font_size = self.__font_size,
 		color = Color.black:with_alpha(0.5)
@@ -166,15 +166,15 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 
 	if nationality_icon ~= nil then
 		local nation_icon = self.__subtitle_panel:child("nation_icon") or self.__subtitle_panel:bitmap({
-			layer = 1,
-			x = 1,
-			h = 32,
 			texture_rect = nil,
 			texture = nil,
-			y = 1,
 			w = 32,
+			y = 1,
+			x = 1,
 			name = "nation_icon",
 			visible = true,
+			layer = 1,
+			h = 32,
 			texture = nationality_icon.texture,
 			texture_rect = nationality_icon.texture_rect
 		})
@@ -271,15 +271,15 @@ function OverlayPresenter:_layout_text_field()
 	assert(self.__subtitle_panel)
 
 	return self.__subtitle_panel:child("layout") or self.__subtitle_panel:text({
-		word_wrap = true,
-		vertical = "top",
-		align = "center",
-		width = nil,
+		font_size = nil,
 		font = nil,
 		name = "layout",
-		font_size = nil,
+		word_wrap = true,
 		visible = false,
 		wrap = true,
+		width = nil,
+		vertical = "top",
+		align = "center",
 		width = self.__subtitle_panel:w() - 64,
 		font = self.__font_name,
 		font_size = self.__font_size
@@ -289,10 +289,10 @@ end
 function OverlayPresenter:_string_width(subtitle_string)
 	local string_width_measure_text_field = self.__ws:panel():child("string_width") or self.__ws:panel():text({
 		wrap = true,
-		name = "string_width",
-		font_size = nil,
 		visible = false,
 		font = nil,
+		font_size = nil,
+		name = "string_width",
 		font = self.__font_name,
 		font_size = self.__font_size
 	})

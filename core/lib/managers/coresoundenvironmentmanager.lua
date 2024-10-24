@@ -309,8 +309,8 @@ function CoreSoundEnvironmentManager:_set_environment(environment)
 	self._current_environment = environment
 
 	SoundDevice:set_default_environment({
-		effect = nil,
 		gain = 1,
+		effect = nil,
 		effect = environment
 	})
 end
@@ -496,16 +496,16 @@ function CoreSoundEnvironmentManager:add_check_object(data)
 	end
 
 	local t = {
-		soundsource = nil,
+		object = nil,
+		id = nil,
+		listener = nil,
+		primary = nil,
 		sound_area_counter = 1,
 		surround = nil,
 		next_occasional = nil,
-		primary = nil,
+		soundsource = nil,
 		active = nil,
 		surround_iterator = nil,
-		object = nil,
-		listener = nil,
-		id = nil,
 		object = data.object,
 		soundsource = soundsource,
 		surround = surround,
@@ -961,9 +961,9 @@ end
 function SoundEnvironmentArea:_add_environment()
 	if self._use_environment and not self._environment_id then
 		self._environment_id = SoundDevice:add_environment({
-			effect = nil,
 			shape = nil,
 			gain = nil,
+			effect = nil,
 			effect = self._environment,
 			gain = self._gain,
 			shape = self._environment_shape
@@ -1067,9 +1067,9 @@ end
 function SoundEnvironmentArea:_update_environment()
 	if self._environment_id then
 		SoundDevice:update_environment(self._environment_id, {
-			effect = nil,
 			shape = nil,
 			gain = nil,
+			effect = nil,
 			effect = self._environment,
 			gain = self._gain,
 			shape = self._environment_shape

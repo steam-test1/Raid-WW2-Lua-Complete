@@ -100,8 +100,8 @@ function JobValueFilterUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select which check operation to perform")
 
 	local help = {
-		sizer = nil,
 		panel = nil,
+		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "Key is what to check. Value is what it is supposed to be to pass the filter. Different check types can be used i the value is known to be a number, for example, greater_then checks if the stored value is greater then the input value."
@@ -138,10 +138,10 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0.25,
-				g = 0.85,
-				r = 0.85,
 				to_unit = nil,
+				b = 0.25,
+				r = 0.85,
+				g = 0.85,
 				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
@@ -152,8 +152,8 @@ end
 
 function ApplyJobValueUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then

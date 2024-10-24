@@ -15,6 +15,7 @@ function DropLootTweakData:init(tweak_data)
 	self:_init_elite_enemy()
 	self:_init_special_enemy()
 	self:_init_flamer_enemy()
+	self:_init_candy_enemy()
 end
 
 function DropLootTweakData:_init_pickups_properties()
@@ -48,6 +49,89 @@ function DropLootTweakData:_init_pickups_properties()
 	self.ammo_small = {
 		ammo_multiplier = 1
 	}
+	self.candy_simple = {
+		interaction_detail = nil,
+		health_restored = 20,
+		grenades_amount = 1,
+		candy_value = 1,
+		ammo_multiplier = 1.2,
+		interaction_detail = {
+			icon = "status_effect_candy_simple",
+			text = "details_candy_simple"
+		}
+	}
+	self.candy_health_regen = {
+		candy_value = 2,
+		interaction_detail = nil,
+		upgrade = "candy_health_regen",
+		interaction_detail = {
+			icon = "status_effect_candy_health_regen",
+			text = "details_candy_health_regen"
+		}
+	}
+	self.candy_god_mode = {
+		candy_value = 3,
+		interaction_detail = nil,
+		upgrade = "candy_god_mode",
+		interaction_detail = {
+			icon = "status_effect_candy_god_mode",
+			text = "details_candy_god_mode"
+		}
+	}
+	self.candy_armor_pen = {
+		candy_value = 2,
+		interaction_detail = nil,
+		upgrade = "candy_armor_pen",
+		interaction_detail = {
+			icon = "status_effect_candy_armor_pen",
+			text = "details_candy_armor_pen"
+		}
+	}
+	self.candy_unlimited_ammo = {
+		candy_value = 3,
+		interaction_detail = nil,
+		upgrade = "candy_unlimited_ammo",
+		interaction_detail = {
+			icon = "status_effect_candy_unlimited_ammo",
+			text = "details_candy_unlimited_ammo"
+		}
+	}
+	self.candy_sprint_speed = {
+		candy_value = 2,
+		interaction_detail = nil,
+		upgrade = "candy_sprint_speed",
+		interaction_detail = {
+			icon = "status_effect_candy_sprint_speed",
+			text = "details_candy_sprint_speed"
+		}
+	}
+	self.candy_jump_boost = {
+		candy_value = 3,
+		interaction_detail = nil,
+		upgrade = "candy_jump_boost",
+		interaction_detail = {
+			icon = "status_effect_candy_jump_boost",
+			text = "details_candy_jump_boost"
+		}
+	}
+	self.candy_atk_dmg = {
+		candy_value = 2,
+		interaction_detail = nil,
+		upgrade = "candy_attack_damage",
+		interaction_detail = {
+			icon = "status_effect_candy_attack_damage",
+			text = "details_candy_atk_dmg"
+		}
+	}
+	self.candy_crit_chance = {
+		candy_value = 3,
+		interaction_detail = nil,
+		upgrade = "candy_critical_hit_chance",
+		interaction_detail = {
+			icon = "status_effect_candy_critical_hit_chance",
+			text = "details_candy_crit_chance"
+		}
+	}
 end
 
 function DropLootTweakData:_init_elite_enemy()
@@ -56,17 +140,20 @@ function DropLootTweakData:_init_elite_enemy()
 		buff_effects_applied = {}
 	}
 	self.elite_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
+	self.elite_enemy.buff_table_override = {
+		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy"
+	}
 	self.elite_enemy.units.health = {
 		drop_rate = 10,
 		subtypes = {}
 	}
 	self.elite_enemy.units.health.subtypes.medium = {
-		drop_rate = 1,
-		unit = "health_medium_beam"
+		unit = "health_medium_beam",
+		drop_rate = 1
 	}
 	self.elite_enemy.units.health.subtypes.small = {
-		drop_rate = 1,
-		unit = "health_small_beam"
+		unit = "health_small_beam",
+		drop_rate = 1
 	}
 	self.elite_enemy.units.grenade = {
 		drop_rate = 5,
@@ -84,17 +171,20 @@ function DropLootTweakData:_init_easy_enemy()
 		buff_effects_applied = {}
 	}
 	self.easy_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
+	self.easy_enemy.buff_table_override = {
+		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy"
+	}
 	self.easy_enemy.units.health = {
 		drop_rate = 15,
 		subtypes = {}
 	}
 	self.easy_enemy.units.health.subtypes.medium = {
-		drop_rate = 10,
-		unit = "health_medium_beam"
+		unit = "health_medium_beam",
+		drop_rate = 10
 	}
 	self.easy_enemy.units.health.subtypes.small = {
-		drop_rate = 90,
-		unit = "health_small_beam"
+		unit = "health_small_beam",
+		drop_rate = 90
 	}
 	self.easy_enemy.units.grenade = {
 		drop_rate = 5,
@@ -105,12 +195,12 @@ function DropLootTweakData:_init_easy_enemy()
 		subtypes = {}
 	}
 	self.easy_enemy.units.ammo.subtypes.medium = {
-		drop_rate = 25,
-		unit = "ammo_medium_beam"
+		unit = "ammo_medium_beam",
+		drop_rate = 25
 	}
 	self.easy_enemy.units.ammo.subtypes.small = {
-		drop_rate = 75,
-		unit = "ammo_small_beam"
+		unit = "ammo_small_beam",
+		drop_rate = 75
 	}
 end
 
@@ -120,17 +210,20 @@ function DropLootTweakData:_init_normal_enemy()
 		buff_effects_applied = {}
 	}
 	self.normal_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
+	self.normal_enemy.buff_table_override = {
+		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy"
+	}
 	self.normal_enemy.units.health = {
 		drop_rate = 10,
 		subtypes = {}
 	}
 	self.normal_enemy.units.health.subtypes.medium = {
-		drop_rate = 20,
-		unit = "health_medium_beam"
+		unit = "health_medium_beam",
+		drop_rate = 20
 	}
 	self.normal_enemy.units.health.subtypes.small = {
-		drop_rate = 80,
-		unit = "health_small_beam"
+		unit = "health_small_beam",
+		drop_rate = 80
 	}
 	self.normal_enemy.units.grenade = {
 		drop_rate = 2,
@@ -141,12 +234,12 @@ function DropLootTweakData:_init_normal_enemy()
 		subtypes = {}
 	}
 	self.normal_enemy.units.ammo.subtypes.medium = {
-		drop_rate = 50,
-		unit = "ammo_medium_beam"
+		unit = "ammo_medium_beam",
+		drop_rate = 50
 	}
 	self.normal_enemy.units.ammo.subtypes.small = {
-		drop_rate = 50,
-		unit = "ammo_small_beam"
+		unit = "ammo_small_beam",
+		drop_rate = 50
 	}
 end
 
@@ -156,17 +249,20 @@ function DropLootTweakData:_init_hard_enemy()
 		buff_effects_applied = {}
 	}
 	self.hard_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
+	self.hard_enemy.buff_table_override = {
+		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy"
+	}
 	self.hard_enemy.units.health = {
 		drop_rate = 20,
 		subtypes = {}
 	}
 	self.hard_enemy.units.health.subtypes.medium = {
-		drop_rate = 30,
-		unit = "health_medium_beam"
+		unit = "health_medium_beam",
+		drop_rate = 30
 	}
 	self.hard_enemy.units.health.subtypes.small = {
-		drop_rate = 70,
-		unit = "health_small_beam"
+		unit = "health_small_beam",
+		drop_rate = 70
 	}
 	self.hard_enemy.units.grenade = {
 		drop_rate = 3,
@@ -177,12 +273,12 @@ function DropLootTweakData:_init_hard_enemy()
 		subtypes = {}
 	}
 	self.hard_enemy.units.ammo.subtypes.medium = {
-		drop_rate = 75,
-		unit = "ammo_medium_beam"
+		unit = "ammo_medium_beam",
+		drop_rate = 75
 	}
 	self.hard_enemy.units.ammo.subtypes.small = {
-		drop_rate = 25,
-		unit = "ammo_small_beam"
+		unit = "ammo_small_beam",
+		drop_rate = 25
 	}
 end
 
@@ -192,63 +288,70 @@ function DropLootTweakData:_init_special_enemy()
 		buff_effects_applied = {}
 	}
 	self.special_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
+	self.special_enemy.buff_table_override = {
+		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy"
+	}
 	self.special_enemy.units.health = {
 		drop_rate = 65,
 		subtypes = {}
 	}
 	self.special_enemy.units.health.subtypes.medium = {
-		drop_rate = 100,
-		unit = "health_medium_beam"
+		unit = "health_medium_beam",
+		drop_rate = 100
 	}
 	self.special_enemy.units.ammo = {
 		drop_rate = 35,
 		subtypes = {}
 	}
 	self.special_enemy.units.ammo.subtypes.medium = {
-		drop_rate = 100,
-		unit = "ammo_medium_beam"
+		unit = "ammo_medium_beam",
+		drop_rate = 100
 	}
 end
 
 function DropLootTweakData:_init_flamer_enemy()
 	self.flamer_enemy = {
-		buff_effects_applied = nil,
 		units = nil,
+		buff_effects_applied = nil,
+		buff_table_override = nil,
 		buff_effects_applied = {
 			[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
 		},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_flamer_enemy"
+		},
 		units = {
-			ammo = nil,
 			health = nil,
+			ammo = nil,
 			health = {
-				drop_rate = 60,
 				subtypes = nil,
+				drop_rate = 60,
 				subtypes = {
 					large = nil,
 					medium = nil,
 					large = {
-						drop_rate = 15,
-						unit = "health_big_beam"
+						unit = "health_big_beam",
+						drop_rate = 15
 					},
 					medium = {
-						drop_rate = 85,
-						unit = "health_medium_beam"
+						unit = "health_medium_beam",
+						drop_rate = 85
 					}
 				}
 			},
 			ammo = {
-				drop_rate = 40,
 				subtypes = nil,
+				drop_rate = 40,
 				subtypes = {
 					large = nil,
 					medium = nil,
 					large = {
-						drop_rate = 15,
-						unit = "ammo_big_beam"
+						unit = "ammo_big_beam",
+						drop_rate = 15
 					},
 					medium = {
-						drop_rate = 85,
-						unit = "ammo_medium_beam"
+						unit = "ammo_medium_beam",
+						drop_rate = 85
 					}
 				}
 			}
@@ -256,45 +359,161 @@ function DropLootTweakData:_init_flamer_enemy()
 	}
 end
 
+function DropLootTweakData:_init_candy_enemy()
+	self.candy_crate = {
+		units = {
+			simple = nil,
+			simple = {
+				unit = "candy_simple",
+				drop_rate = 100
+			}
+		}
+	}
+	self.candy_shelf = {
+		units = {
+			simple = nil,
+			health = nil,
+			simple = {
+				unit = "candy_simple",
+				drop_rate = 20
+			},
+			health = {
+				unit = "health_big",
+				drop_rate = 1
+			}
+		}
+	}
+	self.candy_enemy = {
+		units = {
+			simple = nil,
+			common = nil,
+			rare = nil,
+			simple = {
+				unit = "candy_simple_drop",
+				drop_rate = 40
+			},
+			common = {
+				subtypes = nil,
+				drop_rate = 30,
+				subtypes = {
+					health_regen = nil,
+					atk_dmg = nil,
+					sprint_speed = nil,
+					armor_pen = nil,
+					health_regen = {
+						unit = "candy_health_regen",
+						drop_rate = 25
+					},
+					armor_pen = {
+						unit = "candy_armor_pen",
+						drop_rate = 25
+					},
+					sprint_speed = {
+						unit = "candy_sprint_speed",
+						drop_rate = 25
+					},
+					atk_dmg = {
+						unit = "candy_atk_dmg",
+						drop_rate = 25
+					}
+				}
+			},
+			rare = {
+				subtypes = nil,
+				drop_rate = 25,
+				subtypes = {
+					god_mode = nil,
+					crit_chance = nil,
+					jump_boost = nil,
+					unlimited_ammo = nil,
+					unlimited_ammo = {
+						unit = "candy_unlimited_ammo",
+						drop_rate = 25
+					},
+					jump_boost = {
+						unit = "candy_jump_boost",
+						drop_rate = 25
+					},
+					crit_chance = {
+						unit = "candy_crit_chance",
+						drop_rate = 25
+					},
+					god_mode = {
+						unit = "candy_god_mode",
+						drop_rate = 25
+					}
+				}
+			}
+		}
+	}
+	self.candy_flamer_enemy = {
+		units = {
+			god_mode = nil,
+			crit_chance = nil,
+			jump_boost = nil,
+			unlimited_ammo = nil,
+			unlimited_ammo = {
+				unit = "candy_unlimited_ammo",
+				drop_rate = 25
+			},
+			jump_boost = {
+				unit = "candy_jump_boost",
+				drop_rate = 25
+			},
+			crit_chance = {
+				unit = "candy_crit_chance",
+				drop_rate = 25
+			},
+			god_mode = {
+				unit = "candy_god_mode",
+				drop_rate = 25
+			}
+		}
+	}
+end
+
 function DropLootTweakData:_init_basic_crate_tier()
 	self.basic_crate_tier = {
-		units = {}
+		units = {},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_crate"
+		}
 	}
 	self.basic_crate_tier.units.health = {
-		drop_rate = 50,
+		drop_rate = 40,
 		subtypes = {}
 	}
 	self.basic_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 30,
-		unit = "health_medium"
+		unit = "health_medium",
+		drop_rate = 30
 	}
 	self.basic_crate_tier.units.health.subtypes.small = {
-		drop_rate = 60,
-		unit = "health_small"
+		unit = "health_small",
+		drop_rate = 60
 	}
 	self.basic_crate_tier.units.grenade = {
 		drop_rate = 15,
 		subtypes = {}
 	}
 	self.basic_crate_tier.units.grenade.subtypes.medium = {
-		drop_rate = 50,
-		unit = "grenade_medium"
+		unit = "grenade_medium",
+		drop_rate = 25
 	}
 	self.basic_crate_tier.units.grenade.subtypes.small = {
-		drop_rate = 25,
-		unit = "grenade_small"
+		unit = "grenade_small",
+		drop_rate = 75
 	}
 	self.basic_crate_tier.units.ammo = {
-		drop_rate = 55,
+		drop_rate = 45,
 		subtypes = {}
 	}
 	self.basic_crate_tier.units.ammo.subtypes.medium = {
-		drop_rate = 30,
-		unit = "ammo_medium"
+		unit = "ammo_medium",
+		drop_rate = 30
 	}
 	self.basic_crate_tier.units.ammo.subtypes.small = {
-		drop_rate = 60,
-		unit = "ammo_small"
+		unit = "ammo_small",
+		drop_rate = 60
 	}
 end
 
@@ -307,172 +526,212 @@ function DropLootTweakData:_init_lockpick_crate_tier()
 		subtypes = {}
 	}
 	self.lockpick_crate_tier.units.health.subtypes.large = {
-		drop_rate = 6,
-		unit = "health_big"
+		unit = "health_big",
+		drop_rate = 6
 	}
 	self.lockpick_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 47,
-		unit = "health_medium"
+		unit = "health_medium",
+		drop_rate = 47
 	}
 	self.lockpick_crate_tier.units.health.subtypes.small = {
-		drop_rate = 47,
-		unit = "health_small"
+		unit = "health_small",
+		drop_rate = 47
 	}
 	self.lockpick_crate_tier.units.grenade = {
 		drop_rate = 15,
 		subtypes = {}
 	}
 	self.lockpick_crate_tier.units.grenade.subtypes.large = {
-		drop_rate = 50,
-		unit = "grenade_big"
+		unit = "grenade_big",
+		drop_rate = 50
 	}
 	self.lockpick_crate_tier.units.grenade.subtypes.medium = {
-		drop_rate = 50,
-		unit = "grenade_medium"
+		unit = "grenade_medium",
+		drop_rate = 50
 	}
 	self.lockpick_crate_tier.units.ammo = {
-		drop_rate = 40,
+		drop_rate = 45,
 		subtypes = {}
 	}
 	self.lockpick_crate_tier.units.ammo.subtypes.medium = {
-		drop_rate = 50,
-		unit = "ammo_medium"
+		unit = "ammo_medium",
+		drop_rate = 50
 	}
 	self.lockpick_crate_tier.units.ammo.subtypes.small = {
-		drop_rate = 50,
-		unit = "ammo_small"
+		unit = "ammo_small",
+		drop_rate = 50
 	}
 end
 
 function DropLootTweakData:_init_crowbar_crate_tier()
 	self.crowbar_crate_tier = {
-		units = {}
+		units = {},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR] = "crowbar_crate_reduced"
+		}
 	}
 	self.crowbar_crate_tier.units.health = {
-		drop_rate = 40,
-		unit = "health_big"
+		unit = "health_big",
+		drop_rate = 45
 	}
 	self.crowbar_crate_tier.units.grenade = {
-		drop_rate = 10,
-		unit = "grenade_big"
+		unit = "grenade_big",
+		drop_rate = 10
 	}
 	self.crowbar_crate_tier.units.ammo = {
-		drop_rate = 45,
-		unit = "ammo_big"
+		unit = "ammo_big",
+		drop_rate = 45
+	}
+	self.crowbar_crate_reduced = {
+		units = {
+			grenade = nil,
+			health = nil,
+			ammo = nil,
+			health = {
+				subtypes = nil,
+				drop_rate = 40,
+				subtypes = {
+					large = nil,
+					medium = nil,
+					large = {
+						unit = "health_big",
+						drop_rate = 25
+					},
+					medium = {
+						unit = "health_medium",
+						drop_rate = 75
+					}
+				}
+			},
+			grenade = {
+				unit = "grenade_big",
+				drop_rate = 10
+			},
+			ammo = {
+				unit = "ammo_big",
+				drop_rate = 45
+			}
+		}
 	}
 end
 
 function DropLootTweakData:_init_basic_shelf_tier()
 	self.basic_shelf_tier = {
 		units = {},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_shelf"
+		},
 		difficulty_multipliers = {
+			0.8,
 			0.7,
-			0.6,
-			0.4,
-			0.3
+			0.5,
+			0.35
 		}
 	}
 	self.basic_shelf_tier.units.health = {
-		drop_rate = 20,
+		drop_rate = 40,
 		subtypes = {}
 	}
 	self.basic_shelf_tier.units.health.subtypes.large = {
-		drop_rate = 5,
-		unit = "health_big"
+		unit = "health_big",
+		drop_rate = 5
 	}
 	self.basic_shelf_tier.units.health.subtypes.medium = {
-		drop_rate = 60,
-		unit = "health_medium"
+		unit = "health_medium",
+		drop_rate = 60
 	}
 	self.basic_shelf_tier.units.health.subtypes.small = {
-		drop_rate = 35,
-		unit = "health_small"
+		unit = "health_small",
+		drop_rate = 35
 	}
 	self.basic_shelf_tier.units.grenade = {
-		drop_rate = 5,
+		drop_rate = 10,
 		subtypes = {}
 	}
 	self.basic_shelf_tier.units.grenade.subtypes.large = {
-		drop_rate = 15,
-		unit = "grenade_big"
+		unit = "grenade_big",
+		drop_rate = 15
 	}
 	self.basic_shelf_tier.units.grenade.subtypes.medium = {
-		drop_rate = 60,
-		unit = "grenade_medium"
+		unit = "grenade_medium",
+		drop_rate = 60
 	}
 	self.basic_shelf_tier.units.grenade.subtypes.small = {
-		drop_rate = 15,
-		unit = "grenade_small"
+		unit = "grenade_small",
+		drop_rate = 15
 	}
 	self.basic_shelf_tier.units.ammo = {
-		drop_rate = 20,
+		drop_rate = 40,
 		subtypes = {}
 	}
 	self.basic_shelf_tier.units.ammo.subtypes.large = {
-		drop_rate = 30,
-		unit = "ammo_big"
+		unit = "ammo_big",
+		drop_rate = 30
 	}
 	self.basic_shelf_tier.units.ammo.subtypes.medium = {
-		drop_rate = 50,
-		unit = "ammo_medium"
+		unit = "ammo_medium",
+		drop_rate = 50
 	}
 	self.basic_shelf_tier.units.ammo.subtypes.small = {
-		drop_rate = 10,
-		unit = "ammo_small"
+		unit = "ammo_small",
+		drop_rate = 10
 	}
 end
 
 function DropLootTweakData:_init_camp_shelf_tier()
 	self.camp_shelf_tier = {
-		units = {}
+		units = {},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_shelf"
+		}
 	}
 	self.camp_shelf_tier.units.health = {
 		drop_rate = 10,
 		subtypes = {}
 	}
 	self.camp_shelf_tier.units.health.subtypes.large = {
-		drop_rate = 50,
-		unit = "health_big"
+		unit = "health_big",
+		drop_rate = 50
 	}
 	self.camp_shelf_tier.units.health.subtypes.medium = {
-		drop_rate = 30,
-		unit = "health_medium"
+		unit = "health_medium",
+		drop_rate = 30
 	}
 	self.camp_shelf_tier.units.health.subtypes.small = {
-		drop_rate = 20,
-		unit = "health_small"
+		unit = "health_small",
+		drop_rate = 20
 	}
 	self.camp_shelf_tier.units.grenade = {
 		drop_rate = 30,
 		subtypes = {}
 	}
 	self.camp_shelf_tier.units.grenade.subtypes.large = {
-		drop_rate = 70,
-		unit = "grenade_big"
+		unit = "grenade_big",
+		drop_rate = 40
 	}
 	self.camp_shelf_tier.units.grenade.subtypes.medium = {
-		drop_rate = 20,
-		unit = "grenade_medium"
+		unit = "grenade_medium",
+		drop_rate = 50
 	}
 	self.camp_shelf_tier.units.grenade.subtypes.small = {
-		drop_rate = 10,
-		unit = "grenade_small"
+		unit = "grenade_small",
+		drop_rate = 10
 	}
 	self.camp_shelf_tier.units.ammo = {
 		drop_rate = 60,
 		subtypes = {}
 	}
 	self.camp_shelf_tier.units.ammo.subtypes.large = {
-		drop_rate = 70,
-		unit = "ammo_big"
+		unit = "ammo_big",
+		drop_rate = 70
 	}
 	self.camp_shelf_tier.units.ammo.subtypes.medium = {
-		drop_rate = 20,
-		unit = "ammo_medium"
+		unit = "ammo_medium",
+		drop_rate = 20
 	}
 	self.camp_shelf_tier.units.ammo.subtypes.small = {
-		drop_rate = 10,
-		unit = "ammo_small"
+		unit = "ammo_small",
+		drop_rate = 10
 	}
 end
 
@@ -484,19 +743,19 @@ end
 
 function DropLootTweakData:_init_drop_rate_multipliers()
 	self.drop_rate_multipliers = {
-		grenade = nil,
 		health = nil,
+		grenade = nil,
 		health = {
-			min_ratio = 0.2,
-			max_multiplier = 1.5,
 			max_ratio = 0.5,
-			min_multiplier = 2
+			min_multiplier = 2,
+			min_ratio = 0.2,
+			max_multiplier = 1.5
 		},
 		grenade = {
-			min_ratio = 0.01,
-			max_multiplier = 1.5,
 			max_ratio = 0.5,
-			min_multiplier = 3
+			min_multiplier = 3,
+			min_ratio = 0.01,
+			max_multiplier = 1.5
 		}
 	}
 end

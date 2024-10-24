@@ -183,8 +183,8 @@ function CopLogicPhalanxMinion.breakup(remote_call)
 		local phalanx_area = groupai:get_area_from_nav_seg_id(phalanx_center_nav_seg)
 		local grp_objective = {
 			type = "hunt",
-			area = nil,
 			nav_seg = nil,
+			area = nil,
 			area = phalanx_area,
 			nav_seg = phalanx_center_nav_seg
 		}

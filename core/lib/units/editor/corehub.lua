@@ -403,8 +403,8 @@ function CoreHub:layer_finished()
 
 		if type_name(value) == "number" then
 			v = {
-				unit_id = nil,
 				type = "",
+				unit_id = nil,
 				unit_id = v
 			}
 		end
@@ -449,9 +449,9 @@ function CoreHub:add_action(a)
 
 	local s = self:id_string(a)
 	self._hed.actions_data[s] = {
-		action_delay = 0,
-		unit_id = nil,
 		type = "",
+		unit_id = nil,
+		action_delay = 0,
 		unit_id = a:unit_data().unit_id
 	}
 
@@ -478,8 +478,8 @@ function CoreHub:add_trigger(t)
 
 	local s = self:id_string(t)
 	self._hed.triggers_data[s] = {
-		unit_id = nil,
 		type = "",
+		unit_id = nil,
 		unit_id = t:unit_data().unit_id
 	}
 
@@ -654,9 +654,9 @@ function CoreHub:_build_panel()
 	self._panel_sizer:add(actions_sizer, 0, 0, "EXPAND")
 
 	self._actions_ctrlrs = {
+		action_types = nil,
 		action_delay = nil,
 		actions = nil,
-		action_types = nil,
 		actions = actions,
 		action_delay = action_delay,
 		action_types = action_types
@@ -697,8 +697,8 @@ function CoreHub:_build_panel()
 	self._panel_sizer:add(triggers_sizer, 0, 0, "EXPAND")
 
 	self._triggers_ctrlrs = {
-		triggers = nil,
 		trigger_types = nil,
+		triggers = nil,
 		triggers = triggers,
 		trigger_types = trigger_types
 	}

@@ -34,13 +34,13 @@ end
 
 function QueuedTasksManager:queue(id, callback, task_self, data, delay, verification_callback, persistant)
 	local task = {
+		task_self = nil,
 		callback = nil,
 		id = nil,
 		verification_callback = nil,
 		persistant = nil,
 		execute_time = nil,
 		data = nil,
-		task_self = nil,
 		id = id,
 		callback = callback,
 		task_self = task_self,

@@ -56,10 +56,10 @@ function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 	local y_move = 160
 	local fade_out_distance = 40
 	local icon_params = {
-		texture_rect = nil,
 		name = "icon_clone",
 		layer = nil,
 		texture = nil,
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
 		layer = self._icon:layer() + 1
@@ -88,9 +88,9 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_panel()
 	local panel_params = {
-		w = nil,
 		name = "loot_breakdown_item",
 		alpha = 0,
+		w = nil,
 		w = RaidGUIControlLootBreakdownItem.W
 	}
 	self._object = self._panel:panel(panel_params)
@@ -98,8 +98,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_icon()
 	local icon_params = {
-		texture_rect = nil,
 		name = "loot_item_icon",
+		texture_rect = nil,
 		texture = nil,
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect
@@ -111,8 +111,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_text_panel()
 	local text_panel_params = {
-		h = nil,
 		name = "text_panel",
+		h = nil,
 		h = RaidGUIControlLootBreakdownItem.TEXT_PANEL_H
 	}
 	self._text_panel = self._object:panel(text_panel_params)
@@ -154,11 +154,11 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
-		y = nil,
-		h = nil,
 		name = "counter",
+		y = nil,
 		text = nil,
 		vertical = "center",
+		h = nil,
 		align = "center",
 		halign = "scale",
 		valign = "top",

@@ -1456,10 +1456,10 @@ function MenuManager:show_confirm_skillpoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
 		text = managers.localization:text(params.text_string, {
-			remaining_points = nil,
 			points = nil,
 			cost = nil,
 			skill = nil,
+			remaining_points = nil,
 			skill = params.skill_name_localized,
 			points = params.points,
 			remaining_points = params.remaining_points,
@@ -1558,9 +1558,9 @@ function MenuManager:show_confirm_infamypoints(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_skills_place_title"),
 		text = managers.localization:text(params.text_string, {
-			item = nil,
 			points = nil,
 			remaining_points = nil,
+			item = nil,
 			item = params.infamy_item,
 			points = params.points,
 			remaining_points = params.remaining_points
@@ -1739,8 +1739,8 @@ function MenuManager:show_confirm_blackmarket_mask_remove(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
-			slot = nil,
 			item = nil,
+			slot = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_mask_remove", {
@@ -1786,8 +1786,8 @@ function MenuManager:show_confirm_blackmarket_mask_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
-			slot = nil,
 			item = nil,
+			slot = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_item_sell", {
@@ -1830,8 +1830,8 @@ function MenuManager:show_confirm_blackmarket_sell(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_crafted_sell_title"),
 		text = managers.localization:text("dialog_blackmarket_slot_item", {
-			slot = nil,
 			item = nil,
+			slot = nil,
 			slot = params.slot,
 			item = params.name
 		}) .. "\n\n" .. managers.localization:text("dialog_blackmarket_slot_item_sell", {
@@ -1918,8 +1918,8 @@ function MenuManager:show_confirm_blackmarket_buy(params)
 
 	if num_of_same > 0 then
 		num_in_inventory = managers.localization:text("dialog_blackmarket_num_in_inventory", {
-			item = nil,
 			amount = nil,
+			item = nil,
 			item = params.name,
 			amount = num_of_same
 		})
@@ -1928,9 +1928,9 @@ function MenuManager:show_confirm_blackmarket_buy(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_weapon_buy_title"),
 		text = managers.localization:text("dialog_blackmarket_buy_item", {
-			item = nil,
 			num_in_inventory = nil,
 			money = nil,
+			item = nil,
 			item = params.name,
 			money = params.money,
 			num_in_inventory = num_in_inventory
@@ -1961,8 +1961,8 @@ function MenuManager:show_confirm_blackmarket_mod(params)
 		focus_button = 2,
 		title = l_local:text("dialog_bm_weapon_modify_title"),
 		text = l_local:text("dialog_blackmarket_slot_item", {
-			slot = nil,
 			item = nil,
+			slot = nil,
 			slot = params.slot,
 			item = params.weapon_name
 		}) .. "\n\n" .. l_local:text("dialog_blackmarket_mod_" .. (params.add and "add" or "remove"), {
@@ -2034,8 +2034,8 @@ function MenuManager:show_confirm_weapon_cosmetics(params)
 		focus_button = 2,
 		title = l_local:text("dialog_bm_weapon_modify_title"),
 		text = l_local:text("dialog_blackmarket_slot_item", {
-			slot = nil,
 			item = nil,
+			slot = nil,
 			slot = params.slot,
 			item = params.weapon_name
 		}) .. "\n\n" .. l_local:text("dialog_weapon_cosmetics_" .. (params.item_has_cosmetic and "add" or "remove"), {
@@ -2085,8 +2085,8 @@ function MenuManager:show_confirm_blackmarket_assemble(params)
 
 	if num_of_same > 0 then
 		num_in_inventory = managers.localization:text("dialog_blackmarket_num_in_inventory", {
-			item = nil,
 			amount = nil,
+			item = nil,
 			item = params.name,
 			amount = num_of_same
 		})
@@ -2095,8 +2095,8 @@ function MenuManager:show_confirm_blackmarket_assemble(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_assemble_title"),
 		text = managers.localization:text("dialog_blackmarket_assemble_item", {
-			item = nil,
 			num_in_inventory = nil,
+			item = nil,
 			item = params.name,
 			num_in_inventory = num_in_inventory
 		}),
@@ -2148,12 +2148,12 @@ function MenuManager:show_confirm_blackmarket_finalize(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_bm_mask_custom_final_title"),
 		text = managers.localization:text("dialog_blackmarket_finalize_item", {
-			money = nil,
 			ITEM = nil,
+			money = nil,
 			money = params.money,
 			ITEM = managers.localization:text("dialog_blackmarket_slot_item", {
-				item = nil,
 				slot = nil,
+				item = nil,
 				item = params.name,
 				slot = params.slot
 			})
@@ -2709,12 +2709,12 @@ function MenuManager:show_skill_profile_rename_dialog(params)
 		callback_func = params.callback_no
 	}
 	local dialog_data = {
-		title = nil,
-		textbox_value = nil,
-		capitalize = false,
-		textbox = true,
 		button_list = nil,
+		textbox_value = nil,
 		focus_button = 1,
+		textbox = true,
+		title = nil,
+		capitalize = false,
 		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
 		textbox_value = params.textbox_value,
 		button_list = {

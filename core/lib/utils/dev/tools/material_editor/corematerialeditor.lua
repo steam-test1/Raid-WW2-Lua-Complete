@@ -410,14 +410,14 @@ function CoreMaterialEditor:_save_to_disk(path)
 	local global_file = self:_save_global_to_disk(false)
 
 	Application:data_compile({
+		send_idstrings = false,
 		source_files = nil,
 		platform = nil,
 		target_db_name = "all",
-		send_idstrings = false,
+		preprocessor_definitions = "preprocessor_definitions",
 		target_db_root = nil,
 		source_root = nil,
 		verbose = false,
-		preprocessor_definitions = "preprocessor_definitions",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -445,14 +445,14 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 
 	if recompile then
 		Application:data_compile({
+			send_idstrings = false,
 			source_files = nil,
 			platform = nil,
 			target_db_name = "all",
-			send_idstrings = false,
+			preprocessor_definitions = "preprocessor_definitions",
 			target_db_root = nil,
 			source_root = nil,
 			verbose = false,
-			preprocessor_definitions = "preprocessor_definitions",
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "assets",

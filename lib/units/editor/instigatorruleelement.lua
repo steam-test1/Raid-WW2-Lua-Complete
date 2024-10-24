@@ -46,8 +46,8 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	local instigator = CoreEWS.combobox(instigator_params)
 
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "instigator",
 		ctrlr = nil,
+		value = "instigator",
 		ctrlr = instigator
 	})
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_instigator_changed"), {
@@ -75,11 +75,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 
 	if instigator == "player" then
 		local states_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Player states:",
 			tooltip = "Select player state rules",
 			panel = panel,
@@ -90,11 +90,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(states_params)
 		local carry_ids_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Carry ids:",
 			tooltip = "Select player carry ids rules",
 			panel = panel,
@@ -111,11 +111,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		end
 
 		local mission_equipment_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Mission equipment:",
 			tooltip = "Select player mission equipment rules",
 			panel = panel,
@@ -127,11 +127,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local states = CoreEws.list_selector(mission_equipment_params)
 	elseif instigator == "enemies" then
 		local carry_ids_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Enemy name:",
 			tooltip = "Select enemy names rules",
 			panel = panel,
@@ -142,11 +142,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(carry_ids_params)
 		local pickups_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Pickup:",
 			tooltip = "Select a pickup rule",
 			panel = panel,
@@ -158,11 +158,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "civilians" then
 		local civilian_names_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Civilian name:",
 			tooltip = "Select civilian names rules",
 			panel = panel,
@@ -173,11 +173,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(civilian_names_params)
 		local pickups_params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Pickup:",
 			tooltip = "Select a pickup rule",
 			panel = panel,
@@ -189,11 +189,11 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "loot" then
 		local params = {
-			value = nil,
-			sizer = nil,
-			options = nil,
 			panel = nil,
+			value = nil,
 			updated_callback = nil,
+			options = nil,
+			sizer = nil,
 			name = "Carry ids:",
 			tooltip = "Select a loot carry id rule",
 			panel = panel,

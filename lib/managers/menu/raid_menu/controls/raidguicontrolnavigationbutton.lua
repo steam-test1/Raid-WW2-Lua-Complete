@@ -15,11 +15,11 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	end
 
 	self._object = self._panel:panel({
+		name = nil,
+		layer = nil,
 		h = nil,
 		y = nil,
 		x = nil,
-		name = nil,
-		layer = nil,
 		name = "navigation_button_panel_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -47,15 +47,15 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	end
 
 	self._icon = self._object:image({
-		w = nil,
+		name = nil,
 		y = 0,
 		layer = nil,
+		w = nil,
 		texture_rect = nil,
 		h = nil,
 		texture = nil,
 		x = nil,
 		color = nil,
-		name = nil,
 		name = "navigation_button_icon_" .. self._name,
 		x = icon_coord_x,
 		w = RaidGUIControlNavigationButton.ICON_SIZE,
@@ -66,7 +66,9 @@ function RaidGUIControlNavigationButton:init(parent, params)
 		layer = self._object:layer() - 1
 	})
 	self._text = self._object:label({
+		name = nil,
 		h = nil,
+		vertical = "center",
 		text = nil,
 		font_size = nil,
 		font = nil,
@@ -75,8 +77,6 @@ function RaidGUIControlNavigationButton:init(parent, params)
 		y = 0,
 		x = nil,
 		color = nil,
-		name = nil,
-		vertical = "center",
 		name = "navigation_button_text_" .. self._name,
 		x = text_coord_x,
 		h = RaidGUIControlNavigationButton.ICON_SIZE,

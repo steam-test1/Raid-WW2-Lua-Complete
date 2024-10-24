@@ -118,8 +118,8 @@ function PostGameBreakdownGui:_layout()
 	self._stats_breakdown:hide()
 
 	local top_stats_small_panel_params = {
-		halign = "right",
 		w = nil,
+		halign = "right",
 		valign = "top",
 		y = nil,
 		h = nil,
@@ -149,13 +149,13 @@ function PostGameBreakdownGui:_layout()
 	self._top_stats_small[3]:set_bottom(self._top_stats_small_panel:h())
 
 	local progress_bar_params = {
-		initial_progress = nil,
 		horizontal_padding = 64,
-		bar_w = 62450,
+		initial_progress = nil,
+		initial_level = nil,
 		y = nil,
 		w = nil,
 		name = "progress_bar",
-		initial_level = nil,
+		bar_w = 62450,
 		y = PostGameBreakdownGui.PROGRESS_BAR_Y,
 		w = self._root_panel:w(),
 		initial_progress = self:_get_progress(self.initial_xp),
@@ -172,21 +172,21 @@ function PostGameBreakdownGui:_layout()
 	end
 
 	local total_xp_params = {
+		value_color = nil,
+		value_align = "center",
+		value = "0",
+		y = nil,
+		w = nil,
+		name = "total_xp",
+		font_size = nil,
+		color = nil,
+		align = "center",
+		x = 0,
+		text = nil,
 		h = nil,
 		layer = 1,
 		value_padding = nil,
-		y = nil,
-		x = 0,
-		name = "total_xp",
-		value_color = nil,
-		value = "0",
 		value_font_size = nil,
-		align = "center",
-		font_size = nil,
-		color = nil,
-		value_align = "center",
-		w = nil,
-		text = nil,
 		y = PostGameBreakdownGui.TOTAL_XP_Y,
 		w = self._root_panel:w(),
 		h = PostGameBreakdownGui.TOTAL_XP_H,
@@ -228,10 +228,10 @@ end
 
 function PostGameBreakdownGui:_layout_central_display()
 	local central_display_panel_params = {
-		halign = "center",
-		h = nil,
-		valign = "top",
 		w = nil,
+		halign = "center",
+		valign = "top",
+		h = nil,
 		name = "central_display_params",
 		alpha = 0,
 		w = PostGameBreakdownGui.CENTRAL_DISPLAY_W,
@@ -244,10 +244,10 @@ end
 
 function PostGameBreakdownGui:_layout_generic_win_display()
 	self._generic_win_panel = self._central_display_panel:panel({
-		halign = "scale",
-		h = nil,
-		valign = "scale",
 		w = nil,
+		halign = "scale",
+		valign = "scale",
+		h = nil,
 		name = "generic_win_panel",
 		visible = nil,
 		w = self._central_display_panel:w(),
@@ -267,15 +267,15 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 
 	local is_player_max_level = managers.experience:reached_level_cap()
 	local title = self._generic_win_panel:text({
-		h = nil,
-		color = nil,
-		name = "generic_win_title_text",
-		visible = nil,
-		align = "center",
-		font_size = nil,
 		vertical = "center",
+		align = "center",
+		visible = nil,
+		name = "generic_win_title_text",
+		font_size = nil,
+		color = nil,
 		font = nil,
 		text = nil,
+		h = nil,
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_FONT_SIZE,
@@ -291,15 +291,15 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	title:set_center_x(self._generic_win_panel:w() / 2)
 
 	local flavor_text = self._generic_win_panel:text({
-		h = nil,
-		color = nil,
-		name = "generic_win_flavor_text",
-		visible = nil,
-		align = "center",
-		font_size = nil,
 		vertical = "center",
+		align = "center",
+		visible = nil,
+		name = "generic_win_flavor_text",
+		font_size = nil,
+		color = nil,
 		font = nil,
 		text = nil,
+		h = nil,
 		text = self:translate("menu_keep_it_up", true),
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
@@ -316,10 +316,10 @@ end
 
 function PostGameBreakdownGui:_layout_fail_display()
 	self._fail_panel = self._central_display_panel:panel({
-		halign = "scale",
-		h = nil,
-		valign = "scale",
 		w = nil,
+		halign = "scale",
+		valign = "scale",
+		h = nil,
 		name = "fail_display_panel",
 		visible = nil,
 		w = self._central_display_panel:w(),
@@ -338,14 +338,14 @@ function PostGameBreakdownGui:_layout_fail_display()
 	icon:set_center_y(PostGameBreakdownGui.CENTRAL_DISPLAY_SINGLE_ICON_CENTER_Y)
 
 	local title = self._fail_panel:text({
-		h = nil,
-		align = "center",
-		font_size = nil,
-		color = nil,
 		font = nil,
-		name = "fail_title_text",
+		align = "center",
 		text = nil,
 		vertical = "center",
+		h = nil,
+		name = "fail_title_text",
+		font_size = nil,
+		color = nil,
 		text = self:translate("menu_better_luck_next_time", true),
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_FONT_SIZE,
@@ -360,14 +360,14 @@ function PostGameBreakdownGui:_layout_fail_display()
 	title:set_center_x(self._fail_panel:w() / 2)
 
 	local flavor_text = self._fail_panel:text({
-		h = nil,
-		align = "center",
-		font_size = nil,
-		color = nil,
 		font = nil,
-		name = "fail_flavor_text",
+		align = "center",
 		text = nil,
 		vertical = "center",
+		h = nil,
+		name = "fail_flavor_text",
+		font_size = nil,
+		color = nil,
 		text = self:translate("menu_fail", true),
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_FLAVOR_TEXT_FONT_SIZE,
@@ -661,21 +661,24 @@ function PostGameBreakdownGui:animate_breakdown()
 		local top_stats = managers.statistics:get_top_stats()
 
 		for i = 1, 3 do
+			local stat_data = top_stats[i]
+			local stat_tweak = tweak_data.statistics.top_stats[stat_data.id]
+			local peer_id = stat_data.peer_id
 			local data = {
-				score_format = nil,
-				score = nil,
 				icon_texture_rect = nil,
-				icon_texture = nil,
-				stat = nil,
+				score_format = nil,
 				icon = nil,
+				icon_texture = nil,
+				score = nil,
+				stat = nil,
 				player_nickname = nil,
-				player_nickname = top_stats[i].peer_name,
-				stat = top_stats[i].id,
-				icon = tweak_data.statistics.top_stats[top_stats[i].id].icon,
-				icon_texture = tweak_data.statistics.top_stats[top_stats[i].id].texture,
-				icon_texture_rect = tweak_data.statistics.top_stats[top_stats[i].id].texture_rect,
-				score = top_stats[i].score,
-				score_format = tweak_data.statistics.top_stats[top_stats[i].id].score_format
+				player_nickname = stat_data.peer_name,
+				stat = stat_data.id,
+				score = stat_data.score,
+				icon = stat_tweak.icon,
+				icon_texture = stat_tweak.texture,
+				icon_texture_rect = stat_tweak.texture_rect,
+				score_format = stat_tweak.score_format
 			}
 
 			self._top_stats_small[i]:set_data(data)

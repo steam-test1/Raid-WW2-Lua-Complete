@@ -41,9 +41,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		_shooting = nil,
 		from = nil,
 		kills = 0,
+		stop_shooting = nil,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -56,9 +56,9 @@ function RaycastWeaponBase:init(unit)
 	self._obj_fire = self._unit:get_object(Idstring("fire"))
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
-		force_synch = true,
 		parent = nil,
 		effect = nil,
+		force_synch = true,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
@@ -66,9 +66,9 @@ function RaycastWeaponBase:init(unit)
 
 	if self._muzzletrail_effect then
 		self._muzzletrail_effect_table = {
-			force_synch = true,
 			parent = nil,
 			effect = nil,
+			force_synch = true,
 			effect = self._muzzletrail_effect,
 			parent = self._obj_fire
 		}
@@ -92,8 +92,8 @@ function RaycastWeaponBase:init(unit)
 
 	self._trail_effect_table = {
 		normal = nil,
-		position = nil,
 		effect = nil,
+		position = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
@@ -121,6 +121,7 @@ end
 function RaycastWeaponBase:get_shoot_through_enemies_count()
 	local pen_count = self._can_shoot_through_enemy or 0
 	pen_count = pen_count + managers.player:upgrade_value("player", "warcry_shoot_through_enemies", 0)
+	pen_count = pen_count + managers.player:temporary_upgrade_value("temporary", "candy_armor_pen", 0)
 
 	return pen_count
 end
@@ -391,6 +392,7 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	if self._setup.user_unit == managers.player:player_unit() then
 		consume_ammo = consume_ammo and not managers.player:has_category_upgrade("player", "warcry_no_reloads")
+		consume_ammo = consume_ammo and not managers.player:has_activate_temporary_upgrade("temporary", "candy_unlimited_ammo")
 		local active_warcry = managers.warcry:get_active_warcry()
 
 		if managers.warcry:active() and active_warcry.check_ammo_consumption then
@@ -525,9 +527,9 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	if managers.player:local_player() == user_unit then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_FIRED_WEAPON, {
-			damage = nil,
-			killed_enemy = nil,
 			weapon = nil,
+			killed_enemy = nil,
+			damage = nil,
 			weapon = self._name_id,
 			damage = self:base_damage(),
 			killed_enemy = ray_res.hit_enemy and type(ray_res.hit_enemy) == "table" and ray_res.hit_enemy.type and ray_res.hit_enemy.type == "death"
@@ -1168,9 +1170,9 @@ function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos,
 	local col_ray = {
 		unit = nil,
 		ray = nil,
-		body = nil,
 		normal = nil,
 		position = nil,
+		body = nil,
 		position = impact_pos,
 		ray = direction,
 		normal = impact_normal,
@@ -1910,8 +1912,8 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 
 		managers.game_play_central:play_impact_flesh({
 			col_ray = nil,
-			weapon_type = nil,
 			no_sound = nil,
+			weapon_type = nil,
 			col_ray = col_ray,
 			no_sound = no_sound,
 			weapon_type = weapon_type
@@ -1950,8 +1952,8 @@ end
 function InstantBulletBase:play_impact_sound_and_effects(col_ray, no_sound, weapon_type)
 	managers.game_play_central:play_impact_sound_and_effects({
 		col_ray = nil,
-		weapon_type = nil,
 		no_sound = nil,
+		weapon_type = nil,
 		col_ray = col_ray,
 		no_sound = no_sound,
 		weapon_type = weapon_type
@@ -1991,14 +1993,14 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
+	idstr_decal = nil,
+	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
 	on_unit = true,
 	sound_event = "round_explode",
 	idstr_effect = nil,
-	idstr_decal = nil,
-	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.explosive_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2078,15 +2080,15 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	managers.explosion:play_sound_and_effects(position, normal, self.RANGE, self.EFFECT_PARAMS)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		damage = nil,
-		owner = nil,
-		user = nil,
 		player_damage = nil,
 		collision_slotmask = nil,
-		hit_pos = nil,
-		curve_pow = nil,
 		ignore_unit = nil,
+		user = nil,
+		curve_pow = nil,
+		hit_pos = nil,
+		owner = nil,
 		range = nil,
+		damage = nil,
 		hit_pos = position,
 		range = self.RANGE,
 		collision_slotmask = slot_mask,
@@ -2113,9 +2115,9 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
+				skip_bullet_count = true,
 				weapon_unit = nil,
 				hit = true,
-				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -2141,14 +2143,14 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
+	idstr_decal = nil,
+	on_unit = true,
 	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
-	idstr_effect = nil,
-	sound_event = "round_explode",
 	pushunits = nil,
-	idstr_decal = nil,
-	on_unit = true,
+	sound_event = "round_explode",
+	idstr_effect = nil,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.flame_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),

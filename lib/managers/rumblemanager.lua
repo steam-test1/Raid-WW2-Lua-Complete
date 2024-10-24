@@ -12,25 +12,25 @@ end
 
 function RumbleManager:setup_preset_rumbles()
 	self:add_preset_rumbles("weapon_fire", {
-		peak = 0.5,
-		engine = "both",
 		cumulative = false,
 		release = 0.05,
-		sustain = 0.1
+		sustain = 0.1,
+		peak = 0.5,
+		engine = "both"
 	})
 	self:add_preset_rumbles("land", {
-		peak = 0.5,
-		engine = "both",
 		cumulative = false,
 		release = 0.1,
-		sustain = 0.1
+		sustain = 0.1,
+		peak = 0.5,
+		engine = "both"
 	})
 	self:add_preset_rumbles("hard_land", {
-		peak = 1,
-		engine = "both",
 		cumulative = false,
 		release = 0.1,
-		sustain = 0.3
+		sustain = 0.3,
+		peak = 1,
+		engine = "both"
 	})
 	self:add_preset_rumbles("electrified", {
 		peak = 0.5,
@@ -39,54 +39,54 @@ function RumbleManager:setup_preset_rumbles()
 		release = 0.05
 	})
 	self:add_preset_rumbles("electric_shock", {
-		peak = 1,
-		engine = "both",
 		cumulative = true,
 		release = 0.1,
-		sustain = 0.2
+		sustain = 0.2,
+		peak = 1,
+		engine = "both"
 	})
 	self:add_preset_rumbles("incapacitated_shock", {
-		peak = 0.75,
-		engine = "both",
 		cumulative = true,
 		release = 0.1,
-		sustain = 0.2
+		sustain = 0.2,
+		peak = 0.75,
+		engine = "both"
 	})
 	self:add_preset_rumbles("damage_bullet", {
-		peak = 1,
-		engine = "both",
 		cumulative = true,
 		release = 0,
-		sustain = 0.2
+		sustain = 0.2,
+		peak = 1,
+		engine = "both"
 	})
 	self:add_preset_rumbles("damage_bullet_turret", {
-		peak = 0.5,
-		engine = "both",
 		cumulative = true,
 		release = 0,
-		sustain = 0.1
+		sustain = 0.1,
+		peak = 0.5,
+		engine = "both"
 	})
 	self:add_preset_rumbles("bullet_whizby", {
-		peak = 1,
-		engine = "both",
 		cumulative = true,
 		release = 0,
-		sustain = 0.075
+		sustain = 0.075,
+		peak = 1,
+		engine = "both"
 	})
 	self:add_preset_rumbles("melee_hit", {
-		peak = 1,
-		engine = "both",
 		cumulative = true,
 		release = 0,
-		sustain = 0.15
+		sustain = 0.15,
+		peak = 1,
+		engine = "both"
 	})
 	self:add_preset_rumbles("mission_triggered", {
-		peak = 1,
 		attack = 0.1,
-		engine = "both",
 		cumulative = true,
 		release = 2.1,
-		sustain = 0.3
+		sustain = 0.3,
+		peak = 1,
+		engine = "both"
 	})
 end
 

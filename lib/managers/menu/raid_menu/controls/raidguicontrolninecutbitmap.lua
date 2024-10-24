@@ -30,13 +30,13 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	local corner_size = self._params.corner_size
 	local top_left_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_top_left")
 	self._top_left = self._object:bitmap({
+		texture_rect = nil,
+		texture = nil,
 		name = nil,
 		h = nil,
 		w = nil,
 		color = nil,
 		alpha = nil,
-		texture_rect = nil,
-		texture = nil,
 		name = self._name .. "_top_left",
 		w = corner_size,
 		h = corner_size,
@@ -47,14 +47,14 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local top_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_top")
 	self._top = self._object:bitmap({
+		texture_rect = nil,
+		texture = nil,
+		name = nil,
 		x = nil,
 		h = nil,
 		w = nil,
 		color = nil,
 		alpha = nil,
-		texture_rect = nil,
-		texture = nil,
-		name = nil,
 		name = self._name .. "_top",
 		x = corner_size,
 		w = self._object:w() - corner_size * 2,
@@ -66,14 +66,14 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local top_right_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_top_right")
 	self._top_right = self._object:bitmap({
+		texture_rect = nil,
+		texture = nil,
+		name = nil,
 		x = nil,
 		h = nil,
 		w = nil,
 		color = nil,
 		alpha = nil,
-		texture_rect = nil,
-		texture = nil,
-		name = nil,
 		name = self._name .. "_top_right",
 		x = self._object:w() - corner_size,
 		w = corner_size,
@@ -85,14 +85,14 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local left_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_left")
 	self._left = self._object:bitmap({
-		w = nil,
-		h = nil,
-		name = nil,
-		y = nil,
-		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
 		color = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		alpha = nil,
 		name = self._name .. "_left",
 		y = corner_size,
 		w = corner_size,
@@ -104,8 +104,6 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local center_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_center")
 	self._center = self._object:bitmap({
-		name = nil,
-		y = nil,
 		x = nil,
 		h = nil,
 		w = nil,
@@ -113,6 +111,8 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
+		y = nil,
 		name = self._name .. "_center",
 		x = corner_size,
 		y = corner_size,
@@ -125,8 +125,6 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local right_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_right")
 	self._right = self._object:bitmap({
-		name = nil,
-		y = nil,
 		x = nil,
 		h = nil,
 		w = nil,
@@ -134,6 +132,8 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
+		y = nil,
 		name = self._name .. "_right",
 		x = self._object:w() - corner_size,
 		y = corner_size,
@@ -146,14 +146,14 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local bottom_left_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_bottom_left")
 	self._bottom_left = self._object:bitmap({
-		w = nil,
-		h = nil,
-		name = nil,
-		y = nil,
-		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
 		color = nil,
+		h = nil,
+		w = nil,
+		y = nil,
+		alpha = nil,
 		name = self._name .. "_bottom_left",
 		y = self._object:h() - corner_size,
 		w = corner_size,
@@ -165,8 +165,6 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local bottom_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_bottom")
 	self._bottom = self._object:bitmap({
-		name = nil,
-		y = nil,
 		x = nil,
 		h = nil,
 		w = nil,
@@ -174,6 +172,8 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
+		y = nil,
 		name = self._name .. "_bottom",
 		x = corner_size,
 		y = self._object:h() - corner_size,
@@ -186,8 +186,6 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 	})
 	local bottom_right_icon = tweak_data.gui:get_full_gui_data(self._params.icon .. "_bottom_right")
 	self._bottom_right = self._object:bitmap({
-		name = nil,
-		y = nil,
 		x = nil,
 		h = nil,
 		w = nil,
@@ -195,6 +193,8 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		alpha = nil,
 		texture_rect = nil,
 		texture = nil,
+		name = nil,
+		y = nil,
 		name = self._name .. "_bottom_right",
 		x = self._object:w() - corner_size,
 		y = self._object:h() - corner_size,

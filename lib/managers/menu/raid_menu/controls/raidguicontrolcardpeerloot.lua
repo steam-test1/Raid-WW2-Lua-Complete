@@ -39,13 +39,13 @@ end
 
 function RaidGUIControlCardPeerLoot:_create_card_details()
 	local params_card_image = {
+		texture_rect = nil,
+		texture = "ui/main_menu/textures/cards_atlas",
 		y = 0,
 		name = "card_image",
 		h = nil,
 		w = nil,
 		x = 0,
-		texture_rect = nil,
-		texture = "ui/main_menu/textures/cards_atlas",
 		w = self._control_panel:w(),
 		h = self._control_panel:w() * 1.45,
 		texture_rect = {
@@ -77,11 +77,11 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 	}
 	self._name_label = self._control_panel:label(params_player_name)
 	local params_card_title = {
+		wrap = true,
 		y = nil,
 		align = "right",
 		font_size = nil,
 		font = nil,
-		wrap = true,
 		color = nil,
 		layer = 1,
 		text = "22xp",

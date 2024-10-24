@@ -4,10 +4,10 @@ AchievmentManager.FILE_EXTENSION = "achievment"
 
 function AchievmentManager:init()
 	self.exp_awards = {
-		a = 500,
 		none = 0,
 		c = 5000,
-		b = 1500
+		b = 1500,
+		a = 500
 	}
 	self.script_data = {}
 
@@ -24,8 +24,8 @@ function AchievmentManager:init()
 				self.handler:init()
 
 				Global.achievment_manager = {
-					handler = nil,
 					achievments = nil,
+					handler = nil,
 					handler = self.handler,
 					achievments = self.achievments
 				}
@@ -52,8 +52,8 @@ function AchievmentManager:init()
 			self:_parse_achievments("PS4")
 
 			Global.achievment_manager = {
-				trophy_requests = nil,
 				achievments = nil,
+				trophy_requests = nil,
 				trophy_requests = {},
 				achievments = self.achievments
 			}
@@ -174,11 +174,11 @@ function AchievmentManager:_parse_achievments(platform)
 			for _, reward in ipairs(ach) do
 				if reward._meta == "reward" and (Application:editor() or not platform or platform == reward.platform) then
 					self.achievments[ach.id] = {
-						dlc_loot = nil,
 						awarded = false,
 						exp = nil,
 						name = nil,
 						id = nil,
+						dlc_loot = nil,
 						id = reward.id,
 						name = ach.name,
 						exp = self.exp_awards[ach.awards_exp],
@@ -232,6 +232,8 @@ function AchievmentManager:award(id)
 	end
 
 	if self:get_info(id).awarded then
+		Application:debug("[AchievmentManager:award] Awarding already awarded achievement", "id", id)
+
 		return
 	end
 
@@ -258,8 +260,8 @@ function AchievmentManager:award_progress(stat, value)
 
 	local stats = {
 		[stat] = {
-			value = nil,
 			type = "int",
+			value = nil,
 			value = value or 1
 		}
 	}
@@ -445,77 +447,93 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 	end
 end
 
-AchievmentManager._T = {
-	clear_skies = nil,
-	oper_flamable = nil,
-	clear_skies = {
-		hardest_nobleed = "ach_clear_skies_hardest_no_bleedout",
-		hardest = "ach_clear_skies_hardest",
-		nobleed = "ach_clear_skies_no_bleedout"
-	},
-	oper_flamable = {
-		hardest_nobleed = "ach_burn_hardest_no_bleedout",
-		hardest = "ach_burn_hardest",
-		nobleed = "ach_burn_no_bleedout"
-	}
-}
-
-function AchievmentManager:check_achievement_operation(operation_save_data)
-	local job_achi_data = AchievmentManager._T[operation_save_data.current_job.job_id]
-
-	if not job_achi_data then
+function AchievmentManager:on_level_loaded_callback()
+	if not managers.raid_job:is_camp_loaded() then
 		return
 	end
 
-	local is_hardest_difficulty = operation_save_data.difficulty_id == tweak_data.hardest_difficulty.id
-
-	if is_hardest_difficulty and job_achi_data.hardest then
-		managers.achievment:award(job_achi_data.hardest)
+	if managers.raid_job:current_job() then
+		return
 	end
 
-	if managers.network:session():count_all_peers() >= 2 and (job_achi_data.nobleed or job_achi_data.hardest_nobleed) then
-		local total_downed_count = 0
+	self:check_experience_achievements()
+	self:check_achievement_mission_award()
+end
 
-		for events_index_index, events_index_level_name in ipairs(operation_save_data.events_index) do
-			local event_data = operation_save_data.event_data[events_index_index]
+function AchievmentManager:check_achievement_mission_award()
+	for job_id, data in pairs(tweak_data.achievement.missions) do
+		self:check_mission_achievements(job_id)
+	end
+end
 
-			Application:debug("[AchievmentManager:check_achievement_operation] NOBLEED Check event data:", inspect(event_data))
+function AchievmentManager:check_mission_achievements(job_id, current_job_data)
+	if not tweak_data.operations.missions[job_id] then
+		return
+	end
 
-			if event_data and event_data.peer_data then
-				for peer_index, peer_data in pairs(event_data.peer_data) do
-					if peer_data.statistics ~= nil then
-						total_downed_count = total_downed_count + (peer_data.statistics.downs or 0)
-					end
-				end
-			end
+	if not tweak_data.achievement.missions[job_id] then
+		return
+	end
+
+	local job_achievements = tweak_data.achievement.missions[job_id]
+	local job_type = tweak_data.operations.missions[job_id].job_type
+	local _, difficulty_completed = managers.progression:get_mission_progression(job_type, job_id)
+
+	if current_job_data then
+		difficulty_completed = current_job_data.difficulty or difficulty_completed
+	end
+
+	if not difficulty_completed then
+		return
+	end
+
+	local stealthed = current_job_data and current_job_data.stealthed
+	local dogtags_collected = current_job_data and current_job_data.dogtags_collected
+	local peers_connected = current_job_data and current_job_data.peers_connected or 1
+	local no_bleedout = current_job_data and current_job_data.no_bleedout or false
+
+	for _, data in ipairs(job_achievements) do
+		local achieved = difficulty_completed >= (data.difficulty or 1)
+
+		if achieved and data.all_dogtags then
+			achieved = dogtags_collected
 		end
 
-		if total_downed_count <= 0 then
-			if job_achi_data.nobleed then
-				managers.achievment:award(job_achi_data.nobleed)
-			end
+		if achieved and data.num_peers then
+			achieved = data.num_peers <= peers_connected
+		end
 
-			if is_hardest_difficulty and job_achi_data.hardest_nobleed then
-				managers.achievment:award(job_achi_data.hardest_nobleed)
-			end
+		if achieved and data.no_bleedout then
+			achieved = no_bleedout
+		end
+
+		if achieved and data.stealth then
+			achieved = stealthed
+		end
+
+		if achieved then
+			self:award(data.id)
 		end
 	end
 end
 
-function AchievmentManager:check_achievement_group_bring_them_home(current_job_data)
-	if current_job_data and current_job_data.job_type and current_job_data.job_type == OperationsTweakData.JOB_TYPE_RAID then
-		if current_job_data.job_id == "flakturm" then
-			managers.achievment:award("ach_bring_them_home_flak")
-		elseif current_job_data.job_id == "ger_bridge" then
-			managers.achievment:award("ach_bring_them_home_bridge")
-		elseif current_job_data.job_id == "train_yard" then
-			managers.achievment:award("ach_bring_them_home_trainyard")
-		elseif current_job_data.job_id == "gold_rush" then
-			managers.achievment:award("ach_bring_them_home_bank")
-		elseif current_job_data.job_id == "settlement" then
-			managers.achievment:award("ach_bring_them_home_castle")
-		elseif current_job_data.job_id == "radio_defense" then
-			managers.achievment:award("ach_bring_them_home_radiodefence")
+function AchievmentManager:check_experience_achievements()
+	local achievements = tweak_data.achievement.experience
+	local highest_level = 0
+
+	for i = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
+		local save_data = Global.savefile_manager.meta_data_list[i]
+
+		if save_data and save_data.is_cached_slot and save_data.cache and save_data.cache.RaidExperienceManager then
+			local digest_level = save_data.cache.RaidExperienceManager.level
+			local character_level = Application:digest_value(digest_level, false) or 0
+			highest_level = math.max(character_level, highest_level)
+		end
+	end
+
+	for _, data in ipairs(achievements) do
+		if data.level <= highest_level then
+			managers.achievment:award(data.id)
 		end
 	end
 end

@@ -1,9 +1,9 @@
 ImpactHurt = ImpactHurt or class(ProjectileBase)
 ImpactHurt._impact_units = {}
 ImpactHurt.DEFUALT_SOUNDS = {
+	impact = "arrow_impact_gen",
 	flyby = "arrow_flyby",
-	flyby_stop = "arrow_flyby_stop",
-	impact = "arrow_impact_gen"
+	flyby_stop = "arrow_flyby_stop"
 }
 local ids_pickup = Idstring("pickup")
 local mvec1 = Vector3()
@@ -19,6 +19,7 @@ function ImpactHurt:_setup_from_tweak_data()
 		debug_pause_unit(self._unit, "No projectile tweakdata entry for unit.", proj_entry, self._tweak_data)
 	end
 
+	self._range = self._tweak_data.range
 	self._damage_class_string = tweak_data.projectiles[self.name_id].bullet_class or "InstantBulletBase"
 	self._damage_class = CoreSerialize.string_to_classtable(self._damage_class_string)
 	self._damage = self._tweak_data.damage or 1
@@ -27,6 +28,12 @@ function ImpactHurt:_setup_from_tweak_data()
 end
 
 function ImpactHurt:set_owner_peer_id(peer_id)
+	if not peer_id then
+		Application:warn("[ImpactHurt:set_owner_peer_id] Cannot set nil peer id", peer_id)
+
+		return
+	end
+
 	self._owner_peer_id = peer_id
 	ImpactHurt._impact_units[peer_id] = ImpactHurt._impact_units[peer_id] or {}
 	ImpactHurt._impact_units[peer_id][self._unit:key()] = self._unit
@@ -107,10 +114,10 @@ function ImpactHurt:clbk_body_activation(tag, unit, body, activated)
 		local pos = self._unit:position()
 
 		self:_on_collision({
-			normal = nil,
 			hit_position = nil,
-			distance = 0,
+			normal = nil,
 			position = nil,
+			distance = 0,
 			velocity = nil,
 			ray = nil,
 			position = pos,
@@ -161,8 +168,7 @@ function ImpactHurt:_on_collision(col_ray)
 	dynamic_body:set_velocity(new_vel)
 end
 
-function ImpactHurt:add_damage_result(unit, is_dead, damage_percent)
-	print("[ImpactHurt:add_damage_result]", unit, is_dead, damage_percent)
+function ImpactHurt:add_damage_result(unit, attacker, is_dead, damage_percent)
 end
 
 function ImpactHurt:update(unit, t, dt)
@@ -398,8 +404,8 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 
 	if alive(hit_unit) and parent_body then
 		self._attached_body_disabled_cbk_data = {
-			unit = nil,
 			body = nil,
+			unit = nil,
 			cbk = nil,
 			cbk = callback(self, self, "_cbk_attached_body_disabled"),
 			unit = hit_unit,
@@ -431,11 +437,11 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 
 			if id ~= -1 then
 				self._sync_attach_data = {
-					parent_unit_id = nil,
 					local_pos = nil,
-					parent_unit = nil,
-					dir = nil,
 					parent_body = nil,
+					parent_unit = nil,
+					parent_unit_id = nil,
+					dir = nil,
 					parent_unit = hit_unit,
 					parent_unit_id = id,
 					parent_body = parent_body,
@@ -448,12 +454,12 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 
 			if id ~= -1 then
 				self._sync_attach_data = {
-					parent_body = nil,
 					parent_unit = nil,
+					parent_body = nil,
 					local_pos = nil,
-					parent_obj = nil,
-					dir = nil,
 					character = true,
+					dir = nil,
+					parent_obj = nil,
 					parent_unit = hit_unit:id() ~= -1 and hit_unit or nil,
 					parent_obj = hit_unit:id() ~= -1 and parent_obj or nil,
 					parent_body = hit_unit:id() ~= -1 and parent_body or nil,
@@ -490,9 +496,9 @@ function ImpactHurt:sync_attach_to_unit(instant_dynamic_pickup, parent_unit, par
 	end
 
 	self._col_ray = {
+		body = nil,
 		unit = nil,
 		position = nil,
-		body = nil,
 		velocity = nil,
 		position = world_position,
 		unit = parent_unit,
@@ -645,9 +651,11 @@ function ImpactHurt:save(data)
 
 	local state = {
 		is_pickup = nil,
+		owner_peer_id = nil,
 		is_pickup_dynamic = nil,
 		is_pickup = self._is_pickup,
-		is_pickup_dynamic = self._is_pickup_dynamic
+		is_pickup_dynamic = self._is_pickup_dynamic,
+		owner_peer_id = self._owner_peer_id
 	}
 
 	if not self._sync_attach_data then
@@ -685,6 +693,8 @@ function ImpactHurt:load(data)
 
 	local state = data.ImpactHurt
 
+	self:set_owner_peer_id(state.owner_peer_id)
+
 	if state.is_pickup then
 		self:_switch_to_pickup(state.is_pickup_dynamic)
 	end
@@ -697,9 +707,9 @@ function ImpactHurt:load(data)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)
 				local parent_obj = parent_body:root_object()
 				self._drop_in_sync_data = {
+					f = 2,
 					state = nil,
 					parent_unit = nil,
-					f = 2,
 					parent_unit = parent_unit,
 					state = state
 				}

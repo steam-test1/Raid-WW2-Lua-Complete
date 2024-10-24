@@ -3,20 +3,21 @@ ChallengeTask.STATE_INACTIVE = "inactive"
 ChallengeTask.STATE_ACTIVE = "active"
 ChallengeTask.STATE_COMPLETED = "completed"
 ChallengeTask.STATE_FAILED = "failed"
+ChallengeTask.TYPES = {}
 
 function ChallengeTask.create(task_type, challenge_category, challenge_id, task_data)
-	if task_type == ChallengeTweakData.TASK_KILL_ENEMIES then
-		return ChallengeTaskKillEnemies:new(challenge_category, challenge_id, task_data)
-	elseif task_type == ChallengeTweakData.TASK_COLLECT_AMMO then
-		return ChallengeTaskCollectAmmo:new(challenge_category, challenge_id, task_data)
+	local task_class = ChallengeTask.TYPES[task_type]
+
+	if task_class then
+		return task_class:new(challenge_category, challenge_id, task_data)
 	end
 end
 
 function ChallengeTask.get_metatable(task_type)
-	if task_type == ChallengeTweakData.TASK_KILL_ENEMIES then
-		return ChallengeTaskKillEnemies
-	elseif task_type == ChallengeTweakData.TASK_COLLECT_AMMO then
-		return ChallengeTaskCollectAmmo
+	local task_class = ChallengeTask.TYPES[task_type]
+
+	if task_class then
+		return task_class
 	end
 end
 
@@ -79,6 +80,7 @@ function ChallengeTask:force_complete()
 end
 
 ChallengeTaskKillEnemies = ChallengeTaskKillEnemies or class(ChallengeTask)
+ChallengeTask.TYPES[ChallengeTweakData.TASK_KILL_ENEMIES] = ChallengeTaskKillEnemies
 
 function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskKillEnemies.super.init(self)
@@ -223,6 +225,7 @@ function ChallengeTaskKillEnemies:force_complete()
 end
 
 ChallengeTaskCollectAmmo = ChallengeTaskCollectAmmo or class(ChallengeTask)
+ChallengeTask.TYPES[ChallengeTweakData.TASK_COLLECT_AMMO] = ChallengeTaskCollectAmmo
 
 function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_data)
 	ChallengeTaskCollectAmmo.super.init(self)
@@ -316,6 +319,104 @@ function ChallengeTaskCollectAmmo:_on_completed()
 end
 
 function ChallengeTaskCollectAmmo:force_complete()
+	if self:completed() then
+		return
+	end
+
+	self._state = ChallengeTask.STATE_COMPLETED
+	self._count = self._target
+
+	managers.system_event_listener:remove_listener(self._id)
+end
+
+ChallengeTaskCollectCandy = ChallengeTaskCollectCandy or class(ChallengeTask)
+ChallengeTask.TYPES[ChallengeTweakData.TASK_COLLECT_CANDY] = ChallengeTaskCollectCandy
+
+function ChallengeTaskCollectCandy:init(challenge_category, challenge_id, task_data)
+	ChallengeTaskCollectCandy.super.init(self)
+
+	self._count = 0
+	self._target = task_data.target
+	self._parent_challenge_category = challenge_category
+	self._parent_challenge_id = challenge_id
+	self._id = self._parent_challenge_id .. "_collect_candy"
+	self._briefing_id = task_data.challenge_briefing_id
+	self._done_text_id = task_data.challenge_done_text_id
+	self._type = ChallengeTweakData.TASK_COLLECT_CANDY
+	self._reminders = task_data.reminders or {}
+end
+
+function ChallengeTaskCollectCandy:activate()
+	ChallengeTaskCollectCandy.super.activate(self)
+	managers.system_event_listener:add_listener(self._id, {
+		BuffEffectCandy.EVENT_CANDY_CONSUMED
+	}, callback(self, self, "_on_candy_consumed"))
+end
+
+function ChallengeTaskCollectCandy:deactivate()
+	ChallengeTaskCollectAmmo.super.deactivate(self)
+	managers.system_event_listener:remove_listener(self._id)
+end
+
+function ChallengeTaskCollectCandy:reset()
+	ChallengeTaskKillEnemies.super.reset(self)
+
+	self._count = 0
+end
+
+function ChallengeTaskCollectCandy:current_count()
+	return self._count
+end
+
+function ChallengeTaskCollectCandy:target()
+	return self._target
+end
+
+function ChallengeTaskCollectCandy:min_range()
+	return 0
+end
+
+function ChallengeTaskCollectCandy:max_range()
+	return 0
+end
+
+function ChallengeTaskCollectCandy:set_reminders(reminders)
+	self._reminders = reminders
+end
+
+function ChallengeTaskCollectCandy:_on_candy_consumed(tweak_id)
+	if managers.raid_job:is_camp_loaded() then
+		return
+	end
+
+	if not tweak_data.drop_loot[tweak_id] or not tweak_data.drop_loot[tweak_id].candy_value then
+		return false
+	end
+
+	local value = tweak_data.drop_loot[tweak_id].candy_value
+	self._count = self._count + value
+
+	if self._target < self._count then
+		self._count = self._target
+	end
+
+	self:_check_status()
+end
+
+function ChallengeTaskCollectCandy:_check_status()
+	if self._target <= self._count then
+		self:_on_completed()
+	end
+end
+
+function ChallengeTaskCollectCandy:_on_completed()
+	self._state = ChallengeTask.STATE_COMPLETED
+
+	managers.challenge:get_challenge(self._parent_challenge_category, self._parent_challenge_id):on_task_completed()
+	managers.system_event_listener:remove_listener(self._id)
+end
+
+function ChallengeTaskCollectCandy:force_complete()
 	if self:completed() then
 		return
 	end

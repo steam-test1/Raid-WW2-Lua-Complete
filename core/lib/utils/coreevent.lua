@@ -117,10 +117,10 @@ end
 function CallbackHandler:add(f, interval, times)
 	times = times or -1
 	local cb = {
-		interval = nil,
 		f = nil,
 		next = nil,
 		times = nil,
+		interval = nil,
 		f = f,
 		interval = interval,
 		times = times,

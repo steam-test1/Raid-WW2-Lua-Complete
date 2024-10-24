@@ -72,11 +72,11 @@ function ReadyUpGui:_layout_buttons()
 	local button_y = 848
 	self._ready_up_button = self._root_panel:short_primary_button({
 		on_click_callback = nil,
+		name = "ready_up_button",
+		visible = false,
 		text = nil,
 		y = nil,
 		x = 0,
-		name = "ready_up_button",
-		visible = false,
 		y = button_y,
 		text = self:translate("menu_ready_button", true),
 		on_click_callback = callback(self, self, "_on_ready_up_button")
@@ -86,11 +86,11 @@ function ReadyUpGui:_layout_buttons()
 
 	self._suggest_card_button = self._root_panel:short_secondary_button({
 		on_click_callback = nil,
+		name = "suggest_card_button",
+		visible = false,
 		text = nil,
 		y = nil,
 		x = 1000,
-		name = "suggest_card_button",
-		visible = false,
 		y = button_y,
 		text = self:translate("menu_suggest_card_button", true),
 		on_click_callback = callback(self, self, "_on_select_card_button")
@@ -101,10 +101,10 @@ function ReadyUpGui:_layout_buttons()
 	self._suggest_card_button:hide()
 
 	self._no_cards_warning_label = self._root_panel:label({
-		align = "right",
 		font = nil,
 		name = "no_cards_warning_label",
 		visible = false,
+		align = "right",
 		text = nil,
 		y = nil,
 		x = 1000,
@@ -126,10 +126,10 @@ function ReadyUpGui:_layout_buttons()
 	if self._is_host then
 		self._kick_button = self._root_panel:short_secondary_button({
 			on_click_callback = nil,
+			name = "kick_button",
 			text = nil,
 			y = nil,
 			x = 1000,
-			name = "kick_button",
 			y = button_y,
 			text = self:translate("menu_kick_button", true),
 			on_click_callback = callback(self, self, "_on_kick_button")
@@ -203,16 +203,16 @@ function ReadyUpGui:_layout_header()
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
-		h = 32,
-		text = nil,
-		vertical = "center",
 		font = nil,
 		name = "mission_name",
 		align = "left",
+		text = nil,
+		h = 32,
 		y = 0,
 		x = nil,
 		color = nil,
 		font_size = nil,
+		vertical = "center",
 		x = mission_info_x,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -262,15 +262,15 @@ function ReadyUpGui:_layout_player_list()
 		local list_index = self:_get_list_index(peer_index)
 		local current_player = peer == managers.network:session():local_peer()
 		local player_control = self._root_panel:create_custom_control(RaidGUIControlReadyUpPlayerDescription, {
-			on_click_callback = nil,
-			peer_index = nil,
+			list_index = nil,
 			is_current_player = nil,
 			w = nil,
 			h = 112,
 			y = 96,
 			x = nil,
 			peer = nil,
-			list_index = nil,
+			peer_index = nil,
+			on_click_callback = nil,
 			x = (list_index - 1) * width,
 			w = width,
 			on_click_callback = callback(self, self, "_on_player_click_callback"),
@@ -281,10 +281,10 @@ function ReadyUpGui:_layout_player_list()
 		})
 		local outfit = peer:blackmarket_outfit()
 		local player_data = {
-			player_class = nil,
 			player_level = nil,
 			player_name = nil,
 			is_host = nil,
+			player_class = nil,
 			player_name = peer:name(),
 			player_level = peer:level() or managers.experience:current_level(),
 			player_class = outfit.skills,
@@ -305,10 +305,10 @@ function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
 		item_w = nil,
+		name = "player_loot_card",
+		item_h = 224,
 		y = 384,
 		x = nil,
-		item_h = 224,
-		name = "player_loot_card",
 		x = self._root_panel:w() - 160,
 		item_w = card_w
 	}
@@ -318,13 +318,13 @@ function ReadyUpGui:_layout_card_info()
 
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 	self._empty_card_slot = self._root_panel:bitmap({
+		texture_rect = nil,
+		name = "cc_empty_slot",
+		texture = nil,
 		w = nil,
 		h = nil,
 		y = 384,
 		x = nil,
-		texture_rect = nil,
-		name = "cc_empty_slot",
-		texture = nil,
 		x = self._root_panel:w() - 160,
 		w = empty_slot_texture.texture_rect[3],
 		h = empty_slot_texture.texture_rect[4],
@@ -332,16 +332,16 @@ function ReadyUpGui:_layout_card_info()
 		texture_rect = empty_slot_texture.texture_rect
 	})
 	self._card_not_selected_label = self._root_panel:label({
-		text = nil,
-		h = 128,
-		w = nil,
 		font = nil,
 		name = "card_not_selected_label",
+		text = nil,
+		w = nil,
 		wrap = true,
-		align = "center",
+		h = 128,
 		y = nil,
 		x = nil,
 		color = nil,
+		align = "center",
 		font_size = nil,
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
@@ -356,16 +356,16 @@ function ReadyUpGui:_layout_card_info()
 	self._card_not_selected_label:set_visible(true)
 
 	self._positive_card_effect_label = self._root_panel:label({
-		text = nil,
-		h = 128,
-		w = 352,
 		font = nil,
 		name = "positive_card_effect",
+		text = nil,
+		w = 352,
 		wrap = true,
-		align = "left",
+		h = 128,
 		y = nil,
 		x = 0,
 		color = nil,
+		align = "left",
 		font_size = nil,
 		y = self._card_control:bottom() + 32,
 		text = self:translate("hud_no_challenge_card_text", false),
@@ -377,16 +377,16 @@ function ReadyUpGui:_layout_card_info()
 	self._positive_card_effect_label:set_right(self._root_panel:right())
 
 	self._negative_card_effect_label = self._root_panel:label({
-		text = "",
-		h = 64,
-		w = 352,
 		font = nil,
 		name = "negative_card_effect",
+		text = "",
+		w = 352,
 		wrap = true,
-		align = "left",
+		h = 64,
 		y = nil,
 		x = 0,
 		color = nil,
+		align = "left",
 		font_size = nil,
 		y = self._card_control:bottom() + 96,
 		font = tweak_data.gui.fonts.lato,
@@ -479,10 +479,10 @@ function ReadyUpGui:_spawn_character_units()
 		self._weapon_assembled[peer] = false
 
 		managers.dyn_resource:load(IDS_UNIT, unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_weapon", {
-			weapon_id = nil,
-			unit_path = nil,
-			weapon_factory_id = nil,
 			peer = nil,
+			weapon_factory_id = nil,
+			unit_path = nil,
+			weapon_id = nil,
 			character_unit = nil,
 			weapon_factory_id = weapon_factory_id,
 			unit_path = unit_path,
@@ -707,15 +707,19 @@ function ReadyUpGui:_show_player_challenge_card_info()
 
 			self._negative_card_effect_label:set_h(h)
 			self._negative_card_effect_label:set_y(self._positive_card_effect_label:bottom() + 15)
+			self._negative_card_effect_label:set_visible(true)
+		else
+			self._negative_card_effect_label:set_visible(false)
 		end
 
 		self._card_control:set_visible(true)
 		self._empty_card_slot:set_visible(false)
 		self._card_not_selected_label:set_visible(false)
-		self._negative_card_effect_label:set_visible(true)
 
 		self._card_control_set_nil = false
-	elseif not self._card_control_set_nil then
+		self._card_control_is_blank = false
+	elseif not self._card_control_set_nil and not self._card_control_is_blank then
+		self._card_control_is_blank = true
 		self._card_control_set_nil = true
 
 		self._card_control:set_card(nil)
@@ -967,6 +971,7 @@ function ReadyUpGui:_update_controls_contining_mission()
 			self._card_control:set_visible(true)
 			self._card_control:set_card(active_card)
 
+			self._forced_card = active_card.locked_suggestion
 			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card.key_name)
 
 			self._positive_card_effect_label:set_text("+ " .. bonus_description)
@@ -1026,8 +1031,10 @@ function ReadyUpGui:update(t, dt)
 		if not self._stinger_played then
 			Application:debug("[ReadyUpGui:update] Ready up stinger...")
 
-			if managers.challenge_cards:get_suggested_cards() and managers.challenge_cards:get_suggested_cards()[1] and managers.challenge_cards:get_suggested_cards()[1].selected_sound then
-				managers.menu_component:post_event(managers.challenge_cards:get_suggested_cards()[1].selected_sound)
+			local active_card = managers.challenge_cards:get_active_card()
+
+			if active_card and active_card.selected_sound then
+				managers.menu_component:post_event(active_card.selected_sound)
 			else
 				managers.menu_component:post_event("ready_up_stinger")
 			end
@@ -1055,7 +1062,7 @@ function ReadyUpGui:update(t, dt)
 			self._synced_document_spawn_chance_to_host = true
 		end
 
-		if self._continuing_mission then
+		if self._forced_card then
 			managers.global_state:fire_event(GlobalStateManager.EVENT_START_RAID)
 		elseif self._is_single_player then
 			managers.challenge_cards:select_challenge_card(self._current_peer_index)
@@ -1139,8 +1146,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 		if is_current_player and not self._ready then
 			local bindings = {
 				{
-					callback = nil,
 					key = nil,
+					callback = nil,
 					key = Idstring("menu_controller_face_bottom"),
 					callback = callback(self, self, "_on_ready_up_button")
 				}
@@ -1152,8 +1159,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 		end
 
 		local legend = {
-			controller = nil,
 			keyboard = nil,
+			controller = nil,
 			controller = {},
 			keyboard = {}
 		}
@@ -1165,20 +1172,20 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	local bindings = {
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_tab_left")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_tab_right")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_right"),
 			callback = callback(self, self, "back_pressed")
 		}
@@ -1191,8 +1198,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	if self._is_host and not is_current_player and not self._is_single_player then
 		table.insert(bindings, {
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_right"),
 			callback = callback(self, self, "_on_kick_button")
 		})
@@ -1201,13 +1208,13 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	if not self._ready and is_current_player and (managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_RAID and self._raid_card_count and self._raid_card_count > 0 or managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION and self._operation_card_count and self._operation_card_count > 0) then
 		table.insert(bindings, {
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_select_card_button")
 		})
 
-		if not self._continuing_mission then
+		if not self._forced_card then
 			if self._is_single_player then
 				table.insert(controler_legend, "menu_legend_ready_up_select_card")
 			else
@@ -1218,8 +1225,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	if can_leave then
 		table.insert(bindings, {
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_leave_lobby_button")
 		})
@@ -1228,8 +1235,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	if not self._ready then
 		table.insert(bindings, {
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_on_ready_up_button")
 		})
@@ -1243,8 +1250,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 
 	if not is_current_player and IS_XB1 then
 		local gamercard_key = {
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "show_gamercard")
 		}
@@ -1256,8 +1263,8 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = controler_legend,
 		keyboard = {}
 	}

@@ -45,9 +45,9 @@ end
 
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
-		suspicion = nil,
 		set_look_dir = nil,
 		criminal_hurt = nil,
+		suspicion = nil,
 		set_look_dir = {
 			clbk = nil,
 			clbk = NetworkManager.clbk_msg_overwrite

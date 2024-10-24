@@ -16,50 +16,50 @@ end
 function ChallengeCardsViewGui:_layout()
 	local tabs_params = {
 		{
+			callback_param = nil,
 			text = nil,
 			name = "tab_common",
-			callback_param = nil,
 			text = self:translate("loot_rarity_common", true),
 			callback_param = LootDropTweakData.RARITY_COMMON
 		},
 		{
+			callback_param = nil,
 			text = nil,
 			name = "tab_uncommon",
-			callback_param = nil,
 			text = self:translate("loot_rarity_uncommon", true),
 			callback_param = LootDropTweakData.RARITY_UNCOMMON
 		},
 		{
+			callback_param = nil,
 			text = nil,
 			name = "tab_rare",
-			callback_param = nil,
 			text = self:translate("loot_rarity_rare", true),
 			callback_param = LootDropTweakData.RARITY_RARE
 		},
 		{
+			callback_param = nil,
 			text = nil,
 			name = "tab_other",
-			callback_param = nil,
 			text = self:translate("menu_filter_other", true),
 			callback_param = LootDropTweakData.RARITY_OTHER
 		},
 		{
+			callback_param = nil,
 			text = nil,
 			name = "tab_all",
-			callback_param = nil,
 			text = self:translate("menu_filter_all", true)
 		}
 	}
 	self._rarity_filters_tabs = self._root_panel:tabs({
-		tabs_params = nil,
-		on_click_callback = nil,
-		initial_tab_idx = nil,
-		tab_align = "center",
 		tab_height = 64,
 		tab_width = nil,
-		y = 96,
+		on_click_callback = nil,
 		x = 0,
+		y = 96,
+		tab_align = "center",
 		name = "rarity_filters_tabs",
+		initial_tab_idx = nil,
+		tabs_params = nil,
 		dont_trigger_special_buttons = true,
 		tab_width = 640 / #tabs_params,
 		initial_tab_idx = #tabs_params,
@@ -67,16 +67,16 @@ function ChallengeCardsViewGui:_layout()
 		tabs_params = tabs_params
 	})
 	self._type_filters_tabs = self._root_panel:tabs({
-		item_class = nil,
-		tabs_params = nil,
-		name = "type_filters_tabs",
-		on_click_callback = nil,
 		initial_tab_idx = 3,
-		tab_align = "center",
-		tab_height = 32,
 		tab_width = 140,
 		y = 176,
 		x = 0,
+		on_click_callback = nil,
+		tab_align = "center",
+		tab_height = 32,
+		item_class = nil,
+		name = "type_filters_tabs",
+		tabs_params = nil,
 		icon = nil,
 		dont_trigger_special_buttons = true,
 		icon = tweak_data.gui.icons.ico_filter,
@@ -84,44 +84,44 @@ function ChallengeCardsViewGui:_layout()
 		on_click_callback = callback(self, self, "on_click_filter_type"),
 		tabs_params = {
 			{
+				callback_param = nil,
 				text = nil,
 				name = "filter_raid",
-				callback_param = nil,
 				text = self:translate("menu_mission_selected_mission_type_raid", true),
 				callback_param = OperationsTweakData.JOB_TYPE_RAID
 			},
 			{
+				callback_param = nil,
 				text = nil,
 				name = "filter_operation",
-				callback_param = nil,
 				text = self:translate("menu_mission_selected_mission_type_operation", true),
 				callback_param = OperationsTweakData.JOB_TYPE_OPERATION
 			},
 			{
+				callback_param = nil,
 				text = nil,
 				name = "filter_type_all",
-				callback_param = nil,
 				text = self:translate("menu_mission_selected_mission_type_both", true)
 			}
 		}
 	})
 	local challenge_cards_grid_scrollable_area_params = {
 		w = 640,
+		scroll_step = 30,
 		y = 224,
 		x = 0,
 		name = "challenge_cards_grid_scrollable_area",
-		scroll_step = 30,
 		h = 580
 	}
 	self._challenge_cards_grid_scrollable_area = self._root_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
 	local challenge_cards_grid_params = {
 		w = 636,
+		scrollable_area_ref = nil,
 		y = 0,
 		x = 0,
-		scrollable_area_ref = nil,
 		grid_params = nil,
-		name = "challenge_cards_grid",
 		item_params = nil,
+		name = "challenge_cards_grid",
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
 		grid_params = {
 			on_select_callback = nil,
@@ -147,11 +147,11 @@ function ChallengeCardsViewGui:_layout()
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
 	local card_details_params = {
 		w = 992,
+		visible = true,
 		y = 96,
 		x = 736,
-		h = 736,
 		name = "card_deatils",
-		visible = true
+		h = 736
 	}
 	self._card_details = self._root_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 
@@ -279,26 +279,26 @@ end
 function ChallengeCardsViewGui:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_tabs_rarity_left")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_tabs_rarity_right")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_tabs_type_left")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_tabs_type_right")
 		}
@@ -307,8 +307,8 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_challenge_cards_rarity",
@@ -316,8 +316,8 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

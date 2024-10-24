@@ -75,9 +75,9 @@ function RaidGUIControlLootProgressBar:_create_brackets()
 		bracket_control:set_center_x(self._progress_bar:x() + self._progress_bar:w() * bracket_progress)
 
 		local new_bracket = {
+			progress = nil,
 			active = false,
 			control = nil,
-			progress = nil,
 			control = bracket_control,
 			progress = bracket_progress
 		}

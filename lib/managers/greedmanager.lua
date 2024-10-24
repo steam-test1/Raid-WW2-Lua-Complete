@@ -169,8 +169,8 @@ end
 
 function GreedManager:pickup_greed_item(value, unit)
 	local notification_item = {
-		name_id = "menu_greed_loot_title",
 		icon = "carry_gold",
+		name_id = "menu_greed_loot_title",
 		value = nil,
 		value = value
 	}
@@ -200,8 +200,8 @@ function GreedManager:secure_greed_carry_loot(carry_id, multiplier)
 
 	if value then
 		local notification_item = {
-			name_id = nil,
 			icon = nil,
+			name_id = nil,
 			value = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,
@@ -221,8 +221,8 @@ function GreedManager:on_loot_pickpocketed()
 	if tweak then
 		local value = tweak.value
 		local notification_item = {
-			name_id = nil,
 			icon = nil,
+			name_id = nil,
 			value = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,

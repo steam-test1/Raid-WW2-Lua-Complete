@@ -238,8 +238,8 @@ function WeaponFactoryManager:_indexed_parts(factory_id)
 
 			table.insert(i_table, {
 				parts = nil,
-				amount = nil,
 				i = 1,
+				amount = nil,
 				parts = parts,
 				amount = #parts
 			})
@@ -291,10 +291,10 @@ function WeaponFactoryManager:_preload_parts(factory_id, factory_weapon, bluepri
 
 	if not only_record and self._uses_streaming then
 		async_task_data = {
+			parts = nil,
 			done_cb = nil,
 			third_person = nil,
 			blueprint = nil,
-			parts = nil,
 			spawn = false,
 			third_person = third_person,
 			parts = parts,
@@ -430,8 +430,8 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 	if not package then
 		parts[part_id] = {
-			name = nil,
 			is_streaming = nil,
+			name = nil,
 			name = ids_unit_name,
 			is_streaming = async_task_data and true or nil
 		}
@@ -684,17 +684,17 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 	if self._uses_tasks and not skip_queue then
 		table.insert(self._tasks, {
-			parts = nil,
+			blueprint = nil,
+			done_cb = nil,
+			third_person = nil,
 			blueprint_i = 1,
+			override = nil,
 			p_unit = nil,
 			need_parent = nil,
 			need_parent_i = 1,
-			done_cb = nil,
-			third_person = nil,
-			blueprint = nil,
-			override = nil,
-			factory_id = nil,
+			parts = nil,
 			forbidden = nil,
+			factory_id = nil,
 			done_cb = done_cb,
 			p_unit = p_unit,
 			factory_id = factory_id,
@@ -710,10 +710,10 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 		if self._uses_streaming then
 			async_task_data = {
+				parts = nil,
 				done_cb = nil,
 				third_person = nil,
 				blueprint = nil,
-				parts = nil,
 				spawn = true,
 				third_person = third_person,
 				parts = parts,
@@ -848,12 +848,12 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	if async_task_data then
 		parts[part_id] = {
+			animations = nil,
 			parent = nil,
-			link_to_unit = nil,
+			is_streaming = true,
 			name = nil,
 			a_obj = nil,
-			is_streaming = true,
-			animations = nil,
+			link_to_unit = nil,
 			animations = part.animations,
 			name = ids_unit_name,
 			link_to_unit = link_to_unit,
@@ -869,10 +869,10 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 		local unit = self:_spawn_and_link_unit(ids_unit_name, Idstring(part.a_obj), third_person, link_to_unit)
 		parts[part_id] = {
-			unit = nil,
-			name = nil,
 			animations = nil,
+			unit = nil,
 			package = nil,
+			name = nil,
 			unit = unit,
 			animations = part.animations,
 			name = ids_unit_name,
@@ -1555,8 +1555,8 @@ function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second
 
 	return {
 		translation = nil,
-		rotation = nil,
 		lens_distortion = nil,
+		rotation = nil,
 		translation = translation,
 		rotation = rotation,
 		lens_distortion = lens_distortion

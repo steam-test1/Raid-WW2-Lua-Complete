@@ -49,7 +49,7 @@ VehicleDrivingExt.cumulative_dt = 0
 VehicleDrivingExt.cumulative_gravity = 0
 VehicleDrivingExt.PLAYER_CAPSULE_OFFSET = Vector3(0, 0, -150)
 VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING = "special_objective_type_driving"
-VehicleDrivingExt.SPECIAL_LOOT_GERMAN_SPY_CARRY_ID = "german_spy"
+VehicleDrivingExt.SPECIAL_LOOT_GERMAN_SPY_CARRY_ID = "german_spy_body"
 
 function VehicleDrivingExt:init(unit)
 	self._unit = unit
@@ -321,9 +321,9 @@ function VehicleDrivingExt:_create_position_reservation()
 
 	if self._pos_reservation_id then
 		self._pos_reservation = {
-			filter = nil,
-			radius = 500,
 			position = nil,
+			radius = 500,
+			filter = nil,
 			position = self._unit:position(),
 			filter = self._pos_reservation_id
 		}
@@ -1039,7 +1039,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
 			skip_idle_check = true,
-			position = nil
+			done_cbk = nil
 		})
 	end
 
@@ -1191,9 +1191,9 @@ function VehicleDrivingExt:evacuate_seat(seat)
 		-- Nothing
 	elseif Network:is_server() then
 		seat.occupant:movement():action_request({
-			body_part = 1,
 			type = "idle",
-			sync = true
+			sync = true,
+			body_part = 1
 		})
 	end
 
@@ -1210,8 +1210,8 @@ function VehicleDrivingExt:find_exit_position(player)
 	local seat = self:find_seat_for_player(player)
 	local exit_position = self._unit:get_object(Idstring(VehicleDrivingExt.EXIT_PREFIX .. seat.name))
 	local result = {
-		rotation = nil,
 		position = nil,
+		rotation = nil,
 		position = exit_position:position(),
 		rotation = exit_position:rotation()
 	}
@@ -1259,8 +1259,8 @@ function VehicleDrivingExt:find_exit_position(player)
 		end
 
 		result = {
-			rotation = nil,
 			position = nil,
+			rotation = nil,
 			position = exit_position:position(),
 			rotation = exit_position:rotation()
 		}
@@ -1420,9 +1420,9 @@ function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 
 			if Network:is_server() then
 				ai_unit:movement():action_request({
-					body_part = 1,
 					type = "idle",
-					sync = true
+					sync = true,
+					body_part = 1
 				})
 			end
 
@@ -2164,17 +2164,17 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		destroy_clbk_key = false,
-		rot = nil,
+		pos = nil,
+		haste = nil,
+		objective_type = nil,
+		type = "act",
 		action = nil,
+		rot = nil,
 		fail_clbk = nil,
 		area = nil,
 		nav_seg = nil,
-		pos = nil,
+		destroy_clbk_key = false,
 		pose = "stand",
-		type = "act",
-		objective_type = nil,
-		haste = nil,
 		haste = haste,
 		nav_seg = align_nav_seg,
 		area = align_area,
@@ -2183,23 +2183,24 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
 			body_part = 1,
-			align_sync = false,
-			type = "act",
-			variant = nil,
-			needs_full_blend = true,
 			blocks = nil,
+			variant = nil,
+			type = "act",
+			needs_full_blend = true,
+			align_sync = false,
 			variant = team_ai_animation,
 			blocks = {
-				act = 1,
-				heavy_hurt = -1,
 				action = -1,
+				heavy_hurt = -1,
 				walk = -1,
-				hurt = -1
+				hurt = -1,
+				act = 1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
 	}
 	local SO_descriptor = {
+		objective = nil,
 		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
@@ -2208,7 +2209,6 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
-		objective = nil,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),
@@ -2216,10 +2216,10 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
 	seat.drive_SO_data = {
-		ride_objective = nil,
-		SO_registered = true,
 		SO_id = nil,
 		align_area = nil,
+		ride_objective = nil,
+		SO_registered = true,
 		SO_id = SO_id,
 		align_area = align_area,
 		ride_objective = ride_objective

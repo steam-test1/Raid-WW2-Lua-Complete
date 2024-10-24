@@ -68,11 +68,11 @@ function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_un
 
 		if draw then
 			self:_draw_link({
-				b = 0,
-				g = 0.75,
 				r = 0,
 				to_unit = nil,
 				from_unit = nil,
+				b = 0,
+				g = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -175,8 +175,8 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 		end
 
 		check:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_preferred_spawn_groups_checkbox_changed"), {
-			ctrlr = nil,
 			name = nil,
+			ctrlr = nil,
 			ctrlr = check,
 			name = o
 		})

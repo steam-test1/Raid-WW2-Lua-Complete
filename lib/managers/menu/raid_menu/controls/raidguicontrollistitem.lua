@@ -24,16 +24,16 @@ function RaidGUIControlListItem:init(parent, params, data)
 		h = params.h
 	})
 	self._item_label = self._object:label({
-		font_size = nil,
-		vertical = "center",
-		font = nil,
 		text = nil,
+		vertical = "center",
 		color = nil,
 		name = nil,
 		h = nil,
 		w = nil,
 		y = 0,
 		x = 32,
+		font_size = nil,
+		font = nil,
 		name = "list_item_label_" .. self._name,
 		w = params.w,
 		h = params.h,

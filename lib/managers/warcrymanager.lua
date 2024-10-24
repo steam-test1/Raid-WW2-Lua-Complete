@@ -183,11 +183,11 @@ function WarcryManager:activate_warcry()
 	if not can_activate then
 		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
 		local notification_data = {
-			duration = nil,
-			text = nil,
 			sound_effect = "generic_fail_sound",
 			id = nil,
 			shelf_life = 5,
+			duration = nil,
+			text = nil,
 			id = self.WARCRY_BLOCKED_TEXT,
 			text = managers.localization:text(blocked_text_id),
 			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION
@@ -220,8 +220,8 @@ function WarcryManager:activate_warcry()
 	end
 
 	managers.dialog:queue_dialog(self._active_warcry:get_activation_callout(), {
-		skip_idle_check = true,
 		instigator = nil,
+		skip_idle_check = true,
 		instigator = managers.player:local_player()
 	})
 
@@ -318,8 +318,8 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 
 	if managers.hud then
 		managers.hud:set_player_warcry_meter_fill({
-			total = nil,
 			current = nil,
+			total = nil,
 			current = self._meter_value,
 			total = self._meter_max_value
 		})
@@ -332,11 +332,11 @@ end
 
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
+		id = "warcry",
+		color = nil,
 		icon = nil,
 		text_id = "com_wheel_warcry",
 		clbk = nil,
-		id = "warcry",
-		color = nil,
 		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
 		color = Color.white,
 		clbk = callback(self, self, "activate_warcry")
@@ -381,15 +381,15 @@ function WarcryManager:_on_meter_full(skip_notification)
 			end
 
 			managers.hud:set_big_prompt({
-				title = nil,
-				icon = nil,
-				background = "backgrounds_warcry_msg",
+				id = "warcry_ready",
 				flares = true,
 				duration = nil,
 				text_color = nil,
-				id = "warcry_ready",
+				background = "backgrounds_warcry_msg",
 				priority = true,
 				description = nil,
+				title = nil,
+				icon = nil,
 				title = prompt_title,
 				description = prompt_desc,
 				icon = icon,
@@ -582,8 +582,8 @@ function WarcryManager:save(data)
 		end
 
 		local manager_data = {
-			warcries = nil,
 			active_warcry = nil,
+			warcries = nil,
 			warcries = self._warcries,
 			active_warcry = active_warcry
 		}

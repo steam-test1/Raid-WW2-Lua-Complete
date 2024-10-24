@@ -177,8 +177,8 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	if occupant then
 		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-			instigator = nil,
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = occupant
 		})
 	end
@@ -342,10 +342,10 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 		self:die(attack_data.variant)
 
 		local data = {
+			name = nil,
 			weapon_unit = nil,
 			head_shot = false,
 			variant = "explosion",
-			name = nil,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -484,10 +484,10 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 		self:die(attack_data.variant)
 
 		local data = {
+			name = nil,
 			weapon_unit = nil,
 			head_shot = false,
 			variant = "fire",
-			name = nil,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -590,8 +590,8 @@ function VehicleDamage:damage_collision(attack_data)
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_collision", {
-				instigator = nil,
 				skip_idle_check = true,
+				instigator = nil,
 				instigator = occupant
 			})
 		end
@@ -636,8 +636,8 @@ function VehicleDamage:revive(instigator)
 
 	if alive(instigator) then
 		managers.dialog:queue_dialog("gen_vehicle_repaired", {
-			instigator = nil,
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = instigator
 		})
 	end
@@ -789,8 +789,8 @@ function VehicleDamage:_health_recap()
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_at_50_percent", {
-				instigator = nil,
 				skip_idle_check = true,
+				instigator = nil,
 				instigator = occupant
 			})
 		end

@@ -24,11 +24,11 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0,
-				g = 0,
 				r = 0.75,
 				to_unit = nil,
 				from_unit = nil,
+				b = 0,
+				g = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -41,8 +41,8 @@ end
 
 function CoreCounterResetUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "logic_counter/logic_counter", 1, true) then
@@ -82,16 +82,16 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
 	local counter_target_params = {
-		name_proportions = 1,
-		min = 0,
-		ctrlr_proportions = 2,
 		tooltip = "Specifies what the selected counted should reset to",
 		floats = 0,
 		value = nil,
 		sizer = nil,
+		ctrlr_proportions = 2,
 		sorted = false,
 		name = "Counter target:",
 		panel = nil,
+		name_proportions = 1,
+		min = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.counter_target
@@ -99,13 +99,13 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	local counter_target = CoreEWS.number_controller(counter_target_params)
 
 	counter_target:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "counter_target",
+		ctrlr = nil,
 		ctrlr = counter_target
 	})
 	counter_target:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "counter_target",
+		ctrlr = nil,
 		ctrlr = counter_target
 	})
 end

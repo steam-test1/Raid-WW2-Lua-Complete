@@ -180,8 +180,8 @@ end
 
 function ElementTimer:add_trigger(id, time, callback)
 	self._triggers[id] = {
-		callback = nil,
 		time = nil,
+		callback = nil,
 		time = time,
 		callback = callback
 	}

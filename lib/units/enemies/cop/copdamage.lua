@@ -21,13 +21,13 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
+	light = "light_hurt",
 	none = false,
 	poison = "poison_hurt",
 	fire = "fire_hurt",
 	explode = "expl_hurt",
 	heavy = "heavy_hurt",
-	moderate = "hurt",
-	light = "light_hurt"
+	moderate = "hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
 	german_flamer = "enemy_flamer_comment_death",
@@ -116,8 +116,8 @@ function CopDamage:init(unit)
 	end
 
 	self._tase_effect_table = {
-		parent = nil,
 		effect = nil,
+		parent = nil,
 		effect = tweak_data.common_effects.taser_hit,
 		parent = self._spine2_obj
 	}
@@ -282,8 +282,8 @@ function CopDamage:_dismember_part(dismember_part, decal_data, variant)
 		local check_to = self._unit:movement() and self._unit:movement():m_head_pos() or self._unit:position()
 
 		if managers.player:is_player_looking_at(check_to, {
-			raycheck = true,
-			distance = 4000
+			distance = 4000,
+			raycheck = true
 		}) then
 			managers.dialog:queue_dialog("player_gen_grenade_aftermath", {
 				skip_idle_check = true
@@ -451,11 +451,11 @@ function CopDamage:damage_bullet(attack_data)
 
 		if is_kill_shot or WeaponTweakData.HIT_INDICATOR_ABSOLUTE <= damage or WeaponTweakData.HIT_INDICATOR_PERCENT <= damage / self._HEALTH_INIT then
 			managers.hud:on_hit_confirmed({
-				hit_type = nil,
 				pos = nil,
 				is_crit = nil,
 				is_headshot = nil,
 				is_killshot = nil,
+				hit_type = nil,
 				pos = attack_data.col_ray.position,
 				hit_type = wep_type_shotgun and HUDHitConfirm.HIT_SPLINTER or HUDHitConfirm.HIT_NORMAL,
 				is_killshot = is_kill_shot,
@@ -473,8 +473,8 @@ function CopDamage:damage_bullet(attack_data)
 		if head and math.random(25) < damage then
 			self:_spawn_head_gadget({
 				dir = nil,
-				position = nil,
 				rotation = nil,
+				position = nil,
 				position = attack_data.col_ray.body:position(),
 				rotation = attack_data.col_ray.body:rotation(),
 				dir = attack_data.col_ray.ray
@@ -487,8 +487,8 @@ function CopDamage:damage_bullet(attack_data)
 
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -506,8 +506,8 @@ function CopDamage:damage_bullet(attack_data)
 		attack_data.damage = damage
 		local result_type = self:get_damage_type(damage_percent, WeaponTweakData.DAMAGE_TYPE_BULLET)
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = attack_data.variant
 		}
@@ -517,8 +517,8 @@ function CopDamage:damage_bullet(attack_data)
 		if head and math.random(25) < damage then
 			self:_spawn_head_gadget({
 				dir = nil,
-				position = nil,
 				rotation = nil,
+				position = nil,
 				position = attack_data.col_ray.body:position(),
 				rotation = attack_data.col_ray.body:rotation(),
 				dir = attack_data.col_ray.ray
@@ -533,10 +533,10 @@ function CopDamage:damage_bullet(attack_data)
 			self._flamer_hint_popped = true
 
 			managers.hud:set_big_prompt({
-				title = nil,
 				description = nil,
 				id = "shoot_flamer_tank",
 				duration = 5,
+				title = nil,
 				title = utf8.to_upper(managers.localization:text("hint_shoot_flamer_tank")),
 				description = managers.localization:text("hint_shoot_flamer_tank_desc")
 			})
@@ -558,13 +558,13 @@ function CopDamage:damage_bullet(attack_data)
 		end
 
 		local data = {
-			head_shot = nil,
 			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			name = nil,
 			variant = nil,
+			name = nil,
 			dismembered = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -633,8 +633,8 @@ function CopDamage:damage_bullet(attack_data)
 
 	if is_attacker_player and not is_civilian then
 		local damage_enemy_params = {
-			attack_data = nil,
 			unit = nil,
+			attack_data = nil,
 			unit = self._unit,
 			attack_data = attack_data
 		}
@@ -685,8 +685,8 @@ function CopDamage:_comment_death(unit, type)
 
 	if dialogue_id then
 		managers.dialog:queue_dialog(dialogue_id, {
-			skip_idle_check = true,
 			instigator = nil,
+			skip_idle_check = true,
 			instigator = managers.player:local_player()
 		})
 	end
@@ -776,8 +776,8 @@ function CopDamage:damage_fire(attack_data)
 	if is_kill_shot then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -794,8 +794,8 @@ function CopDamage:damage_fire(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = attack_data.variant == "stun" and "hurt_sick" or self:get_damage_type(damage_percent, "fire"),
 			variant = attack_data.variant
 		}
@@ -823,12 +823,12 @@ function CopDamage:damage_fire(attack_data)
 	if result.type == "death" then
 		local data = {
 			name = nil,
-			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			head_shot = nil,
 			variant = nil,
+			weapon_unit = nil,
 			owner = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -941,8 +941,8 @@ function CopDamage:damage_dot(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -960,8 +960,8 @@ function CopDamage:damage_dot(attack_data)
 		attack_data.damage = damage
 		local result_type = attack_data.hurt_animation and self:get_damage_type(damage_percent, attack_data.variant) or "dmg_rcv"
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = attack_data.variant
 		}
@@ -982,12 +982,12 @@ function CopDamage:damage_dot(attack_data)
 	if result.type == "death" then
 		local data = {
 			name = nil,
-			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			head_shot = nil,
 			variant = nil,
+			weapon_unit = nil,
 			owner = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -1064,8 +1064,8 @@ function CopDamage:damage_explosion(attack_data)
 
 		self:_spawn_head_gadget({
 			dir = nil,
-			position = nil,
 			rotation = nil,
+			position = nil,
 			position = body:position(),
 			rotation = body:rotation(),
 			dir = -attack_data.col_ray.ray
@@ -1104,10 +1104,10 @@ function CopDamage:damage_explosion(attack_data)
 		local pos = self._spine2_obj:position()
 
 		managers.hud:on_hit_confirmed({
-			hit_type = nil,
 			pos = nil,
 			is_crit = nil,
 			is_killshot = nil,
+			hit_type = nil,
 			pos = pos,
 			hit_type = HUDHitConfirm.HIT_SPLINTER,
 			is_killshot = is_kill_shot,
@@ -1118,8 +1118,8 @@ function CopDamage:damage_explosion(attack_data)
 	if is_kill_shot then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -1136,8 +1136,8 @@ function CopDamage:damage_explosion(attack_data)
 		attack_data.damage = damage
 		local result_type = attack_data.variant == "stun" and "hurt_sick" or self:get_damage_type(damage_percent, "explosion")
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = attack_data.variant
 		}
@@ -1168,13 +1168,13 @@ function CopDamage:damage_explosion(attack_data)
 
 		local data = {
 			name = nil,
-			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			head_shot = nil,
-			dismembered = nil,
 			variant = nil,
+			weapon_unit = nil,
 			owner = nil,
+			dismembered = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -1220,8 +1220,8 @@ function CopDamage:damage_explosion(attack_data)
 
 	if is_attacker_player and not is_civilian then
 		local damage_enemy_params = {
-			attack_data = nil,
 			unit = nil,
+			attack_data = nil,
 			unit = self._unit,
 			attack_data = attack_data
 		}
@@ -1289,8 +1289,8 @@ function CopDamage:damage_tase(attack_data)
 			end
 
 			managers.hud:on_hit_confirmed({
-				hit_type = nil,
 				is_crit = nil,
+				hit_type = nil,
 				hit_type = wep_type_shotgun and HUDHitConfirm.HIT_SPLINTER or HUDHitConfirm.HIT_NORMAL,
 				is_crit = death_event_params.critical_hit
 			})
@@ -1310,8 +1310,8 @@ function CopDamage:damage_tase(attack_data)
 
 		self:_spawn_head_gadget({
 			dir = nil,
-			position = nil,
 			rotation = nil,
+			position = nil,
 			position = body:position(),
 			rotation = body:rotation(),
 			dir = -attack_data.col_ray.ray
@@ -1336,8 +1336,8 @@ function CopDamage:damage_tase(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
 
@@ -1360,8 +1360,8 @@ function CopDamage:damage_tase(attack_data)
 		end
 
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = type,
 			variant = attack_data.variant
 		}
@@ -1381,12 +1381,12 @@ function CopDamage:damage_tase(attack_data)
 	if result.type == "death" then
 		local data = {
 			name = nil,
-			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			head_shot = nil,
 			variant = nil,
+			weapon_unit = nil,
 			owner = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -1496,9 +1496,9 @@ function CopDamage:damage_melee(attack_data)
 
 		managers.hud:on_hit_confirmed({
 			is_killshot = nil,
-			hit_type = nil,
 			is_crit = nil,
 			is_headshot = nil,
+			hit_type = nil,
 			hit_type = HUDHitConfirm.HIT_NORMAL,
 			is_killshot = self._health < damage,
 			is_headshot = attack_data.can_headshot and head,
@@ -1554,8 +1554,8 @@ function CopDamage:damage_melee(attack_data)
 		damage_effect_percent = 1
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -1584,8 +1584,8 @@ function CopDamage:damage_melee(attack_data)
 		damage_effect_percent = math.clamp(damage_effect_percent, 1, self._HEALTH_GRANULARITY)
 		local result_type = attack_data.shield_knock and "shield_knock" or attack_data.variant == "counter_tased" and "counter_tased" or attack_data.variant == "taser_tased" and "taser_tased" or self:get_damage_type(damage_effect_percent, WeaponTweakData.DAMAGE_TYPE_MELEE) or "fire_hurt"
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = attack_data.variant
 		}
@@ -1611,14 +1611,14 @@ function CopDamage:damage_melee(attack_data)
 		end
 
 		local data = {
-			head_shot = nil,
 			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			name = nil,
 			name_id = nil,
 			variant = nil,
+			name = nil,
 			dismembered = nil,
+			head_shot = nil,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -1663,8 +1663,8 @@ function CopDamage:damage_melee(attack_data)
 
 	if is_attacker_player then
 		local damage_enemy_params = {
-			attack_data = nil,
 			unit = nil,
+			attack_data = nil,
 			unit = self._unit,
 			attack_data = attack_data
 		}
@@ -1685,8 +1685,8 @@ function CopDamage:damage_mission(attack_data)
 	local damage_percent = self._HEALTH_GRANULARITY
 	attack_data.damage = self._health
 	result = {
-		type = "death",
 		variant = nil,
+		type = "death",
 		variant = attack_data.variant
 	}
 
@@ -1703,11 +1703,11 @@ function CopDamage:damage_mission(attack_data)
 		end
 
 		local data = {
-			head_shot = false,
-			weapon_unit = nil,
 			stats_name = nil,
-			name = nil,
+			weapon_unit = nil,
 			variant = "explosion",
+			name = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attack_data.weapon_unit
@@ -1921,6 +1921,7 @@ function CopDamage:die(attack_data)
 		end
 	end
 
+	self._unit:base():set_gear_dead()
 	self._unit:inventory():drop_shield()
 
 	if self._unit:unit_data().mission_element then
@@ -2021,8 +2022,8 @@ function CopDamage:drop_pickup()
 
 		managers.game_play_central:spawn_pickup({
 			name = nil,
-			position = nil,
 			rotation = nil,
+			position = nil,
 			name = self._pickup,
 			position = position + Vector3(0, 0, 1.5),
 			rotation = rotation
@@ -2054,8 +2055,8 @@ function CopDamage:sync_damage_knockdown(attacker_unit, damage_percent, i_body, 
 
 	attack_data.attack_dir = attack_dir
 	local result = {
-		type = "expl_hurt",
-		variant = "expl_hurt"
+		variant = "expl_hurt",
+		type = "expl_hurt"
 	}
 	attack_data.variant = "expl_hurt"
 	attack_data.attacker_unit = attacker_unit
@@ -2096,8 +2097,8 @@ function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit
 		if head and math.random(10) < damage then
 			self:_spawn_head_gadget({
 				dir = nil,
-				position = nil,
 				rotation = nil,
+				position = nil,
 				position = body:position(),
 				rotation = body:rotation(),
 				dir = attack_dir
@@ -2105,8 +2106,8 @@ function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit
 		end
 
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
 
@@ -2114,11 +2115,11 @@ function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit
 		self:chk_killshot(attacker_unit, WeaponTweakData.DAMAGE_TYPE_BULLET)
 
 		local data = {
-			head_shot = nil,
-			weapon_unit = nil,
 			stats_name = nil,
-			name = nil,
+			weapon_unit = nil,
 			variant = nil,
+			name = nil,
+			head_shot = nil,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			head_shot = head,
@@ -2136,8 +2137,8 @@ function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit
 	else
 		local result_type = self:get_damage_type(damage_percent, WeaponTweakData.DAMAGE_TYPE_BULLET)
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
@@ -2183,19 +2184,19 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = variant
 		}
 
 		self:die(attack_data)
 
 		local data = {
-			head_shot = false,
-			weapon_unit = nil,
 			stats_name = nil,
-			name = nil,
+			weapon_unit = nil,
 			variant = "explosion",
+			name = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
@@ -2205,8 +2206,8 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 	else
 		local result_type = variant == "stun" and "hurt_sick" or self:get_damage_type(damage_percent, "explosion")
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = variant
 		}
@@ -2235,10 +2236,10 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 		local body = self._unit:body(self._head_body_name)
 
 		self:_spawn_head_gadget({
-			dir = nil,
 			skip_push = true,
-			position = nil,
+			dir = nil,
 			rotation = nil,
+			position = nil,
 			position = body:position(),
 			rotation = body:rotation(),
 			dir = Vector3()
@@ -2249,8 +2250,8 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 
 	if attack_data.attacker_unit and attack_data.attacker_unit == managers.player:player_unit() then
 		managers.hud:on_hit_confirmed({
-			hit_type = nil,
 			is_killshot = nil,
+			hit_type = nil,
 			hit_type = HUDHitConfirm.HIT_SPLINTER,
 			is_killshot = is_kill_shot
 		})
@@ -2258,12 +2259,12 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 
 	if is_kill_shot then
 		local data = {
-			head_shot = false,
 			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			name = nil,
 			variant = "explosion",
+			name = nil,
+			head_shot = false,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -2356,8 +2357,8 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = variant
 		}
 
@@ -2365,11 +2366,11 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 		self:chk_killshot(attacker_unit, "fire")
 
 		local data = {
-			head_shot = false,
-			weapon_unit = nil,
 			stats_name = nil,
-			name = nil,
+			weapon_unit = nil,
 			variant = "fire",
+			name = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
@@ -2379,8 +2380,8 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 	else
 		local result_type = variant == "stun" and "hurt_sick" or self:get_damage_type(damage_percent, "fire")
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = variant
 		}
@@ -2411,10 +2412,10 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 		local body = self._unit:body(self._head_body_name)
 
 		self:_spawn_head_gadget({
-			dir = nil,
 			skip_push = true,
-			position = nil,
+			dir = nil,
 			rotation = nil,
+			position = nil,
 			position = body:position(),
 			rotation = body:rotation(),
 			dir = Vector3()
@@ -2423,12 +2424,12 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 
 	if result.type == "death" then
 		local data = {
-			head_shot = false,
 			weapon_unit = nil,
 			stats_name = nil,
 			unit_key = nil,
-			name = nil,
 			variant = "fire",
+			name = nil,
+			head_shot = false,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -2480,8 +2481,8 @@ function CopDamage:sync_damage_dot(attacker_unit, damage_percent, death, variant
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = variant
 		}
 
@@ -2489,11 +2490,11 @@ function CopDamage:sync_damage_dot(attacker_unit, damage_percent, death, variant
 		self:chk_killshot(attacker_unit, variant or "dot")
 
 		local data = {
-			head_shot = false,
-			weapon_unit = nil,
 			stats_name = nil,
-			name = nil,
+			weapon_unit = nil,
 			variant = nil,
+			name = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit(),
@@ -2506,8 +2507,8 @@ function CopDamage:sync_damage_dot(attacker_unit, damage_percent, death, variant
 	else
 		local result_type = hurt_animation and self:get_damage_type(damage_percent, variant) or "dmg_rcv"
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = variant
 		}
@@ -2551,8 +2552,8 @@ function CopDamage:sync_damage_melee(attacker_unit, damage_percent, damage_effec
 		end
 
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = WeaponTweakData.DAMAGE_TYPE_MELEE
 		}
 
@@ -2560,10 +2561,10 @@ function CopDamage:sync_damage_melee(attacker_unit, damage_percent, damage_effec
 		self:chk_killshot(attacker_unit, WeaponTweakData.DAMAGE_TYPE_MELEE)
 
 		local data = {
-			name = nil,
-			head_shot = false,
 			stats_name = nil,
+			name = nil,
 			variant = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			variant = WeaponTweakData.DAMAGE_TYPE_MELEE
@@ -2573,8 +2574,8 @@ function CopDamage:sync_damage_melee(attacker_unit, damage_percent, damage_effec
 	else
 		local result_type = variant == 1 and "shield_knock" or variant == 2 and "counter_tased" or variant == 5 and "taser_tased" or variant == 4 and "expl_hurt" or self:get_damage_type(damage_effect_percent, WeaponTweakData.DAMAGE_TYPE_BULLET) or "fire_hurt"
 		result = {
-			type = nil,
 			variant = nil,
+			type = nil,
 			type = result_type,
 			variant = WeaponTweakData.DAMAGE_TYPE_MELEE
 		}
@@ -2627,8 +2628,8 @@ function CopDamage:sync_damage_tase(attacker_unit, damage_percent, variant, deat
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = WeaponTweakData.DAMAGE_TYPE_BULLET
 		}
 
@@ -2636,10 +2637,10 @@ function CopDamage:sync_damage_tase(attacker_unit, damage_percent, variant, deat
 		self:chk_killshot(attacker_unit, "tase")
 
 		local data = {
-			name = nil,
-			head_shot = false,
 			stats_name = nil,
+			name = nil,
 			variant = nil,
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			variant = WeaponTweakData.DAMAGE_TYPE_MELEE
@@ -2648,8 +2649,8 @@ function CopDamage:sync_damage_tase(attacker_unit, damage_percent, variant, deat
 		managers.statistics:killed_by_anyone(data)
 	else
 		result = {
-			type = "taser_tased",
 			variant = nil,
+			type = "taser_tased",
 			variant = variant == 1 and "heavy" or "light"
 		}
 
@@ -2905,13 +2906,13 @@ function CopDamage:build_suppression(amount, panic_chance)
 		local duration = math.lerp(sup_tweak.duration[1], sup_tweak.duration[2], math.random())
 		local decay_t = t + duration
 		self._suppression_data = {
-			duration = nil,
-			decay_t = nil,
-			last_build_t = nil,
 			value = nil,
+			duration = nil,
 			react_point = nil,
 			brown_point = nil,
 			decay_clbk_id = nil,
+			decay_t = nil,
+			last_build_t = nil,
 			value = amount_val,
 			last_build_t = t,
 			decay_t = decay_t,
@@ -3004,45 +3005,45 @@ function CopDamage:_create_debug_ws()
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
 		name = "health",
-		align = "left",
-		y = 0,
-		visible = true,
-		render_template = "OverlayVertexColorTextured",
-		color = nil,
-		font_size = 30,
-		layer = 1,
-		vertical = "top",
-		text = nil,
 		font = "fonts/font_medium_shadow_mf",
+		color = nil,
+		y = 0,
+		layer = 1,
+		font_size = 30,
+		visible = true,
+		vertical = "top",
+		align = "left",
+		text = nil,
+		render_template = "OverlayVertexColorTextured",
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
 		name = "ld",
-		align = "left",
-		y = 30,
-		visible = true,
-		render_template = "OverlayVertexColorTextured",
-		color = nil,
-		font_size = 30,
-		layer = 1,
-		vertical = "top",
-		text = "",
 		font = "fonts/font_medium_shadow_mf",
+		color = nil,
+		y = 30,
+		layer = 1,
+		font_size = 30,
+		visible = true,
+		vertical = "top",
+		align = "left",
+		text = "",
+		render_template = "OverlayVertexColorTextured",
 		color = Color.white
 	})
 	self._ws:panel():text({
 		name = "variant",
-		align = "left",
-		y = 60,
-		visible = true,
-		render_template = "OverlayVertexColorTextured",
-		color = nil,
-		font_size = 30,
-		layer = 1,
-		vertical = "top",
-		text = "",
 		font = "fonts/font_medium_shadow_mf",
+		color = nil,
+		y = 60,
+		layer = 1,
+		font_size = 30,
+		visible = true,
+		vertical = "top",
+		align = "left",
+		text = "",
+		render_template = "OverlayVertexColorTextured",
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -3085,19 +3086,19 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		if damage_info and damage_info.damage > 0 then
 			local text = self._ws:panel():text({
-				align = "center",
+				font = "fonts/font_medium_shadow_mf",
 				y = -20,
-				font_size = 20,
-				layer = 1,
-				render_template = "OverlayVertexColorTextured",
 				color = nil,
-				visible = true,
-				rotation = 360,
 				w = 40,
 				h = 40,
+				font_size = 20,
+				rotation = 360,
 				vertical = "center",
+				visible = true,
+				align = "center",
+				layer = 1,
 				text = nil,
-				font = "fonts/font_medium_shadow_mf",
+				render_template = "OverlayVertexColorTextured",
 				text = string.format("%.2f", damage_info.damage),
 				color = Color.white
 			})
@@ -3150,6 +3151,10 @@ function CopDamage:load(data)
 	end
 
 	self._dead = data.char_dmg.dead
+
+	if data.char_dmg.dead then
+		self._unit:base():set_gear_dead()
+	end
 
 	if data.char_dmg.health then
 		self._health = data.char_dmg.health
@@ -3223,26 +3228,26 @@ function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_ty
 		hurt_type = hurt_type or "knockdown"
 		local client_interrupt = Network:is_client()
 		local action_data = {
-			type = "hurt",
-			client_interrupt = nil,
-			hit_pos = nil,
-			hurt_type = nil,
-			direction_vec = nil,
 			block_type = "heavy_hurt",
 			body_part = 1,
+			hit_pos = nil,
 			blocks = nil,
+			client_interrupt = nil,
+			type = "hurt",
+			hurt_type = nil,
+			direction_vec = nil,
 			direction_vec = direction,
 			hit_pos = hit_position,
 			hurt_type = hurt_type,
 			client_interrupt = client_interrupt,
 			blocks = {
+				idle = -1,
+				dodge = -1,
+				aim = -1,
 				act = -1,
 				action = -1,
 				walk = -1,
-				hurt = -1,
-				idle = -1,
-				dodge = -1,
-				aim = -1
+				hurt = -1
 			}
 		}
 

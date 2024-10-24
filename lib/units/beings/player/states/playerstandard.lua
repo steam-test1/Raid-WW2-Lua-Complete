@@ -269,13 +269,13 @@ function PlayerStandard:exit(state_data, new_state_name)
 	self._ext_camera:set_shaker_parameter("headbob", "amplitude", 0)
 
 	local exit_data = {
-		last_sent_pos_t = nil,
-		equip_weapon_expire_t = nil,
 		unequip_weapon_expire_t = nil,
-		skip_equip = true,
+		last_sent_pos_t = nil,
 		ducking = nil,
 		change_weapon_data = nil,
+		skip_equip = true,
 		last_sent_pos = nil,
+		equip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data,
@@ -553,55 +553,55 @@ function PlayerStandard:_get_input(t, dt)
 	end
 
 	local input = {
-		btn_weapon_firemode_press = nil,
-		btn_throw_grenade_press = nil,
-		btn_reload_press = nil,
-		btn_primary_attack_release = nil,
-		btn_primary_attack_state = nil,
-		btn_projectile_press = nil,
-		btn_primary_attack_press = nil,
-		btn_jump_press = nil,
-		btn_projectile_state = nil,
-		btn_warcry_right_state = nil,
-		btn_vehicle_change_seat_press = nil,
 		btn_warcry_left_state = nil,
+		btn_run_state = nil,
 		btn_activate_warcry_press = nil,
 		btn_duck_release = nil,
-		btn_duck_state = nil,
-		btn_duck_press = nil,
-		btn_stats_screen_release = nil,
-		btn_stats_screen_down = nil,
-		btn_stats_screen_press = nil,
-		any_input_held = nil,
-		any_input_released = nil,
-		any_input_pressed = nil,
+		btn_run_release = nil,
+		btn_switch_weapon_press = nil,
+		btn_projectile_state = nil,
+		btn_projectile_release = nil,
+		btn_deploy_bipod = false,
+		btn_left_alt_inspect_state = nil,
+		btn_vehicle_exit_press = nil,
+		btn_vehicle_exit_release = nil,
+		btn_vehicle_change_seat_press = nil,
 		btn_vehicle_shooting_stance_release = nil,
 		btn_vehicle_shooting_stance_press = nil,
 		btn_vehicle_rear_view_release = nil,
 		btn_vehicle_rear_view_press = nil,
-		btn_vehicle_exit_release = nil,
-		btn_vehicle_exit_press = nil,
+		btn_duck_state = nil,
+		btn_duck_press = nil,
+		btn_stats_screen_release = nil,
+		btn_stats_screen_down = nil,
 		btn_enter_inspect_state = nil,
-		btn_left_alt_inspect_state = nil,
-		btn_deploy_bipod = false,
-		btn_projectile_release = nil,
-		btn_melee_release = nil,
-		btn_use_item_release = nil,
-		btn_interact_release = nil,
-		btn_steelsight_release = nil,
+		btn_stats_screen_press = nil,
+		any_input_held = nil,
+		any_input_released = nil,
+		any_input_pressed = nil,
+		btn_projectile_press = nil,
+		btn_throw_grenade_press = nil,
 		btn_weapon_gadget_press = nil,
 		btn_melee_state = nil,
 		btn_melee_press = nil,
 		btn_use_item_press = nil,
 		btn_previous_weapon_press = nil,
 		btn_next_weapon_press = nil,
-		btn_switch_weapon_press = nil,
-		btn_run_release = nil,
-		btn_run_state = nil,
+		btn_melee_release = nil,
+		btn_use_item_release = nil,
+		btn_interact_release = nil,
+		btn_steelsight_release = nil,
 		btn_run_press = nil,
 		btn_interact_press = nil,
 		btn_steelsight_state = nil,
 		btn_steelsight_press = nil,
+		btn_weapon_firemode_press = nil,
+		btn_reload_press = nil,
+		btn_primary_attack_release = nil,
+		btn_primary_attack_state = nil,
+		btn_primary_attack_press = nil,
+		btn_jump_press = nil,
+		btn_warcry_right_state = nil,
 		any_input_pressed = pressed,
 		any_input_released = released,
 		any_input_held = held,
@@ -1629,9 +1629,9 @@ function PlayerStandard:_end_action_ducking(t, skip_can_stand_check)
 	if not skip_can_stand_check and not self:_can_stand() then
 		managers.notification:add_notification({
 			duration = 2,
-			id = "hint_cant_stand_up",
-			shelf_life = 5,
 			text = nil,
+			shelf_life = 5,
+			id = "hint_cant_stand_up",
 			text = managers.localization:text("hint_cant_stand_up")
 		})
 
@@ -1847,6 +1847,7 @@ function PlayerStandard:interupt_all_actions()
 	self:_interupt_action_cash_inspect(t)
 	self:_interupt_action_mantle(t)
 	self:_interupt_action_diving(t)
+	self:_check_stop_shooting()
 end
 
 function PlayerStandard:_start_action_throw_projectile(t, input)
@@ -2177,9 +2178,9 @@ function PlayerStandard:_start_action_interact(t, input, timer, interact_object)
 
 	self._interact_expire_t = t + timer
 	self._interact_params = {
-		object = nil,
-		tweak_data = nil,
 		timer = nil,
+		tweak_data = nil,
+		object = nil,
 		object = interact_object,
 		timer = timer,
 		tweak_data = interact_object:interaction().tweak_data
@@ -2586,8 +2587,8 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 				})
 				managers.game_play_central:play_impact_sound_and_effects({
 					col_ray = nil,
-					no_decal = true,
 					no_sound = true,
+					no_decal = true,
 					col_ray = col_ray
 				})
 			end
@@ -2655,16 +2656,16 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 			local action_variant = special_weapon == "taser" and "taser_tased" or "melee"
 			local stealth_knock = is_whisper_mode and hit_unit:character_damage():is_surprise_knockdown()
 			local action_data = {
-				col_ray = nil,
-				attacker_unit = nil,
 				weapon_unit = nil,
 				name_id = nil,
-				variant = nil,
-				shield_knock = nil,
-				charge_lerp_value = nil,
-				damage_effect = nil,
 				damage = nil,
+				damage_effect = nil,
+				variant = nil,
+				col_ray = nil,
+				charge_lerp_value = nil,
 				can_headshot = nil,
+				shield_knock = nil,
+				attacker_unit = nil,
 				variant = action_variant,
 				name_id = melee_entry,
 				damage = damage * dmg_multiplier,
@@ -2969,7 +2970,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		ratio = nil,
+		delay = nil,
 		text = nil,
 		text = text
 	})
@@ -3558,8 +3559,8 @@ function PlayerStandard:_do_action_intimidate(t, interact_type, sound_name, queu
 		self._intimidate_t = t
 
 		managers.dialog:queue_dialog(sound_name, {
-			instigator = nil,
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = self._unit
 		})
 	end
@@ -3774,9 +3775,9 @@ function PlayerStandard:_check_action_equip(t, input)
 			elseif fail_reason then
 				managers.notification:add_notification({
 					duration = 3,
-					id = nil,
-					shelf_life = 5,
 					text = nil,
+					shelf_life = 5,
+					id = nil,
 					id = fail_reason,
 					text = managers.localization:text(fail_reason)
 				})
@@ -3973,6 +3974,7 @@ function PlayerStandard:_check_action_jump(t, input)
 
 				local action_start_data = {}
 				local jump_vel_z = self._tweak_data.movement.jump_velocity.z
+				jump_vel_z = jump_vel_z * managers.player:temporary_upgrade_value("temporary", "candy_jump_boost", 1)
 				action_start_data.jump_vel_z = jump_vel_z
 
 				if self._move_dir then
@@ -4718,8 +4720,8 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 				if weap_base.out_of_ammo and weap_base:out_of_ammo() then
 					if input.btn_primary_attack_press then
 						managers.dialog:queue_dialog("player_gen_no_ammo", {
-							instigator = nil,
 							skip_idle_check = true,
+							instigator = nil,
 							instigator = self._unit
 						})
 						managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
@@ -4789,6 +4791,7 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 					local autohit_mul = math.lerp(1, tweak_data.player.suppression.autohit_chance_mul, suppression_ratio)
 					local suppression_mul = managers.blackmarket:threat_multiplier()
 					local dmg_mul = managers.player:temporary_upgrade_value("temporary", "dmg_multiplier_outnumbered", 1)
+					local dmg_mul = dmg_mul * managers.player:temporary_upgrade_value("temporary", "candy_attack_damage", 1)
 					local weapon_category = weap_base:category()
 					local health_ratio = self._ext_damage:health_ratio()
 
@@ -4998,8 +5001,8 @@ function PlayerStandard:_start_action_reload(t)
 	if self._equipped_unit:base():can_reload() then
 		managers.hud:hide_prompt("hud_reload_prompt")
 		managers.dialog:queue_dialog("player_reloading", {
-			instigator = nil,
 			skip_idle_check = true,
+			instigator = nil,
 			instigator = self._unit
 		})
 
@@ -5102,13 +5105,19 @@ function PlayerStandard:_get_swap_speed_multiplier()
 	return multiplier
 end
 
-function PlayerStandard:force_change_weapon_slot(slot)
+function PlayerStandard:force_change_weapon_slot(slot, instant)
 	local tbl = {
 		selection_wanted = nil,
 		selection_wanted = slot
 	}
 
-	self:_start_action_unequip_weapon(managers.player:player_timer():time(), tbl)
+	if instant then
+		self._change_weapon_data = tbl
+
+		self:_start_action_equip_weapon(managers.player:player_timer():time())
+	else
+		self:_start_action_unequip_weapon(managers.player:player_timer():time(), tbl)
+	end
 end
 
 function PlayerStandard:_start_action_unequip_weapon(t, data)
@@ -5323,9 +5332,9 @@ function PlayerStandard:setup_upgrades()
 
 	if managers.player:has_category_upgrade("player", "marshal_max_multiplier_stacks") then
 		self._state_data.marshal_data = self._state_data.marshal_data or {
+			decay_time = nil,
 			max_stacks = nil,
 			stacks = 0,
-			decay_time = nil,
 			max_stacks = managers.player:upgrade_value("player", "marshal_max_multiplier_stacks", 1),
 			decay_time = managers.player:upgrade_value("player", "marshal_stack_decay_timer", 1)
 		}

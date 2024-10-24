@@ -1,20 +1,37 @@
 CorpseCarryData = CorpseCarryData or class(CarryData)
 
-function CorpseCarryData:init(...)
-	CorpseCarryData.super.init(self, ...)
-
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PUMKIN_HEADS) and self._unit:damage() then
-		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
-	end
+function CorpseCarryData:destroy()
+	self:_clear_spawn_gear()
+	CorpseCarryData.super.destroy(self)
 end
 
-function CarryData:on_pickup()
+function CorpseCarryData:load(data)
+	CorpseCarryData.super.load(self, data)
+
+	self._tweak_table = tweak_data.carry[self:carry_id()].character_id
+	self._char_tweak = tweak_data.character[self._tweak_table]
+
+	self:_init_spawn_gear()
+	self:set_gear_dead()
+end
+
+CorpseCarryData._init_spawn_gear = CopBase._init_spawn_gear
+CorpseCarryData._clear_spawn_gear = CopBase._clear_spawn_gear
+CorpseCarryData.set_spawn_gear_visibility_state = CopBase.set_spawn_gear_visibility_state
+CorpseCarryData.set_gear_dead = CopBase.set_gear_dead
+
+function CorpseCarryData:on_pickup()
 	if self._dismembered_parts then
 		managers.player:set_carry_temporary_data(self:carry_id(), self._dismembered_parts)
 	end
+
+	self:_clear_spawn_gear()
 end
 
 function CorpseCarryData:on_thrown()
+	Application:info("[CorpseCarryData:on_thrown] Threw corpse ID", self:carry_id())
+	self._unit:damage():has_then_run_sequence_simple("set_bodybag_class")
+
 	self._dismembered_parts = self._dismembered_parts or managers.player:carry_temporary_data(self:carry_id())
 
 	for _, dismember_part in ipairs(self._dismembered_parts or {}) do
@@ -24,6 +41,12 @@ function CorpseCarryData:on_thrown()
 	end
 
 	managers.player:clear_carry_temporary_data(self:carry_id())
+
+	self._tweak_table = tweak_data.carry[self:carry_id()].character_id
+	self._char_tweak = tweak_data.character[self._tweak_table]
+
+	self:_init_spawn_gear()
+	self:set_gear_dead()
 	self:_switch_to_ragdoll()
 end
 

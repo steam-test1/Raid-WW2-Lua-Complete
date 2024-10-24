@@ -225,8 +225,8 @@ function MenuCallbackHandler:on_account_picker()
 		end
 
 		managers.system_menu:show_select_user({
-			callback_func = nil,
 			count = 1,
+			callback_func = nil,
 			callback_func = f
 		})
 	end
@@ -1333,8 +1333,8 @@ end
 
 function MenuCallbackHandler:set_default_options()
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_default_options_message"),
 		callback = function ()
 			managers.user:reset_setting_map()
@@ -1347,8 +1347,8 @@ end
 
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_default_controls_options_message"),
 		callback = function ()
 			managers.user:reset_controls_setting_map()
@@ -1361,8 +1361,8 @@ end
 
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_default_video_options_message"),
 		callback = function ()
 			managers.user:reset_video_setting_map()
@@ -1375,8 +1375,8 @@ end
 
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_default_sound_options_message"),
 		callback = function ()
 			managers.user:reset_sound_setting_map()
@@ -1390,8 +1390,8 @@ end
 
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_default_network_options_message"),
 		callback = function ()
 			managers.user:reset_network_setting_map()
@@ -1451,8 +1451,8 @@ end
 
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
-		callback = nil,
 		text = nil,
+		callback = nil,
 		text = managers.localization:text("dialog_use_default_keys_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")

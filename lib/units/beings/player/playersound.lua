@@ -81,9 +81,9 @@ function PlayerSound:play_footstep(foot, material_name, pos)
 	self:_play(sprinting and "footsteps_1p_run" or "footsteps_1p")
 
 	local world_effect = self._last_material_effect and self._last_material_effect.step and World:effect_manager():spawn({
-		position = nil,
 		effect = nil,
 		rotation = nil,
+		position = nil,
 		effect = self._last_material_effect[sprinting and "sprint" or "step"],
 		position = pos or self._unit:position(),
 		rotation = self._unit:rotation()
@@ -103,9 +103,9 @@ function PlayerSound:play_land(material_name, pos)
 	self:_play("footstep_land_1p")
 
 	local world_effect = self._last_material_effect and self._last_material_effect.land and World:effect_manager():spawn({
-		position = nil,
 		effect = nil,
 		rotation = nil,
+		position = nil,
 		effect = self._last_material_effect.land,
 		position = pos or self._unit:position(),
 		rotation = self._unit:rotation()

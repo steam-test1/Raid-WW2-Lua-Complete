@@ -30,14 +30,14 @@ function RaidMenuOptionsSound:_layout_sound()
 	local start_y = 320
 	local default_width = 512
 	local master_params = {
+		name = "slider_master",
+		value_format = "%02d%%",
+		on_value_change_callback = nil,
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
 		value = 100,
-		value_format = "%02d%%",
-		name = "slider_master",
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_master_volume")),
 		x = start_x,
 		y = start_y,
@@ -48,14 +48,14 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_master_volume = self._root_panel:slider(master_params)
 	local music_params = {
+		name = "slider_music",
+		value_format = "%02d%%",
+		on_value_change_callback = nil,
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
 		value = 100,
-		value_format = "%02d%%",
-		name = "slider_music",
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_music_volume")),
 		x = start_x,
 		y = master_params.y + RaidGuiBase.PADDING,
@@ -67,14 +67,14 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_music_volume = self._root_panel:slider(music_params)
 	local sfx_params = {
+		name = "slider_sfx",
+		value_format = "%02d%%",
+		on_value_change_callback = nil,
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
 		value = 100,
-		value_format = "%02d%%",
-		name = "slider_sfx",
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_sfx_volume")),
 		x = start_x,
 		y = music_params.y + RaidGuiBase.PADDING,
@@ -86,14 +86,14 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_sfx_volume = self._root_panel:slider(sfx_params)
 	local voice_over_params = {
+		name = "slider_voice_over",
+		value_format = "%02d%%",
+		on_value_change_callback = nil,
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
 		value = 100,
-		value_format = "%02d%%",
-		name = "slider_voice_over",
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_voice_over_volume")),
 		x = start_x,
 		y = sfx_params.y + RaidGuiBase.PADDING,
@@ -105,14 +105,14 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_voice_over_volume = self._root_panel:slider(voice_over_params)
 	local voice_chat_params = {
+		name = "slider_voice_chat",
+		value_format = "%02d%%",
+		on_value_change_callback = nil,
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
 		value = 100,
-		value_format = "%02d%%",
-		name = "slider_voice_chat",
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_voice_volume")),
 		x = start_x,
 		y = voice_over_params.y + RaidGuiBase.PADDING,
@@ -124,13 +124,13 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_voice_volume = self._root_panel:slider(voice_chat_params)
 	local use_voice_chat_params = {
+		on_click_callback = nil,
+		w = nil,
+		name = "use_voice_chat",
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		name = "use_voice_chat",
-		on_click_callback = nil,
-		w = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_voicechat_toggle")),
 		x = start_x,
 		y = voice_chat_params.y + RaidGuiBase.PADDING,
@@ -143,13 +143,13 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._toggle_menu_voicechat_toggle = self._root_panel:toggle_button(use_voice_chat_params)
 	local push_to_talk_params = {
+		on_click_callback = nil,
+		w = nil,
+		name = "push_to_talk",
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		name = "push_to_talk",
-		on_click_callback = nil,
-		w = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_push_to_talk_toggle")),
 		x = start_x,
 		y = use_voice_chat_params.y + RaidGuiBase.PADDING,
@@ -162,13 +162,13 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._toggle_menu_push_to_talk_toggle = self._root_panel:toggle_button(push_to_talk_params)
 	local tinnitus_params = {
+		on_click_callback = nil,
+		w = nil,
+		name = "tinnitus",
+		on_menu_move = nil,
 		description = nil,
 		y = nil,
 		x = nil,
-		name = "tinnitus",
-		on_click_callback = nil,
-		w = nil,
-		on_menu_move = nil,
 		description = utf8.to_upper(managers.localization:text("menu_tinnitus_toggle")),
 		x = start_x,
 		y = push_to_talk_params.y + RaidGuiBase.PADDING,

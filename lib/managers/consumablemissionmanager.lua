@@ -142,8 +142,8 @@ end
 
 function ConsumableMissionManager:on_document_spawn_chance_received(chance, peer_id)
 	table.insert(self._peer_document_spawn_chances, {
-		peer_id = nil,
 		chance = nil,
+		peer_id = nil,
 		chance = chance,
 		peer_id = peer_id
 	})
@@ -266,8 +266,8 @@ end
 
 function ConsumableMissionManager:save(data)
 	local state = {
-		version = nil,
 		intel_spawn_modifier = nil,
+		version = nil,
 		inventory = nil,
 		version = ConsumableMissionManager.VERSION,
 		inventory = {},

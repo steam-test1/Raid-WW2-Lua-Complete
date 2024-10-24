@@ -26,7 +26,6 @@ end
 
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
-		name = "list_menu_options",
 		loop_items = true,
 		selection_enabled = true,
 		data_source_callback = nil,
@@ -35,6 +34,7 @@ function RaidMenuLeftOptions:_layout_list_menu()
 		w = 480,
 		y = 144,
 		x = 0,
+		name = "list_menu_options",
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 		data_source_callback = callback(self, self, "_list_menu_options_data_source")
 	}
@@ -43,12 +43,12 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self.list_menu_options:set_selected(true)
 
 	local default_video_params = {
+		on_click_callback = nil,
+		x = 1472,
+		y = 832,
+		text = nil,
 		layer = nil,
 		name = "default_video",
-		on_click_callback = nil,
-		text = nil,
-		y = 832,
-		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_option_default")),
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_default"
@@ -57,12 +57,12 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	}
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_params)
 	local reset_progress_params = {
+		on_click_callback = nil,
+		x = 1472,
+		y = 768,
+		text = nil,
 		layer = nil,
 		name = "reset_progress",
-		on_click_callback = nil,
-		text = nil,
-		y = 768,
-		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_clear_progress")),
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_reset_progress"
@@ -134,16 +134,16 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_default_options"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -175,8 +175,8 @@ function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_clear_progress",
@@ -184,8 +184,8 @@ function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

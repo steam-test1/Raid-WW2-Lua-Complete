@@ -250,16 +250,17 @@ function CarryTweakData:init(tweak_data)
 		cannot_stack = true,
 		cannot_secure = true
 	}
-	self.german_spy = deep_clone(self.corpse_body)
-	self.german_spy.name_id = "hud_carry_spy"
-	self.german_spy.prompt_text = "hud_carry_put_down_prompt"
-	self.german_spy.carry_item_id = "carry_item_spy"
-	self.german_spy.hud_icon = "carry_alive"
-	self.german_spy.visual_unit_root_joint = "body_bag_spawn"
-	self.german_spy.visual_unit_name = "units/vanilla/characters/npc/models/raid_npc_spy/body_bag/raid_npc_spy_body_bag"
-	self.german_spy.unit_static = "units/vanilla/characters/npc/models/raid_npc_spy/raid_npc_spy_static"
-	self.german_spy.unit = "units/vanilla/characters/npc/models/raid_npc_spy/raid_npc_spy_corpse"
-	self.german_spy.ignore_corpse_cleanup = true
+	self.german_spy_body = deep_clone(self.corpse_body)
+	self.german_spy_body.name_id = "hud_carry_spy"
+	self.german_spy_body.character_id = "civilian"
+	self.german_spy_body.prompt_text = "hud_carry_put_down_prompt"
+	self.german_spy_body.carry_item_id = "carry_item_spy"
+	self.german_spy_body.hud_icon = "carry_alive"
+	self.german_spy_body.visual_unit_root_joint = "body_bag_spawn"
+	self.german_spy_body.visual_unit_name = "units/vanilla/characters/npc/models/raid_npc_spy/body_bag/raid_npc_spy_body_bag"
+	self.german_spy_body.unit_static = "units/vanilla/characters/npc/models/raid_npc_spy/raid_npc_spy_static"
+	self.german_spy_body.unit = "units/vanilla/characters/npc/models/raid_npc_spy/raid_npc_spy_corpse"
+	self.german_spy_body.ignore_corpse_cleanup = true
 
 	self:_build_missing_corpse_bags(tweak_data)
 
@@ -385,10 +386,11 @@ function CarryTweakData:_build_missing_corpse_bags(tweak_data)
 
 	for _, data in pairs(char_map) do
 		for _, character in ipairs(data.list) do
-			if not self[character] then
+			if not self[character .. "_body"] then
 				local bodybag_path = data.path .. character
 				local character_path = bodybag_path .. "/" .. character
 				local bag = deep_clone(self.corpse_body)
+				bag.character_id = character
 				bag.unit = character_path .. "_corpse"
 				bag.visual_unit_name = bodybag_path .. "/body_bag/" .. character .. "_body_bag"
 				bag.visual_unit_root_joint = "body_bag_spawn"

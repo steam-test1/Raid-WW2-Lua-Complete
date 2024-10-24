@@ -181,8 +181,8 @@ function CoreWorldCameraManager:save(file)
 	end
 
 	local camera_data = {
-		worldcameras = nil,
 		sequences = nil,
+		worldcameras = nil,
 		worldcameras = worldcameras,
 		sequences = self._world_camera_sequences
 	}
@@ -549,9 +549,9 @@ function CoreWorldCameraManager:play_world_camera_sequence(name, sequence, stay_
 
 	if not self._sound_environment_check_object then
 		self._sound_environment_check_object = managers.sound_environment:add_check_object({
-			object = nil,
 			primary = true,
 			active = false,
+			object = nil,
 			object = self._camera
 		})
 	end
@@ -611,10 +611,10 @@ function CoreWorldCameraManager:update_dof_values(near_dof, far_dof, dof_padding
 	self._current_dof_clamp = dof_clamp
 
 	managers.DOF:set_effect_parameters(self._dof_effect_id, {
-		near_max = nil,
 		near_min = nil,
 		far_max = nil,
 		far_min = nil,
+		near_max = nil,
 		near_min = near_dof,
 		near_max = near_dof - dof_padding,
 		far_min = far_dof,
@@ -689,18 +689,18 @@ end
 
 function CoreWorldCamera:save_data_table()
 	local t = {
-		in_acc = nil,
-		delay = nil,
-		duration = nil,
-		out_acc = nil,
-		dof_padding = nil,
-		dof_clamp = nil,
-		spline_metadata = nil,
 		curve_type = nil,
 		keys = nil,
 		target_positions = nil,
 		positions = nil,
+		out_acc = nil,
+		in_acc = nil,
 		name = nil,
+		duration = nil,
+		dof_padding = nil,
+		dof_clamp = nil,
+		delay = nil,
+		spline_metadata = nil,
 		name = self._world_camera_name,
 		duration = self._duration,
 		delay = self._delay,
@@ -1261,10 +1261,10 @@ function CoreWorldCamera:extract_spline_metadata()
 		tar_ctrl_points = nil,
 		ctrl_points = nil,
 		tar_segment_lengths = nil,
-		tar_spline_length = nil,
 		nr_subseg_per_seg = nil,
 		segment_lengths = nil,
 		spline_length = nil,
+		tar_spline_length = nil,
 		ctrl_points = control_points,
 		segment_lengths = segment_lengths,
 		spline_length = spline_length,
@@ -1529,8 +1529,8 @@ end
 
 function CoreWorldCamera:get_point(point)
 	return {
-		pos = nil,
 		t_pos = nil,
+		pos = nil,
 		pos = self._positions[point],
 		t_pos = self._target_positions[point]
 	}

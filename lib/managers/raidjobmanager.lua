@@ -142,11 +142,11 @@ end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
 	local obj_data = {
-		description = nil,
 		id = nil,
 		text = nil,
 		xp_weight = 1,
 		prio = 1,
+		description = nil,
 		id = "dyn_" .. obj_id,
 		text = obj_id .. "_hl",
 		description = obj_id .. "_desc"
@@ -156,10 +156,10 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 	for _, t in ipairs(sub_id_list or {}) do
 		local subid = "dyn_" .. t .. "_sub"
 		obj_data[i] = {
-			id = nil,
-			prio = nil,
 			text = nil,
 			start_completed = nil,
+			prio = nil,
+			id = nil,
 			id = subid,
 			text = t .. "_sub_hl",
 			prio = i,
@@ -319,6 +319,10 @@ function RaidJobManager:on_mission_restart()
 	managers.lootdrop:reset_loot_value_counters()
 	self:on_mission_ended()
 	self:on_mission_started()
+
+	if managers.event_system:is_event_active() and Global.game_settings.event_enabled then
+		managers.queued_tasks:queue("special_event_reenable", managers.event_system.activate_current_event, managers.event_system, true, 0.5)
+	end
 end
 
 function RaidJobManager:external_start_mission()
@@ -616,6 +620,10 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 					Application:trace("[RaidJobManager:job_completion_trail] finished it on difficulty", difficulty)
 					managers.progression:complete_mission_on_difficulty(self._current_job.job_type, self._current_job.job_id, difficulty_index)
 				end
+
+				local is_stealth = managers.groupai and managers.groupai:state():whisper_mode() or false
+
+				self:set_memory("stealth_completion", is_stealth)
 			end
 
 			data.background = data.mission.loading.image
@@ -927,11 +935,17 @@ function RaidJobManager:complete_job()
 end
 
 function RaidJobManager:continue_operation(slot)
-	managers.global_state:reset_all_flags()
-	managers.global_state:set_global_states(self._save_slots[slot].global_states)
+	local save_slot = self._save_slots[slot]
 
-	self._current_job = self._save_slots[slot].current_job
-	self._current_job.events_index = self._save_slots[slot].events_index
+	if not save_slot then
+		return
+	end
+
+	managers.global_state:reset_all_flags()
+	managers.global_state:set_global_states(save_slot.global_states)
+
+	self._current_job = save_slot.current_job
+	self._current_job.events_index = save_slot.events_index
 
 	if self._current_job.events_index then
 		tweak_data.operations.missions[self._current_job.job_id].events_index = self._current_job.events_index
@@ -940,28 +954,42 @@ function RaidJobManager:continue_operation(slot)
 		managers.network:session():send_to_peers_synched("sync_randomize_operation", self._current_job.job_id, list_delimited)
 	end
 
+	if save_slot.difficulty then
+		tweak_data:set_difficulty(save_slot.difficulty)
+	end
+
+	if save_slot.team_ai then
+		Global.game_settings.team_ai = save_slot.team_ai
+	end
+
+	managers.network:session():send_to_peers_synched("sync_set_selected_job", self._current_job.job_id, Global.game_settings.difficulty)
 	managers.network:session():send_to_peers_synched("sync_current_job", self._current_job.job_id)
 
-	if self._save_slots[slot].active_card then
-		managers.challenge_cards:set_active_card(self._save_slots[slot].active_card)
+	if save_slot.active_card then
+		managers.challenge_cards:set_active_card(save_slot.active_card)
 	end
 
 	self._current_save_slot = slot
 	self._loot_data = {}
 
-	if self._save_slots[slot].event_data then
-		for event_index, event_data in pairs(self._save_slots[slot].event_data) do
-			self._loot_data[event_index] = event_data.loot_data
+	if save_slot.event_data then
+		for event_index, event_data in pairs(save_slot.event_data) do
+			local loot_data = event_data.loot_data
+
+			if loot_data then
+				self._loot_data[event_index] = loot_data
+
+				managers.network:session():send_to_peers_synched("sync_event_loot_data", loot_data.acquired, loot_data.spawned)
+			end
 		end
 	end
 
 	managers.network.matchmake:set_job_info_by_current_job()
 
-	if self._current_job.current_event == 1 then
-		self._selected_job = self._current_job
-	end
+	local current_event = self._current_job.current_event
+	self._selected_job = current_event == 1 and self._current_job
 
-	self:start_event(self._current_job.current_event)
+	self:start_event(current_event)
 end
 
 function RaidJobManager:clear_operations_save_slots()
@@ -983,6 +1011,32 @@ end
 
 function RaidJobManager:get_save_slots()
 	return self._save_slots
+end
+
+function RaidJobManager:get_save_slot_downs(save_slot)
+	local save_data = self._save_slots[save_slot]
+	local total_downs = 0
+	local all_players_downed = true
+
+	if save_data then
+		for events_index_index, _ in ipairs(save_data.events_index) do
+			local event_data = save_data.event_data[events_index_index]
+
+			if event_data and event_data.peer_data then
+				for _, peer_data in pairs(event_data.peer_data) do
+					if peer_data.statistics then
+						total_downs = total_downs + (peer_data.statistics.downs or 0)
+
+						if not peer_data.statistics.downs or peer_data.statistics.downs < 1 then
+							all_players_downed = false
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return total_downs, all_players_downed
 end
 
 function RaidJobManager:save_progress()
@@ -1095,30 +1149,46 @@ function RaidJobManager:save_game(data)
 end
 
 function RaidJobManager:_prepare_peer_save_data()
-	local peer_save_data = {}
+	local local_peer = managers.network:session():local_peer()
+	local peer_id = local_peer:id()
 	local local_player_data = {
-		name = utf8.to_upper(managers.player:get_character_profile_name()),
+		class = nil,
+		level = nil,
+		name = nil,
+		nationality = nil,
+		statistics = nil,
 		is_local_player = true,
+		player_id = nil,
+		name = utf8.to_upper(managers.player:get_character_profile_name()),
 		class = managers.skilltree:get_character_profile_class(),
-		nationality = managers.network:session():local_peer():character(),
+		nationality = local_peer:character(),
 		level = managers.experience:current_level(),
-		player_id = managers.network:session():local_peer():user_id(),
-		statistics = managers.network:session():local_peer():statistics()
+		player_id = local_peer:user_id(),
+		statistics = local_peer:statistics()
+	}
+	local peer_save_data = {
+		local_player_data
 	}
 
-	table.insert(peer_save_data, local_player_data)
-
 	for index, peer in pairs(managers.network:session():all_peers()) do
-		local peer_data = {
-			name = peer:name(),
-			class = peer:class(),
-			nationality = peer:character(),
-			level = peer:level(),
-			player_id = peer:user_id(),
-			statistics = peer:statistics()
-		}
+		if not peer:id() == peer_id then
+			local peer_data = {
+				class = nil,
+				level = nil,
+				name = nil,
+				nationality = nil,
+				statistics = nil,
+				player_id = nil,
+				name = peer:name(),
+				class = peer:class(),
+				nationality = peer:character(),
+				level = peer:level(),
+				player_id = peer:user_id(),
+				statistics = peer:statistics()
+			}
 
-		table.insert(peer_save_data, peer_data)
+			table.insert(peer_save_data, peer_data)
+		end
 	end
 
 	return peer_save_data
@@ -1127,6 +1197,7 @@ end
 function RaidJobManager:sync_current_job(job_id)
 	self._selected_job = nil
 	self._current_job = nil
+	self._loot_data = {}
 	self._current_job = tweak_data.operations:mission_data(job_id)
 
 	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
@@ -1274,4 +1345,10 @@ end
 
 function RaidJobManager:has_active_job()
 	return self._current_job ~= nil
+end
+
+function RaidJobManager:exclude_camp_continent(continent_id)
+	if self._camp then
+		table.insert(self._camp.excluded_continents, continent_id)
+	end
 end

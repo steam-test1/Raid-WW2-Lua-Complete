@@ -5,9 +5,9 @@ function NPCSawWeaponBase:init(unit)
 
 	self._active_effect_name = Idstring("effects/vanilla/weapons/saw/sawing")
 	self._active_effect_table = {
+		force_synch = true,
 		parent = nil,
 		effect = nil,
-		force_synch = true,
 		effect = self._active_effect_name,
 		parent = self._obj_fire
 	}

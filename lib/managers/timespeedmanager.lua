@@ -124,9 +124,9 @@ function TimeSpeedManager:play_effect(id, effect_desc)
 			self._affected_timers[timer_key].ref_count = self._affected_timers[timer_key].ref_count + 1
 		else
 			self._affected_timers[timer_key] = {
-				timer = nil,
-				mul = 1,
 				ref_count = 1,
+				mul = 1,
+				timer = nil,
 				timer = affect_timer
 			}
 		end

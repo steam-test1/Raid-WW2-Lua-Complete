@@ -74,7 +74,6 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	local title_description_params = {
-		vertical = "center",
 		name = "title_description",
 		h = nil,
 		color = nil,
@@ -82,6 +81,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 		font = nil,
 		text = nil,
 		align = "left",
+		vertical = "center",
 		h = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_FONT_SIZE,
@@ -94,7 +94,6 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	title_description:set_w(w)
 
 	local title_params = {
-		vertical = "top",
 		name = "customization_name",
 		align = "center",
 		color = nil,
@@ -102,6 +101,7 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 		font = nil,
 		y = nil,
 		text = nil,
+		vertical = "top",
 		y = title_description:y() + title_description:h() + RaidGUIControlWeaponPointRewardDetails.TITLE_PADDING_TOP,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_FONT_SIZE,
@@ -127,10 +127,10 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
-		h = nil,
 		name = "reward_image_panel",
 		y = nil,
 		w = nil,
+		h = nil,
 		y = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_Y,
 		w = self._left_panel:w(),
 		h = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_H
@@ -178,8 +178,8 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
-		y = nil,
 		name = "redeem_xp_button",
+		y = nil,
 		x = 0,
 		on_click_callback = nil,
 		text = nil,
@@ -273,8 +273,8 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_on_click_redeem()
 	local params = {
-		callback = nil,
 		xp = nil,
+		callback = nil,
 		callback = callback(self, self, "redeem"),
 		xp = self._xp_redeem_value
 	}

@@ -712,9 +712,9 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_suspicious = {
-		texture_rect = nil,
-		texture_rect_over = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
+		texture_rect_over = nil,
+		texture_rect = nil,
 		texture_rect = {
 			0,
 			0,
@@ -769,9 +769,9 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_spotter_progress = {
-		texture_rect = nil,
-		texture_rect_over = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
+		texture_rect_over = nil,
+		texture_rect = nil,
 		texture_rect = {
 			0,
 			0,

@@ -28,29 +28,29 @@ function PlayerManager:init()
 	self._viewport_configs[1][1] = {
 		dimensions = nil,
 		dimensions = {
+			y = 0,
 			x = 0,
 			h = 1,
-			w = 1,
-			y = 0
+			w = 1
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = nil,
 			dimensions = {
+				y = 0,
 				x = 0,
 				h = 0.5,
-				w = 1,
-				y = 0
+				w = 1
 			}
 		},
 		{
 			dimensions = nil,
 			dimensions = {
+				y = 0.5,
 				x = 0,
 				h = 0.5,
-				w = 1,
-				y = 0.5
+				w = 1
 			}
 		}
 	}
@@ -60,9 +60,6 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
-		fatal = "ingame_fatal",
-		turret = "ingame_standard",
-		bleed_out = "ingame_bleed_out",
 		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
 		freefall = "ingame_freefall",
@@ -73,7 +70,10 @@ function PlayerManager:init()
 		carry = "ingame_standard",
 		incapacitated = "ingame_incapacitated",
 		tased = "ingame_electrified",
-		charging = "ingame_standard"
+		charging = "ingame_standard",
+		fatal = "ingame_fatal",
+		turret = "ingame_standard",
+		bleed_out = "ingame_bleed_out"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -90,9 +90,8 @@ end
 
 function PlayerManager:save(data)
 	local state = {
-		game_settings_permission = nil,
-		customization_equiped_lower_name = nil,
 		customization_equiped_upper_name = nil,
+		game_settings_permission = nil,
 		customization_equiped_head_name = nil,
 		character_profile_nation = nil,
 		game_settings_team_ai = nil,
@@ -102,6 +101,7 @@ function PlayerManager:save(data)
 		viewed_content_updates = nil,
 		kit = nil,
 		game_settings_difficulty = nil,
+		customization_equiped_lower_name = nil,
 		kit = self._global.kit,
 		viewed_content_updates = self._global.viewed_content_updates,
 		character_profile_name = self:get_character_profile_name(),
@@ -152,11 +152,11 @@ end
 
 function PlayerManager:sync_save(data)
 	local state = {
-		husk_turret_data = nil,
-		husk_bipod_data = nil,
 		player_mesh_suffix = nil,
 		current_sync_state = nil,
 		local_player_in_camp = nil,
+		husk_turret_data = nil,
+		husk_bipod_data = nil,
 		current_sync_state = self._current_sync_state,
 		player_mesh_suffix = self._player_mesh_suffix,
 		husk_bipod_data = self._global.synced_bipod,
@@ -206,9 +206,9 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
+		add_coroutine = nil,
 		specials = nil,
 		selections = nil,
-		nationality = nil,
 		selections = {},
 		specials = {}
 	}
@@ -224,9 +224,9 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
+		add_coroutine = nil,
 		specials = nil,
 		selections = nil,
-		nationality = nil,
 		selections = {},
 		specials = {}
 	}
@@ -365,10 +365,10 @@ function PlayerManager:get_customization_for_nationality(nationality)
 		if save_data and save_data.is_cached_slot and save_data.cache and save_data.cache.PlayerManager and nationality == save_data.cache.PlayerManager.character_profile_nation then
 			local player_man = save_data.cache.PlayerManager
 			local customization = {
-				equiped_lower_name = nil,
 				equiped_upper_name = nil,
 				equiped_head_name = nil,
 				nationality = nil,
+				equiped_lower_name = nil,
 				equiped_head_name = player_man.customization_equiped_head_name,
 				equiped_upper_name = player_man.customization_equiped_upper_name,
 				equiped_lower_name = player_man.customization_equiped_lower_name,
@@ -381,10 +381,10 @@ function PlayerManager:get_customization_for_nationality(nationality)
 
 	local cc = managers.character_customization
 	local customization = {
-		equiped_lower_name = nil,
 		equiped_upper_name = nil,
 		equiped_head_name = nil,
 		nationality = nil,
+		equiped_lower_name = nil,
 		equiped_head_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_HEAD),
 		equiped_upper_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_UPPER),
 		equiped_lower_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_LOWER),
@@ -581,8 +581,8 @@ function PlayerManager:_internal_load()
 	end
 
 	self:_set_grenade({
-		grenade = nil,
 		amount = nil,
+		grenade = nil,
 		grenade = grenade,
 		amount = math.min(amount, self:get_max_grenades())
 	})
@@ -1234,6 +1234,25 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 		expire_time = nil,
 		expire_time = Application:time() + lifetime
 	}
+
+	if category == "temporary" then
+		local icon_id = "status_effect_" .. upgrade
+
+		if tweak_data.gui.icons[icon_id] then
+			managers.hud:add_status_effect({
+				color = nil,
+				id = nil,
+				icon = nil,
+				tier = nil,
+				lifetime = nil,
+				id = upgrade,
+				tier = upgrade_level,
+				icon = icon_id,
+				color = tweak_data.gui.colors.progress_green,
+				lifetime = lifetime
+			})
+		end
+	end
 end
 
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
@@ -1257,6 +1276,25 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 		upgrade_value = upgrade_value[1],
 		expire_time = Application:time() + lifetime
 	}
+
+	if category == "temporary" then
+		local icon_id = "status_effect_" .. upgrade
+
+		if tweak_data.gui.icons[icon_id] then
+			managers.hud:add_status_effect({
+				color = nil,
+				id = nil,
+				icon = nil,
+				tier = nil,
+				lifetime = nil,
+				id = upgrade,
+				tier = upgrade_value[1],
+				icon = icon_id,
+				color = tweak_data.gui.colors.progress_green,
+				lifetime = lifetime
+			})
+		end
+	end
 end
 
 function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
@@ -1271,6 +1309,11 @@ function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
 	end
 
 	self._temporary_upgrades[category][upgrade] = nil
+	local icon_id = "status_effect_" .. upgrade
+
+	if tweak_data.gui.icons[icon_id] then
+		managers.hud:remove_status_effect(upgrade, false)
+	end
 end
 
 function PlayerManager:has_activate_temporary_upgrade(category, upgrade)
@@ -1429,6 +1472,7 @@ function PlayerManager:movement_speed_multiplier(is_running, is_climbing, is_cro
 	end
 
 	multiplier = multiplier + warcry_multiplier
+	multiplier = multiplier + self:temporary_upgrade_value("temporary", "candy_sprint_speed", 1) - 1
 
 	if self:has_activate_temporary_upgrade("temporary", "warcry_sentry_shooting") then
 		multiplier = multiplier * self:upgrade_value("player", "warcry_shooting_movement_speed_reduction", 1)
@@ -1503,6 +1547,8 @@ function PlayerManager:critical_hit_chance(distance)
 	if self:has_activate_temporary_upgrade("temporary", "revenant_revived_critical_hit_chance") then
 		multiplier = multiplier + self:temporary_upgrade_value("temporary", "revenant_revived_critical_hit_chance", 1) - 1
 	end
+
+	multiplier = multiplier + managers.player:temporary_upgrade_value("temporary", "candy_critical_hit_chance", 1) - 1
 
 	if self:current_state() == "bleed_out" then
 		multiplier = multiplier + self:upgrade_value("player", "revenant_downed_critical_hit_chance", 1) - 1
@@ -1581,6 +1627,7 @@ function PlayerManager:health_regen(health_ratio, real_armor)
 
 	health_regen = health_regen + self:team_upgrade_value("player", "warcry_health_regeneration", 1) - 1
 	health_regen = health_regen + self:temporary_upgrade_value("temporary", "big_game_special_health_regen", 1) - 1
+	health_regen = health_regen + self:temporary_upgrade_value("temporary", "candy_health_regen", 1) - 1
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN) then
 		health_regen = health_regen + managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN)
@@ -1605,6 +1652,11 @@ end
 
 function PlayerManager:damage_reduction_skill_multiplier(damage_type, current_state, health_ratio)
 	local multiplier = 1
+
+	if self:has_activate_temporary_upgrade("temporary", "candy_god_mode") then
+		return self:temporary_upgrade_value("temporary", "candy_god_mode", 1)
+	end
+
 	local is_bullet = damage_type == "bullet"
 	local is_melee = damage_type == "melee"
 	local is_explosion = damage_type == "explosion"
@@ -1919,8 +1971,8 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 	end
 
 	self._global.synced_deployables[peer_id] = {
-		deployable = nil,
 		amount = nil,
+		deployable = nil,
 		deployable = deployable,
 		amount = amount
 	}
@@ -1931,15 +1983,15 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 
 		if only_update_amount then
 			managers.hud:set_teammate_deployable_equipment_amount(character_data.panel_id, 1, {
-				amount = nil,
 				icon = nil,
+				amount = nil,
 				icon = icon,
 				amount = amount
 			})
 		else
 			managers.hud:set_deployable_equipment(character_data.panel_id, {
-				amount = nil,
 				icon = nil,
+				amount = nil,
 				icon = icon,
 				amount = amount
 			})
@@ -2325,7 +2377,11 @@ function PlayerManager:from_server_interaction_reply(status)
 	self:player_unit():movement():set_carry_restriction(false)
 
 	if not status then
-		self:clear_carry()
+		local carry_data = self:get_my_carry_data()
+
+		if carry_data then
+			self:remove_carry(#carry_data)
+		end
 	end
 end
 
@@ -2497,8 +2553,8 @@ function PlayerManager:set_synced_equipment_possession(peer_id, equipment, amoun
 		else
 			managers.hud:add_teammate_special_equipment(character_data.panel_id, {
 				amount = nil,
-				icon = nil,
 				id = nil,
+				icon = nil,
 				id = equipment,
 				icon = icon,
 				amount = amount
@@ -2565,8 +2621,8 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 						if Network:is_server() then
 							if id == local_peer_id then
 								managers.player:add_special({
-									transfer = true,
 									amount = nil,
+									transfer = true,
 									name = nil,
 									name = name,
 									amount = transfer_amount
@@ -2699,8 +2755,8 @@ function PlayerManager:_add_equipment(params)
 	local use_function = use_function_name or nil
 
 	table.insert(self._equipment.selections, {
-		use_function = nil,
 		amount = nil,
+		use_function = nil,
 		equipment = nil,
 		action_timer = nil,
 		equipment = equipment,
@@ -2713,8 +2769,8 @@ function PlayerManager:_add_equipment(params)
 
 	self:update_deployable_equipment_amount_to_peers(equipment, amount)
 	managers.hud:add_item({
-		icon = nil,
 		amount = nil,
+		icon = nil,
 		amount = amount,
 		icon = icon
 	})
@@ -2936,8 +2992,8 @@ function PlayerManager:use_selected_equipment(unit)
 	end
 
 	return {
-		expire_timer = nil,
 		redirect = nil,
+		expire_timer = nil,
 		expire_timer = equipment.action_timer,
 		redirect = redirect
 	}
@@ -3077,10 +3133,10 @@ function PlayerManager:add_special(params)
 		local text = managers.localization:text(equipment.text_id)
 		local icon = equipment.icon
 		local interact_data = {
-			title = nil,
-			icon = nil,
-			id = nil,
 			duration = nil,
+			id = nil,
+			icon = nil,
+			title = nil,
 			id = "equipment_obtained_" .. name,
 			title = utf8.to_upper(managers.localization:text("hud_hint_obtained_equipment_title", {
 				EQUIPMENT = nil,
@@ -3107,8 +3163,8 @@ function PlayerManager:add_special(params)
 
 	managers.hud:add_special_equipment({
 		amount = nil,
-		icon = nil,
 		id = nil,
+		icon = nil,
 		id = name,
 		icon = icon,
 		amount = quantity or equipment.transfer_quantity and 1 or nil
@@ -3234,11 +3290,49 @@ function PlayerManager:_set_grenade(params)
 	self:update_grenades_amount_to_peers(grenade, amount)
 	player:inventory():set_grenade(grenade)
 	managers.hud:set_teammate_grenades(HUDManager.PLAYER_PANEL, {
-		icon = nil,
 		amount = nil,
+		icon = nil,
 		amount = amount,
 		icon = icon
 	})
+end
+
+function PlayerManager:set_temporary_grenade(new_grenade)
+	local player = self:player_unit()
+
+	if not alive(player) then
+		return
+	end
+
+	if not self._grenade_overriden then
+		local peer_id = managers.network:session():local_peer():id()
+		local grenade = player:inventory().equipped_grenade
+		local grenade_amount = self:get_grenade_amount(peer_id)
+		local new_grenade_amount = self:get_max_grenades(new_grenade)
+		self._grenade_overriden = {
+			amount = nil,
+			grenade = nil,
+			grenade = grenade,
+			amount = grenade_amount
+		}
+
+		self:_set_grenade({
+			amount = nil,
+			grenade = nil,
+			grenade = new_grenade,
+			amount = new_grenade_amount
+		})
+		managers.blackmarket:equip_grenade(new_grenade)
+	end
+end
+
+function PlayerManager:clear_temporary_grenade()
+	if self._grenade_overriden then
+		self:_set_grenade(self._grenade_overriden)
+		managers.blackmarket:equip_grenade(self._grenade_overriden.grenade)
+
+		self._grenade_overriden = nil
+	end
 end
 
 function PlayerManager:add_grenade_amount(amount)
@@ -3258,8 +3352,8 @@ function PlayerManager:add_grenade_amount(amount)
 		gained_grenades = amount - gained_grenades
 
 		managers.hud:set_teammate_grenades_amount(HUDManager.PLAYER_PANEL, {
-			amount = nil,
 			icon = nil,
+			amount = nil,
 			icon = icon,
 			amount = amount
 		})
@@ -3300,8 +3394,8 @@ function PlayerManager:set_synced_grenades(peer_id, grenade, amount)
 	local only_update_amount = self._global.synced_grenades[peer_id] and self._global.synced_grenades[peer_id].grenade == grenade
 	local digested_amount = Application:digest_value(amount, true)
 	self._global.synced_grenades[peer_id] = {
-		grenade = nil,
 		amount = nil,
+		grenade = nil,
 		grenade = grenade,
 		amount = digested_amount
 	}
@@ -3527,10 +3621,10 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
+			disabled = true,
+			id = nil,
 			icon = "comm_wheel_no",
 			text_id = "",
-			id = nil,
-			disabled = true,
 			id = "carry_" .. i
 		}
 
@@ -3608,10 +3702,10 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
-			id = "cant_throw_body",
-			shelf_life = 5,
 			text = nil,
+			id = "cant_throw_body",
 			duration = 2,
+			shelf_life = 5,
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -4068,11 +4162,11 @@ function PlayerManager:set_turret_data_for_peer(data)
 	end
 
 	self._global.synced_turret[data.peer_id] = {
-		enter_animation = nil,
-		turret_rot = nil,
-		husk_pos = nil,
 		turret_unit = nil,
+		husk_pos = nil,
+		turret_rot = nil,
 		exit_animation = nil,
+		enter_animation = nil,
 		husk_pos = data.husk_pos,
 		turret_rot = data.turret_rot,
 		enter_animation = data.enter_animation,
@@ -4088,11 +4182,11 @@ end
 function PlayerManager:set_synced_turret(peer, husk_pos, turret_rot, enter_animation, exit_animation, turret_unit)
 	local peer_id = peer:id()
 	self._global.synced_turret[peer_id] = {
-		enter_animation = nil,
-		turret_rot = nil,
-		husk_pos = nil,
 		turret_unit = nil,
+		husk_pos = nil,
+		turret_rot = nil,
 		exit_animation = nil,
+		enter_animation = nil,
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
 		enter_animation = enter_animation,
@@ -4140,8 +4234,8 @@ end
 
 function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
 	self._global.synced_vehicle_data[peer_id] = {
-		vehicle_unit = nil,
 		seat = nil,
+		vehicle_unit = nil,
 		vehicle_unit = vehicle,
 		seat = seat_name
 	}
@@ -4287,8 +4381,8 @@ end
 
 function PlayerManager:_move_to_next_seat(vehicle, peer_id, player, seat, previous_seat, previous_occupant)
 	self._global.synced_vehicle_data[peer_id] = {
-		vehicle_unit = nil,
 		seat = nil,
+		vehicle_unit = nil,
 		vehicle_unit = vehicle,
 		seat = seat.name
 	}
@@ -4356,8 +4450,8 @@ function PlayerManager:update_player_list(unit, health)
 	end
 
 	table.insert(self._player_list, {
-		unit = nil,
 		health = nil,
+		unit = nil,
 		unit = unit,
 		health = health
 	})
@@ -4710,8 +4804,8 @@ function PlayerManager:tutorial_prompt_jump()
 	}))
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_jump",
 		text = nil,
+		id = "prompt_hint_tutorial_jump",
 		duration = 3,
 		text = text
 	})
@@ -4724,8 +4818,8 @@ function PlayerManager:tutorial_prompt_duck()
 	}))
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_crouch",
 		text = nil,
+		id = "prompt_hint_tutorial_crouch",
 		duration = 3,
 		text = text
 	})
@@ -4738,8 +4832,8 @@ function PlayerManager:tutorial_prompt_detection()
 	}))
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_detection",
 		text = nil,
+		id = "prompt_hint_tutorial_detection",
 		duration = 3,
 		text = text
 	})
@@ -4749,8 +4843,8 @@ function PlayerManager:tutorial_prompt_ammo()
 	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_ammo"))
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_ammo",
 		text = nil,
+		id = "prompt_hint_tutorial_ammo",
 		duration = 3,
 		text = text
 	})
@@ -4763,8 +4857,8 @@ function PlayerManager:tutorial_prompt_weapons()
 	}))
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_switch_weapon",
 		text = nil,
+		id = "prompt_hint_tutorial_switch_weapon",
 		duration = 3,
 		text = text
 	})

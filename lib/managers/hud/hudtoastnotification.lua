@@ -41,13 +41,13 @@ end
 
 function HUDToastNotification:_create_background()
 	self._background = self._object:bitmap({
-		name = "background",
-		texture_rect = nil,
+		halign = "center",
 		valign = "center",
+		texture_rect = nil,
 		texture = nil,
 		h = nil,
 		w = nil,
-		halign = "center",
+		name = "background",
 		w = HUDToastNotification.W,
 		h = HUDToastNotification.H,
 		texture = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture,
@@ -57,6 +57,7 @@ end
 
 function HUDToastNotification:_create_title()
 	self._title = self._object:text({
+		text = "OBJECTIVE ACTIVATED",
 		align = "center",
 		valign = "center",
 		halign = "center",
@@ -66,7 +67,6 @@ function HUDToastNotification:_create_title()
 		font = nil,
 		vertical = "center",
 		name = "text",
-		text = "OBJECTIVE ACTIVATED",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
 		font_size = HUDToastNotification.TITLE_FONT_SIZE,
 		color = HUDToastNotification.TITLE_COLOR,
@@ -80,8 +80,9 @@ end
 
 function HUDToastNotification:_create_text()
 	self._text = self._object:text({
-		align = "center",
+		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
 		w = nil,
+		align = "center",
 		valign = "center",
 		halign = "center",
 		color = nil,
@@ -90,7 +91,6 @@ function HUDToastNotification:_create_text()
 		font = nil,
 		vertical = "center",
 		name = "text",
-		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
 		font_size = HUDToastNotification.TEXT_FONT_SIZE,
 		color = HUDToastNotification.TEXT_COLOR,
@@ -105,10 +105,10 @@ end
 
 function HUDToastNotification:_create_icon()
 	self._icon_panel = self._object:panel({
+		layer = nil,
 		h = nil,
 		w = nil,
 		name = "toast_notification_panel",
-		layer = nil,
 		layer = self._background:layer() + 1,
 		w = HUDToastNotification.ICON_PANEL_SIZE,
 		h = HUDToastNotification.ICON_PANEL_SIZE
@@ -124,13 +124,13 @@ function HUDToastNotification:_create_icon()
 	})
 	local blur = self._icon_panel:bitmap({
 		render_template = "VertexColorTexturedBlur3D",
-		texture_rect = nil,
 		texture = nil,
+		texture_rect = nil,
+		rotation = 360,
 		layer = nil,
 		h = nil,
 		w = nil,
 		name = "blur",
-		rotation = 360,
 		layer = self._icon:layer() - 1,
 		w = HUDToastNotification.ICON_PANEL_SIZE,
 		h = HUDToastNotification.ICON_PANEL_SIZE,
@@ -139,8 +139,8 @@ function HUDToastNotification:_create_icon()
 	})
 	local icon_bg = self._icon_panel:bitmap({
 		texture = nil,
-		texture_rect = nil,
 		rotation = 360,
+		texture_rect = nil,
 		layer = nil,
 		h = nil,
 		w = nil,

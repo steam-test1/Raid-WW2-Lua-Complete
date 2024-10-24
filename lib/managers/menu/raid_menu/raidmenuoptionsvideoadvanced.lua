@@ -87,13 +87,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	local start_y = 320
 	local default_width = 512
 	local toggle_menu_toggle_ssao_params = {
+		name = "toggle_menu_toggle_ssao",
+		description = nil,
+		on_menu_move = nil,
+		on_click_callback = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
-		name = "toggle_menu_toggle_ssao",
-		description = nil,
-		on_click_callback = nil,
 		x = start_x,
 		y = start_y,
 		w = default_width,
@@ -105,13 +105,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_ssao = self._root_panel:toggle_button(toggle_menu_toggle_ssao_params)
 	local toggle_menu_toggle_parallax_params = {
+		name = "toggle_menu_toggle_parallax",
+		description = nil,
+		on_menu_move = nil,
+		on_click_callback = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
-		name = "toggle_menu_toggle_parallax",
-		description = nil,
-		on_click_callback = nil,
 		x = start_x,
 		y = toggle_menu_toggle_ssao_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -124,13 +124,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
 	local toggle_menu_toggle_motion_blur_params = {
+		name = "toggle_menu_toggle_motion_blur",
+		description = nil,
+		on_menu_move = nil,
+		on_click_callback = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
-		name = "toggle_menu_toggle_motion_blur",
-		description = nil,
-		on_click_callback = nil,
 		x = start_x,
 		y = toggle_menu_toggle_parallax_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -143,13 +143,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
 	local toggle_menu_toggle_dof_params = {
+		name = "toggle_menu_toggle_dof",
+		description = nil,
+		on_menu_move = nil,
+		on_click_callback = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
-		name = "toggle_menu_toggle_dof",
-		description = nil,
-		on_click_callback = nil,
 		x = start_x,
 		y = toggle_menu_toggle_motion_blur_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -162,13 +162,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
 	local toggle_menu_toggle_volumetric_light_scattering_params = {
+		name = "toggle_menu_toggle_volumetric_light_scattering",
+		description = nil,
+		on_menu_move = nil,
+		on_click_callback = nil,
 		w = nil,
 		y = nil,
 		x = nil,
-		on_menu_move = nil,
-		name = "toggle_menu_toggle_volumetric_light_scattering",
-		description = nil,
-		on_click_callback = nil,
 		x = start_x,
 		y = toggle_menu_toggle_dof_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -181,13 +181,13 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
 	local progress_bar_menu_detail_distance_params = {
-		value_format = "%02d%%",
-		y = nil,
-		x = nil,
 		name = "progress_bar_menu_detail_distance",
 		description = nil,
 		on_value_change_callback = nil,
 		on_menu_move = nil,
+		value_format = "%02d%%",
+		y = nil,
+		x = nil,
 		description = utf8.to_upper(managers.localization:text("menu_detail_distance")),
 		x = start_x,
 		y = toggle_menu_toggle_volumetric_light_scattering_params.y + RaidGuiBase.PADDING,
@@ -200,14 +200,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
 	start_x = 704
 	local stepper_menu_antialias_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_antialias",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = start_y,
 		w = default_width,
@@ -221,14 +221,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
 	local stepper_menu_texture_quality_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_texture_quality",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_antialias_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -242,14 +242,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
 	local stepper_menu_shadow_quality_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_shadow_quality",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_texture_quality_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -263,14 +263,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
 	local stepper_menu_anisotropic_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_anisotropic",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_shadow_quality_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -284,14 +284,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
 	local stepper_menu_anim_lod_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_anim_lod",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_anisotropic_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -305,14 +305,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
 	local stepper_menu_fps_limit_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_fps_limit",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_anim_lod_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -326,14 +326,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
 	local stepper_menu_colorblind_setting_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_colorblind_setting",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_fps_limit_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -347,14 +347,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
 	local _stepper_menu_toggle_vsync_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		data_source_callback = nil,
 		name = "label_menu_vsync",
 		description = nil,
 		on_item_selected_callback = nil,
 		on_menu_move = nil,
+		w = nil,
+		y = nil,
+		x = nil,
+		data_source_callback = nil,
 		x = start_x,
 		y = stepper_menu_colorblind_setting_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -367,12 +367,12 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 	local default_advanced_video_params = {
-		y = 832,
-		text = nil,
-		x = 1472,
 		name = "default_advanced_video",
 		layer = nil,
+		y = 832,
 		on_click_callback = nil,
+		text = nil,
+		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER

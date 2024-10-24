@@ -736,14 +736,14 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	slider_sizer:add(EWS:StaticText(self._ews_panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
 
 	local slider_params = {
-		slider_ctrlr_proportions = 0.2,
-		number_ctrlr_proportions = 0.1,
-		value = nil,
-		max = nil,
-		min = nil,
-		floats = 0,
 		sizer = nil,
 		panel = nil,
+		min = nil,
+		number_ctrlr_proportions = 0.1,
+		slider_ctrlr_proportions = 0.2,
+		max = nil,
+		value = nil,
+		floats = 0,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,
@@ -831,10 +831,10 @@ function BrushLayer:get_brush_stats(filter)
 			local rotations = MassUnitManager:unit_rotations(unit_name)
 			local positions = MassUnitManager:unit_positions(unit_name)
 			local stats = {
+				positions = nil,
+				rotations = nil,
 				unit_name = nil,
 				amount = nil,
-				rotations = nil,
-				positions = nil,
 				unit_name = unit_name,
 				amount = #positions,
 				positions = positions,

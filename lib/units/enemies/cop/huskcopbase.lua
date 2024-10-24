@@ -26,7 +26,7 @@ function HuskCopBase:_do_post_init()
 	self._ext_movement:post_init()
 	self._unit:brain():post_init()
 	managers.enemy:register_enemy(self._unit)
-	self:_chk_spawn_gear()
+	self:_init_spawn_gear()
 
 	if self._nav_ready_listener_key then
 		managers.navigation:remove_listener(self._nav_ready_listener_key)
@@ -34,9 +34,6 @@ function HuskCopBase:_do_post_init()
 end
 
 function HuskCopBase:pre_destroy(unit)
-	if alive(self._headwear_unit) then
-		self._headwear_unit:set_slot(0)
-	end
-
+	self:_clear_spawn_gear()
 	UnitBase.pre_destroy(self, unit)
 end

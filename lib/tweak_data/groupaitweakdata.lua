@@ -41,12 +41,12 @@ end
 function GroupAITweakData:_init_chatter_data()
 	self.enemy_chatter = {
 		spotted_player = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "spotted_player",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -57,12 +57,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		aggressive = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "aggressive",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -73,12 +73,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		retreat = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "retreat",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -89,12 +89,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		follow_me = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "follow_me",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -105,12 +105,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		clear = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "clear",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -121,12 +121,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		go_go = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "go_go",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -137,12 +137,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		ready = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "ready",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				1,
 				2
@@ -153,12 +153,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		smoke = {
-			duration = nil,
-			max_nr = 1,
-			radius = 3500,
 			queue = "smoke",
 			group_min = 2,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 3500,
 			duration = {
 				0,
 				0
@@ -169,12 +169,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		incomming_flamer = {
-			duration = nil,
-			max_nr = 1,
-			radius = 4000,
 			queue = "incomming_flamer",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 4000,
 			duration = {
 				60,
 				60
@@ -185,12 +185,12 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		incomming_commander = {
-			duration = nil,
-			max_nr = 1,
-			radius = 4000,
 			queue = "incomming_commander",
 			group_min = 1,
 			interval = nil,
+			duration = nil,
+			max_nr = 1,
+			radius = 4000,
 			duration = {
 				60,
 				60
@@ -634,6 +634,21 @@ end
 
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
+		grunt_flankers = nil,
+		ss_chargers = nil,
+		ss_flankers = nil,
+		grunt_chargers = nil,
+		sniper = nil,
+		close_assault_supprise = nil,
+		close_assault_grenade_flank = nil,
+		close_assault_grenade = nil,
+		close_assault_flank = nil,
+		ss_rifle_range = nil,
+		commander = nil,
+		close_assault = nil,
+		flanker = nil,
+		defend = nil,
+		ranged_fire = nil,
 		flamethrower = nil,
 		fallschirm_support = nil,
 		fallschirm_flankers = nil,
@@ -642,21 +657,6 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 		gerbish_flankers = nil,
 		gerbish_chargers = nil,
 		grunt_support_range = nil,
-		grunt_flankers = nil,
-		ss_flankers = nil,
-		ss_rifle_range = nil,
-		grunt_chargers = nil,
-		sniper = nil,
-		close_assault_supprise = nil,
-		close_assault_grenade_flank = nil,
-		close_assault_grenade = nil,
-		close_assault_flank = nil,
-		ss_chargers = nil,
-		commander = nil,
-		close_assault = nil,
-		flanker = nil,
-		defend = nil,
-		ranged_fire = nil,
 		ranged_fire = {
 			"ranged_fire"
 		},
@@ -2559,10 +2559,10 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.phalanx.minions.distance = 100
 	self.phalanx.vip.health_ratio_flee = 0.2
 	self.phalanx.vip.damage_reduction = {
-		increase = 0.05,
-		start = 0.1,
 		increase_intervall = 5,
-		max = 0.5
+		max = 0.5,
+		increase = 0.05,
+		start = 0.1
 	}
 	self.phalanx.check_spawn_intervall = 120
 	self.phalanx.chance_increase_intervall = 120
@@ -2606,9 +2606,9 @@ end
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.phalanx = {
-		vip = nil,
 		spawn_chance = nil,
 		minions = nil,
+		vip = nil,
 		minions = {},
 		vip = {},
 		spawn_chance = {}

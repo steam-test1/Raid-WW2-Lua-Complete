@@ -177,8 +177,8 @@ end
 
 function RaidGUIControlGrid:_on_item_clicked_callback(item_data, key_field_name)
 	self:select_grid_item_by_key_value({
-		value = nil,
 		dont_fire_select_callback = true,
+		value = nil,
 		key = nil,
 		key = key_field_name,
 		value = item_data[key_field_name]

@@ -585,15 +585,15 @@ function CopActionHurt:init(action_desc, common_data)
 
 			if old_variant ~= nil then
 				old_info = {
-					high = nil,
-					fwd = nil,
 					hvy = nil,
-					mod = nil,
 					crh = nil,
+					mod = nil,
 					r = nil,
 					l = nil,
 					bwd = nil,
 					low = nil,
+					high = nil,
+					fwd = nil,
 					fwd = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "fwd"),
 					bwd = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "bwd"),
 					l = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "l"),
@@ -735,10 +735,10 @@ function CopActionHurt:init(action_desc, common_data)
 
 		if not self._shoot_history then
 			self._shoot_history = {
-				focus_start_t = nil,
-				focus_error_roll = nil,
 				m_last_pos = nil,
 				focus_delay = nil,
+				focus_start_t = nil,
+				focus_error_roll = nil,
 				focus_error_roll = math.random(360),
 				focus_start_t = t,
 				focus_delay = weapon_usage_tweak.focus_delay,
@@ -845,8 +845,8 @@ function CopActionHurt:init(action_desc, common_data)
 
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
-				position = nil,
 				radius = 30,
+				position = nil,
 				position = mvector3.copy(common_data.pos)
 			})
 		end
@@ -1097,9 +1097,9 @@ function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 		mvec3_set_z(h, new_pos.z)
 
 		ray_params = {
+			trace = true,
 			pos_to = nil,
 			tracker_from = nil,
-			trace = true,
 			tracker_from = tracker,
 			pos_to = h
 		}

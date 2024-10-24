@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -181,9 +181,9 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 					if ikey ~= "value_missing" and ikey ~= "value_pending" then
 						table.insert(info.room_list, {
+							room_id = nil,
 							owner_name = nil,
 							owner_id = nil,
-							room_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
@@ -288,9 +288,9 @@ end
 
 function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
+		value = nil,
 		comparision_type = nil,
 		key = nil,
-		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -336,10 +336,10 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 				for _, lobby in ipairs(lobbies) do
 					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
 						table.insert(info.room_list, {
-							owner_name = nil,
-							owner_id = nil,
 							custom_text = nil,
 							room_id = nil,
+							owner_name = nil,
+							owner_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id(),
@@ -492,6 +492,12 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 		local server_ok, ok_error = self:is_server_ok(nil, room_id, attributes, is_invite)
 
 		if server_ok then
+			local challenge_card = lobby:key_value("challenge_card_id")
+
+			if challenge_card ~= "" and challenge_card ~= "nocards" and challenge_card ~= "value_pending" then
+				managers.challenge_cards:set_dropin_card(challenge_card)
+			end
+
 			self:join_server(room_id, true)
 		else
 			managers.system_menu:close("join_server")
@@ -723,6 +729,8 @@ function NetworkMatchMakingSTEAM:_restart_network()
 	else
 		managers.network:prepare_stop_network()
 	end
+
+	managers.challenge_cards:set_dropin_card()
 end
 
 function NetworkMatchMakingSTEAM:send_join_invite(friend)
@@ -781,14 +789,14 @@ function NetworkMatchMakingSTEAM:create_lobby(settings, return_to_camp_client)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
-				text = nil,
 				title = nil,
+				text = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
 					{
-						callback_func = nil,
 						text = nil,
+						callback_func = nil,
 						text = managers.localization:text("dialog_ok"),
 						callback_func = callback(setup, setup, "quit_to_main_menu")
 					}
@@ -972,29 +980,29 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 		"private"
 	}
 	local lobby_attributes = {
+		job_class_min = nil,
+		job_id = nil,
+		mission_type = nil,
+		challenge_card_id = nil,
+		players_info_4 = nil,
+		players_info_3 = nil,
+		players_info_2 = nil,
 		players_info_1 = nil,
 		region = nil,
 		job_plan = nil,
+		owner_name = nil,
+		owner_id = nil,
 		job_class_max = nil,
-		job_class_min = nil,
+		difficulty = nil,
 		kick_option = nil,
 		min_level = nil,
-		job_id = nil,
+		drop_in = nil,
 		num_players = nil,
 		permission = nil,
 		level = nil,
 		state = nil,
-		difficulty = nil,
-		custom_text = nil,
-		drop_in = nil,
-		players_info_4 = nil,
-		challenge_card_id = nil,
-		mission_type = nil,
 		progress = nil,
-		owner_name = nil,
-		owner_id = nil,
-		players_info_3 = nil,
-		players_info_2 = nil,
+		custom_text = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		custom_text = Global.game_settings.custom_text or "",

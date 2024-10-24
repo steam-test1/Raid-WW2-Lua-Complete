@@ -12,12 +12,12 @@ function RaidGUIControlTab:init(parent, params)
 	RaidGUIControlTab.super.init(self, parent, params)
 
 	self._object = parent:panel({
-		x = nil,
 		name = nil,
 		layer = nil,
 		h = nil,
 		w = nil,
 		y = nil,
+		x = nil,
 		name = "tab_panel_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -30,16 +30,16 @@ function RaidGUIControlTab:init(parent, params)
 
 	if params.icon then
 		self._tab_icon = self._object:image({
-			x = nil,
-			color = nil,
-			vertical = "center",
 			name = nil,
+			vertical = "center",
 			texture = nil,
 			texture_rect = nil,
 			layer = nil,
 			h = nil,
 			w = nil,
 			y = 0,
+			x = nil,
+			color = nil,
 			name = "tab_control_icon_" .. self._name,
 			x = RaidGUIControlTab.PADDING,
 			w = params.icon.texture_rect[3],
@@ -54,10 +54,8 @@ function RaidGUIControlTab:init(parent, params)
 	end
 
 	self._tab_label = self._object:label({
-		x = nil,
-		color = nil,
-		vertical = "center",
 		name = nil,
+		vertical = "center",
 		text = nil,
 		layer = nil,
 		font_size = nil,
@@ -65,6 +63,8 @@ function RaidGUIControlTab:init(parent, params)
 		h = nil,
 		w = nil,
 		y = 0,
+		x = nil,
+		color = nil,
 		name = "tab_control_label_" .. self._name,
 		x = label_coord_x,
 		w = label_width,
@@ -83,12 +83,12 @@ function RaidGUIControlTab:init(parent, params)
 	self._callback_param = params.callback_param
 	self._tab_select_callback = params.tab_select_callback
 	self._bottom_line = self._object:rect({
-		x = 0,
-		color = nil,
 		name = "tab_control_bottom_line",
 		h = nil,
 		w = nil,
 		y = nil,
+		x = 0,
+		color = nil,
 		y = params.h - RaidGUIControlTab.BOTTOM_LINE_NORMAL_HEIGHT,
 		w = params.w,
 		h = RaidGUIControlTab.BOTTOM_LINE_NORMAL_HEIGHT,

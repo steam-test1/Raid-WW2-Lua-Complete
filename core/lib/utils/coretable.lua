@@ -591,10 +591,10 @@ function table.fill_with_item(data, item, amount)
 	return data
 end
 
-function table.trail_exists(table, list)
+function table.trail_exists(table, ...)
 	local item = table
 
-	for _, key in ipairs(list) do
+	for _, key in ipairs(...) do
 		if item[key] then
 			item = item[key]
 		else
@@ -605,10 +605,10 @@ function table.trail_exists(table, list)
 	return true
 end
 
-function table.trail_get(table, list)
+function table.trail_get(table, ...)
 	local item = table
 
-	for _, key in ipairs(list) do
+	for _, key in ipairs(...) do
 		if item[key] then
 			item = item[key]
 		else

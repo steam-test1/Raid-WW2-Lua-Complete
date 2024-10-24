@@ -27,28 +27,28 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	}
 	local text = string.upper(managers.localization:text("debug_loading_level"))
 	self._title_text = self._saferect_panel:text({
-		y = 0,
-		color = nil,
 		visible = false,
+		align = "left",
+		layer = nil,
+		font_size = 32,
+		color = nil,
 		font = "ui/fonts/pf_din_text_comp_pro_medium_32",
+		y = 0,
 		h = 24,
 		text = nil,
 		vertical = "bottom",
 		halign = "left",
-		align = "left",
-		layer = nil,
-		font_size = 32,
 		text = text,
 		color = Color.white,
 		layer = self._base_layer + 1
 	})
 	self._stonecold_small_logo = self._saferect_panel:bitmap({
+		name = "stonecold_small_logo",
+		layer = nil,
 		h = 56,
 		texture_rect = nil,
 		visible = false,
 		texture = "guis/textures/game_small_logo",
-		name = "stonecold_small_logo",
-		layer = nil,
 		texture_rect = {
 			0,
 			0,

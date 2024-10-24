@@ -17,6 +17,7 @@ require("lib/managers/hud/HUDMapPlayerPin")
 require("lib/managers/hud/HUDMapBase")
 require("lib/managers/hud/HUDMapTab")
 require("lib/managers/hud/HUDTabGreedBar")
+require("lib/managers/hud/HUDTabCandyProgression")
 require("lib/managers/hud/HUDTabWeaponChallenge")
 require("lib/managers/hud/HUDTabScreen")
 require("lib/managers/hud/HUDNameLabel")
@@ -43,6 +44,7 @@ require("lib/managers/hud/HUDCenterPrompt")
 require("lib/managers/hud/HUDBigPrompt")
 require("lib/managers/hud/HUDControllerHotswap")
 require("lib/managers/hud/HUDCrosshair")
+require("lib/managers/hud/HUDStatusEffects")
 require("lib/managers/hud/HUDSpecialInteraction/Base")
 require("lib/managers/hud/HUDSpecialInteraction/LockPick")
 require("lib/managers/hud/HUDSpecialInteraction/FuseCutting")
@@ -97,8 +99,8 @@ end
 
 function HUDManager:add_weapon(data)
 	self._hud.weapons[data.inventory_index] = {
-		unit = nil,
 		inventory_index = nil,
+		unit = nil,
 		inventory_index = data.inventory_index,
 		unit = data.unit
 	}
@@ -698,6 +700,7 @@ function HUDManager:_setup_ingame_hud_saferect()
 	self:_create_watermark(hud)
 	self:_create_crosshair(hud)
 	self:set_motiondot_type(managers.user:get_setting("motion_dot"))
+	self:_create_status_effects(hud)
 end
 
 function HUDManager:_create_ammo_test()
@@ -708,23 +711,23 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
+		h = 4,
+		w = 100,
 		y = 200,
 		x = 550,
-		name = "ammo_test",
-		w = 100,
-		h = 4
+		name = "ammo_test"
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
 	panel:set_center_x(hud.panel:w() / 2)
 	panel:rect({
-		name = "ammo_test_bg_rect",
 		color = nil,
+		name = "ammo_test_bg_rect",
 		color = Color.black:with_alpha(0.5)
 	})
 	panel:rect({
-		color = nil,
 		layer = 1,
+		color = nil,
 		name = "ammo_test_rect",
 		color = Color.white
 	})
@@ -796,9 +799,9 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 
 				for equipment, amount in pairs(peer_equipment) do
 					self:add_teammate_special_equipment(i, {
-						icon = nil,
 						amount = nil,
 						id = nil,
+						icon = nil,
 						id = equipment,
 						icon = tweak_data.equipments.specials[equipment].icon,
 						amount = amount
@@ -811,8 +814,8 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 					local icon = tweak_data.equipments[peer_deployable_equipment.deployable].icon
 
 					self:set_deployable_equipment(i, {
-						icon = nil,
 						amount = nil,
+						icon = nil,
 						icon = icon,
 						amount = peer_deployable_equipment.amount
 					})
@@ -964,13 +967,13 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
+		valign = "grow",
+		halign = "left",
+		h = nil,
+		w = nil,
 		y = 0,
 		x = 0,
 		name = "teammates_panel",
-		w = nil,
-		halign = "left",
-		valign = "grow",
-		h = nil,
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -978,8 +981,8 @@ function HUDManager:_create_teammates_panel(hud)
 
 	for i = 1, 3 do
 		self._hud.teammate_panels_data[i] = {
-			taken = false,
 			special_equipments = nil,
+			taken = false,
 			special_equipments = {}
 		}
 		local ai_teammate = HUDTeammateAI:new(i, teammates_panel)
@@ -1003,8 +1006,8 @@ function HUDManager:_create_teammates_panel(hud)
 	table.insert(self._teammate_panels, teammate)
 
 	self._hud.teammate_panels_data[HUDManager.PLAYER_PANEL] = {
-		taken = false,
 		special_equipments = nil,
+		taken = false,
 		special_equipments = {}
 	}
 end
@@ -1031,10 +1034,10 @@ function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
 		valign = "bottom",
-		name = "weapons_panel",
-		w = nil,
 		halign = "right",
 		h = nil,
+		w = nil,
+		name = "weapons_panel",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1306,13 +1309,13 @@ end
 function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
+		color = nil,
+		height = 8,
+		width = 256,
+		description = nil,
 		y = nil,
 		x = nil,
 		name = "progress_timer_progress_bar",
-		height = 8,
-		width = 256,
-		color = nil,
-		description = nil,
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
@@ -1390,10 +1393,10 @@ function HUDManager:on_progression_cycle_completed()
 	end
 
 	local notification_params = {
+		notification_type = nil,
+		id = "progression_cycle_completed",
 		duration = 6,
 		priority = 4,
-		id = "progression_cycle_completed",
-		notification_type = nil,
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 
@@ -1406,12 +1409,12 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 	end
 
 	managers.notification:add_notification({
+		initial_progress = nil,
+		id = "greed_item_picked_up",
+		new_progress = nil,
+		notification_type = nil,
 		shelf_life = 8,
 		item = nil,
-		initial_progress = nil,
-		new_progress = nil,
-		id = "greed_item_picked_up",
-		notification_type = nil,
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress,
@@ -1492,6 +1495,24 @@ end
 
 function HUDManager:set_loot_total(amount)
 	self._tab_screen:set_loot_total(amount)
+end
+
+function HUDManager:register_tab_event_panel(control_class, params)
+	if self._tab_screen then
+		self._tab_screen:register_event_panel(control_class, params)
+	end
+end
+
+function HUDManager:set_tab_event_panel_data(data)
+	if self._tab_screen then
+		self._tab_screen:set_event_panel_data(data)
+	end
+end
+
+function HUDManager:remove_tab_event_panel()
+	if self._tab_screen then
+		self._tab_screen:remove_event_panel()
+	end
 end
 
 function HUDManager:feed_point_of_no_return_timer(time, is_inside)
@@ -1801,6 +1822,31 @@ end
 function HUDManager:update_crosshair_offset(t, dt)
 	if self._hud_crosshair and managers.user:get_setting("hud_crosshairs") then
 		self._hud_crosshair:update_crosshair_offset(t, dt)
+	end
+end
+
+function HUDManager:_create_status_effects(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	self._hud_status_effects = HUDStatusEffects:new(hud)
+end
+
+function HUDManager:add_status_effect(status_data)
+	if self._hud_status_effects then
+		Application:debug("[StatusEffects] add_status", status_data and status_data.id)
+		self._hud_status_effects:add_status(status_data)
+	end
+end
+
+function HUDManager:remove_status_effect(status_key, sync)
+	if self._hud_status_effects then
+		Application:debug("[StatusEffects] remove_status", status_key)
+		self._hud_status_effects:remove_status(status_key, sync)
+	end
+end
+
+function HUDManager:clear_all_status_effects()
+	if self._hud_status_effects then
+		self._hud_status_effects:clear_all_status()
 	end
 end
 
@@ -2119,11 +2165,11 @@ function HUDManager:_add_name_label(data)
 	end
 
 	local name_label_params = {
+		id = nil,
 		movement = nil,
+		nationality = nil,
 		peer_id = nil,
 		name = nil,
-		nationality = nil,
-		id = nil,
 		id = id,
 		name = data.name,
 		nationality = data.nationality,
@@ -2142,9 +2188,9 @@ function HUDManager:add_vehicle_name_label(data)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels]:id() or 0
 	local id = last_id + 1
 	local vehicle_name_label_params = {
-		vehicle_unit = nil,
-		id = nil,
 		vehicle_name = nil,
+		id = nil,
+		vehicle_unit = nil,
 		id = id,
 		vehicle_name = managers.localization:text(data.name),
 		vehicle_unit = data.unit

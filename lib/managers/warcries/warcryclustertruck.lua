@@ -8,7 +8,6 @@ function WarcryClustertruck:init()
 
 	self._type = Warcry.CLUSTERTRUCK
 	self._tweak_data = tweak_data.warcry[self._type]
-	self._killstreak_list = {}
 
 	managers.system_event_listener:add_listener("warcry_" .. self:get_type() .. "_enemy_killed", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
@@ -32,12 +31,31 @@ function WarcryClustertruck:activate()
 
 	material:set_variable(ids_base_color_intensity, self._tweak_data.fire_intensity)
 
-	local grenade_refills = managers.player:upgrade_value("player", "warcry_grenade_refill_amounts", 1)
+	if not alive(self._local_player) or not self._local_player:inventory() then
+		return
+	end
 
-	managers.player:refill_grenades(grenade_refills)
-	managers.player:get_current_state():set_weapon_selection_wanted(PlayerInventory.SLOT_3)
+	self._previous_selection = self._local_player:inventory():equipped_selection()
+	local movement_state = managers.player:get_current_state()
 
-	self._killstreak_list = {}
+	movement_state:interupt_all_actions()
+	movement_state:force_change_weapon_slot(PlayerInventory.SLOT_3, true)
+end
+
+function WarcryClustertruck:deactivate()
+	WarcryBerserk.super.deactivate(self)
+
+	if not alive(self._local_player) or not self._local_player:movement() then
+		return
+	end
+
+	local movement_state = managers.player:get_current_state()
+
+	movement_state:interupt_all_actions()
+	movement_state:force_change_weapon_slot(self._previous_selection, true)
+
+	self._local_player = nil
+	self._previous_selection = nil
 end
 
 function WarcryClustertruck:_on_enemy_killed(params)

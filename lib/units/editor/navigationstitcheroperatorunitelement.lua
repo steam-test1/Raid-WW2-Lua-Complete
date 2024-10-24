@@ -19,8 +19,8 @@ end
 
 function NavigationStitcherOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -40,8 +40,8 @@ end
 
 function NavigationStitcherOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -61,11 +61,11 @@ function NavigationStitcherOperatorUnitElement:draw_links_unselected(...)
 
 		if alive(unit) then
 			local params = {
-				to_unit = nil,
 				from_unit = nil,
 				b = 0.5,
 				g = 0,
 				r = 0,
+				to_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -84,11 +84,11 @@ function NavigationStitcherOperatorUnitElement:draw_links_selected(...)
 
 		if alive(unit) then
 			local params = {
-				to_unit = nil,
 				from_unit = nil,
 				b = 0.5,
 				g = 0,
 				r = 0,
+				to_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			}

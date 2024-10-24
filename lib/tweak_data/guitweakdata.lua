@@ -386,23 +386,23 @@ end
 function GuiTweakData:_setup_crosshairs()
 	self.crosshairs = {
 		pistol = {
+			edge_pips_icon = "weapons_reticles_flatline",
 			degree_field = 360,
 			base_rotation = 0,
-			edge_pips = 4,
-			edge_pips_icon = "weapons_reticles_flatline"
+			edge_pips = 4
 		},
 		smg = {
+			edge_pips_icon = "weapons_reticles_flatline",
 			degree_field = 270,
 			base_rotation = 0,
-			edge_pips = 3,
-			edge_pips_icon = "weapons_reticles_flatline"
+			edge_pips = 3
 		},
 		lmg = {
+			core_dot = "weapons_reticles_static_diamond",
 			degree_field = 225,
 			base_rotation = 0,
 			edge_pips = 5,
 			edge_pips_icon = nil,
-			core_dot = "weapons_reticles_static_diamond",
 			edge_pips_icon = {
 				"weapons_reticles_flatline"
 			}
@@ -422,34 +422,34 @@ function GuiTweakData:_setup_crosshairs()
 		"weapons_reticles_bowbend"
 	}
 	self.crosshairs.assault_rifle = {
+		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
 		edge_pips = 4,
-		edge_pips_icon = "weapons_reticles_flatline",
-		core_dot = "weapons_reticles_static_dot"
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.sniper = {
+		core_dot = "weapons_reticles_static_tri_small",
 		degree_field = 270,
 		base_rotation = 0,
 		edge_pips = 3,
-		edge_pips_icon = "weapons_reticles_flatline",
-		core_dot = "weapons_reticles_static_tri_small"
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.shotgun = {
+		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
 		edge_pips = 4,
-		edge_pips_icon = "weapons_reticles_bowbend",
-		core_dot = "weapons_reticles_static_dot"
+		edge_pips_icon = "weapons_reticles_bowbend"
 	}
 	self.crosshairs.shotgun_db = deep_clone(self.crosshairs.shotgun)
 	self.crosshairs.shotgun_db.edge_pips = 2
 	self.crosshairs.grenade = {
+		core_dot = "weapons_reticles_static_diamond",
 		degree_field = 0,
 		base_rotation = 0,
 		edge_pips = 0,
-		edge_pips_icon = nil,
-		core_dot = "weapons_reticles_static_diamond"
+		edge_pips_icon = nil
 	}
 end
 
@@ -5251,6 +5251,33 @@ function GuiTweakData:_setup_hud_icons()
 			42
 		}
 	}
+	self.icons.weapons_panel_gre_gold_bar = {
+		texture = "ui/updates/upd_candy/atlas_gold_bar",
+		texture_rect = {
+			96,
+			0,
+			42,
+			42
+		}
+	}
+	self.icons.weapons_panel_gre_anti_tank = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			96,
+			0,
+			102,
+			42
+		}
+	}
+	self.icons.weapons_panel_gre_thermite = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			96,
+			128,
+			42,
+			42
+		}
+	}
 	self.icons.missions_consumable_fury_railway = {
 		texture = "ui/atlas/raid_atlas_hud_raids_mini",
 		texture_rect = {
@@ -5283,60 +5310,6 @@ function GuiTweakData:_setup_hud_icons()
 		texture_rect = {
 			128,
 			0,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_assault_a = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			256,
-			0,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_assault_b = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			384,
-			0,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_assault_c = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			0,
-			128,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_assault_d = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			128,
-			128,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_assault_e = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			256,
-			128,
-			128,
-			128
-		}
-	}
-	self.icons.presenter_diamond = {
-		texture = "ui/atlas/raid_atlas_presenter",
-		texture_rect = {
-			384,
-			128,
 			128,
 			128
 		}
@@ -6336,6 +6309,18 @@ function GuiTweakData:_setup_hud_status_effects()
 	_make_icon("status_effect_crit_chances", 1, 1)
 	_make_icon("status_effect_on_fire", 2, 1)
 	_make_icon("status_effect_dismemberment_boost", 3, 1)
+
+	local hw_path = "ui/updates/upd_candy/atlas_candy_icons"
+
+	_make_icon("status_effect_candy_unlimited_ammo", 0, 0, hw_path, Color("76ff81"))
+	_make_icon("status_effect_candy_armor_pen", 1, 0, hw_path, Color("76ff81"))
+	_make_icon("status_effect_candy_sprint_speed", 2, 0, hw_path, Color("ffcf76"))
+	_make_icon("status_effect_candy_jump_boost", 3, 0, hw_path, Color("ffcf76"))
+	_make_icon("status_effect_candy_attack_damage", 0, 1, hw_path, Color("76a6ff"))
+	_make_icon("status_effect_candy_critical_hit_chance", 1, 1, hw_path, Color("76a6ff"))
+	_make_icon("status_effect_candy_health_regen", 2, 1, hw_path, Color("ff76f0"))
+	_make_icon("status_effect_candy_god_mode", 3, 1, hw_path, Color("ff76f0"))
+	_make_icon("status_effect_candy_simple", 0, 2, hw_path, Color("ff76f0"))
 end
 
 function GuiTweakData:_setup_map_icons()
@@ -6935,6 +6920,78 @@ function GuiTweakData:_setup_skill_big_icons()
 		texture_rect = {
 			0,
 			0,
+			96,
+			128
+		}
+	}
+	self.icons.weapon_gre_gold_bar_large = {
+		texture = "ui/updates/upd_candy/atlas_gold_bar",
+		texture_rect = {
+			0,
+			0,
+			96,
+			128
+		}
+	}
+	self.icons.candy_progress_left = {
+		texture = "ui/updates/upd_candy/atlas_candy_icons",
+		texture_rect = {
+			70,
+			144,
+			16,
+			32
+		}
+	}
+	self.icons.candy_progress_center = {
+		texture = "ui/updates/upd_candy/atlas_candy_icons",
+		texture_rect = {
+			88,
+			144,
+			16,
+			32
+		}
+	}
+	self.icons.candy_progress_right = {
+		texture = "ui/updates/upd_candy/atlas_candy_icons",
+		texture_rect = {
+			106,
+			144,
+			16,
+			32
+		}
+	}
+	self.icons.candy_progress_overlay = {
+		texture = "ui/updates/upd_candy/atlas_candy_icons",
+		texture_rect = {
+			0,
+			224,
+			256,
+			32
+		}
+	}
+	self.icons.candy_buff_background = {
+		texture = "ui/updates/upd_candy/atlas_candy_icons",
+		texture_rect = {
+			128,
+			128,
+			64,
+			64
+		}
+	}
+	self.icons.weapon_gre_anti_tank_large = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			0,
+			0,
+			96,
+			128
+		}
+	}
+	self.icons.weapon_gre_thermite_large = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			0,
+			128,
 			96,
 			128
 		}
@@ -8514,11 +8571,11 @@ function GuiTweakData:_setup_old_tweak_data()
 	end
 
 	self.fav_videos = {
-		db_url = "http://www.overkillsoftware.com/?page_id=1263",
-		title_id = "menu_fav_videos",
 		item_list = nil,
 		button = nil,
 		num_items = 3,
+		db_url = "http://www.overkillsoftware.com/?page_id=1263",
+		title_id = "menu_fav_videos",
 		button = {
 			url = "http://www.overkillsoftware.com/?page_id=1263",
 			text_id = "menu_fav_video_homepage"
@@ -8587,12 +8644,12 @@ function GuiTweakData:_setup_old_tweak_data()
 	self.stats_present_multiplier = 10
 	self.armor_damage_shake_base = 1.1
 	self.buy_weapon_category_groups = {
-		saw = "wpn_special",
 		grenade_launcher = "wpn_special",
 		crossbow = "wpn_special",
 		bow = "wpn_special",
 		flamethrower = "wpn_special",
-		minigun = "wpn_special"
+		minigun = "wpn_special",
+		saw = "wpn_special"
 	}
 	self.weapon_texture_switches = {}
 end

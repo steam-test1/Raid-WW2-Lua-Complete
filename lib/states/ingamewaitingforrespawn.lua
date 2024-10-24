@@ -86,9 +86,9 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 
 	self._listener_activation_id = managers.listener:activate_set("main", "spectator_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
+		active = true,
 		object = nil,
 		primary = true,
-		active = true,
 		object = self._camera_object
 	})
 end
@@ -110,9 +110,9 @@ function IngameWaitingForRespawnState:_create_spectator_data()
 	end
 
 	self._spectator_data = {
+		watch_u_key = nil,
 		teammate_list = nil,
 		teammate_records = nil,
-		watch_u_key = nil,
 		teammate_records = all_teammates,
 		teammate_list = teammate_list,
 		watch_u_key = teammate_list[1]
@@ -157,8 +157,8 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 
 			local sp_id = "IngameWaitingForRespawnState"
 			local spawn_point = {
-				position = nil,
 				rotation = nil,
+				position = nil,
 				position = pos_rot[1],
 				rotation = pos_rot[2]
 			}
@@ -401,14 +401,14 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.player:force_drop_carry()
 	managers.hud:hide_stats_screen()
 	managers.hud:set_player_health({
+		no_hint = true,
 		total = 100,
-		current = 0,
-		no_hint = true
+		current = 0
 	})
 	managers.hud:set_player_armor({
+		no_hint = true,
 		total = 100,
-		current = 0,
-		no_hint = true
+		current = 0
 	})
 	managers.hud:set_player_condition("mugshot_in_custody", managers.localization:text("debug_mugshot_in_custody"))
 	managers.overlay_effect:play_effect(tweak_data.overlay_effects.fade_in)

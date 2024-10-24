@@ -34,11 +34,11 @@ CopMovement = CopMovement or class()
 CopMovement.set_friendly_fire = PlayerMovement.set_friendly_fire
 CopMovement.friendly_fire = PlayerMovement.friendly_fire
 CopMovement._gadgets = {
-	aligns = nil,
 	needle = nil,
+	aligns = nil,
 	aligns = {
-		head = nil,
 		hand_r = nil,
+		head = nil,
 		hand_l = nil,
 		hand_l = Idstring("a_weapon_left_front"),
 		hand_r = Idstring("a_weapon_right_front"),
@@ -51,14 +51,14 @@ CopMovement._gadgets = {
 local action_variants = {
 	security = nil,
 	security = {
-		reload = nil,
 		walk = nil,
-		tase = nil,
+		reload = nil,
 		act = nil,
-		dodge = nil,
+		tase = nil,
 		idle = nil,
-		warp = nil,
+		dodge = nil,
 		shoot = nil,
+		warp = nil,
 		crouch = nil,
 		stand = nil,
 		hurt = nil,
@@ -166,8 +166,8 @@ action_variants.tank_hw = action_variants.tank
 action_variants.taser = security_variant
 action_variants.inside_man = security_variant
 action_variants.civilian = {
-	hurt = nil,
 	walk = nil,
+	hurt = nil,
 	act = nil,
 	idle = nil,
 	turn = nil,
@@ -341,11 +341,12 @@ function CopMovement:post_init()
 	local weap_name = self._ext_base:default_weapon_name(managers.groupai:state():enemy_weapons_hot() and "primary" or "secondary")
 	local fwd = self._m_rot:y()
 	self._action_common_data = {
+		look_vec = nil,
 		queued_actions = nil,
 		active_actions = nil,
 		nav_tracker = nil,
 		char_tweak = nil,
-		unit = nil,
+		ext_damage = nil,
 		ext_network = nil,
 		ext_base = nil,
 		ext_inventory = nil,
@@ -353,13 +354,12 @@ function CopMovement:post_init()
 		ext_brain = nil,
 		ext_movement = nil,
 		machine = nil,
-		ext_damage = nil,
 		right = nil,
 		rot = nil,
 		pos = nil,
 		stance = nil,
 		fwd = nil,
-		look_vec = nil,
+		unit = nil,
 		stance = self._stance,
 		pos = self._m_pos,
 		rot = self._m_rot,
@@ -1003,11 +1003,11 @@ function CopMovement:_change_stance(stance_code, instant)
 
 		local t = TimerManager:game():time()
 		local transition = {
-			start_values = nil,
 			end_values = nil,
-			next_upd_t = nil,
 			duration = nil,
 			start_t = nil,
+			next_upd_t = nil,
+			start_values = nil,
 			end_values = end_values,
 			start_values = start_values,
 			duration = delay,
@@ -1248,8 +1248,8 @@ end
 function CopMovement:linked(state, physical, parent_unit)
 	if state then
 		self._link_data = {
-			parent = nil,
 			physical = nil,
+			parent = nil,
 			physical = physical,
 			parent = parent_unit
 		}
@@ -1335,9 +1335,9 @@ function CopMovement:upd_ground_ray(from_pos)
 	end
 
 	local fake_ray = {
-		position = nil,
 		unit = nil,
 		ray = nil,
+		position = nil,
 		position = new_pos:with_z(ground_z),
 		ray = math.DOWN,
 		unit = hit_ray and hit_ray.unit
@@ -1355,11 +1355,11 @@ function CopMovement:on_suppressed(state)
 		local t = TimerManager:game():time()
 		local duration = 0.5 * math.abs(end_value - suppression.value)
 		suppression.transition = {
-			start_val = nil,
 			next_upd_t = nil,
 			duration = nil,
 			start_t = nil,
 			end_val = nil,
+			start_val = nil,
 			end_val = end_value,
 			start_val = suppression.value,
 			duration = duration,
@@ -1378,26 +1378,26 @@ function CopMovement:on_suppressed(state)
 	if Network:is_server() and state and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.stand) and not self:chk_action_forbidden("walk") then
 		if state == "panic" and not self:chk_action_forbidden("act") then
 			local action_desc = {
-				type = "act",
-				clamp_to_graph = true,
-				variant = nil,
 				blocks = nil,
+				clamp_to_graph = true,
 				body_part = 1,
+				type = "act",
+				variant = nil,
 				variant = self._ext_anim.run and self._ext_anim.move_fwd and "e_so_sup_fumble_run_fwd" or "e_so_sup_fumble_inplace",
 				blocks = {
-					action = -1,
-					walk = -1
+					walk = -1,
+					action = -1
 				}
 			}
 
 			self:action_request(action_desc)
 		elseif self._ext_anim.idle and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 			local action_desc = {
-				type = "act",
-				clamp_to_graph = true,
-				variant = "suppressed_reaction",
 				blocks = nil,
+				clamp_to_graph = true,
 				body_part = 1,
+				type = "act",
+				variant = "suppressed_reaction",
 				blocks = {
 					walk = -1
 				}
@@ -1480,10 +1480,10 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 	if not lgt_hurt then
 		blocks = {
 			walk = -1,
-			aim = -1,
+			tase = -1,
 			act = -1,
-			action = -1,
-			tase = -1
+			aim = -1,
+			action = -1
 		}
 
 		if hurt_type == "bleedout" then
@@ -1510,21 +1510,21 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 
 	local tweak = self._tweak_data
 	local action_data = {
+		direction_vec = nil,
+		client_interrupt = nil,
+		attacker_unit = nil,
+		body_part = nil,
 		type = "hurt",
-		fire_dot_data = nil,
 		is_fire_dot_damage = nil,
 		hit_pos = nil,
 		ignite_character = nil,
 		start_dot_damage_roll = nil,
 		blocks = nil,
+		death_type = nil,
+		fire_dot_data = nil,
 		block_type = nil,
 		hurt_type = nil,
-		client_interrupt = nil,
-		death_type = nil,
-		attacker_unit = nil,
 		variant = nil,
-		direction_vec = nil,
-		body_part = nil,
 		block_type = block_type,
 		hurt_type = hurt_type,
 		variant = damage_info.variant,
@@ -2302,20 +2302,20 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 
 	local redir_name = self._actions.act:_get_act_name_from_index(index)
 	local action_data = {
-		type = "act",
-		start_rot = nil,
-		needs_full_blend = nil,
-		clamp_to_graph = nil,
-		variant = nil,
 		start_pos = nil,
 		blocks = nil,
+		start_rot = nil,
 		body_part = 1,
+		type = "act",
+		clamp_to_graph = nil,
+		needs_full_blend = nil,
+		variant = nil,
 		variant = redir_name,
 		blocks = {
-			action = -1,
 			walk = -1,
 			idle = -1,
-			act = -1
+			act = -1,
+			action = -1
 		},
 		start_rot = start_rot,
 		start_pos = start_pos,
@@ -2357,13 +2357,13 @@ function CopMovement:sync_action_dodge_start(body_part, var, side, rot, speed, s
 	end
 
 	local action_data = {
-		type = "dodge",
-		side = nil,
 		speed = nil,
+		side = nil,
 		direction = nil,
-		shoot_accuracy = nil,
-		variation = nil,
 		body_part = nil,
+		type = "dodge",
+		variation = nil,
+		shoot_accuracy = nil,
 		body_part = body_part,
 		variation = CopActionDodge.get_variation_name(var),
 		direction = Rotation(rot):y(),
@@ -2406,19 +2406,19 @@ function CopMovement:sync_action_hurt_end()
 		if hurt_type == "bleedout" or hurt_type == "fatal" then
 			local action_data = {
 				client_interrupt = true,
-				type = "act",
-				variant = "stand",
 				blocks = nil,
 				body_part = 1,
+				type = "act",
+				variant = "stand",
 				blocks = {
 					walk = -1,
-					aim = -1,
-					light_hurt = -1,
-					action = -1,
-					heavy_hurt = -1,
 					hurt = -1,
 					stand = -1,
-					crouch = -1
+					crouch = -1,
+					aim = -1,
+					heavy_hurt = -1,
+					light_hurt = -1,
+					action = -1
 				}
 			}
 			local res = CopMovement.action_request(self, action_data)

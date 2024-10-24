@@ -32,13 +32,13 @@ function ExecLuaOperatorElement:_build_panel(panel, panel_sizer)
 	local text = EWS:TextCtrl(panel, self._hed.lua_string, "", "TE_MULTILINE,TE_DONTWRAP,VSCROLL,ALWAYS_SHOW_SB,TE_PROCESS_ENTER")
 
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "lua_string",
 		ctrlr = nil,
+		value = "lua_string",
 		ctrlr = text
 	})
 	text:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "lua_string",
 		ctrlr = nil,
+		value = "lua_string",
 		ctrlr = text
 	})
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_lua_syntax_check"))

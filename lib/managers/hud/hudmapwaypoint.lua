@@ -222,13 +222,13 @@ end
 function HUDMapWaypointPoint:_create_distance()
 	local distance_text_params = {
 		font = nil,
+		align = "center",
+		text = "",
 		h = nil,
 		w = nil,
-		name = "distance_text",
-		text = "",
 		layer = nil,
 		vertical = "center",
-		align = "center",
+		name = "distance_text",
 		font_size = nil,
 		w = self._object:w(),
 		h = HUDMapWaypointPoint.DISTANCE_H,

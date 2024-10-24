@@ -2,9 +2,9 @@ FeedBackManager = FeedBackManager or class()
 
 function FeedBackManager:init()
 	self._effect_types = {
+		camera_shake = nil,
 		above_camera_effect = nil,
 		rumble = nil,
-		camera_shake = nil,
 		rumble = FeedBackrumble,
 		camera_shake = FeedBackCameraShake,
 		above_camera_effect = FeedBackAboveCameraEffect

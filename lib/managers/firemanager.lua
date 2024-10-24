@@ -170,12 +170,12 @@ function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, wea
 
 		if not contains then
 			local dot_info = {
-				fire_dot_counter = 0,
-				fire_damage_received_time = nil,
 				weapon_unit = nil,
-				enemy_unit = nil,
 				dot_length = nil,
 				dot_damage = nil,
+				fire_dot_counter = 0,
+				fire_damage_received_time = nil,
+				enemy_unit = nil,
 				enemy_unit = enemy_unit,
 				fire_damage_received_time = fire_damage_received_time,
 				weapon_unit = weapon_unit,
@@ -327,11 +327,11 @@ function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
 
 	if player then
 		player:character_damage():damage_fire({
+			ignite_character = nil,
+			range = nil,
 			damage = nil,
 			position = nil,
 			variant = "fire",
-			ignite_character = nil,
-			range = nil,
 			position = pos,
 			range = range,
 			damage = damage,
@@ -360,11 +360,11 @@ function FireManager:detect_and_give_dmg(params)
 
 	if alive(player) and player_dmg ~= 0 then
 		player:character_damage():damage_fire({
+			ignite_character = nil,
+			range = nil,
 			damage = nil,
 			position = nil,
 			variant = "fire",
-			ignite_character = nil,
-			range = nil,
 			position = hit_pos,
 			range = range,
 			damage = player_dmg,

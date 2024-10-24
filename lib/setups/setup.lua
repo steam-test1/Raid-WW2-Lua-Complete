@@ -240,6 +240,7 @@ require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlKickMuteWidge
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlGridItemSkill")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlSkillProgression")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillTiny")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlEventDisplay")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlMeleeWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlGrenadeWeaponStats")
@@ -323,6 +324,10 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		search_appropriate_jobs = true,
+		job_plan = -1,
+		kick_option = 1,
+		drop_in_allowed = true,
 		reputation_permission = 0,
 		team_ai = true,
 		selected_team_ai = true,
@@ -330,10 +335,6 @@ function Setup:init_managers(managers)
 		difficulty = nil,
 		level_id = nil,
 		is_playing = false,
-		search_appropriate_jobs = true,
-		job_plan = -1,
-		kick_option = 1,
-		drop_in_allowed = true,
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
@@ -472,11 +473,11 @@ function Setup:_start_loading_screen()
 		load_level_data.controller_image = "guis/textures/controller"
 		load_level_data.controller_shapes = {
 			{
-				texture_rect = nil,
 				position = nil,
+				texture_rect = nil,
 				position = {
-					cx = 0.5,
-					cy = 0.5
+					cy = 0.5,
+					cx = 0.5
 				},
 				texture_rect = {
 					0,
@@ -500,30 +501,30 @@ function Setup:_start_loading_screen()
 		local aspect_ratio = managers.viewport:aspect_ratio()
 		local res = RenderSettings.resolution
 		load_level_data.gui_data = {
-			safe_rect = nil,
-			saferect_size = nil,
-			workspace_size = nil,
-			safe_rect_pixels = nil,
-			bg_texture = nil,
 			res = nil,
 			aspect_ratio = nil,
+			saferect_size = nil,
+			safe_rect = nil,
+			bg_texture = nil,
+			workspace_size = nil,
+			safe_rect_pixels = nil,
 			safe_rect_pixels = safe_rect_pixels,
 			safe_rect = safe_rect,
 			aspect_ratio = aspect_ratio,
 			res = res,
 			workspace_size = {
-				y = 0,
 				x = 0,
 				h = nil,
 				w = nil,
+				y = 0,
 				w = res.x,
 				h = res.y
 			},
 			saferect_size = {
-				y = nil,
 				x = nil,
 				h = nil,
 				w = nil,
+				y = nil,
 				x = safe_rect.x,
 				y = safe_rect.y,
 				w = safe_rect.width,
@@ -538,10 +539,10 @@ function Setup:_start_loading_screen()
 	end
 
 	local data = {
-		layer = nil,
 		res = nil,
-		is_win32 = nil,
 		load_level_data = nil,
+		is_win32 = nil,
+		layer = nil,
 		res = RenderSettings.resolution,
 		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
 		load_level_data = load_level_data,
@@ -552,18 +553,18 @@ end
 
 function Setup:_setup_loading_environment()
 	local env_map = {
-		deferred = nil,
 		shadow_processor = nil,
+		deferred = nil,
 		deferred = {
-			apply_ambient = nil,
 			shadow = nil,
+			apply_ambient = nil,
 			shadow = {
+				slice3 = nil,
+				slice2 = nil,
 				slice1 = nil,
 				slice0 = nil,
 				shadow_slice_overlap = nil,
 				shadow_slice_depths = nil,
-				slice3 = nil,
-				slice2 = nil,
 				shadow_slice_depths = Vector3(800, 1600, 5500),
 				shadow_slice_overlap = Vector3(150, 300, 400),
 				slice0 = Vector3(0, 800, 0),
@@ -572,13 +573,13 @@ function Setup:_setup_loading_environment()
 				slice3 = Vector3(5100, 17500, 0)
 			},
 			apply_ambient = {
+				effect_light_scale = 1,
+				sky_bottom_color = nil,
 				sky_top_color = nil,
 				ambient_falloff_scale = 0,
 				ambient_scale = 1,
 				ambient_color_scale = 0.31999999284744,
 				ambient_color = nil,
-				effect_light_scale = 1,
-				sky_bottom_color = nil,
 				ambient_color = Vector3(1, 1, 1),
 				sky_top_color = Vector3(0, 0, 0),
 				sky_bottom_color = Vector3(0, 0, 0)
@@ -587,12 +588,12 @@ function Setup:_setup_loading_environment()
 		shadow_processor = {
 			shadow_modifier = nil,
 			shadow_modifier = {
+				slice3 = nil,
+				slice2 = nil,
 				slice1 = nil,
 				slice0 = nil,
 				shadow_slice_overlap = nil,
 				shadow_slice_depths = nil,
-				slice3 = nil,
-				slice2 = nil,
 				slice0 = Vector3(0, 800, 0),
 				slice1 = Vector3(650, 1600, 0),
 				slice2 = Vector3(1300, 5500, 0),

@@ -24,54 +24,54 @@ EnemyManager._nr_i_lod = {
 	}
 }
 EnemyManager.ENEMIES = {
-	german_gebirgsjager_light = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light",
 	german_black_waffen_sentry_light = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light",
-	german_grunt_heavy_shotgun = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun",
-	german_black_waffen_sentry_light_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98",
-	german_grunt_heavy_kar98 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98",
-	german_black_waffen_sentry_light_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun",
-	german_grunt_heavy_mp38 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38",
-	german_black_waffen_sentry_heavy = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy",
-	german_grunt_heavy = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy",
-	german_black_waffen_sentry_heavy_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98",
-	german_grunt_mid_shotgun = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun",
-	german_black_waffen_sentry_heavy_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun",
-	german_grunt_mid_kar98 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98",
-	german_black_waffen_sentry_gasmask = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask",
-	german_grunt_mid_mp38 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38",
-	german_black_waffen_sentry_gasmaskshotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun",
-	german_grunt_mid = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid",
-	german_commander = "units/vanilla/characters/enemies/models/german_commander/german_commander",
-	german_grunt_light_shotgun = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun",
-	german_og_commander = "units/vanilla/characters/enemies/models/german_og_commander/german_og_commander",
 	german_grunt_light_kar98 = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_kar98",
-	german_officer = "units/vanilla/characters/enemies/models/german_commander/german_officer",
+	german_black_waffen_sentry_light_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98",
 	german_grunt_light_mp38 = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_mp38",
-	german_flamer = "units/vanilla/characters/enemies/models/german_flamer/german_flamer",
+	german_black_waffen_sentry_light_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun",
 	german_grunt_light = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light",
-	german_sniper = "units/vanilla/characters/enemies/models/german_sniper/german_sniper",
+	german_black_waffen_sentry_heavy = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy",
 	german_sommilier_01 = "units/vanilla/characters/enemies/models/german_sommilier/german_sommilier",
-	german_spotter = "units/vanilla/characters/enemies/models/german_sniper/german_spotter",
+	german_black_waffen_sentry_heavy_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98",
 	german_sommilier = "units/vanilla/characters/enemies/models/german_sommeleir/german_sommilier",
-	soviet_nkvd_int_security_captain = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain/soviet_nkvd_int_security_captain",
+	german_black_waffen_sentry_heavy_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun",
 	soviet_nightwitch_02 = "units/vanilla/characters/enemies/models/soviet_nightwitch_02/soviet_nightwitch_02",
-	soviet_nkvd_int_security_captain_b = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain_b/soviet_nkvd_int_security_captain_b",
+	german_black_waffen_sentry_gasmask = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask",
 	soviet_nightwitch_01 = "units/vanilla/characters/enemies/models/soviet_nightwitch_01/soviet_nightwitch_01",
+	german_black_waffen_sentry_gasmaskshotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun",
 	female_spy = "units/vanilla/characters/enemies/models/female_spy/female_spy",
+	german_commander = "units/vanilla/characters/enemies/models/german_commander/german_commander",
 	german_fallschirmjager_light_shotgun = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_shotgun",
+	german_og_commander = "units/vanilla/characters/enemies/models/german_og_commander/german_og_commander",
 	german_fallschirmjager_light_kar98 = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_kar98",
+	german_officer = "units/vanilla/characters/enemies/models/german_commander/german_officer",
 	german_fallschirmjager_light = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light",
+	german_flamer = "units/vanilla/characters/enemies/models/german_flamer/german_flamer",
 	german_fallschirmjager_heavy_shotgun = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_shotgun",
+	german_sniper = "units/vanilla/characters/enemies/models/german_sniper/german_sniper",
 	german_fallschirmjager_heavy_kar98 = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98",
+	german_spotter = "units/vanilla/characters/enemies/models/german_sniper/german_spotter",
 	german_fallschirmjager_heavy = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy",
+	soviet_nkvd_int_security_captain = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain/soviet_nkvd_int_security_captain",
 	german_waffen_ss_shotgun = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss_shotgun",
+	soviet_nkvd_int_security_captain_b = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain_b/soviet_nkvd_int_security_captain_b",
 	german_waffen_ss_kar98 = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss_kar98",
 	german_waffen_ss = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss",
 	german_gebirgsjager_heavy_shotgun = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_shotgun",
 	german_gebirgsjager_heavy_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98",
 	german_gebirgsjager_heavy = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy",
 	german_gebirgsjager_light_shotgun = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun",
-	german_gebirgsjager_light_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98"
+	german_gebirgsjager_light_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98",
+	german_gebirgsjager_light = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light",
+	german_grunt_heavy_shotgun = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun",
+	german_grunt_heavy_kar98 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98",
+	german_grunt_heavy_mp38 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38",
+	german_grunt_heavy = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy",
+	german_grunt_mid_shotgun = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun",
+	german_grunt_mid_kar98 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98",
+	german_grunt_mid_mp38 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38",
+	german_grunt_mid = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid",
+	german_grunt_light_shotgun = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun"
 }
 
 function EnemyManager:init()
@@ -479,13 +479,13 @@ end
 
 function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
 	local task_data = {
-		id = nil,
-		queue_time = nil,
-		data = nil,
-		v_cb = nil,
 		t = nil,
 		clbk = nil,
 		asap = nil,
+		queue_time = nil,
+		data = nil,
+		id = nil,
+		v_cb = nil,
 		clbk = task_clbk,
 		id = id,
 		data = data,
@@ -766,12 +766,12 @@ function EnemyManager:register_enemy(enemy)
 
 	local char_tweak = tweak_data.character[enemy:base()._tweak_table]
 	local u_data = {
-		so_access = nil,
-		char_tweak = nil,
-		unit = nil,
 		importance = 0,
 		tracker = nil,
 		m_pos = nil,
+		unit = nil,
+		char_tweak = nil,
+		so_access = nil,
 		unit = enemy,
 		m_pos = enemy:movement():m_pos(),
 		tracker = enemy:movement():nav_tracker(),
@@ -848,9 +848,9 @@ function EnemyManager:add_corpse_lootbag(corpse)
 		local enemy_data = self._enemy_data
 		enemy_data.nr_corpses = enemy_data.nr_corpses + 1
 		enemy_data.corpses[corpse:id()] = {
+			unit = nil,
 			death_t = nil,
 			m_pos = nil,
-			unit = nil,
 			unit = corpse,
 			m_pos = corpse:position(),
 			death_t = self._t
@@ -908,12 +908,12 @@ function EnemyManager:register_civilian(unit)
 
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
 	self._civilian_data.unit_data[unit:key()] = {
-		so_access = nil,
-		is_civilian = true,
-		char_tweak = nil,
 		unit = nil,
 		tracker = nil,
 		m_pos = nil,
+		is_civilian = true,
+		char_tweak = nil,
+		so_access = nil,
 		unit = unit,
 		m_pos = unit:movement():m_pos(),
 		tracker = unit:movement():nav_tracker(),
@@ -1174,10 +1174,10 @@ function EnemyManager:load(data)
 				corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
 
 				self._enemy_data.corpses[u_id] = {
-					death_t = 0,
-					u_id = nil,
-					m_pos = nil,
 					unit = nil,
+					death_t = 0,
+					m_pos = nil,
+					u_id = nil,
 					unit = corpse,
 					u_id = u_id,
 					m_pos = corpse:position()
@@ -1271,8 +1271,8 @@ function EnemyManager:register_commander()
 		if count < 5 then
 			managers.hud:set_big_prompt({
 				title = nil,
-				id = "commander_arrived",
 				description = nil,
+				id = "commander_arrived",
 				duration = 5,
 				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
 				description = managers.localization:text("hint_commander_arrived_desc")

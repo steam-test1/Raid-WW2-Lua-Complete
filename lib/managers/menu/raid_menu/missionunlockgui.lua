@@ -53,18 +53,18 @@ end
 function MissionUnlockGui:_layout_contents_panel()
 	local contents_panel_params = {
 		halign = "scale",
-		name = "contents_panel",
-		valign = "scale"
+		valign = "scale",
+		name = "contents_panel"
 	}
 	self._contents_panel = self._root_panel:panel(contents_panel_params)
 end
 
 function MissionUnlockGui:_layout_offered_missions()
 	local offered_missions_panel_params = {
-		h = nil,
-		name = "offered_missions_panel",
 		w = nil,
 		y = nil,
+		h = nil,
+		name = "offered_missions_panel",
 		y = MissionUnlockGui.CONTENT_Y,
 		w = MissionUnlockGui.CONTENT_WIDTH,
 		h = MissionUnlockGui.CONTENT_HEIGHT
@@ -90,9 +90,9 @@ function MissionUnlockGui:_layout_offered_missions()
 
 		local offered_mission_params = {
 			mission = nil,
-			name = nil,
-			on_click_callback = nil,
 			on_menu_move = nil,
+			on_click_callback = nil,
+			name = nil,
 			name = "offered_mission_" .. tostring(i),
 			mission = pending_missions[i],
 			on_click_callback = callback(self, self, "on_mission_chosen"),
@@ -123,10 +123,10 @@ end
 
 function MissionUnlockGui:_layout_unlock_button()
 	local unlock_button_params = {
-		on_click_callback = nil,
-		name = "unlock_button",
 		text = nil,
+		on_click_callback = nil,
 		layer = 1,
+		name = "unlock_button",
 		text = self:translate("mission_unlock_button_text", true),
 		on_click_callback = callback(self, self, "show_unlock_confirmation_prompt")
 	}
@@ -154,8 +154,8 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 
 	if chosen_video_unlock_id then
 		managers.unlock:unlock({
-			identifier = nil,
 			slot = nil,
+			identifier = nil,
 			slot = UnlockManager.SLOT_PROFILE,
 			identifier = UnlockManager.CATEGORY_CONTROL_ARCHIVE
 		}, {
@@ -164,23 +164,23 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	end
 
 	local video_panel_params = {
-		layer = 100,
-		is_root_panel = true
+		is_root_panel = true,
+		layer = 100
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		name = "video_background",
-		color = nil,
-		halign = "scale",
 		layer = 1,
+		halign = "scale",
 		valign = "scale",
+		color = nil,
+		name = "video_background",
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
+		video = nil,
 		width = nil,
 		layer = 2,
-		video = nil,
 		layer = self._video_panel:layer() + 1,
 		video = chosen_video,
 		width = self._video_panel:w()
@@ -196,13 +196,13 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		font_size = nil,
-		name = "press_any_key_prompt",
 		text = nil,
-		color = nil,
 		layer = nil,
 		alpha = 0,
 		font = nil,
+		font_size = nil,
+		color = nil,
+		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

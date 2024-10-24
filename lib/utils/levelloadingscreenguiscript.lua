@@ -25,8 +25,8 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	local base_panel = self._back_drop_gui:get_new_base_layer()
 	local level_image = base_panel:bitmap({
-		layer = 0,
 		texture = nil,
+		layer = 0,
 		texture = self._gui_data.bg_texture
 	})
 
@@ -42,16 +42,16 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	local text = string.upper(managers.localization:text("debug_loading_level"))
 	self._level_title_text = background_safepanel:text({
-		h = 36,
-		vertical = "bottom",
-		halign = "left",
-		layer = 0,
-		align = "left",
-		text = nil,
-		color = nil,
 		font_size = 36,
+		text = nil,
 		font = "fonts/font_large_mf",
 		y = 0,
+		h = 36,
+		layer = 0,
+		vertical = "bottom",
+		halign = "left",
+		align = "left",
+		color = nil,
 		text = text,
 		color = Color.white
 	})
@@ -61,25 +61,25 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	if self._coords then
 		self._controller = background_safepanel:bitmap({
-			h = 256,
-			texture = "guis/textures/controller",
+			layer = 1,
 			w = 512,
-			layer = 1
+			texture = "guis/textures/controller",
+			h = 256
 		})
 
 		self._controller:set_center(background_safepanel:w() / 2, background_safepanel:h() / 2)
 
 		for id, data in pairs(self._coords) do
 			data.text = background_safepanel:text({
-				vertical = nil,
+				font_size = 24,
 				halign = "center",
+				font = "fonts/font_medium_mf",
+				vertical = nil,
+				text = nil,
 				valign = "center",
 				align = nil,
-				text = nil,
 				name = nil,
 				color = nil,
-				font_size = 24,
-				font = "fonts/font_medium_mf",
 				name = data.id,
 				text = data.string,
 				align = data.align,

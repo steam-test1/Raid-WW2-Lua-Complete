@@ -93,13 +93,13 @@ function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	self._unit:movement():on_activated(tweak_table_id)
 
 	local weapon_setup_data = {
-		spread_mul = 1,
-		alert_AI = false,
 		autoaim = true,
 		expend_ammo = true,
 		ignore_units = nil,
 		bullet_slotmask = nil,
 		auto_reload = true,
+		spread_mul = 1,
+		alert_AI = false,
 		ignore_units = {
 			self._unit
 		},
@@ -190,14 +190,14 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, damage_mu
 	end
 
 	local setup_data = {
-		spread_mul = nil,
-		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
 		ignore_units = nil,
 		user_unit = nil,
 		alert_filter = nil,
 		creates_alerts = true,
+		spread_mul = nil,
+		alert_AI = true,
 		user_unit = self._owner,
 		ignore_units = {
 			self._unit,
@@ -280,8 +280,8 @@ function SentryGunBase._attach(pos, rot, sentrygun_unit)
 
 	if ray then
 		local attached_data = {
-			body = nil,
 			index = 1,
+			body = nil,
 			rotation = nil,
 			max_index = 3,
 			position = nil,

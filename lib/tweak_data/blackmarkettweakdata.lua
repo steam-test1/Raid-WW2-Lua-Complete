@@ -42,6 +42,11 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 
 	for id, data in pairs(tweak_data.weapon.factory.parts) do
 		self.weapon_mods[id] = {
+			weight = nil,
+			unatainable = nil,
+			texture_bundle_folder = nil,
+			desc_id = nil,
+			name_id = nil,
 			value = nil,
 			infamous = nil,
 			dlcs = nil,
@@ -50,11 +55,6 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 			pc = nil,
 			is_a_unlockable = nil,
 			max_in_inventory = nil,
-			weight = nil,
-			unatainable = nil,
-			texture_bundle_folder = nil,
-			desc_id = nil,
-			name_id = nil,
 			max_in_inventory = data.is_a_unlockable and 1 or 2,
 			pc = data.pc,
 			pcs = data.pcs,

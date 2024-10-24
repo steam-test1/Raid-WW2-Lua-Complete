@@ -23,8 +23,8 @@ function PlayerStateUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "On instigator")
 
 	local help = {
-		panel = nil,
 		sizer = nil,
+		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "Set the state the players should change to."

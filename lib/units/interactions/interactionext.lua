@@ -294,9 +294,9 @@ function BaseInteractionExt:_show_interaction_text(custom_text_id)
 
 	if self._hide_interaction_prompt ~= true then
 		managers.hud:show_interact({
+			details = nil,
 			icon = nil,
 			text = nil,
-			details = nil,
 			text = text,
 			icon = icon,
 			details = details
@@ -372,8 +372,8 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
-			shelf_life = 5,
 			text = nil,
+			shelf_life = 5,
 			duration = 2,
 			id = nil,
 			id = hint_id,
@@ -993,9 +993,9 @@ end
 function LootDropInteractionExt:_spawn_loot()
 	local loot_locator = self._unit:get_object(Idstring("snap_1"))
 	local unit = managers.game_play_central:spawn_pickup({
-		name = "gold_bar_medium",
 		rotation = nil,
 		position = nil,
+		name = "gold_bar_medium",
 		position = loot_locator:position() + Vector3(0, 0, 5),
 		rotation = loot_locator:rotation()
 	})
@@ -1467,8 +1467,8 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 		local hint = "hint_teammate_downed"
 
 		managers.notification:add_notification({
-			shelf_life = 5,
 			text = nil,
+			shelf_life = 5,
 			duration = 3,
 			id = nil,
 			id = hint,
@@ -1487,11 +1487,11 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 			local timer = self.tweak_data == "revive" and (self._unit:base().is_husk_player and down_time or tweak_data.character[self._unit:base()._tweak_table].damage.DOWNED_TIME)
 
 			managers.hud:add_waypoint(self._wp_id, {
-				text = nil,
 				distance = nil,
-				icon = nil,
 				waypoint_type = "revive",
 				unit = nil,
+				icon = nil,
+				text = nil,
 				text = text,
 				icon = icon,
 				unit = self._unit,
@@ -1695,8 +1695,8 @@ function MultipleEquipmentBagInteractionExt:sync_interacted(peer, player, amount
 		managers.network:session():send_to_peer(peer, "give_equipment", equipment_name, amount_to_give, false)
 	elseif player then
 		managers.player:add_special({
-			name = nil,
 			amount = nil,
+			name = nil,
 			name = equipment_name,
 			amount = amount_to_give
 		})
@@ -1904,8 +1904,8 @@ function IntimitateInteractionExt:on_peer_interacted(tweak_table_name)
 	if tweak then
 		local value = tweak.value
 		local notification_item = {
-			icon = nil,
 			value = nil,
+			icon = nil,
 			name_id = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,
@@ -1951,7 +1951,7 @@ function CarryInteractionExt:_interact_blocked(player)
 	local tweak_data = tweak_data.carry[carry_id]
 
 	if not tweak_data then
-		Application:warn("[CarryInteractionExt:can_select] Carry interaction unit uses invalid carry id: ", tostring(carry_id))
+		Application:warn("[CarryInteractionExt:can_select] Carry interaction unit uses invalid carry id: ", tostring(carry_id), self._unit)
 
 		return true, true
 	end
@@ -2940,12 +2940,12 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
-		doc_icon = "notification_consumable",
-		doc_text = "hud_hint_consumable_mission_secured",
-		duration = 4,
-		id = "hud_hint_consumable_mission",
 		notification_type = nil,
 		priority = 3,
+		doc_text = "hud_hint_consumable_mission_secured",
+		doc_icon = "notification_consumable",
+		duration = 4,
+		id = "hud_hint_consumable_mission",
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 
@@ -3064,5 +3064,28 @@ function DummyInteractionExt:can_select()
 end
 
 function DummyInteractionExt:can_interact()
+	return false
+end
+
+CandyPickupInteractionExt = CandyPickupInteractionExt or class(PickupInteractionExt)
+
+function CandyPickupInteractionExt:_interact_blocked(player)
+	return not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_TRICK_OR_TREAT)
+end
+
+function CandyPickupInteractionExt:_get_interaction_details()
+	local interaction_detail = self._unit:pickup():interaction_detail()
+
+	if interaction_detail then
+		local details = {
+			icon = nil,
+			text = nil,
+			icon = interaction_detail.icon,
+			text = managers.localization:text(interaction_detail.text)
+		}
+
+		return details
+	end
+
 	return false
 end

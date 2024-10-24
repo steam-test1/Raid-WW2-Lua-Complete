@@ -294,10 +294,10 @@ function ViewportManager:get_safe_rect()
 	local b = 1 - a * 2
 
 	return {
-		x = nil,
-		height = nil,
 		width = nil,
 		y = nil,
+		x = nil,
+		height = nil,
 		x = a,
 		y = a,
 		width = b,

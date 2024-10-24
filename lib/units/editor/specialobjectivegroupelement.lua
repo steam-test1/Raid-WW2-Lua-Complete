@@ -37,11 +37,11 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 					if draw then
 						self:_draw_link({
+							to_unit = nil,
+							from_unit = nil,
 							b = 0.75,
 							g = 0,
 							r = 0,
-							to_unit = nil,
-							from_unit = nil,
 							from_unit = self._unit,
 							to_unit = unit
 						})
@@ -65,11 +65,11 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 
 			if draw then
 				self:_draw_link({
+					to_unit = nil,
+					from_unit = nil,
 					b = 0.75,
 					g = 0,
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -380,10 +380,10 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
 		value = nil,
+		name = "Mode:",
 		panel = nil,
 		options = nil,
 		sizer = nil,
-		name = "Mode:",
 		tooltip = nil,
 		sorted = false,
 		ctrlr_proportions = 2,
@@ -420,9 +420,9 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	local base_chance_params = {
 		value = nil,
+		name = "Base chance:",
 		panel = nil,
 		sizer = nil,
-		name = "Base chance:",
 		max = 1,
 		min = 0,
 		tooltip = "Used to specify chance to happen (1.0 == 100%)",

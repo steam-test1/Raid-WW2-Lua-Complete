@@ -13,8 +13,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "bullet",
 		type = nil,
+		variant = "bullet",
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -36,8 +36,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 	end
 
 	local attack_data = {
-		attacker_unit = nil,
 		attack_dir = nil,
+		attacker_unit = nil,
 		variant = "bullet",
 		result = nil,
 		pos = nil,
@@ -61,8 +61,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "explosion",
 		type = nil,
+		variant = "explosion",
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -84,8 +84,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 	end
 
 	local attack_data = {
-		attacker_unit = nil,
 		attack_dir = nil,
+		attacker_unit = nil,
 		variant = "explosion",
 		result = nil,
 		pos = nil,
@@ -109,8 +109,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "fire",
 		type = nil,
+		variant = "fire",
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -132,8 +132,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 	end
 
 	local attack_data = {
-		attacker_unit = nil,
 		attack_dir = nil,
+		attacker_unit = nil,
 		variant = "fire",
 		result = nil,
 		pos = nil,
@@ -157,8 +157,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "melee",
 		type = nil,
+		variant = "melee",
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -182,8 +182,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 	end
 
 	local attack_data = {
-		attacker_unit = nil,
 		attack_dir = nil,
+		attacker_unit = nil,
 		variant = "melee",
 		result = nil,
 		pos = nil,

@@ -23,19 +23,19 @@ local bezier_curve = {
 }
 CopActionShoot = CopActionShoot or class()
 CopActionShoot._ik_presets = {
-	r_arm = nil,
 	spine = nil,
+	r_arm = nil,
 	spine = {
-		start = "_begin_ik_spine",
 		update = "_update_ik_spine",
 		stop = "_stop_ik_spine",
-		get_blend = "_get_blend_ik_spine"
+		get_blend = "_get_blend_ik_spine",
+		start = "_begin_ik_spine"
 	},
 	r_arm = {
-		start = "_begin_ik_r_arm",
 		update = "_update_ik_r_arm",
 		stop = "_stop_ik_r_arm",
-		get_blend = "_get_blend_ik_r_arm"
+		get_blend = "_get_blend_ik_r_arm",
+		start = "_begin_ik_r_arm"
 	}
 }
 
@@ -117,7 +117,7 @@ function CopActionShoot:on_inventory_event(event)
 		local weapon_usage_tweak = self._common_data.char_tweak.weapon[weap_tweak.usage]
 
 		if not weapon_usage_tweak then
-			Application:error("[CopActionShoot:on_inventory_e vent] unknown weapon used: ", inspect(self._unit), "   ", inspect(weap_tweak), "   ", inspect(self._common_data.char_tweak))
+			Application:error("[CopActionShoot:on_inventory_event] unknown weapon used: ", inspect(self._unit), "   ", inspect(weap_tweak), "   ", inspect(self._common_data.char_tweak))
 
 			return
 		end
@@ -272,10 +272,10 @@ function CopActionShoot:on_exit()
 end
 
 function CopActionShoot:update(t)
-	local vis_state = self._ext_base:lod_stage()
-	vis_state = vis_state or 4
+	local vis_state = self._ext_base:lod_stage() or 4
+	local high_quality = vis_state == 1
 
-	if vis_state == 1 then
+	if high_quality then
 		-- Nothing
 	elseif self._skipped_frames < vis_state * 3 then
 		self._skipped_frames = self._skipped_frames + 1
@@ -311,8 +311,8 @@ function CopActionShoot:update(t)
 					local spin = tar_vec_flat:to_polar_with_reference(fwd, math.UP).spin
 					local new_action_data = {
 						type = "turn",
-						angle = nil,
 						body_part = 2,
+						angle = nil,
 						angle = spin
 					}
 
@@ -387,7 +387,7 @@ function CopActionShoot:update(t)
 						self._unit:unit_data().mission_element:event("killshot", self._unit)
 					end
 
-					if not ext_anim.recoil and vis_state == 1 and not ext_anim.base_no_recoil then
+					if high_quality and not ext_anim.recoil and not ext_anim.base_no_recoil then
 						self._ext_movement:play_redirect("recoil_auto")
 					end
 
@@ -401,11 +401,7 @@ function CopActionShoot:update(t)
 							self._ext_movement:play_redirect("up_idle")
 						end
 
-						if vis_state == 1 then
-							self._shoot_t = t + (self._common_data.is_suppressed and 1.5 or 1) * math.lerp(falloff.recoil[1], falloff.recoil[2], math.random())
-						else
-							self._shoot_t = t + falloff.recoil[2]
-						end
+						self:_add_shoot_recoil_delay(falloff, high_quality, t)
 					else
 						self._autoshots_fired = self._autoshots_fired + 1
 					end
@@ -488,7 +484,7 @@ function CopActionShoot:update(t)
 					self._autofiring = firemode < 4 and firemode or math.random(self._w_usage_tweak.autofire_rounds[1], self._w_usage_tweak.autofire_rounds[2])
 					self._autoshots_fired = 0
 
-					if vis_state == 1 and not ext_anim.base_no_recoil then
+					if high_quality and not ext_anim.base_no_recoil then
 						self._ext_movement:play_redirect("recoil_auto")
 					end
 				else
@@ -519,15 +515,11 @@ function CopActionShoot:update(t)
 							self._unit:unit_data().mission_element:event("killshot", self._unit)
 						end
 
-						if vis_state == 1 then
-							if not ext_anim.base_no_recoil then
-								self._ext_movement:play_redirect("recoil_single")
-							end
-
-							self._shoot_t = t + (self._common_data.is_suppressed and 1.5 or 1) * math.lerp(falloff.recoil[1], falloff.recoil[2], math.random())
-						else
-							self._shoot_t = t + falloff.recoil[2]
+						if high_quality and not ext_anim.base_no_recoil then
+							self._ext_movement:play_redirect("recoil_single")
 						end
+
+						self:_add_shoot_recoil_delay(falloff, high_quality, t)
 					end
 				end
 			end
@@ -536,6 +528,15 @@ function CopActionShoot:update(t)
 
 	if self._ext_anim.base_need_upd then
 		self._ext_movement:upd_m_head_pos()
+	end
+end
+
+function CopActionShoot:_add_shoot_recoil_delay(falloff, high_quality, t)
+	if high_quality then
+		local supp_t_add = self._common_data.is_suppressed and 1.5 or 1
+		self._shoot_t = t + supp_t_add * math.rand(falloff.recoil[1], falloff.recoil[2])
+	else
+		self._shoot_t = t + falloff.recoil[2]
 	end
 end
 
@@ -950,13 +951,13 @@ function CopActionShoot:anim_clbk_melee_strike()
 	end
 
 	local action_data = {
-		damage = nil,
-		attacker_unit = nil,
-		col_ray = nil,
-		push_vel = nil,
 		melee_weapon = nil,
+		push_vel = nil,
 		variant = "melee",
+		col_ray = nil,
+		attacker_unit = nil,
 		weapon_unit = nil,
+		damage = nil,
 		damage = damage,
 		weapon_unit = self._weapon_unit,
 		attacker_unit = self._common_data.unit,
@@ -974,12 +975,12 @@ function CopActionShoot:anim_clbk_melee_strike()
 	if defense_data == "countered" then
 		self._common_data.melee_countered_t = TimerManager:game():time()
 		local action_data = {
-			damage = 0,
-			attacker_unit = nil,
 			attack_dir = nil,
-			col_ray = nil,
 			variant = "counter_spooc",
+			col_ray = nil,
+			attacker_unit = nil,
 			damage_effect = 1,
+			damage = 0,
 			attacker_unit = self._strike_unit,
 			col_ray = {
 				position = nil,

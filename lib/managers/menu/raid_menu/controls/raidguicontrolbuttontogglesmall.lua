@@ -43,11 +43,11 @@ end
 
 function RaidGUIControlButtonToggleSmall:_create_border()
 	local checkbox_border_params = {
+		texture_rect = nil,
+		texture = nil,
 		color = nil,
 		valign = "scale",
 		halign = "scale",
-		texture_rect = nil,
-		texture = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggleSmall.BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggleSmall.BORDER_ICON].texture_rect,
 		color = RaidGUIControlButtonToggleSmall.BORDER_COLOR

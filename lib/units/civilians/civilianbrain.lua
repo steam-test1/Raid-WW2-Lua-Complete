@@ -100,13 +100,13 @@ function CivilianBrain:on_cool_state_changed(state)
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
 		alert_types = {
+			vo_cbt = true,
 			bullet = true,
 			footstep = true,
 			explosion = true,
 			aggression = true,
 			vo_distress = true,
-			vo_intimidate = true,
-			vo_cbt = true
+			vo_intimidate = true
 		}
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
@@ -150,14 +150,14 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 
 		local follow_objective = {
 			lose_track_dis = 2000,
+			interrupt_health = 0,
+			type = "follow",
+			interrupt_dis = 0,
 			nav_seg = nil,
 			follow_unit = nil,
-			distance = 500,
-			type = "follow",
 			fail_clbk = nil,
 			stance = "cbt",
-			interrupt_health = 0,
-			interrupt_dis = 0,
+			distance = 500,
 			follow_unit = interacting_unit,
 			nav_seg = interacting_unit:movement():nav_tracker():nav_segment(),
 			fail_clbk = callback(self, self, "on_hostage_follow_objective_failed")
@@ -177,9 +177,9 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		self:set_objective({
+			amount = 1,
 			type = "surrender",
 			aggressor_unit = nil,
-			amount = 1,
 			aggressor_unit = interacting_unit
 		})
 

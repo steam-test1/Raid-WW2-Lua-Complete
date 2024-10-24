@@ -75,8 +75,8 @@ function FlamerBrain:_queued_update(t, dt)
 
 		table.insert(assault_candidates, {
 			pos = nil,
-			nav_seg = nil,
 			area = nil,
+			nav_seg = nil,
 			area = area,
 			nav_seg = nav_seg,
 			pos = pos
@@ -90,8 +90,8 @@ function FlamerBrain:_queued_update(t, dt)
 
 				table.insert(assault_candidates, {
 					pos = nil,
-					nav_seg = nil,
 					area = nil,
+					nav_seg = nil,
 					area = area,
 					nav_seg = nav_seg,
 					pos = pos

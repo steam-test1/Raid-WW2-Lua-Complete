@@ -126,11 +126,11 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		end
 	else
 		entry = {
-			callbacks = nil,
 			ref_c = 1,
+			package_name = nil,
+			callbacks = nil,
 			resource_name = nil,
 			resource_type = nil,
-			package_name = nil,
 			resource_type = resource_type,
 			resource_name = resource_name,
 			package_name = package_name,

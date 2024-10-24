@@ -13,10 +13,6 @@ function CommanderBrain:post_init(unit)
 
 		self._registered = true
 	end
-
-	if self._unit:damage() then
-		self._unit:damage():has_then_run_sequence_simple("spawn_radio_pack")
-	end
 end
 
 function CommanderBrain:pre_destroy(unit)

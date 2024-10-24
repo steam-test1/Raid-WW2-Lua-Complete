@@ -68,11 +68,11 @@ function BlackMarketManager:_setup_grenades()
 	for grenade_id, grenade in pairs(tweak_data.projectiles) do
 		if grenade.throwable then
 			grenades[grenade_id] = {
-				skill_based = false,
-				equipped = false,
 				amount = 0,
 				unlocked = true,
-				level = 0
+				level = 0,
+				skill_based = false,
+				equipped = false
 			}
 			local is_default, weapon_level = managers.upgrades:get_value(grenade_id, self._defaults.grenade)
 			grenades[grenade_id].level = weapon_level
@@ -91,12 +91,12 @@ function BlackMarketManager:_setup_melee_weapons()
 
 	for melee_weapon, _ in pairs(tweak_data.blackmarket.melee_weapons) do
 		melee_weapons[melee_weapon] = {
-			unlocked = true,
-			skill_based = false,
-			equipped = false,
 			owned = true,
 			durability = 1,
-			level = 0
+			level = 0,
+			unlocked = true,
+			skill_based = false,
+			equipped = false
 		}
 	end
 
@@ -362,10 +362,10 @@ function BlackMarketManager:equipped_customization()
 	end
 
 	local customization = {
-		equiped_lower_name = nil,
 		equiped_upper_name = nil,
-		nationality = nil,
+		equiped_lower_name = nil,
 		equiped_head_name = nil,
+		nationality = nil,
 		equiped_head_name = managers.player:get_customization_equiped_head_name(),
 		equiped_upper_name = managers.player:get_customization_equiped_upper_name(),
 		equiped_lower_name = managers.player:get_customization_equiped_lower_name(),
@@ -584,10 +584,10 @@ end
 function BlackMarketManager:unpack_team_ai_customization_from_string(customization_string)
 	local data = string.split(customization_string or "", " ")
 	local customization = {
-		equiped_lower_name = nil,
 		equiped_upper_name = nil,
-		nationality = nil,
+		equiped_lower_name = nil,
 		equiped_head_name = nil,
+		nationality = nil,
 		equiped_head_name = data[1],
 		equiped_upper_name = data[2],
 		equiped_lower_name = data[3],
@@ -950,12 +950,12 @@ function BlackMarketManager:create_preload_ws()
 	for i = 1, num_squares do
 		row_index = row_index + 1
 		last_rect = square_panel:rect({
-			h = 15,
-			w = 15,
-			color = nil,
-			blend_mode = "add",
 			y = nil,
 			x = nil,
+			h = 15,
+			w = 15,
+			blend_mode = "add",
+			color = nil,
 			x = x,
 			y = y,
 			color = Color(0.3, 0.3, 0.3)
@@ -973,12 +973,12 @@ function BlackMarketManager:create_preload_ws()
 
 	square_panel:set_size(max_w, max_h)
 	panel:rect({
+		blend_mode = "add",
+		layer = 2,
 		h = 19,
 		w = 19,
-		blend_mode = "add",
 		name = "progress",
 		color = nil,
-		layer = 2,
 		color = Color(0.3, 0.3, 0.3)
 	})
 
@@ -1176,8 +1176,8 @@ end
 function BlackMarketManager:get_weapon_category(category)
 	local weapon_index = {
 		primaries = 2,
-		melees = 4,
 		equipments = 3,
+		melees = 4,
 		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
@@ -1197,8 +1197,8 @@ end
 function BlackMarketManager:get_weapon_names_category(category)
 	local weapon_index = {
 		primaries = 2,
-		melees = 4,
 		equipments = 3,
+		melees = 4,
 		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
@@ -1353,13 +1353,13 @@ function BlackMarketManager:_get_base_stats(name)
 	self._stats_shown = {
 		{
 			stat_name = "extra_ammo",
-			round_value = true,
-			name = "magazine"
+			name = "magazine",
+			round_value = true
 		},
 		{
 			stat_name = "total_ammo_mod",
-			round_value = true,
-			name = "totalammo"
+			name = "totalammo",
+			round_value = true
 		},
 		{
 			round_value = true,
@@ -1369,17 +1369,17 @@ function BlackMarketManager:_get_base_stats(name)
 			name = "damage"
 		},
 		{
-			one_minus = true,
-			revert = true,
 			name = "spread",
 			visual_multiplier = 0.5,
-			percent = true
+			percent = true,
+			one_minus = true,
+			revert = true
 		},
 		{
-			offset = true,
-			revert = true,
 			percent = true,
-			name = "recoil"
+			name = "recoil",
+			revert = true,
+			offset = true
 		},
 		{
 			index = true,
@@ -1780,14 +1780,14 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 		},
 		{
 			range = true,
-			multiple_of = "damage",
-			name = "damage_effect"
+			name = "damage_effect",
+			multiple_of = "damage"
 		},
 		{
-			num_decimals = 1,
-			inverse = true,
 			suffix = nil,
 			name = "charge_time",
+			num_decimals = 1,
+			inverse = true,
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
@@ -1812,19 +1812,19 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 		mods_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 		skill_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 
 		if stat.name == "damage" then
@@ -1835,17 +1835,17 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 			local skill_min = skill_mul
 			local skill_max = skill_mul
 			base_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = base_min,
 				max_value = base_max,
 				value = (base_min + base_max) / 2
 			}
 			skill_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = skill_min,
 				max_value = skill_max,
 				value = (skill_min + skill_max) / 2,
@@ -1855,9 +1855,9 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 			local base_min = stats_data.min_damage_effect
 			local base_max = stats_data.max_damage_effect
 			base_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = base_min,
 				max_value = base_max,
 				value = (base_min + base_max) / 2
@@ -1869,10 +1869,10 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 			local skill_min = skill_mul
 			local skill_max = skill_mul
 			skill_stats[stat.name] = {
-				skill_min = nil,
 				skill_max = nil,
 				max_value = nil,
 				min_value = nil,
+				skill_min = nil,
 				value = nil,
 				skill_min = skill_min,
 				skill_max = skill_max,
@@ -1884,9 +1884,9 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 		elseif stat.name == "charge_time" then
 			local base = stats_data.charge_time
 			base_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				value = base,
 				min_value = base,
 				max_value = base
@@ -1895,9 +1895,9 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 			local base_min = stats_data.range
 			local base_max = stats_data.range
 			base_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = base_min,
 				max_value = base_max,
 				value = (base_min + base_max) / 2
@@ -1906,17 +1906,17 @@ function BlackMarketManager:_get_melee_weapon_stats(name)
 			local base = managers.blackmarket:_calculate_melee_weapon_concealment(name)
 			local skill = managers.blackmarket:concealment_modifier("melee_weapons")
 			base_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = base,
 				max_value = base,
 				value = base
 			}
 			skill_stats[stat.name] = {
+				value = nil,
 				max_value = nil,
 				min_value = nil,
-				value = nil,
 				min_value = skill,
 				max_value = skill,
 				value = skill,
@@ -2877,11 +2877,11 @@ function BlackMarketManager:on_buy_weapon_platform(category, weapon_id, slot, fr
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 	local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
 	self._global.crafted_items[category][slot] = {
-		weapon_id = nil,
 		factory_id = nil,
-		global_values = nil,
-		blueprint = nil,
 		unlocked = nil,
+		global_values = nil,
+		weapon_id = nil,
+		blueprint = nil,
 		weapon_id = weapon_id,
 		factory_id = factory_id,
 		blueprint = blueprint,
@@ -3330,11 +3330,11 @@ function BlackMarketManager:load(data)
 			local selection_index = data.use_data.selection_index
 			local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon)
 			self._global.weapons[weapon] = {
+				owned = false,
+				unlocked = false,
 				selection_index = nil,
 				factory_id = nil,
 				equipped = false,
-				owned = false,
-				unlocked = false,
 				factory_id = factory_id,
 				selection_index = selection_index
 			}
@@ -3512,9 +3512,9 @@ function BlackMarketManager:_cleanup_blackmarket()
 
 									if default_mod then
 										table.insert(invalid_parts, {
-											default_mod = nil,
-											global_value = "normal",
 											part_id = nil,
+											global_value = "normal",
+											default_mod = nil,
 											slot = nil,
 											slot = slot,
 											default_mod = default_mod,

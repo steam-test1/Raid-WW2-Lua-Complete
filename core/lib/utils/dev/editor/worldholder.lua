@@ -52,8 +52,8 @@ function WorldHolder:init(params)
 			self:_error("World " .. file_path .. "." .. file_type .. " is old format! Will soon result in crash, please resave.")
 
 			local t = {
-				world_setting = nil,
 				world_dir = nil,
+				world_setting = nil,
 				world_dir = self._world_dir,
 				world_setting = params.world_setting
 			}
@@ -244,8 +244,8 @@ function CoreOldWorldDefinition:init(params)
 	end
 
 	self._definitions.editor_groups = self._definitions.editor_groups or {
-		group_names = nil,
 		groups = nil,
+		group_names = nil,
 		groups = self._old_groups.groups,
 		group_names = self._old_groups.group_names
 	}
@@ -920,9 +920,9 @@ function CoreOldWorldDefinition:create_environment(data, offset)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
-					position = nil,
-					effect = nil,
 					rotation = nil,
+					effect = nil,
+					position = nil,
 					effect = name,
 					position = effect.position,
 					rotation = effect.rotation
@@ -1416,9 +1416,9 @@ function CoreEnvironment:parse_unit_effect(node)
 
 	local name = node:parameter("name")
 	local t = {
-		pos = nil,
-		name = nil,
 		rot = nil,
+		name = nil,
+		pos = nil,
 		pos = pos,
 		rot = rot,
 		name = name
@@ -1468,9 +1468,9 @@ function CoreEnvironment:create(offset)
 
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
-					position = nil,
-					effect = nil,
 					rotation = nil,
+					effect = nil,
+					position = nil,
 					effect = name,
 					position = unit_effect.pos,
 					rotation = unit_effect.rot
@@ -1508,10 +1508,10 @@ function CorePortal:parse_portal_list(node)
 	local bottom = tonumber(node:parameter("bottom")) or 0
 	local draw_base = tonumber(node:parameter("draw_base")) or 0
 	self._portal_shapes[name] = {
-		draw_base = nil,
-		portal = nil,
 		bottom = nil,
+		portal = nil,
 		top = nil,
+		draw_base = nil,
 		portal = {},
 		top = top,
 		bottom = bottom,
@@ -1825,15 +1825,15 @@ function Generic:parse_light(node)
 	end
 
 	table.insert(self._lights, {
-		enable = nil,
-		multiplier = nil,
-		angle_end = nil,
-		linear_attenuation_factor = nil,
-		name = nil,
 		angle_start = nil,
 		color = nil,
+		enable = nil,
 		far_range = nil,
+		linear_attenuation_factor = nil,
 		falloff_exponent = nil,
+		name = nil,
+		multiplier = nil,
+		angle_end = nil,
 		name = name,
 		far_range = far_range,
 		enable = enable,
@@ -1899,17 +1899,17 @@ function Generic:parse_editable_gui(node)
 	local alpha = tonumber(node:parameter("alpha"))
 	local shape = string.split(node:parameter("shape"), " ")
 	self._editable_gui = {
-		text = nil,
-		vertical = nil,
-		word_wrap = nil,
-		align = nil,
-		alpha = nil,
-		font_size = nil,
-		font_color = nil,
 		shape = nil,
+		word_wrap = nil,
+		font_size = nil,
+		alpha = nil,
+		font_color = nil,
+		text = nil,
 		wrap = nil,
 		render_template = nil,
 		blend_mode = nil,
+		vertical = nil,
+		align = nil,
 		text = text,
 		font_color = font_color,
 		font_size = font_size,

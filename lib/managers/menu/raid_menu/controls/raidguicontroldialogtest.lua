@@ -6,40 +6,40 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._yes_callback = self._params.yes_callback
 	self._no_callback = self._params.no_callback
 	self._object = self._panel:panel({
-		w = nil,
-		y = 0,
-		x = 0,
 		name = "dialog_panel",
 		layer = nil,
 		h = nil,
+		w = nil,
+		y = 0,
+		x = 0,
 		w = self._panel:w(),
 		h = self._panel:h(),
 		layer = self._panel:layer() + 100
 	})
 	self._background = self._object:rect({
-		w = nil,
-		y = 0,
-		x = 0,
 		color = nil,
 		name = "background",
 		h = nil,
+		w = nil,
+		y = 0,
+		x = 0,
 		w = self._object:w(),
 		h = self._object:h(),
 		color = tweak_data.gui.colors.raid_black:with_alpha(0.9)
 	})
 	local center_x, center_y = self._object:center()
 	self._title_label = self._object:label({
-		font_size = nil,
-		align = "center",
-		font = nil,
 		text = nil,
+		font = nil,
 		h = 32,
 		w = 576,
 		y = nil,
 		x = nil,
-		visible = false,
 		name = "dialog_title",
+		visible = false,
+		align = "center",
 		vertical = "center",
+		font_size = nil,
 		x = center_x,
 		y = center_y - 82,
 		text = self:translate("character_creation_create_title", true),
@@ -51,13 +51,13 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._title_label:set_visible(true)
 
 	self._input_box = self._object:input_field({
+		ws = nil,
+		name = "input_field",
+		visible = false,
+		h = 48,
 		w = 430,
 		y = nil,
 		x = nil,
-		visible = false,
-		name = "input_field",
-		ws = nil,
-		h = 48,
 		x = center_x,
 		y = center_y,
 		ws = self._params.ws
@@ -69,10 +69,10 @@ function RaidGUIControlDialogTest:init(parent, params)
 
 	self._yes_button = self._object:short_primary_button({
 		on_click_callback = nil,
-		y = nil,
-		x = nil,
 		name = "yes_button",
 		text = nil,
+		y = nil,
+		x = nil,
 		x = center_x,
 		y = center_y + 112,
 		text = self:translate("yes", true),
@@ -84,10 +84,10 @@ function RaidGUIControlDialogTest:init(parent, params)
 
 	self._no_button = self._object:short_secondary_button({
 		on_click_callback = nil,
-		y = nil,
-		x = nil,
 		name = "no_button",
 		text = nil,
+		y = nil,
+		x = nil,
 		x = center_x,
 		y = center_y + 112,
 		text = self:translate("no", true),

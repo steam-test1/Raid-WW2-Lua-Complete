@@ -308,20 +308,20 @@ end
 
 function RainDropScreenEffect:start()
 	self._settings_1 = {
-		uv_settings2 = nil,
 		uv_settings1 = nil,
 		uv_settings4 = nil,
 		uv_settings3 = nil,
+		uv_settings2 = nil,
 		uv_settings1 = Vector3(math.random(), math.random(), math.random() * 2 * math.pi),
 		uv_settings2 = Vector3(math.random(), math.random(), math.random() * 2 * math.pi),
 		uv_settings3 = Vector3(math.random(), math.random(), math.random() * 2 * math.pi),
 		uv_settings4 = Vector3(math.random(), math.random(), math.random() * 2 * math.pi)
 	}
 	self._settings_2 = {
-		uv_settings2 = nil,
 		uv_settings1 = nil,
 		uv_settings4 = nil,
 		uv_settings3 = nil,
+		uv_settings2 = nil,
 		uv_settings1 = Vector3(math.random(), math.random(), 0),
 		uv_settings2 = Vector3(math.random(), math.random(), 0),
 		uv_settings3 = Vector3(math.random(), math.random(), 0),

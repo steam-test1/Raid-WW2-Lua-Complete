@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			add_lobby_filter = nil
+			comparision_type = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -189,8 +189,8 @@ function NetworkMatchMakingXBL:_join_invite_accepted(host_info, host_name)
 
 	managers.system_menu:force_close_all()
 	self:join_server_with_check(host_info:id(), true, {
-		host_name = nil,
 		info = nil,
+		host_name = nil,
 		info = host_info,
 		host_name = host_name
 	})
@@ -530,10 +530,10 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 
 		if self._session:id() ~= server.info:id() and server.properties.LEVELINDEX ~= 0 then
 			table.insert(info.room_list, {
-				info = nil,
 				xuid = nil,
-				owner_name = nil,
 				room_id = nil,
+				owner_name = nil,
+				info = nil,
 				owner_name = server.properties.GAMERHOSTNAME,
 				xuid = server.properties.GAMERHOSTXUID,
 				room_id = server.info:id(),
@@ -654,9 +654,9 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 	if data and data.info then
 		f({
 			{
-				host_name = nil,
 				open_private_slots = 0,
 				info = nil,
+				host_name = nil,
 				info = data.info,
 				host_name = data.host_name
 			}
@@ -730,11 +730,11 @@ function NetworkMatchMakingXBL:_join_by_smartmatch(job_id_filter, difficulty_fil
 	end
 
 	self._hopper_variables = {
+		PrefMission = nil,
 		NrClients = 1,
 		NrHosts = 0,
 		PlayerLevel = nil,
 		PrefDifficulty = nil,
-		PrefMission = nil,
 		PrefMission = tostring(job_id_filter == -1 and job_id_filter or tweak_data.operations:get_index_from_raid_id(job_id_filter)),
 		PrefDifficulty = difficulty_filter,
 		PlayerLevel = self:_get_smartmatch_player_level()
@@ -774,8 +774,8 @@ function NetworkMatchMakingXBL:join_by_smartmatch(job_id_filter, difficulty_filt
 	end
 
 	self._queued_join_by_smartmatch = {
-		difficulty_filter = nil,
 		job_id_filter = nil,
+		difficulty_filter = nil,
 		job_id_filter = job_id_filter,
 		difficulty_filter = difficulty_filter
 	}
@@ -1085,11 +1085,11 @@ function NetworkMatchMakingXBL:create_lobby(settings)
 
 	if self:is_host_lobby_public() then
 		self._hopper_variables = {
+			PrefMission = nil,
 			NrClients = 0,
 			NrHosts = 1,
 			PlayerLevel = nil,
 			PrefDifficulty = nil,
-			PrefMission = nil,
 			PrefMission = tostring(tweak_data.operations:get_index_from_raid_id(managers.raid_job:current_job_id())),
 			PrefDifficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty),
 			PlayerLevel = self:_get_smartmatch_player_level()
@@ -1111,8 +1111,8 @@ function NetworkMatchMakingXBL:_create_lobby_failed()
 
 	local title = managers.localization:text("dialog_error_title")
 	local dialog_data = {
-		text = nil,
 		title = nil,
+		text = nil,
 		title = title,
 		text = managers.localization:text("dialog_err_failed_creating_lobby"),
 		button_list = {
@@ -1285,13 +1285,13 @@ function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatc
 
 			self._join_smartmatch = "confirm_inexact"
 			local params = {
-				difficulty = nil,
-				timeout = nil,
+				yes_clbk = nil,
 				job_name = nil,
+				host_name = nil,
 				timeout_clbk = nil,
 				no_clbk = nil,
-				yes_clbk = nil,
-				host_name = nil,
+				timeout = nil,
+				difficulty = nil,
 				yes_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_yes"),
 				no_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_no"),
 				timeout_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_no"),

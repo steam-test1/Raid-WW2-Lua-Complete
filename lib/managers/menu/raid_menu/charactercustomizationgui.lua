@@ -148,14 +148,14 @@ function CharacterCustomizationGui:_layout()
 	local body_part_data = self._all_customizations[self._selected_upper_name]
 	self._body_part_title = self._root_panel:label({
 		x = nil,
-		y = nil,
-		w = 288,
 		wor_wrap = true,
 		wrap = true,
-		text = nil,
 		color = nil,
-		font = nil,
+		y = nil,
+		w = 288,
 		font_size = nil,
+		text = nil,
+		font = nil,
 		x = self._body_part_icon:x() + 48,
 		y = self._body_part_icon:y(),
 		text = self:translate(body_part_data.name, true),
@@ -164,14 +164,14 @@ function CharacterCustomizationGui:_layout()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._body_part_description = self._root_panel:label({
-		wrap = true,
+		font_size = nil,
 		text = nil,
+		wrap = true,
 		x = nil,
-		color = nil,
 		font = nil,
 		h = 448,
 		w = 352,
-		font_size = nil,
+		color = nil,
 		x = self._body_part_icon:x(),
 		text = self:translate(body_part_data.description, false),
 		font = tweak_data.gui.fonts.lato,
@@ -183,10 +183,10 @@ function CharacterCustomizationGui:_layout()
 
 	self._coord_center_y = 864
 	self._equip_button = self._root_panel:short_primary_button({
-		layer = nil,
-		text = nil,
-		visible = false,
 		name = "equip_button",
+		text = nil,
+		layer = nil,
+		visible = false,
 		x = 0,
 		on_click_callback = nil,
 		text = self:translate("character_customization_equip_button", true),
@@ -197,10 +197,10 @@ function CharacterCustomizationGui:_layout()
 	self._equip_button:set_center_y(self._coord_center_y)
 
 	self._equip_gold_button = self._root_panel:short_primary_gold_button({
-		layer = nil,
-		text = nil,
-		visible = false,
 		name = "equip_gold_button",
+		text = nil,
+		layer = nil,
+		visible = false,
 		x = 0,
 		on_click_callback = nil,
 		text = self:translate("character_customization_equip_button", true),
@@ -211,10 +211,10 @@ function CharacterCustomizationGui:_layout()
 	self._equip_gold_button:set_center_y(self._coord_center_y)
 
 	self._buy_button = self._root_panel:short_primary_gold_button({
-		layer = nil,
-		text = nil,
-		visible = false,
 		name = "buy_button",
+		text = nil,
+		layer = nil,
+		visible = false,
 		x = 0,
 		on_click_callback = nil,
 		text = self:translate("character_customization_buy_button", true),
@@ -226,16 +226,16 @@ function CharacterCustomizationGui:_layout()
 
 	self._info_label = self._root_panel:label({
 		name = "info_label",
-		text = nil,
 		x = 0,
-		word_wrap = true,
-		h = 60,
-		w = 520,
 		wrap = true,
 		layer = nil,
 		visible = false,
-		font = nil,
+		h = 60,
+		w = 520,
+		word_wrap = true,
 		font_size = nil,
+		text = nil,
+		font = nil,
 		text = self:translate("character_customization_insuficient_gold_label", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -245,14 +245,14 @@ function CharacterCustomizationGui:_layout()
 	self._info_label:set_center_y(self._coord_center_y)
 
 	self._gold_currency_label = self._root_panel:label({
-		layer = nil,
-		text = "",
-		visible = false,
-		color = nil,
-		name = "gold_currency_label",
-		font = nil,
-		x = 250,
 		font_size = nil,
+		text = "",
+		font = nil,
+		layer = nil,
+		name = "gold_currency_label",
+		color = nil,
+		x = 250,
+		visible = false,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		color = tweak_data.gui.colors.gold_orange,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -267,11 +267,11 @@ function CharacterCustomizationGui:_layout()
 
 	self._gold_currency_icon = self._root_panel:bitmap({
 		texture = nil,
-		layer = nil,
-		visible = false,
-		color = nil,
-		name = "gold_currency_icon",
 		texture_rect = nil,
+		visible = false,
+		layer = nil,
+		name = "gold_currency_icon",
+		color = nil,
 		x = 200,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		color = tweak_data.gui.colors.gold_orange,
@@ -284,9 +284,9 @@ function CharacterCustomizationGui:_layout()
 
 	self._gold_item_bought_icon = self._root_panel:bitmap({
 		texture = nil,
-		layer = nil,
-		visible = false,
 		texture_rect = nil,
+		visible = false,
+		layer = nil,
 		name = "gold_item_bought_icon",
 		x = 200,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -759,8 +759,8 @@ function CharacterCustomizationGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_customization_shoulder"
@@ -809,8 +809,8 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 	end
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = controller_legend,
 		keyboard = {
 			{
@@ -845,8 +845,8 @@ function CharacterCustomizationGui:bind_controller_inputs_buy()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_customization_shoulder",

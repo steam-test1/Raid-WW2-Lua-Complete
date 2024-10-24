@@ -586,8 +586,8 @@ function ControllerWrapperAxis:read_axis_btns(node)
 
 		if (child_name == "button" or child_name == "axis") and child.name and child.input then
 			self._btn_connections[child.name] = {
-				type = nil,
 				name = nil,
+				type = nil,
 				type = child_name,
 				name = child.input
 			}

@@ -452,9 +452,9 @@ function MissionManager:start_root_level_script()
 	if level then
 		local level_path = "levels/" .. tostring(level)
 		local mission_params = {
-			stage_name = "stage1",
 			activate_mission = nil,
 			file_path = nil,
+			stage_name = "stage1",
 			file_path = level_path .. "/mission",
 			activate_mission = mission
 		}

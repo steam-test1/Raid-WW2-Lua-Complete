@@ -17,8 +17,8 @@ function ControllerWrapperPC:init(manager, id, name, controller, setup, debug, s
 	}
 
 	ControllerWrapperPC.super.init(self, manager, id, name, {
-		gamepads = nil,
 		mouse = nil,
+		gamepads = nil,
 		keyboard = nil,
 		keyboard = Input:keyboard(),
 		mouse = Input:mouse(),

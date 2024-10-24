@@ -460,9 +460,9 @@ end
 
 function RaidMenuOptionsControls:on_click_default_controls()
 	local params = {
-		callback = nil,
 		message = nil,
 		title = nil,
+		callback = nil,
 		title = managers.localization:text("dialog_reset_controls_title"),
 		message = managers.localization:text("dialog_reset_controls_message"),
 		callback = function ()
@@ -539,8 +539,8 @@ function RaidMenuOptionsControls:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_options_controls_default_controller"

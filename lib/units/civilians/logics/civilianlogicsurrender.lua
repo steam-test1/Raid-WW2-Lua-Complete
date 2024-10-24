@@ -424,8 +424,8 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 				end
 			else
 				data.unit:brain():set_objective({
-					is_default = true,
 					alert_data = nil,
+					is_default = true,
 					type = "free",
 					alert_data = clone(alert_data)
 				})

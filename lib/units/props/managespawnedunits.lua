@@ -46,8 +46,8 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit, pos, rot)
 	end
 
 	local unit_entry = {
-		align_obj_name = nil,
 		unit = nil,
+		align_obj_name = nil,
 		align_obj_name = align_obj_name,
 		unit = spawn_unit
 	}
@@ -232,8 +232,8 @@ function ManageSpawnedUnits:spawn_prefab(prefab_nick, prefab_id, align_obj_name)
 
 	for i, spawn_unit in ipairs(spawn_units) do
 		local unit_entry = {
-			align_obj_name = nil,
 			unit = nil,
+			align_obj_name = nil,
 			align_obj_name = align_obj_name,
 			unit = spawn_unit
 		}

@@ -26,11 +26,11 @@ function FragGrenade:_setup_from_tweak_data()
 	self._targets_slotmask = managers.slot:get_mask("trip_mine_targets")
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
+		effect = nil,
+		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
 		feedback_range = nil,
-		effect = nil,
-		sound_event = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -86,18 +86,18 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		damage = nil,
-		user = nil,
-		killzone_range = nil,
-		push_units = true,
 		player_damage = 0,
+		ignore_unit = nil,
 		alert_radius = nil,
 		owner = nil,
 		range = nil,
-		ignore_unit = nil,
+		damage = nil,
 		collision_slotmask = nil,
 		hit_pos = nil,
+		user = nil,
 		curve_pow = nil,
+		killzone_range = nil,
+		push_units = true,
 		hit_pos = pos,
 		range = range,
 		collision_slotmask = slot_mask,
@@ -111,8 +111,20 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	})
 	local thrower_peer_id = self:get_thrower_peer_id()
 
-	if thrower_peer_id and results and results.count_cop_kills >= 5 then
-		self:_award_achievement_multi_kill(thrower_peer_id)
+	if thrower_peer_id and results then
+		if results.count_cop_kills >= 5 then
+			self:_award_achievement_multi_kill(thrower_peer_id)
+		end
+
+		if results.count_cop_kills > 0 then
+			for k, unit in pairs(hit_units) do
+				if unit:character_damage() and unit:character_damage():dead() and tweak_data.character[unit:base()._tweak_table].special_type and tweak_data.character[unit:base()._tweak_table].special_type == CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER then
+					self:_award_achievement_spotter_grenade(thrower_peer_id)
+
+					break
+				end
+			end
+		end
 	end
 
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
@@ -154,7 +166,23 @@ function FragGrenade:_detonate_with_clusters()
 end
 
 function FragGrenade:_award_achievement_multi_kill(thrower_peer_id)
+	Application:info("[FragGrenade:achievements] ach_kill_enemies_with_single_grenade_5")
+
 	local achievement_id = "ach_kill_enemies_with_single_grenade_5"
+
+	if thrower_peer_id == 1 then
+		managers.achievment:award(achievement_id)
+	else
+		local thrower_peer = managers.network:session():peer(thrower_peer_id)
+
+		managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+	end
+end
+
+function FragGrenade:_award_achievement_spotter_grenade(thrower_peer_id)
+	Application:info("[FragGrenade:achievements] ach_grenade_kill_spotter")
+
+	local achievement_id = "ach_grenade_kill_spotter"
 
 	if thrower_peer_id == 1 then
 		managers.achievment:award(achievement_id)

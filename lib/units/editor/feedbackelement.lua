@@ -136,9 +136,9 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, self:_effect_options()), "Select and above camera effect", "effect")
 	self:_build_value_number(panel, above_camera_effect_sizer, "above_camera_effect_distance", {
-		max = 1,
 		min = 0,
-		floats = 2
+		floats = 2,
+		max = 1
 	}, "A filter value to use with the range. A value of 1 means that the effect will be played whenever inside the range, a lower value means you need to be closer to the position.", "distance filter")
 end
 
@@ -155,8 +155,8 @@ end
 function FeedbackUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.above_camera_effect ~= "none" then
 		managers.editor:add_to_world_package({
-			continent = nil,
 			name = nil,
+			continent = nil,
 			category = "effects",
 			name = self._hed.above_camera_effect,
 			continent = self._unit:unit_data().continent

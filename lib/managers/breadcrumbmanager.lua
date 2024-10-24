@@ -4,18 +4,18 @@ BreadcrumbManager.CRUMB_ID_COUNT_MAX = 100000
 BreadcrumbManager.SLOT_CHARACTER = "character"
 BreadcrumbManager.SLOT_PROFILE = "profile"
 BreadcrumbManager.CATEGORY_NEW_RAID = {
-	identifier = "new_raid",
 	slot = nil,
+	identifier = "new_raid",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION = {
-	identifier = "consumable_mission",
 	slot = nil,
+	identifier = "consumable_mission",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_OPERATIONS = {
-	identifier = "operations",
 	slot = nil,
+	identifier = "operations",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_MISSIONS = {
@@ -27,14 +27,14 @@ BreadcrumbManager.CATEGORY_MISSIONS = {
 	}
 }
 BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_UPPER = {
-	identifier = nil,
 	slot = nil,
+	identifier = nil,
 	slot = BreadcrumbManager.SLOT_PROFILE,
 	identifier = CharacterCustomizationTweakData.PART_TYPE_UPPER
 }
 BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_LOWER = {
-	identifier = nil,
 	slot = nil,
+	identifier = nil,
 	slot = BreadcrumbManager.SLOT_PROFILE,
 	identifier = CharacterCustomizationTweakData.PART_TYPE_LOWER
 }
@@ -46,23 +46,23 @@ BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION = {
 	}
 }
 BreadcrumbManager.CATEGORY_WEAPON_PRIMARY = {
-	identifier = "weapon_primary",
 	slot = nil,
+	identifier = "weapon_primary",
 	slot = BreadcrumbManager.SLOT_CHARACTER
 }
 BreadcrumbManager.CATEGORY_WEAPON_SECONDARY = {
-	identifier = "weapon_secondary",
 	slot = nil,
+	identifier = "weapon_secondary",
 	slot = BreadcrumbManager.SLOT_CHARACTER
 }
 BreadcrumbManager.CATEGORY_WEAPON_MELEE = {
-	identifier = "weapon_melee",
 	slot = nil,
+	identifier = "weapon_melee",
 	slot = BreadcrumbManager.SLOT_CHARACTER
 }
 BreadcrumbManager.CATEGORY_WEAPON_UPGRADE = {
-	identifier = "weapon_upgrade",
 	slot = nil,
+	identifier = "weapon_upgrade",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_WEAPON = {
@@ -74,23 +74,23 @@ BreadcrumbManager.CATEGORY_WEAPON = {
 	}
 }
 BreadcrumbManager.CATEGORY_CAMP_CUSTOMIZATION = {
-	identifier = "camp_customization",
 	slot = nil,
+	identifier = "camp_customization",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_RANK_REWARD = {
-	identifier = "rank_reward",
 	slot = nil,
+	identifier = "rank_reward",
 	slot = BreadcrumbManager.SLOT_CHARACTER
 }
 BreadcrumbManager.CATEGORY_CHALLENGE_CARD_RAID = {
-	identifier = "challenge_card_raid",
 	slot = nil,
+	identifier = "challenge_card_raid",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_CHALLENGE_CARD_OPERATION = {
-	identifier = "challenge_card_operation",
 	slot = nil,
+	identifier = "challenge_card_operation",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
 BreadcrumbManager.CATEGORY_CARD = {
@@ -318,8 +318,8 @@ end
 
 function BreadcrumbManager:save_character_slot(data)
 	local state = {
-		version = nil,
 		slot_breadcrumbs = nil,
+		version = nil,
 		version = self.version,
 		slot_breadcrumbs = self._breadcrumbs[BreadcrumbManager.SLOT_CHARACTER]
 	}
@@ -346,8 +346,8 @@ end
 
 function BreadcrumbManager:save_profile_slot(data)
 	local state = {
-		version = nil,
 		profile_breadcrumbs = nil,
+		version = nil,
 		version = self.version,
 		profile_breadcrumbs = self._breadcrumbs[BreadcrumbManager.SLOT_PROFILE]
 	}

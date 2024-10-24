@@ -7,6 +7,7 @@ GlobalStateManager.EVENT_PRE_START_RAID = "system_pre_start_raid"
 GlobalStateManager.EVENT_START_RAID = "system_start_raid"
 GlobalStateManager.EVENT_END_RAID = "system_end_raid"
 GlobalStateManager.EVENT_END_TUTORIAL = "system_end_tutorial"
+GlobalStateManager.EVENT_LEVEL_LOADED = "system_level_loaded"
 GlobalStateManager.EVENT_RESTART_CAMP = "system_restart_camp"
 GlobalStateManager.EVENT_CHARACTER_CREATED = "system_character_created"
 GlobalStateManager.TYPE_BOOL = "bool"
@@ -19,32 +20,35 @@ function GlobalStateManager:init()
 
 	self:_parse_states()
 	self:add_listener("CCM_PRE_START_RAID", {
-		GlobalStateManager.EVENT_PRE_START_RAID
+		self.EVENT_PRE_START_RAID
 	}, callback(managers.challenge_cards, managers.challenge_cards, "system_pre_start_raid"))
 	self:add_listener("RM_START_RAID", {
-		GlobalStateManager.EVENT_START_RAID
+		self.EVENT_START_RAID
 	}, callback(managers.raid_menu, managers.raid_menu, "system_start_raid"))
 	self:add_listener("JM_START_MISSION", {
-		GlobalStateManager.EVENT_START_RAID
+		self.EVENT_START_RAID
 	}, callback(managers.raid_job, managers.raid_job, "external_start_mission"))
 	self:add_listener("JM_END_MISSION", {
-		GlobalStateManager.EVENT_END_RAID
+		self.EVENT_END_RAID
 	}, callback(managers.raid_job, managers.raid_job, "external_end_mission"))
 	self:add_listener("JM_END_TUTORIAL", {
-		GlobalStateManager.EVENT_END_TUTORIAL
+		self.EVENT_END_TUTORIAL
 	}, callback(managers.raid_job, managers.raid_job, "tutorial_ended"))
 	self:add_listener("OM_START_MISSION", {
-		GlobalStateManager.EVENT_START_RAID
+		self.EVENT_START_RAID
 	}, callback(managers.objectives, managers.objectives, "on_mission_start_callback"))
 	self:add_listener("WM_END_MISSION", {
-		GlobalStateManager.EVENT_END_RAID
+		self.EVENT_END_RAID
 	}, callback(managers.warcry, managers.warcry, "on_mission_end_callback"))
 	self:add_listener("TAI_END_MISSION", {
-		GlobalStateManager.EVENT_END_RAID
+		self.EVENT_END_RAID
 	}, callback(managers.criminals, managers.criminals, "on_mission_end_callback"))
 	self:add_listener("TAI_START_MISSION", {
-		GlobalStateManager.EVENT_START_RAID
+		self.EVENT_START_RAID
 	}, callback(managers.criminals, managers.criminals, "on_mission_start_callback"))
+	self:add_listener("AM_LEVEL_LOADED", {
+		self.EVENT_LEVEL_LOADED
+	}, callback(managers.achievment, managers.achievment, "on_level_loaded_callback"))
 end
 
 function GlobalStateManager:add_listener(key, events, clbk)
@@ -179,10 +183,10 @@ function GlobalStateManager:fire_event(flag_name)
 				self._next_hint_t = t + 6
 
 				managers.notification:add_notification({
-					shelf_life = 5,
 					id = "hud_waiting_for_player_dropin",
 					duration = 2,
 					text = nil,
+					shelf_life = 5,
 					text = managers.localization:text("hud_waiting_for_player_dropin")
 				})
 			end
@@ -262,16 +266,16 @@ function GlobalStateManager:get_all_global_states()
 	for id, data in pairs(self._states.global_init) do
 		local state = {
 			{
-				value = nil,
 				id = nil,
+				value = nil,
 				id = id,
 				value = data.value
 			}
 		}
 
 		table.insert(global_states, {
-			value = nil,
 			id = nil,
+			value = nil,
 			id = id,
 			value = data.value
 		})
@@ -296,16 +300,16 @@ function GlobalStateManager:save_game(data)
 	for id, data in pairs(self._states.global_init) do
 		local state = {
 			{
-				value = nil,
 				id = nil,
+				value = nil,
 				id = id,
 				value = data.value
 			}
 		}
 
 		table.insert(global_states, {
-			value = nil,
 			id = nil,
+			value = nil,
 			id = id,
 			value = data.value
 		})

@@ -10,11 +10,11 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
 
 	self._object = self._panel:panel({
-		y = nil,
-		x = nil,
 		visible = false,
 		h = nil,
 		w = nil,
+		y = nil,
+		x = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -22,13 +22,13 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	})
 	self._special_action_callback = self._params.special_action_callback
 	self._background = self._object:image({
+		texture = nil,
+		h = nil,
+		w = nil,
 		y = 0,
 		texture_rect = nil,
 		x = 0,
 		layer = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
 		w = CharacterSelectionGui.BUTTON_W,
 		h = CharacterSelectionGui.BUTTON_H,
 		texture = tweak_data.gui.icons.btn_list_rect.texture,
@@ -36,14 +36,14 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 		layer = self._object:layer()
 	})
 	self._icon = self._object:image({
-		y = 0,
-		texture_rect = nil,
-		x = 0,
-		layer = nil,
-		color = nil,
 		texture = nil,
 		h = 32,
 		w = 32,
+		y = 0,
+		texture_rect = nil,
+		x = 0,
+		color = nil,
+		layer = nil,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,
 		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
@@ -53,17 +53,17 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	self._icon:set_center(CharacterSelectionGui.BUTTON_W / 2, CharacterSelectionGui.BUTTON_H / 2)
 
 	self._label = self._object:label({
-		align = "center",
-		color = nil,
 		visible = false,
 		h = 25,
 		w = 116,
-		y = 0,
-		font_size = nil,
-		x = 0,
-		font = nil,
 		text = "",
 		vertical = "center",
+		x = 0,
+		align = "center",
+		y = 0,
+		font = nil,
+		color = nil,
+		font_size = nil,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.keybinding,
 		color = tweak_data.gui.colors.raid_black

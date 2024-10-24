@@ -232,10 +232,10 @@ function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	end
 
 	return {
-		forward = nil,
-		left = nil,
 		center = nil,
 		right = nil,
+		forward = nil,
+		left = nil,
 		left = ray_bipod_left,
 		right = ray_bipod_right,
 		center = ray_bipod_center,

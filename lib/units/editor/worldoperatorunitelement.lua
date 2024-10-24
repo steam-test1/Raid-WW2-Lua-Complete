@@ -66,11 +66,11 @@ function WorldOperatorUnitElement:draw_links_unselected(...)
 
 		if alive(unit) then
 			local params = {
+				to_unit = nil,
 				from_unit = nil,
 				b = 0.5,
 				g = 0,
 				r = 0,
-				to_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -89,11 +89,11 @@ function WorldOperatorUnitElement:draw_links_selected(...)
 
 		if alive(unit) then
 			local params = {
+				to_unit = nil,
 				from_unit = nil,
 				b = 0.5,
 				g = 0,
 				r = 0,
-				to_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			}

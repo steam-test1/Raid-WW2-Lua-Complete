@@ -43,14 +43,14 @@ end
 
 function HUDMultipleChoiceWheel:_create_panel(hud)
 	local panel_params = {
+		h = nil,
+		w = nil,
 		alpha = 0,
 		name = "multiple_choice_wheel_panel",
 		visible = false,
 		halign = "center",
 		layer = 1200,
 		valign = "top",
-		h = nil,
-		w = nil,
 		w = HUDMultipleChoiceWheel.W,
 		h = HUDMultipleChoiceWheel.H
 	}
@@ -59,11 +59,11 @@ end
 
 function HUDMultipleChoiceWheel:_create_background()
 	local background_params = {
+		h = nil,
+		w = nil,
 		texture_rect = nil,
 		name = "background",
 		texture = nil,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.BACKGROUND_IMAGE].texture_rect,
 		w = HUDMultipleChoiceWheel.W,
@@ -75,13 +75,13 @@ function HUDMultipleChoiceWheel:_create_background()
 	background:set_center_y(self._object:h() / 2)
 
 	local background_circle_params = {
+		h = nil,
+		w = nil,
 		texture_rect = nil,
 		name = "background_circle",
 		color = nil,
 		texture = nil,
 		layer = 10,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture_rect,
 		w = HUDMultipleChoiceWheel.WHEEL_RADIUS * 2,
@@ -94,6 +94,8 @@ function HUDMultipleChoiceWheel:_create_background()
 	background_circle:set_center_y(self._object:h() / 2)
 
 	local selection_arc_params = {
+		h = nil,
+		w = nil,
 		texture_rect = nil,
 		name = "selection_arc",
 		texture = nil,
@@ -101,8 +103,6 @@ function HUDMultipleChoiceWheel:_create_background()
 		layer = nil,
 		visible = false,
 		color = nil,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDMultipleChoiceWheel.CIRCLE_IMAGE),
@@ -124,9 +124,9 @@ end
 function HUDMultipleChoiceWheel:_create_pointer()
 	local pointer_params = {
 		texture_rect = nil,
-		name = "pointer",
-		layer = nil,
 		texture = nil,
+		layer = nil,
+		name = "pointer",
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture_rect,
 		layer = self._selection_arc:layer() + 1
@@ -297,8 +297,8 @@ function HUDMultipleChoiceWheel:_create_options()
 		local option = {
 			text = nil,
 			icon = nil,
-			dy = nil,
 			panel = nil,
+			dy = nil,
 			dx = nil,
 			panel = panel,
 			icon = icon,
@@ -321,11 +321,11 @@ end
 
 function HUDMultipleChoiceWheel:_create_separator_line(index, angle)
 	local separator_line_params = {
-		color = nil,
-		name = nil,
-		texture_rect = nil,
 		texture = nil,
+		texture_rect = nil,
 		rotation = nil,
+		name = nil,
+		color = nil,
 		name = "separator_line_" .. tostring(index),
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.LINE_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.LINE_IMAGE].texture_rect,
@@ -343,11 +343,11 @@ end
 
 function HUDMultipleChoiceWheel:_create_option(index, angle, range)
 	local panel = self._object:panel({
+		layer = nil,
 		alpha = 0,
 		name = nil,
 		halign = "center",
 		valign = "top",
-		layer = nil,
 		name = "panel_params_" .. tostring(index),
 		layer = self._selection_arc:layer() + 1
 	})
@@ -381,9 +381,9 @@ end
 function HUDMultipleChoiceWheel:_create_icon(index, parent)
 	local icon_params = {
 		texture_rect = nil,
-		name = nil,
-		color = nil,
 		texture = nil,
+		color = nil,
+		name = nil,
 		name = "icon_" .. tostring(self._option_data[index].id),
 		texture = tweak_data.gui.icons[self._option_data[index].icon].texture,
 		texture_rect = tweak_data.gui.icons[self._option_data[index].icon].texture_rect,
@@ -396,14 +396,14 @@ end
 
 function HUDMultipleChoiceWheel:_create_option_text(index, parent)
 	local option_text_params = {
-		font = nil,
 		name = nil,
-		color = nil,
+		text = nil,
 		vertical = "center",
 		align = "center",
+		color = nil,
 		layer = 5,
-		text = nil,
 		font_size = nil,
+		font = nil,
 		halign = "left",
 		valign = "top",
 		name = "text_" .. tostring(self._option_data[index].id),

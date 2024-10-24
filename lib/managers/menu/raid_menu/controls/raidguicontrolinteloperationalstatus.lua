@@ -12,12 +12,12 @@ end
 function RaidGUIControlIntelOperationalStatus:_layout()
 	self._bg_image = self._object:bitmap({
 		h = nil,
-		texture = nil,
-		texture_rect = nil,
 		w = nil,
 		layer = nil,
 		y = 0,
 		x = 0,
+		texture = nil,
+		texture_rect = nil,
 		layer = self._object:layer() + 1,
 		w = tweak_data.gui.icons.intel_table_newspapers.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_newspapers.texture_rect[4],
@@ -25,34 +25,34 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 		texture_rect = tweak_data.gui.icons.intel_table_newspapers.texture_rect
 	})
 	self._update_date = self._object:text({
+		font_size = nil,
+		w = 192,
+		layer = nil,
+		y = 112,
+		x = 96,
 		vertical = "center",
 		font = nil,
 		align = "left",
 		text = "",
 		h = 32,
 		color = nil,
-		font_size = nil,
-		w = 192,
-		layer = nil,
-		y = 112,
-		x = 96,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.intel_newspapers_text
 	})
 	self._update_person = self._object:text({
+		font_size = nil,
+		w = 192,
+		layer = nil,
+		y = 112,
+		x = 96,
 		vertical = "center",
 		font = nil,
 		align = "right",
 		text = "",
 		h = 32,
 		color = nil,
-		font_size = nil,
-		w = 192,
-		layer = nil,
-		y = 112,
-		x = 96,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
@@ -63,13 +63,13 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 
 	local content_panel_scrollable_area_params = {
 		h = 512,
-		name = "content_panel_scrollable_area",
-		scroll_step = 19,
-		scrollbar_width = 10,
 		w = 576,
 		layer = nil,
 		y = 208,
 		x = 256,
+		scroll_step = 19,
+		name = "content_panel_scrollable_area",
+		scrollbar_width = 10,
 		layer = self._object:layer() + 2
 	}
 	self.content_panel_scrollable_area = self._object:scrollable_area(content_panel_scrollable_area_params)
@@ -86,17 +86,17 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	self.content_panel_scrollable_area:setup_scroll_area()
 
 	self._title = self._content_panel:text({
+		font_size = nil,
+		w = nil,
+		layer = nil,
+		y = 0,
+		x = 0,
 		vertical = "center",
 		font = nil,
 		align = "center",
 		text = "",
 		wrap = true,
 		color = nil,
-		font_size = nil,
-		w = nil,
-		layer = nil,
-		y = 0,
-		x = 0,
 		w = self._content_panel:w(),
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -104,17 +104,17 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._text = self._content_panel:text({
+		font_size = nil,
+		w = nil,
+		layer = nil,
+		y = 0,
+		x = 0,
 		vertical = "top",
 		font = nil,
 		align = "left",
 		text = "",
 		wrap = true,
 		color = nil,
-		font_size = nil,
-		w = nil,
-		layer = nil,
-		y = 0,
-		x = 0,
 		w = self._content_panel:w(),
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -123,12 +123,12 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	})
 	self._title_image = self._content_panel:bitmap({
 		h = 288,
-		texture = nil,
-		texture_rect = nil,
 		w = 512,
 		layer = nil,
 		y = 0,
 		x = 32,
+		texture = nil,
+		texture_rect = nil,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_newspapers.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_newspapers.texture_rect

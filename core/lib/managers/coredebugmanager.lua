@@ -2069,8 +2069,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			counter = nil,
 			func = nil,
+			counter = nil,
 			func = f,
 			counter = "find_" .. find_type
 		})
@@ -2080,8 +2080,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			counter = nil,
 			func = nil,
+			counter = nil,
 			func = f,
 			counter = "find_" .. find_type .. "_physics"
 		})
@@ -2092,8 +2092,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				counter = nil,
 				func = nil,
+				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect"
 			})
@@ -2103,8 +2103,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				counter = nil,
 				func = nil,
+				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect_physics"
 			})
@@ -2115,8 +2115,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			counter = nil,
 			func = nil,
+			counter = nil,
 			func = f,
 			counter = "find_" .. find_type
 		})
@@ -2126,8 +2126,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			counter = nil,
 			func = nil,
+			counter = nil,
 			func = f,
 			counter = "find_" .. find_type .. "_physics"
 		})
@@ -2138,8 +2138,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				counter = nil,
 				func = nil,
+				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect"
 			})
@@ -2149,8 +2149,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				counter = nil,
 				func = nil,
+				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect_physics"
 			})
@@ -2182,8 +2182,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	end
 
 	table.insert(list, {
-		counter = "bundlecast",
 		func = nil,
+		counter = "bundlecast",
 		func = f
 	})
 
@@ -2192,8 +2192,8 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	end
 
 	table.insert(list, {
-		counter = "spherecast",
 		func = nil,
+		counter = "spherecast",
 		func = f
 	})
 
@@ -2774,10 +2774,10 @@ function MacroDebug:set_draw_unit_enabled(unit_name, is_enabled, draw_camera_lin
 		local disabled_blue = (red or 1) * disabled_color_scale
 		local disabled_pen = Draw:pen(Color(disabled_red, disabled_green, disabled_blue), draw_on_top and "no_z" or "normal")
 		local data = {
-			disabled_pen = nil,
 			draw_camera_line = nil,
 			pen = nil,
 			draw_unit_list = nil,
+			disabled_pen = nil,
 			draw_unit_list = draw_unit_list,
 			draw_camera_line = draw_camera_line,
 			pen = pen,
@@ -2871,12 +2871,12 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 					end
 
 					sub_map[unit_file] = {
-						object = nil,
 						unit = nil,
 						sync = nil,
 						slot = nil,
 						sequence = nil,
 						original_slot = nil,
+						object = nil,
 						unit = unit_file_path,
 						object = object_file_path,
 						sequence = sequence_file_path,
@@ -3107,16 +3107,16 @@ end
 MemoryDebug = MemoryDebug or class(BaseDebug)
 MemoryDebug.CALC_TYPE_FUNC_MAP = DebugManager.CALC_TYPE_FUNC_MAP or {
 	number = "add_calc_number",
-	userdata = "add_calc_userdata",
-	string = "add_calc_string",
 	table = "add_calc_table",
+	userdata = "add_calc_userdata",
 	boolean = "add_calc_boolean",
+	string = "add_calc_string",
 	function = "add_calc_function"
 }
 MemoryDebug.PRIMITIVE_VALUE_TYPE_MAP = DebugManager.PRIMITIVE_VALUE_TYPE_MAP or {
 	number = true,
-	string = true,
-	boolean = true
+	boolean = true,
+	string = true
 }
 
 function MemoryDebug:extensions()
@@ -3133,9 +3133,9 @@ function MemoryDebug:extensions()
 			local class_name_string = CoreDebug.class_name(extension_class, _M)
 			local data = extension_class_map[class_name_string]
 			data = data or {
-				unit_list = nil,
 				count = 0,
 				unit_count = nil,
+				unit_list = nil,
 				unit_count = {},
 				unit_list = {}
 			}
@@ -3196,9 +3196,9 @@ function MemoryDebug:traverse_instances(func, seen_map, map)
 	seen_map = seen_map or {}
 	local populate_map = {}
 	local info_map = {
+		count = 0,
 		found_count = 0,
-		seen_count = 0,
-		count = 0
+		seen_count = 0
 	}
 
 	if map then
@@ -3533,8 +3533,8 @@ function ConsoleDebug:add_text(text, color)
 	local formatted_text = string.gsub(tostring(text), "\t", "    ")
 	local text_data = {
 		color = nil,
-		text = nil,
 		time = nil,
+		text = nil,
 		time = TimerManager:wall():time(),
 		text = formatted_text,
 		color = color

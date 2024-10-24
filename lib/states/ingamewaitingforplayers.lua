@@ -156,8 +156,8 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 				if btn_skip_press and not self._skip_data then
 					self._skip_data = {
-						total = 1,
-						current = 0
+						current = 0,
+						total = 1
 					}
 				elseif not btn_skip_press and self._skip_data then
 					self._skip_data = nil
@@ -299,13 +299,13 @@ function IngameWaitingForPlayersState:show_intro_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		font = nil,
-		color = nil,
-		font_size = nil,
-		alpha = 0,
-		layer = nil,
 		text = nil,
+		alpha = 0,
+		color = nil,
+		layer = nil,
+		font = nil,
 		name = "press_any_key_prompt",
+		font_size = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

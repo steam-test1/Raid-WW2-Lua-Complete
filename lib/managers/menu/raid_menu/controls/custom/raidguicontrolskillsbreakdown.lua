@@ -48,16 +48,16 @@ end
 
 function RaidGUIControlSkillsBreakdown:_create_skills_label()
 	self._skills_label = self._object:text({
-		font = nil,
-		text = nil,
-		h = nil,
-		w = nil,
-		vertical = "center",
+		x = nil,
+		name = "skills_label",
 		color = nil,
 		font_size = nil,
-		name = "skills_label",
+		font = nil,
 		y = nil,
-		x = nil,
+		h = nil,
+		vertical = "center",
+		text = nil,
+		w = nil,
 		x = RaidGUIControlSkillsBreakdown.LABEL_X,
 		y = RaidGUIControlSkillsBreakdown.LABEL_Y,
 		w = RaidGUIControlSkillsBreakdown.DEFAULT_W,
@@ -71,9 +71,9 @@ end
 
 function RaidGUIControlSkillsBreakdown:_create_skills_panel()
 	self._skills_panel = self._object:panel({
-		h = nil,
-		name = "skills_panel",
 		y = nil,
+		name = "skills_panel",
+		h = nil,
 		y = RaidGUIControlSkillsBreakdown.LABEL_H + RaidGUIControlSkillsBreakdown.LABEL_PADDING_DOWN,
 		h = self._object:h() - RaidGUIControlSkillsBreakdown.LABEL_H - RaidGUIControlSkillsBreakdown.LABEL_PADDING_DOWN
 	})
@@ -103,10 +103,10 @@ function RaidGUIControlSkillsBreakdown:_create_skill_progressions(params)
 			local id = skill_data.id
 			local icon = tweak_data.skilltree:get_skill_icon_tiered(id)
 			local item = self._skills_panel:create_custom_control(RaidGUIControlSkillProgression, {
-				w = nil,
-				h = nil,
-				name = nil,
 				y = nil,
+				name = nil,
+				h = nil,
+				w = nil,
 				x = nil,
 				name = "skill_progression_" .. id,
 				x = item_offset * (i_horizontal - 1),

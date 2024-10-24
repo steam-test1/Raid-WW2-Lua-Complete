@@ -177,8 +177,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	managers.statistics:shot_fired({
-		hit = nil,
 		weapon_unit = nil,
+		hit = nil,
 		hit = result.hit_enemy,
 		weapon_unit = self._unit
 	})

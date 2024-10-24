@@ -50,11 +50,11 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0,
-				to_unit = nil,
 				from_unit = nil,
 				b = 0,
 				g = 0.75,
+				r = 0,
+				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

@@ -1,84 +1,84 @@
 DialogManager = DialogManager or class()
 DialogManager.MAX_CASE_PLAYER_NUM = 4
 DialogManager.MRS_WHITE = {
+	sound_switch = "mrs_white",
 	char = "MRS_WHITE",
-	unit = nil,
-	sound_switch = "mrs_white"
+	unit = nil
 }
 DialogManager.NIGHT_WITCH = {
+	sound_switch = "night_whitch",
 	char = "NIGHT_WITCH",
-	unit = nil,
-	sound_switch = "night_whitch"
+	unit = nil
 }
 DialogManager.FRANZ = {
+	sound_switch = "franz",
 	char = "FRANZ",
-	unit = nil,
-	sound_switch = "franz"
+	unit = nil
 }
 DialogManager.BOAT_DRIVER_BRIDGE = {
+	sound_switch = "boat_driver_bridge",
 	char = "BOAT_DRIVER_BRIDGE",
-	unit = nil,
-	sound_switch = "boat_driver_bridge"
+	unit = nil
 }
 DialogManager.TRUCK_DRIVER_BRIDGE = {
+	sound_switch = "truck_driver_bridge",
 	char = "TRUCK_DRIVER_BRIDGE",
-	unit = nil,
-	sound_switch = "truck_driver_bridge"
+	unit = nil
 }
 DialogManager.RESIST_PILOT_BANK = {
+	sound_switch = "resist_pilot_bank",
 	char = "RESIST_PILOT_BANK",
-	unit = nil,
-	sound_switch = "resist_pilot_bank"
+	unit = nil
 }
 DialogManager.TRAIN_ENGINEER = {
+	sound_switch = "train_engineer",
 	char = "TRAIN_ENGINEER",
-	unit = nil,
-	sound_switch = "train_engineer"
+	unit = nil
 }
 DialogManager.CASTLE_TRUCK_DRIVER = {
+	sound_switch = "castle_truck_driver",
 	char = "CASTLE_TRUCK_DRIVER",
-	unit = nil,
-	sound_switch = "castle_truck_driver"
+	unit = nil
 }
 DialogManager.MINIRAID2_TRUCK_DRIVER = {
+	sound_switch = "miniraid2_truck_driver",
 	char = "MINIRAID2_TRUCK_DRIVER",
-	unit = nil,
-	sound_switch = "miniraid2_truck_driver"
+	unit = nil
 }
 DialogManager.BANK_TRUCK_DRIVER = {
+	sound_switch = "bank_truck_driver",
 	char = "BANK_TRUCK_DRIVER",
-	unit = nil,
-	sound_switch = "bank_truck_driver"
+	unit = nil
 }
 DialogManager.DR_REINHARDT = {
+	sound_switch = "dr_reinhardt",
 	char = "DR_REINHARDT",
-	unit = nil,
-	sound_switch = "dr_reinhardt"
+	unit = nil
 }
 DialogManager.TANK_GENERAL = {
+	sound_switch = "tank_general",
 	char = "TANK_GENERAL",
-	unit = nil,
-	sound_switch = "tank_general"
+	unit = nil
 }
 DialogManager.RUSSIAN_GENERAL = {
+	sound_switch = "russian_general",
 	char = "RUSSIAN_GENERAL",
-	unit = nil,
-	sound_switch = "russian_general"
+	unit = nil
 }
 DialogManager.RUSSIAN_GENERAL2 = {
+	sound_switch = "russian_general2",
 	char = "RUSSIAN_GENERAL2",
-	unit = nil,
-	sound_switch = "russian_general2"
+	unit = nil
 }
 DialogManager.MALE_SPY = {
+	sound_switch = "male_spy",
 	char = "MALE_SPY",
-	unit = nil,
-	sound_switch = "male_spy"
+	unit = nil
 }
 DialogManager.FEMALE_SPY = {
+	sound_switch = "female_spy",
 	char = "FEMALE_SPY",
-	unit = nil,
-	sound_switch = "female_spy"
+	unit = nil
 }
 DialogManager.CHARS = {
 	DialogManager.MRS_WHITE,
@@ -645,13 +645,13 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._dialog_list[node.id] = {
-				priority = nil,
-				string_id = nil,
-				chance = nil,
+				sound = nil,
 				character = nil,
 				id = nil,
-				sound = nil,
+				chance = nil,
 				file_name = nil,
+				priority = nil,
+				string_id = nil,
 				id = node.id,
 				character = node.character,
 				sound = node.sound,
@@ -714,9 +714,9 @@ function DialogManager:_parse_line_node(node)
 
 	return {
 		delay = nil,
+		character = nil,
 		sound = nil,
 		string_id = nil,
-		character = nil,
 		sound = sound,
 		character = node.character,
 		string_id = node.string_id,
@@ -727,9 +727,9 @@ end
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
 	local case_node = {
+		lines = nil,
 		id = nil,
 		players_no = nil,
-		lines = nil,
 		lines = {},
 		id = node.id,
 		players_no = node.players

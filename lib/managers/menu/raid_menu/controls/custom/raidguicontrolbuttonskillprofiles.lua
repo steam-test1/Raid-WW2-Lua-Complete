@@ -28,12 +28,12 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 	local icon_offset = on_controller and self.CONTROLLER_ICON_OFFSET or 0
 	local background_data = tweak_data.gui:get_full_gui_data(self.BACKGROUND_ICON)
 	self._background = self._object:bitmap({
-		name = "background",
-		color = nil,
-		texture_rect = nil,
 		texture = nil,
 		h = nil,
 		w = nil,
+		name = "background",
+		color = nil,
+		texture_rect = nil,
 		w = params.w,
 		h = params.h,
 		texture = background_data.texture,
@@ -42,13 +42,13 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 	})
 	local icon_data = tweak_data.gui:get_full_gui_data(self.ICON)
 	self._icon = self._object:bitmap({
-		name = "arrow_icon",
-		layer = nil,
-		color = nil,
-		texture_rect = nil,
 		texture = nil,
 		h = nil,
 		w = nil,
+		layer = nil,
+		name = "arrow_icon",
+		color = nil,
+		texture_rect = nil,
 		w = params.w * self.ICON_UNSELECTED_SCALE,
 		h = params.w * self.ICON_UNSELECTED_SCALE,
 		texture = icon_data.texture,
@@ -60,8 +60,9 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 	self._icon:set_center(self._background:center_x(), self._background:center_y() - icon_offset)
 
 	self._controller_button = self._object:label({
-		visible = nil,
 		vertical = "bottom",
+		layer = nil,
+		visible = nil,
 		color = nil,
 		align = "center",
 		font_size = nil,
@@ -69,7 +70,6 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 		x = 2,
 		name = "controller_switch_button",
 		text = nil,
-		layer = nil,
 		text = self.CONTROLLER_BUTTON,
 		font = self.CONTROLLER_FONT,
 		font_size = self.CONTROLLER_FONT_SIZE,

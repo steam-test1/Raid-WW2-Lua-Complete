@@ -82,10 +82,10 @@ function ImageBoxGui:_create_image_box(image_config)
 	scroll_down_indicator_arrow:set_leftbottom(scroll_panel:right() + 2, scroll_down_indicator_shade:bottom() - 8)
 
 	local image_panel = main:panel({
-		w = nil,
 		name = "image_panel",
 		h = nil,
 		layer = nil,
+		w = nil,
 		w = image_width,
 		h = image_height,
 		layer = image_layer
@@ -117,11 +117,11 @@ function ImageBoxGui:_create_image_box(image_config)
 
 	if image_video then
 		local image = image_panel:video({
+			h = nil,
+			blend_mode = nil,
 			w = nil,
 			video = nil,
 			loop = nil,
-			blend_mode = nil,
-			h = nil,
 			video = image_video,
 			w = image_width,
 			h = image_height,
@@ -154,11 +154,11 @@ function ImageBoxGui:_create_image_box(image_config)
 
 			if type == "rect" then
 				new_shape = image_panel:rect({
-					w = nil,
-					blend_mode = nil,
 					h = nil,
 					color = nil,
 					layer = nil,
+					w = nil,
+					blend_mode = nil,
 					color = shape.color or Color.white,
 					w = shape.width or shape.w or 0,
 					h = shape.height or shape.h or 0,
@@ -167,12 +167,12 @@ function ImageBoxGui:_create_image_box(image_config)
 				})
 			elseif type == "bitmap" then
 				new_shape = image_panel:bitmap({
-					w = nil,
-					blend_mode = nil,
-					texture = nil,
 					h = nil,
 					color = nil,
 					layer = nil,
+					w = nil,
+					blend_mode = nil,
+					texture = nil,
 					texture = shape.texture,
 					color = shape.color or Color.white,
 					w = shape.width or shape.w or 0,
@@ -206,11 +206,11 @@ function ImageBoxGui:request_texture(texture_path, panel, keep_aspect_ratio, ble
 	end
 
 	local texture_count = managers.menu_component:request_texture(texture_path, callback(self, self, "texture_done_clbk", {
-		keep_aspect_ratio = nil,
-		panel = nil,
 		blend_mode = nil,
-		render_template = nil,
 		layer = nil,
+		panel = nil,
+		keep_aspect_ratio = nil,
+		render_template = nil,
 		panel = panel,
 		blend_mode = blend_mode,
 		layer = layer,
@@ -252,11 +252,11 @@ function ImageBoxGui:texture_done_clbk(params, texture_ids)
 	end
 
 	local image = panel:bitmap({
+		layer = nil,
 		name = nil,
 		blend_mode = nil,
 		texture = nil,
 		render_template = nil,
-		layer = nil,
 		name = name,
 		texture = texture_ids,
 		blend_mode = blend_mode,

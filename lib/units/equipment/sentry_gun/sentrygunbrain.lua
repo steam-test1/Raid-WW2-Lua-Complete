@@ -416,10 +416,10 @@ function SentryGunBrain:_select_focus_attention(t)
 	if current_focus ~= best_focus_attention then
 		if best_focus_attention then
 			local attention_data = {
-				u_key = nil,
-				unit = nil,
 				handler = nil,
+				u_key = nil,
 				reaction = nil,
+				unit = nil,
 				unit = best_focus_attention.unit,
 				u_key = best_focus_attention.u_key,
 				handler = best_focus_attention.handler,
@@ -559,8 +559,8 @@ function SentryGunBrain:_upd_fire(t)
 				self._allow_turret_abandon = true
 
 				managers.dialog:queue_dialog("player_gen_mg_under_fire", {
-					position = nil,
-					skip_idle_check = true
+					skip_idle_check = true,
+					position = nil
 				})
 			end
 		end

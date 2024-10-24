@@ -223,9 +223,9 @@ function ScriptGraph:_load_node_info(node)
 				for inf in node_info:children() do
 					if inf:name() == "connection" then
 						table.insert(connection, {
+							id = nil,
 							desc = nil,
 							slot = nil,
-							id = nil,
 							id = assert(inf:parameter("id")),
 							slot = assert(inf:parameter("slot")),
 							desc = assert(inf:parameter("desc"))
@@ -242,8 +242,8 @@ function ScriptGraph:_load_node_info(node)
 				table.insert(info.out_slot_names, name)
 
 				info.out_slots[name] = {
-					col = nil,
 					con = nil,
+					col = nil,
 					con = connection,
 					col = color
 				}

@@ -57,10 +57,10 @@ function MenuModInfoGui:setup()
 	})
 	panel:bitmap({
 		h = nil,
-		name = "blur",
+		layer = -1,
 		render_template = "VertexColorTexturedBlur3D",
 		texture = "guis/textures/test_blur_df",
-		layer = -1,
+		name = "blur",
 		w = nil,
 		w = panel:w(),
 		h = panel:h()
@@ -114,10 +114,10 @@ function MenuModInfoGui:set_mod_info(item)
 	})
 	local title = self.safe_rect_panel:text({
 		text = nil,
-		name = "info_title",
+		layer = 1,
 		font_size = nil,
 		font = nil,
-		layer = 1,
+		name = "info_title",
 		text = managers.localization:to_upper_text("menu_mods_info_title", {
 			mod = nil,
 			mod = mod_name
@@ -131,12 +131,12 @@ function MenuModInfoGui:set_mod_info(item)
 	if mod_data then
 		local text = conflicted_panel:text({
 			text = nil,
-			w = nil,
-			font_size = nil,
-			font = nil,
 			layer = 1,
-			x = 10,
+			font_size = nil,
 			y = 0,
+			font = nil,
+			x = 10,
+			w = nil,
 			text = managers.localization:to_upper_text("menu_mods_conflict_title"),
 			font = self.medium_font,
 			font_size = self.medium_font_size,
@@ -153,12 +153,12 @@ function MenuModInfoGui:set_mod_info(item)
 
 		local text = modded_panel:text({
 			text = nil,
-			w = nil,
-			font_size = nil,
-			font = nil,
 			layer = 1,
-			x = 10,
+			font_size = nil,
 			y = 0,
+			font = nil,
+			x = 10,
+			w = nil,
 			text = managers.localization:to_upper_text("menu_mods_modded_title"),
 			font = self.medium_font,
 			font_size = self.medium_font_size,
@@ -189,13 +189,13 @@ function MenuModInfoGui:set_mod_info(item)
 			else
 				text = modded_panel:text({
 					text = nil,
-					w = nil,
-					font_size = nil,
-					wrap = true,
-					font = nil,
 					layer = 1,
-					x = 20,
+					font_size = nil,
 					y = nil,
+					font = nil,
+					x = 20,
+					w = nil,
+					wrap = true,
 					text = path,
 					font = self.small_font,
 					font_size = self.small_font_size,
@@ -224,13 +224,13 @@ function MenuModInfoGui:set_mod_info(item)
 		for _, mod in ipairs(sorted_conflicts) do
 			text = conflicted_panel:text({
 				text = nil,
-				w = nil,
-				font_size = nil,
-				wrap = true,
-				font = nil,
 				layer = 1,
-				x = 20,
+				font_size = nil,
 				y = nil,
+				font = nil,
+				x = 20,
+				w = nil,
+				wrap = true,
 				text = utf8.to_upper(mod) .. ":",
 				font = self.small_font,
 				font_size = self.small_font_size,
@@ -246,13 +246,13 @@ function MenuModInfoGui:set_mod_info(item)
 			for _, path in ipairs(conflicted_mods[mod]) do
 				text = conflicted_panel:text({
 					text = nil,
-					w = nil,
-					font_size = nil,
-					wrap = true,
-					font = nil,
 					layer = 1,
-					x = 25,
+					font_size = nil,
 					y = nil,
+					font = nil,
+					x = 25,
+					w = nil,
+					wrap = true,
 					text = path,
 					font = self.small_font,
 					font_size = self.small_font_size,
@@ -312,11 +312,11 @@ function MenuModInfoGui:set_mod_info(item)
 			local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
 			local scroll_up_indicator_arrow = self._scroll_bar_panel:bitmap({
 				blend_mode = "add",
-				name = "scroll_up_indicator_arrow",
-				color = nil,
-				texture_rect = nil,
-				texture = nil,
 				layer = 2,
+				texture_rect = nil,
+				color = nil,
+				texture = nil,
+				name = "scroll_up_indicator_arrow",
 				texture = texture,
 				texture_rect = rect,
 				color = Color.white
@@ -327,12 +327,12 @@ function MenuModInfoGui:set_mod_info(item)
 			local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
 			local scroll_down_indicator_arrow = self._scroll_bar_panel:bitmap({
 				blend_mode = "add",
+				layer = 2,
+				texture_rect = nil,
+				rotation = 180,
+				texture = nil,
 				name = "scroll_down_indicator_arrow",
 				color = nil,
-				texture_rect = nil,
-				texture = nil,
-				layer = 2,
-				rotation = 180,
 				texture = texture,
 				texture_rect = rect,
 				color = Color.white
@@ -344,8 +344,8 @@ function MenuModInfoGui:set_mod_info(item)
 			local bar_h = scroll_down_indicator_arrow:top() - scroll_up_indicator_arrow:bottom()
 
 			self._scroll_bar_panel:rect({
-				y = nil,
 				color = nil,
+				y = nil,
 				h = nil,
 				w = 4,
 				alpha = 0.05,

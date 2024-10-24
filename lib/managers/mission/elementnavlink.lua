@@ -55,12 +55,12 @@ ElementNavLink._HASTES = {
 	"run"
 }
 ElementNavLink._DEFAULT_VALUES = {
+	path_style = 1,
+	ai_group = 1,
 	interaction_voice = 1,
 	chance_inc = 0,
 	base_chance = 1,
-	interval = 3,
-	path_style = 1,
-	ai_group = 1
+	interval = 3
 }
 
 function ElementNavLink:init(...)
@@ -165,8 +165,8 @@ function ElementNavLink:clbk_objective_administered(unit)
 			managers.navigation:unreserve_pos(unit_rsrv)
 		else
 			unit_rsrv = {
-				radius = 30,
 				position = nil,
+				radius = 30,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
 			self._pos_rsrv[unit:key()] = unit_rsrv
@@ -234,8 +234,8 @@ end
 function ElementNavLink:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
-			radius = 30,
 			position = nil,
+			radius = 30,
 			position = self._values.position
 		}
 		local pos_rsrv = self._tmp_pos_rsrv
@@ -307,26 +307,26 @@ function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		stance = nil,
-		pose = nil,
-		forced = nil,
-		attitude = nil,
+		followup_SO = nil,
+		interrupt_dis = nil,
 		interaction_voice = nil,
+		type = "act",
+		element = nil,
+		interrupt_health = nil,
 		scan = nil,
-		path_style = nil,
+		haste = nil,
+		attitude = nil,
+		pose = nil,
+		rot = nil,
+		pos = nil,
+		stance = nil,
+		forced = nil,
 		trigger_on = nil,
+		path_style = nil,
 		verification_clbk = nil,
 		complete_clbk = nil,
 		fail_clbk = nil,
 		action_start_clbk = nil,
-		followup_SO = nil,
-		type = "act",
-		element = nil,
-		haste = nil,
-		interrupt_health = nil,
-		interrupt_dis = nil,
-		rot = nil,
-		pos = nil,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -351,19 +351,19 @@ function ElementNavLink:get_objective(instigator)
 
 	if self._values.so_action then
 		action = {
-			align_sync = true,
-			needs_full_blend = true,
 			blocks = nil,
 			body_part = 1,
 			variant = nil,
 			type = "act",
+			align_sync = true,
+			needs_full_blend = true,
 			variant = self._values.so_action,
 			blocks = {
+				action = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				light_hurt = -1,
-				action = -1
+				light_hurt = -1
 			}
 		}
 		objective.type = "act"

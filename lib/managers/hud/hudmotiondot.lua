@@ -123,11 +123,11 @@ end
 
 function HUDMotionDot:_create_icon(name, icon)
 	local icon_params = {
-		name = nil,
+		valign = "center",
+		visible = false,
 		texture = nil,
 		halign = "center",
-		visible = false,
-		valign = "center",
+		name = nil,
 		texture_rect = nil,
 		name = name,
 		texture = tweak_data.gui.icons[icon].texture,

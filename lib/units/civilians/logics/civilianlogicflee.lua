@@ -197,10 +197,10 @@ function CivilianLogicFlee.update(data)
 			if not my_data.in_cover or my_data.in_cover ~= best_cover then
 				if not unit:anim_data().panic then
 					local action_data = {
-						clamp_to_graph = true,
-						type = "act",
 						variant = "panic",
-						body_part = 1
+						body_part = 1,
+						clamp_to_graph = true,
+						type = "act"
 					}
 
 					data.unit:brain():action_request(action_data)
@@ -338,10 +338,10 @@ function CivilianLogicFlee.on_alert(data, alert_data)
 		return
 	elseif anim_data.peaceful or data.unit:movement():stance_name() == "ntl" then
 		local action_data = {
-			clamp_to_graph = true,
-			type = "act",
 			variant = "panic",
-			body_part = 1
+			body_part = 1,
+			clamp_to_graph = true,
+			type = "act"
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -368,10 +368,10 @@ function CivilianLogicFlee.on_alert(data, alert_data)
 		return
 	elseif anim_data.react or anim_data.drop then
 		local action_data = {
-			clamp_to_graph = true,
-			type = "act",
 			variant = "panic",
-			body_part = 1
+			body_part = 1,
+			clamp_to_graph = true,
+			type = "act"
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -467,10 +467,10 @@ function CivilianLogicFlee.post_react_alert_clbk(shait, params)
 
 	if anim_data.react or anim_data.drop then
 		local action_data = {
-			clamp_to_graph = true,
-			type = "act",
 			variant = "panic",
-			body_part = 1
+			body_part = 1,
+			clamp_to_graph = true,
+			type = "act"
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -603,10 +603,10 @@ function CivilianLogicFlee._find_hide_cover(data)
 	if cover then
 		if not data.unit:anim_data().panic then
 			local action_data = {
-				clamp_to_graph = true,
-				type = "act",
 				variant = "panic",
-				body_part = 1
+				body_part = 1,
+				clamp_to_graph = true,
+				type = "act"
 			}
 
 			data.unit:brain():action_request(action_data)
@@ -620,10 +620,10 @@ function CivilianLogicFlee._find_hide_cover(data)
 		CopLogicBase._reset_attention(data)
 	elseif data.unit:anim_data().react or data.unit:anim_data().halt then
 		local action_data = {
-			clamp_to_graph = true,
-			type = "act",
 			variant = "panic",
-			body_part = 1
+			body_part = 1,
+			clamp_to_graph = true,
+			type = "act"
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -657,9 +657,9 @@ function CivilianLogicFlee._start_moving_to_cover(data, my_data)
 
 	local new_action_data = {
 		variant = "run",
-		type = "walk",
-		nav_path = nil,
 		body_part = 2,
+		nav_path = nil,
+		type = "walk",
 		nav_path = my_data.flee_path
 	}
 	my_data.advancing = data.unit:brain():action_request(new_action_data)
@@ -763,11 +763,11 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 		destroy_clbk_key = false,
 		rot = nil,
 		follow_unit = nil,
-		type = "act",
-		action_duration = nil,
-		complete_clbk = nil,
-		action = nil,
 		pos = nil,
+		action_duration = nil,
+		action = nil,
+		type = "act",
+		complete_clbk = nil,
 		nav_seg = nil,
 		fail_clbk = nil,
 		follow_unit = data.unit,
@@ -777,10 +777,10 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 		fail_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_failed", data),
 		complete_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_completed", data),
 		action = {
-			blocks = nil,
-			type = "act",
 			variant = "untie",
 			body_part = 1,
+			blocks = nil,
+			type = "act",
 			blocks = {
 				walk = -1,
 				action = -1
@@ -790,13 +790,13 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	}
 	local receiver_areas = managers.groupai:state():get_areas_from_nav_seg_id(objective.nav_seg)
 	local so_descriptor = {
-		objective = nil,
+		search_dis_sq = 25000000,
 		verification_clbk = nil,
 		admin_clbk = nil,
 		AI_group = "enemies",
 		usage_amount = 1,
 		search_pos = nil,
-		search_dis_sq = 25000000,
+		objective = nil,
 		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
@@ -888,9 +888,9 @@ function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 				data.brain:on_hostage_move_interaction(nil, "release")
 			elseif data.unit:anim_data().drop or data.unit:anim_data().tied then
 				new_action = {
-					type = "act",
 					variant = "stand",
-					body_part = 1
+					body_part = 1,
+					type = "act"
 				}
 			end
 
@@ -902,9 +902,9 @@ function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 			end
 
 			data.unit:brain():set_objective({
+				is_default = true,
 				was_rescued = true,
-				type = "free",
-				is_default = true
+				type = "free"
 			})
 		elseif not CivilianLogicFlee._get_coarse_flee_path(data) then
 			return
@@ -926,10 +926,10 @@ function CivilianLogicFlee._get_coarse_flee_path(data)
 	local my_data = data.internal_data
 	local verify_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "_flee_coarse_path_verify_clbk")
 	local search_params = {
-		access_pos = nil,
 		to_seg = nil,
 		from_tracker = nil,
 		verify_clbk = nil,
+		access_pos = nil,
 		id = nil,
 		from_tracker = data.unit:movement():nav_tracker(),
 		to_seg = flee_point.nav_seg,
@@ -1052,10 +1052,10 @@ function CivilianLogicFlee.clbk_chk_call_the_police(ignore_this, data)
 
 	if not already_calling and (not my_data.calling_the_police or not data.unit:movement():chk_action_forbidden("walk")) then
 		local action = {
-			blocks = nil,
-			type = "act",
 			variant = "cmf_so_call_police",
 			body_part = 1,
+			blocks = nil,
+			type = "act",
 			blocks = {}
 		}
 		my_data.calling_the_police = data.unit:movement():action_request(action)

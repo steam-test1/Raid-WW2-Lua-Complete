@@ -59,6 +59,16 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 
 	local loot_tweak = tweak_table or "default_tier"
 
+	if tweak_data.drop_loot[loot_tweak].buff_table_override then
+		for effect, override_tweak in pairs(tweak_data.drop_loot[loot_tweak].buff_table_override) do
+			if managers.buff_effect:is_effect_active(effect) then
+				loot_tweak = override_tweak
+
+				break
+			end
+		end
+	end
+
 	if not weight_multiplier then
 		local multiplier = 1
 
@@ -67,9 +77,9 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 		end
 
 		weight_multiplier = {
+			ammo = nil,
 			health = nil,
 			grenade = nil,
-			ammo = nil,
 			health = multiplier,
 			ammo = multiplier,
 			grenade = multiplier
@@ -102,10 +112,10 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 
 	if item then
 		local spawned_unit = managers.game_play_central:spawn_pickup({
-			position = nil,
 			world_id = nil,
-			name = nil,
 			rotation = nil,
+			position = nil,
+			name = nil,
 			name = item,
 			position = position,
 			rotation = rotation,

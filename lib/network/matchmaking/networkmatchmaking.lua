@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_23_01"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -245,9 +245,9 @@ end
 
 function NetworkMatchMaking:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
-		value = nil,
 		key = nil,
 		comparision_type = nil,
+		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -619,8 +619,8 @@ function NetworkMatchMaking:create_lobby(settings)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
-				title = nil,
 				text = nil,
+				title = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
@@ -695,20 +695,20 @@ function NetworkMatchMaking:set_attributes(settings)
 	}
 	local level_index, job_index = self:_split_attribute_number(settings.numbers[1], 1000)
 	local lobby_attributes = {
-		job_class_max = nil,
-		job_class_min = nil,
-		kick_option = nil,
 		min_level = nil,
-		drop_in = nil,
 		state = nil,
+		num_players = nil,
 		permission = nil,
 		level = nil,
 		difficulty = nil,
-		num_players = nil,
 		owner_name = nil,
 		owner_id = nil,
-		job_id = nil,
+		drop_in = nil,
+		kick_option = nil,
 		job_plan = nil,
+		job_class_max = nil,
+		job_class_min = nil,
+		job_id = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		level = level_index,

@@ -5,8 +5,8 @@ EditZipLine = EditZipLine or class(EditUnitBase)
 
 function EditZipLine:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "ZipLine",
 		class = nil,
+		name = "ZipLine",
 		class = self
 	})
 	self._panel = panel
@@ -29,27 +29,27 @@ function EditZipLine:init(editor)
 	end_pos_sizer:add(btn_toolbar, 0, 1, "EXPAND,LEFT")
 
 	self._speed_params = {
+		floats = 0,
+		value = 0,
+		name = "Speed [cm/s]:",
+		sizer = nil,
 		panel = nil,
 		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
 		tooltip = "Sets the speed of the zipline in cm/s",
-		floats = 0,
-		value = 0,
-		name = "Speed [cm/s]:",
-		sizer = nil,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "_update_speed")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "_update_speed")
 			}
 		}
@@ -58,27 +58,27 @@ function EditZipLine:init(editor)
 	CoreEws.number_controller(self._speed_params)
 
 	self._slack_params = {
+		floats = 0,
+		value = 0,
+		name = "Slack [cm]:",
+		sizer = nil,
 		panel = nil,
 		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
 		tooltip = "Value to define slack of the zipline in cm",
-		floats = 0,
-		value = 0,
-		name = "Slack [cm]:",
-		sizer = nil,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = nil,
+				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "_update_slack")
 			},
 			{
-				event = "EVT_KILL_FOCUS",
 				callback = nil,
+				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "_update_slack")
 			}
 		}
@@ -87,14 +87,14 @@ function EditZipLine:init(editor)
 	CoreEws.number_controller(self._slack_params)
 
 	self._type_params = {
-		panel = nil,
-		options = nil,
 		tooltip = "Select a type from the combobox",
 		ctrlr_proportions = 1,
+		options = nil,
 		name = "Type:",
 		name_proportions = 1,
 		sorted = true,
 		sizer = nil,
+		panel = nil,
 		panel = panel,
 		sizer = sizer,
 		options = ZipLine.TYPES
