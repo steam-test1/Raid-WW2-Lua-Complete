@@ -49,10 +49,12 @@ function WarcryClustertruck:deactivate()
 		return
 	end
 
-	local movement_state = managers.player:get_current_state()
+	local movement_state = self._local_player:movement():current_state()
 
-	movement_state:interupt_all_actions()
-	movement_state:force_change_weapon_slot(self._previous_selection, true)
+	if self._local_player:inventory():equipped_selection() == PlayerInventory.SLOT_3 then
+		movement_state:interupt_all_actions()
+		movement_state:force_change_weapon_slot(self._previous_selection, true)
+	end
 
 	self._local_player = nil
 	self._previous_selection = nil

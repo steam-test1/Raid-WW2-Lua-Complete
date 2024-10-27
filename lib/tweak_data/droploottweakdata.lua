@@ -54,7 +54,7 @@ function DropLootTweakData:_init_pickups_properties()
 		health_restored = 20,
 		grenades_amount = 1,
 		candy_value = 1,
-		ammo_multiplier = 1.2,
+		ammo_multiplier = 1.4,
 		interaction_detail = {
 			icon = "status_effect_candy_simple",
 			text = "details_candy_simple"
@@ -485,11 +485,11 @@ function DropLootTweakData:_init_basic_crate_tier()
 	}
 	self.basic_crate_tier.units.health.subtypes.medium = {
 		unit = "health_medium",
-		drop_rate = 30
+		drop_rate = 35
 	}
 	self.basic_crate_tier.units.health.subtypes.small = {
 		unit = "health_small",
-		drop_rate = 60
+		drop_rate = 65
 	}
 	self.basic_crate_tier.units.grenade = {
 		drop_rate = 15,
@@ -509,11 +509,11 @@ function DropLootTweakData:_init_basic_crate_tier()
 	}
 	self.basic_crate_tier.units.ammo.subtypes.medium = {
 		unit = "ammo_medium",
-		drop_rate = 30
+		drop_rate = 35
 	}
 	self.basic_crate_tier.units.ammo.subtypes.small = {
 		unit = "ammo_small",
-		drop_rate = 60
+		drop_rate = 65
 	}
 end
 

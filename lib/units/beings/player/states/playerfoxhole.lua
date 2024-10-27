@@ -90,3 +90,6 @@ function PlayerFoxhole:_end_action_exit_foxhole()
 	managers.hud:hide_progress_timer_bar(true)
 	managers.player:set_player_state("standard")
 end
+
+function PlayerFoxhole:force_change_weapon_slot(slot, instant)
+end

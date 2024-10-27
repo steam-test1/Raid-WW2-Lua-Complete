@@ -146,9 +146,9 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
+		ducking = false,
 		equip_weapon_expire_t = nil,
 		skip_equip = true,
-		ducking = false,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
 	}
 
@@ -188,12 +188,12 @@ function PlayerTurret:_husk_turret_data()
 	local exit_animation = tweak_data.weapon[turret_weapon_name].anim_exit
 
 	managers.player:set_turret_data_for_peer({
+		peer_id = nil,
 		exit_animation = nil,
 		enter_animation = nil,
 		turret_unit = nil,
 		turret_rot = nil,
 		husk_pos = nil,
-		peer_id = nil,
 		peer_id = peer_id,
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
@@ -471,6 +471,9 @@ function PlayerTurret:get_zoom_fov(stance_data)
 end
 
 function PlayerTurret:_update_movement(t, dt)
+end
+
+function PlayerTurret:force_change_weapon_slot(slot, instant)
 end
 
 function PlayerTurret:_update_fwd_ray()

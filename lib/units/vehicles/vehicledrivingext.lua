@@ -162,15 +162,15 @@ end
 function VehicleDrivingExt:_setup_states()
 	local unit = self._unit
 	self._states = {
-		blocked = nil,
-		frozen = nil,
 		secured = nil,
+		blocked = nil,
 		locked = nil,
 		broken = nil,
 		driving = nil,
 		parked = nil,
 		inactive = nil,
 		invalid = nil,
+		frozen = nil,
 		broken = VehicleStateBroken:new(unit),
 		driving = VehicleStateDriving:new(unit),
 		inactive = VehicleStateInactive:new(unit),
@@ -321,9 +321,9 @@ function VehicleDrivingExt:_create_position_reservation()
 
 	if self._pos_reservation_id then
 		self._pos_reservation = {
+			filter = nil,
 			position = nil,
 			radius = 500,
-			filter = nil,
 			position = self._unit:position(),
 			filter = self._pos_reservation_id
 		}
@@ -1039,7 +1039,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
 			skip_idle_check = true,
-			done_cbk = nil
+			[""] = nil
 		})
 	end
 
@@ -1353,7 +1353,7 @@ function VehicleDrivingExt:get_next_seat(player)
 	local next_seat = self._seats[seat.next_seat]
 
 	while next_seat and next_seat ~= seat do
-		if not next_seat.occupant or next_seat.occupant and next_seat.occupant:brain() then
+		if not next_seat.occupant or alive(next_seat.occupant) and next_seat.occupant:brain() then
 			return next_seat
 		end
 
@@ -2164,17 +2164,17 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		pos = nil,
-		haste = nil,
-		objective_type = nil,
-		type = "act",
-		action = nil,
-		rot = nil,
 		fail_clbk = nil,
 		area = nil,
-		nav_seg = nil,
+		rot = nil,
 		destroy_clbk_key = false,
+		type = "act",
 		pose = "stand",
+		nav_seg = nil,
+		pos = nil,
+		objective_type = nil,
+		haste = nil,
+		action = nil,
 		haste = haste,
 		nav_seg = align_nav_seg,
 		area = align_area,
@@ -2182,33 +2182,33 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
+			needs_full_blend = true,
+			variant = nil,
 			body_part = 1,
 			blocks = nil,
-			variant = nil,
 			type = "act",
-			needs_full_blend = true,
 			align_sync = false,
 			variant = team_ai_animation,
 			blocks = {
-				action = -1,
+				act = 1,
 				heavy_hurt = -1,
 				walk = -1,
 				hurt = -1,
-				act = 1
+				action = -1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
 	}
 	local SO_descriptor = {
-		objective = nil,
-		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
+		chance_inc = 0,
 		verification_clbk = nil,
 		search_pos = nil,
 		interval = 0,
-		chance_inc = 0,
 		base_chance = 1,
+		objective = nil,
+		admin_clbk = nil,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),

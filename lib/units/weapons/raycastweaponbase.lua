@@ -41,9 +41,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		from = nil,
 		kills = 0,
-		stop_shooting = nil,
+		trigger_held = nil,
+		from = nil,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -56,9 +56,9 @@ function RaycastWeaponBase:init(unit)
 	self._obj_fire = self._unit:get_object(Idstring("fire"))
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
-		parent = nil,
 		effect = nil,
 		force_synch = true,
+		parent = nil,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
@@ -66,9 +66,9 @@ function RaycastWeaponBase:init(unit)
 
 	if self._muzzletrail_effect then
 		self._muzzletrail_effect_table = {
-			parent = nil,
 			effect = nil,
 			force_synch = true,
+			parent = nil,
 			effect = self._muzzletrail_effect,
 			parent = self._obj_fire
 		}
@@ -79,8 +79,8 @@ function RaycastWeaponBase:init(unit)
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
-			parent = nil,
 			effect = nil,
+			parent = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
@@ -91,16 +91,16 @@ function RaycastWeaponBase:init(unit)
 	self._sound_fire:link(self._unit:orientation_object())
 
 	self._trail_effect_table = {
-		normal = nil,
-		effect = nil,
 		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
 	}
 	self._shot_fired_stats_table = {
-		hit = false,
 		weapon_unit = nil,
+		hit = false,
 		weapon_unit = self._unit
 	}
 	self._ammo_pickup_amount = tweak_data.weapon[self._name_id].ammo_pickup_base or tweak_data.weapon.default_values.ammo_pickup_base
@@ -527,9 +527,9 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	if managers.player:local_player() == user_unit then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_FIRED_WEAPON, {
-			weapon = nil,
-			killed_enemy = nil,
 			damage = nil,
+			killed_enemy = nil,
+			weapon = nil,
 			weapon = self._name_id,
 			damage = self:base_damage(),
 			killed_enemy = ray_res.hit_enemy and type(ray_res.hit_enemy) == "table" and ray_res.hit_enemy.type and ray_res.hit_enemy.type == "death"
@@ -1170,9 +1170,9 @@ function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos,
 	local col_ray = {
 		unit = nil,
 		ray = nil,
-		normal = nil,
-		position = nil,
 		body = nil,
+		position = nil,
+		normal = nil,
 		position = impact_pos,
 		ray = direction,
 		normal = impact_normal,
@@ -1620,7 +1620,7 @@ function RaycastWeaponBase:on_reload()
 		local reload_full_magazine = managers.player:has_category_upgrade("weapon", "clipazines_reload_full_magazine")
 
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD) then
-			ammo_max_per_clip = math.random(0, ammo_max_per_clip)
+			ammo_max_per_clip = math.random(1, ammo_max_per_clip)
 		end
 
 		if reload_full_magazine then
@@ -1691,8 +1691,8 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override, skip_event)
 
 	if not skip_event then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_PICKED_UP_AMMO, {
-			weapon = nil,
 			amount = nil,
+			weapon = nil,
 			weapon = self._name_id,
 			amount = ammo_actually_picked_up
 		})
@@ -1993,12 +1993,12 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
-	idstr_decal = nil,
 	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
+	idstr_decal = nil,
+	on_unit = true,
 	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
-	on_unit = true,
 	sound_event = "round_explode",
 	idstr_effect = nil,
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
@@ -2080,15 +2080,15 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	managers.explosion:play_sound_and_effects(position, normal, self.RANGE, self.EFFECT_PARAMS)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		player_damage = nil,
-		collision_slotmask = nil,
 		ignore_unit = nil,
-		user = nil,
-		curve_pow = nil,
 		hit_pos = nil,
-		owner = nil,
+		curve_pow = nil,
 		range = nil,
 		damage = nil,
+		owner = nil,
+		user = nil,
+		player_damage = nil,
+		collision_slotmask = nil,
 		hit_pos = position,
 		range = self.RANGE,
 		collision_slotmask = slot_mask,
@@ -2108,16 +2108,16 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 		local enemies_killed = (results.count_gangster_kills or 0) + (results.count_cop_kills or 0)
 
 		managers.statistics:shot_fired({
-			hit = false,
 			weapon_unit = nil,
+			hit = false,
 			weapon_unit = weapon_unit
 		})
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				weapon_unit = nil,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -2143,12 +2143,12 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
+	pushunits = nil,
 	idstr_decal = nil,
 	on_unit = true,
 	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
-	pushunits = nil,
 	sound_event = "round_explode",
 	idstr_effect = nil,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
@@ -2340,10 +2340,10 @@ end
 
 DOTBulletBase = DOTBulletBase or class(InstantBulletBase)
 DOTBulletBase.DOT_DATA = {
-	hurt_animation_chance = 1,
 	dot_damage = 0.5,
 	dot_tick_period = 0.5,
-	dot_length = 6
+	dot_length = 6,
+	hurt_animation_chance = 1
 }
 
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
@@ -2419,8 +2419,8 @@ function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_uni
 		end
 
 		result = self:start_dot_damage(col_ray, nil, {
-			dot_length = nil,
 			dot_damage = nil,
+			dot_length = nil,
 			dot_damage = dot_type_data.dot_damage,
 			dot_length = dot_data.custom_length or dot_type_data.dot_length
 		})

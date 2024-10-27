@@ -179,8 +179,8 @@ function PlayerDriving:exit(state_data, new_state_name)
 	self._stance = PlayerDriving.STANCE_NORMAL
 	local exit_data = {
 		skip_equip = true,
-		unequip_weapon_expire_t = nil,
 		equip_weapon_expire_t = nil,
+		unequip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t
 	}
@@ -623,9 +623,9 @@ function PlayerDriving:cb_leave()
 	if exit_position == nil then
 		print("[DRIVING] PlayerDriving: Could not found valid exit position, aborting exit.")
 		managers.notification:add_notification({
+			shelf_life = 5,
 			text = nil,
 			duration = 3,
-			shelf_life = 5,
 			id = "hint_cant_exit_vehicle",
 			text = managers.localization:text("hint_cant_exit_vehicle")
 		})
@@ -813,4 +813,7 @@ function PlayerDriving:smoothstep(a, b, step, n)
 	local x = a * v + b * (1 - v)
 
 	return x
+end
+
+function PlayerDriving:force_change_weapon_slot(slot, instant)
 end

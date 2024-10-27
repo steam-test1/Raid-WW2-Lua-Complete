@@ -3,22 +3,22 @@ ProjectilesTweakData = ProjectilesTweakData or class()
 function ProjectilesTweakData:init(tweak_data)
 	self.GRENADE_QUANTITY_UPGARDE = {
 		{
-			upgrade = "grenadier_grenade_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "grenadier_grenade_quantity"
 		},
 		{
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		}
 	}
 	self.MINE_QUANTITY_UPGARDE = {
 		{
-			upgrade = "sapper_mine_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "sapper_mine_quantity"
 		},
 		{
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		}
 	}
 	self._projectiles_index = {}
@@ -329,11 +329,11 @@ function ProjectilesTweakData:_init_molotov(tweak_data)
 		damage = 15,
 		player_damage = 5,
 		fire_dot_data = {
+			dot_tick_period = 0.5,
+			dot_length = 2.01,
 			dot_trigger_chance = 35,
 			dot_trigger_max_distance = 3000,
-			dot_damage = 10,
-			dot_tick_period = 0.5,
-			dot_length = 2.01
+			dot_damage = 10
 		},
 		range = 75,
 		killzone_range = 0,
@@ -358,8 +358,8 @@ function ProjectilesTweakData:_init_decoy_coin(tweak_data)
 		icon = "frag_grenade",
 		max_amount = 5,
 		upgrade_amount = {
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		},
 		pickup_filter = "coins",
 		is_a_grenade = true,
@@ -409,8 +409,8 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 		pickup_filter = "nopickup",
 		upgrade_amounts = table.list_union(self.GRENADE_QUANTITY_UPGARDE, {
 			{
-				upgrade = "warcry_grenade_refill_amounts",
-				category = "player"
+				category = "player",
+				upgrade = "warcry_grenade_refill_amounts"
 			}
 		}),
 		throw_allowed_expire_t = 0.662,
@@ -431,15 +431,15 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 	}
 	self.anti_tank.sound_event = "grenade_explode"
 	self.anti_tank.gui = {
+		initial_rotation = nil,
+		display_offset = 10,
 		height_offset = -14,
 		distance_offset = -80,
 		rotation_offset = 3,
-		initial_rotation = nil,
-		display_offset = 10,
 		initial_rotation = {
-			pitch = 60,
 			yaw = -90,
-			roll = 0
+			roll = 0,
+			pitch = 60
 		}
 	}
 end
@@ -463,11 +463,11 @@ function ProjectilesTweakData:_init_thermite(tweak_data)
 		damage = 15,
 		player_damage = 5,
 		fire_dot_data = {
+			dot_tick_period = 0.5,
+			dot_length = 2.01,
 			dot_trigger_chance = 35,
 			dot_trigger_max_distance = 3000,
-			dot_damage = 10,
-			dot_tick_period = 0.5,
-			dot_length = 2.01
+			dot_damage = 10
 		},
 		launch_speed = 240,
 		range = 100,
@@ -532,9 +532,15 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 		unit_dummy = "units/upd_candy/weapons/gre_gold_bar/wpn_tps_gre_gold_bar",
 		icon = "frag_grenade",
 		max_amount = 5,
-		upgrade_amount = {
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+		upgrade_amounts = {
+			{
+				category = "player",
+				upgrade = "pack_mule_equipment_quantity"
+			},
+			{
+				category = "player",
+				upgrade = "midas_gold_bar_quantity"
+			}
 		},
 		pickup_filter = "gold_bar",
 		is_a_grenade = true,
@@ -556,15 +562,15 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 	}
 	self.gold_bar.animations.equip_id = "equip_welrod"
 	self.gold_bar.gui = {
+		initial_rotation = nil,
+		display_offset = 22,
 		height_offset = -14,
 		distance_offset = -140,
 		rotation_offset = 3,
-		initial_rotation = nil,
-		display_offset = 22,
 		initial_rotation = {
-			pitch = 80,
 			yaw = 52,
-			roll = 0
+			roll = 0,
+			pitch = 80
 		}
 	}
 
