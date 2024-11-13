@@ -28,9 +28,9 @@ local idstr_base = Idstring("base")
 CopActionWalk = CopActionWalk or class()
 CopActionWalk.debug_paths = false
 CopActionWalk._walk_anim_velocities = {
+	stand = nil,
 	wounded = nil,
 	crouch = nil,
-	stand = nil,
 	stand = {
 		ntl = nil,
 		cbt = nil,
@@ -38,40 +38,40 @@ CopActionWalk._walk_anim_velocities = {
 			run = nil,
 			walk = nil,
 			walk = {
-				fwd = 195,
-				r = 124.5,
 				l = 124.5,
-				bwd = 111.4
+				bwd = 111.4,
+				fwd = 195,
+				r = 124.5
 			},
 			run = {
-				fwd = 457.98,
-				r = 411.9,
 				l = 416.35,
-				bwd = 416.77
+				bwd = 416.77,
+				fwd = 457.98,
+				r = 411.9
 			}
 		},
 		cbt = {
+			sprint = nil,
 			run = nil,
 			walk = nil,
-			sprint = nil,
 			walk = {
-				fwd = 208.27,
-				r = 192.75,
 				l = 192.75,
-				bwd = 208.27
+				bwd = 208.27,
+				fwd = 208.27,
+				r = 192.75
 			},
 			run = {
-				fwd = 414.73,
-				r = 411.9,
 				l = 416.35,
-				bwd = 416.77
+				bwd = 416.77,
+				fwd = 414.73,
+				r = 411.9
 			},
 			sprint = {
 				14,
-				fwd = 672.79,
-				r = 547.09,
 				l = 488,
-				bwd = 547.35
+				bwd = 547.35,
+				fwd = 672.79,
+				r = 547.09
 			}
 		}
 	},
@@ -81,16 +81,16 @@ CopActionWalk._walk_anim_velocities = {
 			run = nil,
 			walk = nil,
 			walk = {
-				fwd = 174.45,
-				r = 162.85,
 				l = 152.14,
-				bwd = 163.74
+				bwd = 163.74,
+				fwd = 174.45,
+				r = 162.85
 			},
 			run = {
-				fwd = 312.25,
-				r = 282.93,
 				l = 282.93,
-				bwd = 268.68
+				bwd = 268.68,
+				fwd = 312.25,
+				r = 282.93
 			}
 		}
 	},
@@ -100,16 +100,16 @@ CopActionWalk._walk_anim_velocities = {
 			run = nil,
 			walk = nil,
 			walk = {
-				fwd = 148,
-				r = 135,
 				l = 122,
-				bwd = 114
+				bwd = 114,
+				fwd = 148,
+				r = 135
 			},
 			run = {
-				fwd = 280,
-				r = 224,
 				l = 246,
-				bwd = 230
+				bwd = 230,
+				fwd = 280,
+				r = 224
 			}
 		}
 	}
@@ -119,10 +119,10 @@ CopActionWalk._walk_anim_velocities.crouch.ntl = CopActionWalk._walk_anim_veloci
 CopActionWalk._walk_anim_velocities.crouch.hos = CopActionWalk._walk_anim_velocities.crouch.cbt
 CopActionWalk._walk_anim_velocities.wounded.hos = CopActionWalk._walk_anim_velocities.wounded.cbt
 CopActionWalk._walk_anim_lengths = {
-	wounded = nil,
-	crouch = nil,
 	panic = nil,
 	stand = nil,
+	wounded = nil,
+	crouch = nil,
 	stand = {
 		ntl = nil,
 		cbt = nil,
@@ -130,59 +130,59 @@ CopActionWalk._walk_anim_lengths = {
 			run = nil,
 			walk = nil,
 			walk = {
-				fwd = 42,
-				r = 34,
 				l = 34,
-				bwd = 42
+				bwd = 42,
+				fwd = 42,
+				r = 34
 			},
 			run = {
-				fwd = 20,
-				r = 20,
 				l = 18,
-				bwd = 18
+				bwd = 18,
+				fwd = 20,
+				r = 20
 			}
 		},
 		cbt = {
+			sprint = nil,
+			run_stop = nil,
 			run = nil,
 			run_start = nil,
 			run_start_turn = nil,
 			walk = nil,
-			sprint = nil,
-			run_stop = nil,
 			walk = {
-				fwd = 26,
-				r = 26,
 				l = 26,
-				bwd = 26
+				bwd = 26,
+				fwd = 26,
+				r = 26
 			},
 			run = {
-				fwd = 19,
-				r = 20,
 				l = 18,
-				bwd = 18
+				bwd = 18,
+				fwd = 19,
+				r = 20
 			},
 			sprint = {
-				fwd = 16,
-				r = 19,
 				l = 16,
-				bwd = 16
+				bwd = 16,
+				fwd = 16,
+				r = 19
 			},
 			run_start = {
-				fwd = 29,
-				r = 24,
 				l = 27,
-				bwd = 25
+				bwd = 25,
+				fwd = 29,
+				r = 24
 			},
 			run_start_turn = {
-				r = 26,
 				l = 37,
-				bwd = 26
+				bwd = 26,
+				r = 26
 			},
 			run_stop = {
-				fwd = 29,
-				r = 31,
 				l = 28,
-				bwd = 23
+				bwd = 23,
+				fwd = 29,
+				r = 31
 			}
 		}
 	},
@@ -190,38 +190,38 @@ CopActionWalk._walk_anim_lengths = {
 		cbt = nil,
 		cbt = {
 			run_start_turn = nil,
-			run_start = nil,
-			run = nil,
-			walk = nil,
 			run_stop = nil,
+			run = nil,
+			run_start = nil,
+			walk = nil,
 			walk = {
-				fwd = 31,
-				r = 28,
 				l = 27,
-				bwd = 31
+				bwd = 31,
+				fwd = 31,
+				r = 28
 			},
 			run = {
-				fwd = 21,
-				r = 19,
 				l = 19,
-				bwd = 20
+				bwd = 20,
+				fwd = 21,
+				r = 19
 			},
 			run_start = {
-				fwd = 31,
-				r = 22,
 				l = 30,
-				bwd = 16
+				bwd = 16,
+				fwd = 31,
+				r = 22
 			},
 			run_start_turn = {
-				r = 21,
 				l = 21,
-				bwd = 28
+				bwd = 28,
+				r = 21
 			},
 			run_stop = {
-				fwd = 27,
-				r = 26,
 				l = 28,
-				bwd = 25
+				bwd = 25,
+				fwd = 27,
+				r = 26
 			}
 		}
 	},
@@ -231,16 +231,16 @@ CopActionWalk._walk_anim_lengths = {
 			run = nil,
 			walk = nil,
 			walk = {
-				fwd = 28,
-				r = 29,
 				l = 29,
-				bwd = 29
+				bwd = 29,
+				fwd = 28,
+				r = 29
 			},
 			run = {
-				fwd = 19,
-				r = 19,
 				l = 19,
-				bwd = 18
+				bwd = 18,
+				fwd = 19,
+				r = 19
 			}
 		}
 	},
@@ -249,10 +249,10 @@ CopActionWalk._walk_anim_lengths = {
 		ntl = {
 			run = nil,
 			run = {
-				fwd = 15,
-				r = 16,
 				l = 15,
-				bwd = 15
+				bwd = 15,
+				fwd = 15,
+				r = 16
 			}
 		}
 	}
@@ -273,10 +273,10 @@ CopActionWalk._walk_anim_lengths.crouch.ntl = CopActionWalk._walk_anim_lengths.c
 CopActionWalk._walk_anim_lengths.crouch.hos = CopActionWalk._walk_anim_lengths.crouch.cbt
 CopActionWalk._walk_anim_lengths.wounded.hos = CopActionWalk._walk_anim_lengths.wounded.cbt
 CopActionWalk._matching_walk_anims = {
-	fwd = nil,
-	r = nil,
 	l = nil,
 	bwd = nil,
+	fwd = nil,
+	r = nil,
 	fwd = {
 		bwd = true
 	},
@@ -291,10 +291,10 @@ CopActionWalk._matching_walk_anims = {
 	}
 }
 CopActionWalk._walk_side_rot = {
-	fwd = nil,
-	r = nil,
 	l = nil,
 	bwd = nil,
+	fwd = nil,
+	r = nil,
 	fwd = Rotation(),
 	bwd = Rotation(180),
 	l = Rotation(-90),
@@ -304,13 +304,13 @@ CopActionWalk._anim_movement = {
 	crouch = nil,
 	stand = nil,
 	stand = {
+		run_stop_fwd = 154,
+		run_start_turn_r = nil,
 		run_start_turn_l = nil,
 		run_start_turn_bwd = nil,
 		run_stop_r = 106,
 		run_stop_l = 87,
 		run_stop_bwd = 91,
-		run_stop_fwd = 154,
-		run_start_turn_r = nil,
 		run_start_turn_bwd = {
 			ds = nil,
 			ds = Vector3(19, -173, 0)
@@ -325,13 +325,13 @@ CopActionWalk._anim_movement = {
 		}
 	},
 	crouch = {
+		run_stop_fwd = 83,
+		run_start_turn_r = nil,
 		run_start_turn_l = nil,
 		run_start_turn_bwd = nil,
 		run_stop_r = 65,
 		run_stop_l = 75,
 		run_stop_bwd = 62,
-		run_stop_fwd = 83,
-		run_start_turn_r = nil,
 		run_start_turn_bwd = {
 			ds = nil,
 			ds = Vector3(0, -123, 0)
@@ -347,41 +347,41 @@ CopActionWalk._anim_movement = {
 	}
 }
 CopActionWalk._anim_block_presets = {
-	block_none = nil,
-	block_all = nil,
 	block_upper = nil,
 	block_lower = nil,
+	block_none = nil,
+	block_all = nil,
 	block_all = {
-		act = -1,
-		heavy_hurt = -1,
-		hurt = -1,
-		light_hurt = -1,
-		turn = -1,
-		crouch = -1,
 		dodge = -1,
 		action = -1,
 		idle = -1,
-		shoot = -1,
+		crouch = -1,
 		walk = -1,
-		stand = -1
-	},
-	block_lower = {
+		stand = -1,
 		act = -1,
 		heavy_hurt = -1,
 		hurt = -1,
 		light_hurt = -1,
 		turn = -1,
-		crouch = -1,
+		shoot = -1
+	},
+	block_lower = {
 		dodge = -1,
 		idle = -1,
 		walk = -1,
-		stand = -1
+		stand = -1,
+		act = -1,
+		heavy_hurt = -1,
+		hurt = -1,
+		light_hurt = -1,
+		turn = -1,
+		crouch = -1
 	},
 	block_upper = {
 		crouch = -1,
-		shoot = -1,
+		action = -1,
 		stand = -1,
-		action = -1
+		shoot = -1
 	},
 	block_none = {
 		crouch = -1,
@@ -427,8 +427,8 @@ function CopActionWalk:init(action_desc, common_data)
 
 		if Network:is_server() then
 			self._unit:brain():add_pos_rsrv("move_dest", {
-				position = nil,
 				radius = 30,
+				position = nil,
 				position = mvector3.copy(self._nav_point_pos(self._nav_path[#self._nav_path]))
 			})
 		end
@@ -465,8 +465,8 @@ function CopActionWalk:_init()
 				table.insert(nav_path, nav_point)
 			elseif alive(nav_point) then
 				table.insert(nav_path, {
-					c_class = nil,
 					element = nil,
+					c_class = nil,
 					element = nav_point:script_data().element,
 					c_class = nav_point
 				})
@@ -501,8 +501,8 @@ function CopActionWalk:_init()
 
 		if not action_desc.host_stop_pos_ahead and self._nav_path[2] then
 			local ray_params = {
-				pos_to = nil,
 				tracker_from = nil,
+				pos_to = nil,
 				tracker_from = common_data.nav_tracker,
 				pos_to = self._nav_point_pos(self._nav_path[2])
 			}
@@ -625,8 +625,8 @@ function CopActionWalk:_init()
 	if Network:is_server() then
 		self._unit:brain():rem_pos_rsrv("stand")
 		self._unit:brain():add_pos_rsrv("move_dest", {
-			position = nil,
 			radius = 30,
+			position = nil,
 			position = mvector3.copy(self._simplified_path[#self._simplified_path])
 		})
 	end
@@ -1318,10 +1318,10 @@ function CopActionWalk:_upd_start_anim(t)
 			self._cur_vel = math_max(delta_pos:length() / dt, self._start_max_vel)
 			local new_pos = self._common_data.pos + delta_pos
 			local ray_params = {
-				trace = true,
-				pos_to = nil,
-				allow_entry = true,
 				tracker_from = nil,
+				allow_entry = true,
+				pos_to = nil,
+				trace = true,
 				tracker_from = self._common_data.nav_tracker,
 				pos_to = new_pos
 			}
@@ -1422,18 +1422,18 @@ end
 
 function CopActionWalk:get_husk_interrupt_desc()
 	local old_action_desc = {
-		variant = nil,
 		type = "walk",
-		end_rot = nil,
-		no_strafe = nil,
-		path_simplified = true,
-		no_walk = nil,
-		interrupted = true,
-		host_stop_pos_ahead = nil,
 		body_part = 2,
-		persistent = nil,
+		no_strafe = nil,
 		host_stop_pos_inserted = nil,
+		variant = nil,
+		host_stop_pos_ahead = nil,
+		persistent = nil,
 		nav_path = nil,
+		end_rot = nil,
+		path_simplified = true,
+		interrupted = true,
+		no_walk = nil,
 		end_rot = self._end_rot,
 		variant = self._haste,
 		nav_path = self._simplified_path,
@@ -1515,10 +1515,10 @@ function CopActionWalk:save(save_data)
 	save_data.persistent = true
 	save_data.path_simplified = true
 	save_data.blocks = {
-		act = -1,
-		walk = -1,
 		turn = -1,
-		idle = -1
+		idle = -1,
+		act = -1,
+		walk = -1
 	}
 	local sync_path = {}
 	local s_path = self._simplified_path
@@ -1538,10 +1538,10 @@ end
 
 function CopActionWalk.synthesize_nav_link(pos, rot, anim, from_idle)
 	local fake_element = {
-		position = nil,
+		so_action = nil,
 		from_idle = nil,
 		rotation = nil,
-		so_action = nil,
+		position = nil,
 		position = pos,
 		rotation = rot,
 		so_action = anim,
@@ -1855,12 +1855,12 @@ function CopActionWalk:_reserve_nav_pos(nav_pos, next_pos, from_pos, vel)
 	mvec3_set_l(step_vec, 65)
 
 	local data = {
+		start_pos = nil,
+		step_vec = nil,
 		nr_attempts = 0,
 		step_mul = 1,
 		bwd_pos = nil,
 		fwd_pos = nil,
-		start_pos = nil,
-		step_vec = nil,
 		start_pos = nav_pos,
 		fwd_pos = next_pos,
 		bwd_pos = from_pos,
@@ -1893,9 +1893,9 @@ function CopActionWalk:_reserve_pos_step_clbk(data, test_pos)
 	mvec3_add(test_pos, data.start_pos)
 
 	local params = {
-		pos_to = nil,
 		allow_entry = false,
 		pos_from = nil,
+		pos_to = nil,
 		pos_from = data.start_pos,
 		pos_to = test_pos
 	}
@@ -2223,8 +2223,8 @@ function CopActionWalk:stop()
 
 	if is_initialized and #s_path >= 3 and self.update ~= self._upd_nav_link and self.update ~= self._upd_nav_link_first_frame and self.update ~= self._upd_nav_link_blend_to_idle and self.update ~= self._upd_stop_anim_first_frame and self.update ~= self._upd_stop_anim and self.update ~= self._upd_walk_turn_first_frame and self.update ~= self._upd_walk_turn and math.abs(mvector3.z(self._common_data.pos) - mvector3.z(pos)) < 100 then
 		local ray_params = {
-			pos_to = nil,
 			tracker_from = nil,
+			pos_to = nil,
 			tracker_from = self._common_data.nav_tracker,
 			pos_to = pos
 		}
@@ -2325,10 +2325,10 @@ function CopActionWalk:set_blocks(preset_name, state)
 
 	if self._blocks.action then
 		self._ext_movement:action_request({
-			client_interrupt = true,
 			type = "idle",
+			body_part = 3,
 			non_persistent = true,
-			body_part = 3
+			client_interrupt = true
 		})
 	end
 end
@@ -2403,10 +2403,10 @@ function CopActionWalk:_play_nav_link_anim(t)
 
 		if self._blocks == self._anim_block_presets.block_all then
 			self._ext_movement:action_request({
-				client_interrupt = true,
 				type = "idle",
+				body_part = 3,
 				non_persistent = true,
-				body_part = 3
+				client_interrupt = true
 			})
 		end
 	else
@@ -2461,8 +2461,8 @@ function CopActionWalk:_upd_nav_link(t)
 
 		if self._sync then
 			local ray_params = {
-				pos_to = nil,
 				tracker_from = nil,
+				pos_to = nil,
 				tracker_from = self._common_data.nav_tracker,
 				pos_to = self._nav_point_pos(self._simplified_path[2])
 			}
@@ -2659,8 +2659,8 @@ end
 function CopActionWalk:on_nav_link_unregistered(element_id)
 	if self._next_is_nav_link and self._next_is_nav_link.element._id == element_id then
 		self._ext_movement:action_request({
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		})
 
 		return
@@ -2669,8 +2669,8 @@ function CopActionWalk:on_nav_link_unregistered(element_id)
 	for i, nav_point in ipairs(self._simplified_path or self._nav_path) do
 		if not nav_point.x and (nav_point.element and nav_point.element:id() or nav_point:script_data().element:id()) == element_id then
 			self._ext_movement:action_request({
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			})
 
 			return
@@ -2736,20 +2736,20 @@ function CopActionWalk:_chk_correct_pose()
 
 	if pose == "crouch" and not allowed_poses.crouch then
 		self._ext_movement:action_request({
-			body_part = 4,
-			type = "stand"
+			type = "stand",
+			body_part = 4
 		})
 	elseif pose == "stand" and not allowed_poses.stand then
 		self._ext_movement:action_request({
-			body_part = 4,
-			type = "crouch"
+			type = "crouch",
+			body_part = 4
 		})
 	end
 
 	if pose == "crouch" and self._common_data.is_cool then
 		self._ext_movement:action_request({
-			body_part = 4,
-			type = "stand"
+			type = "stand",
+			body_part = 4
 		})
 	end
 end

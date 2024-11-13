@@ -188,10 +188,10 @@ function FFCEditorController:start_cube_map(params)
 	self._output_name = params.output_name
 	self._output_name = self._output_name or "cubemap"
 
-	self._camera:set_position(params.light:position())
-	self._camera:set_rotation(params.light:rotation())
-
 	if params.light then
+		self._camera:set_position(params.light:position())
+		self._camera:set_rotation(params.light:rotation())
+
 		self._light = World:create_light("omni")
 
 		self._light:set_position(params.light:position())

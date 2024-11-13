@@ -51,34 +51,34 @@ function ChallengeCardsViewGui:_layout()
 		}
 	}
 	self._rarity_filters_tabs = self._root_panel:tabs({
+		x = 0,
+		name = "rarity_filters_tabs",
+		dont_trigger_special_buttons = true,
+		tabs_params = nil,
+		on_click_callback = nil,
+		initial_tab_idx = nil,
+		tab_align = "center",
 		tab_height = 64,
 		tab_width = nil,
-		on_click_callback = nil,
-		x = 0,
 		y = 96,
-		tab_align = "center",
-		name = "rarity_filters_tabs",
-		initial_tab_idx = nil,
-		tabs_params = nil,
-		dont_trigger_special_buttons = true,
 		tab_width = 640 / #tabs_params,
 		initial_tab_idx = #tabs_params,
 		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tabs_params = tabs_params
 	})
 	self._type_filters_tabs = self._root_panel:tabs({
-		initial_tab_idx = 3,
-		tab_width = 140,
-		y = 176,
 		x = 0,
+		tab_width = 140,
+		name = "type_filters_tabs",
+		icon = nil,
+		dont_trigger_special_buttons = true,
+		tabs_params = nil,
 		on_click_callback = nil,
+		initial_tab_idx = 3,
 		tab_align = "center",
 		tab_height = 32,
 		item_class = nil,
-		name = "type_filters_tabs",
-		tabs_params = nil,
-		icon = nil,
-		dont_trigger_special_buttons = true,
+		y = 176,
 		icon = tweak_data.gui.icons.ico_filter,
 		item_class = RaidGUIControlTabFilter,
 		on_click_callback = callback(self, self, "on_click_filter_type"),
@@ -106,22 +106,22 @@ function ChallengeCardsViewGui:_layout()
 		}
 	})
 	local challenge_cards_grid_scrollable_area_params = {
-		w = 640,
-		scroll_step = 30,
-		y = 224,
 		x = 0,
+		y = 224,
 		name = "challenge_cards_grid_scrollable_area",
-		h = 580
+		scroll_step = 30,
+		h = 580,
+		w = 640
 	}
 	self._challenge_cards_grid_scrollable_area = self._root_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
 	local challenge_cards_grid_params = {
-		w = 636,
-		scrollable_area_ref = nil,
-		y = 0,
 		x = 0,
+		y = 0,
+		scrollable_area_ref = nil,
+		name = "challenge_cards_grid",
 		grid_params = nil,
 		item_params = nil,
-		name = "challenge_cards_grid",
+		w = 636,
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
 		grid_params = {
 			on_select_callback = nil,
@@ -134,8 +134,8 @@ function ChallengeCardsViewGui:_layout()
 			on_select_callback = callback(self, self, "_on_select_inventory_cards")
 		},
 		item_params = {
-			hover_selects = true,
 			key_value_field = "key_name",
+			hover_selects = true,
 			row_class = nil,
 			selected_marker_h = 250,
 			selected_marker_w = 192,
@@ -146,12 +146,12 @@ function ChallengeCardsViewGui:_layout()
 	}
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
 	local card_details_params = {
-		w = 992,
-		visible = true,
-		y = 96,
 		x = 736,
+		visible = true,
+		w = 992,
 		name = "card_deatils",
-		h = 736
+		h = 736,
+		y = 96
 	}
 	self._card_details = self._root_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 
@@ -279,26 +279,26 @@ end
 function ChallengeCardsViewGui:bind_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
 			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_tabs_rarity_left")
 		},
 		{
-			key = nil,
 			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_tabs_rarity_right")
 		},
 		{
-			key = nil,
 			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_tabs_type_left")
 		},
 		{
-			key = nil,
 			callback = nil,
+			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_tabs_type_right")
 		}
@@ -307,8 +307,8 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_challenge_cards_rarity",
@@ -316,8 +316,8 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = nil,
+				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

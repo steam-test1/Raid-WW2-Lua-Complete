@@ -123,11 +123,11 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
+			world_borders = nil,
+			base_icon = "map_camp",
 			panel_shape = nil,
 			base_location = nil,
 			texture = "map",
-			world_borders = nil,
-			base_icon = "map_camp",
 			base_location = {
 				y = -2850,
 				x = -200
@@ -159,11 +159,11 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
+			world_borders = nil,
+			base_icon = "map_camp",
 			panel_shape = nil,
 			base_location = nil,
 			texture = "map",
-			world_borders = nil,
-			base_icon = "map_camp",
 			base_location = {
 				y = -2850,
 				x = -200
@@ -195,11 +195,11 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
+			world_borders = nil,
+			base_icon = "map_camp",
 			panel_shape = nil,
 			base_location = nil,
 			texture = "map",
-			world_borders = nil,
-			base_icon = "map_camp",
 			base_location = {
 				y = -2850,
 				x = -200
@@ -231,11 +231,11 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
+			world_borders = nil,
+			base_icon = "map_camp",
 			panel_shape = nil,
 			base_location = nil,
 			texture = "map",
-			world_borders = nil,
-			base_icon = "map_camp",
 			base_location = {
 				y = -2850,
 				x = -200
@@ -267,11 +267,11 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
+			world_borders = nil,
+			base_icon = "map_camp",
 			panel_shape = nil,
 			base_location = nil,
 			texture = "map",
-			world_borders = nil,
-			base_icon = "map_camp",
 			base_location = {
 				y = -2850,
 				x = -200
@@ -500,12 +500,12 @@ function LevelsTweakData:get_team_setup()
 		teams = deep_clone(teams)
 	else
 		teams = {
+			neutral1 = nil,
+			hacked_turret = nil,
+			law1 = nil,
 			criminal1 = nil,
 			converted_enemy = nil,
-			hacked_turret = nil,
 			mobster1 = nil,
-			neutral1 = nil,
-			law1 = nil,
 			criminal1 = {
 				foes = nil,
 				foes = {

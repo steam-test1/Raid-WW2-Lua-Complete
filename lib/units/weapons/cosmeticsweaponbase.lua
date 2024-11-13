@@ -76,15 +76,13 @@ function NewRaycastWeaponBase:_update_materials()
 
 	if is_thq or use_cc_material_config then
 		if not self._materials then
-			local material_config_ids = Idstring("material_config")
-
 			for part_id, part in pairs(self._parts) do
 				local part_data = managers.weapon_factory:get_part_data_by_part_id_from_weapon(part_id, self._factory_id, self._blueprint)
 
 				if part_data then
 					local new_material_config_ids = self:_material_config_name(part_id, part_data.unit, use_cc_material_config)
 
-					if part.unit:material_config() ~= new_material_config_ids and DB:has(material_config_ids, new_material_config_ids) then
+					if part.unit:material_config() ~= new_material_config_ids and DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
 						part.unit:set_material_config(new_material_config_ids, true)
 					end
 				end
@@ -107,13 +105,11 @@ function NewRaycastWeaponBase:_update_materials()
 			end
 		end
 	elseif self._materials then
-		local material_config_ids = Idstring("material_config")
-
 		for part_id, part in pairs(self._parts) do
 			if tweak_data.weapon.factory.parts[part_id] then
 				local new_material_config_ids = tweak_data.weapon.factory.parts[part_id].material_config or Idstring(self:is_npc() and tweak_data.weapon.factory.parts[part_id].third_unit or tweak_data.weapon.factory.parts[part_id].unit)
 
-				if part.unit:material_config() ~= new_material_config_ids and DB:has(material_config_ids, new_material_config_ids) then
+				if part.unit:material_config() ~= new_material_config_ids and DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
 					part.unit:set_material_config(new_material_config_ids, true)
 				end
 			end
@@ -124,28 +120,28 @@ function NewRaycastWeaponBase:_update_materials()
 end
 
 local material_defaults = {
+	diffuse_layer3_texture = nil,
 	diffuse_layer1_texture = nil,
 	diffuse_layer0_texture = nil,
 	diffuse_layer2_texture = nil,
-	diffuse_layer3_texture = nil,
 	diffuse_layer1_texture = Idstring("texture_removed_in_cleanup"),
 	diffuse_layer2_texture = Idstring("texture_removed_in_cleanup"),
 	diffuse_layer0_texture = Idstring("texture_removed_in_cleanup"),
 	diffuse_layer3_texture = Idstring("texture_removed_in_cleanup")
 }
 local material_textures = {
+	sticker = "diffuse_layer3_texture",
 	pattern = "diffuse_layer0_texture",
 	pattern_gradient = "diffuse_layer2_texture",
-	base_gradient = "diffuse_layer1_texture",
-	sticker = "diffuse_layer3_texture"
+	base_gradient = "diffuse_layer1_texture"
 }
 local material_variables = {
-	wear_and_tear = nil,
+	uv_scale = "uv_scale",
 	cubemap_pattern_control = "cubemap_pattern_control",
+	pattern_tweak = "pattern_tweak",
 	pattern_pos = "pattern_pos",
 	uv_offset_rot = "uv_offset_rot",
-	uv_scale = "uv_scale",
-	pattern_tweak = "pattern_tweak",
+	wear_and_tear = nil,
 	wear_and_tear = Application:production_build() and "wear_tear_value" or nil
 }
 
@@ -187,9 +183,9 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 				if mat_texture or base_texture then
 					texture_key = mat_texture and mat_texture:key() or base_texture and base_texture:key()
 					textures[texture_key] = textures[texture_key] or {
+						ready = false,
 						name = nil,
 						applied = false,
-						ready = false,
 						name = mat_texture or base_texture
 					}
 				end

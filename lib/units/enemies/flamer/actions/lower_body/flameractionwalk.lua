@@ -33,19 +33,19 @@ FlamerActionWalk._walk_anim_velocities = {
 	stand = {
 		cbt = nil,
 		cbt = {
-			run = nil,
 			walk = nil,
+			run = nil,
 			walk = {
-				fwd = 144,
 				r = 122.48,
 				l = 118.53,
-				bwd = 112.85
+				bwd = 112.85,
+				fwd = 144
 			},
 			run = {
-				fwd = 361.5,
 				r = 318.33,
 				l = 287.43,
-				bwd = 357.23
+				bwd = 357.23,
+				fwd = 361.5
 			}
 		}
 	}
@@ -59,19 +59,19 @@ FlamerActionWalk._walk_anim_lengths = {
 	stand = {
 		cbt = nil,
 		cbt = {
-			run = nil,
 			walk = nil,
+			run = nil,
 			walk = {
-				fwd = 34,
 				r = 38,
 				l = 40,
-				bwd = 40
+				bwd = 40,
+				fwd = 34
 			},
 			run = {
-				fwd = 20,
 				r = 21,
 				l = 20,
-				bwd = 21
+				bwd = 21,
+				fwd = 20
 			}
 		}
 	}

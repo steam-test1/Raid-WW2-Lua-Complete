@@ -46,26 +46,26 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	end
 
 	local params_customization_image = {
+		texture_rect = nil,
+		name = "card_image",
 		texture = nil,
 		y = 0,
 		x = 0,
-		texture_rect = nil,
-		name = "card_image",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
 	self._customization_image = self._control_panel:bitmap(params_customization_image)
 	local params_player_name = {
-		w = nil,
 		y = nil,
+		layer = 1,
+		name = "peer_customization_name_label",
+		w = nil,
 		x = nil,
 		align = "left",
 		font_size = nil,
 		font = nil,
 		color = nil,
 		text = "",
-		layer = 1,
-		name = "peer_customization_name_label",
 		x = RaidGUIControlCharacterCustomizationPeerLoot.TEXT_X,
 		y = RaidGUIControlCharacterCustomizationPeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlCharacterCustomizationPeerLoot.TEXT_X,
@@ -79,17 +79,17 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	self._name_label:set_h(h)
 
 	local params_customization_description = {
-		w = nil,
 		y = nil,
-		x = nil,
 		wrap = true,
+		layer = 1,
+		name = "customization_description_label",
+		w = nil,
+		x = nil,
 		align = "left",
 		font_size = nil,
 		font = nil,
 		color = nil,
 		text = "",
-		layer = 1,
-		name = "customization_description_label",
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlCharacterCustomizationPeerLoot.NAME_PADDING_DOWN,
 		w = self._name_label:w(),

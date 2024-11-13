@@ -183,10 +183,10 @@ function GlobalStateManager:fire_event(flag_name)
 				self._next_hint_t = t + 6
 
 				managers.notification:add_notification({
-					id = "hud_waiting_for_player_dropin",
 					duration = 2,
 					text = nil,
 					shelf_life = 5,
+					id = "hud_waiting_for_player_dropin",
 					text = managers.localization:text("hud_waiting_for_player_dropin")
 				})
 			end
@@ -266,16 +266,16 @@ function GlobalStateManager:get_all_global_states()
 	for id, data in pairs(self._states.global_init) do
 		local state = {
 			{
-				id = nil,
 				value = nil,
+				id = nil,
 				id = id,
 				value = data.value
 			}
 		}
 
 		table.insert(global_states, {
-			id = nil,
 			value = nil,
+			id = nil,
 			id = id,
 			value = data.value
 		})
@@ -300,16 +300,16 @@ function GlobalStateManager:save_game(data)
 	for id, data in pairs(self._states.global_init) do
 		local state = {
 			{
-				id = nil,
 				value = nil,
+				id = nil,
 				id = id,
 				value = data.value
 			}
 		}
 
 		table.insert(global_states, {
-			id = nil,
 			value = nil,
+			id = nil,
 			id = id,
 			value = data.value
 		})

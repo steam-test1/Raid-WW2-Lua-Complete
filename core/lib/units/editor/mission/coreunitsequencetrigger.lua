@@ -25,8 +25,8 @@ function CoreUnitSequenceTriggerUnitElement:layer_finished()
 
 	if self._hed.unit_id then
 		table.insert(self._hed.sequence_list, {
-			sequence = nil,
 			unit_id = nil,
+			sequence = nil,
 			unit_id = self._hed.unit_id,
 			sequence = self._hed.sequence
 		})
@@ -55,11 +55,11 @@ function CoreUnitSequenceTriggerUnitElement:update_selected()
 			self._sequence_units[id] = nil
 		else
 			local params = {
+				from_unit = nil,
 				b = 1,
 				g = 0,
 				r = 0,
 				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -89,11 +89,11 @@ function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._sequence_units) do
 		local params = {
+			from_unit = nil,
 			b = 0.5,
 			g = 0,
 			r = 0,
 			to_unit = nil,
-			from_unit = nil,
 			from_unit = unit,
 			to_unit = self._unit
 		}
@@ -109,8 +109,8 @@ function CoreUnitSequenceTriggerUnitElement:get_links_to_unit(to_unit, links, al
 	if to_unit == self._unit then
 		for id, unit in pairs(self._sequence_units) do
 			table.insert(links.executers, {
-				unit = nil,
 				alternative = "unit",
+				unit = nil,
 				unit = unit
 			})
 		end
@@ -119,9 +119,9 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -136,9 +136,9 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -153,8 +153,8 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	if #sequences > 0 then
 		self._sequence_units[unit:unit_data().unit_id] = unit
 		local sequence_list_data = {
-			sequence = "none",
 			unit_id = nil,
+			sequence = "none",
 			unit_id = unit:unit_data().unit_id
 		}
 
@@ -280,17 +280,17 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
 	local sequence_params = {
-		sizer = nil,
-		panel = nil,
-		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		name = "Sequence:",
+		panel = nil,
 		tooltip = "Select a sequence from the combobox",
 		value = nil,
 		default = "none",
 		options = nil,
+		sizer = nil,
+		name = "Sequence:",
+		sorted = true,
 		panel = panel,
 		sizer = h_sizer,
 		options = sequences,
@@ -307,12 +307,12 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	toolbar:realize()
 
 	self._guis[self._guis_id] = {
-		unit = nil,
-		guis_id = nil,
-		name_ctrlr = nil,
-		toolbar = nil,
-		sequence = nil,
 		unit_id = nil,
+		sequence = nil,
+		guis_id = nil,
+		unit = nil,
+		toolbar = nil,
+		name_ctrlr = nil,
 		unit_id_ctrlr = nil,
 		unit_id_ctrlr = unit_id,
 		unit = unit,

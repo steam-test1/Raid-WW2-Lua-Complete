@@ -18,9 +18,9 @@ function SentryGunWeapon:init(unit)
 
 	self._interleaving_fire = 1
 	self._trail_effect_table = {
+		effect = nil,
 		position = nil,
 		normal = nil,
-		effect = nil,
 		effect = RaycastWeaponBase.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
@@ -48,16 +48,16 @@ function SentryGunWeapon:_init()
 	self._muzzle_effect = Idstring(self._tweak_data.muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
 		{
-			force_synch = false,
 			parent = nil,
 			effect = nil,
+			force_synch = false,
 			effect = self._muzzle_effect,
 			parent = self._effect_align[1]
 		},
 		{
-			force_synch = false,
 			parent = nil,
 			effect = nil,
+			force_synch = false,
 			effect = self._muzzle_effect,
 			parent = self._effect_align[2]
 		}
@@ -68,8 +68,8 @@ function SentryGunWeapon:_init()
 		self._obj_shell_ejection = self._unit:get_object(Idstring("shell"))
 		self._shell_ejection_effect = Idstring(tweak_data.weapon[self._name_id].shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
-			parent = nil,
 			effect = nil,
+			parent = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}

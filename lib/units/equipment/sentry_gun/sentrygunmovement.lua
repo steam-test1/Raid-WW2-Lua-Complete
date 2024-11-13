@@ -17,8 +17,8 @@ function SentryGunMovement:init(unit)
 	self._unit_fwd = self._m_rot:y()
 	self._m_head_pos = self._head_obj:position()
 	self._vel = {
-		pitch = 0,
-		spin = 0
+		spin = 0,
+		pitch = 0
 	}
 
 	if managers.navigation:is_data_ready() then
@@ -26,8 +26,8 @@ function SentryGunMovement:init(unit)
 		self._nav_tracker = managers.navigation:create_nav_tracker(self._unit:position())
 		self._pos_reservation = {
 			radius = 30,
-			filter = nil,
 			position = nil,
+			filter = nil,
 			position = self._unit:position(),
 			filter = self._pos_rsrv_id
 		}
@@ -215,8 +215,8 @@ function SentryGunMovement:nav_tracker()
 	if not alive(self._nav_tracker) then
 		self._nav_tracker = managers.navigation:create_nav_tracker(self._unit:position())
 		self._pos_reservation = {
-			radius = 30,
 			position = nil,
+			radius = 30,
 			position = self._unit:position()
 		}
 

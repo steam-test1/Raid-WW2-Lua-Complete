@@ -114,9 +114,9 @@ end
 
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -127,9 +127,9 @@ end
 
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
 		mask = nil,
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -179,18 +179,18 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
+		remove_result = nil,
 		remove_filter = nil,
 		add_result = nil,
 		add_filter = nil,
-		remove_result = nil,
 		add_filter = callback(self, self, "_add_unit_filter"),
 		add_result = callback(self, self, "_add_unit"),
 		remove_filter = callback(self, self, "_remove_unit_filter"),
 		remove_result = callback(self, self, "_remove_unit")
 	})
 	self:_build_value_number(panel, panel_sizer, "timer", {
-		min = 0,
-		floats = 1
+		floats = 1,
+		min = 0
 	}, "Specifies how long time (in seconds) to wait before execute")
 	self:_add_help_text("Creates a timer element. When the timer runs out, execute will be run. The timer element can be operated on using the logic_timer_operator")
 end
@@ -302,8 +302,8 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"hide_hud_timer"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "time", {
-		min = 0,
-		floats = 1
+		floats = 1,
+		min = 0
 	}, "Amount of time to add, subtract or set to the timers.")
 	self:_add_help_text("This element can modify logic_timer element. Select timers to modify using insert and clicking on the elements.")
 end
@@ -394,8 +394,8 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_number(panel, panel_sizer, "time", {
-		min = 0,
-		floats = 1
+		floats = 1,
+		min = 0
 	}, "Specify how much time should be left on the timer to trigger.")
 	self:_add_help_text("This element is a trigger to logic_timer element.")
 end

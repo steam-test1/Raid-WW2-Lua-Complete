@@ -1288,9 +1288,9 @@ function CopActionAct:_ik_update_func(t)
 			local old_look_vec = self._modifier_name == Idstring("look_head") and self._unit:get_object(Idstring("Head")):rotation():z() or self._unit:get_object(ids_aim):rotation():y()
 			local duration = math.lerp(0.1, 1, target_vec:angle(old_look_vec) / 90)
 			self._look_trans = {
-				duration = nil,
-				start_vec = nil,
 				start_t = nil,
+				start_vec = nil,
+				duration = nil,
 				start_t = TimerManager:game():time(),
 				duration = duration,
 				start_vec = old_look_vec
@@ -1499,8 +1499,8 @@ function CopActionAct:save(save_data)
 	end
 
 	save_data.blocks = save_data.blocks or {
-		action = -1,
 		walk = -1,
+		action = -1,
 		act = -1
 	}
 	save_data.start_anim_time = self._machine:segment_real_time(Idstring("base"))

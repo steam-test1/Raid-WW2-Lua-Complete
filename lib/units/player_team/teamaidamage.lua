@@ -11,12 +11,12 @@ TeamAIDamage._all_event_types = {
 	"none"
 }
 TeamAIDamage._RESULT_INDEX_TABLE = {
+	death = 3,
+	bleedout = 2,
 	fatal = 6,
 	heavy_hurt = 5,
 	light_hurt = 4,
-	hurt = 1,
-	death = 3,
-	bleedout = 2
+	hurt = 1
 }
 TeamAIDamage._HEALTH_GRANULARITY = CopDamage._HEALTH_GRANULARITY
 TeamAIDamage.set_invulnerable = CopDamage.set_invulnerable
@@ -674,10 +674,10 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 
 	local attack_data = {
 		damage = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = "bullet",
+		pos = nil,
 		attacker_unit = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		damage = damage,
 		attack_dir = attack_dir,
@@ -718,10 +718,10 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 
 	local attack_data = {
 		damage = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = nil,
+		pos = nil,
 		attacker_unit = nil,
+		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		damage = damage,
@@ -763,10 +763,10 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 
 	local attack_data = {
 		damage = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = nil,
+		pos = nil,
 		attacker_unit = nil,
+		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		damage = damage,
@@ -812,10 +812,10 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 
 	local attack_data = {
 		damage = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = "melee",
+		pos = nil,
 		attacker_unit = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		damage = damage,
 		attack_dir = attack_dir,
@@ -847,15 +847,15 @@ function TeamAIDamage:revive(reviving_unit)
 		self:_regenerated()
 
 		local action_data = {
+			blocks = nil,
 			variant = "stand",
 			body_part = 1,
 			type = "act",
-			blocks = nil,
 			blocks = {
 				aim = -1,
 				walk = -1,
-				heavy_hurt = -1,
 				action = -1,
+				heavy_hurt = -1,
 				hurt = -1
 			}
 		}
@@ -944,15 +944,15 @@ function TeamAIDamage:on_tase_ended()
 
 		self._to_incapacitated_clbk_id = nil
 		local action_data = {
+			blocks = nil,
 			variant = "stand",
 			body_part = 1,
 			type = "act",
-			blocks = nil,
 			blocks = {
 				hurt = -1,
+				heavy_hurt = -1,
 				walk = -1,
-				action = -1,
-				heavy_hurt = -1
+				action = -1
 			}
 		}
 		local res = self._unit:movement():action_request(action_data)

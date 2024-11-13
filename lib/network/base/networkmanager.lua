@@ -45,9 +45,9 @@ end
 
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
+		suspicion = nil,
 		set_look_dir = nil,
 		criminal_hurt = nil,
-		suspicion = nil,
 		set_look_dir = {
 			clbk = nil,
 			clbk = NetworkManager.clbk_msg_overwrite
@@ -504,9 +504,9 @@ function NetworkManager:register_spawn_point(id, data, spawner)
 	Application:debug("[NetworkManager:register_spawn_point]")
 
 	local runtime_data = {
-		id = nil,
 		spawner = nil,
 		pos_rot = nil,
+		id = nil,
 		pos_rot = {
 			data.position,
 			data.rotation

@@ -168,8 +168,8 @@ function EwsTextDialog:init(name, init_text)
 
 	button_sizer:add(ok_btn, 0, 0, "EXPAND")
 	ok_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "close"), {
-		dialog = nil,
 		cancel = false,
+		dialog = nil,
 		dialog = self._dialog
 	})
 
@@ -177,8 +177,8 @@ function EwsTextDialog:init(name, init_text)
 
 	button_sizer:add(cancel_btn, 0, 0, "EXPAND")
 	cancel_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "close"), {
-		dialog = nil,
 		cancel = true,
+		dialog = nil,
 		dialog = self._dialog
 	})
 	dialog_main_sizer:add(button_sizer, 0, 0, "ALIGN_RIGHT")

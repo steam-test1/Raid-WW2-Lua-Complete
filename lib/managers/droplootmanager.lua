@@ -77,9 +77,9 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 		end
 
 		weight_multiplier = {
+			grenade = nil,
 			ammo = nil,
 			health = nil,
-			grenade = nil,
 			health = multiplier,
 			ammo = multiplier,
 			grenade = multiplier
@@ -113,9 +113,9 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 	if item then
 		local spawned_unit = managers.game_play_central:spawn_pickup({
 			world_id = nil,
-			rotation = nil,
-			position = nil,
 			name = nil,
+			position = nil,
+			rotation = nil,
 			name = item,
 			position = position,
 			rotation = rotation,
@@ -147,10 +147,14 @@ function DropLootManager:enemy_drop_item(tweak_table, killer_unit, position, rot
 				multipliers.health = tweak_data.drop_loot:get_drop_rate_multiplier("health", health_ratio)
 			end
 
-			local current_grenades = managers.player:get_grenade_amount(peer_id)
-			local max_grenades = managers.player:get_max_grenades_by_peer_id(peer_id)
-			local grenades_ratio = current_grenades / max_grenades
-			multipliers.grenade = tweak_data.drop_loot:get_drop_rate_multiplier("grenade", grenades_ratio)
+			local grenade_type = managers.player:get_grenade_type(peer_id)
+
+			if grenade_type and grenade_type.pickup_filter and grenade_type.pickup_filter == "grenades" then
+				local current_grenades = managers.player:get_grenade_amount(peer_id)
+				local max_grenades = managers.player:get_max_grenades_by_peer_id(peer_id)
+				local grenades_ratio = current_grenades / max_grenades
+				multipliers.grenade = tweak_data.drop_loot:get_drop_rate_multiplier("grenade", grenades_ratio)
+			end
 		end
 	end
 

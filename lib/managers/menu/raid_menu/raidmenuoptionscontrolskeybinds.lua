@@ -16,14 +16,11 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 	RaidMenuOptionsControlsKeybinds.super._layout(self)
 
 	self._keybind_panel = self._root_panel:panel({
+		name = "keybind_panel",
 		y = 0,
-		x = 0,
-		name = "keybind_panel"
+		x = 0
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
-		on_click_callback = nil,
-		initial_tab_idx = 1,
-		tab_align = "center",
 		tab_height = 64,
 		tab_width = 160,
 		name = "tabs_keybind_types",
@@ -31,29 +28,32 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		x = 0,
 		tabs_params = nil,
 		dont_trigger_special_buttons = true,
+		on_click_callback = nil,
+		initial_tab_idx = 1,
+		tab_align = "center",
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{
 				callback_param = "normal",
-				text = nil,
 				name = "tab_on_foot",
+				text = nil,
 				text = self:translate("menu_options_binding_type_on_foot", true)
 			},
 			{
 				callback_param = "vehicle",
-				text = nil,
 				name = "tab_in_vehicle",
+				text = nil,
 				text = self:translate("menu_options_binding_type_in_vehicle", true)
 			}
 		}
 	})
 	local default_controls_keybinds_params = {
-		x = 1472,
+		text = nil,
+		layer = nil,
 		on_click_callback = nil,
 		name = "default_controls_keybinds",
 		y = 832,
-		text = nil,
-		layer = nil,
+		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -128,14 +128,14 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 		start_x = (type_no - 1) * column_padding
 
 		self._keybind_panel:text({
-			x = nil,
+			color = nil,
 			align = "left",
+			text = nil,
+			font = nil,
 			font_size = nil,
 			name = nil,
 			y = nil,
-			text = nil,
-			color = nil,
-			font = nil,
+			x = nil,
 			name = "column_title" .. keybind_type,
 			x = start_x,
 			y = column_title_y,
@@ -147,15 +147,15 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 
 		for row, keybind_params in ipairs(self._keybinds[keybind_type]) do
 			local keybind_control = self._keybind_panel:keybind({
-				text = nil,
-				keybind_w = 120,
 				ws = nil,
-				h = nil,
-				w = nil,
+				keybind_params = nil,
 				name = nil,
 				y = nil,
 				x = nil,
-				keybind_params = nil,
+				keybind_w = 120,
+				text = nil,
+				h = nil,
+				w = nil,
 				name = "keybind_" .. keybind_params.button,
 				x = start_x,
 				y = start_y + row * RaidGuiBase.PADDING,
@@ -201,13 +201,13 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				if btn_connection then
 					local name_id = name
 					local params = {
-						localize = "false",
-						button = nil,
-						axis = nil,
-						name = nil,
 						binding = nil,
 						text_id = nil,
 						connection_name = nil,
+						button = nil,
+						name = nil,
+						axis = nil,
+						localize = "false",
 						name = btn_name,
 						connection_name = name,
 						text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[btn_name].text_id)),
@@ -221,12 +221,12 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 			end
 		else
 			local params = {
-				localize = "false",
-				button = nil,
-				name = nil,
 				binding = nil,
 				text_id = nil,
 				connection_name = nil,
+				name = nil,
+				button = nil,
+				localize = "false",
 				name = name_id,
 				connection_name = name,
 				text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)),
@@ -263,8 +263,8 @@ end
 
 function RaidMenuOptionsControlsKeybinds:bind_controller_inputs()
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back"
 		},

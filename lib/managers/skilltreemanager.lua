@@ -49,13 +49,13 @@ end
 function SkillTreeManager:_required_save_data(real_save_data)
 	local save_data_skilltree = deep_clone(real_save_data)
 	local t_filter = {
-		exp_requirements = true,
-		exp_progression = true,
-		exp_tier = true,
 		active = true,
 		warcry_id = true,
 		upgrades_type = true,
-		gold_requirements = true
+		gold_requirements = true,
+		exp_requirements = true,
+		exp_progression = true,
+		exp_tier = true
 	}
 
 	for type_idx, type_group_data in pairs(save_data_skilltree) do
@@ -113,13 +113,13 @@ function SkillTreeManager:save_character_slot(data)
 	local cleaned_save_data_skilltree = self:_required_save_data(self:get_character_skilltree())
 	local display_stats = self:calculate_stats(self._global.character_profile_base_class)
 	local state = {
-		character_profile_base_class = nil,
-		version = nil,
-		display_stats = nil,
-		active_skill_profile = nil,
-		skill_profiles = nil,
 		base_class_automatic_unlock_progression = nil,
 		base_class_skill_tree = nil,
+		character_profile_base_class = nil,
+		skill_profiles = nil,
+		display_stats = nil,
+		active_skill_profile = nil,
+		version = nil,
 		version = SkillTreeManager.VERSION,
 		character_profile_base_class = self._global.character_profile_base_class,
 		base_class_skill_tree = cleaned_save_data_skilltree,
@@ -159,7 +159,7 @@ function SkillTreeManager:load_character_slot(data, version)
 		self:_activate_skill_tree(self._global.base_class_skill_tree, true)
 	end
 
-	if managers.player:local_player() then
+	if managers.player then
 		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
 	end
 end
@@ -623,13 +623,13 @@ end
 function SkillTreeManager:calculate_stats(character_class)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local stats = {
-		speed_run = nil,
-		stamina_regen = nil,
 		stamina = nil,
 		speed_walk = nil,
 		health = nil,
 		carry_limit = nil,
 		stamina_delay = nil,
+		speed_run = nil,
+		stamina_regen = nil,
 		health = self:_calculate_health_stat(class_tweak_data),
 		stamina = self:_calculate_stamina_stat(class_tweak_data),
 		stamina_regen = self:_calculate_stamina_regen_stat(class_tweak_data),
@@ -720,10 +720,10 @@ function SkillTreeManager:reset_skills()
 	local purchased_skills = self._global.main_profile_purchased_skills or {}
 	local purchased_profiles = self._global.main_profile_purchased_profiles or {}
 	Global.skilltree_manager = {
+		main_profile_purchased_skills = nil,
 		reset_message = false,
 		main_profile_purchased_profiles = nil,
 		VERSION = nil,
-		main_profile_purchased_skills = nil,
 		VERSION = SkillTreeManager.VERSION,
 		main_profile_purchased_skills = purchased_skills,
 		main_profile_purchased_profiles = purchased_profiles
@@ -878,8 +878,8 @@ function SkillTreeManager:_activate_skill(skill_id, savedata_skill_data, apply_a
 
 	if tweakdata_skill_data.warcry_id then
 		managers.warcry:set_active_warcry({
-			level = nil,
 			name = nil,
+			level = nil,
 			name = tweakdata_skill_data.warcry_id,
 			level = tiers
 		})
@@ -900,18 +900,6 @@ function SkillTreeManager:_apply_upgrades(upgrades, apply_acquires, activate)
 			managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[2])
 		end
 	end
-end
-
-function SkillTreeManager:pack_to_string()
-	local packed_string = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
-
-	return packed_string
-end
-
-function SkillTreeManager:pack_to_string_from_list(list)
-	local packed_string = managers.skilltree:get_character_profile_class()
-
-	return packed_string
 end
 
 function SkillTreeManager:_activate_skill_tree(skill_tree, activate)

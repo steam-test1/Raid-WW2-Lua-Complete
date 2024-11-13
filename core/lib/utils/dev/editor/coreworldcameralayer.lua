@@ -31,9 +31,9 @@ end
 function WorldCameraLayer:save(save_params)
 	local file_name = "world_cameras"
 	local t = {
+		single_data_block = true,
 		entry = nil,
 		data = nil,
-		single_data_block = true,
 		entry = self._save_name,
 		data = {
 			file = nil,
@@ -184,16 +184,16 @@ function WorldCameraLayer:build_panel(notebook)
 	edit_sizer:add(in_out_sizer, 0, 0, "EXPAND")
 
 	self._duration_params = {
-		name = "Camera Duration [sec]:",
-		panel = nil,
-		sizer = nil,
 		events = nil,
-		ctrlr_proportions = 1,
+		panel = nil,
 		name_proportions = 1,
 		min = 0,
+		ctrlr_proportions = 1,
 		tooltip = "Specifies the camera lenght in seconds",
-		floats = 2,
+		name = "Camera Duration [sec]:",
 		value = 2.5,
+		sizer = nil,
+		floats = 2,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -213,16 +213,16 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._duration_params)
 
 	self._delay_params = {
-		name = "End Delay [sec]:",
-		panel = nil,
-		sizer = nil,
 		events = nil,
-		ctrlr_proportions = 1,
+		panel = nil,
 		name_proportions = 1,
 		min = 0,
+		ctrlr_proportions = 1,
 		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
-		floats = 2,
+		name = "End Delay [sec]:",
 		value = 0,
+		sizer = nil,
+		floats = 2,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -242,16 +242,16 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._delay_params)
 
 	self._dof_paddding_params = {
-		name = "Dof Padding [cm]:",
-		panel = nil,
-		sizer = nil,
 		events = nil,
-		ctrlr_proportions = 1,
+		panel = nil,
 		name_proportions = 1,
 		min = 0,
+		ctrlr_proportions = 1,
 		tooltip = "The fade distance from max dof to no dof",
-		floats = 0,
+		name = "Dof Padding [cm]:",
 		value = nil,
+		sizer = nil,
+		floats = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_padding(),
@@ -272,17 +272,17 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._dof_paddding_params)
 
 	self._dof_clamp_params = {
-		name = "Dof Amount [0-1]:",
-		min = 0,
-		sizer = nil,
-		max = 1,
 		events = nil,
-		ctrlr_proportions = 1,
-		name_proportions = 1,
 		panel = nil,
+		name_proportions = 1,
+		min = 0,
+		ctrlr_proportions = 1,
 		tooltip = "A value to specify how much dof it should have",
-		floats = 2,
+		name = "Dof Amount [0-1]:",
 		value = nil,
+		sizer = nil,
+		floats = 2,
+		max = 1,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_clamp(),
@@ -444,15 +444,15 @@ function WorldCameraLayer:build_panel(notebook)
 	keys_sizer:add(key_far_dof_sizer, 0, 0, "EXPAND")
 
 	local roll_params = {
-		name = "Roll:",
-		sizer = nil,
 		events = nil,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		panel = nil,
-		tooltip = "An angle value specifying the roll",
 		floats = 0,
+		tooltip = "An angle value specifying the roll",
+		name = "Roll:",
 		value = 0,
+		sizer = nil,
 		panel = self._ews_panel,
 		sizer = keys_sizer,
 		events = {

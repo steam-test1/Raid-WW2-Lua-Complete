@@ -34,12 +34,12 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	local parent_params = {
-		name = "kick_mute_widget_panel",
+		y = nil,
 		halign = "scale",
+		visible = false,
+		name = "kick_mute_widget_panel",
 		valign = "top",
 		h = nil,
-		y = nil,
-		visible = false,
 		y = params.y,
 		h = RaidGUIControlKickMuteWidget.HEIGHT
 	}
@@ -48,13 +48,13 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_highlight_line()
 	local highlight_params = {
+		name = "highlight_line",
+		alpha = 0,
+		halign = "left",
+		color = nil,
 		w = nil,
 		x = nil,
-		name = "highlight_line",
 		h = nil,
-		halign = "left",
-		alpha = 0,
-		color = nil,
 		x = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_X,
 		w = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_W,
 		h = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_H,
@@ -67,9 +67,7 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_name_text()
 	local name_params = {
-		name = "name",
 		halign = "left",
-		h = nil,
 		color = nil,
 		w = nil,
 		x = nil,
@@ -78,6 +76,8 @@ function RaidGUIControlKickMuteWidget:_create_name_text()
 		text = "WWWWWWWWWWWWWWWW",
 		font_size = nil,
 		font = nil,
+		name = "name",
+		h = nil,
 		x = RaidGUIControlKickMuteWidget.NAME_X,
 		w = self._object:w() - RaidGUIControlKickMuteWidget.NAME_X,
 		h = RaidGUIControlKickMuteWidget.NAME_H,
@@ -92,12 +92,12 @@ function RaidGUIControlKickMuteWidget:_create_kick_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local kick_button_params = {
+		on_selected_callback = nil,
+		on_unselected_callback = nil,
+		on_menu_move = nil,
 		name = nil,
 		on_click_callback = nil,
-		on_unselected_callback = nil,
 		inactive_icon = "players_icon_kick",
-		on_selected_callback = nil,
-		on_menu_move = nil,
 		name = "kick_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_kick_pressed"),
 		on_menu_move = {
@@ -123,13 +123,13 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local mute_button_params = {
+		on_selected_callback = nil,
+		on_menu_move = nil,
+		active_icon = "players_icon_unmute",
+		on_unselected_callback = nil,
 		name = nil,
 		on_click_callback = nil,
-		on_menu_move = nil,
 		inactive_icon = "players_icon_mute",
-		on_selected_callback = nil,
-		on_unselected_callback = nil,
-		active_icon = "players_icon_unmute",
 		name = "mute_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_mute_pressed"),
 		on_menu_move = {
@@ -157,12 +157,12 @@ function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local gamercard_button_params = {
+		on_selected_callback = nil,
+		on_unselected_callback = nil,
+		on_menu_move = nil,
 		name = nil,
 		on_click_callback = nil,
-		on_unselected_callback = nil,
 		inactive_icon = "players_icon_gamecard",
-		on_selected_callback = nil,
-		on_menu_move = nil,
 		name = "gamercard_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "show_gamercard"),
 		on_menu_move = {
@@ -188,14 +188,14 @@ function RaidGUIControlKickMuteWidget:_create_invite_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local invite_button_params = {
+		on_selected_callback = nil,
+		on_menu_move = nil,
+		active_icon = "players_icon_xbox_invite",
+		on_unselected_callback = nil,
 		name = nil,
 		on_click_callback = nil,
-		on_menu_move = nil,
-		inactive_icon = "players_icon_xbox_invite",
-		on_selected_callback = nil,
-		on_unselected_callback = nil,
-		active_icon = "players_icon_xbox_invite",
 		visible = false,
+		inactive_icon = "players_icon_xbox_invite",
 		name = "invite_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_invite_pressed"),
 		on_menu_move = {

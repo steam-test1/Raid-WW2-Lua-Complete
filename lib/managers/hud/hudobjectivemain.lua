@@ -22,8 +22,8 @@ end
 
 function HUDObjectiveMain:_create_panel(objectives_panel)
 	local panel_params = {
-		h = nil,
 		valign = "top",
+		h = nil,
 		w = nil,
 		name = "main_objective",
 		halign = "scale",
@@ -35,8 +35,8 @@ end
 
 function HUDObjectiveMain:_create_timer()
 	local timer_panel_params = {
-		h = nil,
 		valign = "center",
+		h = nil,
 		w = nil,
 		name = "timer_panel",
 		halign = "right",
@@ -49,8 +49,8 @@ function HUDObjectiveMain:_create_timer()
 
 	local timer_background_params = {
 		texture = nil,
-		name = "timer_background",
 		texture_rect = nil,
+		name = "timer_background",
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_BACKGROUND_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveMain.TIMER_BACKGROUND_ICON].texture_rect
 	}
@@ -61,8 +61,8 @@ function HUDObjectiveMain:_create_timer()
 
 	local timer_static_fill_params = {
 		texture = nil,
-		alpha = 0,
 		texture_rect = nil,
+		alpha = 0,
 		name = "timer_static_fill",
 		layer = nil,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
@@ -76,12 +76,12 @@ function HUDObjectiveMain:_create_timer()
 
 	local timer_fill_params = {
 		texture_rect = nil,
-		h = nil,
 		w = nil,
 		texture = nil,
 		name = "timer_fill",
 		layer = nil,
 		render_template = "VertexColorTexturedRadial",
+		h = nil,
 		visible = false,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
 		texture_rect = {

@@ -34,7 +34,7 @@ end
 
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
-		view = nil,
+		p = nil,
 		message = "",
 		valid = true
 	}
@@ -217,7 +217,7 @@ end
 
 function CoreEffectProperty:validate()
 	local ret = {
-		view = nil,
+		p = nil,
 		message = "",
 		valid = true
 	}
@@ -497,10 +497,10 @@ function create_color_selector(parent, view, prop)
 	end
 
 	local vars = {
+		button = nil,
 		update_colour = nil,
 		prop = nil,
 		view = nil,
-		button = nil,
 		button = button,
 		prop = prop,
 		view = view,
@@ -581,8 +581,8 @@ function create_percentage_slider(parent, view, prop)
 	end
 
 	slider:connect("EVT_SCROLL_THUMBRELEASE", on_thumbtrack, {
-		slider = nil,
 		prop = nil,
+		slider = nil,
 		view = nil,
 		slider = slider,
 		view = view,
@@ -607,8 +607,8 @@ function create_check(parent, view, prop)
 
 	check:set_value(prop._value == "true")
 	check:connect("EVT_COMMAND_CHECKBOX_CLICKED", on_check, {
-		prop = nil,
 		check = nil,
+		prop = nil,
 		view = nil,
 		check = check,
 		view = view,
@@ -640,8 +640,8 @@ function create_key_curve_widget(parent, view, prop)
 
 		if #prop._keys < prop._max_keys then
 			prop:add_key({
-				t = nil,
 				v = nil,
+				t = nil,
 				t = t:get_value(),
 				v = v:get_value()
 			})
@@ -724,12 +724,12 @@ function create_key_curve_widget(parent, view, prop)
 	panel:set_sizer(top_sizer)
 
 	local vars = {
-		view = nil,
-		prop = nil,
 		listbox = nil,
-		refresh_list = nil,
-		t = nil,
 		v = nil,
+		view = nil,
+		t = nil,
+		prop = nil,
+		refresh_list = nil,
 		listbox = listbox,
 		t = t,
 		v = v,
@@ -831,12 +831,12 @@ function CoreEffectProperty:create_widget(parent, view)
 		sizer:add(combo, 0, 0, "EXPAND")
 		sizer:add(variant_panel, 1, 0, "EXPAND")
 		combo:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "on_set_variant", {
-			update = true,
-			view = nil,
 			container_sizer = nil,
 			container = nil,
 			variant_panel = nil,
 			combo = nil,
+			update = true,
+			view = nil,
 			combo = combo,
 			container = widget,
 			view = view,
@@ -847,12 +847,12 @@ function CoreEffectProperty:create_widget(parent, view)
 		widget:set_sizer(sizer)
 		widget:set_min_size(sizer:get_min_size())
 		self:on_set_variant({
-			update = false,
-			view = nil,
 			container_sizer = nil,
 			container = nil,
 			variant_panel = nil,
 			combo = nil,
+			update = false,
+			view = nil,
 			combo = combo,
 			container = widget,
 			view = view,
@@ -926,15 +926,15 @@ function CoreEffectProperty:create_widget(parent, view)
 		local sheet = EWS:Panel(widget, "", "")
 		local top_sizer = EWS:BoxSizer("VERTICAL")
 		local vars = {
-			sheet = nil,
-			fill_list = nil,
-			container_sizer = nil,
+			property = nil,
 			container = nil,
+			container_sizer = nil,
 			combo = nil,
+			view = nil,
+			sheet = nil,
 			on_select_object = nil,
 			list_box = nil,
-			view = nil,
-			property = nil,
+			fill_list = nil,
 			property = self,
 			combo = combo,
 			container = widget,
@@ -1009,8 +1009,8 @@ function CoreEffectProperty:create_widget(parent, view)
 				end
 
 				table.insert(prop._keys, {
-					t = nil,
 					v = nil,
+					t = nil,
 					t = k.t,
 					v = s
 				})
@@ -1023,8 +1023,8 @@ function CoreEffectProperty:create_widget(parent, view)
 
 		widget:set_looping(self._looping)
 		widget:connect("EVT_SELECTOR_UPDATED", on_keys_commit, {
-			prop = nil,
 			widget = nil,
+			prop = nil,
 			view = nil,
 			widget = widget,
 			view = view,
@@ -1173,8 +1173,8 @@ function CoreEffectProperty:load(node)
 						local v = kn:parameter("v")
 
 						self:add_key({
-							t = nil,
 							v = nil,
+							t = nil,
 							t = t,
 							v = v
 						})

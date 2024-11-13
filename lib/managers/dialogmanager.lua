@@ -416,8 +416,8 @@ function DialogManager:finished()
 				local delay = self._current_dialog.lines[self._current_dialog.line].delay or 0.5
 
 				managers.queued_tasks:queue(nil, self._play_dialog, self, {
-					dialog = nil,
 					line = nil,
+					dialog = nil,
 					dialog = self._current_dialog,
 					line = line
 				}, delay, nil)
@@ -645,13 +645,13 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._dialog_list[node.id] = {
-				sound = nil,
-				character = nil,
-				id = nil,
 				chance = nil,
-				file_name = nil,
+				sound = nil,
 				priority = nil,
+				file_name = nil,
+				character = nil,
 				string_id = nil,
+				id = nil,
 				id = node.id,
 				character = node.character,
 				sound = node.sound,
@@ -713,10 +713,10 @@ function DialogManager:_parse_line_node(node)
 	end
 
 	return {
-		delay = nil,
 		character = nil,
 		sound = nil,
 		string_id = nil,
+		delay = nil,
 		sound = sound,
 		character = node.character,
 		string_id = node.string_id,

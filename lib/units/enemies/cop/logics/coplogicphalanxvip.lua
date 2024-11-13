@@ -186,9 +186,9 @@ function CopLogicPhalanxVip.breakup(remote_call)
 			local flee_nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
 			local new_objective = {
 				type = "flee",
-				pos = nil,
-				attitude = "avoid",
 				nav_seg = nil,
+				attitude = "avoid",
+				pos = nil,
 				pos = flee_pos,
 				nav_seg = flee_nav_seg
 			}

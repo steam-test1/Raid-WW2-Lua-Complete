@@ -59,13 +59,13 @@ function VehicleDamage:damage_mission(dmg)
 	local damage_info = {
 		result = nil,
 		result = {
-			type = "hurt",
-			variant = "killzone"
+			variant = "killzone",
+			type = "hurt"
 		}
 	}
 	local attack_data = {
-		damage = nil,
 		variant = "killzone",
+		damage = nil,
 		damage = dmg
 	}
 	local result = damage_info.result
@@ -76,8 +76,8 @@ function VehicleDamage:damage_mission(dmg)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -85,8 +85,8 @@ function VehicleDamage:damage_mission(dmg)
 	else
 		attack_data.damage = damage
 		result = {
-			type = "hurt",
 			variant = nil,
+			type = "hurt",
 			variant = attack_data.variant
 		}
 
@@ -112,11 +112,11 @@ function VehicleDamage:damage_bullet(attack_data)
 	end
 
 	local damage_info = {
-		attacker_unit = nil,
 		result = nil,
+		attacker_unit = nil,
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -143,8 +143,8 @@ function VehicleDamage:damage_bullet(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -152,8 +152,8 @@ function VehicleDamage:damage_bullet(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
-			type = "hurt",
 			variant = nil,
+			type = "hurt",
 			variant = attack_data.variant
 		}
 
@@ -222,15 +222,15 @@ function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body,
 
 	if death then
 		result = {
-			type = "death",
-			variant = "bullet"
+			variant = "bullet",
+			type = "death"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		}
 
 		self:set_health(self._health - damage)
@@ -258,8 +258,8 @@ function VehicleDamage:damage_explosion(attack_data)
 	local damage_info = {
 		result = nil,
 		result = {
-			type = "hurt",
-			variant = "explosion"
+			variant = "explosion",
+			type = "hurt"
 		}
 	}
 
@@ -281,8 +281,8 @@ function VehicleDamage:damage_explosion(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -290,8 +290,8 @@ function VehicleDamage:damage_explosion(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
-			type = "hurt",
 			variant = nil,
+			type = "hurt",
 			variant = attack_data.variant
 		}
 
@@ -334,8 +334,8 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = variant
 		}
 
@@ -351,8 +351,8 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 		}
 	else
 		result = {
-			type = "explosion",
 			variant = nil,
+			type = "explosion",
 			variant = variant
 		}
 
@@ -402,8 +402,8 @@ function VehicleDamage:damage_fire(attack_data)
 	local damage_info = {
 		result = nil,
 		result = {
-			type = "hurt",
-			variant = "fire"
+			variant = "fire",
+			type = "hurt"
 		}
 	}
 
@@ -423,8 +423,8 @@ function VehicleDamage:damage_fire(attack_data)
 	if self._health <= damage then
 		attack_data.damage = self._health
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = attack_data.variant
 		}
 
@@ -432,8 +432,8 @@ function VehicleDamage:damage_fire(attack_data)
 	else
 		attack_data.damage = damage
 		result = {
-			type = "hurt",
 			variant = nil,
+			type = "hurt",
 			variant = attack_data.variant
 		}
 
@@ -476,8 +476,8 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 
 	if death then
 		result = {
-			type = "death",
 			variant = nil,
+			type = "death",
 			variant = variant
 		}
 
@@ -493,8 +493,8 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 		}
 	else
 		result = {
-			type = "fire",
 			variant = nil,
+			type = "fire",
 			variant = variant
 		}
 
@@ -547,8 +547,8 @@ function VehicleDamage:damage_collision(attack_data)
 		local damage_info = {
 			result = nil,
 			result = {
-				type = "hurt",
-				variant = "collision"
+				variant = "collision",
+				type = "hurt"
 			}
 		}
 

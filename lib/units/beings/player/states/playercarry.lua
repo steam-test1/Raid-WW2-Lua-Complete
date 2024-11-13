@@ -56,10 +56,10 @@ function PlayerCarry:exit(state_data, new_state_name)
 	self._camera_unit:base():set_target_tilt(0)
 
 	local exit_data = {
-		equip_weapon_expire_t = nil,
 		change_weapon_data = nil,
 		unequip_weapon_expire_t = nil,
 		skip_equip = true,
+		equip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data

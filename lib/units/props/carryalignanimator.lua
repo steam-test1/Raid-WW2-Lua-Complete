@@ -60,8 +60,8 @@ function CarryAlignAnimator:trigger_store_carry(instigator)
 	local position, rotation = managers.player:carry_align_throw()
 
 	self:client_store_carry({
-		rotation = nil,
 		position = nil,
+		rotation = nil,
 		position = position,
 		rotation = rotation
 	}, carry_data.carry_id)
@@ -162,10 +162,10 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 		local duration = CarryAlignAnimator.SPEED_DISTANCE * distance
 
 		table.insert(self._animating_loots, {
-			duration = nil,
-			align_idstr = nil,
-			unit = nil,
 			slot_index = nil,
+			duration = nil,
+			unit = nil,
+			align_idstr = nil,
 			carry_id = nil,
 			slot_index = slot_index,
 			unit = prop_unit,

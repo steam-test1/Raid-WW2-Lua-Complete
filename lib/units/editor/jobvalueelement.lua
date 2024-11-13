@@ -31,13 +31,13 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = nil,
+		value = "key",
 		ctrlr = key
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = nil,
+		value = "key",
 		ctrlr = key
 	})
 
@@ -53,13 +53,13 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	value_sizer:add(value, 2, 0, "ALIGN_CENTER_VERTICAL")
 	value:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = nil,
+		value = "value",
 		ctrlr = value
 	})
 	value:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = nil,
+		value = "value",
 		ctrlr = value
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "save")
@@ -100,8 +100,8 @@ function JobValueFilterUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select which check operation to perform")
 
 	local help = {
-		panel = nil,
 		sizer = nil,
+		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "Key is what to check. Value is what it is supposed to be to pass the filter. Different check types can be used i the value is known to be a number, for example, greater_then checks if the stored value is greater then the input value."
@@ -139,10 +139,10 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				to_unit = nil,
-				b = 0.25,
-				r = 0.85,
-				g = 0.85,
 				from_unit = nil,
+				b = 0.25,
+				g = 0.85,
+				r = 0.85,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -152,8 +152,8 @@ end
 
 function ApplyJobValueUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -200,13 +200,13 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = nil,
+		value = "key",
 		ctrlr = key
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = nil,
+		value = "key",
 		ctrlr = key
 	})
 
@@ -214,8 +214,8 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	save:set_value(self._hed.save)
 	save:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "save",
 		ctrlr = nil,
+		value = "save",
 		ctrlr = save
 	})
 	panel_sizer:add(save, 0, 0, "EXPAND")

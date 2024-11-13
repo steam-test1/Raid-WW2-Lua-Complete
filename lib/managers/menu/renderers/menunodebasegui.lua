@@ -66,30 +66,30 @@ function MenuNodeBaseGui:create_text_button(params)
 	local font = params.font or self.small_font
 	local font_size = params.font_size or self.small_font_size
 	local button_panel = self.safe_rect_panel:panel({
-		y = nil,
 		x = nil,
 		visible = nil,
 		layer = nil,
+		y = nil,
 		x = left,
 		y = top,
 		layer = layer,
 		visible = not disabled
 	})
 	local gui_blur = button_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
+		visible = nil,
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		name = "button_blur",
 		layer = -1,
-		visible = nil,
 		visible = not hide_blur
 	})
 	local gui_text = button_panel:text({
-		font = nil,
-		text = nil,
-		font_size = nil,
 		name = "button_text",
-		blend_mode = "add",
 		color = nil,
+		text = nil,
+		blend_mode = "add",
+		font_size = nil,
+		font = nil,
 		layer = 0,
 		text = text,
 		font = font,
@@ -130,13 +130,12 @@ function MenuNodeBaseGui:create_text_button(params)
 
 	table.insert(self._text_buttons, {
 		clbk = nil,
+		panel = nil,
+		text = nil,
 		legend_text = nil,
 		params = nil,
-		text = nil,
-		image = nil,
 		highlighted = false,
 		blur = nil,
-		panel = nil,
 		panel = button_panel,
 		text = gui_text,
 		blur = gui_blur,
@@ -275,8 +274,8 @@ function MenuNodeBaseGui:request_texture(texture_path, panel, keep_aspect_ratio,
 
 	local texture_count = managers.menu_component:request_texture(texture_path, callback(self, self, "texture_done_clbk", {
 		blend_mode = nil,
-		keep_aspect_ratio = nil,
 		panel = nil,
+		keep_aspect_ratio = nil,
 		panel = panel,
 		keep_aspect_ratio = keep_aspect_ratio,
 		blend_mode = blend_mode
@@ -315,8 +314,8 @@ function MenuNodeBaseGui:texture_done_clbk(params, texture_ids)
 
 	local image = panel:bitmap({
 		blend_mode = nil,
-		texture = nil,
 		name = nil,
+		texture = nil,
 		name = name,
 		texture = texture_ids,
 		blend_mode = blend_mode

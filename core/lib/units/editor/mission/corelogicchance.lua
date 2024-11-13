@@ -64,11 +64,11 @@ function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
+				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
 				g = 0.75,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -86,8 +86,8 @@ end
 
 function CoreLogicChanceOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_chance/logic_chance") then
@@ -164,11 +164,11 @@ function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw then
 			self:_draw_link({
+				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -186,8 +186,8 @@ end
 
 function CoreLogicChanceTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_chance/logic_chance") then

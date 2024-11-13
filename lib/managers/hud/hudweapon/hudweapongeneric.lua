@@ -37,11 +37,11 @@ end
 
 function HUDWeaponGeneric:_create_panel(weapons_panel)
 	local panel_params = {
-		valign = "bottom",
 		h = nil,
 		w = nil,
 		name = nil,
 		halign = "right",
+		valign = "bottom",
 		name = "weapon_" .. tostring(self._index),
 		w = HUDWeaponGeneric.W,
 		h = HUDWeaponGeneric.H
@@ -51,22 +51,22 @@ end
 
 function HUDWeaponGeneric:_create_icon(icon)
 	local icon_panel_params = {
-		y = 0,
-		x = 0,
 		h = nil,
 		w = nil,
 		valign = "top",
 		name = "icon_panel",
 		halign = "center",
+		y = 0,
+		x = 0,
 		w = self._object:w(),
 		h = self._object:h() / 2
 	}
 	self._icon_panel = self._object:panel(icon_panel_params)
 	local icon_params = {
-		texture_rect = nil,
-		name = "weapon_icon",
 		texture = nil,
 		alpha = nil,
+		texture_rect = nil,
+		name = "weapon_icon",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
@@ -79,11 +79,11 @@ end
 
 function HUDWeaponGeneric:_create_ammo_panel(weapons_panel)
 	local ammo_panel_params = {
-		valign = "bottom",
 		h = nil,
 		w = nil,
 		name = "ammo_panel",
 		halign = "center",
+		valign = "bottom",
 		w = HUDWeaponGeneric.AMMO_PANEL_W,
 		h = HUDWeaponGeneric.AMMO_PANEL_H
 	}
@@ -95,8 +95,6 @@ end
 
 function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 	local current_clip_background_border_params = {
-		y = 0,
-		x = 0,
 		h = nil,
 		alpha = nil,
 		halign = "left",
@@ -104,6 +102,8 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 		color = nil,
 		w = nil,
 		name = "current_clip_background_border",
+		y = 0,
+		x = 0,
 		w = HUDWeaponGeneric.CLIP_BACKGROUND_W,
 		h = self._ammo_panel:h(),
 		color = HUDWeaponGeneric.CLIP_BACKGROUND_OUTLINE_COLOR,
@@ -111,8 +111,6 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 	}
 	local current_clip_background_border = self._ammo_panel:rect(current_clip_background_border_params)
 	local current_clip_background_params = {
-		y = nil,
-		x = nil,
 		h = nil,
 		alpha = nil,
 		layer = nil,
@@ -121,6 +119,8 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 		color = nil,
 		w = nil,
 		name = "current_clip_background",
+		y = nil,
+		x = nil,
 		x = HUDWeaponGeneric.CLIP_BACKGROUND_THICKNESS,
 		y = HUDWeaponGeneric.CLIP_BACKGROUND_THICKNESS,
 		w = current_clip_background_border:w() - HUDWeaponGeneric.CLIP_BACKGROUND_THICKNESS * 2,
@@ -131,14 +131,14 @@ function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 	}
 	self._current_clip_background = self._ammo_panel:rect(current_clip_background_params)
 	local current_clip_text_params = {
-		valign = "top",
-		font = nil,
 		color = nil,
-		text = "",
 		halign = "left",
+		text = "",
 		layer = nil,
 		name = "current_clip_amount",
 		font_size = nil,
+		valign = "top",
+		font = nil,
 		font = tweak_data.gui:get_font_path(HUDWeaponGeneric.CURRENT_CLIP_FONT, HUDWeaponGeneric.CURRENT_CLIP_FONT_SIZE),
 		font_size = HUDWeaponGeneric.CURRENT_CLIP_FONT_SIZE,
 		color = HUDWeaponGeneric.CURRENT_CLIP_TEXT_COLOR,
@@ -152,14 +152,14 @@ end
 
 function HUDWeaponGeneric:_create_ammo_left_info(weapons_panel)
 	local ammo_left_text_params = {
-		valign = "top",
-		font = nil,
 		color = nil,
-		text = "",
 		halign = "right",
-		alpha = nil,
+		text = "",
+		valign = "top",
 		name = "ammo_left_amount",
 		font_size = nil,
+		alpha = nil,
+		font = nil,
 		font = HUDWeaponGeneric.AMMO_LEFT_FONT,
 		font_size = HUDWeaponGeneric.AMMO_LEFT_FONT_SIZE,
 		color = HUDWeaponGeneric.AMMO_LEFT_TEXT_COLOR,
@@ -172,12 +172,12 @@ end
 
 function HUDWeaponGeneric:_create_firemodes()
 	local firemode_auto_params = {
-		texture_rect = nil,
-		valign = "bottom",
 		texture = nil,
 		alpha = nil,
 		name = "firemode_auto",
 		halign = "center",
+		texture_rect = nil,
+		valign = "bottom",
 		texture = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_AUTO_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_AUTO_ICON].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED
@@ -188,12 +188,12 @@ function HUDWeaponGeneric:_create_firemodes()
 	self._firemode_auto:set_bottom(self._icon_panel:h() + 2)
 
 	local firemode_single_params = {
-		texture_rect = nil,
-		valign = "bottom",
 		texture = nil,
 		alpha = nil,
 		name = "firemode_single",
 		halign = "center",
+		texture_rect = nil,
+		valign = "bottom",
 		texture = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_SINGLE_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDWeaponGeneric.FIREMODE_SINGLE_ICON].texture_rect,
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED

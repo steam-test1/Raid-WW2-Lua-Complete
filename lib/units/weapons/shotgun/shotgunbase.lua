@@ -78,8 +78,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 				local spread_direction = mvector3.copy(mvec_spread_direction)
 
 				table.insert(col_rays, {
-					ray = nil,
 					position = nil,
+					ray = nil,
 					position = ray_to,
 					ray = spread_direction
 				})
@@ -177,8 +177,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	end
 
 	managers.statistics:shot_fired({
-		weapon_unit = nil,
 		hit = nil,
+		weapon_unit = nil,
 		hit = result.hit_enemy,
 		weapon_unit = self._unit
 	})

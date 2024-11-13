@@ -26,20 +26,20 @@ end
 
 function RaidGUIControlEventDisplay:_create_panel()
 	self._object = self._panel:panel({
+		name = "event_display_panel",
 		valign = "bottom",
 		h = nil,
 		halign = "right",
-		name = "event_display_panel",
 		h = self.HEIGHT
 	})
 	self._background = self._object:nine_cut_bitmap({
-		layer = 0,
-		alpha = 0.75,
-		corner_size = 32,
 		w = nil,
 		icon = "dialog_rect",
 		h = nil,
 		name = "event_background",
+		layer = 0,
+		alpha = 0.75,
+		corner_size = 32,
 		w = self._object:w(),
 		h = self.INNER_HEIGHT
 	})
@@ -47,11 +47,11 @@ function RaidGUIControlEventDisplay:_create_panel()
 	self._background:set_bottom(self._object:h())
 
 	self._separator = self._object:gradient({
-		layer = nil,
-		orientation = "horizontal",
 		y = nil,
 		h = 4,
 		name = "event_separator",
+		layer = nil,
+		orientation = "horizontal",
 		y = self._background:y() + 4,
 		layer = self._background:layer() + 1
 	})
@@ -60,10 +60,10 @@ end
 function RaidGUIControlEventDisplay:_create_title()
 	self._title = self._object:text({
 		text = "SUPER SPECIAL EVENT",
-		align = "center",
-		font_size = nil,
 		font = nil,
 		name = "event_title",
+		align = "center",
+		font_size = nil,
 		font = tweak_data.gui:get_font_path(self.TITLE_FONT, self.TITLE_FONT_SIZE),
 		font_size = self.TITLE_FONT_SIZE
 	})
@@ -71,12 +71,12 @@ end
 
 function RaidGUIControlEventDisplay:_create_inner_panel()
 	self._inner_panel = self._object:panel({
-		layer = 1,
-		halign = "grow",
 		w = nil,
 		valign = "grow",
 		h = nil,
 		name = "event_inner_panel",
+		layer = 1,
+		halign = "grow",
 		w = self._object:w() - self.INNER_PADDING,
 		h = self.INNER_HEIGHT
 	})
@@ -87,11 +87,11 @@ end
 
 function RaidGUIControlEventDisplay:_create_toggle()
 	self._event_checkbox = self._inner_panel:toggle_button({
-		description = nil,
-		layer = nil,
 		y = 14,
+		layer = nil,
 		value = true,
 		name = "event_checkbox",
+		description = nil,
 		description = self:translate("menu_enable_event_title", true),
 		layer = self._background:layer() + 1
 	})
@@ -107,28 +107,28 @@ end
 function RaidGUIControlEventDisplay:_create_challenge()
 	local default_icon = "wpn_skill_accuracy"
 	self._icon = self._inner_panel:bitmap({
-		x = 8,
-		texture = nil,
-		layer = nil,
 		y = nil,
-		texture_rect = nil,
 		name = "weapon_challenge_icon",
+		texture_rect = nil,
+		layer = nil,
+		texture = nil,
+		x = 8,
 		y = self.CHALLENGES_Y,
 		texture = tweak_data.gui.icons[default_icon].texture,
 		texture_rect = tweak_data.gui.icons[default_icon].texture_rect,
 		layer = self._background:layer() + 1
 	})
 	self._description = self._inner_panel:text({
-		x = nil,
+		w = nil,
+		font = nil,
 		layer = nil,
+		text = "Bla bla bla bla",
+		x = nil,
 		y = nil,
 		name = "weapon_challenge_description",
 		wrap = true,
 		color = nil,
 		font_size = nil,
-		w = nil,
-		font = nil,
-		text = "Bla bla bla bla",
 		x = self.RIGHT_SIDE_X,
 		y = self.CHALLENGES_Y,
 		w = self._inner_panel:w() - self.RIGHT_SIDE_X,
@@ -138,9 +138,9 @@ function RaidGUIControlEventDisplay:_create_challenge()
 		layer = self._background:layer() + 1
 	})
 	self._progress_bar_panel = self._inner_panel:panel({
+		w = nil,
 		vertical = "bottom",
 		h = nil,
-		w = nil,
 		name = "weapon_challenge_progress_bar_panel",
 		w = self._inner_panel:w(),
 		h = tweak_data.gui:icon_h(self.PROGRESS_IMAGE_CENTER)
@@ -149,14 +149,14 @@ function RaidGUIControlEventDisplay:_create_challenge()
 	self._progress_bar_panel:set_center_y(self._inner_panel:h() - 32)
 
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap({
+		w = nil,
+		name = "weapon_challenge_progress_bar_background",
+		h = nil,
+		color = nil,
+		left = nil,
 		center = nil,
 		right = nil,
-		left = nil,
-		w = nil,
-		color = nil,
-		h = nil,
 		layer = 1,
-		name = "weapon_challenge_progress_bar_background",
 		w = self._progress_bar_panel:w(),
 		h = tweak_data.gui:icon_h(self.PROGRESS_IMAGE_CENTER),
 		left = self.PROGRESS_IMAGE_LEFT,
@@ -165,22 +165,22 @@ function RaidGUIControlEventDisplay:_create_challenge()
 		color = Color.white:with_alpha(0.5)
 	})
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel({
-		layer = 2,
-		halign = "scale",
 		w = nil,
 		valign = "scale",
 		h = nil,
 		name = "weapon_challenge_progress_bar_foreground_panel",
+		layer = 2,
+		halign = "scale",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	})
 	self._progress_bar = self._progress_bar_foreground_panel:three_cut_bitmap({
+		w = nil,
+		name = "weapon_challenge_progress_bar_background",
+		h = nil,
+		left = nil,
 		center = nil,
 		right = nil,
-		left = nil,
-		w = nil,
-		h = nil,
-		name = "weapon_challenge_progress_bar_background",
 		w = self._progress_bar_panel:w(),
 		h = tweak_data.gui:icon_h(self.PROGRESS_IMAGE_CENTER),
 		left = self.PROGRESS_IMAGE_LEFT,
@@ -190,16 +190,16 @@ function RaidGUIControlEventDisplay:_create_challenge()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	local overlay = self._progress_bar_foreground_panel:bitmap({
-		color = nil,
+		w = nil,
+		alpha = 0.3,
+		texture_rect = nil,
+		texture = nil,
 		blend_mode = "add",
+		wrap_mode = "wrap",
 		h = nil,
 		name = "candy_progress_bar_background",
 		layer = nil,
-		alpha = 0.3,
-		w = nil,
-		wrap_mode = "wrap",
-		texture_rect = nil,
-		texture = nil,
+		color = nil,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -208,17 +208,17 @@ function RaidGUIControlEventDisplay:_create_challenge()
 		layer = progress_bar_background:layer() + 5
 	})
 	self._progress_text = self._progress_bar_panel:label({
-		color = nil,
+		w = nil,
+		font = nil,
+		align = "center",
+		text = "123/456",
 		y = -2,
 		vertical = "center",
 		h = nil,
 		name = "weapon_challenge_progress_bar_text",
 		layer = nil,
-		align = "center",
+		color = nil,
 		font_size = nil,
-		w = nil,
-		font = nil,
-		text = "123/456",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -256,7 +256,6 @@ function RaidGUIControlEventDisplay:set_event(event_name)
 		local min_range = math.round(tasks[1]:min_range() / 100)
 		local max_range = math.round(tasks[1]:max_range() / 100)
 
-		self._description:set_text(self:translate(challenge_tweak.challenge_briefing_id))
 		self._progress_bar:set_color(accent_color)
 
 		local range = max_range > 0 and max_range or min_range
@@ -267,7 +266,7 @@ function RaidGUIControlEventDisplay:set_event(event_name)
 			WEAPON = nil,
 			AMOUNT = target,
 			RANGE = range,
-			WEAPON = managers.localization:text(tweak_data.weapon[data.weapon].name_id)
+			WEAPON = managers.localization:text(data.unlock)
 		}))
 		self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * count / target)
 

@@ -62,9 +62,9 @@ end
 
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
 	self._world_spawns[world_id] = {
-		active = true,
 		plant_loot = nil,
 		editor_name = nil,
+		active = true,
 		editor_name = editor_name,
 		plant_loot = spawn_loot
 	}
@@ -234,12 +234,12 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	Application:debug("[CoreWorldCollection:prepare_world()] world_id:", world_id, spawn_counter)
 
 	local params = {
-		file_path = nil,
-		world_id = nil,
 		file_type = "world",
 		world_dir = nil,
 		translation = nil,
+		world_id = nil,
 		excluded_continents = nil,
+		file_path = nil,
 		file_path = file_path,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -297,8 +297,8 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 	self._missions[index] = MissionManager:new()
 	self._mission_params[index] = {
 		worlddefinition = nil,
-		file_path = nil,
 		sync_id = nil,
+		file_path = nil,
 		file_path = self._mission_paths[index],
 		worlddefinition = definition,
 		sync_id = index
@@ -907,8 +907,8 @@ function CoreWorldCollection:sync_save(data)
 	Application:debug("[CoreWorldCollection:sync_save]", inspect(self._synced_peers))
 
 	local state = {
-		missions = nil,
 		synced_units = nil,
+		missions = nil,
 		missions = {},
 		synced_units = {}
 	}

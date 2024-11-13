@@ -32,7 +32,7 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 
 	if not self._client_authoritative then
 		if Network:is_client() then
-			managers.network:session():send_to_host("request_throw_projectile", projectile_type_index, from_pos, mvec_spread_direction, 0)
+			managers.network:session():send_to_host("request_throw_projectile", projectile_type_index, from_pos, mvec_spread_direction, 0, "")
 		else
 			unit = ProjectileBase.throw_projectile(projectile_type_index, from_pos, mvec_spread_direction, managers.network:session():local_peer():id())
 		end
@@ -41,8 +41,8 @@ function ProjectileWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	end
 
 	managers.statistics:shot_fired({
-		weapon_unit = nil,
 		hit = false,
+		weapon_unit = nil,
 		weapon_unit = self._unit
 	})
 

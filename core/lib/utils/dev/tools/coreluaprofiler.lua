@@ -295,9 +295,9 @@ function CoreLuaProfiler:fill_dump_tree_ctrl(node, id)
 
 		local new_id = self._dump_frame_table._tree_ctrl:append(id, name)
 		self._dump_tree_id_table[new_id] = {
-			_parent = nil,
 			_name = nil,
 			_id = nil,
+			_parent = nil,
 			_id = new_id,
 			_name = n:name(),
 			_parent = id
@@ -306,9 +306,9 @@ function CoreLuaProfiler:fill_dump_tree_ctrl(node, id)
 		for k, v in pairs(n:parameter_map()) do
 			local new_k_id = self._dump_frame_table._tree_ctrl:append(new_id, k)
 			self._dump_tree_id_table[new_k_id] = {
-				_parent = nil,
 				_name = nil,
 				_id = nil,
+				_parent = nil,
 				_id = new_k_id,
 				_name = k,
 				_parent = new_id
@@ -316,9 +316,9 @@ function CoreLuaProfiler:fill_dump_tree_ctrl(node, id)
 			local bin_str = self:binary_to_string(v)
 			local new_v_id = self._dump_frame_table._tree_ctrl:append(new_k_id, self:binary_to_string(v))
 			self._dump_tree_id_table[new_v_id] = {
-				_parent = nil,
 				_name = nil,
 				_id = nil,
+				_parent = nil,
 				_id = new_v_id,
 				_name = bin_str,
 				_parent = new_k_id
@@ -675,8 +675,8 @@ function CoreLuaProfiler:on_update_resources()
 	for _, unit in ipairs(units) do
 		if not mem_report[unit:name()] then
 			mem_report[unit:name()] = {
-				_num = 1,
 				_unit = nil,
+				_num = 1,
 				_unit = unit
 			}
 		else
@@ -689,11 +689,11 @@ function CoreLuaProfiler:on_update_resources()
 
 	for k, v in pairs(mem_report) do
 		table.insert(self._unit_report, {
+			_extensions = nil,
+			_name = nil,
+			_textures = nil,
 			_unit = nil,
 			_used = nil,
-			_textures = nil,
-			_name = nil,
-			_extensions = nil,
 			_name = k,
 			_used = v._unit:geometry_memory_use(),
 			_unit = v._unit,

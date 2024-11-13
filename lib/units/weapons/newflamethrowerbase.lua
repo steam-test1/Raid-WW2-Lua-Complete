@@ -215,9 +215,9 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 	if next(hit_enemies) then
 		if true or false then
 			managers.statistics:shot_fired({
+				skip_bullet_count = true,
 				weapon_unit = nil,
 				hit = true,
-				skip_bullet_count = true,
 				weapon_unit = self._unit
 			})
 		end

@@ -220,14 +220,14 @@ end
 
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
+		type = "act",
 		action = nil,
 		scan = true,
-		type = "act",
 		action = {
-			blocks = nil,
-			body_part = 1,
 			type = "act",
 			variant = "crouch",
+			blocks = nil,
+			body_part = 1,
 			blocks = {
 				action = -1,
 				heavy_hurt = -1,
@@ -238,29 +238,29 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		}
 	}
 	local objective = {
-		action = nil,
-		scan = true,
-		action_duration = nil,
-		fail_clbk = nil,
-		followup_objective = nil,
 		nav_seg = nil,
 		destroy_clbk_key = false,
 		called = true,
 		follow_unit = nil,
+		action_duration = nil,
+		followup_objective = nil,
 		type = "revive",
+		action = nil,
+		scan = true,
+		fail_clbk = nil,
 		follow_unit = data.unit,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		action = {
+			type = "act",
+			variant = nil,
 			blocks = nil,
 			align_sync = true,
 			body_part = 1,
-			type = "act",
-			variant = nil,
 			variant = rescue_type,
 			blocks = {
-				light_hurt = -1,
 				action = -1,
+				light_hurt = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
@@ -271,15 +271,15 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		followup_objective = followup_objective
 	}
 	local so_descriptor = {
+		base_chance = 1,
+		objective = nil,
+		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
 		search_pos = nil,
 		search_dis_sq = 1000000,
 		interval = 6,
 		chance_inc = 0,
-		base_chance = 1,
-		objective = nil,
-		admin_clbk = nil,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_administered", data)

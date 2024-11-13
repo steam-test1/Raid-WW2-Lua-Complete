@@ -974,8 +974,8 @@ function SequenceManager:_safe_save_map(map, visited_map)
 
 					if id > 0 then
 						value = {
-							id = nil,
 							__is_unit = true,
+							id = nil,
 							id = id
 						}
 					else
@@ -1057,11 +1057,11 @@ function SequenceManager:_safe_load_map(state, wait_unit_load_map, done_callback
 			if value.__is_unit then
 				local id = value.id
 				local data = {
-					id = nil,
-					key = nil,
-					state = nil,
-					done_callback_func = nil,
 					wait_unit_load_map = nil,
+					state = nil,
+					key = nil,
+					done_callback_func = nil,
+					id = nil,
 					id = id,
 					state = state,
 					key = key,
@@ -3951,24 +3951,24 @@ end
 BodyElement = BodyElement or class(BaseElement)
 BodyElement.NAME = "body"
 BodyElement.VALID_MOTION_MAP = BodyElement.VALID_MOTION_MAP or {
-	dynamic = "set_dynamic",
 	fixed = "set_fixed",
+	dynamic = "set_dynamic",
 	keyframed = "set_keyframed"
 }
 BodyElement.FUNC_MAP = BodyElement.FUNC_MAP or {
+	mover_collision = "set_mover_collision",
+	interpolate = "interpolate",
+	body_collision = "set_body_collision",
+	motion = "set_motion",
 	remove_ray_type = "remove_ray_type",
 	add_ray_type = "add_ray_type",
-	interpolate = "interpolate",
-	mover = "set_mover",
-	pushed_by_mover = "set_pushed_by_mover",
-	mover_collision = "set_mover_collision",
-	body_collision = "set_body_collision",
 	enabled = "set_enabled",
-	motion = "set_motion"
+	mover = "set_mover",
+	pushed_by_mover = "set_pushed_by_mover"
 }
 BodyElement.VALID_MOVER_MAP = BodyElement.VALID_MOVER_MAP or {
-	callback = "callback",
-	none = ""
+	none = "",
+	callback = "callback"
 }
 
 function BodyElement:init(node, unit_element)
@@ -4782,20 +4782,20 @@ end
 MaterialElement = MaterialElement or class(BaseElement)
 MaterialElement.NAME = "material"
 MaterialElement.MATERIAL_ATTRIBUTE_MAP = MaterialElement.MATERIAL_ATTRIBUTE_MAP or {
-	diffuse_color_alpha = true,
+	diffuse_color = true,
 	name = true,
-	diffuse_color = true
+	diffuse_color_alpha = true
 }
 MaterialElement.FUNC_MAP = MaterialElement.FUNC_MAP or {
-	time = "set_time",
-	glossiness = "set_glossiness",
+	render_template = "set_render_template",
 	state = "set_material_state",
-	render_template = "set_render_template"
+	glossiness = "set_glossiness",
+	time = "set_time"
 }
 MaterialElement.TIMER_STATE_MAP = MaterialElement.TIMER_STATE_MAP or {
-	play = 1,
+	pause = 0,
 	stop = 0,
-	pause = 0
+	play = 1
 }
 
 function MaterialElement:init(node, unit_element)
@@ -5173,9 +5173,9 @@ function ProjectDecalElement:activate_callback(env)
 
 		if #effect > 0 and self:run_parsed_func(env, self._play_effect) then
 			World:effect_manager():spawn({
-				normal = nil,
-				effect = nil,
 				position = nil,
+				effect = nil,
+				normal = nil,
 				effect = effect,
 				position = position,
 				normal = normal or math.UP
@@ -6118,17 +6118,17 @@ end
 SpawnUnitElement = SpawnUnitElement or class(BaseElement)
 SpawnUnitElement.NAME = "spawn_unit"
 SpawnUnitElement.SPAWN_UNIT_ATTRIBUTE_MAP = SpawnUnitElement.SPAWN_UNIT_ATTRIBUTE_MAP or {
-	rotation = true,
 	run_sequence = true,
-	name = true,
+	rotation = true,
+	position = true,
 	to_trigger_sequence = true,
+	name = true,
 	to_trigger = true,
 	from_trigger_sequence = true,
 	from_trigger = true,
 	dest_link_obj = true,
 	src_link_obj = true,
-	transfer_velocity = true,
-	position = true
+	transfer_velocity = true
 }
 
 function SpawnUnitElement:init(node, unit_element)

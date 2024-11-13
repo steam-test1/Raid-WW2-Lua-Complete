@@ -112,9 +112,9 @@ end
 
 function KillzoneManager:_deal_fire_damage(unit, damage, death_on_down)
 	local attack_data = {
-		death_on_down = nil,
-		col_ray = nil,
 		damage = nil,
+		col_ray = nil,
+		death_on_down = nil,
 		damage = damage,
 		col_ray = {
 			ray = nil,
@@ -138,10 +138,10 @@ function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
 		self._units[unit:key()] = {
-			unit = nil,
-			next_shot = nil,
 			timer = 0,
 			type = nil,
+			unit = nil,
+			next_shot = nil,
 			type = type,
 			next_shot = next_shot,
 			unit = unit
@@ -149,10 +149,10 @@ function KillzoneManager:_add_unit(unit, type)
 	elseif type == "gas" then
 		local next_gas = math.rand(1)
 		self._units[unit:key()] = {
-			unit = nil,
-			next_gas = nil,
 			timer = 0,
 			type = nil,
+			unit = nil,
+			next_gas = nil,
 			type = type,
 			next_gas = next_gas,
 			unit = unit
@@ -160,10 +160,10 @@ function KillzoneManager:_add_unit(unit, type)
 	elseif type == "fire" then
 		local next_fire = math.rand(1)
 		self._units[unit:key()] = {
-			next_fire = nil,
-			unit = nil,
 			timer = 0,
 			type = nil,
+			next_fire = nil,
+			unit = nil,
 			type = type,
 			next_fire = next_fire,
 			unit = unit
@@ -171,10 +171,10 @@ function KillzoneManager:_add_unit(unit, type)
 	elseif type == "inferno" then
 		local next_inferno = math.rand(1)
 		self._units[unit:key()] = {
-			unit = nil,
-			next_inferno = nil,
 			timer = 0,
 			type = nil,
+			unit = nil,
+			next_inferno = nil,
 			type = type,
 			next_inferno = next_inferno,
 			unit = unit

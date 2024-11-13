@@ -26,11 +26,11 @@ function FragGrenade:_setup_from_tweak_data()
 	self._targets_slotmask = managers.slot:get_mask("trip_mine_targets")
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
-		effect = nil,
 		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
 		feedback_range = nil,
+		effect = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -86,18 +86,18 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		player_damage = 0,
 		ignore_unit = nil,
+		user = nil,
+		killzone_range = nil,
+		push_units = true,
+		player_damage = 0,
 		alert_radius = nil,
 		owner = nil,
 		range = nil,
 		damage = nil,
 		collision_slotmask = nil,
 		hit_pos = nil,
-		user = nil,
 		curve_pow = nil,
-		killzone_range = nil,
-		push_units = true,
 		hit_pos = pos,
 		range = range,
 		collision_slotmask = slot_mask,
@@ -175,7 +175,9 @@ function FragGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	else
 		local thrower_peer = managers.network:session():peer(thrower_peer_id)
 
-		managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+		if thrower_peer then
+			managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+		end
 	end
 end
 

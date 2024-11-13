@@ -99,13 +99,13 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	local counter_target = CoreEWS.number_controller(counter_target_params)
 
 	counter_target:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "counter_target",
 		ctrlr = nil,
+		value = "counter_target",
 		ctrlr = counter_target
 	})
 	counter_target:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "counter_target",
 		ctrlr = nil,
+		value = "counter_target",
 		ctrlr = counter_target
 	})
 end

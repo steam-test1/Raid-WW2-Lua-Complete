@@ -38,21 +38,21 @@ end
 function MenuItemInput:setup_gui(node, row_item)
 	local right_align = node:_right_align()
 	row_item.gui_panel = node.item_panel:panel({
-		alpha = 0.9,
 		w = nil,
+		alpha = 0.9,
 		w = node.item_panel:w()
 	})
 	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
 	row_item.empty_gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
 	row_item.input_bg = row_item.gui_panel:rect({
-		vertical = "scale",
-		halign = "scale",
-		alpha = 0,
 		color = nil,
-		layer = nil,
+		halign = "scale",
 		blend_mdoe = "add",
 		valign = "scale",
 		align = "scale",
+		vertical = "scale",
+		layer = nil,
+		alpha = 0,
 		color = Color(0.5, 0.5, 0.5),
 		layer = node.layers.items - 1
 	})
@@ -61,15 +61,15 @@ function MenuItemInput:setup_gui(node, row_item)
 	row_item.gui_text:set_text("")
 
 	row_item.caret = row_item.gui_panel:rect({
+		w = 0,
+		x = 0,
+		layer = nil,
 		blend_mode = "add",
 		h = 0,
 		y = 0,
 		color = nil,
 		rotation = 360,
 		name = "caret",
-		x = 0,
-		layer = nil,
-		w = 0,
 		color = Color(0.1, 1, 1, 1),
 		layer = node.layers.items + 2
 	})

@@ -114,8 +114,8 @@ end
 
 function ChallengeManager:save_profile_slot(data)
 	local state = {
-		challenges = nil,
 		version = nil,
+		challenges = nil,
 		version = ChallengeManager.VERSION,
 		challenges = self._challenges
 	}

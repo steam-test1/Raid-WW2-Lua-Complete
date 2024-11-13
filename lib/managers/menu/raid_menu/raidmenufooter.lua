@@ -7,11 +7,11 @@ end
 
 function RaidMenuFooter:_layout()
 	self._object = self._root_panel:panel({
+		name = "footer_object_panel",
+		h = nil,
 		w = nil,
 		y = 0,
 		x = 0,
-		name = "footer_object_panel",
-		h = nil,
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})
@@ -38,10 +38,10 @@ end
 function RaidMenuFooter:_create_name_and_gold_panel()
 	local string_width_measure_text_field = self._object:child("string_width") or self._object:text({
 		font_size = nil,
+		name = "string_width",
 		wrap = true,
 		font = nil,
 		visible = false,
-		name = "string_width",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24
 	})
@@ -52,17 +52,17 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	local _, _, w1, _ = string_width_measure_text_field:text_rect()
 	w1 = w1 + 64
 	local params_profile_gold_label = {
-		w = nil,
-		y = 0,
-		x = 0,
-		font = nil,
-		h = 32,
-		text = nil,
+		type = "label",
 		font_size = nil,
 		color = nil,
 		vertical = "bottom",
 		name = "gold_label",
-		type = "label",
+		h = 32,
+		w = nil,
+		y = 0,
+		x = 0,
+		font = nil,
+		text = nil,
 		text = username,
 		w = w1,
 		color = tweak_data.gui.colors.raid_grey,
@@ -71,16 +71,16 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	}
 	local gold_icon = tweak_data.gui.icons.gold_amount_footer
 	local gold_icon_params = {
-		w = nil,
-		halign = "scale",
-		x = nil,
-		texture = nil,
 		y = 0,
 		texture_rect = nil,
 		h = nil,
 		color = nil,
 		layer = nil,
 		valign = "scale",
+		w = nil,
+		halign = "scale",
+		x = nil,
+		texture = nil,
 		texture = gold_icon.texture,
 		texture_rect = gold_icon.texture_rect,
 		x = w1,
@@ -96,16 +96,16 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 
 	local _, _, w3, _ = string_width_measure_text_field:text_rect()
 	local params_profile_name_label = {
-		w = nil,
-		h = 32,
-		x = nil,
-		font = nil,
+		type = "label",
 		font_size = nil,
-		text = nil,
 		color = nil,
 		vertical = "bottom",
 		name = "profile_name_label",
-		type = "label",
+		h = 32,
+		w = nil,
+		x = nil,
+		font = nil,
+		text = nil,
 		x = w1 + w2,
 		w = w3,
 		text = gold,
@@ -115,25 +115,25 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	}
 	local total_width = w1 + w2 + w3
 	local separator_params = {
+		name = "separator",
+		h = 14,
 		w = 2,
 		y = 14,
 		x = nil,
 		color = nil,
 		vertical = "bottom",
 		layer = nil,
-		name = "separator",
-		h = 14,
 		x = w1 - 32,
 		color = tweak_data.gui.colors.raid_grey,
 		layer = self._object:layer()
 	}
 	self._name_and_gold_panel = self._object:panel({
+		name = "name_and_gold_panel",
+		h = nil,
 		w = nil,
 		y = 0,
 		x = nil,
 		align = "right",
-		name = "name_and_gold_panel",
-		h = nil,
 		x = self._object:w() - total_width,
 		w = total_width,
 		h = self._object:h()

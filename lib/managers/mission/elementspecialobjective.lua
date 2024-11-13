@@ -55,16 +55,16 @@ ElementSpecialObjective._HASTES = {
 	"run"
 }
 ElementSpecialObjective._DEFAULT_VALUES = {
+	base_chance = 1,
+	interval = -1,
+	path_style = 1,
 	ai_group = 1,
 	action_duration_max = 0,
 	action_duration_min = 0,
 	interaction_voice = 1,
 	interrupt_dmg = 0,
 	interrupt_dis = -1,
-	chance_inc = 0,
-	base_chance = 1,
-	interval = -1,
-	path_style = 1
+	chance_inc = 0
 }
 
 function ElementSpecialObjective:init(...)
@@ -200,8 +200,8 @@ function ElementSpecialObjective:clbk_objective_administered(unit)
 			managers.navigation:unreserve_pos(unit_rsrv)
 		else
 			unit_rsrv = {
-				position = nil,
 				radius = 30,
+				position = nil,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
 			self._pos_rsrv[unit:key()] = unit_rsrv
@@ -277,8 +277,8 @@ end
 function ElementSpecialObjective:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
-			position = nil,
 			radius = 30,
+			position = nil,
 			position = self._values.position
 		}
 		local pos_rsrv = self._tmp_pos_rsrv
@@ -361,17 +361,17 @@ function ElementSpecialObjective:on_executed(instigator)
 			local search_dis_sq = self._values.search_distance
 			search_dis_sq = search_dis_sq and search_dis_sq * search_dis_sq or nil
 			local so_descriptor = {
+				search_dis_sq = nil,
+				interval = nil,
+				base_chance = nil,
+				objective = nil,
+				admin_clbk = nil,
+				repeatable = nil,
 				access = nil,
+				AI_group = nil,
 				usage_amount = nil,
 				search_pos = nil,
-				repeatable = nil,
-				admin_clbk = nil,
-				search_dis_sq = nil,
-				objective = nil,
 				chance_inc = nil,
-				base_chance = nil,
-				interval = nil,
-				AI_group = nil,
 				objective = objective,
 				base_chance = self:_get_default_value_if_nil("base_chance"),
 				chance_inc = self:_get_default_value_if_nil("chance_inc"),
@@ -419,27 +419,27 @@ function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		element = nil,
-		scan = nil,
-		forced = nil,
+		trigger_on = nil,
+		attitude = nil,
+		pose = nil,
 		verification_clbk = nil,
 		complete_clbk = nil,
 		fail_clbk = nil,
 		action_start_clbk = nil,
 		followup_SO = nil,
+		interaction_voice = nil,
 		action_duration = nil,
-		attitude = nil,
-		pose = nil,
+		element = nil,
+		interrupt_dis = nil,
 		haste = nil,
 		interrupt_health = nil,
 		rot = nil,
 		pos = nil,
 		stance = nil,
-		trigger_on = nil,
-		interaction_voice = nil,
-		interrupt_dis = nil,
-		type = false,
+		scan = nil,
 		path_style = nil,
+		forced = nil,
+		type = false,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -525,19 +525,19 @@ function ElementSpecialObjective:get_objective(instigator)
 
 		if self._values.so_action then
 			action = {
-				needs_full_blend = true,
-				align_sync = true,
-				variant = nil,
 				body_part = 1,
-				blocks = nil,
+				align_sync = true,
 				type = "act",
+				variant = nil,
+				needs_full_blend = true,
+				blocks = nil,
 				variant = self._values.so_action,
 				blocks = {
 					action = -1,
-					hurt = -1,
 					heavy_hurt = -1,
-					walk = -1,
-					light_hurt = -1
+					hurt = -1,
+					light_hurt = -1,
+					walk = -1
 				}
 			}
 			objective.type = "act"

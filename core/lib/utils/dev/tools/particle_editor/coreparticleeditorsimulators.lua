@@ -53,8 +53,8 @@ function CoreParticleEditorSimulators:create_scaledvelocityintegrator()
 
 	scale_keys:set_key_type("float")
 	scale_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	scale_keys:set_min_max_keys(min_keys, max_keys)
 	simulator:add_property(scale_keys)
@@ -285,9 +285,9 @@ keys - use key curve over time]]
 
 	local function validate_lifetime(p)
 		local ret = {
-			valid = true,
 			node = nil,
-			message = ""
+			message = "",
+			valid = true
 		}
 		local a = tonumber(p._value)
 
@@ -306,8 +306,8 @@ keys - use key curve over time]]
 
 	lifetime_keys:set_key_type("time")
 	lifetime_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	lifetime_keys:set_min_max_keys(min_keys, max_keys)
 	lifetime_input:add_variant("keys", lifetime_keys)
@@ -336,8 +336,8 @@ keys - use key curve over time]]
 
 	frequency_keys:set_key_type("time")
 	frequency_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	frequency_keys:set_min_max_keys(min_keys, max_keys)
 	frequency_input:add_variant("keys", frequency_keys)

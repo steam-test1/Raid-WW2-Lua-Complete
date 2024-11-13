@@ -51,9 +51,9 @@ end
 function BrushLayer:save(save_params)
 	local file_name = "massunit"
 	local t = {
-		data = nil,
 		single_data_block = true,
 		entry = nil,
+		data = nil,
 		entry = self._save_name,
 		data = {
 			file = nil,
@@ -583,9 +583,9 @@ function BrushLayer:build_panel(notebook)
 	toolbar:add_check_tool("DEBUG_DRAW", "Draw unit orientations", CoreEws.image_path("image_16x16.png"), "Draw unit orientations")
 	toolbar:set_tool_state("DEBUG_DRAW", self._debug_draw_unit_orientation)
 	toolbar:connect("DEBUG_DRAW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		toolbar = nil,
 		value = "_debug_draw_unit_orientation",
 		class = nil,
+		toolbar = nil,
 		class = self,
 		toolbar = toolbar
 	})
@@ -602,8 +602,8 @@ function BrushLayer:build_panel(notebook)
 	debug_sizer:add(self._debug_units_unique, 0, 0, "EXPAND")
 
 	local units_params = {
-		unit_events = nil,
 		style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING",
+		unit_events = nil,
 		unit_events = {
 			"EVT_COMMAND_LIST_ITEM_DESELECTED"
 		}
@@ -736,14 +736,14 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	slider_sizer:add(EWS:StaticText(self._ews_panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
 
 	local slider_params = {
-		sizer = nil,
-		panel = nil,
+		max = nil,
 		min = nil,
+		floats = 0,
+		sizer = nil,
+		value = nil,
+		panel = nil,
 		number_ctrlr_proportions = 0.1,
 		slider_ctrlr_proportions = 0.2,
-		max = nil,
-		value = nil,
-		floats = 0,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,
@@ -753,26 +753,26 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 
 	CoreEws.slider_and_number_controller(slider_params)
 	slider_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_slider"), {
-		slider_params = nil,
 		value = nil,
+		slider_params = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "update_slider"), {
-		slider_params = nil,
 		value = nil,
+		slider_params = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_slider"), {
-		slider_params = nil,
 		value = nil,
+		slider_params = nil,
 		slider_params = slider_params,
 		value = value
 	})
 	slider_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_slider"), {
-		slider_params = nil,
 		value = nil,
+		slider_params = nil,
 		slider_params = slider_params,
 		value = value
 	})
@@ -832,8 +832,8 @@ function BrushLayer:get_brush_stats(filter)
 			local positions = MassUnitManager:unit_positions(unit_name)
 			local stats = {
 				positions = nil,
-				rotations = nil,
 				unit_name = nil,
+				rotations = nil,
 				amount = nil,
 				unit_name = unit_name,
 				amount = #positions,

@@ -73,16 +73,16 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	end
 
 	local effect_params = {
-		ctrlr_proportions = 2,
 		sorted = true,
-		panel = nil,
+		ctrlr_proportions = 2,
 		name_proportions = 1,
+		value = nil,
 		tooltip = "Select a preset effect for the combo box",
 		default = "none",
 		sizer = nil,
-		value = nil,
 		name = "Effect:",
 		options = nil,
+		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = options,

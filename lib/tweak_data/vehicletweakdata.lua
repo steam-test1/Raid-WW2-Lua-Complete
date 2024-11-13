@@ -16,23 +16,16 @@ function VehicleTweakData:_init_data_jeep_willy()
 		name = "hud_vehicle_jeep",
 		hud_label_offset = 150,
 		animations = {
-			passenger_back_right = "drive_kubelwagen_back_right",
-			passenger_front = "drive_kubelwagen_passanger",
-			driver = "drive_kubelwagen_driver",
 			vehicle_id = "kubelwagen",
-			passenger_back_left = "drive_kubelwagen_back_left"
+			passenger_back_right = "drive_kubelwagen_back_right",
+			passenger_back_left = "drive_kubelwagen_back_left",
+			passenger_front = "drive_kubelwagen_passanger",
+			driver = "drive_kubelwagen_driver"
 		},
 		sound = {
 			horn_start = "kubel_horn_start",
-			hit_rtpc = "car_hit_vel",
-			horn_stop = "kubel_horn_stop",
-			hit = "car_hit_gen_01",
-			bump_locator = "anim_tire_front_left",
-			bump_rtpc = "car_bump_vel",
-			bump = "car_bumper_01",
-			slip_locator = "anim_tire_front_left",
-			slip_stop = "car_skid_stop_01",
 			slip = "car_skid_01",
+			horn_stop = "kubel_horn_stop",
 			door_close = "car_door_open",
 			gear_shift = "gear_shift",
 			engine_start = "muscle_engine_start",
@@ -43,17 +36,24 @@ function VehicleTweakData:_init_data_jeep_willy()
 			bump_treshold = 8,
 			engine_rpm_rtpc = "car_falcogini_rpm",
 			engine_speed_rtpc = "car_falcogini_speed",
-			hit_enemy = "car_hit_body_01"
+			hit_enemy = "car_hit_body_01",
+			hit_rtpc = "car_hit_vel",
+			hit = "car_hit_gen_01",
+			bump_locator = "anim_tire_front_left",
+			bump_rtpc = "car_bump_vel",
+			bump = "car_bumper_01",
+			slip_locator = "anim_tire_front_left",
+			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_back_right = nil,
 			passenger_front = nil,
-			passenger_back_left = nil,
+			passenger_back_right = nil,
 			driver = nil,
+			passenger_back_left = nil,
 			driver = {
-				driving = true,
 				name = "driver",
-				next_seat = "passenger_front"
+				next_seat = "passenger_front",
+				driving = true
 			},
 			passenger_front = {
 				name = "passenger_front",
@@ -103,23 +103,16 @@ function VehicleTweakData:_init_data_kubelwagen()
 		name = "hud_vehicle_kubelwagen",
 		hud_label_offset = 150,
 		animations = {
-			passenger_back_right = "drive_kubelwagen_back_right",
-			passenger_front = "drive_kubelwagen_passanger",
-			driver = "drive_kubelwagen_driver",
 			vehicle_id = "kubelwagen",
-			passenger_back_left = "drive_kubelwagen_back_left"
+			passenger_back_right = "drive_kubelwagen_back_right",
+			passenger_back_left = "drive_kubelwagen_back_left",
+			passenger_front = "drive_kubelwagen_passanger",
+			driver = "drive_kubelwagen_driver"
 		},
 		sound = {
 			horn_start = "kubel_horn_start",
-			hit_rtpc = "TRD_hit",
-			horn_stop = "kubel_horn_stop",
-			hit = "car_hits_something",
-			bump_locator = "anim_tire_front_left",
-			bump_rtpc = "TRD_bump",
-			bump = "car_bumper_01",
-			slip_locator = "anim_tire_front_left",
-			slip_stop = "car_skid_stop_01",
 			slip = "car_skid_01",
+			horn_stop = "kubel_horn_stop",
 			door_close = "car_door_open",
 			gear_shift = "gear_shift",
 			engine_start = "kubel_final_engine_start",
@@ -131,33 +124,40 @@ function VehicleTweakData:_init_data_kubelwagen()
 			engine_rpm_rtpc = "TRD",
 			engine_stop = "kubel_final_engine_stop",
 			engine_speed_rtpc = "TRD_speed",
-			hit_enemy = "car_hit_body_01"
+			hit_enemy = "car_hit_body_01",
+			hit_rtpc = "TRD_hit",
+			hit = "car_hits_something",
+			bump_locator = "anim_tire_front_left",
+			bump_rtpc = "TRD_bump",
+			bump = "car_bumper_01",
+			slip_locator = "anim_tire_front_left",
+			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_back_right = nil,
 			passenger_front = nil,
-			passenger_back_left = nil,
+			passenger_back_right = nil,
 			driver = nil,
+			passenger_back_left = nil,
 			driver = {
+				camera_limits = nil,
 				name = "driver",
 				has_shooting_mode = false,
 				allow_shooting = false,
 				next_seat = "passenger_front",
 				driving = true,
-				camera_limits = nil,
 				camera_limits = {
 					50,
 					45
 				}
 			},
 			passenger_front = {
+				camera_limits = nil,
+				shooting_pos = nil,
 				name = "passenger_front",
 				has_shooting_mode = false,
 				allow_shooting = true,
 				next_seat = "passenger_back_right",
 				driving = false,
-				camera_limits = nil,
-				shooting_pos = nil,
 				shooting_pos = Vector3(40, -20, 50),
 				camera_limits = {
 					90,
@@ -165,13 +165,13 @@ function VehicleTweakData:_init_data_kubelwagen()
 				}
 			},
 			passenger_back_right = {
+				camera_limits = nil,
+				shooting_pos = nil,
 				name = "passenger_back_right",
 				has_shooting_mode = true,
 				allow_shooting = false,
 				next_seat = "passenger_back_left",
 				driving = false,
-				camera_limits = nil,
-				shooting_pos = nil,
 				shooting_pos = Vector3(30, -20, 50),
 				camera_limits = {
 					90,
@@ -179,13 +179,13 @@ function VehicleTweakData:_init_data_kubelwagen()
 				}
 			},
 			passenger_back_left = {
+				camera_limits = nil,
+				shooting_pos = nil,
 				name = "passenger_back_left",
 				has_shooting_mode = true,
 				allow_shooting = false,
 				next_seat = "driver",
 				driving = false,
-				camera_limits = nil,
-				shooting_pos = nil,
 				shooting_pos = Vector3(-40, -20, 50),
 				camera_limits = {
 					90,
@@ -201,8 +201,8 @@ function VehicleTweakData:_init_data_kubelwagen()
 		},
 		secure_loot = false,
 		loot_filter = {
-			german_spy_body = true,
-			gold = true
+			gold = true,
+			german_spy_body = true
 		},
 		allow_only_filtered = true,
 		repair_point = "v_repair_engine",
@@ -218,8 +218,8 @@ function VehicleTweakData:_init_data_kubelwagen()
 		skins = {}
 	}
 	self.kubelwagen.skins.special_edition = {
-		dlc = nil,
 		sequence = "state_collector_edition_skin",
+		dlc = nil,
 		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
 	}
 	self.kubelwagen.driver_camera_offset = Vector3(0, 2, 22)
@@ -231,23 +231,16 @@ function VehicleTweakData:_init_data_truck()
 		name = "hud_vehicle_truck",
 		hud_label_offset = 250,
 		animations = {
-			passenger_back_right = "drive_truck_back_right",
-			passenger_front = "drive_truck_passanger",
-			driver = "drive_truck_driver",
 			vehicle_id = "truck",
-			passenger_back_left = "drive_truck_back_left"
+			passenger_back_right = "drive_truck_back_right",
+			passenger_back_left = "drive_truck_back_left",
+			passenger_front = "drive_truck_passanger",
+			driver = "drive_truck_driver"
 		},
 		sound = {
 			horn_start = "kubel_horn_start",
-			hit_rtpc = "TRD",
-			horn_stop = "kubel_horn_stop",
-			hit = "car_hit_gen_01",
-			bump_locator = "anim_tire_front_left",
-			bump_rtpc = "TRD",
-			bump = "car_bumper_01",
-			slip_locator = "anim_tire_front_left",
-			slip_stop = "car_skid_stop_01",
 			slip = "car_skid_01",
+			horn_stop = "kubel_horn_stop",
 			door_close = "car_door_open",
 			gear_shift = "gear_shift",
 			engine_start = "truck_1p_engine_start",
@@ -259,30 +252,37 @@ function VehicleTweakData:_init_data_truck()
 			engine_rpm_rtpc = "TRD",
 			engine_stop = "truck_1p_engine_stop",
 			engine_speed_rtpc = "TRD_speed",
-			hit_enemy = "car_hit_body_01"
+			hit_enemy = "car_hit_body_01",
+			hit_rtpc = "TRD",
+			hit = "car_hit_gen_01",
+			bump_locator = "anim_tire_front_left",
+			bump_rtpc = "TRD",
+			bump = "car_bumper_01",
+			slip_locator = "anim_tire_front_left",
+			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_back_right = nil,
 			passenger_front = nil,
-			passenger_back_left = nil,
+			passenger_back_right = nil,
 			driver = nil,
+			passenger_back_left = nil,
 			driver = {
+				sound_environment_start = "enter_truck",
 				sound_environment_end = "leave_truck",
 				name = "driver",
 				next_seat = "passenger_front",
-				driving = true,
-				sound_environment_start = "enter_truck"
+				driving = true
 			},
 			passenger_front = {
-				driving = false,
+				sound_environment_start = "enter_truck",
+				shooting_pos = nil,
 				has_shooting_mode = true,
 				allow_shooting = false,
 				next_seat = "passenger_back_right",
-				shooting_pos = nil,
+				driving = false,
 				camera_limits = nil,
 				name = "passenger_front",
 				sound_environment_end = "leave_truck",
-				sound_environment_start = "enter_truck",
 				shooting_pos = Vector3(50, -20, 50),
 				camera_limits = {
 					90,
@@ -291,29 +291,29 @@ function VehicleTweakData:_init_data_truck()
 			},
 			passenger_back_right = {
 				name = "passenger_back_right",
+				shooting_pos = nil,
 				has_shooting_mode = true,
 				allow_shooting = true,
 				next_seat = "passenger_back_left",
 				driving = false,
-				shooting_pos = nil,
 				shooting_pos = Vector3(50, 0, 50)
 			},
 			passenger_back_left = {
-				driving = false,
+				shooting_pos = nil,
+				has_shooting_mode = true,
 				name = "passenger_back_left",
 				allow_shooting = true,
 				next_seat = "driver",
-				shooting_pos = nil,
-				has_shooting_mode = true,
+				driving = false,
 				shooting_pos = Vector3(-50, 0, 50)
 			}
 		},
 		loot_points = {
-			loot_2 = nil,
-			loot_1 = nil,
 			loot = nil,
 			loot_4 = nil,
 			loot_3 = nil,
+			loot_2 = nil,
+			loot_1 = nil,
 			loot_1 = {
 				name = "loot_1"
 			},
@@ -331,11 +331,11 @@ function VehicleTweakData:_init_data_truck()
 			}
 		},
 		loot_filter = {
+			gold_bar = true,
 			gold = true,
 			crate_explosives = true,
 			painting_sto_cheap = true,
-			painting_sto = true,
-			gold_bar = true
+			painting_sto = true
 		},
 		repair_point = "v_repair_engine",
 		damage = {
@@ -359,17 +359,10 @@ function VehicleTweakData:_init_data_foxhole()
 		name = "hud_foxhole",
 		hud_label_offset = 950,
 		animations = {
-			driver = "drive_kubelwagen_driver",
-			vehicle_id = "kubelwagen"
+			vehicle_id = "kubelwagen",
+			driver = "drive_kubelwagen_driver"
 		},
 		sound = {
-			hit_rtpc = "occasional_silence",
-			hit = "occasional_silence",
-			bump_rtpc = "occasional_silence",
-			bump = "occasional_silence",
-			going_reverse_stop = "occasional_silence",
-			going_reverse = "occasional_silence",
-			slip_stop = "car_skid_stop_01",
 			slip = "occasional_silence",
 			door_close = "occasional_silence",
 			gear_shift = "occasional_silence",
@@ -382,16 +375,23 @@ function VehicleTweakData:_init_data_foxhole()
 			engine_rpm_rtpc = "occasional_silence",
 			engine_stop = "occasional_silence",
 			engine_speed_rtpc = "occasional_silence",
-			hit_enemy = "car_hit_body_01"
+			hit_enemy = "car_hit_body_01",
+			hit_rtpc = "occasional_silence",
+			hit = "occasional_silence",
+			bump_rtpc = "occasional_silence",
+			bump = "occasional_silence",
+			going_reverse_stop = "occasional_silence",
+			going_reverse = "occasional_silence",
+			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
 			driver = nil,
 			driver = {
+				camera_limits = nil,
 				name = "driver",
 				has_shooting_mode = false,
 				next_seat = "driver",
 				driving = false,
-				camera_limits = nil,
 				camera_limits = {
 					90,
 					45

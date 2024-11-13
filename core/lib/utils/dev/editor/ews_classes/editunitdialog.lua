@@ -37,8 +37,8 @@ function EditUnitDialog:add_page(data)
 	table.insert(self._pages, {
 		class = nil,
 		name = nil,
-		panel = nil,
 		nr = nil,
+		panel = nil,
 		name = name,
 		class = class,
 		panel = panel,

@@ -3,10 +3,10 @@ local ids_time = Idstring("time")
 local ids_blend_factor = Idstring("blend_factor")
 local ids_base_color_intensity = Idstring("base_color_intensity")
 
-function WarcryClustertruck:init()
-	WarcryClustertruck.super.init(self)
+function WarcryClustertruck:init(type)
+	WarcryClustertruck.super.init(self, type)
 
-	self._type = Warcry.CLUSTERTRUCK
+	self._type = type
 	self._tweak_data = tweak_data.warcry[self._type]
 
 	managers.system_event_listener:add_listener("warcry_" .. self:get_type() .. "_enemy_killed", {

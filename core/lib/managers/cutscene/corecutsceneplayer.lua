@@ -473,6 +473,7 @@ function CoreCutscenePlayer:_gui_panel(gui_name, preloading)
 		self._owned_gui_objects = self._owned_gui_objects or {}
 		local viewport_rect = self:_viewport_rect()
 		panel = self._workspace:panel():panel({
+			visible = false,
 			name = nil,
 			y = nil,
 			width = nil,
@@ -480,7 +481,6 @@ function CoreCutscenePlayer:_gui_panel(gui_name, preloading)
 			valign = "grow",
 			height = nil,
 			halign = "grow",
-			visible = false,
 			name = gui_name,
 			x = viewport_rect.px,
 			y = viewport_rect.py,
@@ -620,14 +620,14 @@ function CoreCutscenePlayer:_full_viewport_rect()
 	local resolution = RenderSettings.resolution
 
 	return {
+		ph = nil,
 		py = 0,
 		y = 0,
-		w = 1,
-		x = 0,
-		ph = nil,
-		h = 1,
-		pw = nil,
 		px = 0,
+		x = 0,
+		h = 1,
+		w = 1,
+		pw = nil,
 		pw = resolution.x,
 		ph = resolution.y
 	}
@@ -642,10 +642,10 @@ function CoreCutscenePlayer:_wide_viewport_rect()
 	local viewport_x = (1 - viewport_width) / 2
 	local viewport_y = (1 - viewport_height) / 2
 	local rect = {
+		x = nil,
 		h = nil,
 		y = nil,
 		w = nil,
-		x = nil,
 		x = viewport_x,
 		y = viewport_y,
 		w = viewport_width,
@@ -695,8 +695,8 @@ function CoreCutscenePlayer:_clear_workspace()
 	self._workspace:panel():rect({
 		layer = nil,
 		name = nil,
-		color = nil,
 		visible = nil,
+		color = nil,
 		visible = self._widescreen,
 		layer = self.BLACK_BAR_GUI_LAYER,
 		name = self.BLACK_BAR_TOP_GUI_NAME,
@@ -705,8 +705,8 @@ function CoreCutscenePlayer:_clear_workspace()
 	self._workspace:panel():rect({
 		layer = nil,
 		name = nil,
-		color = nil,
 		visible = nil,
+		color = nil,
 		visible = self._widescreen,
 		layer = self.BLACK_BAR_GUI_LAYER,
 		name = self.BLACK_BAR_BOTTOM_GUI_NAME,
@@ -737,20 +737,20 @@ function CoreCutscenePlayer:_configure_viewport()
 
 		self._workspace:panel():child(self.BLACK_BAR_TOP_GUI_NAME):configure({
 			width = nil,
+			visible = nil,
 			y = 0,
 			x = 0,
 			height = nil,
-			visible = nil,
 			visible = black_bars_enabled,
 			width = viewport_rect.pw,
 			height = viewport_rect.py
 		})
 		self._workspace:panel():child(self.BLACK_BAR_BOTTOM_GUI_NAME):configure({
 			width = nil,
+			visible = nil,
 			y = nil,
 			x = 0,
 			height = nil,
-			visible = nil,
 			visible = black_bars_enabled,
 			y = resolution.y - viewport_rect.py,
 			width = viewport_rect.pw,
@@ -766,10 +766,10 @@ function CoreCutscenePlayer:_configure_viewport()
 
 				panel:clear()
 				panel:configure({
+					x = nil,
 					width = nil,
 					y = nil,
 					height = nil,
-					x = nil,
 					x = viewport_rect.px,
 					y = viewport_rect.py,
 					width = viewport_rect.pw,

@@ -30,8 +30,8 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 
 	set_outline:set_value(self._hed.set_outline)
 	set_outline:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "set_outline",
 		ctrlr = nil,
+		value = "set_outline",
 		ctrlr = set_outline
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
@@ -40,8 +40,8 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 
 	instigator_only:set_value(self._hed.instigator_only)
 	instigator_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "instigator_only",
 		ctrlr = nil,
+		value = "instigator_only",
 		ctrlr = instigator_only
 	})
 	panel_sizer:add(instigator_only, 0, 0, "EXPAND")
@@ -65,11 +65,11 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 1,
-				g = 0.5,
 				r = 0.9,
 				to_unit = nil,
 				from_unit = nil,
+				b = 1,
+				g = 0.5,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -79,8 +79,8 @@ end
 
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then

@@ -12,11 +12,11 @@ function RaidGUIControlListItem:init(parent, params, data)
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._data = data
 	self._object = self._panel:panel({
+		y = nil,
+		x = nil,
 		name = nil,
 		h = nil,
 		w = nil,
-		y = nil,
-		x = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -24,8 +24,9 @@ function RaidGUIControlListItem:init(parent, params, data)
 		h = params.h
 	})
 	self._item_label = self._object:label({
-		text = nil,
 		vertical = "center",
+		font = nil,
+		text = nil,
 		color = nil,
 		name = nil,
 		h = nil,
@@ -33,7 +34,6 @@ function RaidGUIControlListItem:init(parent, params, data)
 		y = 0,
 		x = 32,
 		font_size = nil,
-		font = nil,
 		name = "list_item_label_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -43,26 +43,26 @@ function RaidGUIControlListItem:init(parent, params, data)
 		color = params.color or tweak_data.gui.colors.raid_white
 	})
 	self._item_background = self._object:rect({
+		y = 1,
+		x = 0,
 		visible = false,
 		color = nil,
 		name = nil,
 		h = nil,
 		w = nil,
-		y = 1,
-		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._item_highlight_marker = self._object:rect({
+		y = 1,
+		x = 0,
 		visible = false,
 		color = nil,
 		name = nil,
 		h = nil,
 		w = 3,
-		y = 1,
-		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_red

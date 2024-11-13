@@ -68,10 +68,10 @@ HUDManager.WEAPONS_PANEL_W = 384
 HUDManager.WEAPONS_PANEL_H = 84
 HUDManager.CHAT_DISTANCE_FROM_BOTTOM = 128
 HUDManager.MINIGAMES = {
-	pick_lock = nil,
 	rewire = nil,
 	cut_fuse = nil,
 	roulette = nil,
+	pick_lock = nil,
 	pick_lock = HUDSpecialInteractionLockPick,
 	cut_fuse = HUDSpecialInteractionFuseCutting,
 	rewire = HUDSpecialInteractionRewiring,
@@ -624,7 +624,9 @@ function HUDManager:start_player_timer(time)
 end
 
 function HUDManager:start_teammate_timer(i, name_label_id, time, current)
-	self._teammate_panels[i]:start_timer(time, current)
+	if self._teammate_panels[i] then
+		self._teammate_panels[i]:start_timer(time, current)
+	end
 
 	local name_label = self:_get_name_label(name_label_id)
 
@@ -634,7 +636,11 @@ function HUDManager:start_teammate_timer(i, name_label_id, time, current)
 end
 
 function HUDManager:is_teammate_timer_running(i)
-	return self._teammate_panels[i]:is_timer_running()
+	if self._teammate_panels[i] then
+		return self._teammate_panels[i]:is_timer_running()
+	end
+
+	return false
 end
 
 function HUDManager:pause_player_timer(pause)
@@ -642,7 +648,9 @@ function HUDManager:pause_player_timer(pause)
 end
 
 function HUDManager:pause_teammate_timer(i, name_label_id, pause)
-	self._teammate_panels[i]:set_pause_timer(pause)
+	if self._teammate_panels[i] then
+		self._teammate_panels[i]:set_pause_timer(pause)
+	end
 
 	local name_label = self:_get_name_label(name_label_id)
 
@@ -711,24 +719,24 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
-		h = 4,
+		name = "ammo_test",
 		w = 100,
+		h = 4,
 		y = 200,
-		x = 550,
-		name = "ammo_test"
+		x = 550
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
 	panel:set_center_x(hud.panel:w() / 2)
 	panel:rect({
-		color = nil,
 		name = "ammo_test_bg_rect",
+		color = nil,
 		color = Color.black:with_alpha(0.5)
 	})
 	panel:rect({
-		layer = 1,
-		color = nil,
 		name = "ammo_test_rect",
+		color = nil,
+		layer = 1,
 		color = Color.white
 	})
 end
@@ -800,8 +808,8 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 				for equipment, amount in pairs(peer_equipment) do
 					self:add_teammate_special_equipment(i, {
 						amount = nil,
-						id = nil,
 						icon = nil,
+						id = nil,
 						id = equipment,
 						icon = tweak_data.equipments.specials[equipment].icon,
 						amount = amount
@@ -967,13 +975,13 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
-		valign = "grow",
+		w = nil,
+		name = "teammates_panel",
 		halign = "left",
 		h = nil,
-		w = nil,
+		valign = "grow",
 		y = 0,
 		x = 0,
-		name = "teammates_panel",
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -981,8 +989,8 @@ function HUDManager:_create_teammates_panel(hud)
 
 	for i = 1, 3 do
 		self._hud.teammate_panels_data[i] = {
-			special_equipments = nil,
 			taken = false,
+			special_equipments = nil,
 			special_equipments = {}
 		}
 		local ai_teammate = HUDTeammateAI:new(i, teammates_panel)
@@ -1006,8 +1014,8 @@ function HUDManager:_create_teammates_panel(hud)
 	table.insert(self._teammate_panels, teammate)
 
 	self._hud.teammate_panels_data[HUDManager.PLAYER_PANEL] = {
-		special_equipments = nil,
 		taken = false,
+		special_equipments = nil,
 		special_equipments = {}
 	}
 end
@@ -1033,11 +1041,11 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
+		name = "weapons_panel",
+		w = nil,
+		h = nil,
 		valign = "bottom",
 		halign = "right",
-		h = nil,
-		w = nil,
-		name = "weapons_panel",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1309,13 +1317,13 @@ end
 function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
+		name = "progress_timer_progress_bar",
 		color = nil,
-		height = 8,
-		width = 256,
 		description = nil,
+		width = 256,
+		height = 8,
 		y = nil,
 		x = nil,
-		name = "progress_timer_progress_bar",
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
@@ -1393,10 +1401,10 @@ function HUDManager:on_progression_cycle_completed()
 	end
 
 	local notification_params = {
-		notification_type = nil,
-		id = "progression_cycle_completed",
 		duration = 6,
 		priority = 4,
+		notification_type = nil,
+		id = "progression_cycle_completed",
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 
@@ -1409,12 +1417,12 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 	end
 
 	managers.notification:add_notification({
-		initial_progress = nil,
-		id = "greed_item_picked_up",
 		new_progress = nil,
 		notification_type = nil,
 		shelf_life = 8,
 		item = nil,
+		initial_progress = nil,
+		id = "greed_item_picked_up",
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress,
@@ -2165,11 +2173,11 @@ function HUDManager:_add_name_label(data)
 	end
 
 	local name_label_params = {
-		id = nil,
+		name = nil,
+		peer_id = nil,
 		movement = nil,
 		nationality = nil,
-		peer_id = nil,
-		name = nil,
+		id = nil,
 		id = id,
 		name = data.name,
 		nationality = data.nationality,
@@ -2189,8 +2197,8 @@ function HUDManager:add_vehicle_name_label(data)
 	local id = last_id + 1
 	local vehicle_name_label_params = {
 		vehicle_name = nil,
-		id = nil,
 		vehicle_unit = nil,
+		id = nil,
 		id = id,
 		vehicle_name = managers.localization:text(data.name),
 		vehicle_unit = data.unit

@@ -33,11 +33,11 @@ function NavigationStitcherUnitElement:draw_links(t, dt, selected_unit, all_unit
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
-					from_unit = nil,
 					b = nil,
 					g = nil,
 					r = nil,
 					to_unit = nil,
+					from_unit = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,

@@ -9,17 +9,17 @@ function MenuNodeTableGui:_setup_panels(node)
 
 	local safe_rect_pixels = self:_scaled_size()
 	local mini_info = self.safe_rect_panel:panel({
+		w = 0,
 		y = 0,
 		x = 0,
-		h = 0,
-		w = 0
+		h = 0
 	})
 	local mini_text = mini_info:text({
 		color = nil,
 		wrap = true,
+		word_wrap = true,
 		font = nil,
 		vertical = "top",
-		word_wrap = true,
 		halign = "top",
 		layer = nil,
 		align = "left",
@@ -54,8 +54,8 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local columns = row_item.node:columns()
 		local total_proportions = row_item.node:parameters().total_proportions
 		row_item.gui_panel = self.item_panel:panel({
-			w = nil,
 			x = nil,
+			w = nil,
 			x = self:_right_align(),
 			w = self.item_panel:w()
 		})
@@ -105,8 +105,8 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local safe_rect = self:_scaled_size()
 		local xl_pad = 54
 		row_item.gui_panel = self.item_panel:panel({
-			w = nil,
 			x = nil,
+			w = nil,
 			x = safe_rect.width / 2 - xl_pad,
 			w = safe_rect.width / 2 + xl_pad
 		})
@@ -153,10 +153,10 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 
 		local level_id = row_item.item:parameters().level_id
 		row_item.gui_info_panel = self.safe_rect_panel:panel({
-			visible = false,
+			y = 0,
 			h = nil,
 			w = nil,
-			y = 0,
+			visible = false,
 			x = 0,
 			layer = nil,
 			layer = self.layers.items,
@@ -164,14 +164,14 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = self._item_panel_parent:h()
 		})
 		row_item.heist_name = row_item.gui_info_panel:text({
+			align = "left",
 			text = nil,
-			font_size = nil,
+			color = nil,
 			font = nil,
 			vertical = "left",
 			visible = false,
-			color = nil,
+			font_size = nil,
 			layer = nil,
-			align = "left",
 			text = utf8.to_upper(row_item.item:parameters().level_name),
 			layer = self.layers.items,
 			font = self.font,
@@ -182,14 +182,14 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		row_item.heist_briefing = row_item.gui_info_panel:text({
 			visible = true,
 			color = nil,
+			wrap = true,
 			font = nil,
 			vertical = "top",
-			wrap = true,
+			word_wrap = true,
 			halign = "top",
 			layer = nil,
 			align = "left",
 			text = nil,
-			word_wrap = true,
 			y = 0,
 			x = 0,
 			font_size = nil,

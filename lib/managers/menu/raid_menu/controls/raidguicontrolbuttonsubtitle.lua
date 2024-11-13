@@ -39,13 +39,13 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 
 	self._on_click_callback = params.on_click_callback
 	local icon_params = {
+		x = 0,
 		texture_rect = nil,
 		name = "subtitle_icon",
 		color = nil,
 		texture = nil,
 		layer = nil,
 		y = 0,
-		x = 0,
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
@@ -55,6 +55,7 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 	self._icon_w = self._icon:w()
 	self._icon_h = self._icon:h()
 	local text_params = {
+		color = nil,
 		wrap = false,
 		text = nil,
 		vertical = "top",
@@ -65,7 +66,6 @@ function RaidGUIControlButtonSubtitle:init(parent, params)
 		x = 0,
 		layer = nil,
 		name = "subtitle_text",
-		color = nil,
 		font = RaidGUIControlButtonSubtitle.TEXT_FONT,
 		font_size = RaidGUIControlButtonSubtitle.TEXT_SIZE,
 		text = params.text,
@@ -105,16 +105,16 @@ end
 
 function RaidGUIControlButtonSubtitle:_create_selectors()
 	local selector_panel_params = {
+		alpha = 0,
 		valign = "scale",
 		name = "selector_panel",
-		halign = "scale",
-		alpha = 0
+		halign = "scale"
 	}
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_top_left_params = {
+		texture = nil,
 		texture_rect = nil,
 		name = "selector_top_left",
-		texture = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonSubtitle.SELECTOR_TOP_LEFT].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonSubtitle.SELECTOR_TOP_LEFT].texture_rect
 	}

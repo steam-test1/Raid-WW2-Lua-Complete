@@ -33,19 +33,19 @@ function NpcVehicleDrivingExt:init(unit)
 	self._last_checkpoint_reached = false
 	self._drive_controls = {
 		accelerate = {
-			brake = 0,
 			acceleration = 1,
-			handbrake = 0
+			handbrake = 0,
+			brake = 0
 		},
 		brake = {
-			brake = 1,
 			acceleration = 0,
-			handbrake = 0
+			handbrake = 0,
+			brake = 1
 		},
 		handbrake = {
-			brake = 1,
 			acceleration = 0,
-			handbrake = 1
+			handbrake = 1,
+			brake = 1
 		}
 	}
 	self._current_drive_controls = "accelerate"
@@ -132,36 +132,36 @@ function NpcVehicleDrivingExt:_start()
 
 			self._drive_controls = {
 				accelerate = {
-					brake = 0,
 					acceleration = 1,
-					handbrake = 0
+					handbrake = 0,
+					brake = 0
 				},
 				brake = {
-					brake = 1,
 					acceleration = 0,
-					handbrake = 0
+					handbrake = 0,
+					brake = 1
 				},
 				handbrake = {
-					brake = 1,
 					acceleration = 0,
-					handbrake = 1
+					handbrake = 1,
+					brake = 1
 				}
 			}
 			self._current_drive_controls = "accelerate"
 			self._next_checkpoint_distance = {
 				{
+					distance = 1200,
 					v_max = 40,
 					v_min = 30,
 					relative_angle_max = 60,
-					relative_angle_min = 30,
-					distance = 1200
+					relative_angle_min = 30
 				},
 				{
+					distance = 1500,
 					v_max = 60,
 					v_min = 40,
 					relative_angle_max = 90,
-					relative_angle_min = 30,
-					distance = 1500
+					relative_angle_min = 30
 				}
 			}
 			self._last_checkpoint_reached = false
@@ -583,7 +583,6 @@ end
 function NpcVehicleDrivingExt:_init_states()
 	local unit = self._unit
 	self._states = {
-		pursuit = nil,
 		maneuver = nil,
 		inactive = nil,
 		maneuver_back_left = nil,
@@ -591,6 +590,7 @@ function NpcVehicleDrivingExt:_init_states()
 		maneuver_back_right = nil,
 		player_proximity = nil,
 		maneuver_u_turn = nil,
+		pursuit = nil,
 		inactive = NpcVehicleStateInactive:new(unit),
 		pursuit = NpcVehicleStatePursuit:new(unit),
 		player_proximity = NpcVehicleStatePlayerProximity:new(unit),
@@ -626,14 +626,14 @@ function NpcVehicleDrivingExt:_debug_show()
 	}
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
-		text = "",
-		y = nil,
-		font_size = 14,
-		layer = 2000,
 		color = nil,
 		font = nil,
 		x = 14,
+		font_size = 14,
+		text = "",
+		y = nil,
 		name = "debug_info",
+		layer = 2000,
 		y = 100 + debug_output_offset,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		color = Color.yellow

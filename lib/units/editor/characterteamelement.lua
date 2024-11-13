@@ -30,11 +30,11 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0,
-				to_unit = nil,
 				from_unit = nil,
 				b = 0,
 				g = 0.75,
+				r = 0,
+				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -105,16 +105,16 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
 	local team_params = {
-		default = "",
-		panel = nil,
 		value = nil,
+		sorted = true,
+		panel = nil,
+		name_proportions = 1,
 		ctrlr_proportions = 2,
+		tooltip = "Select wanted team for the character.",
+		default = "",
+		name = "Team:",
 		options = nil,
 		sizer = nil,
-		sorted = true,
-		name = "Team:",
-		name_proportions = 1,
-		tooltip = "Select wanted team for the character.",
 		panel = panel,
 		sizer = panel_sizer,
 		options = tweak_data.levels:get_team_names_indexed(),

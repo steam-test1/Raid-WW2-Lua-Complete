@@ -89,10 +89,10 @@ function CopLogicFlee.update(data)
 				CopLogicAttack._adjust_path_start_pos(data, my_data.cover_path)
 
 				local new_action_data = {
-					body_part = 2,
-					variant = "run",
 					nav_path = nil,
 					type = "walk",
+					body_part = 2,
+					variant = "run",
 					nav_path = my_data.cover_path
 				}
 				my_data.cover_path = nil
@@ -127,11 +127,11 @@ function CopLogicFlee.update(data)
 		elseif my_data.flee_path then
 			if my_data.path_blocked == false and not unit:movement():chk_action_forbidden("walk") then
 				local new_action_data = {
+					nav_path = nil,
 					body_part = 2,
 					path_simplified = true,
 					type = "walk",
 					variant = "run",
-					nav_path = nil,
 					nav_path = my_data.flee_path
 				}
 				my_data.flee_path = nil
@@ -210,8 +210,8 @@ function CopLogicFlee.update(data)
 			if flee_pos then
 				local nav_seg = managers.navigation:get_nav_seg_from_pos(flee_pos)
 				my_data.flee_target = {
-					pos = nil,
 					nav_seg = nil,
+					pos = nil,
 					nav_seg = nav_seg,
 					pos = flee_pos
 				}

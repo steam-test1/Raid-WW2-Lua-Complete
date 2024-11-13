@@ -39,8 +39,8 @@ end
 
 function CoreWorldEventUnitElement:_world_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -102,8 +102,8 @@ function CoreWorldEventUnitElement:_add_world_by_name(world_name)
 	local world = managers.worldcollection:world_names()[world_name].world
 	local events = self:_get_events(world)
 	local event_list_data = {
-		event = nil,
 		world_name = nil,
+		event = nil,
 		world_name = world_name,
 		event = events[1]
 	}
@@ -124,15 +124,15 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	h_sizer:add(world_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
-		value = nil,
-		tooltip = "Select an event from the combobox",
-		panel = nil,
-		options = nil,
 		sizer = nil,
+		panel = nil,
 		sorted = true,
 		sizer_proportions = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 0,
+		tooltip = "Select an event from the combobox",
+		value = nil,
+		options = nil,
 		panel = panel,
 		sizer = h_sizer,
 		options = events,
@@ -145,11 +145,11 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	toolbar:connect("SELECT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "remove_entry"), event_list_data)
 	toolbar:realize()
 	table.insert(self._guis, {
-		toolbar = nil,
 		world_name = nil,
-		event = nil,
 		name_ctrlr = nil,
+		event = nil,
 		world_name_ctrlr = nil,
+		toolbar = nil,
 		world_name_ctrlr = world_name_ctrlr,
 		world_name = world_name,
 		event = event,

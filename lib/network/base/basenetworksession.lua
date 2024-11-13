@@ -88,9 +88,9 @@ function BaseNetworkSession:load(data)
 
 		for _, report in ipairs(data.dead_con_reports) do
 			local report = {
-				reported = nil,
 				reporter = nil,
 				process_t = nil,
+				reported = nil,
 				process_t = report.process_t,
 				reporter = self._peers[report.reporter],
 				reported = self._peers[report.reported]
@@ -143,9 +143,9 @@ function BaseNetworkSession:save(data)
 
 		for _, report in ipairs(self._dead_con_reports) do
 			local save_report = {
-				reported = nil,
 				reporter = nil,
 				process_t = nil,
+				reported = nil,
 				process_t = report.process_t,
 				reporter = report.reporter:id(),
 				reported = report.reported:id()
@@ -467,11 +467,11 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 				self._old_players[peer_ident] = {
 					member_dead = nil,
 					member_downed = nil,
-					hostages_killed = nil,
-					respawn_penalty = nil,
-					used_deployable = nil,
 					health = nil,
+					respawn_penalty = nil,
 					t = nil,
+					hostages_killed = nil,
+					used_deployable = nil,
 					t = Application:time(),
 					member_downed = member_downed,
 					health = member_health,
@@ -516,8 +516,8 @@ end
 function BaseNetworkSession:_soft_remove_peer(peer)
 	self._soft_remove_peers = self._soft_remove_peers or {}
 	self._soft_remove_peers[peer:rpc():ip_at_index(0)] = {
-		expire_t = nil,
 		peer = nil,
+		expire_t = nil,
 		peer = peer,
 		expire_t = TimerManager:wall():time() + 1.5
 	}
@@ -917,8 +917,8 @@ function BaseNetworkSession:add_connection_to_trash(rpc)
 		print("[BaseNetworkSession:add_connection_to_trash]", wanted_ip)
 
 		self._trash_connections[wanted_ip] = {
-			expire_t = nil,
 			rpc = nil,
+			expire_t = nil,
 			rpc = rpc,
 			expire_t = TimerManager:wall():time() + self.CONNECTION_TIMEOUT
 		}
@@ -1713,17 +1713,21 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	local total_specials_kills = 0
 	local total_head_shots = 0
 	local best_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_special_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_accuracy = {
+		peer_id = nil,
 		score = 0
 	}
 	local group_accuracy = 0
 	local group_downs = 0
 	local most_downs = {
+		peer_id = nil,
 		score = 0
 	}
 

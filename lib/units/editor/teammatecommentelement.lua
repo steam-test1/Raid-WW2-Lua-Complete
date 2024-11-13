@@ -78,12 +78,12 @@ function TeammateCommentUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "close_to_element", "Play close to element", "Play close to element")
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Play on instigator", "Play on instigator")
 	self:_build_value_number(panel, panel_sizer, "radius", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "(Optional) Sets a distance to use with the check (in cm)")
 	self:_build_value_number(panel, panel_sizer, "test_robber", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Can be used to test different robber voice (not saved/loaded)")
 	self:_add_help_text("If \"Play close to element\" is checked, the comment will be played on a teammate close to the element position, otherwise close to the player.")
 end

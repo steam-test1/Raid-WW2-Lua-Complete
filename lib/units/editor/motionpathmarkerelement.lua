@@ -178,9 +178,9 @@ function MotionpathMarkerUnitElement:add_element()
 				else
 					table.insert(self._hed.bridges, {
 						path_id = nil,
-						marker_to = nil,
-						distance = nil,
 						marker_from = nil,
+						distance = nil,
+						marker_to = nil,
 						marker_from = unit_id_from,
 						marker_to = unit_id,
 						path_id = path_to.id,
@@ -292,9 +292,9 @@ end
 
 function MotionpathMarkerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		mask = nil,
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
+		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -309,17 +309,17 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local cp_length_params = {
+		name = "Control Point Length:",
+		value = nil,
+		panel = nil,
+		number_ctrlr_proportions = 1,
+		slider_ctrlr_proportions = 3,
+		ctrlr_proportions = 2,
 		name_proportions = 1,
 		max = 10000,
 		min = 1,
 		floats = 3,
 		sizer = nil,
-		value = nil,
-		ctrlr_proportions = 2,
-		slider_ctrlr_proportions = 3,
-		number_ctrlr_proportions = 1,
-		name = "Control Point Length:",
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.cp_length
@@ -327,23 +327,23 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 
 	CoreEws.slider_and_number_controller(cp_length_params)
 	cp_length_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "cp_length",
+		ctrlr = nil,
 		ctrlr = cp_length_params.number_ctrlr
 	})
 	cp_length_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "cp_length",
+		ctrlr = nil,
 		ctrlr = cp_length_params.number_ctrlr
 	})
 	cp_length_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "cp_length",
+		ctrlr = nil,
 		ctrlr = cp_length_params.number_ctrlr
 	})
 	cp_length_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "cp_length",
+		ctrlr = nil,
 		ctrlr = cp_length_params.number_ctrlr
 	})
 	self:_build_value_combobox(panel, panel_sizer, "motion_state", {
@@ -352,16 +352,16 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Units on this marker will either wait or move through it.")
 
 	local speed_params = {
+		value = nil,
+		panel = nil,
+		name = "Speed [km/h]:",
 		tooltip = "Set the target unit speed at this marker in km/h. Set to -1 to ignore.",
+		ctrlr_proportions = 2,
+		name_proportions = 1,
 		max = 1000,
 		min = -1,
 		floats = 1,
 		sizer = nil,
-		value = nil,
-		name_proportions = 1,
-		ctrlr_proportions = 2,
-		name = "Speed [km/h]:",
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.marker_target_speed
@@ -369,13 +369,13 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	local speed_ctrlr = CoreEWS.number_controller(speed_params)
 
 	speed_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "marker_target_speed",
+		ctrlr = nil,
 		ctrlr = speed_ctrlr
 	})
 	speed_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "marker_target_speed",
+		ctrlr = nil,
 		ctrlr = speed_ctrlr
 	})
 
@@ -596,8 +596,8 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 				final_speed = current_speed == -1 and -1 or (current_speed + speed_step) * 27.77
 
 				table.insert(entire_path_points, {
-					speed = nil,
 					point = nil,
+					speed = nil,
 					point = point,
 					speed = final_speed
 				})
@@ -664,8 +664,8 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 
 	for i = 1, #entire_path_points do
 		table.insert(entire_path_points_reverse, 1, {
-			speed = nil,
 			point = nil,
+			speed = nil,
 			point = entire_path_points[i].point,
 			speed = entire_path_points[#entire_path_points - i + 1].speed
 		})
@@ -682,16 +682,16 @@ function MotionpathMarkerUnitElement:_recreate_motion_path(selected_unit, force_
 	end
 
 	local path = {
-		length = nil,
-		id = nil,
-		marker_checkpoints = nil,
 		points = nil,
 		units = nil,
+		marker_checkpoints = nil,
+		length = nil,
+		points_bck = nil,
+		active = true,
+		id = nil,
 		markers = nil,
 		bridges = nil,
 		path_type = nil,
-		points_bck = nil,
-		active = true,
 		id = path_id,
 		path_type = path_type,
 		length = path_length,

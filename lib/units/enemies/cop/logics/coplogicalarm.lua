@@ -586,17 +586,17 @@ end
 
 function CopLogicAlarm._say_call_the_police(data, my_data)
 	local blame_list = {
-		dead_civ = "saw_body",
+		civilian = "saw_civilian",
+		w_hot = "spotted_player",
 		trip_mine = "saw_trip_mine",
 		criminal = "spotted_player",
 		dead_cop = "saw_body",
-		civilian = "saw_civilian",
+		dead_civ = "saw_body",
 		body_bag = "saw_bag",
 		sentry_gun = "saw_sentry_gun",
 		drill = "saw_drill",
 		hostage_cop = "saw_hostage_cop",
-		hostage_civ = "saw_hostage_civ",
-		w_hot = "spotted_player"
+		hostage_civ = "saw_hostage_civ"
 	}
 	local event = blame_list[my_data.call_in_event] or "spotted_player"
 

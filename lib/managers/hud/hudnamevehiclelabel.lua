@@ -11,9 +11,9 @@ end
 
 function HUDNameVehicleLabel:_create_panel(hud)
 	self._object = hud.panel:panel({
-		name = nil,
-		h = nil,
 		w = nil,
+		h = nil,
+		name = nil,
 		name = "vehicle_name_label_" .. self._vehicle_name,
 		w = HUDNameLabel.W,
 		h = HUDNameLabel.H
@@ -30,8 +30,8 @@ function HUDNameVehicleLabel:_create_name()
 	}
 	local crim_color = tweak_data.chat_colors[1]
 	local text = self._object:text({
-		layer = -1,
 		h = 25,
+		layer = -1,
 		vertical = "top",
 		align = "left",
 		color = nil,
@@ -46,21 +46,21 @@ function HUDNameVehicleLabel:_create_name()
 		color = crim_color
 	})
 	local bag = self._object:bitmap({
+		layer = 0,
+		color = nil,
 		name = "bag",
 		x = 1,
-		color = nil,
+		y = 1,
 		visible = false,
 		texture_rect = nil,
 		texture = nil,
-		layer = 0,
-		y = 1,
 		texture = tabs_texture,
 		texture_rect = bag_rect,
 		color = (crim_color * 1.1):with_alpha(1)
 	})
 	local bag_number = self._object:text({
-		layer = -1,
 		h = 18,
+		layer = -1,
 		vertical = "top",
 		align = "left",
 		color = nil,
@@ -77,8 +77,8 @@ function HUDNameVehicleLabel:_create_name()
 	})
 
 	self._object:text({
-		layer = -1,
 		h = 18,
+		layer = -1,
 		align = "center",
 		color = nil,
 		w = 256,
@@ -93,8 +93,9 @@ function HUDNameVehicleLabel:_create_name()
 		color = tweak_data.screen_colors.pro_color
 	})
 	self._object:text({
-		layer = -1,
+		rotation = 360,
 		h = 18,
+		layer = -1,
 		vertical = "bottom",
 		align = "left",
 		color = nil,
@@ -104,7 +105,6 @@ function HUDNameVehicleLabel:_create_name()
 		font = nil,
 		visible = false,
 		text = nil,
-		rotation = 360,
 		text = utf8.to_upper("Fixing"),
 		font = HUDNameLabel.PLAYER_NAME_FONT,
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,

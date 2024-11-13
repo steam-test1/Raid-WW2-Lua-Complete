@@ -57,9 +57,9 @@ function CoreEditableGui:add_workspace(gui_object)
 	gui:child("std_text"):set_alpha(self._alpha)
 	gui:child("std_text"):set_shape(self._shape[1] * gui:w(), self._shape[2] * gui:h(), self._shape[3] * gui:w(), self._shape[4] * gui:h())
 	table.insert(self._guis, {
+		panel = nil,
 		gui = nil,
 		workspace = nil,
-		panel = nil,
 		workspace = ws,
 		gui = gui,
 		panel = panel

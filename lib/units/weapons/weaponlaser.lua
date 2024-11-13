@@ -22,11 +22,11 @@ function WeaponLaser:init(unit)
 	self._light:set_rotation(Rotation(obj:rotation():z(), -obj:rotation():x(), -obj:rotation():y()))
 
 	self._themes = {
-		cop_sniper = nil,
 		turret_module_rearming = nil,
 		turret_module_mad = nil,
 		default = nil,
 		turret_module_active = nil,
+		cop_sniper = nil,
 		default = {
 			light = nil,
 			brush = nil,

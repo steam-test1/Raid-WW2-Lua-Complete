@@ -7,9 +7,17 @@ function HybridReloadRaycastWeaponBase:mag_is_empty()
 end
 
 function HybridReloadRaycastWeaponBase:use_shotgun_reload()
-	return not self:mag_is_empty()
+	self._use_shotgun_reload = not self:mag_is_empty()
+
+	return self._use_shotgun_reload
 end
 
 function HybridReloadRaycastWeaponBase:reload_interuptable()
-	return self:use_shotgun_reload() and not self._started_reload_empty
+	return self._use_shotgun_reload and not self._started_reload_empty
+end
+
+function HybridReloadRaycastWeaponBase:on_reload()
+	HybridReloadRaycastWeaponBase.super.on_reload(self)
+
+	self._started_reload_empty = nil
 end

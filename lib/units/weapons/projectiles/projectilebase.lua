@@ -105,6 +105,14 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
+function ProjectileBase:set_cosmetics_data(cosmetic_id)
+	self._cosmetics_id = cosmetic_id
+end
+
+function ProjectileBase:get_cosmetics_id()
+	return self._cosmetics_id
+end
+
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 	local velocity = params.dir
@@ -172,8 +180,8 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
 	self:throw({
-		projectile_entry = nil,
 		dir = nil,
+		projectile_entry = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})
@@ -267,7 +275,7 @@ end
 
 local ids_object3d = Idstring("object3d")
 
-function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id)
+function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id, cooking_t, parent_projectile_id, cosmetic_id)
 	if not projectile_type then
 		Application:error("[ProjectileBase.throw_projectile] Trying to spawn an unknown projectile type: ", self._values.grenade_type, debug.traceback())
 
@@ -281,11 +289,18 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	end
 
 	local tweak_entry = tweak_data.projectiles[projectile_entry]
-	local unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.local_unit)
 	local rot_dir = tweak_entry.context_rot_dir or math.UP
+	local unit_name = nil
+	local cosmetics_data = tweak_data.weapon.weapon_skins[cosmetic_id]
 
-	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE) then
-		managers.dyn_resource:load(IDS_UNIT, unit_name, managers.dyn_resource.DYN_RESOURCES_PACKAGE)
+	if cosmetics_data and cosmetics_data.replaces_units then
+		unit_name = Idstring(Network:is_server() and cosmetics_data.replaces_units.unit or cosmetics_data.replaces_units.unit_local)
+	else
+		unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.unit_local)
+	end
+
+	if not PackageManager:has(IDS_UNIT, unit_name) then
+		return
 	end
 
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
@@ -326,9 +341,13 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 		unit:base():set_parent_projectile_id(parent_projectile_id)
 	end
 
+	if cosmetic_id then
+		unit:base():set_cosmetics_data(cosmetic_id)
+	end
+
 	unit:base():throw({
-		projectile_entry = nil,
 		dir = nil,
+		projectile_entry = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})
@@ -337,7 +356,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 		unit:base():set_owner_peer_id(owner_peer_id)
 	end
 
-	managers.network:session():send_to_peers_synched("sync_throw_projectile", unit:id() ~= -1 and unit or nil, pos, dir, projectile_type, owner_peer_id or 0, unit:base():get_parent_projectile_id())
+	managers.network:session():send_to_peers_synched("sync_throw_projectile", unit:id() ~= -1 and unit or nil, pos, dir, projectile_type, owner_peer_id or 0, unit:base():get_parent_projectile_id(), cosmetic_id)
 
 	if tweak_data.projectiles[projectile_entry].impact_detonation then
 		Application:debug("[ProjectileBase.throw_projectile] Has impact detonation")
@@ -368,8 +387,61 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
-function ProjectileBase.spawn(unit_name, pos, rot)
-	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
+function ProjectileBase.spawn(projectile_type, pos, dir, owner_peer_id, cosmetic_id)
+	if not projectile_type then
+		Application:error("[ProjectileBase.throw_projectile] Trying to spawn an unknown projectile type: ", self._values.grenade_type, debug.traceback())
+
+		return
+	end
+
+	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
+
+	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
+		return
+	end
+
+	local tweak_entry = tweak_data.projectiles[projectile_entry]
+	local rot_dir = tweak_entry.context_rot_dir or math.UP
+	local unit_name = nil
+	local cosmetics_data = tweak_data.weapon.weapon_skins[cosmetic_id]
+
+	if cosmetics_data and cosmetics_data.replaces_units then
+		unit_name = Idstring(Network:is_server() and cosmetics_data.replaces_units.unit or cosmetics_data.replaces_units.unit_local)
+	else
+		unit_name = Idstring(Network:is_server() and tweak_entry.unit or tweak_entry.unit_local)
+	end
+
+	if not PackageManager:has(IDS_UNIT, unit_name) then
+		return
+	end
+
+	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, rot_dir))
+
+	managers.game_play_central:add_spawned_projectiles(unit)
+
+	for _, o in ipairs(unit:get_objects_by_type(ids_object3d)) do
+		if o.set_skip_detail_distance_culling then
+			o:set_skip_detail_distance_culling(true)
+		end
+	end
+
+	if owner_peer_id and managers.network:session() then
+		local peer = managers.network:session():peer(owner_peer_id)
+		local thrower_unit = peer and peer:unit()
+
+		if alive(thrower_unit) then
+			unit:base():set_thrower_unit(thrower_unit)
+			unit:base():set_thrower_peer_id(owner_peer_id)
+
+			if not tweak_entry.throwable and thrower_unit:movement() and thrower_unit:movement():current_state() then
+				unit:base():set_weapon_unit(thrower_unit:movement():current_state()._equipped_unit)
+			end
+		end
+	end
+
+	if cosmetic_id then
+		unit:base():set_cosmetics_data(cosmetic_id)
+	end
 
 	return unit
 end

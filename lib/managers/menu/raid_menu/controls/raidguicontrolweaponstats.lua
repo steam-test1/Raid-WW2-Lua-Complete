@@ -44,47 +44,47 @@ end
 
 function RaidGUIControlWeaponStats:_set_default_values()
 	self._values = {
+		damage = nil,
+		magazine = nil,
 		accuracy = nil,
 		rate_of_fire = nil,
 		total_ammo = nil,
 		stability = nil,
-		damage = nil,
-		magazine = nil,
 		damage = {
-			value = "00",
 			text = nil,
 			delta_value = "00",
+			value = "00",
 			text = self:translate("menu_weapons_stats_damage", true)
 		},
 		magazine = {
-			value = "000",
 			text = nil,
 			delta_value = "00",
+			value = "000",
 			text = self:translate("menu_weapons_stats_magazine", true)
 		},
 		total_ammo = {
-			value = "000",
 			text = nil,
 			delta_value = "00",
+			value = "000",
 			text = self:translate("menu_weapons_stats_total_ammo", true)
 		},
 		rate_of_fire = {
-			value = "00",
 			text = nil,
 			delta_value = "00",
+			value = "00",
 			text = self:translate("menu_weapons_stats_rate_of_fire", true)
 		},
 		accuracy = {
-			accuracy_as_spread = false,
-			value = "00",
 			text = nil,
 			delta_value = "00",
+			accuracy_as_spread = false,
+			value = "00",
 			text = self:translate("menu_weapons_stats_accuracy", true)
 		},
 		stability = {
-			value = "00",
 			text = nil,
 			delta_value = "00",
+			value = "00",
 			text = self:translate("menu_weapons_stats_stability", true)
 		}
 	}
@@ -93,55 +93,55 @@ end
 function RaidGUIControlWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
-			applied_value = nil,
-			name = "damage",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "damage",
 			text = self._values.damage.text,
 			modified_value = self._values.damage.modified_value or 0,
 			applied_value = self._values.damage.applied_value or 0
 		},
 		{
-			applied_value = nil,
-			name = "magazine",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "magazine",
 			text = self._values.magazine.text,
 			modified_value = self._values.magazine.modified_value or 0,
 			applied_value = self._values.magazine.applied_value or 0
 		},
 		{
-			applied_value = nil,
-			name = "total_ammo",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "total_ammo",
 			text = self._values.total_ammo.text,
 			modified_value = self._values.total_ammo.modified_value or 0,
 			applied_value = self._values.total_ammo.applied_value or 0
 		},
 		{
-			applied_value = nil,
-			name = "rate_of_fire",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "rate_of_fire",
 			text = self._values.rate_of_fire.text,
 			modified_value = self._values.rate_of_fire.modified_value or 0,
 			applied_value = self._values.rate_of_fire.applied_value or 0
 		},
 		{
-			applied_value = nil,
-			name = "accuracy",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "accuracy",
 			text = self._values.accuracy.text,
 			modified_value = self._values.accuracy.modified_value or 0,
 			applied_value = self._values.accuracy.applied_value or 0
 		},
 		{
-			applied_value = nil,
-			name = "stability",
 			text = nil,
 			modified_value = nil,
+			applied_value = nil,
+			name = "stability",
 			text = self._values.stability.text,
 			modified_value = self._values.stability.modified_value or 0,
 			applied_value = self._values.stability.applied_value or 0

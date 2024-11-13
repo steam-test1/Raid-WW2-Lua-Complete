@@ -118,16 +118,16 @@ function PlayerStandard:enter(state_data, enter_data)
 
 	if self._ext_movement:nav_tracker() then
 		self._pos_reservation = {
-			position = nil,
 			filter = nil,
 			radius = 100,
+			position = nil,
 			position = self._ext_movement:m_pos(),
 			filter = self._ext_movement:pos_rsrv_id()
 		}
 		self._pos_reservation_slow = {
-			position = nil,
 			filter = nil,
 			radius = 100,
+			position = nil,
 			position = mvector3.copy(self._ext_movement:m_pos()),
 			filter = self._ext_movement:pos_rsrv_id()
 		}
@@ -269,13 +269,13 @@ function PlayerStandard:exit(state_data, new_state_name)
 	self._ext_camera:set_shaker_parameter("headbob", "amplitude", 0)
 
 	local exit_data = {
-		unequip_weapon_expire_t = nil,
-		last_sent_pos_t = nil,
-		ducking = nil,
-		change_weapon_data = nil,
-		skip_equip = true,
-		last_sent_pos = nil,
 		equip_weapon_expire_t = nil,
+		ducking = nil,
+		skip_equip = true,
+		change_weapon_data = nil,
+		last_sent_pos = nil,
+		last_sent_pos_t = nil,
+		unequip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data,
@@ -509,11 +509,11 @@ end
 function PlayerStandard:_create_on_controller_disabled_input()
 	local release_interact = Global.game_settings.single_player or not managers.menu:get_controller():get_input_bool("interact")
 	local input = {
-		btn_melee_release = true,
 		btn_use_item_release = true,
 		btn_interact_release = nil,
 		btn_steelsight_release = true,
 		is_customized = true,
+		btn_melee_release = true,
 		btn_interact_release = release_interact
 	}
 
@@ -535,8 +535,8 @@ function PlayerStandard:_get_input(t, dt)
 		end
 	elseif not self._state_data.controller_enabled then
 		local input = {
-			is_customized = true,
 			btn_interact_release = nil,
+			is_customized = true,
 			btn_interact_release = managers.menu:get_controller():get_input_released("interact")
 		}
 
@@ -553,44 +553,30 @@ function PlayerStandard:_get_input(t, dt)
 	end
 
 	local input = {
-		btn_warcry_left_state = nil,
-		btn_run_state = nil,
-		btn_activate_warcry_press = nil,
-		btn_duck_release = nil,
-		btn_run_release = nil,
-		btn_switch_weapon_press = nil,
-		btn_projectile_state = nil,
-		btn_projectile_release = nil,
-		btn_deploy_bipod = false,
-		btn_left_alt_inspect_state = nil,
-		btn_vehicle_exit_press = nil,
-		btn_vehicle_exit_release = nil,
-		btn_vehicle_change_seat_press = nil,
-		btn_vehicle_shooting_stance_release = nil,
-		btn_vehicle_shooting_stance_press = nil,
-		btn_vehicle_rear_view_release = nil,
 		btn_vehicle_rear_view_press = nil,
-		btn_duck_state = nil,
-		btn_duck_press = nil,
-		btn_stats_screen_release = nil,
-		btn_stats_screen_down = nil,
+		btn_vehicle_exit_release = nil,
+		btn_deploy_bipod = false,
+		btn_vehicle_exit_press = nil,
+		btn_left_alt_inspect_state = nil,
 		btn_enter_inspect_state = nil,
-		btn_stats_screen_press = nil,
-		any_input_held = nil,
-		any_input_released = nil,
-		any_input_pressed = nil,
-		btn_projectile_press = nil,
-		btn_throw_grenade_press = nil,
-		btn_weapon_gadget_press = nil,
-		btn_melee_state = nil,
-		btn_melee_press = nil,
-		btn_use_item_press = nil,
-		btn_previous_weapon_press = nil,
-		btn_next_weapon_press = nil,
+		btn_projectile_release = nil,
 		btn_melee_release = nil,
 		btn_use_item_release = nil,
 		btn_interact_release = nil,
 		btn_steelsight_release = nil,
+		btn_projectile_press = nil,
+		btn_throw_grenade_press = nil,
+		btn_projectile_state = nil,
+		btn_weapon_gadget_press = nil,
+		btn_melee_state = nil,
+		btn_melee_press = nil,
+		btn_vehicle_change_seat_press = nil,
+		btn_use_item_press = nil,
+		btn_previous_weapon_press = nil,
+		btn_next_weapon_press = nil,
+		btn_switch_weapon_press = nil,
+		btn_run_release = nil,
+		btn_run_state = nil,
 		btn_run_press = nil,
 		btn_interact_press = nil,
 		btn_steelsight_state = nil,
@@ -602,6 +588,20 @@ function PlayerStandard:_get_input(t, dt)
 		btn_primary_attack_press = nil,
 		btn_jump_press = nil,
 		btn_warcry_right_state = nil,
+		btn_warcry_left_state = nil,
+		btn_activate_warcry_press = nil,
+		btn_duck_release = nil,
+		btn_duck_state = nil,
+		btn_duck_press = nil,
+		btn_stats_screen_release = nil,
+		btn_stats_screen_down = nil,
+		btn_stats_screen_press = nil,
+		any_input_held = nil,
+		any_input_released = nil,
+		any_input_pressed = nil,
+		btn_vehicle_shooting_stance_release = nil,
+		btn_vehicle_shooting_stance_press = nil,
+		btn_vehicle_rear_view_release = nil,
 		any_input_pressed = pressed,
 		any_input_released = released,
 		any_input_held = held,
@@ -683,6 +683,12 @@ function PlayerStandard:_get_input(t, dt)
 
 	if self._controller:get_input_pressed("primary_choice4") then
 		input.btn_primary_choice = 4
+	end
+
+	if input.btn_primary_attack_press then
+		self._queue_primary_attack_t = t + tweak_data.player.primary_attack_buffer
+	elseif input.btn_primary_attack_release then
+		self._queue_primary_attack_t = nil
 	end
 
 	return input
@@ -2178,8 +2184,8 @@ function PlayerStandard:_start_action_interact(t, input, timer, interact_object)
 
 	self._interact_expire_t = t + timer
 	self._interact_params = {
-		timer = nil,
 		tweak_data = nil,
+		timer = nil,
 		object = nil,
 		object = interact_object,
 		timer = timer,
@@ -2603,8 +2609,8 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 
 			managers.game_play_central:play_impact_sound_and_effects({
 				col_ray = nil,
-				effect = nil,
 				no_decal = nil,
+				effect = nil,
 				weapon_type = "knife",
 				decal = nil,
 				col_ray = col_ray,
@@ -2726,7 +2732,6 @@ function PlayerStandard:_interupt_action_melee(t)
 	self._state_data.meleeing = nil
 
 	self:_start_action_equip()
-	self._camera_unit:base():unspawn_melee_item()
 	self._camera_unit:base():show_weapon()
 
 	if self._state_data.melee_charge_shake then
@@ -2970,7 +2975,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		delay = nil,
+		vec = nil,
 		text = nil,
 		text = text
 	})
@@ -3102,9 +3107,9 @@ function PlayerStandard:_add_unit_to_char_table(char_table, unit, unit_type, int
 
 			if interaction_through_walls then
 				table.insert(char_table, {
-					inv_wgt = nil,
-					unit_type = nil,
 					unit = nil,
+					unit_type = nil,
+					inv_wgt = nil,
 					unit = unit,
 					inv_wgt = ing_wgt,
 					unit_type = unit_type
@@ -3114,9 +3119,9 @@ function PlayerStandard:_add_unit_to_char_table(char_table, unit, unit_type, int
 
 				if not ray or mvector3.distance(ray.position, u_head_pos) < 30 then
 					table.insert(char_table, {
-						inv_wgt = nil,
-						unit_type = nil,
 						unit = nil,
+						unit_type = nil,
+						inv_wgt = nil,
 						unit = unit,
 						inv_wgt = ing_wgt,
 						unit_type = unit_type
@@ -4684,6 +4689,10 @@ end
 function PlayerStandard:_check_action_primary_attack(t, input)
 	local new_action = nil
 
+	if not self._equipped_unit then
+		return
+	end
+
 	if self._ext_inventory:equipped_selection() == PlayerInventory.SLOT_4 then
 		return
 	end
@@ -4699,201 +4708,199 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 
 		if not action_forbidden then
 			local use_recoil_anim = true
+			local fire_pressed = self._queue_primary_attack_t and t < self._queue_primary_attack_t or input.btn_primary_attack_press
 			self._queue_reload_interupt_t = nil
 
 			self._ext_inventory:equip_selected_primary(false)
 
-			if self._equipped_unit then
-				local weap_base = self._equipped_unit:base()
-				local fire_mode = weap_base.fire_mode and weap_base:fire_mode()
+			local weap_base = self._equipped_unit:base()
+			local fire_mode = weap_base.fire_mode and weap_base:fire_mode()
 
-				if not fire_mode then
-					return false
+			if not fire_mode then
+				return false
+			end
+
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYERS_CAN_ONLY_USE_SINGLE_FIRE) then
+				fire_mode = "single"
+			end
+
+			local fire_on_release = weap_base:fire_on_release()
+
+			if weap_base.out_of_ammo and weap_base:out_of_ammo() then
+				if fire_pressed then
+					managers.dialog:queue_dialog("player_gen_no_ammo", {
+						skip_idle_check = true,
+						instigator = nil,
+						instigator = self._unit
+					})
+					managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
+
+					self._queue_primary_attack_t = nil
+
+					weap_base:dryfire()
 				end
-
-				if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYERS_CAN_ONLY_USE_SINGLE_FIRE) then
-					fire_mode = "single"
-				end
-
-				local fire_on_release = weap_base:fire_on_release()
-
-				if weap_base.out_of_ammo and weap_base:out_of_ammo() then
+			elseif weap_base.clip_empty and weap_base:clip_empty() then
+				if self:_is_using_bipod() then
 					if input.btn_primary_attack_press then
-						managers.dialog:queue_dialog("player_gen_no_ammo", {
-							skip_idle_check = true,
-							instigator = nil,
-							instigator = self._unit
-						})
-						managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
 						weap_base:dryfire()
 					end
-				elseif weap_base.clip_empty and weap_base:clip_empty() then
-					if self:_is_using_bipod() then
-						if input.btn_primary_attack_press then
-							weap_base:dryfire()
-						end
 
-						self._equipped_unit:base():tweak_data_anim_stop("fire")
-					elseif fire_mode == "single" then
-						if input.btn_primary_attack_press then
-							self:_start_action_reload_enter(t)
-						end
-					elseif input.btn_primary_attack_press then
-						new_action = true
-
-						self:_start_action_reload_enter(t)
-					end
-				elseif self._running and not self._run_and_shoot then
-					self:_interupt_action_running(t)
-				else
-					if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and not self:in_air() then
-						if self._equipped_unit and (input.btn_primary_attack_press or input.btn_primary_attack_release) then
-							local weap_base = self._equipped_unit:base()
-
-							weap_base:dryfire()
-						end
-
-						self:_check_stop_shooting()
-
-						return
-					end
-
-					if not self._shooting then
-						if weap_base:start_shooting_allowed() then
-							local start = fire_mode == "single" and input.btn_primary_attack_press
-							start = start or fire_mode ~= "single" and input.btn_primary_attack_state
-							start = start and not fire_on_release
-							start = start or fire_on_release and input.btn_primary_attack_release
-
-							if start then
-								weap_base:start_shooting()
-								self._camera_unit:base():start_shooting()
-
-								self._shooting = true
-
-								if fire_mode == "auto" then
-									if use_recoil_anim then
-										self._unit:camera():play_redirect(self.IDS_RECOIL_ENTER)
-									end
-
-									if not weap_base.akimbo and (not weap_base.third_person_important or weap_base.third_person_important and not weap_base:third_person_important()) then
-										self._ext_network:send("sync_start_auto_fire_sound")
-									end
-								end
-							end
-						else
-							return false
-						end
-					end
-
-					local suppression_ratio = self._unit:character_damage():effective_suppression_ratio()
-					local spread_mul = math.lerp(1, tweak_data.player.suppression.spread_mul, suppression_ratio)
-					local autohit_mul = math.lerp(1, tweak_data.player.suppression.autohit_chance_mul, suppression_ratio)
-					local suppression_mul = managers.blackmarket:threat_multiplier()
-					local dmg_mul = managers.player:temporary_upgrade_value("temporary", "dmg_multiplier_outnumbered", 1)
-					local dmg_mul = dmg_mul * managers.player:temporary_upgrade_value("temporary", "candy_attack_damage", 1)
-					local weapon_category = weap_base:category()
-					local health_ratio = self._ext_damage:health_ratio()
-
-					if self._state_data.marshal_data then
-						local multiplier = managers.player:upgrade_value(weapon_category, "marshal_stacking_damage_multiplier", 1) - 1
-						dmg_mul = dmg_mul * (1 + self._state_data.marshal_data.stacks * multiplier)
-					end
-
-					local fired = nil
-
-					if fire_mode == "single" then
-						if input.btn_primary_attack_press then
-							fired = weap_base:trigger_pressed(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
-						elseif fire_on_release then
-							if input.btn_primary_attack_release then
-								fired = weap_base:trigger_released(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
-							elseif input.btn_primary_attack_state then
-								weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
-							end
-						end
-					elseif input.btn_primary_attack_state then
-						fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
-					end
-
-					if weap_base.manages_steelsight and weap_base:manages_steelsight() then
-						if weap_base:wants_steelsight() and not self._state_data.in_steelsight then
-							self:_start_action_steelsight(t)
-						elseif not weap_base:wants_steelsight() and self._state_data.in_steelsight then
-							self:_end_action_steelsight(t)
-						end
-					end
-
-					local charging_weapon = fire_on_release and weap_base:charging()
-
-					if not self._state_data.charging_weapon and charging_weapon then
-						self:_start_action_charging_weapon(t)
-					elseif self._state_data.charging_weapon and not charging_weapon then
-						self:_end_action_charging_weapon(t)
-					end
-
+					self._equipped_unit:base():tweak_data_anim_stop("fire")
+				elseif input.btn_primary_attack_press then
 					new_action = true
 
-					if fired then
-						managers.rumble:play("weapon_fire")
+					self:_start_action_reload_enter(t)
+				end
+			elseif self._running and not self._run_and_shoot then
+				self:_interupt_action_running(t)
+			else
+				if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and not self:in_air() then
+					if self._equipped_unit and (input.btn_primary_attack_press or input.btn_primary_attack_release) then
+						local weap_base = self._equipped_unit:base()
 
-						local wpn_spread = weap_base:spread_multiplier()
-
-						managers.hud:set_crosshair_offset_kick(wpn_spread)
-
-						local weap_tweak_data = tweak_data.weapon[weap_base:get_name_id()]
-						local shake_multiplier = weap_tweak_data.shake[self._state_data.in_steelsight and "fire_steelsight_multiplier" or "fire_multiplier"]
-						local fire_rate_multiplier = weap_base:fire_rate_multiplier()
-
-						self._ext_camera:play_shaker("fire_weapon_rot", 1 * shake_multiplier)
-						self._ext_camera:play_shaker("fire_weapon_kick", 1 * shake_multiplier, 1, 0.15)
-						self._equipped_unit:base():tweak_data_anim_stop("unequip")
-						self._equipped_unit:base():tweak_data_anim_stop("equip")
-
-						if not self._state_data.in_steelsight or not weap_base:tweak_data_anim_play("fire_steelsight", fire_rate_multiplier) then
-							weap_base:tweak_data_anim_play("fire", fire_rate_multiplier)
-						end
-
-						if use_recoil_anim and fire_mode == "single" then
-							if not self._state_data.in_steelsight or weap_tweak_data.animations.recoil_steelsight_weight then
-								self._ext_camera:play_redirect(self.IDS_RECOIL, fire_rate_multiplier)
-							elseif weap_tweak_data.animations.recoil_steelsight then
-								self._ext_camera:play_redirect(self.IDS_RECOIL_STEELSIGHT)
-							end
-
-							self._delay_running_expire_t = self._equipped_unit:base():next_fire_allowed()
-						end
-
-						local recoil_multiplier = (weap_base:recoil() + weap_base:recoil_addend()) * weap_base:recoil_multiplier()
-						recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil", 1)
-						recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_nullify_recoil", 1)
-
-						if self._state_data.in_steelsight then
-							recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil_steelsight", 1)
-						else
-							recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil_hipfire", 1)
-						end
-
-						local up, down, left, right = unpack(weap_tweak_data.kick[self._state_data.in_steelsight and self._state_data.ducking and "crouching_steelsight" or self._state_data.in_steelsight and "steelsight" or self._state_data.ducking and "crouching" or "standing"])
-
-						self._camera_unit:base():recoil_kick(up, down, left, right, recoil_multiplier)
-
-						if self._state_data.marshal_data and managers.player:has_category_upgrade(weapon_category, "marshal_stacking_damage_multiplier") then
-							self:_marshal_change_stacks(fired.hit_enemy and 1 or -1)
-						end
-
-						if weap_base.set_recharge_clbk then
-							weap_base:set_recharge_clbk(callback(self, self, "weapon_recharge_clbk_listener"))
-						end
-
-						managers.hud:set_ammo_amount(weap_base:selection_index(), weap_base:ammo_info())
-
-						local impact = not fired.hit_enemy
-
-						self._ext_network:send("shot_blank", impact)
-					elseif fire_mode == "single" then
-						new_action = false
+						weap_base:dryfire()
 					end
+
+					self:_check_stop_shooting()
+
+					return
+				end
+
+				if not self._shooting then
+					if weap_base:start_shooting_allowed() then
+						local start = fire_mode == "single" and fire_pressed
+						start = start or fire_mode ~= "single" and input.btn_primary_attack_state
+						start = start and not fire_on_release
+						start = start or fire_on_release and input.btn_primary_attack_release
+
+						if start then
+							weap_base:start_shooting()
+							self._camera_unit:base():start_shooting()
+
+							self._shooting = true
+
+							if fire_mode == "auto" then
+								if use_recoil_anim then
+									self._unit:camera():play_redirect(self.IDS_RECOIL_ENTER)
+								end
+
+								if not weap_base.akimbo and (not weap_base.third_person_important or weap_base.third_person_important and not weap_base:third_person_important()) then
+									self._ext_network:send("sync_start_auto_fire_sound")
+								end
+							end
+						end
+					else
+						return false
+					end
+				end
+
+				local suppression_ratio = self._unit:character_damage():effective_suppression_ratio()
+				local spread_mul = math.lerp(1, tweak_data.player.suppression.spread_mul, suppression_ratio)
+				local autohit_mul = math.lerp(1, tweak_data.player.suppression.autohit_chance_mul, suppression_ratio)
+				local suppression_mul = managers.blackmarket:threat_multiplier()
+				local dmg_mul = managers.player:temporary_upgrade_value("temporary", "dmg_multiplier_outnumbered", 1)
+				dmg_mul = dmg_mul * managers.player:temporary_upgrade_value("temporary", "candy_attack_damage", 1)
+				local weapon_category = weap_base:category()
+
+				if self._state_data.marshal_data then
+					local multiplier = managers.player:upgrade_value(weapon_category, "marshal_stacking_damage_multiplier", 1) - 1
+					dmg_mul = dmg_mul * (1 + self._state_data.marshal_data.stacks * multiplier)
+				end
+
+				local fired = nil
+
+				if fire_mode == "single" then
+					if fire_pressed then
+						fired = weap_base:trigger_pressed(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+					elseif fire_on_release then
+						if input.btn_primary_attack_release then
+							fired = weap_base:trigger_released(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+						elseif input.btn_primary_attack_state then
+							weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+						end
+					end
+				elseif input.btn_primary_attack_state then
+					fired = weap_base:trigger_held(self:get_fire_weapon_position(), self:get_fire_weapon_direction(), dmg_mul, nil, spread_mul, autohit_mul, suppression_mul)
+				end
+
+				if weap_base.manages_steelsight and weap_base:manages_steelsight() then
+					if weap_base:wants_steelsight() and not self._state_data.in_steelsight then
+						self:_start_action_steelsight(t)
+					elseif not weap_base:wants_steelsight() and self._state_data.in_steelsight then
+						self:_end_action_steelsight(t)
+					end
+				end
+
+				local charging_weapon = fire_on_release and weap_base:charging()
+
+				if not self._state_data.charging_weapon and charging_weapon then
+					self:_start_action_charging_weapon(t)
+				elseif self._state_data.charging_weapon and not charging_weapon then
+					self:_end_action_charging_weapon(t)
+				end
+
+				new_action = true
+
+				if fired then
+					managers.rumble:play("weapon_fire")
+
+					local wpn_spread = weap_base:spread_multiplier()
+
+					managers.hud:set_crosshair_offset_kick(wpn_spread)
+
+					local weap_tweak_data = tweak_data.weapon[weap_base:get_name_id()]
+					local shake_multiplier = weap_tweak_data.shake[self._state_data.in_steelsight and "fire_steelsight_multiplier" or "fire_multiplier"]
+					local fire_rate_multiplier = weap_base:fire_rate_multiplier()
+					self._queue_primary_attack_t = nil
+
+					self._ext_camera:play_shaker("fire_weapon_rot", 1 * shake_multiplier)
+					self._ext_camera:play_shaker("fire_weapon_kick", 1 * shake_multiplier, 1, 0.15)
+					self._equipped_unit:base():tweak_data_anim_stop("unequip")
+					self._equipped_unit:base():tweak_data_anim_stop("equip")
+
+					if not self._state_data.in_steelsight or not weap_base:tweak_data_anim_play("fire_steelsight", fire_rate_multiplier) then
+						weap_base:tweak_data_anim_play("fire", fire_rate_multiplier)
+					end
+
+					if use_recoil_anim and fire_mode == "single" then
+						if not self._state_data.in_steelsight or weap_tweak_data.animations.recoil_steelsight_weight then
+							self._ext_camera:play_redirect(self.IDS_RECOIL, fire_rate_multiplier)
+						elseif weap_tweak_data.animations.recoil_steelsight then
+							self._ext_camera:play_redirect(self.IDS_RECOIL_STEELSIGHT)
+						end
+
+						self._delay_running_expire_t = self._equipped_unit:base():next_fire_allowed()
+					end
+
+					local recoil_multiplier = (weap_base:recoil() + weap_base:recoil_addend()) * weap_base:recoil_multiplier()
+					recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil", 1)
+					recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_nullify_recoil", 1)
+
+					if self._state_data.in_steelsight then
+						recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil_steelsight", 1)
+					else
+						recoil_multiplier = recoil_multiplier * managers.player:upgrade_value("player", "warcry_reduce_recoil_hipfire", 1)
+					end
+
+					local up, down, left, right = unpack(weap_tweak_data.kick[self._state_data.in_steelsight and self._state_data.ducking and "crouching_steelsight" or self._state_data.in_steelsight and "steelsight" or self._state_data.ducking and "crouching" or "standing"])
+
+					self._camera_unit:base():recoil_kick(up, down, left, right, recoil_multiplier)
+
+					if self._state_data.marshal_data and managers.player:has_category_upgrade(weapon_category, "marshal_stacking_damage_multiplier") then
+						self:_marshal_change_stacks(fired.hit_enemy and 1 or -1)
+					end
+
+					if weap_base.set_recharge_clbk then
+						weap_base:set_recharge_clbk(callback(self, self, "weapon_recharge_clbk_listener"))
+					end
+
+					managers.hud:set_ammo_amount(weap_base:selection_index(), weap_base:ammo_info())
+
+					local impact = not fired.hit_enemy
+
+					self._ext_network:send("shot_blank", impact)
+				elseif fire_mode == "single" then
+					new_action = false
 				end
 			end
 		elseif self:_is_reloading() and self._equipped_unit:base():reload_interuptable() and input.btn_primary_attack_press then
@@ -5332,9 +5339,9 @@ function PlayerStandard:setup_upgrades()
 
 	if managers.player:has_category_upgrade("player", "marshal_max_multiplier_stacks") then
 		self._state_data.marshal_data = self._state_data.marshal_data or {
+			stacks = 0,
 			decay_time = nil,
 			max_stacks = nil,
-			stacks = 0,
 			max_stacks = managers.player:upgrade_value("player", "marshal_max_multiplier_stacks", 1),
 			decay_time = managers.player:upgrade_value("player", "marshal_stack_decay_timer", 1)
 		}

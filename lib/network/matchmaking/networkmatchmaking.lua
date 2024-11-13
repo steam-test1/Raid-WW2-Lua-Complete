@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_23_02"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_23_03"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -173,9 +173,9 @@ function NetworkMatchMaking:get_friends_lobbies()
 
 					if ikey ~= "value_missing" and ikey ~= "value_pending" then
 						table.insert(info.room_list, {
+							room_id = nil,
 							owner_name = nil,
 							owner_id = nil,
-							room_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
@@ -245,9 +245,9 @@ end
 
 function NetworkMatchMaking:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
-		comparision_type = nil,
 		value = nil,
 		key = nil,
+		comparision_type = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -293,9 +293,9 @@ function NetworkMatchMaking:search_lobby(friends_only)
 				for _, lobby in ipairs(lobbies) do
 					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
 						table.insert(info.room_list, {
+							room_id = nil,
 							owner_name = nil,
 							owner_id = nil,
-							room_id = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
@@ -619,8 +619,8 @@ function NetworkMatchMaking:create_lobby(settings)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
-				text = nil,
 				title = nil,
+				text = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
@@ -695,6 +695,8 @@ function NetworkMatchMaking:set_attributes(settings)
 	}
 	local level_index, job_index = self:_split_attribute_number(settings.numbers[1], 1000)
 	local lobby_attributes = {
+		num_players = nil,
+		state = nil,
 		job_class_max = nil,
 		job_class_min = nil,
 		kick_option = nil,
@@ -706,9 +708,7 @@ function NetworkMatchMaking:set_attributes(settings)
 		job_id = nil,
 		drop_in = nil,
 		difficulty = nil,
-		num_players = nil,
 		job_plan = nil,
-		state = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		level = level_index,

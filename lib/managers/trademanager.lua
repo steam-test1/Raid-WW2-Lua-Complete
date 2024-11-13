@@ -649,17 +649,17 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 
 	if hint_id then
 		local notification_text = managers.localization:text(hint_id, {
-			TEAMMATE = nil,
 			HELPER = nil,
+			TEAMMATE = nil,
 			TEAMMATE = helped_unit:base():nick_name(),
 			HELPER = helping_unit:base():nick_name()
 		})
 
 		managers.notification:add_notification({
-			shelf_life = 5,
-			id = nil,
 			duration = 3,
+			id = nil,
 			text = nil,
+			shelf_life = 5,
 			id = hint_id,
 			text = notification_text
 		})

@@ -146,9 +146,9 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
-		ducking = false,
 		equip_weapon_expire_t = nil,
 		skip_equip = true,
+		ducking = false,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
 	}
 
@@ -188,8 +188,8 @@ function PlayerTurret:_husk_turret_data()
 	local exit_animation = tweak_data.weapon[turret_weapon_name].anim_exit
 
 	managers.player:set_turret_data_for_peer({
-		peer_id = nil,
 		exit_animation = nil,
+		peer_id = nil,
 		enter_animation = nil,
 		turret_unit = nil,
 		turret_rot = nil,
@@ -255,7 +255,7 @@ function PlayerTurret:set_tweak_data(name)
 end
 
 function PlayerTurret:_update_check_actions(t, dt)
-	local input = self:_get_input()
+	local input = self:_get_input(t, dt)
 
 	self:_check_stats_screen(t, dt, input)
 	self:_check_action_steelsight(t, input)

@@ -119,12 +119,12 @@ function ItemToggle:setup_gui(node, row_item)
 
 	if self:selected_option():parameters().icon then
 		row_item.gui_icon = row_item.gui_panel:bitmap({
+			y = 0,
 			x = 0,
 			layer = nil,
 			blend_mode = nil,
 			texture = nil,
 			texture_rect = nil,
-			y = 0,
 			layer = node.layers.items,
 			texture_rect = {
 				0,

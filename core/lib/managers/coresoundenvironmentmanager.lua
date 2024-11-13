@@ -54,9 +54,9 @@ end
 
 function CoreSoundEnvironmentManager:_find_emitter_events()
 	self._emitter = {
-		events = nil,
 		soundbanks = nil,
 		paths = nil,
+		events = nil,
 		events = {},
 		paths = {},
 		soundbanks = {}
@@ -83,8 +83,8 @@ end
 
 function CoreSoundEnvironmentManager:_find_ambience_events()
 	self._ambience = {
-		events = nil,
 		soundbanks = nil,
+		events = nil,
 		events = {},
 		soundbanks = {}
 	}
@@ -104,9 +104,9 @@ end
 
 function CoreSoundEnvironmentManager:_find_scene_events()
 	self._scene = {
-		events = nil,
 		soundbanks = nil,
 		paths = nil,
+		events = nil,
 		events = {},
 		paths = {},
 		soundbanks = {}
@@ -131,8 +131,8 @@ end
 
 function CoreSoundEnvironmentManager:_find_occasional_events()
 	self._occasional = {
-		events = nil,
 		soundbanks = nil,
+		events = nil,
 		events = {},
 		soundbanks = {}
 	}

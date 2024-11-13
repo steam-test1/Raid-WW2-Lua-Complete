@@ -63,11 +63,11 @@ end
 function HUDMapWaypointCircle:_create_panel(panel, waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local panel_params = {
+		name = nil,
 		is_root_panel = true,
 		visible = false,
 		h = nil,
 		w = nil,
-		name = nil,
 		name = "map_waypoint_circle_" .. tostring(self._id),
 		w = radius * 2,
 		h = radius * 2
@@ -78,12 +78,12 @@ end
 function HUDMapWaypointCircle:_create_radar_icon(waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local radar_icon_params = {
+		name = "radar_icon",
+		x = nil,
 		texture_rect = nil,
-		texture = nil,
 		h = nil,
 		w = nil,
-		x = nil,
-		name = "radar_icon",
+		texture = nil,
 		x = radius - 3,
 		w = radius - 3,
 		h = radius,
@@ -178,11 +178,11 @@ end
 function HUDMapWaypointPoint:_create_panel(panel)
 	local panel_params = {
 		halign = "center",
+		name = nil,
 		visible = false,
 		h = nil,
 		w = nil,
 		valign = "center",
-		name = nil,
 		name = "map_waypoint_point_" .. tostring(self._id),
 		w = HUDMapWaypointPoint.W,
 		h = HUDMapWaypointPoint.H
@@ -192,9 +192,9 @@ end
 
 function HUDMapWaypointPoint:_create_icon()
 	local icon_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "icon",
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture_rect
 	}
@@ -206,9 +206,9 @@ end
 
 function HUDMapWaypointPoint:_create_background_icon()
 	local background_icon_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "background_icon",
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDMapWaypointPoint.ICON_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointPoint.ICON_BACKGROUND].texture_rect
 	}
@@ -221,15 +221,15 @@ end
 
 function HUDMapWaypointPoint:_create_distance()
 	local distance_text_params = {
-		font = nil,
-		align = "center",
+		name = "distance_text",
 		text = "",
-		h = nil,
-		w = nil,
 		layer = nil,
 		vertical = "center",
-		name = "distance_text",
+		align = "center",
 		font_size = nil,
+		font = nil,
+		h = nil,
+		w = nil,
 		w = self._object:w(),
 		h = HUDMapWaypointPoint.DISTANCE_H,
 		font = HUDMapWaypointPoint.DISTANCE_FONT,
@@ -303,10 +303,10 @@ function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 	local icon = waypoint_data.map_icon
 	local panel_params = {
 		halign = "center",
+		name = nil,
 		h = nil,
 		w = nil,
 		valign = "center",
-		name = nil,
 		name = "map_waypoint_icon_" .. tostring(self._id),
 		w = tweak_data.gui:icon_w(icon),
 		h = tweak_data.gui:icon_h(icon)
@@ -317,9 +317,9 @@ end
 function HUDMapWaypointIcon:_create_icon(waypoint_data)
 	local icon = waypoint_data.map_icon
 	local icon_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "icon",
+		texture = nil,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}

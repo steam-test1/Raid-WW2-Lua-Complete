@@ -130,8 +130,8 @@ function CoreWorldCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_populate_sequences()
 	self._sequences:set_value(self._hed.worldcamera_sequence)
 	self._sequences:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "worldcamera_sequence",
 		ctrlr = nil,
+		value = "worldcamera_sequence",
 		ctrlr = self._sequences
 	})
 	sequence_sizer:add(self._sequences, 3, 0, "EXPAND")
@@ -153,8 +153,8 @@ function CoreWorldCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_populate_worldcameras()
 	self._worldcameras:set_value(self._hed.worldcamera)
 	self._worldcameras:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "worldcamera",
 		ctrlr = nil,
+		value = "worldcamera",
 		ctrlr = self._worldcameras
 	})
 	worldcamera_sizer:add(self._worldcameras, 3, 0, "EXPAND")

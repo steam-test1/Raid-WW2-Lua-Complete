@@ -66,8 +66,8 @@ end
 function HUDNameLabel:_create_panel(hud)
 	local panel_params = {
 		w = nil,
-		name = nil,
 		h = nil,
+		name = nil,
 		name = "name_label_" .. tostring(self._nationality),
 		w = HUDNameLabel.W,
 		h = HUDNameLabel.H
@@ -77,14 +77,14 @@ end
 
 function HUDNameLabel:_create_name()
 	local name_params = {
-		align = "center",
 		vertical = "center",
 		text = nil,
 		h = nil,
 		w = nil,
-		name = "character_name",
+		align = "center",
 		font_size = nil,
 		font = nil,
+		name = "character_name",
 		w = self._object:w(),
 		h = HUDNameLabel.PLAYER_NAME_H,
 		font = HUDNameLabel.PLAYER_NAME_FONT,
@@ -103,8 +103,8 @@ function HUDNameLabel:_create_nationality_icon()
 		texture = nil,
 		h = nil,
 		w = nil,
-		name = "nationality_icon",
 		texture_rect = nil,
+		name = "nationality_icon",
 		w = self._object:w(),
 		h = self._object:h(),
 		texture = tweak_data.gui.icons[nationality_icon].texture,
@@ -122,9 +122,9 @@ function HUDNameLabel:_create_special_interaction_icon()
 		texture = nil,
 		valign = "center",
 		alpha = 0,
-		name = "special_interaction_icon",
 		texture_rect = nil,
 		halign = "center",
+		name = "special_interaction_icon",
 		texture = gui_icon.texture,
 		texture_rect = gui_icon.texture_rect
 	})
@@ -137,9 +137,9 @@ function HUDNameLabel:_create_mounted_weapon_icon()
 		texture = nil,
 		valign = "center",
 		alpha = 0,
-		name = "mounted_weapon_icon",
 		texture_rect = nil,
 		halign = "center",
+		name = "mounted_weapon_icon",
 		texture = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture_rect
 	}
@@ -152,17 +152,17 @@ end
 function HUDNameLabel:_create_timer()
 	local timer_panel_params = {
 		layer = 5,
-		name = "timer_panel",
-		alpha = 0
+		alpha = 0,
+		name = "timer_panel"
 	}
 	self._timer_panel = self._object:panel(timer_panel_params)
 	local timer_background_params = {
-		texture = nil,
 		layer = 1,
 		valign = "center",
-		name = "timer_background",
+		texture = nil,
 		texture_rect = nil,
 		halign = "center",
+		name = "timer_background",
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture_rect
 	}
@@ -172,15 +172,15 @@ function HUDNameLabel:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		valign = "center",
 		render_template = "VertexColorTexturedRadial",
-		name = "timer_bar",
-		texture_rect = nil,
 		texture = nil,
+		texture_rect = nil,
+		name = "timer_bar",
 		layer = 2,
 		h = nil,
 		w = nil,
 		halign = "center",
+		valign = "center",
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BAR_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDNameLabel.TIMER_BAR_ICON),
@@ -197,16 +197,16 @@ function HUDNameLabel:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		name = "timer_text",
-		h = nil,
+		y = 0,
 		text = "37",
 		vertical = "center",
 		x = 0,
 		align = "center",
 		font_size = nil,
 		font = nil,
+		name = "timer_text",
 		layer = 3,
-		y = 0,
+		h = nil,
 		w = nil,
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
@@ -225,9 +225,9 @@ function HUDNameLabel:_create_interaction_progress_bar()
 		valign = "top",
 		h = nil,
 		w = nil,
-		name = "interaction_panel",
 		alpha = 0,
 		halign = "center",
+		name = "interaction_panel",
 		w = HUDNameLabel.INTERACTION_PANEL_W,
 		h = HUDNameLabel.INTERACTION_PANEL_H
 	}
@@ -240,8 +240,8 @@ function HUDNameLabel:_create_interaction_progress_bar()
 		texture = nil,
 		h = nil,
 		w = nil,
-		name = "interaction_progress_background",
 		texture_rect = nil,
+		name = "interaction_progress_background",
 		texture = tweak_data.gui.icons[HUDNameLabel.PROGRESS_BAR_ICON_BG].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.PROGRESS_BAR_ICON_BG].texture_rect,
 		w = self._interaction_panel:w(),
@@ -253,11 +253,11 @@ function HUDNameLabel:_create_interaction_progress_bar()
 	interaction_progress_background:set_center_y(self._interaction_panel:h() / 2)
 
 	local interaction_progress_fill_params = {
-		position_z = 0,
 		render_template = "VertexColorTexturedRadial",
-		name = "interaction_progress_fill",
-		texture_rect = nil,
 		texture = nil,
+		position_z = 0,
+		texture_rect = nil,
+		name = "interaction_progress_fill",
 		layer = nil,
 		h = nil,
 		w = nil,

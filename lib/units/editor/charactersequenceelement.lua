@@ -29,13 +29,13 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	local text = EWS:TextCtrl(panel, self._hed.sequence, "", "TE_PROCESS_ENTER")
 
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "sequence",
+		ctrlr = nil,
 		ctrlr = text
 	})
 	text:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "sequence",
+		ctrlr = nil,
 		ctrlr = text
 	})
 	panel_sizer:add(text, 0, 0, "EXPAND")
@@ -50,11 +50,11 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				from_unit = nil,
 				b = 0,
 				g = 0.75,
 				r = 0,
 				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -72,8 +72,8 @@ end
 
 function CharacterSequenceElement:on_lmb()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then

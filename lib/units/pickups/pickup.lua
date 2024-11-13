@@ -2,10 +2,6 @@ Pickup = Pickup or class()
 Pickup.PATH = "to be removed"
 
 function Pickup:init(unit)
-	if not Network:is_server() and unit:slot() == 23 then
-		unit:set_slot(20)
-	end
-
 	self._unit = unit
 	self._beaming = self.beaming or false
 	self._automatic_pickup = self.automatic_pickup or false

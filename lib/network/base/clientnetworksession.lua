@@ -27,8 +27,8 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	local gameversion = managers.network.matchmake.GAMEVERSION or -1
 	local join_req_id = self:_get_join_attempt_identifier()
 	self._join_request_params = {
-		params = nil,
 		host_rpc = nil,
+		params = nil,
 		host_rpc = request_rpc,
 		params = {
 			self._local_peer:name(),
@@ -242,11 +242,11 @@ end
 function ClientNetworkSession:on_host_discovered(new_host, new_host_name, level_name, my_ip, state, difficulty)
 	if self._discovered_hosts then
 		local new_host_data = {
-			my_ip = nil,
-			difficulty = nil,
 			state = nil,
+			my_ip = nil,
 			host_name = nil,
 			level_name = nil,
+			difficulty = nil,
 			rpc = nil,
 			rpc = new_host,
 			host_name = new_host_name,

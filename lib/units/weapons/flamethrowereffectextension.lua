@@ -79,8 +79,8 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	local nozzle_pos = nozzle_obj:position()
 	local attach_obj = self._unit
 	local effect_id = World:effect_manager():spawn({
-		normal = nil,
 		position = nil,
+		normal = nil,
 		effect = nil,
 		effect = self._flame_effect.effect,
 		position = nozzle_pos,
@@ -89,10 +89,10 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	self._next_fire_time = managers.player:player_timer():time() + FlamethrowerEffectExtension.MIN_EFFECT_INTERVAL
 
 	table.insert(self._flamethrower_effect_collection, {
+		been_alive = false,
 		direction = nil,
 		id = nil,
 		position = nil,
-		been_alive = false,
 		id = effect_id,
 		position = nozzle_pos,
 		direction = mvector3.copy(direction)

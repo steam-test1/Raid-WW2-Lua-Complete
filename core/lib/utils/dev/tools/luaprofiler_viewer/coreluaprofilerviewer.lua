@@ -195,14 +195,14 @@ function LuaProfilerViewer:_on_open()
 			self:_redraw_menu()
 			self._lpd:buildstructure(true)
 			self._treeview:set_profilerdata({
-				displayformat = nil,
 				lpd = nil,
+				displayformat = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
 			self._gridview:set_profilerdata({
-				displayformat = nil,
 				lpd = nil,
+				displayformat = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
@@ -220,8 +220,8 @@ function LuaProfilerViewer:_on_percent()
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
-				displayformat = nil,
 				lpd = nil,
+				displayformat = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
@@ -250,8 +250,8 @@ function LuaProfilerViewer:_on_seconds()
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
-				displayformat = nil,
 				lpd = nil,
+				displayformat = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
@@ -282,8 +282,8 @@ function LuaProfilerViewer:_on_custom(diffpeak)
 
 		if calltree_modified then
 			self._treeview:set_profilerdata({
-				displayformat = nil,
 				lpd = nil,
+				displayformat = nil,
 				lpd = self._lpd,
 				displayformat = self._displayformat
 			})
@@ -300,14 +300,14 @@ function LuaProfilerViewer:_on_acc_calls()
 	if self._lpd then
 		self._lpd:buildstructure(true)
 		self._treeview:set_profilerdata({
-			displayformat = nil,
 			lpd = nil,
+			displayformat = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
 		self._gridview:set_profilerdata({
-			displayformat = nil,
 			lpd = nil,
+			displayformat = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
@@ -318,14 +318,14 @@ function LuaProfilerViewer:_on_no_acc_calls()
 	if self._lpd then
 		self._lpd:buildstructure(false)
 		self._treeview:set_profilerdata({
-			displayformat = nil,
 			lpd = nil,
+			displayformat = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})
 		self._gridview:set_profilerdata({
-			displayformat = nil,
 			lpd = nil,
+			displayformat = nil,
 			lpd = self._lpd,
 			displayformat = self._displayformat
 		})

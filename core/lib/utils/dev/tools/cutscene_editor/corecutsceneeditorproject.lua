@@ -137,12 +137,12 @@ function CoreCutsceneEditorProject:film_clips()
 
 		for clip_node in track_node:children() do
 			table.insert(clips, {
+				cutscene = nil,
+				track_index = nil,
 				from = nil,
 				to = nil,
 				camera = nil,
 				offset = nil,
-				cutscene = nil,
-				track_index = nil,
 				track_index = index + 1,
 				offset = tonumber(clip_node:parameter("offset") or "0"),
 				cutscene = clip_node:parameter("cutscene"),

@@ -68,13 +68,13 @@ function ElementEscort:start_escort_path(unit)
 			end
 
 			unit:brain():set_objective({
+				path_style = "coarse",
+				break_so = nil,
 				type = "escort",
 				next_escort_point = nil,
-				break_so = nil,
+				end_rot = nil,
 				haste = "walk",
 				path_data = nil,
-				end_rot = nil,
-				path_style = "coarse",
 				path_data = {
 					points = nil,
 					points = points

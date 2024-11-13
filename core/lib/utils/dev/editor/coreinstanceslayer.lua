@@ -38,9 +38,9 @@ end
 function InstancesLayer:save(save_params)
 	for _, data in ipairs(managers.world_instance:instance_save_data()) do
 		local t = {
+			entry = nil,
 			data = nil,
 			continent = nil,
-			entry = nil,
 			entry = self._save_name,
 			continent = data.continent,
 			data = data
@@ -234,8 +234,8 @@ end
 function InstancesLayer:position_as()
 	if self._selected_instance and not self:condition() then
 		local data = {
-			sample = true,
 			mask = nil,
+			sample = true,
 			ray_type = "body editor",
 			mask = self._position_as_slot_mask
 		}
@@ -1086,14 +1086,14 @@ end
 
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
-		target_db_name = "all",
+		verbose = false,
 		platform = nil,
+		target_db_name = "all",
+		send_idstrings = false,
 		target_db_root = nil,
 		preprocessor_definitions = "preprocessor_definitions",
 		source_root = nil,
 		source_files = nil,
-		verbose = false,
-		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -1146,10 +1146,10 @@ function InstancesLayer:_create_overlay_gui()
 	self._workspace:hide()
 
 	self._gui_panel = self._workspace:panel():panel({
-		valign = "scale",
-		halign = "scale",
 		h = 16,
+		valign = "scale",
 		y = nil,
+		halign = "scale",
 		y = self._workspace:panel():h() - 16
 	})
 end
@@ -1158,8 +1158,8 @@ function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
 		halign = "scale",
-		color = nil,
 		valign = "scale",
+		color = nil,
 		color = Color.black
 	})
 
@@ -1173,10 +1173,10 @@ function InstancesLayer:_update_overlay_gui()
 		local w = end_indices[i] * tot_w / tot_indices - x
 
 		self._gui_panel:rect({
-			x = nil,
-			color = nil,
 			w = nil,
 			layer = 2,
+			color = nil,
+			x = nil,
 			x = x,
 			w = w,
 			color = Color.green
@@ -1188,10 +1188,10 @@ function InstancesLayer:_update_overlay_gui()
 		local w = instance_data.index_size * tot_w / tot_indices
 
 		self._gui_panel:rect({
-			x = nil,
-			color = nil,
 			w = nil,
 			layer = 3,
+			color = nil,
+			x = nil,
 			x = x,
 			w = w,
 			color = Color.blue

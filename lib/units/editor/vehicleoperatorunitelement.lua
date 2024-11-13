@@ -170,8 +170,8 @@ function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "operation", self._actions, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "damage", {
-		floats = 0,
-		min = 1
+		min = 1,
+		floats = 0
 	}, "Specify the amount of damage.")
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")

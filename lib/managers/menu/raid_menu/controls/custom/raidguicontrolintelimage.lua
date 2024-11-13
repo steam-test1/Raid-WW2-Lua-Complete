@@ -41,12 +41,12 @@ function RaidGUIControlIntelImage:_create_image()
 		1024
 	}
 	local image_panel_params = {
-		halign = "scale",
-		valign = "scale",
-		layer = nil,
 		name = "background_panel",
+		halign = "scale",
 		h = nil,
 		w = nil,
+		valign = "scale",
+		layer = nil,
 		w = self._object:w() * RaidGUIControlIntelImage.BACKGROUND_SIZE_PERCENTAGE,
 		h = self._object:h() * RaidGUIControlIntelImage.BACKGROUND_SIZE_PERCENTAGE,
 		layer = self._object:layer() + 1
@@ -57,16 +57,16 @@ function RaidGUIControlIntelImage:_create_image()
 	self._image_panel:set_center_y(self._object:h() / 2)
 
 	local background_params = {
-		y = 0,
-		x = 0,
-		layer = nil,
-		texture = "ui/main_menu/textures/mission_paper_background",
 		name = "background",
-		valign = "scale",
+		texture = "ui/main_menu/textures/mission_paper_background",
 		halign = "scale",
+		valign = "scale",
 		texture_rect = nil,
 		h = nil,
 		w = nil,
+		y = 0,
+		x = 0,
+		layer = nil,
 		w = self._image_panel:w(),
 		h = self._image_panel:h(),
 		texture_rect = {
@@ -79,14 +79,14 @@ function RaidGUIControlIntelImage:_create_image()
 	}
 	self._background = self._image_panel:bitmap(background_params)
 	local foreground_params = {
-		texture = nil,
-		texture_rect = nil,
-		layer = nil,
-		halign = "scale",
 		name = "foreground",
-		valign = "scale",
+		texture = nil,
 		h = nil,
 		w = nil,
+		texture_rect = nil,
+		halign = "scale",
+		layer = nil,
+		valign = "scale",
 		w = self._image_panel:w() * RaidGUIControlIntelImage.FOREGROUND_SIZE_PERCENTAGE,
 		h = self._image_panel:h() * RaidGUIControlIntelImage.FOREGROUND_SIZE_PERCENTAGE,
 		texture = self._params.photo and tweak_data.gui.mission_photos[self._params.photo].texture or default_image,
@@ -99,17 +99,17 @@ function RaidGUIControlIntelImage:_create_image()
 	self._foreground:set_center_y(self._image_panel:h() / 2)
 
 	local selector_params = {
-		y = 0,
-		x = 0,
-		layer = nil,
-		texture = nil,
 		name = "selector",
-		valign = "scale",
+		texture = nil,
 		halign = "scale",
+		valign = "scale",
 		texture_rect = nil,
 		alpha = 0,
 		h = 24,
 		w = 24,
+		y = 0,
+		x = 0,
+		layer = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlIntelImage.SELECTOR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlIntelImage.SELECTOR_ICON].texture_rect,
 		layer = self._object:layer() + 3

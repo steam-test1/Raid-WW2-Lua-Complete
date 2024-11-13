@@ -25,16 +25,16 @@ end
 
 function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
-		name = "category_tabs",
-		tabs_params = nil,
 		parent_control_ref = nil,
-		on_click_callback = nil,
-		initial_tab_idx = 1,
 		tab_font_size = nil,
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 220,
 		y = 80,
+		tabs_params = nil,
+		name = "category_tabs",
+		on_click_callback = nil,
+		initial_tab_idx = 1,
 		tab_font_size = tweak_data.gui.font_sizes.small,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
 		parent_control_ref = self,
@@ -55,28 +55,28 @@ end
 
 function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
-		w = 460,
+		y = 192,
 		name = "category_items_list_scrollable_area",
 		scrollbar_width = 10,
 		scroll_step = 19,
 		h = 700,
-		y = 192
+		w = 460
 	}
 	self._category_items_list_scrollable_area = self._root_panel:scrollable_area(category_items_list_scrollable_area_params)
 	local category_items_list_params = {
+		use_unlocked = false,
+		selection_enabled = true,
+		w = nil,
+		item_class = nil,
+		item_font_size = nil,
+		data_source_callback = nil,
+		on_mouse_over_sound_event = "highlight",
 		on_item_selected_callback = nil,
 		on_item_clicked_callback = nil,
 		name = "category_items_list",
-		item_font_size = nil,
-		on_mouse_over_sound_event = "highlight",
 		scrollable_area_ref = nil,
 		item_font = nil,
 		item_h = 62,
-		use_unlocked = false,
-		selection_enabled = true,
-		item_class = nil,
-		data_source_callback = nil,
-		w = nil,
 		w = category_items_list_scrollable_area_params.w,
 		item_font = tweak_data.gui.fonts.lato,
 		item_font_size = tweak_data.gui.font_sizes.size_24,
@@ -300,8 +300,8 @@ function IntelGui:bind_controller_inputs()
 		}
 	}
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_intel_tabs"
@@ -335,8 +335,8 @@ function IntelGui:bind_controller_inputs_play_video()
 		}
 	}
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_intel_tabs",

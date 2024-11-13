@@ -237,9 +237,9 @@ function WeaponFactoryManager:_indexed_parts(factory_id)
 			end
 
 			table.insert(i_table, {
-				parts = nil,
-				i = 1,
 				amount = nil,
+				i = 1,
+				parts = nil,
 				parts = parts,
 				amount = #parts
 			})
@@ -291,11 +291,11 @@ function WeaponFactoryManager:_preload_parts(factory_id, factory_weapon, bluepri
 
 	if not only_record and self._uses_streaming then
 		async_task_data = {
-			parts = nil,
+			spawn = false,
 			done_cb = nil,
 			third_person = nil,
 			blueprint = nil,
-			spawn = false,
+			parts = nil,
 			third_person = third_person,
 			parts = parts,
 			done_cb = done_cb,
@@ -430,8 +430,8 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 	if not package then
 		parts[part_id] = {
-			is_streaming = nil,
 			name = nil,
+			is_streaming = nil,
 			name = ids_unit_name,
 			is_streaming = async_task_data and true or nil
 		}
@@ -458,10 +458,10 @@ end
 
 function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint)
 	local modified_blueprint = {}
-	local skin_id = managers.weapon_inventory:get_weapons_skin(factory_id)
+	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(factory_id)
 
-	for i, v in ipairs(blueprint) do
-		local replacement = tweak_data.weapon.weapon_skins[skin_id] and tweak_data.weapon.weapon_skins[skin_id].replaces_parts and tweak_data.weapon.weapon_skins[skin_id].replaces_parts[v]
+	for _, v in ipairs(blueprint) do
+		local replacement = skin_data and skin_data.replaces_parts and skin_data.replaces_parts[v]
 
 		if replacement then
 			table.insert(modified_blueprint, replacement)
@@ -684,17 +684,17 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 	if self._uses_tasks and not skip_queue then
 		table.insert(self._tasks, {
-			blueprint = nil,
+			need_parent = nil,
 			done_cb = nil,
 			third_person = nil,
-			blueprint_i = 1,
+			blueprint = nil,
 			override = nil,
 			p_unit = nil,
-			need_parent = nil,
-			need_parent_i = 1,
-			parts = nil,
 			forbidden = nil,
+			need_parent_i = 1,
 			factory_id = nil,
+			blueprint_i = 1,
+			parts = nil,
 			done_cb = done_cb,
 			p_unit = p_unit,
 			factory_id = factory_id,
@@ -710,11 +710,11 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 		if self._uses_streaming then
 			async_task_data = {
-				parts = nil,
+				spawn = true,
 				done_cb = nil,
 				third_person = nil,
 				blueprint = nil,
-				spawn = true,
+				parts = nil,
 				third_person = third_person,
 				parts = parts,
 				done_cb = done_cb,
@@ -848,12 +848,12 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	if async_task_data then
 		parts[part_id] = {
+			link_to_unit = nil,
 			animations = nil,
 			parent = nil,
 			is_streaming = true,
 			name = nil,
 			a_obj = nil,
-			link_to_unit = nil,
 			animations = part.animations,
 			name = ids_unit_name,
 			link_to_unit = link_to_unit,
@@ -869,10 +869,10 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 		local unit = self:_spawn_and_link_unit(ids_unit_name, Idstring(part.a_obj), third_person, link_to_unit)
 		parts[part_id] = {
+			name = nil,
 			animations = nil,
 			unit = nil,
 			package = nil,
-			name = nil,
 			unit = unit,
 			animations = part.animations,
 			name = ids_unit_name,

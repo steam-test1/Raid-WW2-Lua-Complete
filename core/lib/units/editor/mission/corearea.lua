@@ -560,14 +560,14 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
 	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_altitude_text"), {
-		type = nil,
 		ctrl = nil,
+		type = nil,
 		ctrl = ctrl,
 		type = type
 	})
 	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "set_altitude_text"), {
-		type = nil,
 		ctrl = nil,
+		type = nil,
 		ctrl = ctrl,
 		type = type
 	})
@@ -577,16 +577,16 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 
 	spin:set_min_size(Vector3(-1, 10, 0))
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "set_altitude_spin"), {
+		ctrl = nil,
 		step = 1,
 		type = nil,
-		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "set_altitude_spin"), {
+		ctrl = nil,
 		step = -1,
 		type = nil,
-		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})

@@ -337,8 +337,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		if objective.cover then
 			occupation = {
 				seg = nil,
-				type = "defend",
 				cover = nil,
+				type = "defend",
 				radius = nil,
 				seg = objective.nav_seg,
 				cover = objective.cover,
@@ -348,8 +348,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			occupation = {
 				seg = nil,
 				pos = nil,
-				radius = nil,
 				type = "defend",
+				radius = nil,
 				seg = objective.nav_seg,
 				pos = objective.pos,
 				radius = objective.radius
@@ -364,8 +364,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 				}
 				occupation = {
 					seg = nil,
-					type = "defend",
 					cover = nil,
+					type = "defend",
 					radius = nil,
 					seg = objective.nav_seg,
 					cover = cover_entry,
@@ -376,8 +376,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 				occupation = {
 					seg = nil,
 					pos = nil,
-					radius = nil,
 					type = "defend",
+					radius = nil,
 					seg = objective.nav_seg,
 					pos = near_pos,
 					radius = objective.radius
@@ -393,8 +393,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		occupation = {
 			seg = nil,
 			pos = nil,
-			radius = nil,
 			type = "defend",
+			radius = nil,
 			seg = objective.nav_seg,
 			pos = phalanx_circle_pos,
 			radius = objective.radius
@@ -514,9 +514,9 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local revive_rot = revive_u_pos - revive_pos
 		local revive_rot = Rotation(revive_rot, math.UP)
 		occupation = {
-			type = "revive",
-			pos = nil,
 			rot = nil,
+			pos = nil,
+			type = "revive",
 			pos = revive_pos,
 			rot = revive_rot
 		}

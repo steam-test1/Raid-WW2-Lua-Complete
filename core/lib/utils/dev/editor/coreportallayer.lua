@@ -39,13 +39,13 @@ function PortalLayer:load(world_holder, offset)
 			local b = 0.25 + math.rand(0.75)
 			local draw_base = portal.draw_base or 0
 			self._portal_shapes[name] = {
-				draw_base = nil,
-				b = nil,
-				g = nil,
 				top = nil,
 				r = nil,
 				bottom = nil,
 				portal = nil,
+				draw_base = nil,
+				b = nil,
+				g = nil,
 				portal = {},
 				top = portal.top,
 				bottom = portal.bottom,
@@ -90,13 +90,13 @@ function PortalLayer:_old_load(portal)
 			local b = 0.25 + math.rand(0.75)
 			local draw_base = portal.draw_base or 0
 			self._portal_shapes[name] = {
-				draw_base = nil,
-				b = nil,
-				g = nil,
 				top = nil,
 				r = nil,
 				bottom = nil,
 				portal = nil,
+				draw_base = nil,
+				b = nil,
+				g = nil,
 				portal = {},
 				top = portal.top,
 				bottom = portal.bottom,
@@ -132,10 +132,10 @@ function PortalLayer:save(save_params)
 
 	for name, data in pairs(self._portal_shapes) do
 		local portal_data = {
+			top = nil,
 			draw_base = nil,
 			bottom = nil,
 			name = nil,
-			top = nil,
 			name = name,
 			top = data.top,
 			draw_base = data.draw_base,
@@ -145,8 +145,8 @@ function PortalLayer:save(save_params)
 
 		for _, unit in ipairs(data.portal) do
 			table.insert(portal_data.points, {
-				position = nil,
 				rotation = nil,
+				position = nil,
 				position = unit:position(),
 				rotation = unit:rotation()
 			})
@@ -156,13 +156,13 @@ function PortalLayer:save(save_params)
 	end
 
 	local t = {
+		data = nil,
 		single_data_block = true,
 		entry = nil,
-		data = nil,
 		entry = self._save_name,
 		data = {
-			unit_groups = nil,
 			portals = nil,
+			unit_groups = nil,
 			portals = portals,
 			unit_groups = unit_groups
 		}
@@ -323,8 +323,8 @@ end
 
 function PortalLayer:build_panel(notebook)
 	PortalLayer.super.build_panel(self, notebook, {
-		units_noteboook_proportion = 0,
 		units_notebook_min_size = nil,
+		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(-1, 160, 0)
 	})
 
@@ -333,8 +333,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw:set_value(self._dont_draw)
 	self._sizer:add(dont_draw, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw",
 		cb = nil,
+		value = "_dont_draw",
 		cb = dont_draw
 	})
 
@@ -343,8 +343,8 @@ function PortalLayer:build_panel(notebook)
 	only_draw_selected:set_value(self._only_draw_selected)
 	self._sizer:add(only_draw_selected, 0, 2, "EXPAND,TOP,BOTTOM")
 	only_draw_selected:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_only_draw_selected",
 		cb = nil,
+		value = "_only_draw_selected",
 		cb = only_draw_selected
 	})
 	only_draw_selected:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_draw_current"), nil)
@@ -354,8 +354,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw_boxes:set_value(self._dont_draw_boxes)
 	self._sizer:add(dont_draw_boxes, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw_boxes:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw_boxes",
 		cb = nil,
+		value = "_dont_draw_boxes",
 		cb = dont_draw_boxes
 	})
 
@@ -364,8 +364,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw_units:set_value(self._dont_draw_units)
 	self._sizer:add(dont_draw_units, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw_units:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw_units",
 		cb = nil,
+		value = "_dont_draw_units",
 		cb = dont_draw_units
 	})
 
@@ -374,8 +374,8 @@ function PortalLayer:build_panel(notebook)
 	draw_nonportaled:set_value(self._draw_units_in_no_portal_state)
 	self._sizer:add(draw_nonportaled, 0, 2, "EXPAND,TOP,BOTTOM")
 	draw_nonportaled:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_units_in_no_portal_state",
 		cb = nil,
+		value = "_draw_units_in_no_portal_state",
 		cb = draw_nonportaled
 	})
 
@@ -384,8 +384,8 @@ function PortalLayer:build_panel(notebook)
 	draw_not_current:set_value(self._draw_not_current)
 	self._sizer:add(draw_not_current, 0, 2, "EXPAND,TOP,BOTTOM")
 	draw_not_current:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_not_current",
 		cb = nil,
+		value = "_draw_not_current",
 		cb = draw_not_current
 	})
 
@@ -431,19 +431,19 @@ function PortalLayer:build_panel(notebook)
 
 	top_spin:set_range(-500, 500)
 	top_spin:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_spin"), {
-		value = "top",
 		spin = nil,
+		value = "top",
 		spin = top_spin
 	})
 	top_spin:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_spin"), {
-		value = "top",
 		spin = nil,
+		value = "top",
 		spin = top_spin
 	})
 
 	self._ews_triggers.set_portal_top = callback(self, self, "set_height", {
-		value = "top",
 		spin = nil,
+		value = "top",
 		spin = top_spin
 	})
 
@@ -453,19 +453,19 @@ function PortalLayer:build_panel(notebook)
 
 	bottom_spin:set_range(-500, 500)
 	bottom_spin:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_spin"), {
-		value = "bottom",
 		spin = nil,
+		value = "bottom",
 		spin = bottom_spin
 	})
 	bottom_spin:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_spin"), {
-		value = "bottom",
 		spin = nil,
+		value = "bottom",
 		spin = bottom_spin
 	})
 
 	self._ews_triggers.set_portal_bottom = callback(self, self, "set_height", {
-		value = "bottom",
 		spin = nil,
+		value = "bottom",
 		spin = bottom_spin
 	})
 
@@ -475,13 +475,13 @@ function PortalLayer:build_panel(notebook)
 	self._ctrlrs = {
 		draw_base = draw_base,
 		top_spin = {
-			value = "top",
 			spin = nil,
+			value = "top",
 			spin = top_spin
 		},
 		bottom_spin = {
-			value = "bottom",
 			spin = nil,
+			value = "bottom",
 			spin = bottom_spin
 		},
 		portals = portals
@@ -579,9 +579,9 @@ end
 function PortalLayer:click_select_unit()
 	if self._ctrl:down(Idstring("add_to_portal_unit_group")) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
+			mask = 1,
 			sample = true,
-			ray_type = "body editor",
-			mask = 1
+			ray_type = "body editor"
 		})
 
 		if ray and ray.unit then
@@ -597,9 +597,9 @@ end
 function PortalLayer:hover_highlight()
 	if self._ctrl:down(Idstring("add_to_portal_unit_group")) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
+			mask = 1,
 			sample = true,
-			ray_type = "body editor",
-			mask = 1
+			ray_type = "body editor"
 		})
 
 		if ray and ray.unit then
@@ -704,13 +704,13 @@ function PortalLayer:new_portal(portals)
 	local g = 0.25 + math.rand(0.75)
 	local b = 0.25 + math.rand(0.75)
 	self._portal_shapes[name] = {
-		draw_base = 0,
-		b = nil,
-		g = nil,
 		top = 0,
 		r = nil,
 		bottom = 0,
 		portal = nil,
+		draw_base = 0,
+		b = nil,
+		g = nil,
 		portal = {},
 		r = r,
 		g = g,

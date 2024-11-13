@@ -25,11 +25,11 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 
 			if draw then
 				self:_draw_link({
+					b = 0.75,
+					g = 0,
 					r = 0,
 					to_unit = nil,
 					from_unit = nil,
-					b = 0.75,
-					g = 0,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -46,8 +46,8 @@ end
 
 function EnemyPreferedAddUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -223,11 +223,11 @@ function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_uni
 
 		if draw then
 			self:_draw_link({
+				b = 0,
+				g = 0,
 				r = 0.75,
 				to_unit = nil,
 				from_unit = nil,
-				b = 0,
-				g = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -237,8 +237,8 @@ end
 
 function EnemyPreferedRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_enemy_prefered_add", 1, true) then

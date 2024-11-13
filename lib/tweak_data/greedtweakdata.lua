@@ -169,12 +169,12 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
-			dialog_enter = "player_gen_picking_lock",
-			dialog_fail = "player_gen_lockpick_fail",
-			failed = "lock_fail",
 			circles = nil,
-			dialog_success = "player_gen_lock_picked",
+			dialog_enter = "player_gen_picking_lock",
+			failed = "lock_fail",
 			success = "success",
+			dialog_fail = "player_gen_lockpick_fail",
+			dialog_success = "player_gen_lock_picked",
 			circles = {
 				{
 					lock = "lock_a",
@@ -212,60 +212,60 @@ function GreedTweakData:_init_value_weights()
 		pickpocket = {
 			{
 				{
-					chance = 55,
-					value = 0
+					value = 0,
+					chance = 55
 				},
 				{
+					value = nil,
 					chance = 45,
-					value = nil,
 					value = self.item_value.low_end
 				}
 			},
 			{
 				{
-					chance = 60,
-					value = 0
+					value = 0,
+					chance = 60
 				},
 				{
+					value = nil,
 					chance = 43,
-					value = nil,
 					value = self.item_value.low_end
 				}
 			},
 			{
 				{
-					chance = 55,
-					value = 0
+					value = 0,
+					chance = 55
 				},
 				{
+					value = nil,
 					chance = 35,
-					value = nil,
 					value = self.item_value.low_end
 				},
 				{
-					chance = 10,
 					value = nil,
+					chance = 10,
 					value = self.item_value.mid_end
 				}
 			},
 			{
 				{
-					chance = 50,
-					value = 0
+					value = 0,
+					chance = 50
 				},
 				{
-					chance = 32,
 					value = nil,
+					chance = 32,
 					value = self.item_value.low_end
 				},
 				{
-					chance = 12,
 					value = nil,
+					chance = 12,
 					value = self.item_value.mid_end
 				},
 				{
-					chance = 6,
 					value = nil,
+					chance = 6,
 					value = self.item_value.high_end
 				}
 			}

@@ -4,12 +4,12 @@ SpawnEnemyUnitElement = SpawnEnemyUnitElement or class(MissionElement)
 SpawnEnemyUnitElement.USES_POINT_ORIENTATION = true
 SpawnEnemyUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "enemy",
-		type = "enemy"
+		type = "enemy",
+		value = "enemy"
 	},
 	{
-		value = "spawn_action",
-		type = "enemy_spawn_action"
+		type = "enemy_spawn_action",
+		value = "spawn_action"
 	}
 }
 
@@ -177,8 +177,8 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
 		managers.editor:add_to_world_package({
-			name = nil,
 			continent = nil,
+			name = nil,
 			category = "units",
 			name = unit_name:s(),
 			continent = self._unit:unit_data().continent
@@ -190,10 +190,10 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
-				name = nil,
 				continent = nil,
-				category = "script_data",
+				name = nil,
 				init = true,
+				category = "script_data",
 				name = file:s() .. ".sequence_manager",
 				continent = self._unit:unit_data().continent
 			})

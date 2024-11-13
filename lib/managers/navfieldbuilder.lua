@@ -7,48 +7,48 @@ function NavFieldBuilder:init()
 		walk = 1
 	}
 	self._opposite_side_str = {
-		y_pos = "y_neg",
 		x_neg = "x_pos",
 		x_pos = "x_neg",
-		y_neg = "y_pos"
+		y_neg = "y_pos",
+		y_pos = "y_neg"
 	}
 	self._perp_pos_dir_str_map = {
-		y_pos = "x_pos",
 		x_neg = "y_pos",
 		x_pos = "y_pos",
-		y_neg = "x_pos"
+		y_neg = "x_pos",
+		y_pos = "x_pos"
 	}
 	self._perp_neg_dir_str_map = {
-		y_pos = "x_neg",
 		x_neg = "y_neg",
 		x_pos = "y_neg",
-		y_neg = "x_neg"
+		y_neg = "x_neg",
+		y_pos = "x_neg"
 	}
 	self._dim_str_map = {
-		y_pos = "y",
 		x_neg = "x",
 		x_pos = "x",
-		y_neg = "y"
+		y_neg = "y",
+		y_pos = "y"
 	}
 	self._perp_dim_str_map = {
-		y_pos = "x",
 		x_neg = "y",
 		x_pos = "y",
-		y_neg = "x"
+		y_neg = "x",
+		y_pos = "x"
 	}
 	self._neg_dir_str_map = {
-		y_neg = true,
-		x_neg = true
+		x_neg = true,
+		y_neg = true
 	}
 	self._x_dir_str_map = {
-		x_pos = true,
-		x_neg = true
+		x_neg = true,
+		x_pos = true
 	}
 	self._dir_str_to_vec = {
-		y_pos = nil,
 		x_neg = nil,
 		x_pos = nil,
 		y_neg = nil,
+		y_pos = nil,
 		x_pos = Vector3(1, 0, 0),
 		x_neg = Vector3(-1, 0, 0),
 		y_pos = Vector3(0, 1, 0),
@@ -94,34 +94,34 @@ function NavFieldBuilder:load(data)
 	if data.quad_borders_x_pos then
 		for i_room = 1, #data.quad_borders_x_pos do
 			local room = {
-				borders = nil,
 				doors = nil,
+				borders = nil,
 				height = nil,
 				borders = {
-					y_pos = nil,
 					x_neg = nil,
 					x_pos = nil,
 					y_neg = nil,
+					y_pos = nil,
 					x_pos = data.quad_borders_x_pos[i_room] * quad_grid_size,
 					x_neg = data.quad_borders_x_neg[i_room] * quad_grid_size,
 					y_pos = data.quad_borders_y_pos[i_room] * quad_grid_size,
 					y_neg = data.quad_borders_y_neg[i_room] * quad_grid_size
 				},
 				height = {
-					xn_yp = nil,
 					xp_yp = nil,
-					xn_yn = nil,
+					xn_yp = nil,
 					xp_yn = nil,
+					xn_yn = nil,
 					xp_yp = data.quad_heights_xp_yp[i_room],
 					xp_yn = data.quad_heights_xp_yn[i_room],
 					xn_yp = data.quad_heights_xn_yp[i_room],
 					xn_yn = data.quad_heights_xn_yn[i_room]
 				},
 				doors = {
-					y_pos = nil,
 					x_neg = nil,
 					x_pos = nil,
 					y_neg = nil,
+					y_pos = nil,
 					x_pos = {},
 					x_neg = {},
 					y_pos = {},
@@ -134,9 +134,9 @@ function NavFieldBuilder:load(data)
 
 		for i_door = 1, #data.door_low_pos do
 			local door = {
-				pos1 = nil,
 				rooms = nil,
 				pos = nil,
+				pos1 = nil,
 				pos = mvector3.copy(data.door_low_pos[i_door]),
 				pos1 = mvector3.copy(data.door_high_pos[i_door]),
 				rooms = {
@@ -287,9 +287,9 @@ function NavFieldBuilder:build_visibility_graph(complete_clbk, all_visible, ray_
 		for nav_seg_id, nav_seg in pairs(self._nav_segments) do
 			local new_vis_group = {
 				vis_groups = nil,
-				seg = nil,
 				rooms = nil,
 				pos = nil,
+				seg = nil,
 				rooms = {},
 				pos = nav_seg.pos,
 				vis_groups = {},
@@ -521,9 +521,9 @@ function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
 	self._disabled_blockers = self._disabled_blockers or {}
 	self._nav_segments[nav_segment_id] = {
 		vis_groups = nil,
-		barrage_allowed = nil,
-		id = nil,
 		location_id = nil,
+		id = nil,
+		barrage_allowed = nil,
 		neighbours = nil,
 		pos = nil,
 		id = nav_segment_id,
@@ -1041,8 +1041,8 @@ function NavFieldBuilder:_expand_room_over_neighbours(i_room, exp_border, clip_s
 
 					if self._rooms[neighbour_data.room].neighbours then
 						local new_data = {
-							overlap = nil,
 							room = nil,
+							overlap = nil,
 							room = i_room,
 							overlap = {
 								neighbour_data.overlap[1],
@@ -1174,20 +1174,20 @@ function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segme
 	local expansion_segments = room.expansion_segments
 	local new_data = {}
 	local lower_neighbours = {
-		y_pos = nil,
 		x_neg = nil,
 		x_pos = nil,
 		y_neg = nil,
+		y_pos = nil,
 		x_pos = {},
 		x_neg = {},
 		y_pos = {},
 		y_neg = {}
 	}
 	local upper_neighbours = {
-		y_pos = nil,
 		x_neg = nil,
 		x_pos = nil,
 		y_neg = nil,
+		y_pos = nil,
 		x_pos = {},
 		x_neg = {},
 		y_pos = {},
@@ -1298,8 +1298,8 @@ function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segme
 
 		for neighbour_index, neighbour_data in pairs(neighbours[perp_neg_side]) do
 			local new_data = {
-				overlap = nil,
 				room = nil,
+				overlap = nil,
 				room = i_room,
 				overlap = {
 					neighbour_data.overlap[1],
@@ -1312,8 +1312,8 @@ function NavFieldBuilder:_clip_room_border(i_room, side, clip_amount, clip_segme
 
 		for neighbour_index, neighbour_data in pairs(neighbours[perp_pos_side]) do
 			local new_data = {
-				overlap = nil,
 				room = nil,
+				overlap = nil,
 				room = i_room,
 				overlap = {
 					neighbour_data.overlap[1],
@@ -1408,10 +1408,10 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	mvector3.set_z(space[2], pos_z)
 
 	new_room.expansion[split_side] = {
-		cliffs = nil,
-		stairs = nil,
-		walls = nil,
 		unsorted = nil,
+		cliffs = nil,
+		walls = nil,
+		stairs = nil,
 		spaces = nil,
 		spaces = {
 			space
@@ -1423,10 +1423,10 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	}
 	new_room.expansion[split_opp_side] = room.expansion[split_opp_side]
 	expansion[split_opp_side] = {
-		cliffs = nil,
-		stairs = nil,
-		walls = nil,
 		unsorted = nil,
+		cliffs = nil,
+		walls = nil,
+		stairs = nil,
 		spaces = nil,
 		spaces = {
 			{
@@ -1441,8 +1441,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	}
 	new_room.neighbours[split_side] = {
 		{
-			overlap = nil,
 			room = nil,
+			overlap = nil,
 			room = i_room,
 			overlap = {
 				space[1],
@@ -1457,8 +1457,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 			self:_update_neighbour_data(neighbour_data.room, i_room, nil, split_side)
 
 			local new_data = {
-				overlap = nil,
 				room = nil,
+				overlap = nil,
 				room = i_new_room,
 				overlap = {
 					neighbour_data.overlap[1],
@@ -1473,8 +1473,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 	new_room.neighbours[split_opp_side] = room.neighbours[split_opp_side]
 	room.neighbours[split_opp_side] = {
 		{
-			overlap = nil,
 			room = nil,
+			overlap = nil,
 			room = i_new_room,
 			overlap = {
 				space[1],
@@ -1499,8 +1499,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 			self:_update_neighbour_data(neighbour_data.room, i_room, nil, split_perp_pos_side)
 
 			local new_data = {
-				overlap = nil,
 				room = nil,
+				overlap = nil,
 				room = i_new_room,
 				overlap = {
 					neighbour_data.overlap[1],
@@ -1517,8 +1517,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 			self:_update_neighbour_data(neighbour_data.room, i_room, nil, split_perp_neg_side)
 
 			local new_data = {
-				overlap = nil,
 				room = nil,
+				overlap = nil,
 				room = i_new_room,
 				overlap = {
 					neighbour_data.overlap[1],
@@ -1532,8 +1532,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 
 	for neighbour_index, neighbour_data in pairs(room.neighbours[split_perp_neg_side]) do
 		local new_data = {
-			overlap = nil,
 			room = nil,
+			overlap = nil,
 			room = i_room,
 			overlap = {
 				neighbour_data.overlap[1],
@@ -1546,8 +1546,8 @@ function NavFieldBuilder:_split_room(i_room, split_pos_along_dim, split_dim)
 
 	for neighbour_index, neighbour_data in pairs(room.neighbours[split_perp_pos_side]) do
 		local new_data = {
-			overlap = nil,
 			room = nil,
+			overlap = nil,
 			room = i_room,
 			overlap = {
 				neighbour_data.overlap[1],
@@ -1575,10 +1575,10 @@ function NavFieldBuilder:_create_empty_room()
 
 	for dir_str, perp_neg_dir_str in pairs(self._perp_neg_dir_str_map) do
 		room.expansion[dir_str] = {
-			cliffs = nil,
-			stairs = nil,
-			walls = nil,
 			unsorted = nil,
+			cliffs = nil,
+			walls = nil,
+			stairs = nil,
 			spaces = nil,
 			walls = {},
 			spaces = {},
@@ -1597,9 +1597,9 @@ end
 function NavFieldBuilder:_cleanup_room_data()
 	for i_room, room in ipairs(self._rooms) do
 		local clean_room = {
-			height = nil,
 			doors = nil,
 			borders = nil,
+			height = nil,
 			segment = nil,
 			doors = room.doors,
 			borders = room.borders,
@@ -1780,10 +1780,10 @@ function NavFieldBuilder:_analyse_room(enter_dir_str, enter_pos)
 
 	for dir_str, perp_neg_dir_str in pairs(perp_neg_dir_str_map) do
 		room.expansion[dir_str] = {
-			cliffs = nil,
-			stairs = nil,
-			walls = nil,
 			unsorted = nil,
+			cliffs = nil,
+			walls = nil,
+			stairs = nil,
 			spaces = nil,
 			walls = {},
 			spaces = {},
@@ -1935,8 +1935,8 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 
 					if neighbour.neighbours then
 						local new_data = {
-							overlap = nil,
 							room = nil,
+							overlap = nil,
 							room = i_room,
 							overlap = {
 								neighbour_data.overlap[1],
@@ -1986,8 +1986,8 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 
 					if neighbour.neighbours then
 						local new_data = {
-							overlap = nil,
 							room = nil,
+							overlap = nil,
 							room = i_room,
 							overlap = {
 								neighbour_data.overlap[1],
@@ -2059,8 +2059,8 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 
 						if neighbour.neighbours then
 							local new_data = {
-								overlap = nil,
 								room = nil,
+								overlap = nil,
 								room = i_room,
 								overlap = {
 									new_neighbours[1].overlap[1],
@@ -2115,8 +2115,8 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 
 						if neighbour.neighbours then
 							local new_data = {
-								overlap = nil,
 								room = nil,
+								overlap = nil,
 								room = i_room,
 								overlap = {
 									new_neighbours[1].overlap[1],
@@ -2189,8 +2189,8 @@ function NavFieldBuilder:_expand_room_borders(expanding_side, room, expandable_s
 
 					if neighbour.neighbours then
 						local new_data = {
-							overlap = nil,
 							room = nil,
+							overlap = nil,
 							room = i_room,
 							overlap = {
 								neighbour_data.overlap[1],
@@ -2484,9 +2484,9 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 	local pos_along_border = travel_seg[1]
 	local res_expansion = {
 		cliffs = nil,
+		spaces = nil,
 		walls = nil,
 		stairs = nil,
-		spaces = nil,
 		walls = {},
 		stairs = {},
 		spaces = {},
@@ -2684,8 +2684,8 @@ function NavFieldBuilder:_expansion_check_neighbours(dir_str, exp_space)
 						mvector3.set_z(overlap_seg[1], (z1_test_room + z1_exp_room) * 0.5)
 						mvector3.set_z(overlap_seg[2], (z2_test_room + z2_exp_room) * 0.5)
 						table.insert(neighbours, {
-							overlap = nil,
 							room = nil,
+							overlap = nil,
 							room = i_room,
 							overlap = overlap_seg
 						})
@@ -3138,9 +3138,9 @@ function NavFieldBuilder:_create_visibility_groups(nav_seg_id)
 			local segment = room.segment
 			local my_vis_group = {
 				vis_groups = nil,
-				seg = nil,
 				rooms = nil,
 				pos = nil,
+				seg = nil,
 				rooms = {},
 				pos = pos,
 				vis_groups = {},

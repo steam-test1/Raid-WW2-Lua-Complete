@@ -21,11 +21,11 @@ function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw then
 			self:_draw_link({
+				from_unit = nil,
 				b = 0,
 				g = 0.85,
 				r = 0,
 				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -115,8 +115,8 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(percentage, 0, 0, "EXPAND")
 	self:add_help_text({
 		panel = nil,
-		sizer = nil,
 		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
+		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer
 	})

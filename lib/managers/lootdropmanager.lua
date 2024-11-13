@@ -417,9 +417,9 @@ function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_i
 	Application:trace("[LootDropManager:on_loot_dropped_for_peer]   Loot dropped for peer:  ", loot_type, name, value, peer_id)
 
 	local drop = {
-		reward_type = nil,
 		peer_id = nil,
 		peer_name = nil,
+		reward_type = nil,
 		peer_id = peer_id,
 		peer_name = managers.network:session():peer(peer_id) and managers.network:session():peer(peer_id):name() or "",
 		reward_type = loot_type

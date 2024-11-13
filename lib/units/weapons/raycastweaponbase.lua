@@ -28,7 +28,6 @@ function RaycastWeaponBase:init(unit)
 	self:_create_use_setups()
 
 	self._setup = {}
-	self._digest_values = IS_PC
 	self._ammo_data = false
 	local replenish_wpn = false
 
@@ -41,9 +40,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		kills = 0,
-		trigger_held = nil,
+		EFFECT_PLAYER_CAN_ONLY_USE_WEAPON_CATEGORY = nil,
 		from = nil,
+		kills = 0,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -528,8 +527,8 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 	if managers.player:local_player() == user_unit then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_FIRED_WEAPON, {
 			damage = nil,
-			killed_enemy = nil,
 			weapon = nil,
+			killed_enemy = nil,
 			weapon = self._name_id,
 			damage = self:base_damage(),
 			killed_enemy = ray_res.hit_enemy and type(ray_res.hit_enemy) == "table" and ray_res.hit_enemy.type and ray_res.hit_enemy.type == "death"
@@ -566,8 +565,8 @@ end
 function RaycastWeaponBase:_check_last_clip(user_unit)
 	if self:get_ammo_total() <= self:get_ammo_max_per_clip() and alive(user_unit) and user_unit:base().is_local_player then
 		managers.dialog:queue_dialog("player_gen_out_of_ammo", {
-			skip_idle_check = true,
 			instigator = nil,
+			skip_idle_check = true,
 			instigator = user_unit
 		})
 	end
@@ -1168,10 +1167,10 @@ function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos,
 	self:set_ammo_remaining_in_clip(math.max(0, self:get_ammo_remaining_in_clip() - 1))
 
 	local col_ray = {
+		position = nil,
 		unit = nil,
 		ray = nil,
 		body = nil,
-		position = nil,
 		normal = nil,
 		position = impact_pos,
 		ray = direction,
@@ -1221,48 +1220,20 @@ function RaycastWeaponBase:anim_stop(anim)
 	self._unit:anim_stop(Idstring(anim))
 end
 
-function RaycastWeaponBase:digest_value(value, digest)
-	if self._digest_values then
-		return Application:digest_value(value, digest)
-	else
-		return value
-	end
-end
-
 function RaycastWeaponBase:set_ammo_max_per_clip(ammo_max_per_clip)
-	if self._ammo_max_per_clip then
-		if self._ammo_max_per_clip2 then
-			print("haxor")
-		end
-
-		self._ammo_max_per_clip2 = self:digest_value(ammo_max_per_clip, true)
-		self._ammo_max_per_clip = nil
-	else
-		self._ammo_max_per_clip = self:digest_value(ammo_max_per_clip, true)
-		self._ammo_max_per_clip2 = nil
-	end
+	self._ammo_max_per_clip = ammo_max_per_clip
 end
 
 function RaycastWeaponBase:get_ammo_max_per_clip()
-	return self._ammo_max_per_clip and self:digest_value(self._ammo_max_per_clip, false) or self:digest_value(self._ammo_max_per_clip2, false)
+	return self._ammo_max_per_clip
 end
 
 function RaycastWeaponBase:set_ammo_max(ammo_max)
-	if self._ammo_max then
-		if self._ammo_max2 then
-			print("haxor")
-		end
-
-		self._ammo_max2 = self:digest_value(ammo_max, true)
-		self._ammo_max = nil
-	else
-		self._ammo_max = self:digest_value(ammo_max, true)
-		self._ammo_max2 = nil
-	end
+	self._ammo_max = ammo_max
 end
 
 function RaycastWeaponBase:get_ammo_max()
-	return self._ammo_max and self:digest_value(self._ammo_max, false) or self:digest_value(self._ammo_max2, false)
+	return self._ammo_max
 end
 
 function RaycastWeaponBase:get_ammo_ratio_excluding_clip()
@@ -1289,13 +1260,11 @@ function RaycastWeaponBase:set_ammo_total(ammo_total)
 		ammo_total = 0
 	end
 
-	self._ammo_total = self:digest_value(ammo_total, true)
+	self._ammo_total = ammo_total
 end
 
 function RaycastWeaponBase:get_ammo_total()
-	local ammo_total = self._ammo_total and self:digest_value(self._ammo_total, false) or self:digest_value(self._ammo_total2, false)
-
-	return ammo_total
+	return self._ammo_total
 end
 
 function RaycastWeaponBase:get_ammo_ratio()
@@ -1314,24 +1283,11 @@ end
 
 function RaycastWeaponBase:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	ammo_remaining_in_clip = math.clamp(ammo_remaining_in_clip, 0, self:get_ammo_max_per_clip())
-
-	if self._ammo_remaining_in_clip then
-		if self._ammo_remaining_in_clip2 then
-			print("haxor")
-		end
-
-		self._ammo_remaining_in_clip2 = self:digest_value(ammo_remaining_in_clip, true)
-		self._ammo_remaining_in_clip = nil
-	else
-		self._ammo_remaining_in_clip = self:digest_value(ammo_remaining_in_clip, true)
-		self._ammo_remaining_in_clip2 = nil
-	end
+	self._ammo_remaining_in_clip = ammo_remaining_in_clip
 end
 
 function RaycastWeaponBase:get_ammo_remaining_in_clip()
-	local ammo_remaining_in_clip = self._ammo_remaining_in_clip and self:digest_value(self._ammo_remaining_in_clip, false) or self:digest_value(self._ammo_remaining_in_clip2, false)
-
-	return ammo_remaining_in_clip
+	return self._ammo_remaining_in_clip
 end
 
 function RaycastWeaponBase:get_ammo_reload_clip_single()
@@ -1899,8 +1855,8 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 
 		if hitmarker_type and hitmarker_type ~= "" then
 			managers.hud:on_hit_confirmed({
-				hit_type = nil,
 				pos = nil,
+				hit_type = nil,
 				pos = col_ray.position,
 				hit_type = hitmarker_type == "armor" and HUDHitConfirm.HIT_ARMOR or hitmarker_type == "weakness" and HUDHitConfirm.HIT_WEAKPOINT or hitmarker_type == "headshot" and HUDHitConfirm.HIT_HEADSHOT or hitmarker_type == "killshot" and HUDHitConfirm.HIT_KILLSHOT or hitmarker_type == "normal" and HUDHitConfirm.HIT_NORMAL
 			})
@@ -1911,9 +1867,9 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 		local weapon_type = weapon_tweak_data and weapon_tweak_data.category
 
 		managers.game_play_central:play_impact_flesh({
+			weapon_type = nil,
 			col_ray = nil,
 			no_sound = nil,
-			weapon_type = nil,
 			col_ray = col_ray,
 			no_sound = no_sound,
 			weapon_type = weapon_type
@@ -1951,9 +1907,9 @@ end
 
 function InstantBulletBase:play_impact_sound_and_effects(col_ray, no_sound, weapon_type)
 	managers.game_play_central:play_impact_sound_and_effects({
+		weapon_type = nil,
 		col_ray = nil,
 		no_sound = nil,
-		weapon_type = nil,
 		col_ray = col_ray,
 		no_sound = no_sound,
 		weapon_type = weapon_type
@@ -1993,14 +1949,14 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
-	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
-	idstr_decal = nil,
-	on_unit = true,
-	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
 	sound_event = "round_explode",
 	idstr_effect = nil,
+	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
+	idstr_decal = nil,
+	on_unit = true,
+	sound_muffle_effect = true,
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.explosive_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2017,8 +1973,8 @@ end
 
 function InstantExplosiveBulletBase:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
-		col_ray = nil,
 		no_decal = true,
+		col_ray = nil,
 		col_ray = col_ray
 	})
 end
@@ -2065,8 +2021,8 @@ function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit
 		end
 
 		return {
-			col_ray = nil,
 			variant = "explosion",
+			col_ray = nil,
 			col_ray = col_ray
 		}
 	end
@@ -2080,15 +2036,15 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	managers.explosion:play_sound_and_effects(position, normal, self.RANGE, self.EFFECT_PARAMS)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		ignore_unit = nil,
-		hit_pos = nil,
-		curve_pow = nil,
-		range = nil,
-		damage = nil,
-		owner = nil,
 		user = nil,
 		player_damage = nil,
 		collision_slotmask = nil,
+		hit_pos = nil,
+		damage = nil,
+		range = nil,
+		ignore_unit = nil,
+		curve_pow = nil,
+		owner = nil,
 		hit_pos = position,
 		range = self.RANGE,
 		collision_slotmask = slot_mask,
@@ -2143,14 +2099,14 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
-	pushunits = nil,
-	idstr_decal = nil,
-	on_unit = true,
-	sound_muffle_effect = true,
 	camera_shake_max_mul = nil,
 	feedback_range = nil,
 	sound_event = "round_explode",
 	idstr_effect = nil,
+	pushunits = nil,
+	idstr_decal = nil,
+	on_unit = true,
+	sound_muffle_effect = true,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.flame_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2211,8 +2167,8 @@ function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, b
 
 	if play_impact_flesh then
 		managers.game_play_central:play_impact_flesh({
-			col_ray = nil,
 			no_sound = true,
+			col_ray = nil,
 			col_ray = col_ray
 		})
 		self:play_impact_sound_and_effects(col_ray)
@@ -2340,10 +2296,10 @@ end
 
 DOTBulletBase = DOTBulletBase or class(InstantBulletBase)
 DOTBulletBase.DOT_DATA = {
-	dot_damage = 0.5,
 	dot_tick_period = 0.5,
 	dot_length = 6,
-	hurt_animation_chance = 1
+	hurt_animation_chance = 1,
+	dot_damage = 0.5
 }
 
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
@@ -2419,8 +2375,8 @@ function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_uni
 		end
 
 		result = self:start_dot_damage(col_ray, nil, {
-			dot_damage = nil,
 			dot_length = nil,
+			dot_damage = nil,
 			dot_damage = dot_type_data.dot_damage,
 			dot_length = dot_data.custom_length or dot_type_data.dot_length
 		})

@@ -44,11 +44,11 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 		end
 
 		local clip_left_background = self._ammo_panel:bitmap({
+			w = nil,
 			texture = nil,
 			name = nil,
 			h = nil,
 			texture_rect = nil,
-			w = nil,
 			name = "clip_left_background" .. i,
 			texture = gui[1].texture,
 			texture_rect = gui[1].texture_rect,
@@ -61,6 +61,7 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 
 		local layer = clip_left_background:layer() + 1
 		local clip_left_fill = self._ammo_panel:bitmap({
+			w = nil,
 			texture = nil,
 			name = nil,
 			position_z = 1,
@@ -68,7 +69,6 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 			h = nil,
 			render_template = "VertexColorTexturedRadial",
 			texture_rect = nil,
-			w = nil,
 			name = "clip_left_fill" .. i,
 			texture = gui[2].texture,
 			texture_rect = gui[2].texture_rect,
@@ -82,13 +82,13 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 
 		layer = layer + 1
 		local clip_left_ooa = self._ammo_panel:bitmap({
+			w = nil,
 			texture = nil,
 			name = nil,
-			texture_rect = nil,
 			visible = false,
-			h = nil,
 			layer = nil,
-			w = nil,
+			h = nil,
+			texture_rect = nil,
 			name = "clip_left_ooa" .. i,
 			texture = gui[3].texture,
 			texture_rect = gui[3].texture_rect,

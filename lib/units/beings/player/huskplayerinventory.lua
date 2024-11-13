@@ -4,13 +4,13 @@ function HuskPlayerInventory:init(unit)
 	HuskPlayerInventory.super.init(self, unit)
 
 	self._align_places.right_hand = {
-		obj3d_name = nil,
 		on_body = true,
+		obj3d_name = nil,
 		obj3d_name = Idstring("a_weapon_right_front")
 	}
 	self._align_places.left_hand = {
-		obj3d_name = nil,
 		on_body = true,
+		obj3d_name = nil,
 		obj3d_name = Idstring("a_weapon_left_front")
 	}
 	self._peer_weapons = {}
@@ -30,12 +30,28 @@ function HuskPlayerInventory:synch_equipped_weapon(send_equipped_weapon_type, eq
 	elseif send_equipped_weapon_type == PlayerInventory.SEND_WEAPON_TYPE_PLAYER_MELEE_GRENADE then
 		if equipped_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
 			local grenade_data = tweak_data.projectiles[equipped_weapon_identifier]
-			weapon_name = Idstring(grenade_data.unit_dummy)
+			local cosmetics_data = tweak_data.weapon.weapon_skins[cosmetics_string]
+
+			if cosmetics_data and cosmetics_data.replaces_units then
+				weapon_name = cosmetics_data.replaces_units.unit_dummy
+			else
+				weapon_name = grenade_data.unit_dummy
+			end
+
+			weapon_name = Idstring(weapon_name)
 
 			self:add_unit_by_name(weapon_name, true, true)
 		elseif equipped_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 			local melee_data = tweak_data.blackmarket.melee_weapons[equipped_weapon_identifier]
-			weapon_name = Idstring(melee_data.third_unit)
+			local cosmetics_data = tweak_data.weapon.weapon_skins[cosmetics_string]
+
+			if cosmetics_data and cosmetics_data.replaces_units then
+				weapon_name = cosmetics_data.replaces_units.third_unit
+			else
+				weapon_name = melee_data.third_unit
+			end
+
+			weapon_name = Idstring(weapon_name)
 
 			self:add_unit_by_name(weapon_name, true, true)
 		end

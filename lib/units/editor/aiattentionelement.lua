@@ -78,11 +78,11 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0,
-				r = 0,
 				to_unit = nil,
 				from_unit = nil,
 				b = 0.75,
+				g = 0,
+				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -95,11 +95,11 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
-			g = 0.75,
-			r = 0,
 			to_unit = nil,
 			from_unit = nil,
 			b = 0,
+			g = 0.75,
+			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
 		})
@@ -107,11 +107,11 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
-			g = 0,
-			r = 0,
 			to_unit = nil,
 			from_unit = nil,
 			b = 0.75,
+			g = 0,
+			r = 0,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
 		})
@@ -127,11 +127,11 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
-			g = 0.75,
-			r = 0,
 			to_unit = nil,
 			from_unit = nil,
 			b = 0,
+			g = 0.75,
+			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
 		})
@@ -139,11 +139,11 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
-			g = 0,
-			r = 0.75,
 			to_unit = nil,
 			from_unit = nil,
 			b = 0,
+			g = 0,
+			r = 0.75,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
 		})
@@ -153,11 +153,11 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 		local unit = all_units[id]
 
 		self:_draw_link({
-			g = 0,
-			r = 0,
 			to_unit = nil,
 			from_unit = nil,
 			b = 0.75,
+			g = 0,
+			r = 0,
 			from_unit = unit,
 			to_unit = self._unit
 		})

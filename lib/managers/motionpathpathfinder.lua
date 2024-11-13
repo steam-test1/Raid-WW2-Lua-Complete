@@ -34,8 +34,8 @@ function MotionPathPathFinder:_make_link(current_pos, target_marker_index, path)
 		local pos = target_unit.position
 		local distance = mvector3.distance(current_pos, pos)
 		link = {
-			distance = nil,
 			target_marker = nil,
+			distance = nil,
 			target_marker = target_marker,
 			distance = distance
 		}
@@ -65,8 +65,8 @@ function MotionPathPathFinder:_add_path(path)
 		for _, bridge in ipairs(path.bridges) do
 			if not bridge.disabled and bridge.marker_from == current_marker then
 				local link = {
-					distance = nil,
 					target_marker = nil,
+					distance = nil,
 					target_marker = bridge.marker_to,
 					distance = bridge.distance
 				}
@@ -77,12 +77,12 @@ function MotionPathPathFinder:_add_path(path)
 
 		local node = {
 			pos = nil,
+			path = nil,
 			came_from = nil,
 			heuristic = 1000000,
 			g_score = 0,
 			marker = nil,
 			links = nil,
-			path = nil,
 			path = path,
 			marker = current_marker,
 			links = links,

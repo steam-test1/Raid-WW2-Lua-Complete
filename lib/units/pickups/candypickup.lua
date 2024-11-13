@@ -5,10 +5,10 @@ BuffCandyPickup.EVENT_IDS = {
 	despawn = 1
 }
 BuffCandyPickup.EFFECT_PARAMS = {
+	idstr_effect = nil,
 	sound_event = "candy_vanish",
 	idstr_decal = nil,
 	effect = "units/upd_candy/effects/candy_drop_vanish",
-	idstr_effect = nil,
 	idstr_decal = Idstring("explosion_round"),
 	idstr_effect = Idstring("")
 }

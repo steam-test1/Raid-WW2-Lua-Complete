@@ -17,11 +17,11 @@ function GrenadeCluster:_setup_from_tweak_data()
 	self._player_damage = self._tweak_data.player_damage
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
-		effect = nil,
 		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
 		feedback_range = nil,
+		effect = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -54,9 +54,8 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 	managers.explosion:play_sound_and_effects(pos, normal, self._range, self._custom_params)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
-		collision_slotmask = nil,
-		hit_pos = nil,
 		range = nil,
+		hit_pos = nil,
 		player_damage = 0,
 		alert_radius = nil,
 		killzone_range = nil,
@@ -64,6 +63,7 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 		curve_pow = nil,
 		user = nil,
 		ignore_unit = nil,
+		collision_slotmask = nil,
 		hit_pos = pos,
 		range = self._range,
 		collision_slotmask = slot_mask,

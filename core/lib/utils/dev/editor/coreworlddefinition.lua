@@ -36,8 +36,8 @@ function WorldDefinition:init(params)
 	self._world_id = params.world_id or 0
 	self._key_counter = 0
 	self._id_converter = {
-		new_to_old = nil,
 		old_to_new = nil,
+		new_to_old = nil,
 		old_to_new = {},
 		new_to_old = {}
 	}
@@ -1267,8 +1267,8 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 			if DB:has("effect", name) then
 				managers.portal:add_effect({
 					position = nil,
-					rotation = nil,
 					effect = nil,
+					rotation = nil,
 					effect = name,
 					position = unit_effect.position,
 					rotation = unit_effect.rotation
@@ -1296,6 +1296,10 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 	end
 
 	if data.dome_occ_shapes then
+		if #data.dome_occ_shapes > 1 then
+			Application:warn("[WorldDefinition:_create_environment] Only one instance of dome occluder shapes will be used. This world has multiple.", #data.dome_occ_shapes)
+		end
+
 		local shape_data = data.dome_occ_shapes[1]
 
 		if shape_data then
@@ -2104,8 +2108,8 @@ function WorldDefinition:_load_package_async(pkg, callback_method, key, init_pkg
 
 	local params = {
 		key = nil,
-		init_pkg = nil,
 		dep_pkg = nil,
+		init_pkg = nil,
 		key = key,
 		dep_pkg = dep_pkg,
 		init_pkg = init_pkg

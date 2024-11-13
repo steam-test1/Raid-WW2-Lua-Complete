@@ -73,81 +73,6 @@ function PlayerEquipment:_disable_contour(unit)
 	end
 end
 
-function PlayerEquipment:use_ammo_bag()
-	local ray = self:valid_shape_placement("ammo_bag")
-
-	if ray then
-		local pos = ray.position
-		local rot = self._unit:movement():m_head_rot()
-		rot = Rotation(rot:yaw(), 0, 0)
-
-		PlayerStandard.say_line(self, "s01x_plu")
-		managers.statistics:use_ammo_bag()
-
-		local ammo_upgrade_lvl = managers.player:upgrade_level("ammo_bag", "ammo_increase")
-
-		if Network:is_client() then
-			managers.network:session():send_to_host("place_deployable_bag", "AmmoBagBase", pos, rot, ammo_upgrade_lvl)
-		else
-			local unit = AmmoBagBase.spawn(pos, rot, ammo_upgrade_lvl, managers.network:session():local_peer():id())
-		end
-
-		return true
-	end
-
-	return false
-end
-
-function PlayerEquipment:use_doctor_bag()
-	local ray = self:valid_shape_placement("doctor_bag")
-
-	if ray then
-		local pos = ray.position
-		local rot = self._unit:movement():m_head_rot()
-		rot = Rotation(rot:yaw(), 0, 0)
-
-		PlayerStandard.say_line(self, "s02x_plu")
-		managers.statistics:use_doctor_bag()
-
-		local amount_upgrade_lvl = managers.player:upgrade_level("doctor_bag", "amount_increase")
-
-		if Network:is_client() then
-			managers.network:session():send_to_host("place_deployable_bag", "DoctorBagBase", pos, rot, amount_upgrade_lvl)
-		else
-			local unit = DoctorBagBase.spawn(pos, rot, amount_upgrade_lvl, managers.network:session():local_peer():id())
-		end
-
-		return true
-	end
-
-	return false
-end
-
-function PlayerEquipment:use_first_aid_kit()
-	local ray = self:valid_shape_placement("first_aid_kit")
-
-	if ray then
-		local pos = ray.position
-		local rot = self._unit:movement():m_head_rot()
-		rot = Rotation(rot:yaw(), 0, 0)
-
-		PlayerStandard.say_line(self, "s12")
-		managers.statistics:use_first_aid()
-
-		local upgrade_lvl = managers.player:has_category_upgrade("first_aid_kit", "damage_reduction_upgrade") and 1 or 0
-
-		if Network:is_client() then
-			managers.network:session():send_to_host("place_deployable_bag", "FirstAidKitBase", pos, rot, upgrade_lvl)
-		else
-			local unit = FirstAidKitBase.spawn(pos, rot, upgrade_lvl, managers.network:session():local_peer():id())
-		end
-
-		return true
-	end
-
-	return false
-end
-
 function PlayerEquipment:_spawn_dummy(dummy_name, pos, rot)
 	if alive(self._dummy_unit) then
 		return self._dummy_unit
@@ -217,84 +142,6 @@ function PlayerEquipment:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
-function PlayerEquipment:use_sentry_gun(selected_index)
-	if self._sentrygun_placement_requested then
-		return
-	end
-
-	local ray = self:valid_shape_placement()
-
-	if ray then
-		local pos = ray.position
-		local rot = self._unit:movement():m_head_rot()
-		rot = Rotation(rot:yaw(), 0, 0)
-
-		managers.statistics:use_sentry_gun()
-
-		local ammo_multiplier = managers.player:upgrade_value("sentry_gun", "extra_ammo_multiplier", 1)
-		local armor_multiplier = 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier", 1) - 1 + managers.player:upgrade_value("sentry_gun", "armor_multiplier2", 1) - 1
-		local damage_multiplier = managers.player:upgrade_value("sentry_gun", "damage_multiplier", 1)
-
-		if Network:is_client() then
-			managers.network:session():send_to_host("place_sentry_gun", pos, rot, ammo_multiplier, armor_multiplier, damage_multiplier, selected_index, self._unit)
-
-			self._sentrygun_placement_requested = true
-
-			return false
-		else
-			local shield = managers.player:has_category_upgrade("sentry_gun", "shield")
-			local sentry_gun_unit = SentryGunBase.spawn(self._unit, pos, rot, ammo_multiplier, armor_multiplier, damage_multiplier, managers.network:session():local_peer():id(), false)
-
-			if sentry_gun_unit then
-				managers.network:session():send_to_peers_synched("from_server_sentry_gun_place_result", managers.network:session():local_peer():id(), selected_index, sentry_gun_unit, sentry_gun_unit:movement()._rot_speed_mul, sentry_gun_unit:weapon()._setup.spread_mul, shield)
-			else
-				return false
-			end
-		end
-
-		return true
-	end
-
-	return false
-end
-
-function PlayerEquipment:use_flash_grenade()
-	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
-
-	return true, "throw_grenade"
-end
-
-function PlayerEquipment:use_smoke_grenade()
-	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
-
-	return true, "throw_grenade"
-end
-
-function PlayerEquipment:use_frag_grenade()
-	self._grenade_name = "units/dev_tools/deleted_unit/deleted_unit"
-
-	return true, "throw_grenade"
-end
-
-function PlayerEquipment:throw_flash_grenade()
-	if not self._grenade_name then
-		Application:error("Tried to throw a grenade with no name")
-	end
-
-	local from = self._unit:movement():m_head_pos()
-	local to = from + self._unit:movement():m_head_rot():y() * 35 + Vector3(0, 0, 0)
-	local unit = ProjectileBase.spawn(self._grenade_name, to, Rotation())
-
-	unit:base():throw({
-		dir = nil,
-		owner = nil,
-		dir = self._unit:movement():m_head_rot():y(),
-		owner = self._unit
-	})
-
-	self._grenade_name = nil
-end
-
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.projectiles[projectile_entry]
@@ -306,58 +153,47 @@ function PlayerEquipment:throw_projectile()
 	self._unit:sound():say(say_line, nil, true)
 
 	local projectile_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_entry)
+	local cosmetic_id = managers.weapon_inventory:get_weapons_skin(equipped_grenade)
 
-	if not projectile_data.client_authoritative then
-		if Network:is_client() then
-			managers.network:session():send_to_host("request_throw_projectile", projectile_index, pos, dir, 0)
-		else
-			ProjectileBase.throw_projectile(projectile_index, pos, dir, managers.network:session():local_peer():id())
-			managers.player:verify_grenade(managers.network:session():local_peer():id())
-		end
+	if Network:is_server() or projectile_data.client_authoritative then
+		local peer_id = managers.network:session():local_peer():id()
+
+		ProjectileBase.throw_projectile(projectile_index, pos, dir, peer_id, nil, cosmetic_id)
+		managers.player:verify_grenade(peer_id)
 	else
-		ProjectileBase.throw_projectile(projectile_index, pos, dir, managers.network:session():local_peer():id())
-		managers.player:verify_grenade(managers.network:session():local_peer():id())
+		managers.network:session():send_to_host("request_throw_projectile", projectile_index, pos, dir, 0, cosmetic_id)
 	end
 
 	managers.player:on_throw_grenade()
 end
 
 function PlayerEquipment:throw_grenade()
+	local equipped_grenade = managers.blackmarket:equipped_grenade()
+	local projectile_data = tweak_data.projectiles[equipped_grenade]
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
-	local equipped_grenade = managers.blackmarket:equipped_grenade()
 	local weapon_data = tweak_data.weapon[equipped_grenade]
 	local say_line = weapon_data.throw_shout or "player_throw_grenade"
 
-	Application:debug("[PlayerEquipment:throw_grenade]", equipped_grenade, say_line)
 	self._unit:sound():say(say_line, nil, true)
 
 	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
-	local cooking_t = nil
+	local cooking_t = self._cooking_start and Application:time() - self._cooking_start
+	local cosmetic_id = managers.weapon_inventory:get_weapons_skin(equipped_grenade)
 
-	if self._cooking_start then
-		cooking_t = Application:time() - self._cooking_start
-	end
+	if Network:is_server() or projectile_data.client_authoritative then
+		local peer_id = managers.network:session():local_peer():id()
 
-	if Network:is_client() then
-		managers.network:session():send_to_host("request_throw_projectile", grenade_index, pos, dir, cooking_t)
+		ProjectileBase.throw_projectile(grenade_index, pos, dir, peer_id, cooking_t, nil, cosmetic_id)
+		managers.player:verify_grenade(peer_id)
 	else
-		ProjectileBase.throw_projectile(grenade_index, pos, dir, managers.network:session():local_peer():id(), cooking_t)
-		managers.player:verify_grenade(managers.network:session():local_peer():id())
+		managers.network:session():send_to_host("request_throw_projectile", grenade_index, pos, dir, cooking_t, cosmetic_id)
 	end
 
 	self._cooking_start = nil
 
 	managers.player:on_throw_grenade()
-end
-
-function PlayerEquipment:use_duck()
-	local soundsource = SoundDevice:create_source("duck")
-
-	soundsource:post_event("footstep_walk")
-
-	return true
 end
 
 function PlayerEquipment:from_server_sentry_gun_place_result()

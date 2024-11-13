@@ -30,15 +30,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 
 	local time_params_easy = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on easy:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on easy:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_easy
@@ -57,15 +57,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_normal = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on normal:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on normal:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_normal
@@ -84,15 +84,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_hard = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on hard:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on hard:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_hard
@@ -111,15 +111,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on overkill:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on overkill:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill
@@ -138,15 +138,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_145 = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on overkill 145:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on overkill 145:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_145
@@ -165,15 +165,15 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_290 = {
-		value = nil,
-		sizer = nil,
-		min = 1,
-		name = "Time left on overkill 290:",
+		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		panel = nil,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
+		value = nil,
+		sizer = nil,
+		name = "Time left on overkill 290:",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_290
@@ -206,11 +206,11 @@ function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				from_unit = nil,
 				b = 0.75,
 				g = 0,
 				r = 0.75,
 				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

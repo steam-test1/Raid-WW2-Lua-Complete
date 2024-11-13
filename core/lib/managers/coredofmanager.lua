@@ -17,11 +17,11 @@ function DOFManager:init()
 	self._game_timer = TimerManager:game()
 	self._env_dof_enabled = true
 	self._environment_parameters = {
+		near_min = 0,
 		clamp = 0,
 		far_max = 0,
 		far_min = 0,
-		near_max = 0,
-		near_min = 0
+		near_max = 0
 	}
 	self._clamp_prev_frame = 0
 end
@@ -242,11 +242,11 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 
 	if clamp > 0 then
 		cur_values = {
+			near_min = nil,
 			clamp = nil,
 			far_max = nil,
 			far_min = nil,
 			near_max = nil,
-			near_min = nil,
 			near_min = near_min,
 			near_max = near_max,
 			far_min = far_min,
@@ -255,11 +255,11 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 		}
 	else
 		cur_values = {
+			near_min = 0,
 			clamp = 0,
 			far_max = 0,
 			far_min = 0,
-			near_max = 0,
-			near_min = 0
+			near_max = 0
 		}
 	end
 
@@ -386,11 +386,11 @@ function DOFManager:clbk_environment_change()
 
 	if env_data then
 		self._environment_parameters = {
+			near_min = nil,
 			clamp = nil,
 			far_max = nil,
 			far_min = nil,
 			near_max = nil,
-			near_min = nil,
 			near_min = env_data.near_focus_distance_min,
 			near_max = env_data.near_focus_distance_max,
 			far_min = env_data.far_focus_distance_min,

@@ -15,11 +15,11 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._on_double_click_callback = params.on_double_click_callback
 	self._data = data
 	self._object = self._panel:panel({
+		x = nil,
 		name = nil,
 		h = nil,
 		w = nil,
 		y = nil,
-		x = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -29,14 +29,14 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._color = params.color or tweak_data.gui.colors.raid_white
 	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
 	self._item_icon = self._object:image({
+		x = nil,
 		texture = nil,
-		name = nil,
-		color = nil,
 		texture_rect = nil,
+		color = nil,
+		name = nil,
 		h = nil,
 		w = nil,
 		y = nil,
-		x = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemIcon.ICON_PADDING,
 		y = (params.h - RaidGUIControlListItemIcon.ICON_HEIGHT) / 2,
@@ -67,26 +67,26 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 		color = params.color or tweak_data.gui.colors.raid_white
 	})
 	self._item_background = self._object:rect({
+		x = 0,
 		visible = false,
-		name = nil,
 		color = nil,
+		name = nil,
 		h = nil,
 		w = nil,
 		y = 1,
-		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._item_highlight_marker = self._object:rect({
+		x = 0,
 		visible = false,
-		name = nil,
 		color = nil,
+		name = nil,
 		h = nil,
 		w = 3,
 		y = 1,
-		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = self._selected_color
@@ -103,8 +103,8 @@ end
 
 function RaidGUIControlListItemIcon:_layout_breadcrumb()
 	local breadcrumb_params = {
-		category = nil,
 		identifiers = nil,
+		category = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

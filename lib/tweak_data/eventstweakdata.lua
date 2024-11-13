@@ -21,38 +21,38 @@ end
 function EventsTweakData:_init_active_duty_rewards()
 	self.login_rewards.active_duty = {
 		{
-			reward = nil,
 			amount = 5,
 			icon = nil,
+			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_SINGLE
 		},
 		{
-			reward = nil,
 			amount = 10,
 			icon = nil,
+			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_FEW
 		},
 		{
-			reward = nil,
 			amount = 20,
 			icon = nil,
+			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_FEW
 		},
 		{
-			reward = nil,
 			amount = 30,
 			icon = nil,
+			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_MANY
 		},
 		{
-			reward = nil,
-			icon_outlaw = nil,
 			amount = 50,
 			icon = nil,
+			reward = nil,
+			icon_outlaw = nil,
 			reward = EventsTweakData.REWARD_TYPE_OUTLAW,
 			icon_outlaw = EventsTweakData.REWARD_ICON_OUTLAW,
 			icon = EventsTweakData.REWARD_ICON_MANY
@@ -63,28 +63,28 @@ end
 function EventsTweakData:_init_halloween_rewards()
 	self.login_rewards.halloween = {
 		{
-			reward = nil,
-			icon = nil,
 			amount = 10,
 			generator_id = nil,
+			reward = nil,
+			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
 		},
 		{
-			reward = nil,
-			icon = nil,
 			amount = 20,
 			generator_id = nil,
+			reward = nil,
+			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
 		},
 		{
-			reward = nil,
-			icon = nil,
 			amount = 40,
 			generator_id = nil,
+			reward = nil,
+			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
@@ -94,21 +94,21 @@ end
 
 function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 	self.special_events.trick_or_treat = {
-		challenge_id = "candy_gold_bar",
-		upgrades = nil,
-		date = nil,
-		game_logo = nil,
-		package = "packages/halloween_candy",
-		accent_color = "progress_orange",
-		login_rewards = "halloween",
 		name_id = "hud_trick_or_treat_title",
+		challenge_id = "candy_gold_bar",
+		date = nil,
 		card_id = "ra_trick_or_treat",
 		milestones = nil,
 		camp_continent = "event_halloween",
+		game_logo = nil,
+		upgrades = nil,
+		accent_color = "progress_orange",
+		login_rewards = "halloween",
+		package = "packages/halloween_candy",
 		game_logo = tweak_data.gui.icons.raid_hw_logo_small,
 		date = {
 			start = 1023,
-			finish = 1110
+			finish = 1109
 		},
 		upgrades = {
 			"temporary_candy_health_regen",

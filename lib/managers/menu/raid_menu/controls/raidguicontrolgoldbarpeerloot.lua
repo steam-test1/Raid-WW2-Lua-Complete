@@ -40,11 +40,11 @@ end
 
 function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 	local params_gold_bar_image = {
-		name = "melee_weapon_image",
 		x = 0,
 		texture_rect = nil,
 		texture = nil,
 		y = 0,
+		name = "melee_weapon_image",
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture_rect
 	}

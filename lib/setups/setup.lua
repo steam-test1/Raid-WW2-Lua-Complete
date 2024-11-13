@@ -324,6 +324,8 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		level_id = nil,
+		is_playing = false,
 		search_appropriate_jobs = true,
 		job_plan = -1,
 		kick_option = 1,
@@ -333,8 +335,6 @@ function Setup:init_managers(managers)
 		selected_team_ai = true,
 		permission = "public",
 		difficulty = nil,
-		level_id = nil,
-		is_playing = false,
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
@@ -473,11 +473,11 @@ function Setup:_start_loading_screen()
 		load_level_data.controller_image = "guis/textures/controller"
 		load_level_data.controller_shapes = {
 			{
-				position = nil,
 				texture_rect = nil,
+				position = nil,
 				position = {
-					cy = 0.5,
-					cx = 0.5
+					cx = 0.5,
+					cy = 0.5
 				},
 				texture_rect = {
 					0,
@@ -501,30 +501,30 @@ function Setup:_start_loading_screen()
 		local aspect_ratio = managers.viewport:aspect_ratio()
 		local res = RenderSettings.resolution
 		load_level_data.gui_data = {
-			res = nil,
 			aspect_ratio = nil,
 			saferect_size = nil,
 			safe_rect = nil,
 			bg_texture = nil,
 			workspace_size = nil,
 			safe_rect_pixels = nil,
+			res = nil,
 			safe_rect_pixels = safe_rect_pixels,
 			safe_rect = safe_rect,
 			aspect_ratio = aspect_ratio,
 			res = res,
 			workspace_size = {
-				x = 0,
 				h = nil,
 				w = nil,
 				y = 0,
+				x = 0,
 				w = res.x,
 				h = res.y
 			},
 			saferect_size = {
-				x = nil,
 				h = nil,
 				w = nil,
 				y = nil,
+				x = nil,
 				x = safe_rect.x,
 				y = safe_rect.y,
 				w = safe_rect.width,
@@ -539,10 +539,10 @@ function Setup:_start_loading_screen()
 	end
 
 	local data = {
-		res = nil,
-		load_level_data = nil,
 		is_win32 = nil,
+		load_level_data = nil,
 		layer = nil,
+		res = nil,
 		res = RenderSettings.resolution,
 		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
 		load_level_data = load_level_data,
@@ -553,11 +553,11 @@ end
 
 function Setup:_setup_loading_environment()
 	local env_map = {
-		shadow_processor = nil,
 		deferred = nil,
+		shadow_processor = nil,
 		deferred = {
-			shadow = nil,
 			apply_ambient = nil,
+			shadow = nil,
 			shadow = {
 				slice3 = nil,
 				slice2 = nil,

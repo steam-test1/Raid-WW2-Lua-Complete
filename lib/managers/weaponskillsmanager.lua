@@ -112,9 +112,9 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 					if not managers.challenge:challenge_exists(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_id) then
 						local challenge_tasks = skill.challenge_tasks
 						local challenge_callback = {
+							method = "on_weapon_challenge_completed",
 							params = nil,
 							target = "managers.weapon_skills",
-							method = "on_weapon_challenge_completed",
 							params = {
 								weapon_id,
 								tier_index,
@@ -122,9 +122,9 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 							}
 						}
 						local challenge_data = {
+							weapon = nil,
 							skill_index = nil,
 							tier = nil,
-							weapon = nil,
 							weapon = weapon_id,
 							tier = tier_index,
 							skill_index = skill_index
@@ -446,11 +446,11 @@ end
 function WeaponSkillsManager:remind_weapon_challenge(weapon_id, tier_index, skill_index)
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 	local notification_data = {
+		notification_type = nil,
+		id = nil,
 		challenge = nil,
 		priority = 1,
 		duration = 4,
-		notification_type = nil,
-		id = nil,
 		id = weapon_skill_tree[tier_index][skill_index][1],
 		notification_type = HUDNotification.WEAPON_CHALLENGE,
 		challenge = weapon_skill_tree[tier_index][skill_index][1]
@@ -468,11 +468,11 @@ function WeaponSkillsManager:on_weapon_challenge_completed(weapon_id, tier_index
 
 	local weapon_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
 	local notification_data = {
+		notification_type = nil,
+		id = nil,
 		challenge = nil,
 		priority = 1,
 		duration = 4,
-		notification_type = nil,
-		id = nil,
 		id = weapon_skill_tree[tier_index][skill_index][1],
 		notification_type = HUDNotification.WEAPON_CHALLENGE,
 		challenge = weapon_skill_tree[tier_index][skill_index][1]
@@ -926,10 +926,10 @@ end
 
 function WeaponSkillsManager:save(data)
 	local state = {
+		gained_weapon_skill_points = nil,
 		available_weapon_skill_points = nil,
 		weapon_skills_skill_tree = nil,
 		version = nil,
-		gained_weapon_skill_points = nil,
 		version = Global.weapon_skills_manager.version,
 		available_weapon_skill_points = Global.weapon_skills_manager.available_weapon_skill_points,
 		weapon_skills_skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree,
@@ -986,9 +986,9 @@ function WeaponSkillsManager:load(data, version)
 							local challenge_id = weapon_id .. "_" .. skill[1].skill_name .. "_" .. tostring(tier_index)
 							local challenge_tasks = skill[1].challenge_tasks
 							local challenge_callback = {
+								method = "on_weapon_challenge_completed",
 								params = nil,
 								target = "managers.weapon_skills",
-								method = "on_weapon_challenge_completed",
 								params = {
 									weapon_id,
 									tier_index,
@@ -996,9 +996,9 @@ function WeaponSkillsManager:load(data, version)
 								}
 							}
 							local challenge_data = {
+								weapon = nil,
 								skill_index = nil,
 								tier = nil,
-								weapon = nil,
 								weapon = weapon_id,
 								tier = tier_index,
 								skill_index = skill_index

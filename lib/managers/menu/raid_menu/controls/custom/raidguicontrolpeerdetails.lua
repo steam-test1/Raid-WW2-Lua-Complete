@@ -63,10 +63,10 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
-		name = "class_icon",
-		color = nil,
 		texture = nil,
 		texture_rect = nil,
+		name = "class_icon",
+		color = nil,
 		texture = tweak_data.gui.icons.ico_class_infiltrator.texture,
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 		color = tweak_data.gui.colors.raid_black

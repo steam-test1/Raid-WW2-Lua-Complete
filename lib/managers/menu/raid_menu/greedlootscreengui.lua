@@ -74,18 +74,18 @@ end
 
 function GreedLootScreenGui:_create_flares()
 	local flare_panel_params = {
-		name = "loot_screen_flare_panel",
-		layer = 1
+		layer = 1,
+		name = "loot_screen_flare_panel"
 	}
 	self._flare_panel = self._fullscreen_panel:panel(flare_panel_params)
 	local flare_center_x = self._flare_panel:w() / 2 + 200
 	local flare_center_y = self._flare_panel:h() / 2
 	local lens_glint_params = {
+		alpha = 0,
+		name = "loot_screen_glint",
 		blend_mode = "add",
 		texture_rect = nil,
-		alpha = 0,
 		texture = nil,
-		name = "loot_screen_glint",
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	}
@@ -94,11 +94,11 @@ function GreedLootScreenGui:_create_flares()
 	self._lens_glint:set_center(flare_center_x, flare_center_y)
 
 	local lens_iris_params = {
+		alpha = 0,
+		name = "loot_screen_iris",
 		blend_mode = "add",
 		texture_rect = nil,
-		alpha = 0,
 		texture = nil,
-		name = "loot_screen_iris",
 		texture = tweak_data.gui.icons.lens_iris.texture,
 		texture_rect = tweak_data.gui.icons.lens_iris.texture_rect
 	}
@@ -107,11 +107,11 @@ function GreedLootScreenGui:_create_flares()
 	self._lens_iris:set_center(flare_center_x, flare_center_y)
 
 	local lens_orbs_params = {
+		alpha = 0,
+		name = "loot_screen_orbs",
 		blend_mode = "add",
 		texture_rect = nil,
-		alpha = 0,
 		texture = nil,
-		name = "loot_screen_orbs",
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	}
@@ -120,11 +120,11 @@ function GreedLootScreenGui:_create_flares()
 	self._lens_orbs:set_center(flare_center_x, flare_center_y)
 
 	local lens_shimmer_params = {
+		alpha = 0,
+		name = "loot_screen_shimmer",
 		blend_mode = "add",
 		texture_rect = nil,
-		alpha = 0,
 		texture = nil,
-		name = "loot_screen_shimmer",
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	}
@@ -133,11 +133,11 @@ function GreedLootScreenGui:_create_flares()
 	self._lens_shimmer:set_center(flare_center_x, flare_center_y)
 
 	local lens_spike_ball_params = {
+		alpha = 0,
+		name = "loot_screen_spike_ball",
 		blend_mode = "add",
 		texture_rect = nil,
-		alpha = 0,
 		texture = nil,
-		name = "loot_screen_spike_ball",
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect
 	}
@@ -148,10 +148,10 @@ end
 
 function GreedLootScreenGui:_create_loot_image()
 	local loot_image_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "loot_image",
 		layer = 15,
+		texture = nil,
 		texture = tweak_data.gui.icons[GreedLootScreenGui.CENTRAL_LOOT_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.CENTRAL_LOOT_IMAGE].texture_rect
 	}
@@ -163,21 +163,21 @@ end
 
 function GreedLootScreenGui:_create_greed_bar()
 	local greed_bar_panel_params = {
+		name = "greed_bar_panel",
+		h = 160,
 		valign = "top",
 		w = 642,
 		halign = "center",
-		y = 32,
-		name = "greed_bar_panel",
-		h = 160
+		y = 32
 	}
 	self._greed_bar_panel = self._root_panel:panel(greed_bar_panel_params)
 
 	self._greed_bar_panel:set_center_x(self._root_panel:w() / 2)
 
 	local frame_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "frame",
+		texture = nil,
 		texture = tweak_data.gui.icons[GreedLootScreenGui.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.FRAME_ICON].texture_rect
 	}
@@ -187,9 +187,9 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._frame:set_center_y(self._greed_bar_panel:h() / 2)
 
 	local loot_icon_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "loot_icon",
+		texture = nil,
 		texture = tweak_data.gui.icons[GreedLootScreenGui.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.LOOT_ICON].texture_rect
 	}
@@ -199,11 +199,11 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._loot_icon:set_center_y(self._greed_bar_panel:h() / 2)
 
 	local gold_icon_params = {
+		color = nil,
+		alpha = 0,
 		name = "gold_icon",
 		texture_rect = nil,
 		texture = nil,
-		color = nil,
-		alpha = 0,
 		texture = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_gold
@@ -214,16 +214,16 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._gold_icon:set_center_y(self._greed_bar_panel:h() / 2)
 
 	local loot_title_params = {
-		valign = "center",
-		font = nil,
-		halign = "left",
-		font_size = nil,
 		color = nil,
+		font_size = nil,
 		h = 64,
 		text = nil,
 		vertical = "center",
 		align = "center",
 		name = "loot_title",
+		valign = "center",
+		font = nil,
+		halign = "left",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_56,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -235,13 +235,13 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._title:set_center_y(self._greed_bar_panel:h() / 2 - 16)
 
 	local progress_bar_background_params = {
+		color = nil,
+		name = "greed_loot_menu_progress_bar_background",
+		right = nil,
 		w = 160,
 		center = nil,
 		left = nil,
-		right = nil,
 		layer = 1,
-		color = nil,
-		name = "greed_loot_menu_progress_bar_background",
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
@@ -253,10 +253,10 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._progress_bar_background:set_center_y(self._greed_bar_panel:h() / 2 + 32)
 
 	local progress_bar_progress_panel_params = {
-		layer = nil,
 		w = nil,
 		name = "progress_bar_progress_panel",
 		h = nil,
+		layer = nil,
 		w = self._progress_bar_background:w(),
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1
@@ -267,13 +267,13 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._progress_bar_progress_panel:set_center_y(self._progress_bar_background:center_y())
 
 	local progress_bar_foreground_params = {
+		color = nil,
+		name = "loot_bar_foreground",
+		right = nil,
 		w = nil,
 		center = nil,
 		left = nil,
-		right = nil,
 		alpha = 0,
-		color = nil,
-		name = "loot_bar_foreground",
 		w = self._progress_bar_background:w(),
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
@@ -282,15 +282,15 @@ function GreedLootScreenGui:_create_greed_bar()
 	}
 	self._loot_bar_foreground = self._progress_bar_progress_panel:three_cut_bitmap(progress_bar_foreground_params)
 	local counter_params = {
-		vertical = "center",
-		font = nil,
-		font_size = nil,
 		color = nil,
+		name = "greed_bar_counter",
 		h = nil,
 		text = "0",
-		x = nil,
+		vertical = "center",
 		align = "left",
-		name = "greed_bar_counter",
+		font_size = nil,
+		font = nil,
+		x = nil,
 		x = self._progress_bar_progress_panel:right() + 10,
 		h = GreedLootScreenGui.COUNTER_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
@@ -311,10 +311,10 @@ end
 
 function GreedLootScreenGui:_create_gold_bar_image()
 	local gold_bar_image_params = {
-		texture = nil,
 		texture_rect = nil,
 		name = "central_gold_bar_image",
 		alpha = 0,
+		texture = nil,
 		texture = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON_SINGLE].texture_rect
 	}
@@ -324,16 +324,16 @@ function GreedLootScreenGui:_create_gold_bar_image()
 	self._central_gold_bar_image:set_center_y(self._second_panel:h() / 2 - 80)
 
 	local title_description_params = {
-		font_size = nil,
-		font = nil,
-		alpha = 0,
-		y = nil,
 		color = nil,
+		name = "title_description",
 		h = nil,
+		alpha = 0,
 		text = nil,
 		vertical = "center",
 		align = "left",
-		name = "title_description",
+		font_size = nil,
+		font = nil,
+		y = nil,
 		y = GreedLootScreenGui.TITLE_DESCRIPTION_Y,
 		h = GreedLootScreenGui.TITLE_DESCRIPTION_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
@@ -347,15 +347,15 @@ function GreedLootScreenGui:_create_gold_bar_image()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		name = "gold_bars_name",
-		font = nil,
-		alpha = 0,
-		y = nil,
 		color = nil,
+		font_size = nil,
+		alpha = 0,
 		text = "GOLD BAR",
 		vertical = "top",
 		align = "center",
-		font_size = nil,
+		name = "gold_bars_name",
+		font = nil,
+		y = nil,
 		y = self._title_description:y() + self._title_description:h() + GreedLootScreenGui.TITLE_PADDING_TOP,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.TITLE_FONT_SIZE,
@@ -368,12 +368,12 @@ end
 
 function GreedLootScreenGui:_create_description_panel()
 	local description_panel_params = {
-		valign = "scale",
-		w = 416,
-		halign = "right",
 		alpha = 0,
 		name = "description_panel",
 		h = nil,
+		valign = "scale",
+		w = 416,
+		halign = "right",
 		h = self._second_panel:h()
 	}
 	self._description_panel = self._second_panel:panel(description_panel_params)
@@ -381,16 +381,16 @@ function GreedLootScreenGui:_create_description_panel()
 	self._description_panel:set_right(self._second_panel:w())
 
 	local item_type_params = {
-		valign = "center",
-		font = nil,
-		halign = "left",
-		font_size = nil,
 		color = nil,
+		font_size = nil,
 		h = nil,
 		text = nil,
 		vertical = "center",
 		align = "left",
 		name = "item_type",
+		valign = "center",
+		font = nil,
+		halign = "left",
 		h = GreedLootScreenGui.ITEM_TYPE_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.ITEM_TYPE_FONT_SIZE,
@@ -399,16 +399,16 @@ function GreedLootScreenGui:_create_description_panel()
 	}
 	local item_type = self._description_panel:text(item_type_params)
 	local item_type_description_params = {
-		valign = "center",
-		font = nil,
-		halign = "left",
-		name = "item_type_description",
-		wrap = true,
 		color = nil,
+		font_size = nil,
+		wrap = true,
 		text = nil,
 		vertical = "top",
 		align = "left",
-		font_size = nil,
+		name = "item_type_description",
+		valign = "center",
+		font = nil,
+		halign = "left",
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,
@@ -426,16 +426,16 @@ function GreedLootScreenGui:_create_description_panel()
 	}
 	self._second_panel_greed_bar = HUDTabGreedBar:new(self._description_panel, greed_bar_params)
 	local greed_description_params = {
-		valign = "center",
-		font = nil,
-		halign = "left",
-		name = "greed_description_params",
-		wrap = true,
 		color = nil,
+		font_size = nil,
+		wrap = true,
 		text = nil,
 		vertical = "top",
 		align = "left",
-		font_size = nil,
+		name = "greed_description_params",
+		valign = "center",
+		font = nil,
+		halign = "left",
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,
@@ -836,15 +836,15 @@ function GreedLootScreenGui:bind_controller_inputs()
 		}
 	}
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_continue"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_continue",
+				callback = nil,
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}
 		}

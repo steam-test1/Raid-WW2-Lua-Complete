@@ -1,8 +1,5 @@
 VoteManager = VoteManager or class()
 VoteManager.VOTE_EVENT = {
-	respond = 2,
-	reports = 1,
-	server_kick_option = 13,
 	instant_restart_mission = 12,
 	process_restart_mission = 11,
 	request_restart_mission = 10,
@@ -12,16 +9,18 @@ VoteManager.VOTE_EVENT = {
 	instant_kick = 6,
 	process_kick = 5,
 	request_kick = 4,
-	stopped = 3
+	stopped = 3,
+	respond = 2,
+	reports = 1,
+	server_kick_option = 13
 }
 VoteManager.VOTES = {
-	none = -1,
-	cancel = 3,
 	no = 2,
-	yes = 1
+	yes = 1,
+	none = -1,
+	cancel = 3
 }
 VoteManager.REASON = {
-	invalid_character = 10,
 	invalid_weapon = 9,
 	invalid_mask = 8,
 	invalid_job = 7,
@@ -30,7 +29,8 @@ VoteManager.REASON = {
 	many_grenades = 4,
 	many_bags = 3,
 	many_bags_pickup = 2,
-	many_assets = 1
+	many_assets = 1,
+	invalid_character = 10
 }
 
 function VoteManager:init()
@@ -351,8 +351,8 @@ function VoteManager:_message(response, peer_id, kick_peer_id)
 		if self._type == "kick" then
 			if kick_peer then
 				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_kick_yes" or "menu_chat_vote_kick_no", {
-					name = nil,
 					kick_name = nil,
+					name = nil,
 					name = peer:name(),
 					kick_name = kick_peer:name()
 				}))
@@ -540,10 +540,10 @@ function VoteManager:update(t, dt)
 					self._next_hint_t = t + 6
 
 					managers.notification:add_notification({
-						duration = 2,
-						id = "waiting_for_player_dropin",
 						text = nil,
+						id = "waiting_for_player_dropin",
 						shelf_life = 5,
+						duration = 2,
 						text = managers.localization:text("hud_waiting_for_player_dropin")
 					})
 				end
@@ -654,8 +654,8 @@ function VoteManager:message_vote()
 	end
 
 	dialog_data.text = managers.localization:text(message, {
-		name = nil,
 		time = nil,
+		name = nil,
 		name = peer and peer:name(),
 		time = count
 	})
@@ -677,8 +677,8 @@ function VoteManager:message_vote()
 
 				if dlg then
 					dlg:set_text(managers.localization:text(message, {
-						name = nil,
 						time = nil,
+						name = nil,
 						name = peer and peer:name(),
 						time = count
 					}), true)

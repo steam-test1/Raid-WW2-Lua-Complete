@@ -26,8 +26,8 @@ function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 
 	enable_sound_env:set_value(self._hed.enable)
 	enable_sound_env:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "enable",
 		ctrlr = nil,
+		value = "enable",
 		ctrlr = enable_sound_env
 	})
 	panel_sizer:add(enable_sound_env, 0, 0, "EXPAND")
@@ -41,11 +41,11 @@ function EnableSoundEnvironmentElement:update_selected(t, dt)
 		for _, name in ipairs(self._hed.elements) do
 			if area:name() == name then
 				self:_draw_link({
+					b = 1,
 					g = 0.5,
 					r = 0.9,
 					to_unit = nil,
 					from_unit = nil,
-					b = 1,
 					from_unit = self._unit,
 					to_unit = area:unit()
 				})
@@ -66,8 +66,8 @@ end
 
 function EnableSoundEnvironmentElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "core/units/sound_environment/sound_environment", 1, true) then
@@ -104,8 +104,8 @@ function EnableSoundEnvironmentElement:add_unit_list_btn()
 
 	local dialog = SelectUnitByNameModal:new("Add Trigger Unit", f)
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	for _, unit in ipairs(dialog:selected_units()) do

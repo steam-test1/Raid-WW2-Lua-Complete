@@ -129,9 +129,9 @@ function ScriptGraph:load(config_root)
 			local node_info = self:_load_node_info(node)
 			local ewsnode = EWS:FlowNode(assert(node:parameter("name")), node_info.in_slot_names, node_info.out_slot_names, tonumber(assert(node:parameter("x"))), tonumber(assert(node:parameter("y"))))
 			self._nodes[assert(node:parameter("id"))] = {
-				cnode = nil,
 				info = nil,
 				node_type = nil,
+				cnode = nil,
 				node_type = assert(node:parameter("type")),
 				info = node_info,
 				cnode = ewsnode
@@ -223,8 +223,8 @@ function ScriptGraph:_load_node_info(node)
 				for inf in node_info:children() do
 					if inf:name() == "connection" then
 						table.insert(connection, {
-							id = nil,
 							desc = nil,
+							id = nil,
 							slot = nil,
 							id = assert(inf:parameter("id")),
 							slot = assert(inf:parameter("slot")),

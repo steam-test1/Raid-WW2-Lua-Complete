@@ -41,10 +41,9 @@ local UpgradeBlammFu = {
 		local dir = local_player:movement():m_head_rot():y()
 
 		if Network:is_client() then
-			managers.network:session():send_to_host("request_throw_projectile", grenade_index, pos, dir, cooking_t)
+			managers.network:session():send_to_host("request_throw_projectile", grenade_index, pos, dir, cooking_t, nil)
 		else
-			local grenade = ProjectileBase.throw_projectile(grenade_index, pos, dir, managers.network:session():local_peer():id(), cooking_t)
-
+			ProjectileBase.throw_projectile(grenade_index, pos, dir, managers.network:session():local_peer():id(), cooking_t)
 			managers.player:verify_grenade(managers.network:session():local_peer():id())
 		end
 

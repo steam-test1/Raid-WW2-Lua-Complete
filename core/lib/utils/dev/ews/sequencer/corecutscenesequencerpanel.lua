@@ -332,8 +332,8 @@ function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 	self._playhead_ornaments = {}
 	self._box_selection_ornaments = {}
 	self._audio_track = responder_map({
-		remove_clip = false,
 		default = nil,
+		remove_clip = false,
 		default = {}
 	})
 	self._key_track = EWS:SequencerTrack(self._scrolled_area)

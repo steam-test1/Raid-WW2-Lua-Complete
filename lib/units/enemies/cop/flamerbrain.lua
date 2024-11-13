@@ -74,8 +74,8 @@ function FlamerBrain:_queued_update(t, dt)
 		local area = managers.groupai:state():get_area_from_nav_seg_id(nav_seg)
 
 		table.insert(assault_candidates, {
-			pos = nil,
 			area = nil,
+			pos = nil,
 			nav_seg = nil,
 			area = area,
 			nav_seg = nav_seg,
@@ -89,8 +89,8 @@ function FlamerBrain:_queued_update(t, dt)
 				local area = managers.groupai:state():get_area_from_nav_seg_id(nav_seg)
 
 				table.insert(assault_candidates, {
-					pos = nil,
 					area = nil,
+					pos = nil,
 					nav_seg = nil,
 					area = area,
 					nav_seg = nav_seg,

@@ -589,9 +589,9 @@ function ControllerManager:save_settings(path)
 	elseif self._last_version and path then
 		local file = SystemFS:open("./" .. tostring(path), "w")
 		local data = {
+			core_version = nil,
 			version = nil,
 			_meta = "controller_settings",
-			core_version = nil,
 			core_version = self._last_core_version,
 			version = self._last_version
 		}

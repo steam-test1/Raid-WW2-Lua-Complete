@@ -61,10 +61,10 @@ function CoreCounterUnitElement:update_selected()
 		else
 			local params = {
 				to_unit = nil,
+				from_unit = nil,
 				b = 0,
 				g = 1,
 				r = 0,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			}
@@ -99,10 +99,10 @@ function CoreCounterUnitElement:draw_links_unselected(...)
 	for id, unit in pairs(self._digital_gui_units) do
 		local params = {
 			to_unit = nil,
+			from_unit = nil,
 			b = 0,
 			g = 0.5,
 			r = 0,
-			from_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit
 		}
@@ -189,8 +189,8 @@ function CoreCounterUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_unit")
 	})
 	self:_build_value_number(panel, panel_sizer, "counter_target", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specifies how many times the counter should be executed before running its on executed")
 	self:_add_help_text("Units with number gui extension can have their value updated from a counter.")
 end
@@ -240,10 +240,10 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 		if draw then
 			self:_draw_link({
 				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
 				g = 0.75,
 				r = 0.75,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -306,8 +306,8 @@ function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"set"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Amount to add, subtract or set to the counters.")
 	self:_add_help_text("This element can modify logic_counter element. Select counters to modify using insert and clicking on the elements.")
 end
@@ -343,10 +343,10 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 		if draw then
 			self:_draw_link({
 				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -448,10 +448,10 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 		if draw then
 			self:_draw_link({
 				to_unit = nil,
+				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})

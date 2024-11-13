@@ -154,10 +154,10 @@ end
 
 function RaidGUIControlTable:_create_header()
 	local header_params = {
-		h = nil,
-		text_color = nil,
-		panel = nil,
 		background_color = nil,
+		h = nil,
+		panel = nil,
+		text_color = nil,
 		layer = nil,
 		x = 0,
 		y = 0,
@@ -230,8 +230,8 @@ end
 
 function RaidGUIControlTable:_create_row_separator(y)
 	local divider_line = self._table_panel:rect({
-		h = 1,
 		w = nil,
+		h = 1,
 		color = nil,
 		x = 0,
 		y = nil,

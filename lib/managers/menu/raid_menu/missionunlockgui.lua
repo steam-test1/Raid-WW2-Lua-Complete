@@ -52,8 +52,8 @@ end
 
 function MissionUnlockGui:_layout_contents_panel()
 	local contents_panel_params = {
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
 		name = "contents_panel"
 	}
 	self._contents_panel = self._root_panel:panel(contents_panel_params)
@@ -61,10 +61,10 @@ end
 
 function MissionUnlockGui:_layout_offered_missions()
 	local offered_missions_panel_params = {
-		w = nil,
 		y = nil,
 		h = nil,
 		name = "offered_missions_panel",
+		w = nil,
 		y = MissionUnlockGui.CONTENT_Y,
 		w = MissionUnlockGui.CONTENT_WIDTH,
 		h = MissionUnlockGui.CONTENT_HEIGHT
@@ -89,16 +89,16 @@ function MissionUnlockGui:_layout_offered_missions()
 		end
 
 		local offered_mission_params = {
-			mission = nil,
 			on_menu_move = nil,
 			on_click_callback = nil,
+			mission = nil,
 			name = nil,
 			name = "offered_mission_" .. tostring(i),
 			mission = pending_missions[i],
 			on_click_callback = callback(self, self, "on_mission_chosen"),
 			on_menu_move = {
-				left = nil,
 				right = nil,
+				left = nil,
 				left = left_move,
 				right = right_move
 			}
@@ -123,10 +123,10 @@ end
 
 function MissionUnlockGui:_layout_unlock_button()
 	local unlock_button_params = {
-		text = nil,
 		on_click_callback = nil,
 		layer = 1,
 		name = "unlock_button",
+		text = nil,
 		text = self:translate("mission_unlock_button_text", true),
 		on_click_callback = callback(self, self, "show_unlock_confirmation_prompt")
 	}
@@ -169,11 +169,11 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		layer = 1,
-		halign = "scale",
 		valign = "scale",
-		color = nil,
 		name = "video_background",
+		color = nil,
+		halign = "scale",
+		layer = 1,
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
@@ -196,13 +196,13 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
+		color = nil,
+		font_size = nil,
+		name = "press_any_key_prompt",
 		text = nil,
 		layer = nil,
 		alpha = 0,
 		font = nil,
-		font_size = nil,
-		color = nil,
-		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -427,8 +427,8 @@ function MissionUnlockGui:_bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
 		controller = nil,
+		keyboard = nil,
 		controller = {
 			"menu_legend_back"
 		},

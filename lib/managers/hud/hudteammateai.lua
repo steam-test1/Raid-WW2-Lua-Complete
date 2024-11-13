@@ -58,13 +58,13 @@ end
 
 function HUDTeammateAI:_create_panel(teammates_panel)
 	local panel_params = {
-		visible = false,
-		valign = "top",
-		halign = "left",
 		h = nil,
 		w = nil,
 		x = nil,
 		layer = nil,
+		visible = false,
+		valign = "top",
+		halign = "left",
 		x = HUDTeammateAI.DEFAULT_X,
 		w = teammates_panel:w(),
 		h = HUDTeammateAI.DEFAULT_H,
@@ -75,11 +75,11 @@ end
 
 function HUDTeammateAI:_create_left_panel()
 	local left_panel_params = {
-		w = nil,
 		h = nil,
 		y = 0,
 		x = 0,
 		name = "left_panel",
+		w = nil,
 		w = HUDTeammateAI.LEFT_PANEL_W,
 		h = self._object:h()
 	}
@@ -88,11 +88,11 @@ end
 
 function HUDTeammateAI:_create_status_panel()
 	local status_panel_params = {
-		w = nil,
 		h = nil,
 		y = 0,
 		x = 0,
 		name = "status_panel",
+		w = nil,
 		w = self._left_panel:w(),
 		h = self._left_panel:h()
 	}
@@ -103,11 +103,11 @@ function HUDTeammateAI:_create_nationality_icon()
 	local nationality = "german"
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 	local nationality_icon_params = {
-		texture = nil,
-		valign = "center",
-		halign = "center",
-		texture_rect = nil,
 		name = "nationality_icon",
+		texture_rect = nil,
+		valign = "center",
+		texture = nil,
+		halign = "center",
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
@@ -119,20 +119,20 @@ end
 
 function HUDTeammateAI:_create_interaction_meter()
 	local interaction_meter_panel_params = {
-		alpha = 0,
-		valign = "center",
 		layer = 4,
-		halign = "left",
-		name = "interaction_meter_panel"
+		name = "interaction_meter_panel",
+		valign = "center",
+		alpha = 0,
+		halign = "left"
 	}
 	self._interaction_meter_panel = self._status_panel:panel(interaction_meter_panel_params)
 	local interaction_meter_background_params = {
-		texture = nil,
-		valign = "scale",
 		layer = 1,
-		halign = "scale",
-		texture_rect = nil,
 		name = "interaction_meter_background",
+		texture_rect = nil,
+		valign = "scale",
+		texture = nil,
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_BG].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_BG].texture_rect
 	}
@@ -142,17 +142,17 @@ function HUDTeammateAI:_create_interaction_meter()
 	interaction_meter_background:set_center_y(self._interaction_meter_panel:h() / 2)
 
 	local interaction_meter_params = {
-		texture = nil,
-		valign = "scale",
+		position_z = 0,
 		layer = 2,
+		valign = "scale",
 		halign = "scale",
 		h = nil,
 		w = nil,
-		name = "interaction_meter",
-		position_z = 0,
 		render_template = "VertexColorTexturedRadial",
+		name = "interaction_meter",
 		texture_rect = nil,
 		color = nil,
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.INTERACTION_METER_FILL),
@@ -172,22 +172,22 @@ end
 
 function HUDTeammateAI:_create_timer()
 	local timer_panel_params = {
-		alpha = 0,
-		valign = "center",
 		layer = 5,
-		halign = "left",
 		y = 0,
 		x = 0,
-		name = "timer_panel"
+		name = "timer_panel",
+		valign = "center",
+		alpha = 0,
+		halign = "left"
 	}
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
 	local timer_background_params = {
-		texture = nil,
-		valign = "scale",
 		layer = 1,
-		halign = "scale",
-		texture_rect = nil,
 		name = "timer_background",
+		texture_rect = nil,
+		valign = "scale",
+		texture = nil,
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDTeammateAI.TIMER_BG].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.TIMER_BG].texture_rect
 	}
@@ -197,15 +197,15 @@ function HUDTeammateAI:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		texture = nil,
+		layer = 2,
 		valign = "scale",
 		halign = "scale",
 		h = nil,
 		w = nil,
-		name = "timer_bar",
 		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
 		texture_rect = nil,
-		layer = 2,
+		texture = nil,
 		texture = tweak_data.gui.icons[HUDTeammateAI.TIMER_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.TIMER_ICON),
@@ -222,14 +222,14 @@ function HUDTeammateAI:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		w = nil,
-		layer = 3,
-		h = nil,
-		y = 0,
-		x = 0,
 		name = "timer_text",
-		font_size = nil,
+		y = 0,
 		font = nil,
+		layer = 3,
+		font_size = nil,
+		h = nil,
+		w = nil,
+		x = 0,
 		text = "23",
 		vertical = "center",
 		align = "center",
@@ -247,12 +247,12 @@ end
 
 function HUDTeammateAI:_create_dead_icon()
 	local dead_icon_params = {
-		texture = nil,
-		valign = "center",
 		alpha = 0,
-		halign = "center",
-		texture_rect = nil,
 		name = "dead_icon",
+		texture_rect = nil,
+		valign = "center",
+		texture = nil,
+		halign = "center",
 		texture = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture_rect
 	}
@@ -264,12 +264,12 @@ end
 
 function HUDTeammateAI:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
-		texture = nil,
-		valign = "center",
 		alpha = 0,
-		halign = "center",
-		texture_rect = nil,
 		name = "mounted_weapon_icon",
+		texture_rect = nil,
+		valign = "center",
+		texture = nil,
+		halign = "center",
 		texture = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture_rect
 	}
@@ -281,11 +281,11 @@ end
 
 function HUDTeammateAI:_create_right_panel()
 	local right_panel_params = {
-		w = nil,
 		h = nil,
 		y = 0,
 		x = nil,
 		name = "right_panel",
+		w = nil,
 		x = HUDTeammateAI.RIGHT_PANEL_X,
 		w = self._object:w() - HUDTeammateAI.RIGHT_PANEL_X,
 		h = self._object:h()
@@ -295,13 +295,13 @@ end
 
 function HUDTeammateAI:_create_player_name()
 	local player_name_params = {
-		w = nil,
-		h = nil,
-		y = 0,
-		x = 0,
 		name = "player_name",
-		font_size = nil,
+		y = 0,
 		font = nil,
+		font_size = nil,
+		h = nil,
+		w = nil,
+		x = 0,
 		text = "TEST",
 		vertical = "center",
 		align = "left",

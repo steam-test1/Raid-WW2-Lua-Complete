@@ -13,11 +13,11 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 	self._data = data
 	local font, font_size = self:_get_font_desc()
 	self._object = self._panel:panel({
-		x = nil,
-		y = nil,
+		name = nil,
 		h = nil,
 		w = nil,
-		name = nil,
+		y = nil,
+		x = nil,
 		name = "list_item_object_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -25,16 +25,16 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		h = params.h
 	})
 	self._item_label = self._object:label({
-		font = nil,
-		text = nil,
-		y = 0,
+		name = nil,
 		vertical = "center",
 		h = nil,
 		w = nil,
-		name = nil,
+		y = 0,
 		x = 32,
 		color = nil,
 		font_size = nil,
+		font = nil,
+		text = nil,
 		name = "list_item_label_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -44,14 +44,14 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey
 	})
 	self._item_background = self._object:rect({
+		name = nil,
+		color = nil,
+		h = nil,
+		w = nil,
+		y = 1,
 		x = 0,
 		layer = nil,
 		visible = false,
-		color = nil,
-		y = 1,
-		h = nil,
-		w = nil,
-		name = nil,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
@@ -59,13 +59,13 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		layer = self._item_label:layer() - 1
 	})
 	self._item_highlight_marker = self._object:rect({
-		x = 0,
-		y = 1,
-		visible = false,
+		name = nil,
 		color = nil,
 		h = nil,
 		w = 3,
-		name = nil,
+		y = 1,
+		x = 0,
+		visible = false,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_red
@@ -76,13 +76,13 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		local text_rect = ico_locker.texture_rect
 
 		self._object:image({
-			x = nil,
-			y = nil,
-			texture_rect = nil,
+			name = "locker_icon",
 			texture = nil,
 			h = nil,
 			w = nil,
-			name = "locker_icon",
+			y = nil,
+			x = nil,
+			texture_rect = nil,
 			x = self._object:right() - 74,
 			y = self._object:h() / 2 - text_rect[4] / 2,
 			w = text_rect[3],

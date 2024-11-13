@@ -116,16 +116,16 @@ end
 
 function RaidGUIControlListItemOperations:_layout_operation_name(params, data)
 	local raid_name_params = {
-		name = nil,
+		font = nil,
 		font_size = nil,
-		vertical = "center",
 		color = nil,
+		text = nil,
+		name = nil,
+		vertical = "center",
 		h = nil,
 		w = nil,
 		y = 0,
 		x = nil,
-		font = nil,
-		text = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		w = params.w,
@@ -154,8 +154,8 @@ end
 
 function RaidGUIControlListItemOperations:_layout_breadcrumb()
 	local breadcrumb_params = {
-		category = nil,
 		identifiers = nil,
+		category = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

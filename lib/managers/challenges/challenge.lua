@@ -13,13 +13,8 @@ function Challenge:init(challenge_category, challenge_id, tasks, completion_call
 	self._state = Challenge.STATE_INACTIVE
 	self._completion_callback = completion_callback
 	self._data = challenge_data
-	self._tasks = {}
 
-	for index, task in pairs(tasks) do
-		local task = ChallengeTask.create(task.type, challenge_category, challenge_id, task)
-
-		table.insert(self._tasks, task)
-	end
+	self:set_tasks(tasks)
 end
 
 function Challenge:setup()
@@ -73,8 +68,22 @@ function Challenge:reset()
 	end
 end
 
+function Challenge:set_tasks(tasks)
+	self._tasks = {}
+
+	for _, task_data in pairs(tasks) do
+		local task = ChallengeTask.create(task_data.type, self._category, self._id, task_data)
+
+		table.insert(self._tasks, task)
+	end
+end
+
 function Challenge:tasks()
 	return self._tasks
+end
+
+function Challenge:set_data(challenge_data)
+	self._data = challenge_data
 end
 
 function Challenge:data()

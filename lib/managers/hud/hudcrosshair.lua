@@ -45,11 +45,11 @@ function HUDCrosshair:set_crosshair_type(type_id)
 			end
 
 			local icon = self._object:bitmap({
-				layer = 1,
-				alpha = nil,
 				color = nil,
 				texture_rect = nil,
 				texture = nil,
+				layer = 1,
+				alpha = nil,
 				texture = gui.texture,
 				texture_rect = gui.texture_rect,
 				color = gui.color or tweak_data.gui.colors.raid_white,
@@ -63,11 +63,11 @@ function HUDCrosshair:set_crosshair_type(type_id)
 
 	if not not self._tweak_data.core_dot then
 		self._core_dot = self._object:bitmap({
-			layer = 1,
-			alpha = nil,
 			color = nil,
 			texture_rect = nil,
 			texture = nil,
+			layer = 1,
+			alpha = nil,
 			texture = tweak_data.gui.icons[self._tweak_data.core_dot].texture,
 			texture_rect = tweak_data.gui.icons[self._tweak_data.core_dot].texture_rect,
 			color = tweak_data.gui.colors.raid_white,

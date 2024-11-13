@@ -560,14 +560,14 @@ function CoreAreaHubElement:_altitude_ctrlr(panel, name, value, type, sizer)
 
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
 	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_altitude_text"), {
-		ctrl = nil,
 		type = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})
 	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "set_altitude_text"), {
-		ctrl = nil,
 		type = nil,
+		ctrl = nil,
 		ctrl = ctrl,
 		type = type
 	})

@@ -10,8 +10,8 @@ function ElementUnitSequenceTrigger:init(...)
 	if not self._values.sequence_list and self._values.sequence then
 		self._values.sequence_list = {
 			{
-				sequence = nil,
 				unit_id = nil,
+				sequence = nil,
 				unit_id = self._values.unit_id,
 				sequence = self._values.sequence
 			}

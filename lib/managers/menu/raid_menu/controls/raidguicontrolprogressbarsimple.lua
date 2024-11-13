@@ -26,9 +26,9 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_background_bar(...)
 	local background_bar_params = {
-		center = nil,
 		y = 0,
 		x = 0,
+		center = nil,
 		h = nil,
 		color = nil,
 		w = nil,
@@ -49,21 +49,21 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 	local foreground_panel_params = {
-		h = nil,
 		y = 0,
 		w = nil,
 		x = 0,
 		layer = nil,
 		name = "foreground_panel",
+		h = nil,
 		w = self._background:w(),
 		h = self._object:h(),
 		layer = self._object:layer() + 10
 	}
 	self._foreground = self._object:panel(foreground_panel_params)
 	local foreground_image_params = {
-		center = nil,
 		y = 0,
 		x = 0,
+		center = nil,
 		h = nil,
 		color = nil,
 		w = nil,

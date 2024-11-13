@@ -75,15 +75,15 @@ function CharacterCreationGui:_layout()
 	self._nationality_screen_controls = {}
 
 	self._root_panel:label({
-		x = 0,
-		name = "subtitle_profiles",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 38,
 		w = 416,
 		y = 96,
+		x = 0,
+		name = "subtitle_profiles",
+		color = nil,
 		text = self:translate("character_creation_subtitle", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_38,
 		font_size = tweak_data.gui.font_sizes.size_38,
@@ -91,15 +91,15 @@ function CharacterCreationGui:_layout()
 	})
 
 	local subtitle_class = self._root_panel:label({
-		x = 0,
-		name = "subtitle_small_profile_class",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 24,
 		w = 416,
 		y = 144,
+		x = 0,
+		name = "subtitle_small_profile_class",
+		color = nil,
 		text = self:translate("character_creation_subtitle_class", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -109,15 +109,15 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, subtitle_class)
 
 	local subtitle_nationality = self._root_panel:label({
-		x = 0,
-		name = "subtitle_small_profile_nationality",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 24,
 		w = 416,
 		y = 144,
+		x = 0,
+		name = "subtitle_small_profile_nationality",
+		color = nil,
 		text = self:translate("character_creation_subtitle_nationality", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -127,12 +127,7 @@ function CharacterCreationGui:_layout()
 	table.insert(self._nationality_screen_controls, subtitle_nationality)
 
 	self._class_list = self._root_panel:list_active({
-		x = 0,
-		on_item_double_clicked_callback = nil,
-		name = "class_list",
-		on_item_clicked_callback = nil,
 		on_item_selected_callback = nil,
-		item_class = nil,
 		data_source_callback = nil,
 		vertical_spacing = 2,
 		item_h = 96,
@@ -140,6 +135,11 @@ function CharacterCreationGui:_layout()
 		h = 384,
 		w = 416,
 		y = 224,
+		x = 0,
+		on_item_double_clicked_callback = nil,
+		name = "class_list",
+		on_item_clicked_callback = nil,
+		item_class = nil,
 		item_class = RaidGUIControlListItemCharacterCreateClass,
 		on_item_clicked_callback = callback(self, self, "_on_class_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -150,12 +150,7 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._class_list)
 
 	self._nation_list = self._root_panel:list_active({
-		x = 0,
-		on_item_double_clicked_callback = nil,
-		name = "nation_list",
-		on_item_clicked_callback = nil,
 		on_item_selected_callback = nil,
-		item_class = nil,
 		data_source_callback = nil,
 		vertical_spacing = 2,
 		item_h = 96,
@@ -163,6 +158,11 @@ function CharacterCreationGui:_layout()
 		h = 384,
 		w = 416,
 		y = 224,
+		x = 0,
+		on_item_double_clicked_callback = nil,
+		name = "nation_list",
+		on_item_clicked_callback = nil,
+		item_class = nil,
 		item_class = RaidGUIControlListItemCharacterCreateNation,
 		on_item_clicked_callback = callback(self, self, "_on_nation_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -174,15 +174,15 @@ function CharacterCreationGui:_layout()
 
 	local list_bottom = self._class_list:bottom()
 	local your_selection = self._root_panel:label({
-		x = 0,
-		name = "label_your_selection",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 24,
 		w = 256,
 		y = nil,
+		x = 0,
+		name = "label_your_selection",
+		color = nil,
 		y = list_bottom + 64,
 		text = self:translate("character_creation_your_selection", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
@@ -192,12 +192,12 @@ function CharacterCreationGui:_layout()
 	local icon_data = tweak_data.gui.icons.character_creation_1_large
 	local tex_rect = icon_data.texture_rect
 	self._number_1 = self._root_panel:image({
+		w = nil,
+		y = nil,
 		x = 0,
 		texture = nil,
 		texture_rect = nil,
 		h = nil,
-		w = nil,
-		y = nil,
 		y = your_selection:bottom() + 32,
 		w = tex_rect[3],
 		h = tex_rect[4],
@@ -205,15 +205,15 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._class_label = self._root_panel:label({
-		x = nil,
-		name = "class_label",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 42,
 		w = 160,
 		y = nil,
+		x = nil,
+		name = "class_label",
+		color = nil,
 		x = self._number_1:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate(tweak_data.skilltree.classes[self._selected_class].name_id, true),
@@ -224,12 +224,12 @@ function CharacterCreationGui:_layout()
 	icon_data = tweak_data.gui.icons.character_creation_2_small
 	tex_rect = icon_data.texture_rect
 	self._number_2 = self._root_panel:image({
+		w = nil,
+		y = nil,
 		x = nil,
 		texture = nil,
 		texture_rect = nil,
 		h = nil,
-		w = nil,
-		y = nil,
 		x = CharacterCreationGui.STEP_TWO_INDICATOR_DEFAULT_X,
 		y = your_selection:bottom() + 35,
 		w = tex_rect[3],
@@ -238,15 +238,15 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._nationality_label = self._root_panel:label({
-		x = nil,
-		name = "nationality_label",
-		color = nil,
 		font_size = nil,
 		font = nil,
 		text = nil,
 		h = 42,
 		w = 256,
 		y = nil,
+		x = nil,
+		name = "nationality_label",
+		color = nil,
 		x = self._number_2:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate("character_profile_creation_" .. self._selected_nation, true),
@@ -261,25 +261,25 @@ function CharacterCreationGui:_layout()
 	self._nationality_label:set_x(self._number_2:right() + 10)
 
 	self._next_button = self._root_panel:short_primary_button({
+		w = 192,
+		y = nil,
 		x = 0,
 		layer = nil,
 		name = "next_button",
 		on_click_callback = nil,
 		text = nil,
-		w = 192,
-		y = nil,
 		y = list_bottom + 224,
 		text = self:translate("character_profile_next_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_next")
 	})
 	self._right_side_info_class = self._root_panel:create_custom_control(RaidGUIControlClassDescription, {
-		x = 1308,
-		visible = false,
-		name = "right_side_info_panel",
-		h = 720,
 		w = 516,
-		y = 0
+		y = 0,
+		x = 1308,
+		name = "right_side_info_panel",
+		visible = false,
+		h = 720
 	}, {
 		class = nil
 	})
@@ -289,12 +289,12 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._right_side_info_class)
 
 	self._right_side_info_nationality = self._root_panel:create_custom_control(RaidGUIControlNationalityDescription, {
-		x = 1308,
-		visible = false,
-		name = "right_side_info_panel",
-		h = 620,
 		w = 480,
-		y = 0
+		y = 0,
+		x = 1308,
+		name = "right_side_info_panel",
+		visible = false,
+		h = 620
 	}, {
 		class = nil
 	})
@@ -404,8 +404,8 @@ function CharacterCreationGui:_data_source_nation_list()
 		local nation_text = managers.localization:to_upper_text("menu_" .. nationality)
 
 		table.insert(nationalities, {
-			text = nil,
 			value = nil,
+			text = nil,
 			info = nil,
 			text = nation_text,
 			value = nationality,
@@ -495,10 +495,10 @@ function CharacterCreationGui:show_selected_character_description()
 	local right_side_info = self._current_screen == "class" and self._right_side_info_class or self._right_side_info_nationality
 
 	right_side_info:set_data({
-		level = 0,
-		class_stats = nil,
 		nationality = nil,
 		class_name = nil,
+		level = 0,
+		class_stats = nil,
 		class_name = self._selected_class,
 		nationality = self._selected_nation,
 		class_stats = managers.skilltree:calculate_stats(self._selected_class)
@@ -626,8 +626,8 @@ function CharacterCreationGui:_show_character_create_input_textbox()
 	}
 	local slot_index = managers.savefile:get_create_character_slot()
 	local params = {
-		textbox_value = nil,
 		callback_no = nil,
+		textbox_value = nil,
 		callback_yes = nil,
 		callback_yes = callback(self, self, "_callback_yes_function"),
 		callback_no = callback(self, self, "_callback_no_function"),
@@ -662,8 +662,8 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 
 	if new_profile_name == "" then
 		local params = {
-			callback_func = nil,
 			textbox_id = "dialog_err_empty_character_name",
+			callback_func = nil,
 			callback_func = callback(self, self, "_show_character_create_input_textbox")
 		}
 
@@ -672,8 +672,8 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 		return
 	elseif character_name_exists(new_profile_name) then
 		local params = {
-			callback_func = nil,
 			textbox_id = "dialog_err_duplicate_character_name",
+			callback_func = nil,
 			callback_func = callback(self, self, "_show_character_create_input_textbox")
 		}
 
@@ -787,8 +787,8 @@ function CharacterCreationGui:_load_class_default_weapons()
 		self._loading_units[unit_path] = true
 
 		managers.dyn_resource:load(IDS_UNIT, Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
-			unit_path = nil,
 			weapon_id = nil,
+			unit_path = nil,
 			weapon_factory_id = nil,
 			weapon_factory_id = weapon_factory_id,
 			unit_path = unit_path,
@@ -876,14 +876,14 @@ end
 function CharacterCreationGui:_bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_on_click_button_next")
 		},
 		{
-			callback = nil,
 			key = nil,
+			callback = nil,
 			key = Idstring("menu_controller_face_right"),
 			callback = callback(self, self, "back_pressed")
 		}
@@ -892,16 +892,16 @@ function CharacterCreationGui:_bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
 		keyboard = nil,
+		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_select"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
+				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back")
 			}
 		}

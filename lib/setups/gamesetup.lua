@@ -372,9 +372,9 @@ function GameSetup:init_game()
 
 			local level_path = "levels/" .. tostring(level)
 			local t = {
-				file_path = nil,
-				world_setting = nil,
 				file_type = "world",
+				world_setting = nil,
+				file_path = nil,
 				file_path = level_path .. "/world",
 				world_setting = world_setting
 			}

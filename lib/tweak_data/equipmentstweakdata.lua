@@ -2,6 +2,8 @@ EquipmentsTweakData = EquipmentsTweakData or class()
 
 function EquipmentsTweakData:init()
 	self.first_aid_kit = {
+		upgrade_deploy_time_multiplier = nil,
+		deploy_time = 1,
 		dummy_unit = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit_dummy",
 		description_id = "des_first_aid_kit",
 		text_id = "debug_equipment_first_aid_kit",
@@ -9,25 +11,23 @@ function EquipmentsTweakData:init()
 		use_function_name = "use_first_aid_kit",
 		visual_object = "g_firstaidbag",
 		icon = "equipment_first_aid_kit",
-		upgrade_deploy_time_multiplier = nil,
-		deploy_time = 1,
 		upgrade_deploy_time_multiplier = {
-			category = "player",
-			upgrade = "first_aid_kit_deploy_time_multiplier"
+			upgrade = "first_aid_kit_deploy_time_multiplier",
+			category = "player"
 		}
 	}
 	self.specials = {
 		planks = {
+			transfer_quantity = 4,
 			text_id = "debug_equipment_stash_planks",
 			icon = "equipment_planks",
-			sync_possession = true,
-			transfer_quantity = 4
+			sync_possession = true
 		},
 		boards = {
+			transfer_quantity = 4,
 			text_id = "hud_equipment_boards",
 			icon = "equipment_planks",
-			sync_possession = true,
-			transfer_quantity = 4
+			sync_possession = true
 		},
 		crowbar = {
 			text_id = "hud_equipment_crowbar",
@@ -39,33 +39,33 @@ function EquipmentsTweakData:init()
 	self.specials.crowbar_stack.transfer_quantity = 4
 	self.specials.dynamite = {
 		transfer_quantity = 99,
-		icon = "equipment_panel_dynamite_stick",
-		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
 		quantity = 1,
-		max_quantity = 99
+		max_quantity = 99,
+		icon = "equipment_panel_dynamite_stick",
+		sync_possession = true
 	}
 	self.specials.dynamite_x5 = {
 		transfer_quantity = 5,
-		icon = "equipment_panel_dynamite_stick",
-		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
 		quantity = 5,
-		max_quantity = 5
+		max_quantity = 5,
+		icon = "equipment_panel_dynamite_stick",
+		sync_possession = true
 	}
 	self.specials.dynamite_x4 = {
 		transfer_quantity = 4,
-		icon = "equipment_panel_dynamite_stick",
-		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
 		quantity = 4,
-		max_quantity = 4
+		max_quantity = 4,
+		icon = "equipment_panel_dynamite_stick",
+		sync_possession = true
 	}
 	self.specials.dynamite_x10 = {
+		quantity = 10,
 		text_id = "hud_equipment_dynamite",
 		icon = "equipment_panel_dynamite_stick",
-		sync_possession = true,
-		quantity = 10
+		sync_possession = true
 	}
 	self.specials.dynamite_bag = {
 		text_id = "hud_equipment_dynamite_bag",
@@ -94,11 +94,11 @@ function EquipmentsTweakData:init()
 	}
 	self.specials.gas_x4 = {
 		transfer_quantity = 4,
-		icon = "equipment_panel_fuel_full",
-		sync_possession = true,
 		text_id = "hud_equipment_fuel_canister",
 		quantity = 1,
-		max_quantity = 4
+		max_quantity = 4,
+		icon = "equipment_panel_fuel_full",
+		sync_possession = true
 	}
 	self.specials.safe_key = {
 		text_id = "hud_safe_key",
@@ -142,11 +142,11 @@ function EquipmentsTweakData:init()
 	}
 	self.specials.radio_parts = {
 		transfer_quantity = 10,
-		icon = "pd2_c4",
-		sync_possession = true,
 		text_id = "hud_equipment_radio_parts",
 		quantity = 1,
-		max_quantity = 10
+		max_quantity = 10,
+		icon = "pd2_c4",
+		sync_possession = true
 	}
 	self.specials.blacksmith_tong = {
 		text_id = "hud_equipment_blacksmith_tong",
@@ -194,11 +194,11 @@ function EquipmentsTweakData:init()
 		sync_possession = true
 	}
 	self.specials.blow_torch_fuel = {
-		icon = "equipment_blow_torch_fuel",
-		sync_possession = true,
 		text_id = "hud_equipment_blow_torch_fuel",
 		quantity = 2,
-		max_quantity = 2
+		max_quantity = 2,
+		icon = "equipment_blow_torch_fuel",
+		sync_possession = true
 	}
 	self.specials.safe_keychain = {
 		text_id = "hud_equipment_safe_keychain",
@@ -222,19 +222,19 @@ function EquipmentsTweakData:init()
 	}
 	self.specials.landmine = {
 		transfer_quantity = 4,
-		icon = "equipment_panel_cvy_landimine",
-		sync_possession = true,
 		text_id = "hud_equipment_landmine",
 		quantity = 1,
-		max_quantity = 4
+		max_quantity = 4,
+		icon = "equipment_panel_cvy_landimine",
+		sync_possession = true
 	}
 	self.specials.scrap_parts = {
 		transfer_quantity = 0,
-		icon = "equipment_panel_tools",
-		sync_possession = true,
 		text_id = "hud_equipment_scrap_parts",
 		quantity = 1,
-		max_quantity = 100
+		max_quantity = 100,
+		icon = "equipment_panel_tools",
+		sync_possession = true
 	}
 	self.specials.fuel_canister = {
 		text_id = "hud_equipment_fuel_canister",
@@ -282,17 +282,17 @@ function EquipmentsTweakData:init()
 		sync_possession = true
 	}
 	self.max_amount = {
-		ecm_jammer = 2,
-		doctor_bag = 2,
-		ammo_bag = 2,
-		asset_grenade_crate = 3,
-		asset_sentry_gun = 4,
-		first_aid_kit = 14,
-		asset_doctor_bag = 3,
 		asset_ammo_bag = 4,
 		grenades = 4,
 		trip_mine = 6,
-		sentry_gun = 2
+		sentry_gun = 2,
+		ecm_jammer = 2,
+		doctor_bag = 2,
+		ammo_bag = 2,
+		asset_doctor_bag = 3,
+		asset_sentry_gun = 4,
+		asset_grenade_crate = 3,
+		first_aid_kit = 14
 	}
 	self.class_name_to_deployable_id = {
 		FirstAidKitBase = "first_aid_kit",

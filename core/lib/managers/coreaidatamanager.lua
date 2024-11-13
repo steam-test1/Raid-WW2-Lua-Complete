@@ -48,10 +48,10 @@ function AiDataManager:add_patrol_point(name, unit)
 	end
 
 	local t = {
-		rotation = nil,
-		position = nil,
 		unit_id = nil,
 		unit = nil,
+		rotation = nil,
+		position = nil,
 		position = unit:position(),
 		rotation = unit:rotation(),
 		unit = unit,

@@ -55,12 +55,12 @@ ElementNavLink._HASTES = {
 	"run"
 }
 ElementNavLink._DEFAULT_VALUES = {
+	interval = 3,
 	path_style = 1,
 	ai_group = 1,
 	interaction_voice = 1,
 	chance_inc = 0,
-	base_chance = 1,
-	interval = 3
+	base_chance = 1
 }
 
 function ElementNavLink:init(...)
@@ -307,26 +307,26 @@ function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		followup_SO = nil,
 		interrupt_dis = nil,
-		interaction_voice = nil,
-		type = "act",
-		element = nil,
-		interrupt_health = nil,
-		scan = nil,
-		haste = nil,
-		attitude = nil,
-		pose = nil,
-		rot = nil,
+		path_style = nil,
 		pos = nil,
 		stance = nil,
+		rot = nil,
+		fail_clbk = nil,
+		verification_clbk = nil,
+		attitude = nil,
+		pose = nil,
+		scan = nil,
 		forced = nil,
 		trigger_on = nil,
-		path_style = nil,
-		verification_clbk = nil,
-		complete_clbk = nil,
-		fail_clbk = nil,
 		action_start_clbk = nil,
+		followup_SO = nil,
+		type = "act",
+		element = nil,
+		complete_clbk = nil,
+		interaction_voice = nil,
+		haste = nil,
+		interrupt_health = nil,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -351,16 +351,16 @@ function ElementNavLink:get_objective(instigator)
 
 	if self._values.so_action then
 		action = {
-			blocks = nil,
 			body_part = 1,
 			variant = nil,
 			type = "act",
 			align_sync = true,
 			needs_full_blend = true,
+			blocks = nil,
 			variant = self._values.so_action,
 			blocks = {
-				action = -1,
 				walk = -1,
+				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				light_hurt = -1
@@ -454,8 +454,8 @@ function ElementNavLink:_administer_objective(unit, objective)
 	if objective.trigger_on == "interact" then
 		if not unit:brain():objective() then
 			local idle_objective = {
-				followup_objective = nil,
 				type = "free",
+				followup_objective = nil,
 				followup_objective = objective
 			}
 
@@ -516,8 +516,8 @@ function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 
 			if followup_element and followup_element:enabled() and weight > 0 then
 				table.insert(pool, {
-					element = nil,
 					weight = nil,
+					element = nil,
 					element = followup_element,
 					weight = weight
 				})

@@ -22,69 +22,69 @@ function EnvironmentLayer:init(owner)
 	self._wind_speeds = {}
 
 	table.insert(self._wind_speeds, {
+		speed = 0,
 		description = "Calm",
-		beaufort = 0,
-		speed = 0
+		beaufort = 0
 	})
 	table.insert(self._wind_speeds, {
+		speed = 0.3,
 		description = "Light air",
-		beaufort = 1,
-		speed = 0.3
+		beaufort = 1
 	})
 	table.insert(self._wind_speeds, {
+		speed = 1.6,
 		description = "Light breeze",
-		beaufort = 2,
-		speed = 1.6
+		beaufort = 2
 	})
 	table.insert(self._wind_speeds, {
+		speed = 3.4,
 		description = "Gentle breeze",
-		beaufort = 3,
-		speed = 3.4
+		beaufort = 3
 	})
 	table.insert(self._wind_speeds, {
+		speed = 5.5,
 		description = "Moderate breeze",
-		beaufort = 4,
-		speed = 5.5
+		beaufort = 4
 	})
 	table.insert(self._wind_speeds, {
+		speed = 8,
 		description = "Fresh breeze",
-		beaufort = 5,
-		speed = 8
+		beaufort = 5
 	})
 	table.insert(self._wind_speeds, {
+		speed = 10.8,
 		description = "Strong breeze",
-		beaufort = 6,
-		speed = 10.8
+		beaufort = 6
 	})
 	table.insert(self._wind_speeds, {
+		speed = 13.9,
 		description = "Near Gale",
-		beaufort = 7,
-		speed = 13.9
+		beaufort = 7
 	})
 	table.insert(self._wind_speeds, {
+		speed = 17.2,
 		description = "Fresh Gale",
-		beaufort = 8,
-		speed = 17.2
+		beaufort = 8
 	})
 	table.insert(self._wind_speeds, {
+		speed = 20.8,
 		description = "Strong Gale",
-		beaufort = 9,
-		speed = 20.8
+		beaufort = 9
 	})
 	table.insert(self._wind_speeds, {
+		speed = 24.5,
 		description = "Whole storm",
-		beaufort = 10,
-		speed = 24.5
+		beaufort = 10
 	})
 	table.insert(self._wind_speeds, {
+		speed = 28.5,
 		description = "Violent storm",
-		beaufort = 11,
-		speed = 28.5
+		beaufort = 11
 	})
 	table.insert(self._wind_speeds, {
+		speed = 32.7,
 		description = "Hurricane",
-		beaufort = 12,
-		speed = 32.7
+		beaufort = 12
 	})
 
 	self._draw_wind = false
@@ -287,12 +287,12 @@ function EnvironmentLayer:save()
 	end
 
 	local wind = {
-		tilt_var = nil,
-		speed = nil,
-		angle_var = nil,
 		tilt = nil,
 		angle = nil,
+		speed = nil,
 		speed_variation = nil,
+		tilt_var = nil,
+		angle_var = nil,
 		angle = self._wind_rot:yaw(),
 		angle_var = self._wind_dir_var,
 		tilt = self._wind_rot:roll(),
@@ -301,12 +301,12 @@ function EnvironmentLayer:save()
 		speed_variation = self._wind_speed_variation
 	}
 	local data = {
-		dome_occ_shapes = nil,
 		cubemap_gizmos = nil,
 		effects = nil,
 		environment_values = nil,
 		wind = nil,
 		environment_areas = nil,
+		dome_occ_shapes = nil,
 		environment_values = self._environment_values,
 		wind = wind,
 		effects = effects,
@@ -416,10 +416,10 @@ function EnvironmentLayer:_build_environment_combobox_and_list()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		panel = nil,
 		value = nil,
-		sizer = nil,
+		name = "World Default:",
 		value_changed_cb = nil,
 		options = nil,
-		name = "World Default:",
+		sizer = nil,
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
@@ -445,12 +445,12 @@ function EnvironmentLayer:on_environment_list_changed()
 end
 
 function EnvironmentLayer:build_panel(notebook)
+	cat_print("editor", "EnvironmentLayer:build_panel")
 	EnvironmentLayer.super.build_panel(self, notebook, {
 		units_noteboook_proportion = 0,
 		units_notebook_min_size = nil,
-		units_notebook_min_size = Vector3(1, 165, 0)
+		units_notebook_min_size = Vector3(32, 200, 0)
 	})
-	cat_print("editor", "EnvironmentLayer:build_panel")
 
 	self._env_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
 	self._env_sizer = EWS:BoxSizer("VERTICAL")
@@ -477,10 +477,10 @@ function EnvironmentLayer:build_panel(notebook)
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
 		panel = nil,
 		value = nil,
-		sizer = nil,
+		name = "Area Environment:",
 		value_changed_cb = nil,
 		options = nil,
-		name = "Area Environment:",
+		sizer = nil,
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
@@ -1018,6 +1018,10 @@ function EnvironmentLayer:set_environment_area_parameters()
 			self._current_shape_panel:set_visible(true)
 		end
 	end
+
+	self._env_panel:layout()
+	self._ews_panel:fit_inside()
+	self._ews_panel:refresh()
 end
 
 function EnvironmentLayer:wind_description(speed)

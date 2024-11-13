@@ -911,8 +911,8 @@ end
 
 function NetworkMatchMakingPSN:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
-		key = nil,
 		comparision_type = nil,
+		key = nil,
 		value = nil,
 		key = key,
 		value = value,
@@ -938,14 +938,14 @@ function NetworkMatchMakingPSN:_filter_out_the_host(info)
 
 		if room_id ~= self._room_id then
 			table.insert(new_info.attribute_list, {
-				strings = nil,
 				numbers = nil,
+				strings = nil,
 				numbers = numbers,
 				strings = strings
 			})
 			table.insert(new_info.room_list, {
-				room_id = nil,
 				owner_id = nil,
+				room_id = nil,
 				owner_id = owner_id,
 				room_id = room_id
 			})
@@ -1027,14 +1027,14 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 
 						if not full and not closed and attributes.numbers[self.GAME_VERSION] == self:_game_version() then
 							table.insert(info.attribute_list, {
-								strings = nil,
 								numbers = nil,
+								strings = nil,
 								numbers = numbers,
 								strings = strings
 							})
 							table.insert(info.room_list, {
-								room_id = nil,
 								owner_id = nil,
+								room_id = nil,
 								owner_id = owner_id,
 								room_id = room_id
 							})
@@ -1082,8 +1082,8 @@ end
 function NetworkMatchMakingPSN:search_lobby(friends_only)
 	self._search_friends_only = friends_only
 	local table_description = {
-		strings = nil,
 		numbers = nil,
+		strings = nil,
 		numbers = {
 			1,
 			2,
@@ -1232,7 +1232,7 @@ function NetworkMatchMakingPSN:get_all_players_info()
 
 			if peer_data then
 				local peer_level = peer_data:level() or "-"
-				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or "-"
+				local peer_class = peer_data:class() or "-"
 				local peer_name = peer_data:name() or ""
 				local peer_nationality = peer_data:nationality() or ""
 				players_data = players_data .. peer_level .. "," .. peer_class .. "," .. peer_name .. "," .. peer_nationality .. ";"
@@ -1344,8 +1344,8 @@ function NetworkMatchMakingPSN:_set_attributes(settings)
 		S2
 	}
 	local attributes = {
-		strings = nil,
 		numbers = nil,
+		strings = nil,
 		numbers = numbers,
 		strings = strings
 	}
@@ -2019,8 +2019,8 @@ function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 			if not full and not closed and attributes.numbers[self.GAME_VERSION] == self:_game_version() then
 				table.insert(info.attribute_list, attributes)
 				table.insert(info.room_list, {
-					room_id = nil,
 					owner_id = nil,
+					room_id = nil,
 					owner_id = owner_id,
 					room_id = room_id
 				})
@@ -2389,14 +2389,14 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 
 	local error_texts = {
 		["8002231d"] = nil,
+		["80022328"] = "dialog_err_room_allready_joined",
+		["80550d13"] = "dialog_err_room_no_longer_exists",
+		["80550d15"] = "dialog_err_room_no_longer_exists",
 		["80550d19"] = "dialog_err_room_is_full",
 		["8002233a"] = nil,
 		["80550D15"] = "dialog_err_failed_joining_lobby",
 		["80550C3A"] = "dialog_err_failed_joining_lobby",
 		["80550c30"] = "dialog_err_room_no_longer_exists",
-		["80022328"] = "dialog_err_room_allready_joined",
-		["80550d13"] = "dialog_err_room_no_longer_exists",
-		["80550d15"] = "dialog_err_room_no_longer_exists",
 		["8002233a"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
 		["8002231d"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil
 	}
@@ -2450,11 +2450,11 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 	end
 
 	PSN:send_message_gui({
-		attachment = nil,
 		type = "INVITE",
 		list_npid = nil,
 		body = nil,
 		subject = nil,
+		attachment = nil,
 		attachment = {
 			version = nil,
 			room_id = nil,

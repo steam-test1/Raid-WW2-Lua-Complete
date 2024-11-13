@@ -82,6 +82,12 @@ function CopBase:_init_spawn_gear()
 		return
 	end
 
+	if not tweak_data.character.char_buff_gear then
+		Application:warn("[CopBase:_init_spawn_gear] How did this happen? There's no char buff gear tweakdata!")
+
+		return
+	end
+
 	self._gear_data = self._char_tweak.gear and deep_clone(self._char_tweak.gear) or {
 		items = nil,
 		run_char_seqs = nil,
@@ -90,7 +96,7 @@ function CopBase:_init_spawn_gear()
 	}
 	self._gear_data.spawned_gear = {}
 
-	for buff, char_gear_data in pairs(tweak_data.character.char_buff_gear or {}) do
+	for buff, char_gear_data in pairs(tweak_data.character.char_buff_gear) do
 		if managers.buff_effect:is_effect_active(buff) and char_gear_data[self._tweak_table] then
 			for bone, items in pairs(char_gear_data[self._tweak_table].items or {}) do
 				for _, item in ipairs(items or {}) do

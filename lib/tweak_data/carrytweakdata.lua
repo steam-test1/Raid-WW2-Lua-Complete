@@ -368,16 +368,16 @@ end
 
 function CarryTweakData:_init_shared_multipliers()
 	self.WEIGHT_MULTIPLIERS_SHELL = {
-		upgrade = "saboteur_shell_weight_multiplier",
-		category = "carry"
+		category = "carry",
+		upgrade = "saboteur_shell_weight_multiplier"
 	}
 	self.WEIGHT_MULTIPLIERS_CORPSE = {
-		upgrade = "predator_corpse_weight_multiplier",
-		category = "carry"
+		category = "carry",
+		upgrade = "predator_corpse_weight_multiplier"
 	}
 	self.TRHROW_MULTIPLIERS_GENERIC = {
-		upgrade = "strongback_throw_distance_multiplier",
-		category = "carry"
+		category = "carry",
+		upgrade = "strongback_throw_distance_multiplier"
 	}
 end
 

@@ -30,11 +30,11 @@ function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				to_unit = nil,
+				from_unit = nil,
 				b = 0,
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

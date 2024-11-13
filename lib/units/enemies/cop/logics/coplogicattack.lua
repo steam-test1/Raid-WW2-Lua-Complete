@@ -962,9 +962,9 @@ end
 
 function CopLogicAttack._is_threat_visible(retreat_pos, threat_pos, threat_head_pos, threat_tracker)
 	local ray_params = {
-		trace = true,
 		tracker_to = nil,
 		pos_from = nil,
+		trace = true,
 		pos_from = retreat_pos,
 		tracker_to = threat_tracker
 	}

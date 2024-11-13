@@ -28,29 +28,29 @@ function PlayerManager:init()
 	self._viewport_configs[1][1] = {
 		dimensions = nil,
 		dimensions = {
-			w = 1,
-			y = 0,
 			x = 0,
-			h = 1
+			h = 1,
+			w = 1,
+			y = 0
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = nil,
 			dimensions = {
-				w = 1,
-				y = 0,
 				x = 0,
-				h = 0.5
+				h = 0.5,
+				w = 1,
+				y = 0
 			}
 		},
 		{
 			dimensions = nil,
 			dimensions = {
-				w = 1,
-				y = 0.5,
 				x = 0,
-				h = 0.5
+				h = 0.5,
+				w = 1,
+				y = 0.5
 			}
 		}
 	}
@@ -60,12 +60,8 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
-		foxhole = "ingame_standard",
-		driving = "ingame_driving",
-		bipod = "ingame_standard",
-		carry_corpse = "ingame_standard",
-		carry = "ingame_standard",
 		incapacitated = "ingame_incapacitated",
+		foxhole = "ingame_standard",
 		tased = "ingame_electrified",
 		charging = "ingame_standard",
 		fatal = "ingame_fatal",
@@ -73,7 +69,11 @@ function PlayerManager:init()
 		bleed_out = "ingame_bleed_out",
 		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
-		freefall = "ingame_freefall"
+		freefall = "ingame_freefall",
+		driving = "ingame_driving",
+		bipod = "ingame_standard",
+		carry_corpse = "ingame_standard",
+		carry = "ingame_standard"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -90,18 +90,18 @@ end
 
 function PlayerManager:save(data)
 	local state = {
-		game_settings_permission = nil,
-		character_profile_nation = nil,
-		game_settings_team_ai = nil,
-		is_character_profile_hardcore = nil,
-		game_settings_drop_in_allowed = nil,
-		character_profile_name = nil,
 		viewed_content_updates = nil,
+		game_settings_permission = nil,
 		kit = nil,
 		game_settings_difficulty = nil,
 		customization_equiped_lower_name = nil,
 		customization_equiped_upper_name = nil,
 		customization_equiped_head_name = nil,
+		character_profile_nation = nil,
+		game_settings_team_ai = nil,
+		is_character_profile_hardcore = nil,
+		game_settings_drop_in_allowed = nil,
+		character_profile_name = nil,
 		kit = self._global.kit,
 		viewed_content_updates = self._global.viewed_content_updates,
 		character_profile_name = self:get_character_profile_name(),
@@ -152,11 +152,11 @@ end
 
 function PlayerManager:sync_save(data)
 	local state = {
+		player_mesh_suffix = nil,
+		current_sync_state = nil,
 		local_player_in_camp = nil,
 		husk_turret_data = nil,
 		husk_bipod_data = nil,
-		player_mesh_suffix = nil,
-		current_sync_state = nil,
 		current_sync_state = self._current_sync_state,
 		player_mesh_suffix = self._player_mesh_suffix,
 		husk_bipod_data = self._global.synced_bipod,
@@ -206,7 +206,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		add_coroutine = nil,
+		PART_TYPE_HEAD = nil,
 		specials = nil,
 		selections = nil,
 		selections = {},
@@ -224,7 +224,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		add_coroutine = nil,
+		PART_TYPE_HEAD = nil,
 		specials = nil,
 		selections = nil,
 		selections = {},
@@ -581,8 +581,8 @@ function PlayerManager:_internal_load()
 	end
 
 	self:_set_grenade({
-		grenade = nil,
 		amount = nil,
+		grenade = nil,
 		grenade = grenade,
 		amount = math.min(amount, self:get_max_grenades())
 	})
@@ -1086,6 +1086,8 @@ function PlayerManager:on_upgrades_changed()
 		self:replenish_player()
 		self:sync_upgrades()
 	end
+
+	MenuCallbackHandler:_update_outfit_information()
 end
 
 function PlayerManager:unaquire_equipment(upgrade, id)
@@ -1240,10 +1242,10 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 
 		if tweak_data.gui.icons[icon_id] then
 			managers.hud:add_status_effect({
-				lifetime = nil,
-				color = nil,
 				icon = nil,
 				tier = nil,
+				color = nil,
+				lifetime = nil,
 				id = nil,
 				id = upgrade,
 				tier = upgrade_level,
@@ -1282,10 +1284,10 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 
 		if tweak_data.gui.icons[icon_id] then
 			managers.hud:add_status_effect({
-				lifetime = nil,
-				color = nil,
 				icon = nil,
 				tier = nil,
+				color = nil,
+				lifetime = nil,
 				id = nil,
 				id = upgrade,
 				tier = upgrade_value[1],
@@ -1971,8 +1973,8 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 	end
 
 	self._global.synced_deployables[peer_id] = {
-		amount = nil,
 		deployable = nil,
+		amount = nil,
 		deployable = deployable,
 		amount = amount
 	}
@@ -2552,9 +2554,9 @@ function PlayerManager:set_synced_equipment_possession(peer_id, equipment, amoun
 			managers.hud:set_teammate_special_equipment_amount(character_data.panel_id, equipment, amount)
 		else
 			managers.hud:add_teammate_special_equipment(character_data.panel_id, {
-				id = nil,
 				icon = nil,
 				amount = nil,
+				id = nil,
 				id = equipment,
 				icon = icon,
 				amount = amount
@@ -2621,9 +2623,9 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 						if Network:is_server() then
 							if id == local_peer_id then
 								managers.player:add_special({
-									amount = nil,
-									transfer = true,
 									name = nil,
+									transfer = true,
+									amount = nil,
 									name = name,
 									amount = transfer_amount
 								})
@@ -2755,12 +2757,11 @@ function PlayerManager:_add_equipment(params)
 	local use_function = use_function_name or nil
 
 	table.insert(self._equipment.selections, {
-		action_timer = nil,
-		amount = nil,
 		use_function = nil,
+		action_timer = nil,
+		amount = 0,
 		equipment = nil,
 		equipment = equipment,
-		amount = Application:digest_value(0, true),
 		use_function = use_function,
 		action_timer = tweak_data.action_timer
 	})
@@ -2769,8 +2770,8 @@ function PlayerManager:_add_equipment(params)
 
 	self:update_deployable_equipment_amount_to_peers(equipment, amount)
 	managers.hud:add_item({
-		icon = nil,
 		amount = nil,
+		icon = nil,
 		amount = amount,
 		icon = icon
 	})
@@ -3133,10 +3134,10 @@ function PlayerManager:add_special(params)
 		local text = managers.localization:text(equipment.text_id)
 		local icon = equipment.icon
 		local interact_data = {
-			id = nil,
+			icon = nil,
 			duration = nil,
 			title = nil,
-			icon = nil,
+			id = nil,
 			id = "equipment_obtained_" .. name,
 			title = utf8.to_upper(managers.localization:text("hud_hint_obtained_equipment_title", {
 				EQUIPMENT = nil,
@@ -3162,9 +3163,9 @@ function PlayerManager:add_special(params)
 	end
 
 	managers.hud:add_special_equipment({
-		id = nil,
 		icon = nil,
 		amount = nil,
+		id = nil,
 		id = name,
 		icon = icon,
 		amount = quantity or equipment.transfer_quantity and 1 or nil
@@ -3290,8 +3291,8 @@ function PlayerManager:_set_grenade(params)
 	self:update_grenades_amount_to_peers(grenade, amount)
 	player:inventory():set_grenade(grenade)
 	managers.hud:set_teammate_grenades(HUDManager.PLAYER_PANEL, {
-		icon = nil,
 		amount = nil,
+		icon = nil,
 		amount = amount,
 		icon = icon
 	})
@@ -3310,15 +3311,15 @@ function PlayerManager:set_temporary_grenade(new_grenade)
 		local grenade_amount = self:get_grenade_amount(peer_id)
 		local new_grenade_amount = self:get_max_grenades(new_grenade)
 		self._grenade_overriden = {
-			grenade = nil,
 			amount = nil,
+			grenade = nil,
 			grenade = grenade,
 			amount = grenade_amount
 		}
 
 		self:_set_grenade({
-			grenade = nil,
 			amount = nil,
+			grenade = nil,
 			grenade = new_grenade,
 			amount = new_grenade_amount
 		})
@@ -3347,8 +3348,8 @@ function PlayerManager:add_grenade_amount(amount)
 
 	if self._global.synced_grenades[peer_id] then
 		local icon = tweak_data.projectiles[grenade].icon
-		gained_grenades = Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
-		amount = math.clamp(Application:digest_value(self._global.synced_grenades[peer_id].amount, false) + amount, 0, self:get_max_grenades_by_peer_id(peer_id))
+		gained_grenades = self._global.synced_grenades[peer_id].amount
+		amount = math.clamp(self._global.synced_grenades[peer_id].amount + amount, 0, self:get_max_grenades_by_peer_id(peer_id))
 		gained_grenades = amount - gained_grenades
 
 		managers.hud:set_teammate_grenades_amount(HUDManager.PLAYER_PANEL, {
@@ -3377,7 +3378,7 @@ function PlayerManager:update_grenades_to_peer(peer)
 		local grenade = self._global.synced_grenades[peer_id].grenade
 		local amount = self._global.synced_grenades[peer_id].amount
 
-		peer:send_queued_sync("sync_grenades", grenade, Application:digest_value(amount, false))
+		peer:send_queued_sync("sync_grenades", grenade, amount)
 	end
 end
 
@@ -3392,12 +3393,11 @@ function PlayerManager:set_synced_grenades(peer_id, grenade, amount)
 	Application:debug("[PlayerManager:set_synced_grenades]", peer_id, grenade, amount)
 
 	local only_update_amount = self._global.synced_grenades[peer_id] and self._global.synced_grenades[peer_id].grenade == grenade
-	local digested_amount = Application:digest_value(amount, true)
 	self._global.synced_grenades[peer_id] = {
-		grenade = nil,
 		amount = nil,
+		grenade = nil,
 		grenade = grenade,
-		amount = digested_amount
+		amount = amount
 	}
 	local character_data = managers.criminals:character_data_by_peer_id(peer_id)
 
@@ -3414,7 +3414,7 @@ end
 
 function PlayerManager:get_grenade_amount(peer_id)
 	if self._global.synced_grenades[peer_id] then
-		return Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
+		return self._global.synced_grenades[peer_id].amount
 	end
 
 	return 0
@@ -3429,6 +3429,19 @@ end
 
 function PlayerManager:get_synced_grenades(peer_id)
 	return self._global.synced_grenades[peer_id]
+end
+
+function PlayerManager:get_grenade_type(peer_id)
+	peer_id = peer_id or managers.network:session():local_peer():id()
+	local synced_grenade = self:get_synced_grenades(peer_id)
+
+	if not synced_grenade and synced_grenade.grenade then
+		return
+	end
+
+	local projectile_tweak = tweak_data.projectiles[synced_grenade.grenade]
+
+	return projectile_tweak
 end
 
 function PlayerManager:can_throw_grenade()
@@ -3621,10 +3634,10 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
-			id = nil,
-			disabled = true,
 			icon = "comm_wheel_no",
 			text_id = "",
+			disabled = true,
+			id = nil,
 			id = "carry_" .. i
 		}
 
@@ -3704,8 +3717,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 		managers.notification:add_notification({
 			text = nil,
 			duration = 2,
-			id = "cant_throw_body",
 			shelf_life = 5,
+			id = "cant_throw_body",
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -4054,8 +4067,8 @@ function PlayerManager:add_weapon_ammo_gain(name_id, amount)
 	if Application:production_build() then
 		self._debug_weapon_ammo_gains = self._debug_weapon_ammo_gains or {}
 		self._debug_weapon_ammo_gains[name_id] = self._debug_weapon_ammo_gains[name_id] or {
-			total = 0,
-			index = 0
+			index = 0,
+			total = 0
 		}
 		self._debug_weapon_ammo_gains[name_id].total = self._debug_weapon_ammo_gains[name_id].total + amount
 		self._debug_weapon_ammo_gains[name_id].index = self._debug_weapon_ammo_gains[name_id].index + 1
@@ -4117,8 +4130,8 @@ function PlayerManager:set_bipod_data_for_peer(data)
 	end
 
 	self._global.synced_bipod[data.peer_id] = {
-		body_pos = nil,
 		bipod_pos = nil,
+		body_pos = nil,
 		bipod_pos = data.bipod_pos,
 		body_pos = data.body_pos
 	}
@@ -4131,8 +4144,8 @@ end
 function PlayerManager:set_synced_bipod(peer, bipod_pos, body_pos)
 	local peer_id = peer:id()
 	self._global.synced_bipod[peer_id] = {
-		body_pos = nil,
 		bipod_pos = nil,
+		body_pos = nil,
 		bipod_pos = bipod_pos,
 		body_pos = body_pos
 	}
@@ -4162,11 +4175,11 @@ function PlayerManager:set_turret_data_for_peer(data)
 	end
 
 	self._global.synced_turret[data.peer_id] = {
-		husk_pos = nil,
-		turret_unit = nil,
 		exit_animation = nil,
 		enter_animation = nil,
 		turret_rot = nil,
+		husk_pos = nil,
+		turret_unit = nil,
 		husk_pos = data.husk_pos,
 		turret_rot = data.turret_rot,
 		enter_animation = data.enter_animation,
@@ -4182,11 +4195,11 @@ end
 function PlayerManager:set_synced_turret(peer, husk_pos, turret_rot, enter_animation, exit_animation, turret_unit)
 	local peer_id = peer:id()
 	self._global.synced_turret[peer_id] = {
-		husk_pos = nil,
-		turret_unit = nil,
 		exit_animation = nil,
 		enter_animation = nil,
 		turret_rot = nil,
+		husk_pos = nil,
+		turret_unit = nil,
 		husk_pos = husk_pos,
 		turret_rot = turret_rot,
 		enter_animation = enter_animation,
@@ -4456,8 +4469,8 @@ function PlayerManager:update_player_list(unit, health)
 	end
 
 	table.insert(self._player_list, {
-		unit = nil,
 		health = nil,
+		unit = nil,
 		unit = unit,
 		health = health
 	})

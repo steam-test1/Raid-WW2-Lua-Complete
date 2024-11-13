@@ -5,12 +5,12 @@ SpawnCivilianUnitElement = SpawnCivilianUnitElement or class(MissionElement)
 SpawnCivilianUnitElement.USES_POINT_ORIENTATION = true
 SpawnCivilianUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "civilian",
-		value = "enemy"
+		value = "enemy",
+		type = "civilian"
 	},
 	{
-		type = "civilian_spawn_state",
-		value = "state"
+		value = "state",
+		type = "civilian_spawn_state"
 	}
 }
 SpawnCivilianUnitElement._options = {
@@ -128,9 +128,9 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
 		managers.editor:add_to_world_package({
-			category = "units",
 			continent = nil,
 			name = nil,
+			category = "units",
 			name = unit_name:s(),
 			continent = self._unit:unit_data().continent
 		})
@@ -141,10 +141,10 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
-				category = "script_data",
 				continent = nil,
 				name = nil,
 				init = true,
+				category = "script_data",
 				name = file:s() .. ".sequence_manager",
 				continent = self._unit:unit_data().continent
 			})

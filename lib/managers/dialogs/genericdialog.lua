@@ -24,10 +24,10 @@ function GenericDialog:init(manager, data, is_title_outside)
 
 	self._ws = self._data.ws or manager:_get_ws()
 	self._panel_script = _G.TextBoxGui:new(self._ws, self._data.title or "", self._data.text or "", self._data, {
-		is_title_outside = nil,
 		no_close_legend = true,
-		capitalize = nil,
+		is_title_outside = nil,
 		type = nil,
+		capitalize = nil,
 		type = self._data.type or "system_menu",
 		is_title_outside = is_title_outside,
 		capitalize = self._data.capitalize

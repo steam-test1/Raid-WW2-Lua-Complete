@@ -14,15 +14,15 @@ function EditUnitTriggable:init(editor)
 	self._element_guis = {}
 	local sequence_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._triggers_params = {
-		name = "Triggers:",
+		sizer_proportions = 1,
 		tooltip = "Select a sequence that should trigger other unit sequences",
+		options = nil,
+		name = "Triggers:",
 		sorted = true,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		options = nil,
 		sizer = nil,
 		panel = nil,
-		sizer_proportions = 1,
 		panel = panel,
 		sizer = sequence_sizer,
 		options = {}
@@ -108,10 +108,10 @@ function EditUnitTriggable:build_element_gui(data)
 	sizer:add(time, 1, 0, "EXPAND")
 
 	local ctrls = {
+		trigger = nil,
 		trigger_name = nil,
 		id = nil,
 		time = nil,
-		trigger = nil,
 		id = id,
 		trigger_name = trigger_name,
 		trigger = trigger,

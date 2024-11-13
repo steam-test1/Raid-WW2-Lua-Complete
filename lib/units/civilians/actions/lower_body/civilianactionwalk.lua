@@ -8,32 +8,32 @@ CivilianActionWalk._walk_anim_velocities = {
 			walk = nil,
 			run = nil,
 			walk = {
-				bwd = 111.3,
-				fwd = 129,
 				r = 136.1,
-				l = 136.1
+				l = 136.1,
+				bwd = 111.3,
+				fwd = 129
 			},
 			run = {
-				bwd = 222,
-				fwd = 421,
 				r = 419,
-				l = 436
+				l = 436,
+				bwd = 222,
+				fwd = 421
 			}
 		},
 		hos = {
 			walk = nil,
 			run = nil,
 			walk = {
-				bwd = 170,
-				fwd = 170,
 				r = 170,
-				l = 170
+				l = 170,
+				bwd = 170,
+				fwd = 170
 			},
 			run = {
-				bwd = 222,
-				fwd = 421,
 				r = 419,
-				l = 436
+				l = 436,
+				bwd = 222,
+				fwd = 421
 			}
 		}
 	}
@@ -42,12 +42,12 @@ CivilianActionWalk._walk_anim_velocities.stand.cbt = CivilianActionWalk._walk_an
 CivilianActionWalk._anim_movement = {
 	stand = nil,
 	stand = {
+		run_stop_r = 80,
+		run_stop_l = 110,
 		run_stop_fwd = 120,
 		run_start_turn_r = nil,
 		run_start_turn_l = nil,
 		run_start_turn_bwd = nil,
-		run_stop_r = 80,
-		run_stop_l = 110,
 		run_start_turn_bwd = {
 			ds = nil,
 			ds = Vector3(49, -161, 0)

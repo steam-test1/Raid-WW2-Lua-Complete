@@ -36,11 +36,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 	end
 
 	local attack_data = {
-		attack_dir = nil,
 		attacker_unit = nil,
 		variant = "bullet",
 		result = nil,
 		pos = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,
@@ -84,11 +84,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 	end
 
 	local attack_data = {
-		attack_dir = nil,
 		attacker_unit = nil,
 		variant = "explosion",
 		result = nil,
 		pos = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,
@@ -132,11 +132,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 	end
 
 	local attack_data = {
-		attack_dir = nil,
 		attacker_unit = nil,
 		variant = "fire",
 		result = nil,
 		pos = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,
@@ -182,11 +182,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 	end
 
 	local attack_data = {
-		attack_dir = nil,
 		attacker_unit = nil,
 		variant = "melee",
 		result = nil,
 		pos = nil,
+		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,

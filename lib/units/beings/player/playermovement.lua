@@ -17,20 +17,20 @@ require("lib/units/beings/player/states/PlayerCharging")
 
 PlayerMovement = PlayerMovement or class()
 PlayerMovement._STATES = {
-	bipod = nil,
 	standard = nil,
-	driving = nil,
+	bipod = nil,
 	empty = nil,
-	parachuting = nil,
+	driving = nil,
 	carry_corpse = nil,
-	freefall = nil,
+	parachuting = nil,
 	carry = nil,
-	turret = nil,
+	freefall = nil,
 	incapacitated = nil,
-	foxhole = nil,
+	turret = nil,
 	tased = nil,
-	charging = nil,
+	foxhole = nil,
 	fatal = nil,
+	charging = nil,
 	bleed_out = nil,
 	empty = PlayerEmpty,
 	standard = PlayerStandard,
@@ -74,9 +74,9 @@ function PlayerMovement:init(unit)
 	self._m_com = math.lerp(self._m_pos, self._m_stand_pos, 0.5)
 	self._kill_overlay_t = managers.player:player_timer():time() + 5
 	self._state_data = {
-		m_newest_pos = nil,
 		in_air = false,
-		ducking = false
+		ducking = false,
+		m_newest_pos = nil
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false
@@ -88,13 +88,13 @@ function PlayerMovement:init(unit)
 	managers.hud:reset_player_state()
 
 	self._underdog_skill_data = {
-		has_dmg_mul = nil,
 		has_dmg_dampener = nil,
 		max_dis_sq = 3240000,
 		nr_enemies = 2,
 		chk_t = 6,
 		chk_interval_inactive = 1,
 		chk_interval_active = 6,
+		has_dmg_mul = nil,
 		has_dmg_dampener = managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered") or managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered_strong"),
 		has_dmg_mul = managers.player:has_category_upgrade("temporary", "dmg_multiplier_outnumbered")
 	}
@@ -860,13 +860,13 @@ end
 function PlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	data.movement = {
-		outfit_version = nil,
-		outfit = nil,
-		attentions = nil,
 		character_name = nil,
-		state_name = nil,
+		outfit_version = nil,
 		look_fwd = nil,
 		peer_id = nil,
+		state_name = nil,
+		outfit = nil,
+		attentions = nil,
 		state_name = self._current_state_name,
 		look_fwd = self._m_head_rot:y(),
 		peer_id = peer_id,

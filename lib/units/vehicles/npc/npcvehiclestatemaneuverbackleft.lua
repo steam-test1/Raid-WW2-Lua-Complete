@@ -10,30 +10,30 @@ function NpcVehicleStateManeuverBackLeft:on_enter(npc_driving_ext)
 	local delayed_tick = Application:time() + 0.5
 	self._maneuver_actions = {
 		{
+			duration = 1,
 			input = nil,
 			tick_at = nil,
-			duration = 1,
 			tick_at = delayed_tick,
 			input = {
+				handbrake = 0,
 				brake = 0,
 				steering = nil,
 				acceleration = 1,
 				gear = nil,
-				handbrake = 0,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_RIGHT,
 				gear = NpcVehicleDrivingExt.DRIVE_CONTROLS_GEAR_REVERSE
 			}
 		},
 		{
+			duration = 1,
 			input = nil,
 			tick_at = 0,
-			duration = 1,
 			input = {
+				handbrake = 0,
 				brake = 0,
 				steering = nil,
 				acceleration = 1,
 				gear = nil,
-				handbrake = 0,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_STRAIGHT,
 				gear = NpcVehicleDrivingExt.DRIVE_CONTROLS_GEAR_FIRST
 			}

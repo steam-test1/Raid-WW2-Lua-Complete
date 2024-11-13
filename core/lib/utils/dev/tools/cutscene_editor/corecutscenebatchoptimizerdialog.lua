@@ -6,37 +6,37 @@ local JOB_LIST_FILE_SPEC = "Job List (*.boj)|*.boj"
 local commands = CoreCommandRegistry:new()
 
 commands:add({
-	label = "&New Job List",
 	key = "Ctrl+N",
-	id = "NEW_JOB_LIST",
-	help = "Clears the job list so you can start with a blank slate"
+	label = "&New Job List",
+	help = "Clears the job list so you can start with a blank slate",
+	id = "NEW_JOB_LIST"
 })
 commands:add({
-	label = "&Default Job List",
 	key = "Ctrl+D",
-	id = "DEFAULT_JOB_LIST",
-	help = "Clears the job list and populates it with all cutscene projects in the database"
+	label = "&Default Job List",
+	help = "Clears the job list and populates it with all cutscene projects in the database",
+	id = "DEFAULT_JOB_LIST"
 })
 commands:add({
-	label = "&Open Job List...",
 	key = "Ctrl+O",
-	id = "OPEN_JOB_LIST",
-	help = "Opens an existing job list"
+	label = "&Open Job List...",
+	help = "Opens an existing job list",
+	id = "OPEN_JOB_LIST"
 })
 commands:add({
-	label = "&Save Job List",
 	key = "Ctrl+S",
-	id = "SAVE_JOB_LIST",
-	help = "Saves the current job list to disk"
+	label = "&Save Job List",
+	help = "Saves the current job list to disk",
+	id = "SAVE_JOB_LIST"
 })
 commands:add({
-	label = "&Save Job List As...",
 	help = "Saves the current job list to disk under a new name",
+	label = "&Save Job List As...",
 	id = "SAVE_JOB_LIST_AS"
 })
 commands:add({
-	label = "E&xit",
 	help = "Closes this window",
+	label = "E&xit",
 	id = "EXIT"
 })
 

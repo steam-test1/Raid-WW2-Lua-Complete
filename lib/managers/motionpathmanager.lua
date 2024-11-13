@@ -153,9 +153,9 @@ function MotionPathManager:_assign_units_to_paths(units_info)
 		local path = self:get_path_by_id(unit_info.path_id)
 
 		table.insert(path.units, {
-			target_checkpoint = nil,
 			unit = nil,
 			initial_checkpoint = nil,
+			target_checkpoint = nil,
 			unit = unit_info.unit_id,
 			target_checkpoint = unit_info.target_checkpoint,
 			initial_checkpoint = unit_info.initial_checkpoint
@@ -196,9 +196,9 @@ end
 function MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)
 	Application:debug("MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, goto_marker_id)
 	table.insert(self._operations, {
-		checkpoint_marker = nil,
 		goto_marker = nil,
 		operation = "goto_marker",
+		checkpoint_marker = nil,
 		checkpoint_marker = checkpoint_marker_id,
 		goto_marker = goto_marker_id
 	})
@@ -208,8 +208,8 @@ function MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, te
 	Application:debug("MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, teleport_to_marker_id)
 	table.insert(self._operations, {
 		teleport_to_marker = nil,
-		checkpoint_marker = nil,
 		operation = "teleport",
+		checkpoint_marker = nil,
 		checkpoint_marker = checkpoint_marker_id,
 		teleport_to_marker = teleport_to_marker_id
 	})
@@ -218,9 +218,9 @@ end
 function MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, operator_id)
 	Application:debug("MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, operator_id)
 	table.insert(self._operations, {
-		checkpoint_marker = nil,
-		operator_id = nil,
 		operation = "rotate",
+		operator_id = nil,
+		checkpoint_marker = nil,
 		checkpoint_marker = checkpoint_marker_id,
 		operator_id = operator_id
 	})
@@ -274,10 +274,10 @@ end
 function MotionPathManager:_assign_unit_to_path(path, unit_and_pos, checkpoint)
 	Application:debug("MotionPathManager:_assign_unit_to_path(path, unit_and_pos, checkpoint)", path, unit_and_pos, checkpoint)
 	table.insert(path.units, {
-		target_checkpoint = nil,
-		direction = nil,
 		unit = nil,
 		initial_checkpoint = nil,
+		target_checkpoint = nil,
+		direction = nil,
 		unit = unit_and_pos.unit,
 		target_checkpoint = checkpoint,
 		initial_checkpoint = checkpoint,
@@ -293,10 +293,10 @@ function MotionPathManager:put_unit_on_path(path_info)
 	end
 
 	table.insert(path_info.path.units, {
-		target_checkpoint = nil,
-		direction = nil,
 		unit = nil,
 		initial_checkpoint = nil,
+		target_checkpoint = nil,
+		direction = nil,
 		unit = path_info.unit_id,
 		target_checkpoint = checkpoint,
 		initial_checkpoint = checkpoint,
@@ -1012,10 +1012,10 @@ function MotionPathManager:get_units_info()
 	for _, path in ipairs(self._paths) do
 		for _, unit_and_pos in ipairs(path.units) do
 			table.insert(units_info, {
-				target_checkpoint = nil,
-				unit_id = nil,
 				initial_checkpoint = nil,
 				path_id = nil,
+				target_checkpoint = nil,
+				unit_id = nil,
 				unit_id = unit_and_pos.unit,
 				path_id = path.id,
 				target_checkpoint = unit_and_pos.target_checkpoint,
@@ -1083,8 +1083,8 @@ function MotionPathManager:find_nearest_ground_path(ground_unit_id)
 
 	local ground_unit_position = ground_unit:position()
 	local min_distance_marker = {
-		path = nil,
-		distance = 2000000
+		distance = 2000000,
+		path = nil
 	}
 
 	for _, path in ipairs(self._paths) do

@@ -169,8 +169,8 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 		if num_updated_lobbies >= #lobbies then
 			local info = {
-				attribute_list = nil,
 				room_list = nil,
+				attribute_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
@@ -233,8 +233,8 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 
 	if #lobbies == 0 then
 		local info = {
-			attribute_list = nil,
 			room_list = nil,
+			attribute_list = nil,
 			room_list = {},
 			attribute_list = {}
 		}
@@ -288,9 +288,9 @@ end
 
 function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
-		value = nil,
 		comparision_type = nil,
 		key = nil,
+		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -325,8 +325,8 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 			end
 
 			local info = {
-				attribute_list = nil,
 				room_list = nil,
+				attribute_list = nil,
 				room_list = {},
 				attribute_list = {}
 			}
@@ -336,10 +336,10 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 				for _, lobby in ipairs(lobbies) do
 					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
 						table.insert(info.room_list, {
-							custom_text = nil,
 							room_id = nil,
 							owner_name = nil,
 							owner_id = nil,
+							custom_text = nil,
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id(),
@@ -789,14 +789,14 @@ function NetworkMatchMakingSTEAM:create_lobby(settings, return_to_camp_client)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
-				title = nil,
 				text = nil,
+				title = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
 					{
-						text = nil,
 						callback_func = nil,
+						text = nil,
 						text = managers.localization:text("dialog_ok"),
 						callback_func = callback(setup, setup, "quit_to_main_menu")
 					}
@@ -919,7 +919,7 @@ function NetworkMatchMakingSTEAM:add_player_info(peer_id)
 
 			if peer_data then
 				local peer_level = peer_data:level() or ""
-				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or ""
+				local peer_class = peer_data:class() or ""
 				local peer_name = string.gsub(peer_data:name() or "", ",", "")
 				local peer_nationality = peer_data:character() or ""
 				players_info = peer_level .. "," .. peer_class .. "," .. peer_name .. "," .. peer_nationality
@@ -980,16 +980,19 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 		"private"
 	}
 	local lobby_attributes = {
-		job_class_min = nil,
-		job_id = nil,
-		mission_type = nil,
-		challenge_card_id = nil,
-		players_info_4 = nil,
+		state = nil,
+		progress = nil,
+		custom_text = nil,
 		players_info_3 = nil,
 		players_info_2 = nil,
 		players_info_1 = nil,
 		region = nil,
 		job_plan = nil,
+		mission_type = nil,
+		job_id = nil,
+		challenge_card_id = nil,
+		job_class_min = nil,
+		players_info_4 = nil,
 		owner_name = nil,
 		owner_id = nil,
 		job_class_max = nil,
@@ -1000,9 +1003,6 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 		num_players = nil,
 		permission = nil,
 		level = nil,
-		state = nil,
-		progress = nil,
-		custom_text = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		custom_text = Global.game_settings.custom_text or "",

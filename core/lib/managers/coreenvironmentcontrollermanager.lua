@@ -1,4 +1,3 @@
-local flashbang_test_offset = Vector3(0, 0, 150)
 CoreEnvironmentControllerManager = CoreEnvironmentControllerManager or class()
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_START = 0.5
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_END = 0.1
@@ -7,6 +6,30 @@ CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_INTERVAL = CoreEnvironmentCon
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_PULSE_AMPLITUDE = 0.4
 CoreEnvironmentControllerManager.LOW_HEALTH_EFFECT_PULSE_FREQ = 200
 CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE = 10
+local ids_dof_near_plane = Idstring("near_plane")
+local ids_dof_far_plane = Idstring("far_plane")
+local ids_dof_settings = Idstring("settings")
+local ids_radial_pos = Idstring("radial_pos")
+local ids_radial_offset = Idstring("radial_offset")
+local ids_tgl_r = Idstring("tgl_r")
+local hit_feedback_rlu = Idstring("hit_feedback_rlu")
+local hit_feedback_d = Idstring("hit_feedback_d")
+local ids_dof_prepare_post_processor = Idstring("dof_prepare_post_processor")
+local ids_post_DOF = Idstring("post_DOF")
+local mvec1 = Vector3()
+local mvec2 = Vector3()
+local new_cam_fwd = Vector3()
+local new_cam_up = Vector3()
+local new_cam_right = Vector3()
+local ids_LUT_post = Idstring("color_grading_post")
+local ids_LUT_settings = Idstring("lut_settings")
+local ids_LUT_params = Idstring("LUT_settings")
+local ids_low_health_params = Idstring("low_health_settings")
+local ids_LUT_contrast = Idstring("contrast")
+local ids_lens_distortion_post = Idstring("lens_distortion")
+local ids_lens_distortion_settings = Idstring("lens_distortion_mod")
+local ids_lens_distortion_power = Idstring("distortion_power")
+local flashbang_test_offset = Vector3(0, 0, 150)
 
 function CoreEnvironmentControllerManager:init()
 	self._dof_distance = CoreEnvironmentControllerManager.DEFAULT_DOF_DISTANCE
@@ -161,16 +184,18 @@ function CoreEnvironmentControllerManager:hit_feedback_down()
 end
 
 function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, height, delete_after_fadeout)
-	local blurzone = self._blurzones[id]
-
 	if id then
+		local blurzone = self._blurzones[id]
+
+		Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Check exists:", id, not not blurzone)
+
 		blurzone = blurzone or {
 			height = 0,
 			radius = 0,
-			update = nil,
-			mode = -1,
-			check = nil,
 			opacity = 0,
+			mode = -1,
+			update = nil,
+			check = nil,
 			delete_after_fadeout = false
 		}
 
@@ -179,6 +204,7 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 			blurzone.pos = pos
 			blurzone.radius = radius
 			blurzone.height = height
+			blurzone.delete_after_fadeout = delete_after_fadeout
 
 			if mode == 2 then
 				blurzone.opacity = 2
@@ -198,9 +224,7 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 			else
 				blurzone.check = self.blurzone_check_sphere
 			end
-
-			blurzone.delete_after_fadeout = delete_after_fadeout
-		elseif blurzone and blurzone.mode > 0 then
+		elseif blurzone.mode and blurzone.mode > 0 then
 			blurzone.mode = mode
 			blurzone.pos = blurzone.pos or pos
 			blurzone.radius = blurzone.radius or radius
@@ -208,7 +232,7 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 			blurzone.opacity = 1
 			blurzone.update = self.blurzone_fade_out
 
-			if blurzone.height > 0 then
+			if blurzone.height and blurzone.height > 0 then
 				blurzone.check = self.blurzone_check_cylinder
 			else
 				blurzone.check = self.blurzone_check_sphere
@@ -216,6 +240,10 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 		end
 
 		self._blurzones[id] = blurzone
+
+		Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Updated:", id, inspect(blurzone))
+	else
+		Application:warn("[CoreEnvironmentControllerManager:set_blurzone] Blurzone ID was bad:", id)
 	end
 end
 
@@ -330,30 +358,6 @@ function CoreEnvironmentControllerManager:blurzone_check_sphere(blurzone, camera
 	return (1 - result) * blurzone.opacity
 end
 
-local ids_dof_near_plane = Idstring("near_plane")
-local ids_dof_far_plane = Idstring("far_plane")
-local ids_dof_settings = Idstring("settings")
-local ids_radial_pos = Idstring("radial_pos")
-local ids_radial_offset = Idstring("radial_offset")
-local ids_tgl_r = Idstring("tgl_r")
-local hit_feedback_rlu = Idstring("hit_feedback_rlu")
-local hit_feedback_d = Idstring("hit_feedback_d")
-local ids_dof_prepare_post_processor = Idstring("dof_prepare_post_processor")
-local ids_post_DOF = Idstring("post_DOF")
-local mvec1 = Vector3()
-local mvec2 = Vector3()
-local new_cam_fwd = Vector3()
-local new_cam_up = Vector3()
-local new_cam_right = Vector3()
-local ids_LUT_post = Idstring("color_grading_post")
-local ids_LUT_settings = Idstring("lut_settings")
-local ids_LUT_params = Idstring("LUT_settings")
-local ids_low_health_params = Idstring("low_health_settings")
-local ids_LUT_contrast = Idstring("contrast")
-local ids_lens_distortion_post = Idstring("lens_distortion")
-local ids_lens_distortion_settings = Idstring("lens_distortion_mod")
-local ids_lens_distortion_power = Idstring("distortion_power")
-
 function CoreEnvironmentControllerManager:set_lut_lerp_value(lut_lerp_value)
 	self._lut_lerp_value = lut_lerp_value
 end
@@ -422,7 +426,7 @@ function CoreEnvironmentControllerManager:set_post_composite(t, dt)
 	end
 
 	self._material:set_variable(ids_radial_offset, Vector3((self._hit_left - self._hit_right) * 0.2, (self._hit_up - self._hit_down) * 0.2, self._hit_front - self._hit_back + blur_zone_val * 0.1))
-	self._material:set_variable(ids_LUT_contrast, self._base_contrast + self._hit_some * 0.25)
+	self._material:set_variable(ids_LUT_contrast, self:base_contrast() + self._hit_some * 0.25)
 	self:_update_dof(t, dt)
 
 	local lens_distortion_post = vp:vp():get_post_processor_effect("World", ids_lens_distortion_post)

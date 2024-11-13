@@ -5,13 +5,8 @@ local idstr_contour_opacity = Idstring("contour_opacity")
 local idstr_contour_distance = Idstring("contour_distance")
 ContourExt.UNSET_CONTOUR_DISTANCE = 200000
 ContourExt._types = {
-	teammate_downed = nil,
-	mark_enemy_ghost = nil,
-	mark_enemy_turret = nil,
-	mark_enemy_damage_bonus = nil,
-	mark_enemy = nil,
-	mark_unit_friendly = nil,
 	mark_unit_dangerous = nil,
+	teammate_downed = nil,
 	mark_unit = nil,
 	deployable_interactable = nil,
 	friendly = nil,
@@ -28,139 +23,144 @@ ContourExt._types = {
 	teammate = nil,
 	mark_enemy_silver_bullet = nil,
 	mark_enemy_sharpshooter = nil,
+	mark_enemy_ghost = nil,
+	mark_enemy_turret = nil,
+	mark_enemy_damage_bonus = nil,
+	mark_enemy = nil,
+	mark_unit_friendly = nil,
 	teammate = {
 		ray_check = true,
 		persistence = 0.1,
 		priority = 5
 	},
 	teammate_downed = {
-		color = nil,
 		priority = 4,
+		color = nil,
 		color = tweak_data.contour.character.downed_color
 	},
 	teammate_downed_selected = {
-		color = nil,
 		priority = 3,
+		color = nil,
 		color = tweak_data.contour.character_interactable.selected_color
 	},
 	teammate_dead = {
-		color = nil,
 		priority = 4,
+		color = nil,
 		color = tweak_data.contour.character.dead_color
 	},
 	friendly = {
-		color = nil,
 		priority = 3,
+		color = nil,
 		color = tweak_data.contour.character.friendly_color
 	},
 	mark_unit = {
-		fadeout = 4.5,
-		color = nil,
 		priority = 4,
+		color = nil,
+		fadeout = 4.5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_dangerous = {
-		fadeout = 9,
-		color = nil,
 		priority = 4,
+		color = nil,
+		fadeout = 9,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_unit_friendly = {
-		fadeout = 9,
-		color = nil,
 		priority = 3,
+		color = nil,
+		fadeout = 9,
 		color = tweak_data.contour.character.friendly_color
 	},
 	mark_enemy = {
+		priority = 5,
+		fadeout_silent = 13.5,
 		fadeout = 4.5,
 		color = nil,
-		fadeout_silent = 13.5,
-		priority = 5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_damage_bonus = {
-		fadeout = 16,
-		color = nil,
 		priority = 4,
+		color = nil,
+		fadeout = 16,
 		color = tweak_data.contour.character.more_dangerous_color
 	},
 	mark_enemy_turret = {
+		priority = 5,
+		fadeout_silent = 13.5,
 		fadeout = 4.5,
 		color = nil,
-		fadeout_silent = 13.5,
-		priority = 5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_ghost = {
-		distance = 3200,
-		fadeout = 0,
-		persistence = 0.1,
 		priority = 6,
+		persistence = 0.1,
+		fadeout = 0,
 		color = nil,
+		distance = 3200,
 		color = tweak_data.contour.character.ghost_warcry
 	},
 	mark_enemy_sharpshooter = {
+		priority = 3,
+		persistence = 0.1,
 		fadeout = 0,
 		color = nil,
-		persistence = 0.1,
-		priority = 3,
 		color = tweak_data.contour.character.sharpshooter_warcry
 	},
 	mark_enemy_silver_bullet = {
-		distance = 3000,
-		fadeout = 0,
-		persistence = 0.1,
 		priority = 6,
+		persistence = 0.1,
+		fadeout = 0,
 		color = nil,
+		distance = 3000,
 		color = tweak_data.contour.character.silver_bullet_warcry
 	},
 	highlight = {
-		color = nil,
 		priority = 4,
+		color = nil,
 		color = tweak_data.contour.interactable.standard_color
 	},
 	highlight_character = {
-		color = nil,
 		priority = 6,
+		color = nil,
 		color = tweak_data.contour.interactable.standard_color
 	},
 	generic_interactable = {
-		color = nil,
 		priority = 2,
+		color = nil,
 		color = tweak_data.contour.character_interactable.standard_color
 	},
 	generic_interactable_selected = {
-		color = nil,
 		priority = 1,
+		color = nil,
 		color = tweak_data.contour.character_interactable.selected_color
 	},
 	hostage_trade = {
-		color = nil,
 		priority = 1,
+		color = nil,
 		color = tweak_data.contour.character_interactable.standard_color
 	},
 	deployable_selected = {
-		color = nil,
-		unique = true,
 		priority = 1,
+		unique = true,
+		color = nil,
 		color = tweak_data.contour.deployable.selected_color
 	},
 	deployable_disabled = {
-		color = nil,
-		unique = true,
 		priority = 2,
+		unique = true,
+		color = nil,
 		color = tweak_data.contour.deployable.disabled_color
 	},
 	deployable_active = {
-		color = nil,
-		unique = true,
 		priority = 3,
+		unique = true,
+		color = nil,
 		color = tweak_data.contour.deployable.active_color
 	},
 	deployable_interactable = {
-		color = nil,
-		unique = true,
 		priority = 4,
+		unique = true,
+		color = nil,
 		color = tweak_data.contour.deployable.interact_color
 	}
 }
@@ -233,10 +233,10 @@ function ContourExt:add(type, sync, multiplier, damage_multiplier)
 	end
 
 	local setup = {
-		type = nil,
 		sync = nil,
-		fadeout_t = nil,
+		type = nil,
 		ref_c = 1,
+		fadeout_t = nil,
 		type = type,
 		fadeout_t = fadeout and TimerManager:game():time() + fadeout or nil,
 		sync = sync

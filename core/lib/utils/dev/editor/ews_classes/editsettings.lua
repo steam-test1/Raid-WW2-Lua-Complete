@@ -5,8 +5,8 @@ EditUnitSettings = EditUnitSettings or class(EditUnitBase)
 
 function EditUnitSettings:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		class = nil,
 		name = "Settings",
+		class = nil,
 		class = self
 	})
 	self._ctrls = {}
@@ -215,9 +215,9 @@ function EditUnitSettings:start_physics_simulation()
 	for _, unit in ipairs(self._ctrls.units) do
 		if self:_should_simulate_physics(unit) then
 			local unit_data = {
-				unit = nil,
 				position = nil,
 				rotation = nil,
+				unit = nil,
 				unit = unit,
 				position = unit:position(),
 				rotation = unit:rotation()

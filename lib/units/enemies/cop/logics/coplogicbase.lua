@@ -12,17 +12,17 @@ CopLogicBase = class()
 CopLogicBase.SAW_SOMETHING_THRESHOLD = 0.2
 CopLogicBase.INVESTIGATE_THRESHOLD = 0.4
 CopLogicBase._AGGRESSIVE_ALERT_TYPES = {
+	vo_cbt = true,
+	bullet = true,
+	footstep = true,
 	explosion = true,
 	aggression = true,
 	vo_distress = true,
-	vo_intimidate = true,
-	vo_cbt = true,
-	bullet = true,
-	footstep = true
+	vo_intimidate = true
 }
 CopLogicBase._DANGEROUS_ALERT_TYPES = {
-	bullet = true,
 	explosion = true,
+	bullet = true,
 	aggression = true
 }
 CopLogicBase._SUSPICIOUS_SO_ANIMS = {
@@ -107,10 +107,10 @@ end
 
 function CopLogicBase._set_attention(data, attention_info, reaction)
 	local attention_data = {
-		unit = nil,
-		handler = nil,
 		u_key = nil,
 		reaction = nil,
+		unit = nil,
+		handler = nil,
 		unit = attention_info.unit,
 		u_key = attention_info.u_key,
 		handler = attention_info.handler,
@@ -437,8 +437,8 @@ function CopLogicBase._exit_to_state(unit, state_name, params)
 		unit:brain().logic_queued_key = "travel" .. tostring(unit:key())
 
 		managers.queued_tasks:queue(unit:brain().logic_queued_key, unit:brain().set_logic_queued, unit:brain(), {
-			state_name = nil,
 			params = nil,
+			state_name = nil,
 			state_name = state_name,
 			params = params
 		}, math.random() * 0.7, nil)
@@ -446,8 +446,8 @@ function CopLogicBase._exit_to_state(unit, state_name, params)
 		unit:brain().logic_queued_key = "logic_queue" .. tostring(unit:key())
 
 		managers.queued_tasks:queue(unit:brain().logic_queued_key, unit:brain().set_logic_queued, unit:brain(), {
-			state_name = nil,
 			params = nil,
+			state_name = nil,
 			state_name = state_name,
 			params = params
 		}, params.delay, nil)
@@ -1163,11 +1163,11 @@ function CopLogicBase._detection_obj_lost(data, attention_info)
 
 	if data._queued_objective and not managers.groupai:state():enemy_weapons_hot() then
 		local stop_current_action = {
-			type = "act",
-			action = nil,
-			action_duration = 1,
-			stance = "ntl",
 			followup_objective = nil,
+			type = "act",
+			stance = "ntl",
+			action_duration = 1,
+			action = nil,
 			followup_objective = data._queued_objective,
 			action = {
 				type = "idle",
@@ -1238,18 +1238,18 @@ function CopLogicBase._create_return_from_search_SO(cop, old_objective)
 	mrotation.multiply(rot, cop:movement():m_rot())
 
 	local objective = {
-		path_style = "coarse_complete",
+		followup_objective = nil,
+		pos = nil,
+		type = "free",
 		nav_seg = nil,
+		attitude = "engage",
 		area = nil,
 		interrupt_dis = -1,
 		haste = "walk",
+		path_style = "coarse_complete",
 		stance = "ntl",
-		followup_objective = nil,
-		attitude = "engage",
 		scan = true,
 		rot = nil,
-		type = "free",
-		pos = nil,
 		followup_objective = old_objective,
 		pos = pos,
 		rot = rot,
@@ -1288,27 +1288,27 @@ function CopLogicBase.register_search_SO(cop, attention_info, position, search_d
 	end
 
 	local so_investigate = {
+		pos = nil,
 		area = nil,
+		type = "act",
 		nav_seg = nil,
+		stance = "ntl",
 		fail_clbk = nil,
-		action = nil,
 		interrupt_dis = -1,
 		haste = "walk",
-		stance = "ntl",
+		action = nil,
 		followup_objective = nil,
 		attitude = "engage",
 		complete_clbk = nil,
 		action_start_clbk = nil,
-		type = "act",
-		pos = nil,
 		pos = pos,
 		nav_seg = nav_seg,
 		area = area,
 		followup_objective = old_objective,
 		action_start_clbk = callback(cop, CopLogicBase, "on_search_SO_action_start", {
-			attention_info = nil,
 			position = nil,
 			search_data = nil,
+			attention_info = nil,
 			attention_info = attention_info,
 			position = pos,
 			search_data = search_data
@@ -1326,30 +1326,30 @@ function CopLogicBase.register_search_SO(cop, attention_info, position, search_d
 			position = pos
 		}),
 		action = {
-			align_sync = true,
-			needs_full_blend = true,
-			blocks = nil,
 			variant = nil,
 			body_part = 1,
 			type = "act",
+			align_sync = true,
+			blocks = nil,
+			needs_full_blend = true,
 			variant = table.random(CopLogicBase._INVESTIGATE_SO_ANIMS),
 			blocks = {
-				heavy_hurt = -1,
-				action = -1,
-				light_hurt = -1,
-				aim = -1,
 				hurt = -1,
-				walk = -1
+				aim = -1,
+				heavy_hurt = -1,
+				walk = -1,
+				light_hurt = -1,
+				action = -1
 			}
 		}
 	}
 	local stop_current_action = {
-		type = "act",
-		action = nil,
 		complete_clbk = nil,
-		action_duration = 1,
-		stance = "ntl",
 		followup_objective = nil,
+		type = "act",
+		stance = "ntl",
+		action_duration = 1,
+		action = nil,
 		followup_objective = so_investigate,
 		complete_clbk = callback(cop, CopLogicBase, "on_search_SO_started", {
 			attention_info = nil,
@@ -1382,10 +1382,10 @@ function CopLogicBase.register_stop_and_look_SO(data, attention_info)
 
 	if old_objective and old_objective.pos then
 		local stop_current_action = {
-			type = "act",
 			action = nil,
-			stance = "ntl",
 			action_duration = 1,
+			type = "act",
+			stance = "ntl",
 			action = {
 				type = "idle",
 				body_part = 1
@@ -1540,32 +1540,32 @@ function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_ke
 
 	local dis = mvector3.distance(my_unit:movement():m_head_pos(), m_head_pos)
 	local new_entry = {
+		nav_tracker = nil,
+		next_verify_t = nil,
+		is_very_dangerous = nil,
+		is_person = nil,
+		is_deployable = nil,
+		m_pos = nil,
 		is_local_player = nil,
+		is_husk_player = nil,
+		char_tweak = nil,
+		criminal_record = nil,
+		verified_pos = nil,
+		verified = false,
+		dis = nil,
+		verified_t = false,
 		m_head_pos = nil,
+		handler = nil,
 		u_key = nil,
 		reaction = nil,
-		handler = nil,
 		settings = nil,
 		prev_notice_chk_t = nil,
 		notice_progress = 0,
 		unit = nil,
-		has_team = nil,
-		is_husk_player = nil,
-		verified_pos = nil,
-		verified_dis = nil,
 		is_human_player = nil,
-		dis = nil,
-		is_very_dangerous = nil,
-		is_person = nil,
-		is_deployable = nil,
-		verified = false,
-		nav_tracker = nil,
-		verified_t = false,
+		has_team = nil,
 		detected_pos = nil,
-		char_tweak = nil,
-		criminal_record = nil,
-		next_verify_t = nil,
-		m_pos = nil,
+		verified_dis = nil,
 		settings = settings,
 		unit = attention_info.unit,
 		u_key = u_key,
@@ -1843,8 +1843,8 @@ function CopLogicBase._chk_relocate(data)
 
 		if not relocate then
 			local ray_params = {
-				tracker_from = nil,
 				pos_to = nil,
+				tracker_from = nil,
 				tracker_from = data.unit:movement():nav_tracker(),
 				pos_to = follow_unit_pos
 			}
@@ -2258,17 +2258,17 @@ end
 
 function CopLogicBase._say_call_the_police(data, my_data)
 	local blame_list = {
-		criminal = "spotted_player",
 		sentry_gun = "saw_sentry_gun",
-		trip_mine = "saw_trip_mine",
-		drill = "saw_drill",
-		body_bag = "saw_bag",
-		dead_cop = "saw_body",
 		dead_civ = "saw_body",
+		drill = "saw_drill",
 		hostage_cop = "saw_hostage_cop",
 		hostage_civ = "saw_hostage_civ",
 		civilian = "saw_civilian",
-		w_hot = "spotted_player"
+		w_hot = "spotted_player",
+		criminal = "spotted_player",
+		trip_mine = "saw_trip_mine",
+		body_bag = "saw_bag",
+		dead_cop = "saw_body"
 	}
 	local event = blame_list[my_data.call_in_event] or "spotted_player"
 
@@ -2387,8 +2387,8 @@ function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_uni
 				for k, v in pairs(health_surrender) do
 					if not min_setting or k < min_setting.k then
 						min_setting = {
-							v = nil,
 							k = nil,
+							v = nil,
 							k = k,
 							v = v
 						}
@@ -2396,8 +2396,8 @@ function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_uni
 
 					if not max_setting or max_setting.k < k then
 						max_setting = {
-							v = nil,
 							k = nil,
+							v = nil,
 							k = k,
 							v = v
 						}
@@ -2416,8 +2416,8 @@ function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_uni
 			for k, v in pairs(agg_dis_surrender) do
 				if not min_setting or k < min_setting.k then
 					min_setting = {
-						v = nil,
 						k = nil,
+						v = nil,
 						k = k,
 						v = v
 					}
@@ -2425,8 +2425,8 @@ function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_uni
 
 				if not max_setting or max_setting.k < k then
 					max_setting = {
-						v = nil,
 						k = nil,
+						v = nil,
 						k = k,
 						v = v
 					}
@@ -2542,8 +2542,8 @@ end
 
 function CopLogicBase._surrender(data, amount, aggressor_unit)
 	local params = {
-		aggressor_unit = nil,
 		effect = nil,
+		aggressor_unit = nil,
 		effect = amount,
 		aggressor_unit = aggressor_unit
 	}
@@ -2672,9 +2672,9 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	mvector3.add(ray_to_pos, data.m_pos)
 
 	local ray_params = {
+		pos_to = nil,
 		tracker_from = nil,
 		trace = true,
-		pos_to = nil,
 		tracker_from = data.unit:movement():nav_tracker(),
 		pos_to = ray_to_pos
 	}
@@ -2759,6 +2759,8 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	end
 
 	local action_data = {
+		body_part = nil,
+		type = "dodge",
 		variation = nil,
 		shoot_accuracy = nil,
 		speed = nil,
@@ -2766,8 +2768,6 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 		side = nil,
 		direction = nil,
 		blocks = nil,
-		body_part = nil,
-		type = "dodge",
 		body_part = body_part,
 		variation = variation,
 		side = dodge_side,
@@ -2776,13 +2776,13 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 		speed = data.char_tweak.dodge.speed,
 		shoot_accuracy = variation_data.shoot_accuracy,
 		blocks = {
+			act = -1,
 			aim = nil,
-			action = nil,
+			dodge = -1,
+			walk = -1,
 			bleedout = -1,
 			tase = -1,
-			dodge = -1,
-			act = -1,
-			walk = -1,
+			action = nil,
 			action = body_part == 1 and -1 or nil,
 			aim = body_part == 1 and -1 or nil
 		}
@@ -2875,18 +2875,18 @@ function CopLogicBase._upd_stop_old_action(data, my_data, objective)
 		if my_data.advancing then
 			if not data.unit:movement():chk_action_forbidden("idle") then
 				data.unit:brain():action_request({
-					sync = true,
 					body_part = 2,
-					type = "idle"
+					type = "idle",
+					sync = true
 				})
 			end
 		elseif not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().needs_idle then
 			CopLogicBase._start_idle_action_from_act(data)
 		elseif data.unit:anim_data().act_idle then
 			data.unit:brain():action_request({
-				sync = true,
 				body_part = 2,
-				type = "idle"
+				type = "idle",
+				sync = true
 			})
 		end
 
@@ -2999,14 +2999,14 @@ function CopLogicBase._start_idle_action_from_act(data)
 		type = "act",
 		blocks = nil,
 		blocks = {
-			heavy_hurt = -1,
 			light_hurt = -1,
-			expl_hurt = -1,
 			idle = -1,
-			action = -1,
-			fire_hurt = -1,
+			heavy_hurt = -1,
+			walk = -1,
+			expl_hurt = -1,
 			hurt = -1,
-			walk = -1
+			action = -1,
+			fire_hurt = -1
 		}
 	})
 end

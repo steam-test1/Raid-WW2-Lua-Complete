@@ -94,19 +94,19 @@ function CoreVideoCutsceneKey:_play_video(video_ws)
 		video_ws:panel():clear()
 		video_ws:show()
 		video_ws:panel():rect({
-			height = nil,
 			width = nil,
 			color = nil,
+			height = nil,
 			width = video_ws:width(),
 			height = video_ws:height(),
 			color = Color.black
 		})
 
 		self._video_object = video_ws:panel():video({
-			video = nil,
 			speed = nil,
 			loop = nil,
 			layer = nil,
+			video = nil,
 			video = self:video(),
 			loop = self:loop() > 0,
 			speed = self:speed(),

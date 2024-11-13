@@ -16,8 +16,8 @@ function CoreEditor:create_projection_light(type)
 
 			if light_name then
 				table.insert(units, {
-					unit = nil,
 					light_name = nil,
+					unit = nil,
 					unit = unit,
 					light_name = light_name
 				})
@@ -31,8 +31,8 @@ function CoreEditor:create_projection_light(type)
 
 			if light_name then
 				table.insert(units, {
-					unit = nil,
 					light_name = nil,
+					unit = nil,
 					unit = unit,
 					light_name = light_name
 				})
@@ -44,8 +44,8 @@ function CoreEditor:create_projection_light(type)
 
 	for _, light in ipairs(CoreEditorUtils.all_lights()) do
 		table.insert(self._saved_all_lights, {
-			light = nil,
 			enabled = nil,
+			light = nil,
 			light = light,
 			enabled = light:enable()
 		})
@@ -59,16 +59,16 @@ function CoreEditor:create_projection_light(type)
 		resolution = resolution or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
 		table.insert(lights, {
-			position = nil,
-			output_name = nil,
-			saved_rotation = nil,
-			rotation = nil,
 			unit = nil,
 			enabled = nil,
 			light = nil,
 			name = "",
 			resolution = nil,
 			spot = nil,
+			output_name = nil,
+			saved_rotation = nil,
+			rotation = nil,
+			position = nil,
 			position = light:position(),
 			rotation = light:rotation(),
 			saved_rotation = unit:rotation(),
@@ -102,9 +102,9 @@ function CoreEditor:create_projection_light(type)
 
 	managers.viewport:set_default_environment("core/environments/default_depthlight", nil, nil)
 	self:_create_cube_light({
+		simple_postfix = true,
 		cubes = nil,
 		saved_environment = nil,
-		simple_postfix = true,
 		cubes = lights,
 		saved_environment = saved_environment
 	})
@@ -137,9 +137,9 @@ function CoreEditor:create_cube_map(params)
 
 	if #self._cubes_que == 0 then
 		table.insert(self._cubes_que, {
+			name = "camera",
 			rotation = nil,
 			position = nil,
-			name = "camera",
 			position = self:camera():position(),
 			rotation = self:camera():rotation()
 		})
@@ -164,8 +164,8 @@ function CoreEditor:create_cube_map(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
-		vis = false,
-		ignore_max_per_frame = true
+		ignore_max_per_frame = true,
+		vis = false
 	})
 
 	self._saved_hidden_object = {}
@@ -211,14 +211,14 @@ function CoreEditor:next_cube()
 
 		local params = {
 			name = nil,
+			light = nil,
+			simple_postfix = nil,
+			done_callback = nil,
+			spot = nil,
 			output_path = nil,
 			output_name = nil,
 			source_path = nil,
 			unit = nil,
-			done_callback = nil,
-			light = nil,
-			simple_postfix = nil,
-			spot = nil,
 			done_callback = callback(self, self, "cube_map_done"),
 			name = cube.name,
 			output_name = cube.output_name,
@@ -285,8 +285,8 @@ function CoreEditor:cube_map_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
-		vis = true,
-		ignore_max_per_frame = false
+		ignore_max_per_frame = false,
+		vis = true
 	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do

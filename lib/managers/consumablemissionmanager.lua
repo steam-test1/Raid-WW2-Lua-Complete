@@ -266,9 +266,9 @@ end
 
 function ConsumableMissionManager:save(data)
 	local state = {
-		version = nil,
 		intel_spawn_modifier = nil,
 		inventory = nil,
+		version = nil,
 		version = ConsumableMissionManager.VERSION,
 		inventory = {},
 		intel_spawn_modifier = Global.consumable_missions_manager.intel_spawn_modifier

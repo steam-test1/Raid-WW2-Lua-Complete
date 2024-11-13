@@ -66,9 +66,9 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_left_panel()
 	local left_panel_params = {
+		w = nil,
 		name = "left_panel",
 		h = nil,
-		w = nil,
 		w = RaidGUIControlGoldBarRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
 	}
@@ -77,16 +77,16 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	local title_description_params = {
-		y = nil,
-		color = nil,
 		align = "left",
-		alpha = 0,
+		color = nil,
 		text = nil,
 		vertical = "center",
 		name = "title_description",
 		h = nil,
 		font_size = nil,
 		font = nil,
+		y = nil,
+		alpha = 0,
 		y = RaidGUIControlGoldBarRewardDetails.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlGoldBarRewardDetails.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlGoldBarRewardDetails.FONT,
@@ -100,15 +100,15 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		y = nil,
 		align = "center",
-		alpha = 0,
 		text = "",
 		vertical = "top",
 		name = "gold_bars_name",
 		color = nil,
 		font_size = nil,
 		font = nil,
+		y = nil,
+		alpha = 0,
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlGoldBarRewardDetails.TITLE_PADDING_TOP,
 		font = RaidGUIControlGoldBarRewardDetails.FONT,
 		font_size = RaidGUIControlGoldBarRewardDetails.TITLE_FONT_SIZE,
@@ -130,20 +130,20 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
-		y = nil,
-		h = nil,
 		w = nil,
 		name = "reward_image_panel",
+		y = nil,
+		h = nil,
 		y = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_PANEL_Y,
 		w = self._left_panel:w(),
 		h = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_PANEL_H
 	}
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
 	local reward_image_params = {
-		name = "reward_image",
-		texture_rect = nil,
 		alpha = 0,
 		texture = nil,
+		name = "reward_image",
+		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture_rect
 	}
@@ -155,9 +155,9 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_right_panel()
 	local right_panel_params = {
+		w = nil,
 		name = "right_panel",
 		h = nil,
-		w = nil,
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
 	}
@@ -168,17 +168,17 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_description()
 	local description_params = {
-		y = nil,
-		font_size = nil,
-		align = "left",
-		alpha = 0,
 		wrap = true,
+		w = nil,
 		text = nil,
+		align = "left",
 		vertical = "top",
 		name = "description",
 		color = nil,
-		w = nil,
+		font_size = nil,
 		font = nil,
+		y = nil,
+		alpha = 0,
 		y = RaidGUIControlGoldBarRewardDetails.DESCRIPTION_Y,
 		w = RaidGUIControlGoldBarRewardDetails.DESCRIPTION_W,
 		font = RaidGUIControlGoldBarRewardDetails.DESCRIPTION_FONT,
@@ -193,18 +193,18 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	local item_type_params = {
-		y = nil,
-		font_size = nil,
-		font = nil,
 		align = "left",
-		color = nil,
-		alpha = 0,
+		x = nil,
 		text = nil,
+		color = nil,
 		vertical = "center",
+		w = nil,
 		name = "item_type",
 		h = nil,
-		w = nil,
-		x = nil,
+		font_size = nil,
+		font = nil,
+		y = nil,
+		alpha = 0,
 		x = self._description:x(),
 		y = RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_Y,
 		w = self._right_panel:w(),

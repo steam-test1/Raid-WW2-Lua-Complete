@@ -7,11 +7,11 @@ function ImpactDecoy:_setup_from_tweak_data()
 	self._pathing_searches = {}
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
-		feedback_range = nil,
 		effect = nil,
 		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
+		feedback_range = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -21,7 +21,7 @@ end
 function ImpactDecoy:_on_collision(col_ray)
 	ImpactDecoy.super._on_collision(self, col_ray)
 
-	if not managers.groupai:state():whisper_mode() then
+	if Network:is_client() or not managers.groupai:state():whisper_mode() then
 		return
 	end
 
@@ -86,13 +86,13 @@ function ImpactDecoy:_on_collision(col_ray)
 
 		local search_id = "ImpactDecoy._on_collision" .. tostring(closest_cop:key())
 		local search_params = {
-			pos_from = nil,
 			access_pos = nil,
 			cop = nil,
 			result_clbk = nil,
 			id = nil,
 			pos_to = nil,
 			finished = false,
+			pos_from = nil,
 			pos_from = closest_cop:movement():m_pos(),
 			pos_to = final_lure_position,
 			id = search_id,
@@ -107,6 +107,8 @@ function ImpactDecoy:_on_collision(col_ray)
 end
 
 function ImpactDecoy:add_damage_result(unit, attacker, is_dead, damage_percent)
+	ImpactDecoy.super.add_damage_result(self, unit, attacker, is_dead, damage_percent)
+
 	local thrower_peer_id = self:get_thrower_peer_id()
 
 	if is_dead and not unit:movement():cool() then
@@ -163,8 +165,8 @@ function ImpactDecoy:clbk_pathing_results(search_id, path)
 			}
 			attention_info.u_key = 1
 			local search_data = {
-				unit = nil,
 				activated_clbk = nil,
+				unit = nil,
 				unit = self._unit,
 				activated_clbk = callback(self, self, "_guard_picked_up")
 			}

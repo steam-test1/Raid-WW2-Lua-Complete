@@ -156,9 +156,9 @@ function CopActionDodge:_determine_rotation_transition()
 	end
 
 	self._rot_transition = {
+		start_rot = nil,
 		end_rot = nil,
 		end_anim_t = 0.3,
-		start_rot = nil,
 		end_rot = end_rot,
 		start_rot = self._unit:rotation()
 	}

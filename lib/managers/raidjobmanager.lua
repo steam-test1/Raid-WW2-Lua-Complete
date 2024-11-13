@@ -52,8 +52,8 @@ function RaidJobManager:_set_selected_job(job_id)
 	self._current_job = nil
 
 	managers.statistics:stop_session({
-		success = false,
-		quit = true
+		quit = true,
+		success = false
 	})
 	managers.network:session():send_to_peers_synched("stop_statistics_session", false, true, "")
 
@@ -142,11 +142,11 @@ end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
 	local obj_data = {
-		id = nil,
 		text = nil,
+		description = nil,
+		id = nil,
 		xp_weight = 1,
 		prio = 1,
-		description = nil,
 		id = "dyn_" .. obj_id,
 		text = obj_id .. "_hl",
 		description = obj_id .. "_desc"
@@ -156,9 +156,9 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 	for _, t in ipairs(sub_id_list or {}) do
 		local subid = "dyn_" .. t .. "_sub"
 		obj_data[i] = {
-			text = nil,
 			start_completed = nil,
 			prio = nil,
+			text = nil,
 			id = nil,
 			id = subid,
 			text = t .. "_sub_hl",
@@ -190,8 +190,8 @@ function RaidJobManager:start_selected_job()
 	self._previously_completed_job = nil
 
 	managers.statistics:start_session({
-		from_beginning = true,
-		drop_in = false
+		drop_in = false,
+		from_beginning = true
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", true, false)
 	managers.network:session():send_to_peers_synched("sync_current_job", self._current_job.job_id)
@@ -238,8 +238,8 @@ end
 
 function RaidJobManager:_on_restart_to_camp()
 	managers.statistics:stop_session({
-		success = false,
-		quit = true
+		quit = true,
+		success = false
 	})
 	managers.lootdrop:reset_loot_value_counters()
 	managers.hud:reset_session_time()
@@ -899,8 +899,8 @@ function RaidJobManager:start_event(event_id)
 	managers.global_state:reset_flags_for_job("level_flag")
 	managers.global_state:set_flag(self._current_job.current_event_data.mission_flag)
 	managers.statistics:start_session({
-		from_beginning = false,
-		drop_in = false
+		drop_in = false,
+		from_beginning = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", false, false)
 	managers.lootdrop:reset_loot_value_counters()
@@ -1152,10 +1152,10 @@ function RaidJobManager:_prepare_peer_save_data()
 	local local_peer = managers.network:session():local_peer()
 	local peer_id = local_peer:id()
 	local local_player_data = {
-		class = nil,
 		level = nil,
 		name = nil,
 		nationality = nil,
+		class = nil,
 		statistics = nil,
 		is_local_player = true,
 		player_id = nil,
@@ -1173,10 +1173,10 @@ function RaidJobManager:_prepare_peer_save_data()
 	for index, peer in pairs(managers.network:session():all_peers()) do
 		if not peer:id() == peer_id then
 			local peer_data = {
-				class = nil,
 				level = nil,
 				name = nil,
 				nationality = nil,
+				class = nil,
 				statistics = nil,
 				player_id = nil,
 				name = peer:name(),

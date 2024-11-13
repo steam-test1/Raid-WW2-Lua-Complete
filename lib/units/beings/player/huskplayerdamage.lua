@@ -34,16 +34,16 @@ end
 
 function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, height_offset)
 	local attack_data = {
+		pos = nil,
 		attack_dir = nil,
 		attacker_unit = nil,
-		pos = nil,
 		result = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attacker_unit and attacker_unit:movement():m_pos() - self._unit:movement():m_pos() or Vector3(1, 0, 0),
 		pos = mvector3.copy(self._unit:movement():m_head_pos()),
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		}
 	}
 

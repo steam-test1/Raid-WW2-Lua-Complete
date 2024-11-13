@@ -203,9 +203,9 @@ function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	end
 
 	local new_objective = {
+		aggressor_unit = nil,
 		type = "surrender",
 		amount = nil,
-		aggressor_unit = nil,
 		amount = amount,
 		aggressor_unit = aggressor_unit
 	}

@@ -144,9 +144,9 @@ end
 
 function WaypointUnitElement:_create_shapes()
 	self._square_shape = CoreShapeManager.ShapeBoxMiddle:new({
+		height = 200,
 		depth = nil,
 		width = nil,
-		height = 200,
 		width = self._hed.width,
 		depth = self._hed.depth
 	})
@@ -224,33 +224,33 @@ function WaypointUnitElement:scale_slider(panel, sizer, number_ctrlr_params, val
 
 	slider_sizer:add(slider, 2, 0, "EXPAND")
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_size"), {
+		value = nil,
 		ctrlr = nil,
 		number_ctrlr_params = nil,
-		value = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_size"), {
+		value = nil,
 		ctrlr = nil,
 		number_ctrlr_params = nil,
-		value = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "size_release"), {
+		value = nil,
 		ctrlr = nil,
 		number_ctrlr_params = nil,
-		value = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBRELEASE", callback(self, self, "size_release"), {
+		value = nil,
 		ctrlr = nil,
 		number_ctrlr_params = nil,
-		value = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value

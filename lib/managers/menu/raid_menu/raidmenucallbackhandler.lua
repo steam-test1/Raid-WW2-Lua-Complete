@@ -53,9 +53,9 @@ end
 
 function RaidMenuCallbackHandler:menu_options_on_click_default()
 	local params = {
-		message = nil,
-		title = nil,
 		callback = nil,
+		title = nil,
+		message = nil,
 		title = managers.localization:text("dialog_reset_all_options_title"),
 		message = managers.localization:text("dialog_reset_all_options_message"),
 		callback = function ()
@@ -567,8 +567,8 @@ function RaidMenuCallbackHandler:raid_play_online()
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 	MenuCallbackHandler:start_job({
-		difficulty = nil,
 		job_id = nil,
+		difficulty = nil,
 		job_id = Global.exe_argument_level,
 		difficulty = Global.exe_argument_difficulty
 	})
@@ -590,8 +590,8 @@ end
 function RaidMenuCallbackHandler:_do_play_offline()
 	MenuCallbackHandler:play_single_player()
 	MenuCallbackHandler:start_single_player_job({
-		difficulty = nil,
 		job_id = nil,
+		difficulty = nil,
 		job_id = Global.exe_argument_level,
 		difficulty = Global.exe_argument_difficulty
 	})

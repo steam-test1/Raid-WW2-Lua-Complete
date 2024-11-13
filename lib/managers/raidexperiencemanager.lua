@@ -155,8 +155,8 @@ end
 
 function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id, success)
 	local exp_table = {
-		multiplicative = nil,
 		additive = nil,
+		multiplicative = nil,
 		additive = {},
 		multiplicative = {}
 	}
@@ -466,11 +466,11 @@ end
 
 function RaidExperienceManager:save(data)
 	local state = {
+		next_level_data = nil,
 		level = nil,
-		total = nil,
 		xp_gained = nil,
 		version = nil,
-		next_level_data = nil,
+		total = nil,
 		version = self._global.version,
 		total = self._global.total,
 		xp_gained = self._global.xp_gained,

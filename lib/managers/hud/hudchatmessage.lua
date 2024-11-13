@@ -53,10 +53,10 @@ end
 
 function HUDChatMessage:_create_panel(message_panel)
 	local panel_params = {
-		valign = "bottom",
 		name = "player_message_panel",
 		halign = "scale",
 		w = nil,
+		valign = "bottom",
 		w = HUDChatMessage.W
 	}
 	self._object = message_panel:panel(panel_params)
@@ -64,7 +64,6 @@ end
 
 function HUDChatMessage:_create_name(name)
 	local name_params = {
-		font = nil,
 		h = nil,
 		y = 0,
 		x = 0,
@@ -78,6 +77,7 @@ function HUDChatMessage:_create_name(name)
 		align = nil,
 		color = nil,
 		font_size = nil,
+		font = nil,
 		w = self._object:w(),
 		h = HUDChatMessage.NAME_H,
 		font = HUDChatMessage.NAME_FONT,
@@ -91,13 +91,13 @@ end
 
 function HUDChatMessage:_create_message_panel()
 	local message_panel_params = {
-		valign = "bottom",
 		name = "message_panel",
 		y = nil,
+		w = nil,
 		x = 0,
 		h = nil,
 		halign = "scale",
-		w = nil,
+		valign = "bottom",
 		y = self._name:y() + self._name:h(),
 		w = self._object:w(),
 		h = self._object:h() - self._name:h()
@@ -107,7 +107,6 @@ end
 
 function HUDChatMessage:_create_message(message)
 	local message_params = {
-		font = nil,
 		wrap = true,
 		y = nil,
 		x = 0,
@@ -120,6 +119,7 @@ function HUDChatMessage:_create_message(message)
 		align = nil,
 		color = nil,
 		font_size = nil,
+		font = nil,
 		y = self._name:h(),
 		w = self._object:w(),
 		font = HUDChatMessage.MESSAGE_FONT,
@@ -157,7 +157,6 @@ end
 
 function HUDChatMessage:add_message(message)
 	local message_params = {
-		font = nil,
 		wrap = true,
 		y = 0,
 		x = 0,
@@ -170,6 +169,7 @@ function HUDChatMessage:add_message(message)
 		align = nil,
 		color = nil,
 		font_size = nil,
+		font = nil,
 		name = "message_" .. tostring(#self._messages + 1),
 		w = self._message_panel:w(),
 		font = HUDChatMessage.MESSAGE_FONT,

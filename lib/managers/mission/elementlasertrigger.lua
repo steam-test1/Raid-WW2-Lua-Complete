@@ -2,11 +2,11 @@ core:import("CoreMissionScriptElement")
 
 ElementLaserTrigger = ElementLaserTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 ElementLaserTrigger.COLORS = {
+	black = nil,
 	grey = nil,
 	blue = nil,
 	green = nil,
 	red = nil,
-	black = nil,
 	red = {
 		1,
 		0,

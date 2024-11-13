@@ -26,12 +26,12 @@ end
 function HUDSpecialInteractionRoulette:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.BACKGROUND_PLATE_IMAGE)
 	self._bg_plate = self._object:bitmap({
-		valign = "center",
-		color = nil,
 		texture_rect = nil,
 		texture = nil,
 		name = "special_interaction_bg_plate",
 		halign = "center",
+		valign = "center",
+		color = nil,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		color = gui_data.color
@@ -43,13 +43,13 @@ end
 function HUDSpecialInteractionRoulette:_create_pointer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.POINTER_GUI_ID)
 	self._pointer_texture = self._object:bitmap({
-		valign = "center",
-		color = nil,
 		texture_rect = nil,
 		texture = nil,
 		layer = nil,
 		name = "special_interaction_pointer_texture",
 		halign = "center",
+		valign = "center",
+		color = nil,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		color = gui_data.color,
@@ -63,13 +63,13 @@ end
 function HUDSpecialInteractionRoulette:_create_timer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.TIMER_GUI_ID)
 	self._timer = CircleBitmapGuiObject:new(self._object, {
+		total = nil,
 		sides = nil,
 		radius = 128,
 		image = nil,
-		color = nil,
-		layer = nil,
 		use_bg = false,
-		total = nil,
+		layer = nil,
+		color = nil,
 		image = gui_data.texture,
 		color = gui_data.color,
 		sides = self._sides,
@@ -83,14 +83,14 @@ end
 function HUDSpecialInteractionRoulette:_create_wheel()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.WHEEL_GUI_ID)
 	local circle = self._object:bitmap({
-		valign = "center",
-		color = nil,
 		texture_rect = nil,
 		texture = nil,
 		rotation = nil,
 		name = "special_interaction_circle_texture",
 		halign = "center",
 		layer = nil,
+		valign = "center",
+		color = nil,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		color = gui_data.color,
@@ -101,9 +101,9 @@ function HUDSpecialInteractionRoulette:_create_wheel()
 	circle:set_center(self._object:center())
 
 	self._circle = {
+		valid = true,
 		completed = false,
 		circle = nil,
-		valid = true,
 		circle = circle
 	}
 end

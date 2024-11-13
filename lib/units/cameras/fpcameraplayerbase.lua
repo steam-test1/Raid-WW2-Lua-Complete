@@ -84,8 +84,8 @@ function FPCameraPlayerBase:init(unit)
 	self._camera_properties.current_tilt = 0
 	self._view_kick = {
 		direction = nil,
-		delta = nil,
 		velocity = 0,
+		delta = nil,
 		direction = Vector3(),
 		delta = Vector3()
 	}
@@ -162,8 +162,8 @@ function FPCameraPlayerBase:check_flashlight_enabled()
 		if not self._light_effect then
 			self._light_effect = World:effect_manager():spawn({
 				position = nil,
-				effect = nil,
 				rotation = nil,
+				effect = nil,
 				effect = tweak_data.common_effects.fps_flashlight,
 				position = self._unit:position(),
 				rotation = Rotation()
@@ -1649,43 +1649,15 @@ function FPCameraPlayerBase:remove_limits()
 	self._limits = nil
 end
 
-function FPCameraPlayerBase:throw_projectile(unit)
-	self:unspawn_grenade()
-
+function FPCameraPlayerBase:throw_projectile()
 	if alive(self._parent_unit) then
 		self._parent_unit:equipment():throw_projectile()
 	end
 end
 
-function FPCameraPlayerBase:throw_grenade(unit)
-	self:unspawn_grenade()
-
+function FPCameraPlayerBase:throw_grenade()
 	if alive(self._parent_unit) then
 		self._parent_unit:equipment():throw_grenade()
-	end
-end
-
-function FPCameraPlayerBase:spawn_grenade()
-	if alive(self._grenade_unit) then
-		return
-	end
-
-	local align_obj_l_name = Idstring("a_weapon_left")
-	local align_obj_r_name = Idstring("a_weapon_right")
-	local align_obj_l = self._unit:get_object(align_obj_l_name)
-	local align_obj_r = self._unit:get_object(align_obj_r_name)
-	local grenade_entry = managers.blackmarket:equipped_grenade()
-	self._grenade_unit = World:spawn_unit(Idstring(tweak_data.projectiles[grenade_entry].unit), align_obj_r:position(), align_obj_r:rotation())
-
-	self._unit:link(align_obj_r:name(), self._grenade_unit, self._grenade_unit:orientation_object():name())
-end
-
-function FPCameraPlayerBase:unspawn_grenade()
-	if alive(self._grenade_unit) then
-		self._grenade_unit:unlink()
-		World:delete_unit(self._grenade_unit)
-
-		self._grenade_unit = nil
 	end
 end
 
@@ -1697,55 +1669,6 @@ function FPCameraPlayerBase:spawn_ammo_bag()
 	local idx = managers.player:upgrade_value("player", "toss_ammo", 0)
 
 	ThrowableAmmoBag.spawn(pos, dir, idx)
-end
-
-function FPCameraPlayerBase:spawn_melee_item()
-	if self._melee_item_units then
-		return
-	end
-
-	local melee_entry = managers.blackmarket:equipped_melee_weapon()
-	local unit_name = tweak_data.blackmarket.melee_weapons[melee_entry].unit
-
-	if unit_name then
-		local aligns = tweak_data.blackmarket.melee_weapons[melee_entry].align_objects or {
-			"a_weapon_left"
-		}
-		local graphic_objects = tweak_data.blackmarket.melee_weapons[melee_entry].graphic_objects or {}
-		self._melee_item_units = {}
-
-		for _, align in ipairs(aligns) do
-			local align_obj_name = Idstring(align)
-			local align_obj = self._unit:get_object(align_obj_name)
-			local unit = World:spawn_unit(Idstring(unit_name), align_obj:position(), align_obj:rotation())
-
-			self._unit:link(align_obj:name(), unit, unit:orientation_object():name())
-
-			for a_object, g_object in pairs(graphic_objects) do
-				local graphic_obj_name = Idstring(g_object)
-				local graphic_obj = unit:get_object(graphic_obj_name)
-
-				graphic_obj:set_visibility(Idstring(a_object) == align_obj_name)
-			end
-
-			table.insert(self._melee_item_units, unit)
-		end
-	end
-end
-
-function FPCameraPlayerBase:unspawn_melee_item()
-	if not self._melee_item_units then
-		return
-	end
-
-	for _, unit in ipairs(self._melee_item_units) do
-		if alive(unit) then
-			unit:unlink()
-			World:delete_unit(unit)
-		end
-	end
-
-	self._melee_item_units = nil
 end
 
 function FPCameraPlayerBase:hide_weapon()
@@ -1779,8 +1702,8 @@ function FPCameraPlayerBase:counter_taser()
 
 			World:effect_manager():spawn({
 				position = nil,
-				effect = nil,
 				normal = nil,
+				effect = nil,
 				effect = tweak_data.common_effects.taser_stop,
 				position = align_obj:position(),
 				normal = align_obj:rotation():y()
@@ -1959,8 +1882,6 @@ function FPCameraPlayerBase:destroy()
 		self._light_effect = nil
 	end
 
-	self:unspawn_grenade()
-	self:unspawn_melee_item()
 	self:_unspawn_shotgun_shell()
 	self:_unspawn_bren_mag_shell()
 end

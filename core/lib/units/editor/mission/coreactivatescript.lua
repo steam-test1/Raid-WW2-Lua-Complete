@@ -34,6 +34,9 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._script_params = {
+		ctrlr_proportions = 2,
+		name_proportions = 1,
+		tooltip = "Select a script from the combobox",
 		value = nil,
 		options = nil,
 		default = "none",
@@ -41,9 +44,6 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 		name = "Script:",
 		panel = nil,
 		sorted = true,
-		ctrlr_proportions = 2,
-		name_proportions = 1,
-		tooltip = "Select a script from the combobox",
 		panel = panel,
 		sizer = panel_sizer,
 		options = self:_scripts(),

@@ -79,7 +79,7 @@ function AmmoClip:_pickup(unit)
 		if picked_up then
 			self._picked_up = true
 
-			if not self._weapon_category then
+			if not self._weapon_category and not self._pickup_filter then
 				if managers.player:has_category_upgrade("player", "opportunist_pick_up_ammo_to_health") then
 					local damage_ext = unit:character_damage()
 
@@ -138,7 +138,8 @@ function AmmoClip:sync_net_event(event, peer)
 		local inventory = player:inventory()
 
 		if inventory and mvector3.distance(player_pos, source_pos) < distance_limit then
-			local add_ammo_ratio = tweak_data.drop_loot[self.tweak_data].ammo_multiplier or 1
+			local loot_tweak = tweak_data.drop_loot[self.tweak_data]
+			local add_ammo_ratio = loot_tweak and loot_tweak.ammo_multiplier or 1
 			local share_multiplier = managers.player:upgrade_value_by_level("player", "pack_mule_ammo_share_team", 1, 1) - 1
 
 			for id, weapon in pairs(inventory:available_selections()) do

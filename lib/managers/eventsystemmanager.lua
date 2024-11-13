@@ -166,12 +166,12 @@ function EventSystemManager:_fire_daily_event()
 	local reward_data = login_rewards[self._consecutive_logins]
 	local reward = reward_data.reward
 	local notification_params = {
+		name = "active_duty_bonus",
+		total = nil,
 		consecutive = nil,
 		priority = 4,
 		duration = 13,
 		notification_type = "active_duty_bonus",
-		name = "active_duty_bonus",
-		total = nil,
 		consecutive = self._consecutive_logins,
 		total = #login_rewards
 	}

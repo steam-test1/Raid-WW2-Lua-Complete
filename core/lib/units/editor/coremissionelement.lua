@@ -173,18 +173,18 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	sizer:add(base_delay_sizer, 0, 0, "EXPAND,LEFT")
 
 	local base_delay_ctrlr = self:_build_value_number(panel, base_delay_sizer, "base_delay", {
+		min = 0,
+		floats = 2,
 		sizer_proportions = 2,
 		ctrlr_proportions = 1,
-		name_proportions = 1,
-		min = 0,
-		floats = 2
+		name_proportions = 1
 	}, "Specifies a base delay that is added to each on executed delay")
 	local base_delay_rand_ctrlr = self:_build_value_number(panel, base_delay_sizer, "base_delay_rand", {
+		min = 0,
+		floats = 2,
 		sizer_proportions = 1,
 		ctrlr_proportions = 1,
-		name_proportions = 0,
-		min = 0,
-		floats = 2
+		name_proportions = 0
 	}, "Specifies an additional random time to be added to base delay (delay + rand)", "  random")
 	local on_executed_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "On Executed")
 	local element_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -192,11 +192,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	on_executed_sizer:add(element_sizer, 0, 1, "EXPAND,LEFT")
 
 	self._elements_params = {
-		sizer = nil,
+		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		options = nil,
 		sorted = true,
-		sizer_proportions = 1,
+		sizer = nil,
 		tooltip = "Select an element from the combobox",
 		name_proportions = 1,
 		panel = nil,
@@ -229,12 +229,12 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 
 	if self.ON_EXECUTED_ALTERNATIVES then
 		local on_executed_alternatives_params = {
-			tooltip = "Select an alternative on executed from the combobox",
+			ctrlr_proportions = 2,
 			name_proportions = 1,
 			options = nil,
 			sorted = false,
 			sizer = nil,
-			ctrlr_proportions = 2,
+			tooltip = "Select an alternative on executed from the combobox",
 			value = nil,
 			panel = nil,
 			name = "Alternative:",
@@ -255,15 +255,15 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	on_executed_sizer:add(delay_sizer, 0, 0, "EXPAND,LEFT")
 
 	self._element_delay_params = {
-		name_proportions = 1,
-		ctrlr_proportions = 1,
-		sizer_proportions = 2,
 		min = 0,
 		floats = 2,
+		name_proportions = 1,
+		ctrlr_proportions = 1,
 		sizer = nil,
 		tooltip = "Sets the delay time for the selected on executed element",
 		value = 0,
 		panel = nil,
+		sizer_proportions = 2,
 		name = "Delay:",
 		panel = panel,
 		sizer = delay_sizer
@@ -274,15 +274,15 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	element_delay:connect("EVT_KILL_FOCUS", callback(self, self, "on_executed_element_delay"), nil)
 
 	self._element_delay_rand_params = {
-		name_proportions = 0,
-		ctrlr_proportions = 1,
-		sizer_proportions = 1,
 		min = 0,
 		floats = 2,
+		name_proportions = 0,
+		ctrlr_proportions = 1,
 		sizer = nil,
 		tooltip = "Specifies an additional random time to be added to delay (delay + rand)",
 		value = 0,
 		panel = nil,
+		sizer_proportions = 1,
 		name = "  Random:",
 		panel = panel,
 		sizer = delay_sizer
@@ -335,8 +335,8 @@ function CoreMissionElement:_build_point_orientation(panel)
 
 	use_orientation_sequenced:set_value(self._hed.use_orientation_sequenced)
 	use_orientation_sequenced:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "use_orientation_sequenced",
+		ctrlr = nil,
 		ctrlr = use_orientation_sequenced
 	})
 	sizer:add(use_orientation_sequenced, 0, 4, "EXPAND,LEFT")
@@ -345,8 +345,8 @@ function CoreMissionElement:_build_point_orientation(panel)
 
 	disable_orientation_on_use:set_value(self._hed.disable_orientation_on_use)
 	disable_orientation_on_use:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "disable_orientation_on_use",
+		ctrlr = nil,
 		ctrlr = disable_orientation_on_use
 	})
 	sizer:add(disable_orientation_on_use, 0, 4, "EXPAND,LEFT")
@@ -419,17 +419,17 @@ function CoreMissionElement:_build_instance_var_names(panel)
 
 	for _, data in ipairs(self.INSTANCE_VAR_NAMES) do
 		local params = {
-			value = nil,
-			default = "not_used",
+			name_proportions = 1,
 			options = nil,
 			ctrlr_proportions = 2,
-			sizer_proportions = 1,
 			sorted = true,
 			sizer = nil,
 			tooltip = "Select a value",
-			name_proportions = 1,
+			value = nil,
 			panel = nil,
+			sizer_proportions = 1,
 			name = nil,
+			default = "not_used",
 			name = string.pretty(data.value, true) .. ":",
 			panel = panel,
 			sizer = sizer,
@@ -439,8 +439,8 @@ function CoreMissionElement:_build_instance_var_names(panel)
 		local ctrlr = CoreEws.combobox(params)
 
 		ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_instance_var_name"), {
-			ctrlr = nil,
 			data = nil,
+			ctrlr = nil,
 			ctrlr = ctrlr,
 			data = data
 		})
@@ -518,9 +518,9 @@ end
 
 function CoreMissionElement:_add_help_text(text)
 	local help = {
+		sizer = nil,
 		text = nil,
 		panel = nil,
-		sizer = nil,
 		panel = self._panel,
 		sizer = self._panel_sizer,
 		text = text
@@ -707,12 +707,12 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 
 		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				thick = true,
 				b = nil,
 				g = nil,
 				r = nil,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit,
 				r = r,
@@ -758,8 +758,8 @@ end
 
 function CoreMissionElement:_on_use_point_orientation()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "point_orientation", 1, true) then
@@ -787,8 +787,8 @@ end
 
 function CoreMissionElement:_on_use_instigator_rule()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "data_instigator_rule", 1, true) then
@@ -927,11 +927,11 @@ function CoreMissionElement:_draw_elements(t, dt, elements, selected_unit, all_u
 			local r, g, b = unit:mission_element():get_link_color()
 
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = nil,
 				g = nil,
 				r = nil,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit,
 				r = r,
@@ -990,11 +990,11 @@ function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 			local r, g, b = self:get_link_color()
 
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = nil,
 				g = nil,
 				r = nil,
+				to_unit = nil,
+				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit,
 				r = r * 0.75,
@@ -1263,15 +1263,15 @@ function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, opti
 	sizer:add(horizontal_sizer, params and params.horizontal_sizer_proportions or 0, 1, "EXPAND,LEFT")
 
 	local combobox_params = {
-		tooltip = nil,
+		ctrlr_proportions = 2,
 		name_proportions = 1,
 		options = nil,
-		sizer_proportions = 1,
 		sorted = false,
 		sizer = nil,
-		ctrlr_proportions = 2,
+		tooltip = nil,
 		value = nil,
 		panel = nil,
+		sizer_proportions = 1,
 		name = nil,
 		name = string.pretty(custom_name or value_name, true) .. ":",
 		panel = panel,
@@ -1283,8 +1283,8 @@ function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, opti
 	local ctrlr = CoreEws.combobox(combobox_params)
 
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = value_name
 	})
@@ -1314,8 +1314,8 @@ function CoreMissionElement:_on_gui_value_combobox_toolbar_select_dialog(params)
 	for _, name in ipairs(dialog:_selected_item_assets()) do
 		CoreEws.change_combobox_value(params.combobox_params, name)
 		self:set_element_data({
-			ctrlr = nil,
 			value = nil,
+			ctrlr = nil,
 			ctrlr = params.combobox_params.ctrlr,
 			value = params.value_name
 		})
@@ -1324,17 +1324,17 @@ end
 
 function CoreMissionElement:_build_value_number(panel, sizer, value_name, options, tooltip, custom_name)
 	local number_params = {
-		max = nil,
-		name_proportions = nil,
-		ctrlr_proportions = nil,
-		sizer_proportions = nil,
 		min = nil,
+		max = nil,
 		floats = nil,
+		name_proportions = nil,
 		sizer = nil,
 		tooltip = nil,
 		value = nil,
 		panel = nil,
+		ctrlr_proportions = nil,
 		name = nil,
+		sizer_proportions = nil,
 		name = string.pretty(custom_name or value_name, true) .. ":",
 		panel = panel,
 		sizer = sizer,
@@ -1350,14 +1350,14 @@ function CoreMissionElement:_build_value_number(panel, sizer, value_name, option
 	local ctrlr = CoreEws.number_controller(number_params)
 
 	ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = value_name
 	})
 	ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		ctrlr = ctrlr,
 		value = value_name
 	})
@@ -1371,8 +1371,8 @@ function CoreMissionElement:_build_value_checkbox(panel, sizer, value_name, tool
 	checkbox:set_value(self._hed[value_name])
 	checkbox:set_tool_tip(tooltip or "Click to toggle")
 	checkbox:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = nil,
+		ctrlr = nil,
 		ctrlr = checkbox,
 		value = value_name
 	})
@@ -1428,17 +1428,17 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	sizer:add(horizontal_sizer, 0, 0, "EXPAND,LEFT")
 
 	local number_params = {
-		max = nil,
-		name_proportions = nil,
-		ctrlr_proportions = nil,
-		sizer_proportions = nil,
 		min = nil,
+		max = nil,
 		floats = nil,
+		name_proportions = nil,
 		sizer = nil,
 		tooltip = nil,
 		value = nil,
 		panel = nil,
+		ctrlr_proportions = nil,
 		name = nil,
+		sizer_proportions = nil,
 		name = string.pretty(custom_name or value_name, true) .. ":",
 		panel = panel,
 		sizer = horizontal_sizer,
@@ -1454,32 +1454,32 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	local ctrlr = CoreEws.number_controller(number_params)
 
 	ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_random_number_element_data"), {
-		value = nil,
 		ctrlr = nil,
+		value = nil,
 		index = 1,
 		ctrlr = ctrlr,
 		value = value_name
 	})
 	ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_random_number_element_data"), {
-		value = nil,
 		ctrlr = nil,
+		value = nil,
 		index = 1,
 		ctrlr = ctrlr,
 		value = value_name
 	})
 
 	local number2_params = {
-		max = nil,
-		name_proportions = nil,
-		ctrlr_proportions = nil,
-		sizer_proportions = nil,
 		min = nil,
+		max = nil,
 		floats = nil,
+		name_proportions = nil,
 		sizer = nil,
 		tooltip = "Add a random amount",
 		value = nil,
 		panel = nil,
+		ctrlr_proportions = nil,
 		name = "+ random:",
+		sizer_proportions = nil,
 		panel = panel,
 		sizer = horizontal_sizer,
 		value = self._hed[value_name][2],
@@ -1493,15 +1493,15 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	local ctrlr2 = CoreEws.number_controller(number2_params)
 
 	ctrlr2:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_random_number_element_data"), {
-		value = nil,
 		ctrlr = nil,
+		value = nil,
 		index = 2,
 		ctrlr = ctrlr2,
 		value = value_name
 	})
 	ctrlr2:connect("EVT_KILL_FOCUS", callback(self, self, "_set_random_number_element_data"), {
-		value = nil,
 		ctrlr = nil,
+		value = nil,
 		index = 2,
 		ctrlr = ctrlr2,
 		value = value_name
@@ -1527,9 +1527,9 @@ function CoreMissionElement:_build_add_remove_unit_from_list(panel, sizer, eleme
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Add unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_add_unit_list_btn"), {
-		names = nil,
-		exact_names = nil,
 		elements = nil,
+		exact_names = nil,
+		names = nil,
 		elements = elements,
 		names = names,
 		exact_names = exact_names
@@ -1653,9 +1653,9 @@ function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 			local type = "on_executed" .. (data.alternative and " " .. data.alternative or "")
 
 			table.insert(links.on_executed, {
-				unit = nil,
 				alternative = nil,
 				delay = nil,
+				unit = nil,
 				unit = on_executed_unit,
 				alternative = type,
 				delay = delay
@@ -1671,9 +1671,9 @@ function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 			local type = "on_executed" .. (data.alternative and " " .. data.alternative or "")
 
 			table.insert(links.executers, {
-				unit = nil,
 				alternative = nil,
 				delay = nil,
+				unit = nil,
 				unit = self._unit,
 				alternative = type,
 				delay = delay

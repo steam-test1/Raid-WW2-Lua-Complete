@@ -60,8 +60,8 @@ function BoxGuiObject:_create_side(panel, side, type)
 	end
 
 	local side_panel = panel:panel({
-		halign = "grow",
 		name = nil,
+		halign = "grow",
 		h = nil,
 		w = nil,
 		valign = "grow",

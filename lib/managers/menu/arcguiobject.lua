@@ -34,8 +34,8 @@ end
 
 function ArcGuiObject:set_current(current)
 	local triangles = self:_create_triangles({
-		total = nil,
 		current = nil,
+		total = nil,
 		current = current,
 		total = self._total
 	})

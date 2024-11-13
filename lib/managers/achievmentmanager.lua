@@ -4,10 +4,10 @@ AchievmentManager.FILE_EXTENSION = "achievment"
 
 function AchievmentManager:init()
 	self.exp_awards = {
-		none = 0,
 		c = 5000,
 		b = 1500,
-		a = 500
+		a = 500,
+		none = 0
 	}
 	self.script_data = {}
 
@@ -24,8 +24,8 @@ function AchievmentManager:init()
 				self.handler:init()
 
 				Global.achievment_manager = {
-					achievments = nil,
 					handler = nil,
+					achievments = nil,
 					handler = self.handler,
 					achievments = self.achievments
 				}
@@ -52,8 +52,8 @@ function AchievmentManager:init()
 			self:_parse_achievments("PS4")
 
 			Global.achievment_manager = {
-				achievments = nil,
 				trophy_requests = nil,
+				achievments = nil,
 				trophy_requests = {},
 				achievments = self.achievments
 			}
@@ -175,9 +175,9 @@ function AchievmentManager:_parse_achievments(platform)
 				if reward._meta == "reward" and (Application:editor() or not platform or platform == reward.platform) then
 					self.achievments[ach.id] = {
 						awarded = false,
-						exp = nil,
 						name = nil,
 						id = nil,
+						exp = nil,
 						dlc_loot = nil,
 						id = reward.id,
 						name = ach.name,
@@ -260,8 +260,8 @@ function AchievmentManager:award_progress(stat, value)
 
 	local stats = {
 		[stat] = {
-			type = "int",
 			value = nil,
+			type = "int",
 			value = value or 1
 		}
 	}
@@ -406,18 +406,14 @@ function AchievmentManager:check_achievement_complete_raid_with_4_different_clas
 	if peers and #peers == 4 then
 		local classes = {}
 
-		for peer_id, peer in ipairs(peers) do
-			local peer_outfit = peer:blackmarket_outfit()
+		for _, peer in ipairs(peers) do
+			local class = peer:class()
 
-			if peer_outfit and peer_outfit.skills then
-				if classes[peer_outfit.skills] then
-					return false
-				end
-
-				classes[peer_outfit.skills] = true
-			else
-				return false
+			if not class or classes[class] then
+				return
 			end
+
+			classes[class] = true
 		end
 
 		managers.achievment:award("ach_every_player_different_class")

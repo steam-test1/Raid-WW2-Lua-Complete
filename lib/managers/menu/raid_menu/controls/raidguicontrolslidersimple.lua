@@ -41,11 +41,11 @@ end
 function RaidGUIControlSliderSimple:_create_slider_controls()
 	local w = self._params.w or RaidGUIControlSliderSimple.DEFAULT_WIDTH
 	self._slider_line_panel = self._object:panel({
-		x = nil,
-		layer = nil,
 		name = nil,
+		layer = nil,
 		y = nil,
 		w = nil,
+		x = nil,
 		name = self._name .. "_slider_line_panel",
 		x = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[3] / 2,
 		y = RaidGUIControlSliderSimple.HEIGHT / 2 - RaidGUIControlSliderSimple.SLIDER_LINE_HEIGHT / 2,
@@ -53,30 +53,30 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 		layer = self._object:layer()
 	})
 	self._slider_line = self._slider_line_panel:three_cut_bitmap({
-		x = 0,
+		color = nil,
 		name = nil,
+		y = 0,
+		x = 0,
 		right = "slider_line_right_base",
 		w = nil,
 		center = "slider_line_center_base",
 		layer = nil,
 		left = "slider_line_left_base",
-		color = nil,
-		y = 0,
 		name = self._name .. "_slider_line",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR,
 		layer = self._slider_line_panel:layer()
 	})
 	self._slider_line_active = self._slider_line_panel:three_cut_bitmap({
-		x = 0,
+		color = nil,
 		name = nil,
+		y = 0,
+		x = 0,
 		right = "slider_line_right_base",
 		w = nil,
 		center = "slider_line_center_base",
 		layer = nil,
 		left = "slider_line_left_base",
-		color = nil,
-		y = 0,
 		name = self._name .. "_slider_line_active",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_COLOR,
@@ -86,13 +86,13 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 	self._slider_line_panel:set_h(self._slider_line:h())
 
 	self._slider_thumb = self._object:bitmap({
-		x = 0,
 		w = nil,
 		h = nil,
 		layer = nil,
 		y = 0,
 		texture_rect = nil,
 		texture = nil,
+		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect,
 		w = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[3],

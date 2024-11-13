@@ -29,7 +29,6 @@ function EditZipLine:init(editor)
 	end_pos_sizer:add(btn_toolbar, 0, 1, "EXPAND,LEFT")
 
 	self._speed_params = {
-		floats = 0,
 		value = 0,
 		name = "Speed [cm/s]:",
 		sizer = nil,
@@ -39,17 +38,18 @@ function EditZipLine:init(editor)
 		name_proportions = 1,
 		min = 0,
 		tooltip = "Sets the speed of the zipline in cm/s",
+		floats = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
+				callback = nil,
 				callback = callback(self, self, "_update_speed")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
+				callback = nil,
 				callback = callback(self, self, "_update_speed")
 			}
 		}
@@ -58,7 +58,6 @@ function EditZipLine:init(editor)
 	CoreEws.number_controller(self._speed_params)
 
 	self._slack_params = {
-		floats = 0,
 		value = 0,
 		name = "Slack [cm]:",
 		sizer = nil,
@@ -68,17 +67,18 @@ function EditZipLine:init(editor)
 		name_proportions = 1,
 		min = 0,
 		tooltip = "Value to define slack of the zipline in cm",
+		floats = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
+				callback = nil,
 				callback = callback(self, self, "_update_slack")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
+				callback = nil,
 				callback = callback(self, self, "_update_slack")
 			}
 		}
@@ -88,11 +88,11 @@ function EditZipLine:init(editor)
 
 	self._type_params = {
 		tooltip = "Select a type from the combobox",
-		ctrlr_proportions = 1,
-		options = nil,
-		name = "Type:",
 		name_proportions = 1,
+		ctrlr_proportions = 1,
+		name = "Type:",
 		sorted = true,
+		options = nil,
 		sizer = nil,
 		panel = nil,
 		panel = panel,

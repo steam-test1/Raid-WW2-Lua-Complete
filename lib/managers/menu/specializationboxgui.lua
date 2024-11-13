@@ -29,20 +29,20 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local points_present = math.min(content_data.points_present, available_points)
 	local conversion_rate_number = math.round(xp_present / points_present)
 	local small_text = {
-		text = "",
-		font = nil,
 		layer = 1,
 		blend_mode = "add",
 		font_size = nil,
+		text = "",
+		font = nil,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size
 	}
 	local medium_text = {
-		text = "",
-		font = nil,
 		layer = 1,
 		blend_mode = "add",
 		font_size = nil,
+		text = "",
+		font = nil,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	}
@@ -181,6 +181,11 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 
 	self._anim_data = {
 		progress_bar = nil,
+		goto_end = false,
+		conversion_rate = nil,
+		available_points_present = nil,
+		end_available_points_present = nil,
+		start_available_points_present = nil,
 		end_points_present = nil,
 		start_points_present = 0,
 		end_xp_present = 0,
@@ -193,11 +198,6 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 		points_present = 0,
 		exp_count_text = nil,
 		xp_present = nil,
-		goto_end = false,
-		conversion_rate = nil,
-		available_points_present = nil,
-		end_available_points_present = nil,
-		start_available_points_present = nil,
 		progress_bar = progress_bar,
 		end_progress_width = progress_end:right() - progress_bar:left(),
 		exp_count_text = exp_count_text,

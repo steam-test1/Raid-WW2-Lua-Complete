@@ -55,11 +55,11 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	if not path_blocked then
 		Application:debug("[ExplosionManager] Damage player")
 		player:character_damage():damage_explosion({
-			position = nil,
+			range = nil,
+			damage = nil,
 			ignite_character = nil,
 			variant = "explosion",
-			damage = nil,
-			range = nil,
+			position = nil,
 			position = pos,
 			range = range,
 			damage = damage,
@@ -92,11 +92,11 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 	if alive(player) and player_dmg ~= 0 then
 		player:character_damage():damage_explosion({
-			position = nil,
+			range = nil,
+			damage = nil,
 			ignite_character = nil,
 			variant = "explosion",
-			damage = nil,
-			range = nil,
+			position = nil,
 			position = hit_pos,
 			range = range,
 			damage = player_dmg,
@@ -264,9 +264,9 @@ function ExplosionManager:detect_and_give_dmg(params)
 					attacker_unit = user_unit,
 					weapon_unit = owner,
 					col_ray = self._col_ray or {
-						position = nil,
 						body = nil,
 						ray = nil,
+						position = nil,
 						position = hit_body:position(),
 						ray = dir,
 						body = hit_body
@@ -508,9 +508,9 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 	if effect_name ~= "none" then
 		effect_id = World:effect_manager():spawn({
-			position = nil,
-			normal = nil,
 			effect = nil,
+			normal = nil,
+			position = nil,
 			effect = effect_idstring,
 			position = position,
 			normal = normal
@@ -519,9 +519,9 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 	if molotov_damage_effect_table ~= nil then
 		table.insert(molotov_damage_effect_table, {
-			detonation_position = nil,
 			detonation_normal = nil,
 			effect_id = nil,
+			detonation_position = nil,
 			effect_id = effect_id,
 			detonation_position = position,
 			detonation_normal = normal
@@ -584,9 +584,9 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 
 		if redir_name ~= empty_idstr then
 			World:effect_manager():spawn({
-				position = nil,
-				normal = nil,
 				effect = nil,
+				normal = nil,
+				position = nil,
 				effect = redir_name,
 				position = ray.position,
 				normal = ray.normal
@@ -595,9 +595,9 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 
 		if idstr_effect and idstr_effect ~= empty_idstr then
 			local id = World:effect_manager():spawn({
-				position = nil,
-				normal = nil,
 				effect = nil,
+				normal = nil,
+				position = nil,
 				effect = idstr_effect,
 				position = ray.position,
 				normal = ray.normal

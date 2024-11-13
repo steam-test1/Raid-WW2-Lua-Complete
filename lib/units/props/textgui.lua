@@ -92,6 +92,8 @@ function TextGui:_create_text_gui(row)
 	local font_size = text_data.font_size or self.FONT_SIZE
 	local font = text_data.font or self.FONT
 	local gui = self._panel:text({
+		visible = true,
+		vertical = "center",
 		align = "center",
 		y = 0,
 		text = nil,
@@ -99,8 +101,6 @@ function TextGui:_create_text_gui(row)
 		font_size = nil,
 		layer = 0,
 		color = nil,
-		visible = true,
-		vertical = "center",
 		text = text_data.text,
 		font = font,
 		font_size = font_size,
@@ -224,11 +224,11 @@ function TextGui:add_text(row, text, color_type, font_size, align_h, font)
 	local data = self._texts_data[row]
 
 	table.insert(data.texts_data, {
-		text = nil,
+		color_type = nil,
 		font_size = nil,
 		align_h = nil,
+		text = nil,
 		font = nil,
-		color_type = nil,
 		text = text,
 		color_type = color_type,
 		font_size = font_size,

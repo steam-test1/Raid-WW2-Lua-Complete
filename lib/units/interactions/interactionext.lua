@@ -294,9 +294,9 @@ function BaseInteractionExt:_show_interaction_text(custom_text_id)
 
 	if self._hide_interaction_prompt ~= true then
 		managers.hud:show_interact({
+			text = nil,
 			details = nil,
 			icon = nil,
-			text = nil,
 			text = text,
 			icon = icon,
 			details = details
@@ -373,9 +373,9 @@ function BaseInteractionExt:interact_start(player, locator)
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
 			text = nil,
-			shelf_life = 5,
-			duration = 2,
 			id = nil,
+			duration = 2,
+			shelf_life = 5,
 			id = hint_id,
 			text = managers.localization:text(hint_id)
 		})
@@ -415,8 +415,8 @@ function BaseInteractionExt:interact_start(player, locator)
 		local delay = timer * 0.1 + math.random() * timer * 0.2
 
 		managers.queued_tasks:queue("player_say_interacting", self._interact_say, self, {
-			event = nil,
 			player = nil,
+			event = nil,
 			player = player,
 			event = player_say_interacting
 		}, delay, nil)
@@ -1109,8 +1109,8 @@ function HealthPickupInteractionExt:_get_interaction_details()
 
 		if not local_player:character_damage():is_max_revives() then
 			return {
-				icon = "waypoint_special_health",
 				text = nil,
+				icon = "waypoint_special_health",
 				text = managers.localization:text("details_returns_one_down")
 			}
 		end
@@ -1468,13 +1468,13 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 
 		managers.notification:add_notification({
 			text = nil,
-			shelf_life = 5,
-			duration = 3,
 			id = nil,
+			duration = 3,
+			shelf_life = 5,
 			id = hint,
 			text = managers.localization:text(hint, {
-				LOCATION = nil,
 				TEAMMATE = nil,
+				LOCATION = nil,
 				TEAMMATE = self._unit:base():nick_name(),
 				LOCATION = location
 			})
@@ -1487,11 +1487,11 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 			local timer = self.tweak_data == "revive" and (self._unit:base().is_husk_player and down_time or tweak_data.character[self._unit:base()._tweak_table].damage.DOWNED_TIME)
 
 			managers.hud:add_waypoint(self._wp_id, {
+				unit = nil,
+				text = nil,
 				distance = nil,
 				waypoint_type = "revive",
-				unit = nil,
 				icon = nil,
-				text = nil,
 				text = text,
 				icon = icon,
 				unit = self._unit,
@@ -1573,16 +1573,16 @@ function ReviveInteractionExt:interact(reviving_unit)
 		}
 
 		managers.statistics:revived({
-			npc = false,
 			reviving_unit = nil,
+			npc = false,
 			reviving_unit = reviving_unit
 		})
 		self._unit:network():send_to_unit(revive_rpc_params)
 	else
 		self._unit:character_damage():revive(reviving_unit)
 		managers.statistics:revived({
-			npc = true,
 			reviving_unit = nil,
+			npc = true,
 			reviving_unit = reviving_unit
 		})
 	end
@@ -1695,8 +1695,8 @@ function MultipleEquipmentBagInteractionExt:sync_interacted(peer, player, amount
 		managers.network:session():send_to_peer(peer, "give_equipment", equipment_name, amount_to_give, false)
 	elseif player then
 		managers.player:add_special({
-			amount = nil,
 			name = nil,
+			amount = nil,
 			name = equipment_name,
 			amount = amount_to_give
 		})
@@ -1727,8 +1727,8 @@ end
 function SmallLootInteractionExt:_get_interaction_details()
 	local value = self._unit:loot_drop() and self._unit:loot_drop():value()
 	local details = {
-		icon = "rewards_dog_tags_small",
 		text = nil,
+		icon = "rewards_dog_tags_small",
 		text = tostring(value) .. "x " .. managers.localization:text("hud_dog_tags")
 	}
 
@@ -1904,9 +1904,9 @@ function IntimitateInteractionExt:on_peer_interacted(tweak_table_name)
 	if tweak then
 		local value = tweak.value
 		local notification_item = {
+			name_id = nil,
 			value = nil,
 			icon = nil,
-			name_id = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,
 			value = value
@@ -2110,8 +2110,8 @@ function CarryInteractionExt:_get_interaction_details()
 		end
 
 		local details = {
-			icon = "weight_icon",
 			text = nil,
+			icon = "weight_icon",
 			text = weight
 		}
 
@@ -2224,8 +2224,8 @@ function EventIDInteractionExt:interact_start(player)
 		local delay = timer * 0.1 + math.random() * timer * 0.2
 
 		managers.queued_tasks:queue("player_say_interacting", self._interact_say, self, {
-			event = nil,
 			player = nil,
+			event = nil,
 			player = player,
 			event = player_say_interacting
 		}, delay, nil)
@@ -2815,8 +2815,8 @@ end
 function GreedItemInteractionExt:_get_interaction_details()
 	local value = self._unit:greed():value()
 	local details = {
-		icon = "carry_gold",
 		text = nil,
+		icon = "carry_gold",
 		text = value .. "g"
 	}
 
@@ -2907,8 +2907,8 @@ function GreedCacheItemInteractionExt:_get_interaction_details()
 
 	local value = self._unit:greed():reserve_left()
 	local details = {
-		icon = "carry_gold",
 		text = nil,
+		icon = "carry_gold",
 		text = value .. "g"
 	}
 
@@ -2942,10 +2942,10 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	local notification_data = {
 		notification_type = nil,
 		priority = 3,
-		doc_text = "hud_hint_consumable_mission_secured",
-		doc_icon = "notification_consumable",
 		duration = 4,
+		doc_text = "hud_hint_consumable_mission_secured",
 		id = "hud_hint_consumable_mission",
+		doc_icon = "notification_consumable",
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 
@@ -3078,8 +3078,8 @@ function CandyPickupInteractionExt:_get_interaction_details()
 
 	if interaction_detail then
 		local details = {
-			icon = nil,
 			text = nil,
+			icon = nil,
 			icon = interaction_detail.icon,
 			text = managers.localization:text(interaction_detail.text)
 		}

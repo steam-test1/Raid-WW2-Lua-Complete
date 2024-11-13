@@ -354,9 +354,9 @@ function ListenerManager:activate_set(stack_id, set_id)
 			local link_id = active_set_stack:add(set_id)
 			local activation_id = self._last_activation_id + 1
 			self._activation_map[activation_id] = {
+				link_id = nil,
 				set_id = nil,
 				stack_id = nil,
-				link_id = nil,
 				stack_id = stack_id,
 				set_id = set_id,
 				link_id = link_id

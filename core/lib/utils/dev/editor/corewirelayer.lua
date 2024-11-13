@@ -31,22 +31,22 @@ function WireLayer:save()
 		local t_pos = math.vector_to_string(target:position())
 		local t_rot = target:rotation()
 		local wire_data = {
-			target_rot = nil,
 			target_pos = nil,
 			slack = nil,
+			target_rot = nil,
 			target_pos = target:position(),
 			target_rot = target:rotation(),
 			slack = unit:wire_data().slack
 		}
 		local t = {
+			continent = nil,
 			data = nil,
 			entry = nil,
-			continent = nil,
 			entry = self._save_name,
 			continent = unit:unit_data().continent and unit:unit_data().continent:name(),
 			data = {
-				unit_data = nil,
 				wire_data = nil,
+				unit_data = nil,
 				unit_data = CoreEditorSave.save_data_table(unit),
 				wire_data = wire_data
 			}
@@ -55,9 +55,9 @@ function WireLayer:save()
 		self:_add_project_unit_save_data(unit, t.data)
 		managers.editor:add_save_data(t)
 		managers.editor:add_to_world_package({
+			continent = nil,
 			name = nil,
 			category = "units",
-			continent = nil,
 			name = unit:name():s(),
 			continent = unit:unit_data().continent
 		})
@@ -227,8 +227,6 @@ function WireLayer:build_panel(notebook)
 	self._sizer:add(slack_sizer, 1, 0, "EXPAND")
 
 	local slack_params = {
-		panel = nil,
-		name = "Slack:",
 		number_ctrlr_proportions = 1,
 		slider_ctrlr_proportions = 3,
 		ctrlr_proportions = 4,
@@ -238,6 +236,8 @@ function WireLayer:build_panel(notebook)
 		floats = 0,
 		value = 0,
 		sizer = nil,
+		panel = nil,
+		name = "Slack:",
 		panel = self._ews_panel,
 		sizer = slack_sizer
 	}

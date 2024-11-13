@@ -1414,9 +1414,9 @@ function ReplaceUnit:init(name, types)
 	units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 	units:thaw()
 	unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
-		names = nil,
 		units = nil,
 		filter = nil,
+		names = nil,
 		filter = unit_filter,
 		units = units,
 		names = unit_names
@@ -1446,9 +1446,9 @@ function ReplaceUnit:init(name, types)
 		units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 		units:thaw()
 		unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
-			names = nil,
 			units = nil,
 			filter = nil,
+			names = nil,
 			filter = unit_filter,
 			units = units,
 			names = names
@@ -1570,8 +1570,8 @@ function LayerReplaceUnit:init(layer)
 	self:update_list()
 	self._panel_sizer:add(self._units, 1, 0, "EXPAND")
 	self._units:connect("EVT_COMMAND_LISTBOX_DOUBLECLICKED", callback(self, self, "replace_unit"), {
-		all = false,
 		units = nil,
+		all = false,
 		units = self._units
 	})
 	self._units:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1582,8 +1582,8 @@ function LayerReplaceUnit:init(layer)
 	local replace_btn = EWS:Button(self._panel, "Replace", "", "")
 
 	replace_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		all = false,
 		units = nil,
+		all = false,
 		units = self._units
 	})
 	replace_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1592,8 +1592,8 @@ function LayerReplaceUnit:init(layer)
 	local replace_all_btn = EWS:Button(self._panel, "Replace All", "", "")
 
 	replace_all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		all = true,
 		units = nil,
+		all = true,
 		units = self._units
 	})
 	replace_all_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1775,27 +1775,27 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1811,16 +1811,16 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = 0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = -0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -1941,27 +1941,27 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1977,16 +1977,16 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = 0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = -0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -2111,27 +2111,27 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2147,16 +2147,16 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = 0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		coor = nil,
 		ctrl = nil,
 		step = -0.1,
+		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -2322,56 +2322,56 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	if type == "offset" then
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-rotation in degrees")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_rotation"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_rotation"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_rotation_spin"), {
-			coor = nil,
 			ctrl = nil,
 			step = 1,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_rotation_spin"), {
-			coor = nil,
 			ctrl = nil,
 			step = -1,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-coordinates in cm")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_position"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_position"), {
-			coor = nil,
 			ctrl = nil,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_position_spin"), {
-			coor = nil,
 			ctrl = nil,
 			step = 10,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_position_spin"), {
-			coor = nil,
 			ctrl = nil,
 			step = -10,
+			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})

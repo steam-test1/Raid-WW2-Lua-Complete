@@ -17,9 +17,9 @@ function RaidGUIControlBranchingBarSkilltreePath:init(parent, params)
 		layer = layer
 	})
 	self._active_line = self._panel:polyline({
+		line_width = nil,
 		color = nil,
 		layer = nil,
-		line_width = nil,
 		line_width = line_width,
 		color = self.COLOR_FILL,
 		layer = layer + 1

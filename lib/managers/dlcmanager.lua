@@ -272,8 +272,8 @@ function PS4DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				preorder = nil,
 				full_game = nil,
+				preorder = nil,
 				full_game = {
 					verified = true
 				},
@@ -337,8 +337,8 @@ function PS4DLCManager:buy_full_game()
 	managers.menu:show_waiting_NPCommerce_open()
 
 	self._request = {
-		product = "full_game",
-		type = "buy_product"
+		type = "buy_product",
+		product = "full_game"
 	}
 	self._activity = {
 		type = "open"
@@ -359,8 +359,8 @@ function PS4DLCManager:buy_product(product_name)
 	managers.menu:show_waiting_NPCommerce_open()
 
 	self._request = {
-		product = nil,
 		type = "buy_product",
+		product = nil,
 		product = product_name
 	}
 	self._activity = {
@@ -471,16 +471,16 @@ function XB1DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				preorder = nil,
 				full_game = nil,
+				preorder = nil,
 				full_game = {
-					verified = true,
 					is_default = true,
+					verified = true,
 					index = 0
 				},
 				preorder = {
-					product_id = "123456",
 					is_default = false,
+					product_id = "123456",
 					index = 1
 				}
 			}
@@ -539,33 +539,33 @@ function WINDLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				preorder = nil,
 				raid_community = nil,
 				full_game = nil,
 				special_edition = nil,
 				official_soundtrack = nil,
+				preorder = nil,
 				full_game = {
 					verified = true,
-					app_id = nil,
 					external = true,
 					no_install = true,
+					app_id = nil,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {
-					no_install = true,
-					app_id = "707070"
+					app_id = "707070",
+					no_install = true
 				},
 				special_edition = {
-					no_install = true,
-					app_id = "707080"
+					app_id = "707080",
+					no_install = true
 				},
 				raid_community = {
-					no_install = true,
-					source_id = "103582791460014708"
+					source_id = "103582791460014708",
+					no_install = true
 				},
 				official_soundtrack = {
-					no_install = true,
-					app_id = "720860"
+					app_id = "720860",
+					no_install = true
 				}
 			}
 		}

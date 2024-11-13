@@ -16,13 +16,13 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self._node = node
 	self._ws_panel = self._ws:panel()
 	self._ws_panel = self._ws_panel:panel({
-		y = nil,
-		w = nil,
 		x = nil,
-		layer = nil,
+		w = nil,
 		background_color = nil,
 		name = nil,
 		h = nil,
+		layer = nil,
+		y = nil,
 		name = self._name .. "_ws_panel",
 		background_color = self._background_color,
 		x = self._panel_x,
@@ -46,13 +46,13 @@ function RaidGuiBase:init(ws, fullscreen_ws, node, component_name)
 	self:_set_initial_data()
 
 	local params_root_panel = {
-		y = nil,
-		w = nil,
 		x = nil,
-		layer = nil,
+		w = nil,
 		background_color = nil,
 		name = nil,
 		h = nil,
+		layer = nil,
+		y = nil,
 		is_root_panel = nil,
 		name = self._name .. "_panel",
 		background_color = self._background_color,
@@ -113,13 +113,13 @@ end
 function RaidGuiBase:_create_border()
 	local border_thickness = 1.6
 	self._border_left = self._root_panel:gradient({
-		y = 0,
-		orientation = "vertical",
 		x = 0,
 		layer = 100,
 		w = nil,
 		name = "border_left",
 		h = nil,
+		y = 0,
+		orientation = "vertical",
 		w = border_thickness,
 		h = self._root_panel:h()
 	})
@@ -132,13 +132,13 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_right = self._root_panel:gradient({
-		y = 0,
-		orientation = "vertical",
 		x = nil,
 		layer = 100,
 		w = nil,
 		name = "border_right",
 		h = nil,
+		y = 0,
+		orientation = "vertical",
 		x = self._root_panel:w() - border_thickness,
 		w = border_thickness,
 		h = self._root_panel:h()
@@ -152,13 +152,13 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_up = self._root_panel:gradient({
-		y = 0,
-		orientation = "horizontal",
 		x = 0,
 		layer = 100,
 		w = nil,
 		name = "border_up",
 		h = nil,
+		y = 0,
+		orientation = "horizontal",
 		w = self._root_panel:w(),
 		h = border_thickness
 	})
@@ -177,13 +177,13 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_down = self._root_panel:gradient({
-		y = nil,
-		orientation = "horizontal",
 		x = 0,
 		layer = 100,
 		w = nil,
 		name = "border_down",
 		h = nil,
+		y = nil,
+		orientation = "horizontal",
 		y = self._root_panel:h() - border_thickness,
 		w = self._root_panel:w(),
 		h = border_thickness

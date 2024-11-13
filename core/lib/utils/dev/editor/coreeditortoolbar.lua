@@ -118,9 +118,9 @@ function CoreEditor:build_toolbar()
 	end
 
 	self._ews_triggers.change_snaprot_axis = callback(self, self, "change_snaprot_axis", {
-		t = "_coordinate_systems",
-		menu = nil,
 		combobox = nil,
+		menu = nil,
+		t = "_coordinate_systems",
 		value = "_coordinate_system",
 		combobox = self._ref_coordinate_system,
 		menu = self._coordinate_menu
@@ -203,8 +203,8 @@ function CoreEditor:build_ref_coordinate_system()
 	for _, coor in ipairs(self._coordinate_systems) do
 		self._ref_coordinate_system:append(coor)
 		Global.frame:connect(coor, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_combobox_value"), {
-			menu = nil,
 			combobox = nil,
+			menu = nil,
 			value = "_coordinate_system",
 			combobox = self._ref_coordinate_system,
 			menu = self._coordinate_menu
@@ -215,17 +215,17 @@ function CoreEditor:build_ref_coordinate_system()
 	self._ref_coordinate_system:set_size(Vector3(60, -1, 0))
 	self._toolbar:add_control(self._ref_coordinate_system)
 	self._ref_coordinate_system:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_combo_box"), {
-		menu = nil,
 		combobox = nil,
+		menu = nil,
 		value = "_coordinate_system",
 		combobox = self._ref_coordinate_system,
 		menu = self._coordinate_menu
 	})
 
 	self._ews_triggers.toggle_coordinate_system = callback(self, self, "change_combo_box_trg", {
-		t = "_coordinate_systems",
-		menu = nil,
 		combobox = nil,
+		menu = nil,
+		t = "_coordinate_systems",
 		value = "_coordinate_system",
 		combobox = self._ref_coordinate_system,
 		menu = self._coordinate_menu
@@ -244,9 +244,9 @@ function CoreEditor:build_grid_sizes(icons_path)
 	for _, g in pairs(self._grid_sizes) do
 		sizes:append(g)
 		Global.frame:connect("TB_GRIDSIZE" .. g, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_combobox_value"), {
+			combobox = nil,
 			choice = nil,
 			menu = nil,
-			combobox = nil,
 			value = "_grid_size",
 			combobox = sizes,
 			menu = self._grid_sizes_menu,
@@ -259,20 +259,20 @@ function CoreEditor:build_grid_sizes(icons_path)
 	sizes:set_size(Vector3(55, -1, 0))
 	self._toolbar:add_control(sizes)
 	sizes:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_combo_box"), {
-		menu = nil,
-		prefix = "TB_GRIDSIZE",
 		combobox = nil,
+		prefix = "TB_GRIDSIZE",
+		menu = nil,
 		value = "_grid_size",
 		combobox = sizes,
 		menu = self._grid_sizes_menu
 	})
 
 	self._ews_triggers.change_grid_size = callback(self, self, "change_combo_box_trg", {
+		combobox = nil,
+		prefix = "TB_GRIDSIZE",
 		menu = nil,
 		value = "_grid_size",
 		t = "_grid_sizes",
-		combobox = nil,
-		prefix = "TB_GRIDSIZE",
 		combobox = sizes,
 		menu = self._grid_sizes_menu
 	})
@@ -290,9 +290,9 @@ function CoreEditor:build_snap_rotations()
 	for _, r in pairs(self._snap_rotations) do
 		rotations:append(r)
 		Global.frame:connect("TB_SNAPROTATION" .. r, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_combobox_value"), {
+			combobox = nil,
 			choice = nil,
 			menu = nil,
-			combobox = nil,
 			value = "_snap_rotation",
 			combobox = rotations,
 			menu = self._snap_rotations_menu,
@@ -305,20 +305,20 @@ function CoreEditor:build_snap_rotations()
 	rotations:set_size(Vector3(55, -1, 0))
 	self._toolbar:add_control(rotations)
 	rotations:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_combo_box"), {
-		menu = nil,
-		prefix = "TB_SNAPROTATION",
 		combobox = nil,
+		prefix = "TB_SNAPROTATION",
+		menu = nil,
 		value = "_snap_rotation",
 		combobox = rotations,
 		menu = self._snap_rotations_menu
 	})
 
 	self._ews_triggers.change_snaprot = callback(self, self, "change_combo_box_trg", {
+		combobox = nil,
+		prefix = "TB_SNAPROTATION",
 		menu = nil,
 		value = "_snap_rotation",
 		t = "_snap_rotations",
-		combobox = nil,
-		prefix = "TB_SNAPROTATION",
 		combobox = rotations,
 		menu = self._snap_rotations_menu
 	})
@@ -339,13 +339,13 @@ function CoreEditor:build_rotation_speed()
 	rot_speed:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_rot_speed"), rot_speed)
 
 	self._ews_triggers.increase_rotation_speed = callback(self, self, "update_rot_speed_trg", {
-		ctrlr = nil,
 		value = 1,
+		ctrlr = nil,
 		ctrlr = rot_speed
 	})
 	self._ews_triggers.decrease_rotation_speed = callback(self, self, "update_rot_speed_trg", {
-		ctrlr = nil,
 		value = -1,
+		ctrlr = nil,
 		ctrlr = rot_speed
 	})
 

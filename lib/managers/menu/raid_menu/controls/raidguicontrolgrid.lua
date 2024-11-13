@@ -23,9 +23,9 @@ function RaidGUIControlGrid:init(parent, params)
 	end
 
 	self._grid_panel = self._panel:panel({
-		x = 0,
 		w = nil,
 		y = 0,
+		x = 0,
 		w = self._grid_control_width
 	})
 	self._object = self._grid_panel

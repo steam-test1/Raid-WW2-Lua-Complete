@@ -420,19 +420,19 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
 	local action_data = {
-		attack_dir = nil,
-		damage = nil,
-		damage_effect = nil,
-		attacker_unit = nil,
 		col_ray = nil,
+		attacker_unit = nil,
+		damage_effect = nil,
+		damage = nil,
+		attack_dir = nil,
 		variant = "counter_tased",
 		damage = taser_unit:character_damage()._HEALTH_INIT * (tweak_data.upgrades.counter_taser_damage or 0.2),
 		damage_effect = taser_unit:character_damage()._HEALTH_INIT * 2,
 		attacker_unit = self._unit,
 		attack_dir = -taser_unit:movement()._action_common_data.fwd,
 		col_ray = {
-			position = nil,
 			body = nil,
+			position = nil,
 			position = mvector3.copy(taser_unit:movement():m_head_pos()),
 			body = taser_unit:body("body")
 		}
@@ -447,18 +447,18 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	end
 
 	local action_data = {
-		attack_dir = nil,
-		damage = 0,
-		damage_effect = nil,
-		attacker_unit = nil,
 		col_ray = nil,
+		attacker_unit = nil,
+		damage_effect = nil,
+		damage = 0,
+		attack_dir = nil,
 		variant = "counter_tased",
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 2,
 		attacker_unit = self._unit,
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,
 		col_ray = {
-			position = nil,
 			body = nil,
+			position = nil,
 			position = mvector3.copy(self._taser_unit:movement():m_head_pos()),
 			body = self._taser_unit:body("body")
 		}
@@ -474,27 +474,27 @@ function PlayerTased:_on_malfunction_to_taser_event()
 	end
 
 	World:effect_manager():spawn({
-		normal = nil,
-		effect = nil,
 		position = nil,
+		effect = nil,
+		normal = nil,
 		effect = tweak_data.common_effects.taser_stop,
 		position = self._taser_unit:movement():m_head_pos(),
 		normal = math.UP
 	})
 
 	local action_data = {
-		attack_dir = nil,
-		damage = 0,
-		damage_effect = nil,
-		attacker_unit = nil,
 		col_ray = nil,
+		attacker_unit = nil,
+		damage_effect = nil,
+		damage = 0,
+		attack_dir = nil,
 		variant = "melee",
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 10,
 		attacker_unit = self._unit,
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,
 		col_ray = {
-			position = nil,
 			body = nil,
+			position = nil,
 			position = mvector3.copy(self._taser_unit:movement():m_head_pos()),
 			body = self._taser_unit:body("body")
 		}

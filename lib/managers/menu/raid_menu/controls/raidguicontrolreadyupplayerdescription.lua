@@ -21,18 +21,16 @@ end
 function RaidGUIControlReadyUpPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
+		texture_rect = nil,
 		texture = nil,
 		name = "class_icon",
 		y = 32,
 		x = 32,
-		texture_rect = nil,
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect
 	})
 	self._player_name = self._object:label({
 		font = nil,
-		h = 26,
-		w = 256,
 		color = nil,
 		font_size = nil,
 		name = "player_name",
@@ -41,6 +39,8 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		text = "PLAYER NAME 1",
 		vertical = "center",
 		align = "left",
+		h = 26,
+		w = 256,
 		x = self._class_icon:right() + 8,
 		y = self._class_icon:top(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -49,8 +49,6 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	})
 	self._status_label = self._object:label({
 		font = nil,
-		h = 22,
-		w = 256,
 		color = nil,
 		font_size = nil,
 		name = "player_status",
@@ -59,6 +57,8 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		text = nil,
 		vertical = "center",
 		align = "left",
+		h = 22,
+		w = 256,
 		x = self._player_name:left(),
 		y = self._player_name:bottom() + 6,
 		text = self:translate("menu_not_ready", true),
@@ -67,19 +67,17 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		color = tweak_data.gui.colors.raid_grey_effects
 	})
 	self._selected_card_icon = self._object:bitmap({
+		texture_rect = nil,
 		texture = nil,
 		name = "selected_card_icon",
 		y = nil,
 		x = 352,
-		texture_rect = nil,
 		y = self._player_name:top(),
 		texture = tweak_data.gui.icons.ready_up_card_not_selected.texture,
 		texture_rect = tweak_data.gui.icons.ready_up_card_not_selected.texture_rect
 	})
 	self._player_level = self._object:label({
 		font = nil,
-		h = 24,
-		w = 64,
 		color = nil,
 		font_size = nil,
 		name = "player_level",
@@ -88,6 +86,8 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		text = "00",
 		vertical = "center",
 		align = "left",
+		h = 24,
+		w = 64,
 		x = self._selected_card_icon:right() + 16,
 		y = self._player_name:top(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -95,12 +95,12 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
 	self._select_marker_rect = self._object:rect({
-		w = nil,
-		name = "select_marker_rect",
 		y = 0,
-		x = 0,
 		color = nil,
 		h = nil,
+		name = "select_marker_rect",
+		w = nil,
+		x = 0,
 		w = self._object:w(),
 		h = self._object:h(),
 		color = tweak_data.gui.colors.raid_select_card_background
@@ -109,12 +109,12 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	self._select_marker_rect:hide()
 
 	self._top_select_triangle = self._object:image({
+		y = 0,
+		texture_rect = nil,
 		texture = nil,
 		h = nil,
-		y = 0,
-		x = 0,
 		w = nil,
-		texture_rect = nil,
+		x = 0,
 		w = RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 		h = RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -124,12 +124,12 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 	self._top_select_triangle:hide()
 
 	self._bottom_select_triangle = self._object:image({
+		y = nil,
+		texture_rect = nil,
 		texture = nil,
 		h = nil,
-		y = nil,
-		x = nil,
 		w = nil,
-		texture_rect = nil,
+		x = nil,
 		x = self._object:w() - RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 		y = self._object:h() - RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 		w = RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
@@ -143,11 +143,11 @@ end
 
 function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 	local chat_indicator_params_speaking = {
+		layer = 30,
+		texture_rect = nil,
 		texture = nil,
 		name = "chat_indicator_speaking",
 		alpha = 0,
-		layer = 30,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_SPEAKING].texture_rect
 	}
@@ -160,11 +160,11 @@ function RaidGUIControlReadyUpPlayerDescription:_create_voice_chat_indicator()
 	self._chat_indicator_speaking:set_center_y(y)
 
 	local chat_indicator_params_muted = {
+		layer = 30,
+		texture_rect = nil,
 		texture = nil,
 		name = "chat_indicator_muted",
 		alpha = 0,
-		layer = 30,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlReadyUpPlayerDescription.CHAT_ICON_MUTED].texture_rect
 	}
@@ -227,11 +227,11 @@ function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 
 	if data.is_host then
 		self._object:bitmap({
+			texture_rect = nil,
 			texture = nil,
 			name = "host_icon",
 			y = nil,
 			x = nil,
-			texture_rect = nil,
 			x = self._class_icon:left() + 28,
 			y = self._class_icon:top() + 28,
 			texture = tweak_data.gui.icons.player_panel_host_indicator.texture,

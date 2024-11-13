@@ -377,9 +377,9 @@ function CoreParticleEditorPanel:update(t, dt)
 			self._quality = nil
 			local gizmo = self._editor:effect_gizmo()
 			self._effect_id = World:effect_manager():spawn({
-				effect = nil,
 				parent = nil,
 				custom_quality = nil,
+				effect = nil,
 				effect = Idstring("unique_test_effect_name"),
 				parent = gizmo:get_object(Idstring("rp_root_point")),
 				custom_quality = quality
@@ -842,6 +842,7 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 
 	if self._valid_effect then
 		Application:data_compile({
+			target_db_root = nil,
 			source_root = nil,
 			verbose = false,
 			platform = nil,
@@ -849,7 +850,6 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 			send_idstrings = false,
 			target_db_name = "all",
 			preprocessor_definitions = "preprocessor_definitions",
-			target_db_root = nil,
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "/assets",

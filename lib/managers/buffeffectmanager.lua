@@ -1,4 +1,5 @@
 require("lib/managers/buff_effect/BuffEffect")
+require("lib/managers/buff_effect/BuffEffectCandy")
 
 BuffEffectManager = BuffEffectManager or class()
 BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE = "enemy_loot_drop_reward_increase"
@@ -88,10 +89,10 @@ function BuffEffectManager:activate_effect(effect_data)
 
 	if effect_data.name == BuffEffectManager.EFFECT_COMPLETE_RAID_WITHIN then
 		self._timers[effect_data.name] = {
-			start_time = nil,
 			effect_id = nil,
-			value = nil,
+			start_time = nil,
 			effect_name = nil,
+			value = nil,
 			start_time = TimerManager:game():time(),
 			value = effect_data.value,
 			effect_id = effect.effect_id,
@@ -259,10 +260,10 @@ function BuffEffectManager:save_dropin(data)
 	end
 
 	local state = {
-		active_effects = nil,
-		effect_id_counter = nil,
 		dt_sum = nil,
 		timers = nil,
+		active_effects = nil,
+		effect_id_counter = nil,
 		active_effects = active_effects,
 		dt_sum = self._dt_sum,
 		effect_id_counter = self._effect_id_counter,

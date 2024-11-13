@@ -150,10 +150,10 @@ function AiLayer:_draw(t, dt)
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
 								to_unit = nil,
+								from_unit = nil,
 								b = 0,
 								g = 0,
 								r = 1,
-								from_unit = nil,
 								from_unit = unit,
 								to_unit = to_unit
 							})
@@ -166,10 +166,10 @@ function AiLayer:_draw(t, dt)
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
 								to_unit = nil,
+								from_unit = nil,
 								b = 0,
 								g = 1,
 								r = 0,
-								from_unit = nil,
 								from_unit = unit,
 								to_unit = to_unit
 							})
@@ -221,14 +221,14 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
-				thick = true,
-				b = 1,
-				g = 1,
-				r = 1,
 				to_unit = nil,
 				circle_multiplier = nil,
 				height_offset = 0,
 				from_unit = nil,
+				thick = true,
+				b = 1,
+				g = 1,
+				r = 1,
 				from_unit = point.unit,
 				to_unit = to_unit,
 				circle_multiplier = selected_path and 0.5 or 0.25
@@ -338,12 +338,12 @@ function AiLayer:build_panel(notebook)
 	build_settings:add(self._all_visible, 0, 0, "EXPAND")
 
 	self._ray_length_params = {
-		ctrlr_proportions = 3,
 		value = 150,
-		name = "Ray length [cm]:",
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
+		name = "Ray length [cm]:",
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		floats = 0,
 		sizer = nil,
@@ -392,16 +392,16 @@ end
 function AiLayer:_build_ai_settings()
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local group_state = {
-		options = nil,
 		ctrlr_proportions = 3,
-		sorted = true,
-		value = nil,
-		name = "Group state:",
 		name_proportions = 1,
 		sizer_proportions = 1,
+		value = nil,
+		name = "Group state:",
 		tooltip = "Select a group state from the combo box",
+		sorted = true,
 		sizer = nil,
 		panel = nil,
+		options = nil,
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
 		options = managers.groupai:state_names(),
@@ -421,12 +421,12 @@ end
 function AiLayer:_build_ai_unit_settings()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Unit settings")
 	local suspicion_multiplier = {
-		ctrlr_proportions = 4,
 		value = 1,
-		name = "Suspicion Multiplier:",
+		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
+		name = "Suspicion Multiplier:",
 		tooltip = "multiplier applied to suspicion buildup rate",
 		floats = 1,
 		sizer = nil,
@@ -440,12 +440,12 @@ function AiLayer:_build_ai_unit_settings()
 	suspicion_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_suspicion_mul"), nil)
 
 	local detection_multiplier = {
-		ctrlr_proportions = 4,
 		value = 1,
-		name = "Detection Multiplier:",
+		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 0.01,
+		name = "Detection Multiplier:",
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		floats = 2,
 		sizer = nil,
@@ -534,15 +534,15 @@ function AiLayer:_build_motion_path_section()
 	end
 
 	local mop_type = {
-		options = nil,
-		name = "Selected path type:",
-		sorted = false,
-		value = nil,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
+		value = nil,
+		name = "Selected path type:",
 		tooltip = "Path is used for either ground or airborne units.",
+		sorted = false,
 		sizer = nil,
 		panel = nil,
+		options = nil,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
 		options = mop_path_types,
@@ -553,11 +553,11 @@ function AiLayer:_build_motion_path_section()
 	path_type_ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_mop_type"), nil)
 
 	local speed_limit = {
-		ctrlr_proportions = 3,
 		value = 50,
-		name = "Default Speed Limit [km/h]:",
+		ctrlr_proportions = 3,
 		name_proportions = 1,
 		min = -1,
+		name = "Default Speed Limit [km/h]:",
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
 		floats = 1,
 		sizer = nil,
@@ -798,10 +798,10 @@ function AiLayer:_get_build_settings(type, build_type)
 
 	for _, unit in ipairs(units) do
 		local ray = managers.editor:unit_by_raycast({
-			from = nil,
 			to = nil,
 			sample = true,
 			mask = nil,
+			from = nil,
 			mask = managers.slot:get_mask("all"),
 			from = unit:position() + Vector3(0, 0, 50),
 			to = unit:position() - Vector3(0, 0, 150)
@@ -809,11 +809,11 @@ function AiLayer:_get_build_settings(type, build_type)
 
 		if ray and ray.position then
 			table.insert(settings, {
-				barrage_allowed = nil,
-				id = nil,
 				location_id = nil,
-				color = nil,
 				position = nil,
+				id = nil,
+				color = nil,
+				barrage_allowed = nil,
 				position = unit:position(),
 				id = unit:unit_data().unit_id,
 				color = Color(),

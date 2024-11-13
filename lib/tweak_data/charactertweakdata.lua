@@ -73,8 +73,8 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.weapon = deep_clone(presets.weapon.gang_member)
 	self.russian.HEALTH_INIT = 400
 	self.russian.weapon.weapons_of_choice = {
-		secondary = nil,
 		primary = nil,
+		secondary = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand")
 	}
@@ -87,9 +87,9 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.weapon_voice = "1"
 	self.russian.access = "teamAI2"
 	self.russian.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.russian.vision = presets.vision.easy
 end
@@ -102,8 +102,8 @@ function CharacterTweakData:_init_german(presets)
 	self.german.weapon = deep_clone(presets.weapon.gang_member)
 	self.german.HEALTH_INIT = 400
 	self.german.weapon.weapons_of_choice = {
-		secondary = nil,
 		primary = nil,
+		secondary = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson")
 	}
@@ -116,9 +116,9 @@ function CharacterTweakData:_init_german(presets)
 	self.german.weapon_voice = "2"
 	self.german.access = "teamAI3"
 	self.german.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.german.vision = presets.vision.easy
 end
@@ -131,8 +131,8 @@ function CharacterTweakData:_init_british(presets)
 	self.british.weapon = deep_clone(presets.weapon.gang_member)
 	self.british.HEALTH_INIT = 400
 	self.british.weapon.weapons_of_choice = {
-		secondary = nil,
 		primary = nil,
+		secondary = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand")
 	}
@@ -145,9 +145,9 @@ function CharacterTweakData:_init_british(presets)
 	self.british.weapon_voice = "3"
 	self.british.access = "teamAI1"
 	self.british.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.british.vision = presets.vision.easy
 end
@@ -160,8 +160,8 @@ function CharacterTweakData:_init_american(presets)
 	self.american.weapon = deep_clone(presets.weapon.gang_member)
 	self.american.HEALTH_INIT = 400
 	self.american.weapon.weapons_of_choice = {
-		secondary = nil,
 		primary = nil,
+		secondary = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson")
 	}
@@ -174,9 +174,9 @@ function CharacterTweakData:_init_american(presets)
 	self.american.weapon_voice = "3"
 	self.american.access = "teamAI4"
 	self.american.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.american.vision = presets.vision.easy
 end
@@ -312,8 +312,8 @@ function CharacterTweakData:_init_char_buff_gear()
 		pumkin_heads = {}
 	}
 	local pumpkin_heads = {
-		items = nil,
 		run_char_seqs = nil,
+		items = nil,
 		run_char_seqs = {
 			"detach_hat_no_debris"
 		},
@@ -325,33 +325,6 @@ function CharacterTweakData:_init_char_buff_gear()
 		}
 	}
 	self.char_buff_gear.pumkin_heads = {
-		german_fallschirmjager_light_shotgun = nil,
-		german_fallschirmjager_light_mp38 = nil,
-		german_fallschirmjager_light_kar98 = nil,
-		german_fallschirmjager_light = nil,
-		german_heavy_shotgun = nil,
-		german_heavy_mp38 = nil,
-		german_heavy_kar98 = nil,
-		german_heavy = nil,
-		german_grunt_heavy_shotgun = nil,
-		german_grunt_heavy_mp38 = nil,
-		german_black_waffen_sentry_gasmask = nil,
-		german_grunt_heavy = nil,
-		german_grunt_mid_shotgun = nil,
-		german_grunt_mid_mp38 = nil,
-		german_grunt_mid_kar98 = nil,
-		german_grunt_mid = nil,
-		german_grunt_light_shotgun = nil,
-		german_grunt_light_mp38 = nil,
-		german_grunt_light_kar98 = nil,
-		german_grunt_light = nil,
-		german_gasmask_shotgun = nil,
-		german_gasmask = nil,
-		german_light_shotgun = nil,
-		german_light_kar98 = nil,
-		german_light = nil,
-		german_waffen_ss_shotgun = nil,
-		german_waffen_ss_kar98 = nil,
 		german_waffen_ss = nil,
 		german_light_commander_backup_shotgun = nil,
 		german_light_commander_backup_kar98 = nil,
@@ -368,19 +341,56 @@ function CharacterTweakData:_init_char_buff_gear()
 		german_black_waffen_sentry_gasmask_commander_shotgun = nil,
 		german_black_waffen_sentry_gasmask_commander = nil,
 		german_black_waffen_sentry_gasmask_shotgun = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_black_waffen_sentry_gasmask = nil,
+		german_heavy_commander_backup_shotgun = nil,
+		german_heavy_commander_backup_kar98 = nil,
+		german_heavy_commander_backup = nil,
+		german_gasmask_commander_backup_shotgun = nil,
+		german_gasmask_commander_backup = nil,
+		german_heavy_mp38 = nil,
+		german_heavy_shotgun = nil,
+		german_fallschirmjager_light = nil,
+		german_fallschirmjager_light_kar98 = nil,
+		german_fallschirmjager_light_mp38 = nil,
+		german_fallschirmjager_light_shotgun = nil,
+		german_fallschirmjager_heavy = nil,
+		german_fallschirmjager_heavy_kar98 = nil,
+		german_fallschirmjager_heavy_mp38 = nil,
+		german_fallschirmjager_heavy_shotgun = nil,
+		german_gebirgsjager_light = nil,
+		german_gebirgsjager_light_kar98 = nil,
+		german_gebirgsjager_light_mp38 = nil,
+		german_gebirgsjager_light_shotgun = nil,
 		german_gebirgsjager_heavy = nil,
 		german_gebirgsjager_heavy_kar98 = nil,
 		german_gebirgsjager_heavy_mp38 = nil,
 		german_gebirgsjager_heavy_shotgun = nil,
-		german_gebirgsjager_light_shotgun = nil,
-		german_gebirgsjager_light_mp38 = nil,
-		german_gebirgsjager_light_kar98 = nil,
-		german_gebirgsjager_light = nil,
-		german_fallschirmjager_heavy_shotgun = nil,
-		german_fallschirmjager_heavy_mp38 = nil,
-		german_fallschirmjager_heavy_kar98 = nil,
-		german_fallschirmjager_heavy = nil,
+		german_heavy_kar98 = nil,
+		german_heavy = nil,
+		german_grunt_heavy_shotgun = nil,
+		german_grunt_heavy_mp38 = nil,
+		german_grunt_heavy_kar98 = nil,
+		german_grunt_heavy = nil,
+		german_grunt_mid_shotgun = nil,
+		german_grunt_mid_mp38 = nil,
+		german_grunt_mid_kar98 = nil,
+		german_grunt_mid = nil,
+		german_grunt_light_shotgun = nil,
+		german_grunt_light_mp38 = nil,
+		german_grunt_light_kar98 = nil,
+		german_grunt_light = nil,
+		german_gasmask_shotgun = nil,
+		german_gasmask = nil,
+		german_light_shotgun = nil,
+		german_light_kar98 = nil,
+		german_light = nil,
+		german_waffen_ss_shotgun = nil,
+		german_waffen_ss_kar98 = nil,
+		german_gasmask_commander_backup = pumpkin_heads,
+		german_gasmask_commander_backup_shotgun = pumpkin_heads,
+		german_heavy_commander_backup = pumpkin_heads,
+		german_heavy_commander_backup_kar98 = pumpkin_heads,
+		german_heavy_commander_backup_shotgun = pumpkin_heads,
 		german_black_waffen_sentry_gasmask = pumpkin_heads,
 		german_black_waffen_sentry_gasmask_shotgun = pumpkin_heads,
 		german_black_waffen_sentry_gasmask_commander = pumpkin_heads,
@@ -438,8 +448,8 @@ function CharacterTweakData:_init_char_buff_gear()
 		german_gebirgsjager_heavy_mp38 = pumpkin_heads,
 		german_gebirgsjager_heavy_shotgun = pumpkin_heads,
 		german_commander = {
-			items = nil,
 			run_char_seqs = nil,
+			items = nil,
 			run_char_seqs = {
 				"detach_hat_no_debris"
 			},
@@ -451,8 +461,8 @@ function CharacterTweakData:_init_char_buff_gear()
 			}
 		},
 		german_officer = {
-			items = nil,
 			run_char_seqs = nil,
+			items = nil,
 			run_char_seqs = {
 				"detach_hat_no_debris"
 			},
@@ -464,8 +474,8 @@ function CharacterTweakData:_init_char_buff_gear()
 			}
 		},
 		german_og_commander = {
-			items = nil,
 			run_char_seqs = nil,
+			items = nil,
 			run_char_seqs = {
 				"detach_hat_no_debris"
 			},
@@ -477,8 +487,8 @@ function CharacterTweakData:_init_char_buff_gear()
 			}
 		},
 		german_flamer = {
-			items = nil,
 			run_char_seqs = nil,
+			items = nil,
 			run_char_seqs = {},
 			items = {
 				Head = nil,
@@ -510,8 +520,8 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_light.weapon_voice = "1"
@@ -557,8 +567,8 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_mid.weapon_voice = "1"
@@ -606,8 +616,8 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_heavy.weapon_voice = "1"
@@ -653,8 +663,8 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gebirgsjager_light.weapon_voice = "1"
@@ -702,8 +712,8 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gebirgsjager_heavy.weapon_voice = "1"
@@ -749,8 +759,8 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_light.weapon_voice = "1"
@@ -796,8 +806,8 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_heavy.weapon_voice = "1"
@@ -843,8 +853,8 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_fallschirmjager_light.weapon_voice = "1"
@@ -892,8 +902,8 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_fallschirmjager_heavy.weapon_voice = "1"
@@ -941,8 +951,8 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gasmask.weapon_voice = "1"
@@ -1021,8 +1031,8 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_waffen_ss.weapon_voice = "1"
@@ -1065,8 +1075,8 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_commander.weapon_voice = "1"
@@ -1083,14 +1093,14 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.chatter = presets.enemy_chatter.cop
 	self.german_commander.steal_loot = false
 	self.german_commander.surrender = nil
-	self.german_commander.loot_table = "elite_enemy"
+	self.german_commander.loot_table = "special_enemy"
 	self.german_commander.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_commander.is_special = true
 	self.german_commander.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
 	self.german_commander.carry_tweak_corpse = "german_commander_body"
 	self.german_commander.gear = {
-		items = nil,
 		run_char_seqs = nil,
+		items = nil,
 		run_char_seqs = {},
 		items = {
 			Spine2 = nil,
@@ -1122,8 +1132,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_og_commander.weapon_voice = "1"
@@ -1146,8 +1156,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
 	self.german_og_commander.carry_tweak_corpse = "german_og_commander_body"
 	self.german_og_commander.gear = {
-		items = nil,
 		run_char_seqs = nil,
+		items = nil,
 		run_char_seqs = {},
 		items = {
 			Spine2 = nil,
@@ -1180,8 +1190,8 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_officer.weapon_voice = "1"
@@ -1195,7 +1205,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.deathguard = true
 	self.german_officer.chatter = presets.enemy_chatter.cop
 	self.german_officer.steal_loot = false
-	self.german_officer.loot_table = "elite_enemy"
+	self.german_officer.loot_table = "special_enemy"
 	self.german_officer.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_officer.carry_tweak_corpse = "german_commander_body"
 
@@ -1222,8 +1232,8 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.soviet_nkvd_int_security_captain.weapon_voice = "1"
@@ -1280,8 +1290,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 7,
-			max_duration = 9
+			max_duration = 9,
+			min_duration = 7
 		}
 	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
@@ -1298,8 +1308,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 		health_reference = "current",
 		zones = {
 			{
-				health_limit = 0.1,
-				none = 1
+				none = 1,
+				health_limit = 0.1
 			},
 			{
 				explode = 0.5,
@@ -1334,8 +1344,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		max_range = max_range,
 		additional_weapon_stats = {
-			cooldown_duration = 0.76,
-			shooting_duration = 2.5
+			shooting_duration = 2.5,
+			cooldown_duration = 0.76
 		},
 		range = {
 			far = 500,
@@ -1348,11 +1358,11 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		FALLOFF = {
 			{
-				acc = nil,
-				r = 200,
 				mode = nil,
 				recoil = nil,
 				dmg_mul = 1,
+				acc = nil,
+				r = 200,
 				acc = {
 					1,
 					1
@@ -1369,11 +1379,11 @@ function CharacterTweakData:_init_german_flamer(presets)
 				}
 			},
 			{
-				acc = nil,
-				r = 1000,
 				mode = nil,
 				recoil = nil,
 				dmg_mul = 0.5,
+				acc = nil,
+				r = 1000,
 				acc = {
 					1,
 					1
@@ -1390,11 +1400,11 @@ function CharacterTweakData:_init_german_flamer(presets)
 				}
 			},
 			{
-				acc = nil,
-				r = nil,
 				mode = nil,
 				recoil = nil,
 				dmg_mul = 0.25,
+				acc = nil,
+				r = nil,
 				r = max_range,
 				acc = {
 					1,
@@ -1451,8 +1461,8 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 7,
-			max_duration = 9
+			max_duration = 9,
+			min_duration = 7
 		}
 	}
 	self.german_sniper.priority_shout = "shout_loud_sniper"
@@ -1494,35 +1504,35 @@ function CharacterTweakData:_init_german_sniper(presets)
 		health_reference = "current",
 		zones = {
 			{
-				health_limit = 0.01,
-				none = 1
+				none = 1,
+				health_limit = 0.01
 			},
 			{
-				moderate = 0,
 				light = 0,
-				health_limit = 0.3,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				light = 0,
-				health_limit = 0.6,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				light = 0,
-				health_limit = 0.9,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				none = 1,
 				heavy = 0,
-				light = 0
+				moderate = 0,
+				none = 1,
+				health_limit = 0.3
+			},
+			{
+				light = 0,
+				heavy = 0,
+				moderate = 0,
+				none = 1,
+				health_limit = 0.6
+			},
+			{
+				light = 0,
+				heavy = 0,
+				moderate = 0,
+				none = 1,
+				health_limit = 0.9
+			},
+			{
+				none = 1,
+				moderate = 0,
+				light = 0,
+				heavy = 0
 			}
 		}
 	}
@@ -1551,8 +1561,8 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.ecm_hurts = {
 		ears = nil,
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_spotter.weapon_voice = "1"
@@ -1575,35 +1585,35 @@ function CharacterTweakData:_init_german_spotter(presets)
 		health_reference = "current",
 		zones = {
 			{
-				health_limit = 0.01,
-				none = 1
+				none = 1,
+				health_limit = 0.01
 			},
 			{
-				moderate = 0,
 				light = 0,
-				health_limit = 0.3,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				light = 0,
-				health_limit = 0.6,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				light = 0,
-				health_limit = 0.9,
-				none = 1,
-				heavy = 0
-			},
-			{
-				moderate = 0,
-				none = 1,
 				heavy = 0,
-				light = 0
+				moderate = 0,
+				none = 1,
+				health_limit = 0.3
+			},
+			{
+				light = 0,
+				heavy = 0,
+				moderate = 0,
+				none = 1,
+				health_limit = 0.6
+			},
+			{
+				light = 0,
+				heavy = 0,
+				moderate = 0,
+				none = 1,
+				health_limit = 0.9
+			},
+			{
+				none = 1,
+				moderate = 0,
+				light = 0,
+				heavy = 0
 			}
 		}
 	}
@@ -1633,11 +1643,11 @@ function CharacterTweakData:_presets(tweak_data)
 		hurt_severities = {}
 	}
 	presets.hurt_severities.no_hurts = {
-		bullet = nil,
-		poison = nil,
-		fire = nil,
 		melee = nil,
+		fire = nil,
 		explosion = nil,
+		poison = nil,
+		bullet = nil,
 		bullet = {
 			zones = nil,
 			health_reference = 1,
@@ -1695,42 +1705,42 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.hurt_severities.base = {
-		bullet = nil,
-		poison = nil,
-		fire = nil,
 		melee = nil,
+		fire = nil,
 		explosion = nil,
+		poison = nil,
+		bullet = nil,
 		bullet = {
 			zones = nil,
 			health_reference = "current",
 			zones = {
 				{
-					health_limit = 0.01,
-					none = 1
+					none = 1,
+					health_limit = 0.01
 				},
 				{
-					moderate = 0.05,
 					light = 0.7,
-					health_limit = 0.3,
+					heavy = 0.05,
+					moderate = 0.05,
 					none = 0.2,
-					heavy = 0.05
+					health_limit = 0.3
 				},
 				{
+					heavy = 0.2,
 					moderate = 0.4,
 					light = 0.4,
-					health_limit = 0.6,
-					heavy = 0.2
+					health_limit = 0.6
 				},
 				{
+					heavy = 0.6,
 					moderate = 0.2,
 					light = 0.2,
-					health_limit = 0.9,
-					heavy = 0.6
+					health_limit = 0.9
 				},
 				{
+					heavy = 1,
 					moderate = 0,
-					light = 0,
-					heavy = 1
+					light = 0
 				}
 			}
 		},
@@ -1739,8 +1749,8 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					health_limit = 0.01,
-					none = 1
+					none = 1,
+					health_limit = 0.01
 				},
 				{
 					heavy = 0.4,
@@ -1749,12 +1759,12 @@ function CharacterTweakData:_presets(tweak_data)
 				},
 				{
 					explode = 0.4,
-					health_limit = 0.5,
-					heavy = 0.6
+					heavy = 0.6,
+					health_limit = 0.5
 				},
 				{
-					heavy = 0.2,
-					explode = 0.8
+					explode = 0.8,
+					heavy = 0.2
 				}
 			}
 		},
@@ -1763,32 +1773,32 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					health_limit = 0.01,
-					none = 1
+					none = 1,
+					health_limit = 0.01
 				},
 				{
-					moderate = 0,
 					light = 0.7,
-					health_limit = 0.3,
+					heavy = 0,
+					moderate = 0,
 					none = 0.3,
-					heavy = 0
+					health_limit = 0.3
 				},
 				{
+					heavy = 0,
 					moderate = 0,
 					light = 1,
-					health_limit = 0.8,
-					heavy = 0
+					health_limit = 0.8
 				},
 				{
+					heavy = 0.2,
 					moderate = 0.2,
 					light = 0.6,
-					health_limit = 0.9,
-					heavy = 0.2
+					health_limit = 0.9
 				},
 				{
+					heavy = 9,
 					moderate = 0,
-					light = 0,
-					heavy = 9
+					light = 0
 				}
 			}
 		},
@@ -1797,8 +1807,8 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					health_limit = 0.01,
-					none = 1
+					none = 1,
+					health_limit = 0.01
 				},
 				{
 					fire = 1
@@ -1810,12 +1820,12 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					health_limit = 0.01,
-					none = 1
+					none = 1,
+					health_limit = 0.01
 				},
 				{
-					poison = 1,
-					none = 0
+					none = 0,
+					poison = 1
 				}
 			}
 		}
@@ -1824,10 +1834,10 @@ function CharacterTweakData:_presets(tweak_data)
 		HEALTH_INIT = 2.5,
 		headshot_dmg_mul = 1,
 		SPEED_WALK = {
-			pnc = 160,
+			ntl = 120,
 			cbt = 160,
-			hos = 180,
-			ntl = 120
+			pnc = 160,
+			hos = 180
 		},
 		SPEED_RUN = 370,
 		crouch_move = true,
@@ -1884,22 +1894,22 @@ function CharacterTweakData:_presets(tweak_data)
 		health_reference = "current",
 		zones = {
 			{
+				light = 0.6,
 				moderate = 0.1,
 				none = 0.3,
-				health_limit = 0.4,
-				light = 0.6
+				health_limit = 0.4
 			},
 			{
+				light = 0.7,
 				moderate = 0.2,
 				none = 0.1,
-				health_limit = 0.7,
-				light = 0.7
+				health_limit = 0.7
 			},
 			{
-				moderate = 0.3,
 				none = 0.1,
-				heavy = 0.1,
-				light = 0.5
+				moderate = 0.3,
+				light = 0.5,
+				heavy = 0.1
 			}
 		}
 	}
@@ -1924,14 +1934,14 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon = {
 		normal = {
-			ger_stg44_npc = nil,
-			ger_mp38_npc = nil,
-			ger_luger_npc = nil,
-			ger_kar98_npc = nil,
 			ger_geco_npc = nil,
 			usa_thomspon_npc = nil,
 			usa_m1911_npc = nil,
 			usa_garand_npc = nil,
+			ger_stg44_npc = nil,
+			ger_mp38_npc = nil,
+			ger_luger_npc = nil,
+			ger_kar98_npc = nil,
 			ger_kar98_npc = {},
 			ger_luger_npc = {},
 			ger_mp38_npc = {},
@@ -1965,11 +1975,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_garand_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -1986,11 +1996,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.4,
 				0.9
@@ -2007,11 +2017,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.2,
 				0.8
@@ -2028,11 +2038,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.2,
 				0.5
@@ -2049,11 +2059,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.01,
 				0.35
@@ -2089,11 +2099,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_m1911_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -2110,11 +2120,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.4,
 				0.85
@@ -2131,11 +2141,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.375,
 				0.55
@@ -2152,11 +2162,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.25,
 				0.45
@@ -2173,11 +2183,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.01,
 				0.35
@@ -2217,11 +2227,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_thomspon_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -2238,11 +2248,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.4,
 				0.9
@@ -2259,11 +2269,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.2,
 				0.8
@@ -2280,11 +2290,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.1,
 				0.45
@@ -2301,11 +2311,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.1,
 				0.35
@@ -2341,11 +2351,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1600,
 			acc = {
 				0.3,
 				0.7
@@ -2362,11 +2372,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.1,
 				0.7
@@ -2383,11 +2393,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 4000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 4000,
 			acc = {
 				0.035,
 				0.55
@@ -2404,11 +2414,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 5000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.1,
+			acc = nil,
+			r = 5000,
 			acc = {
 				0.035,
 				0.25
@@ -2444,11 +2454,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_luger_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 800,
 			acc = {
 				0.7,
 				0.8
@@ -2465,11 +2475,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.2,
 				0.7
@@ -2486,11 +2496,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.05,
 				0.55
@@ -2507,11 +2517,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.05,
 				0.25
@@ -2551,11 +2561,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_mp38_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1400,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 1400,
 			acc = {
 				0.4,
 				0.7
@@ -2572,11 +2582,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.2,
 				0.7
@@ -2593,11 +2603,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.05,
 				0.55
@@ -2614,11 +2624,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.05,
 				0.25
@@ -2658,11 +2668,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_stg44_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 1800,
 			acc = {
 				0.4,
 				0.7
@@ -2679,11 +2689,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.2,
 				0.7
@@ -2700,11 +2710,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.05,
 				0.55
@@ -2721,11 +2731,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 4000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 4000,
 			acc = {
 				0.05,
 				0.25
@@ -2761,11 +2771,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_geco_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 600,
 			acc = {
 				0.6,
 				0.7
@@ -2782,11 +2792,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.3,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.2,
 				0.7
@@ -2803,11 +2813,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1200,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 1200,
 			acc = {
 				0.05,
 				0.55
@@ -2824,11 +2834,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.05,
 				0.25
@@ -2846,14 +2856,14 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.weapon.good = {
-		ger_stg44_npc = nil,
-		ger_mp38_npc = nil,
-		ger_luger_npc = nil,
-		ger_kar98_npc = nil,
 		ger_geco_npc = nil,
 		usa_thomspon_npc = nil,
 		usa_m1911_npc = nil,
 		usa_garand_npc = nil,
+		ger_stg44_npc = nil,
+		ger_mp38_npc = nil,
+		ger_luger_npc = nil,
+		ger_kar98_npc = nil,
 		ger_kar98_npc = {},
 		ger_luger_npc = {},
 		ger_mp38_npc = {},
@@ -2880,11 +2890,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.good.usa_garand_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -2901,11 +2911,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.4,
 				0.9
@@ -2922,11 +2932,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.2,
 				0.8
@@ -2943,11 +2953,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.2,
 				0.5
@@ -2964,11 +2974,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.01,
 				0.35
@@ -2997,11 +3007,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.good.usa_m1911_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -3018,11 +3028,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.5,
 				0.85
@@ -3039,11 +3049,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.375,
 				0.55
@@ -3060,11 +3070,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.25,
 				0.45
@@ -3081,11 +3091,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.01,
 				0.35
@@ -3115,11 +3125,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.good.usa_thomspon_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -3136,11 +3146,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.4,
 				0.95
@@ -3157,11 +3167,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.2,
 				0.75
@@ -3178,11 +3188,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.1,
 				0.45
@@ -3199,11 +3209,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.1,
 				0.35
@@ -3236,11 +3246,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 1600,
 			acc = {
 				0.5,
 				0.9
@@ -3257,11 +3267,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2300,
 			acc = {
 				0.35,
 				0.9
@@ -3278,11 +3288,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.1,
 				0.65
@@ -3299,11 +3309,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 4000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 4000,
 			acc = {
 				0.035,
 				0.35
@@ -3336,11 +3346,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_luger_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 800,
 			acc = {
 				0.8,
 				0.9
@@ -3357,11 +3367,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.4,
 				0.9
@@ -3378,11 +3388,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.15,
 				0.65
@@ -3399,11 +3409,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.05,
 				0.35
@@ -3437,11 +3447,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.good.ger_mp38_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1400,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1400,
 			acc = {
 				0.6,
 				0.9
@@ -3458,11 +3468,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.4,
 				0.9
@@ -3479,11 +3489,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.15,
 				0.65
@@ -3500,11 +3510,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.05,
 				0.35
@@ -3538,11 +3548,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.good.ger_stg44_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1800,
 			acc = {
 				0.6,
 				0.9
@@ -3559,11 +3569,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.4,
 				0.9
@@ -3580,11 +3590,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.15,
 				0.65
@@ -3601,11 +3611,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.05,
 				0.35
@@ -3638,11 +3648,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_geco_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 600,
 			acc = {
 				0.7,
 				0.9
@@ -3659,11 +3669,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.7,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.4,
 				0.9
@@ -3680,11 +3690,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.15,
 				0.65
@@ -3701,11 +3711,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.05,
 				0.25
@@ -3723,14 +3733,14 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.weapon.expert = {
-		ger_stg44_npc = nil,
-		ger_mp38_npc = nil,
-		ger_luger_npc = nil,
-		ger_kar98_npc = nil,
 		ger_geco_npc = nil,
 		usa_thomspon_npc = nil,
 		usa_m1911_npc = nil,
 		usa_garand_npc = nil,
+		ger_stg44_npc = nil,
+		ger_mp38_npc = nil,
+		ger_luger_npc = nil,
+		ger_kar98_npc = nil,
 		ger_kar98_npc = {},
 		ger_luger_npc = {},
 		ger_mp38_npc = {},
@@ -3757,11 +3767,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.expert.usa_garand_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -3778,11 +3788,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.55,
 				0.95
@@ -3799,11 +3809,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.525,
 				0.8
@@ -3820,11 +3830,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.7
@@ -3841,11 +3851,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.2,
 				0.4
@@ -3874,11 +3884,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.expert.usa_m1911_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.9
@@ -3895,11 +3905,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.5,
 				0.9
@@ -3916,11 +3926,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.4,
 				0.65
@@ -3937,11 +3947,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.3,
 				0.5
@@ -3958,11 +3968,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.1,
 				0.25
@@ -3992,11 +4002,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.expert.usa_thomspon_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.6,
 				0.95
@@ -4013,11 +4023,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.6,
 				0.9
@@ -4034,11 +4044,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.4,
 				0.65
@@ -4055,11 +4065,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.4,
 				0.6
@@ -4076,11 +4086,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.2,
 				0.35
@@ -4113,11 +4123,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4,
+			acc = nil,
+			r = 1600,
 			acc = {
 				0.5,
 				0.9
@@ -4134,11 +4144,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 2300,
 			acc = {
 				0.4,
 				0.9
@@ -4155,11 +4165,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.1,
 				0.65
@@ -4176,11 +4186,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.035,
 				0.35
@@ -4213,11 +4223,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_luger_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 800,
 			acc = {
 				0.8,
 				0.9
@@ -4234,11 +4244,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.6,
 				0.9
@@ -4255,11 +4265,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.15,
 				0.65
@@ -4276,11 +4286,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.05,
 				0.35
@@ -4314,11 +4324,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.expert.ger_mp38_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1400,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4,
+			acc = nil,
+			r = 1400,
 			acc = {
 				0.6,
 				0.9
@@ -4335,11 +4345,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.9
@@ -4356,11 +4366,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.15,
 				0.65
@@ -4377,11 +4387,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.05,
 				0.35
@@ -4415,11 +4425,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.expert.ger_stg44_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 5,
+			acc = nil,
+			r = 1800,
 			acc = {
 				0.6,
 				0.9
@@ -4436,11 +4446,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.5,
 				0.9
@@ -4457,11 +4467,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.15,
 				0.65
@@ -4478,11 +4488,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.05,
 				0.35
@@ -4515,11 +4525,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_geco_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 5,
+			acc = nil,
+			r = 600,
 			acc = {
 				0.8,
 				0.9
@@ -4536,11 +4546,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.5,
 				0.9
@@ -4557,11 +4567,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.15,
 				0.65
@@ -4578,11 +4588,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.05,
 				0.35
@@ -4600,14 +4610,14 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.weapon.insane = {
-		ger_stg44_npc = nil,
-		ger_mp38_npc = nil,
-		ger_luger_npc = nil,
-		ger_kar98_npc = nil,
 		ger_geco_npc = nil,
 		usa_thomspon_npc = nil,
 		usa_m1911_npc = nil,
 		usa_garand_npc = nil,
+		ger_stg44_npc = nil,
+		ger_mp38_npc = nil,
+		ger_luger_npc = nil,
+		ger_kar98_npc = nil,
 		ger_kar98_npc = {},
 		ger_luger_npc = {},
 		ger_mp38_npc = {},
@@ -4634,11 +4644,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.insane.usa_garand_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.7,
 				0.9
@@ -4655,11 +4665,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.7,
 				0.95
@@ -4676,11 +4686,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.5,
 				0.8
@@ -4697,11 +4707,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.7
@@ -4718,11 +4728,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.3,
 				0.4
@@ -4751,11 +4761,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.insane.usa_m1911_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.7,
 				0.9
@@ -4772,11 +4782,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.7,
 				0.9
@@ -4793,11 +4803,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.5,
 				0.65
@@ -4814,11 +4824,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.5
@@ -4835,11 +4845,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.3,
 				0.25
@@ -4869,11 +4879,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.insane.usa_thomspon_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 100,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 100,
 			acc = {
 				0.7,
 				0.95
@@ -4890,11 +4900,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 500,
 			acc = {
 				0.7,
 				0.9
@@ -4911,11 +4921,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.5,
 				0.65
@@ -4932,11 +4942,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.6
@@ -4953,11 +4963,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.3,
 				0.35
@@ -4990,11 +5000,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1600,
 			acc = {
 				0.7,
 				0.9
@@ -5011,11 +5021,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 2300,
 			acc = {
 				0.5,
 				0.9
@@ -5032,11 +5042,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.25,
 				0.65
@@ -5053,11 +5063,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.15,
 				0.35
@@ -5090,11 +5100,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_luger_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4,
+			acc = nil,
+			r = 800,
 			acc = {
 				0.7,
 				0.9
@@ -5111,11 +5121,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.5,
 				0.9
@@ -5132,11 +5142,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.25,
 				0.65
@@ -5153,11 +5163,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.15,
 				0.35
@@ -5191,11 +5201,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.insane.ger_mp38_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1400,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4.5,
+			acc = nil,
+			r = 1400,
 			acc = {
 				0.7,
 				0.9
@@ -5212,11 +5222,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.5,
 				0.9
@@ -5233,11 +5243,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.25,
 				0.65
@@ -5254,11 +5264,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.15,
 				0.35
@@ -5292,11 +5302,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.insane.ger_stg44_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1800,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4,
+			acc = nil,
+			r = 1800,
 			acc = {
 				0.7,
 				0.9
@@ -5313,11 +5323,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 2500,
 			acc = {
 				0.5,
 				0.9
@@ -5334,11 +5344,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3,
+			acc = nil,
+			r = 3000,
 			acc = {
 				0.25,
 				0.65
@@ -5355,11 +5365,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 3500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 3500,
 			acc = {
 				0.15,
 				0.35
@@ -5392,11 +5402,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_geco_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 600,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 5,
+			acc = nil,
+			r = 600,
 			acc = {
 				0.9,
 				1
@@ -5413,11 +5423,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.5,
 				0.9
@@ -5434,11 +5444,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 1500,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 1500,
 			acc = {
 				0.25,
 				0.65
@@ -5455,11 +5465,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.15,
 				0.35
@@ -5500,11 +5510,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.use_laser = true
 	presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.8,
 				0.95
@@ -5521,11 +5531,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 15000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 15000,
 			acc = {
 				0.4,
 				0.95
@@ -5542,11 +5552,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 40000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 40000,
 			acc = {
 				0.1,
 				0.75
@@ -5563,11 +5573,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 80000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 80000,
 			acc = {
 				0,
 				0.25
@@ -5585,12 +5595,12 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.weapon.gang_member = {
-		ger_stg44_npc = nil,
-		ger_mp38_npc = nil,
-		ger_luger_npc = nil,
 		thompson_npc = nil,
 		usa_m1911_npc = nil,
 		usa_garand_npc = nil,
+		ger_stg44_npc = nil,
+		ger_mp38_npc = nil,
+		ger_luger_npc = nil,
 		ger_luger_npc = {},
 		ger_mp38_npc = {},
 		ger_stg44_npc = {},
@@ -5610,11 +5620,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_luger_npc.range = presets.weapon.normal.ger_luger_npc.range
 	presets.weapon.gang_member.ger_luger_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.7,
 				0.8
@@ -5631,11 +5641,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.1,
 				0.6
@@ -5652,11 +5662,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0,
 				0.15
@@ -5690,11 +5700,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.gang_member.ger_mp38_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.7,
 				1
@@ -5711,11 +5721,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.1,
 				0.6
@@ -5732,11 +5742,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0,
 				0.15
@@ -5770,11 +5780,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.gang_member.ger_stg44_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.7,
 				1
@@ -5791,11 +5801,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.1,
 				0.6
@@ -5812,11 +5822,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0,
 				0.15
@@ -5850,11 +5860,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.gang_member.usa_garand_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.9,
 				1
@@ -5871,11 +5881,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.9,
 				1
@@ -5892,11 +5902,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0.9,
 				1
@@ -5925,11 +5935,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.gang_member.usa_m1911_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 4,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.7,
 				1
@@ -5946,11 +5956,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.7,
 				1
@@ -5967,11 +5977,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0.7,
 				1
@@ -6011,11 +6021,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.gang_member.thompson_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 300,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1,
+			acc = nil,
+			r = 300,
 			acc = {
 				0.9,
 				1
@@ -6032,11 +6042,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 2000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.5,
+			acc = nil,
+			r = 2000,
 			acc = {
 				0.9,
 				1
@@ -6053,11 +6063,11 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			acc = nil,
-			r = 10000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 0.25,
+			acc = nil,
+			r = 10000,
 			acc = {
 				0.9,
 				1
@@ -6309,11 +6319,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.civilian.cone_3.speed_mul = 0.5
 	presets.detection = {
 		normal = {
-			guard = nil,
-			recon = nil,
 			idle = nil,
 			combat = nil,
 			ntl = nil,
+			guard = nil,
+			recon = nil,
 			idle = {},
 			combat = {},
 			recon = {},
@@ -6375,11 +6385,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.detection.flamer.guard.avoid_suppressive_firing = true
 	presets.detection.flamer.ntl.avoid_suppressive_firing = true
 	presets.detection.guard = {
-		guard = nil,
-		recon = nil,
 		idle = nil,
 		combat = nil,
 		ntl = nil,
+		guard = nil,
+		recon = nil,
 		idle = {},
 		combat = {},
 		recon = {},
@@ -6420,11 +6430,11 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.detection.guard.ntl = presets.detection.normal.ntl
 	presets.detection.sniper = {
-		guard = nil,
-		recon = nil,
 		idle = nil,
 		combat = nil,
 		ntl = nil,
+		guard = nil,
+		recon = nil,
 		idle = {},
 		combat = {},
 		recon = {},
@@ -6488,11 +6498,11 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.vision.spotter.combat.cone_3.speed_mul = 6
 	presets.vision.spotter.idle = deep_clone(presets.vision.spotter.combat)
 	presets.detection.gang_member = {
-		guard = nil,
-		recon = nil,
 		idle = nil,
 		combat = nil,
 		ntl = nil,
+		guard = nil,
+		recon = nil,
 		idle = {},
 		combat = {},
 		recon = {},
@@ -6555,22 +6565,22 @@ function CharacterTweakData:_presets(tweak_data)
 		3
 	}
 	presets.dodge = {
-		athletic = nil,
 		average = nil,
 		ninja = nil,
 		poor = nil,
 		heavy = nil,
+		athletic = nil,
 		poor = {
 			occasions = nil,
 			speed = 0.9,
 			occasions = {
-				preemptive = nil,
 				scared = nil,
 				hit = nil,
+				preemptive = nil,
 				hit = {
+					chance = 0.1,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.1,
 					check_timeout = {
 						100,
 						100
@@ -6588,9 +6598,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				scared = {
+					chance = 0.5,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.5,
 					check_timeout = {
 						3,
 						5
@@ -6608,9 +6618,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				preemptive = {
+					chance = 0.5,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.5,
 					check_timeout = {
 						3,
 						5
@@ -6633,13 +6643,13 @@ function CharacterTweakData:_presets(tweak_data)
 			occasions = nil,
 			speed = 1,
 			occasions = {
-				preemptive = nil,
 				scared = nil,
 				hit = nil,
+				preemptive = nil,
 				hit = {
+					chance = 0.35,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.35,
 					check_timeout = {
 						0,
 						0
@@ -6666,9 +6676,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				scared = {
+					chance = 0.4,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.4,
 					check_timeout = {
 						4,
 						7
@@ -6695,9 +6705,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				preemptive = {
+					chance = 0.5,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.5,
 					check_timeout = {
 						1,
 						3
@@ -6729,13 +6739,13 @@ function CharacterTweakData:_presets(tweak_data)
 			occasions = nil,
 			speed = 1,
 			occasions = {
-				preemptive = nil,
 				scared = nil,
 				hit = nil,
+				preemptive = nil,
 				hit = {
+					chance = 0.75,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.75,
 					check_timeout = {
 						0,
 						0
@@ -6744,9 +6754,9 @@ function CharacterTweakData:_presets(tweak_data)
 						roll = nil,
 						side_step = nil,
 						side_step = {
-							shoot_chance = 0.8,
 							timeout = nil,
 							chance = 9,
+							shoot_chance = 0.8,
 							shoot_accuracy = 0.5,
 							timeout = {
 								0,
@@ -6764,9 +6774,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				preemptive = {
+					chance = 0.5,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.5,
 					check_timeout = {
 						1,
 						2
@@ -6774,9 +6784,9 @@ function CharacterTweakData:_presets(tweak_data)
 					variations = {
 						side_step = nil,
 						side_step = {
-							shoot_chance = 0.8,
 							timeout = nil,
 							chance = 9,
+							shoot_chance = 0.8,
 							shoot_accuracy = 0.7,
 							timeout = {
 								1,
@@ -6786,21 +6796,21 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				scared = {
+					chance = 0.8,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.8,
 					check_timeout = {
 						1,
 						2
 					},
 					variations = {
-						roll = nil,
 						dive = nil,
 						side_step = nil,
+						roll = nil,
 						side_step = {
-							shoot_chance = 0.5,
 							timeout = nil,
 							chance = 5,
+							shoot_chance = 0.5,
 							shoot_accuracy = 0.4,
 							timeout = {
 								1,
@@ -6831,13 +6841,13 @@ function CharacterTweakData:_presets(tweak_data)
 			occasions = nil,
 			speed = 1.3,
 			occasions = {
-				preemptive = nil,
 				scared = nil,
 				hit = nil,
+				preemptive = nil,
 				hit = {
+					chance = 0.9,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.9,
 					check_timeout = {
 						0,
 						0
@@ -6846,9 +6856,9 @@ function CharacterTweakData:_presets(tweak_data)
 						roll = nil,
 						side_step = nil,
 						side_step = {
-							shoot_chance = 0.8,
 							timeout = nil,
 							chance = 5,
+							shoot_chance = 0.8,
 							shoot_accuracy = 0.5,
 							timeout = {
 								1,
@@ -6866,9 +6876,9 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				preemptive = {
+					chance = 0.35,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.35,
 					check_timeout = {
 						2,
 						3
@@ -6877,9 +6887,9 @@ function CharacterTweakData:_presets(tweak_data)
 						roll = nil,
 						side_step = nil,
 						side_step = {
-							shoot_chance = 1,
 							timeout = nil,
 							chance = 3,
+							shoot_chance = 1,
 							shoot_accuracy = 0.7,
 							timeout = {
 								1,
@@ -6897,21 +6907,21 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				scared = {
+					chance = 0.4,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.4,
 					check_timeout = {
 						1,
 						2
 					},
 					variations = {
-						roll = nil,
 						dive = nil,
 						side_step = nil,
+						roll = nil,
 						side_step = {
-							shoot_chance = 0.5,
 							timeout = nil,
 							chance = 5,
+							shoot_chance = 0.5,
 							shoot_accuracy = 0.4,
 							timeout = {
 								1,
@@ -6942,25 +6952,25 @@ function CharacterTweakData:_presets(tweak_data)
 			occasions = nil,
 			speed = 1.6,
 			occasions = {
-				preemptive = nil,
 				scared = nil,
 				hit = nil,
+				preemptive = nil,
 				hit = {
+					chance = 0.9,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.9,
 					check_timeout = {
 						0,
 						3
 					},
 					variations = {
-						roll = nil,
 						wheel = nil,
 						side_step = nil,
+						roll = nil,
 						side_step = {
-							shoot_chance = 1,
 							timeout = nil,
 							chance = 3,
+							shoot_chance = 1,
 							shoot_accuracy = 0.7,
 							timeout = {
 								1,
@@ -6986,21 +6996,21 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				preemptive = {
+					chance = 0.6,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.6,
 					check_timeout = {
 						0,
 						3
 					},
 					variations = {
-						roll = nil,
 						wheel = nil,
 						side_step = nil,
+						roll = nil,
 						side_step = {
-							shoot_chance = 1,
 							timeout = nil,
 							chance = 3,
+							shoot_chance = 1,
 							shoot_accuracy = 0.8,
 							timeout = {
 								1,
@@ -7026,22 +7036,22 @@ function CharacterTweakData:_presets(tweak_data)
 					}
 				},
 				scared = {
+					chance = 0.9,
 					variations = nil,
 					check_timeout = nil,
-					chance = 0.9,
 					check_timeout = {
 						0,
 						3
 					},
 					variations = {
-						roll = nil,
 						wheel = nil,
-						dive = nil,
 						side_step = nil,
+						roll = nil,
+						dive = nil,
 						side_step = {
-							shoot_chance = 0.8,
 							timeout = nil,
 							chance = 5,
+							shoot_chance = 0.8,
 							shoot_accuracy = 0.6,
 							timeout = {
 								1,
@@ -7095,14 +7105,14 @@ function CharacterTweakData:_presets(tweak_data)
 	end
 
 	presets.move_speed = {
+		civ_fast = nil,
+		fast = nil,
+		lightning = nil,
+		slow = nil,
 		normal = nil,
 		very_slow = nil,
-		fast = nil,
-		very_fast = nil,
-		lightning = nil,
-		civ_fast = nil,
-		slow = nil,
 		teamai = nil,
+		very_fast = nil,
 		civ_fast = {
 			crouch = nil,
 			stand = nil,
@@ -7110,37 +7120,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 100,
 						strafe = 120,
-						fwd = 150,
-						bwd = 100
+						fwd = 150
 					},
 					hos = {
+						bwd = 160,
 						strafe = 190,
-						fwd = 210,
-						bwd = 160
+						fwd = 210
 					},
 					cbt = {
+						bwd = 160,
 						strafe = 175,
-						fwd = 210,
-						bwd = 160
+						fwd = 210
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 230,
 						strafe = 192,
-						fwd = 500,
-						bwd = 230
+						fwd = 500
 					},
 					cbt = {
+						bwd = 230,
 						strafe = 250,
-						fwd = 500,
-						bwd = 230
+						fwd = 500
 					}
 				}
 			},
@@ -7148,31 +7158,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 163,
 						strafe = 160,
-						fwd = 174,
-						bwd = 163
+						fwd = 174
 					},
 					cbt = {
+						bwd = 163,
 						strafe = 160,
-						fwd = 174,
-						bwd = 163
+						fwd = 174
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 260,
 						strafe = 245,
-						fwd = 312,
-						bwd = 260
+						fwd = 312
 					},
 					cbt = {
+						bwd = 260,
 						strafe = 245,
-						fwd = 312,
-						bwd = 260
+						fwd = 312
 					}
 				}
 			}
@@ -7184,37 +7194,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 110,
 						strafe = 120,
-						fwd = 150,
-						bwd = 110
+						fwd = 150
 					},
 					hos = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					},
 					cbt = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 350,
 						strafe = 400,
-						fwd = 800,
-						bwd = 350
+						fwd = 800
 					},
 					cbt = {
+						bwd = 320,
 						strafe = 380,
-						fwd = 750,
-						bwd = 320
+						fwd = 750
 					}
 				}
 			},
@@ -7222,31 +7232,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 190,
 						strafe = 210,
-						fwd = 245,
-						bwd = 190
+						fwd = 245
 					},
 					cbt = {
+						bwd = 190,
 						strafe = 190,
-						fwd = 255,
-						bwd = 190
+						fwd = 255
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 250,
 						strafe = 300,
-						fwd = 420,
-						bwd = 250
+						fwd = 420
 					},
 					cbt = {
+						bwd = 280,
 						strafe = 300,
-						fwd = 412,
-						bwd = 280
+						fwd = 412
 					}
 				}
 			}
@@ -7258,37 +7268,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					hos = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 113,
 						strafe = 140,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 125,
 						strafe = 100,
-						fwd = 144,
-						bwd = 125
+						fwd = 144
 					}
 				}
 			},
@@ -7296,31 +7306,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 113,
 						strafe = 130,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 125,
 						strafe = 100,
-						fwd = 144,
-						bwd = 125
+						fwd = 144
 					}
 				}
 			}
@@ -7332,37 +7342,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					hos = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 135,
 						strafe = 150,
-						fwd = 360,
-						bwd = 135
+						fwd = 360
 					},
 					cbt = {
+						bwd = 155,
 						strafe = 150,
-						fwd = 360,
-						bwd = 155
+						fwd = 360
 					}
 				}
 			},
@@ -7370,31 +7380,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					},
 					cbt = {
+						bwd = 113,
 						strafe = 120,
-						fwd = 144,
-						bwd = 113
+						fwd = 144
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 150,
 						strafe = 140,
-						fwd = 360,
-						bwd = 150
+						fwd = 360
 					},
 					cbt = {
+						bwd = 155,
 						strafe = 140,
-						fwd = 360,
-						bwd = 155
+						fwd = 360
 					}
 				}
 			}
@@ -7406,37 +7416,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 100,
 						strafe = 120,
-						fwd = 150,
-						bwd = 100
+						fwd = 150
 					},
 					hos = {
+						bwd = 170,
 						strafe = 190,
-						fwd = 220,
-						bwd = 170
+						fwd = 220
 					},
 					cbt = {
+						bwd = 170,
 						strafe = 190,
-						fwd = 220,
-						bwd = 170
+						fwd = 220
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 255,
 						strafe = 290,
-						fwd = 450,
-						bwd = 255
+						fwd = 450
 					},
 					cbt = {
+						bwd = 255,
 						strafe = 250,
-						fwd = 400,
-						bwd = 255
+						fwd = 400
 					}
 				}
 			},
@@ -7444,31 +7454,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 160,
 						strafe = 170,
-						fwd = 210,
-						bwd = 160
+						fwd = 210
 					},
 					cbt = {
+						bwd = 160,
 						strafe = 170,
-						fwd = 210,
-						bwd = 160
+						fwd = 210
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 235,
 						strafe = 260,
-						fwd = 310,
-						bwd = 235
+						fwd = 310
 					},
 					cbt = {
+						bwd = 235,
 						strafe = 260,
-						fwd = 350,
-						bwd = 235
+						fwd = 350
 					}
 				}
 			}
@@ -7480,37 +7490,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 110,
 						strafe = 120,
-						fwd = 150,
-						bwd = 110
+						fwd = 150
 					},
 					hos = {
+						bwd = 185,
 						strafe = 215,
-						fwd = 270,
-						bwd = 185
+						fwd = 270
 					},
 					cbt = {
+						bwd = 185,
 						strafe = 215,
-						fwd = 270,
-						bwd = 185
+						fwd = 270
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 280,
 						strafe = 315,
-						fwd = 625,
-						bwd = 280
+						fwd = 625
 					},
 					cbt = {
+						bwd = 280,
 						strafe = 285,
-						fwd = 450,
-						bwd = 280
+						fwd = 450
 					}
 				}
 			},
@@ -7518,31 +7528,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 170,
 						strafe = 180,
-						fwd = 235,
-						bwd = 170
+						fwd = 235
 					},
 					cbt = {
+						bwd = 170,
 						strafe = 180,
-						fwd = 235,
-						bwd = 170
+						fwd = 235
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 255,
 						strafe = 280,
-						fwd = 330,
-						bwd = 255
+						fwd = 330
 					},
 					cbt = {
+						bwd = 255,
 						strafe = 270,
-						fwd = 312,
-						bwd = 255
+						fwd = 312
 					}
 				}
 			}
@@ -7554,37 +7564,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 110,
 						strafe = 120,
-						fwd = 150,
-						bwd = 110
+						fwd = 150
 					},
 					hos = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					},
 					cbt = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 325,
 						strafe = 340,
-						fwd = 670,
-						bwd = 325
+						fwd = 670
 					},
 					cbt = {
+						bwd = 300,
 						strafe = 325,
-						fwd = 475,
-						bwd = 300
+						fwd = 475
 					}
 				}
 			},
@@ -7592,31 +7602,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 190,
 						strafe = 210,
-						fwd = 245,
-						bwd = 190
+						fwd = 245
 					},
 					cbt = {
+						bwd = 190,
 						strafe = 190,
-						fwd = 255,
-						bwd = 190
+						fwd = 255
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 268,
 						strafe = 282,
-						fwd = 350,
-						bwd = 268
+						fwd = 350
 					},
 					cbt = {
+						bwd = 268,
 						strafe = 282,
-						fwd = 312,
-						bwd = 268
+						fwd = 312
 					}
 				}
 			}
@@ -7628,37 +7638,37 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
+					ntl = nil,
 					cbt = nil,
 					hos = nil,
-					ntl = nil,
 					ntl = {
+						bwd = 120,
 						strafe = 120,
-						fwd = 145,
-						bwd = 120
+						fwd = 145
 					},
 					hos = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					},
 					cbt = {
+						bwd = 215,
 						strafe = 225,
-						fwd = 285,
-						bwd = 215
+						fwd = 285
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 300,
 						strafe = 300,
-						fwd = 500,
-						bwd = 300
+						fwd = 500
 					},
 					cbt = {
+						bwd = 300,
 						strafe = 325,
-						fwd = 475,
-						bwd = 300
+						fwd = 475
 					}
 				}
 			},
@@ -7666,31 +7676,31 @@ function CharacterTweakData:_presets(tweak_data)
 				walk = nil,
 				run = nil,
 				walk = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 190,
 						strafe = 210,
-						fwd = 245,
-						bwd = 190
+						fwd = 245
 					},
 					cbt = {
+						bwd = 190,
 						strafe = 190,
-						fwd = 255,
-						bwd = 190
+						fwd = 255
 					}
 				},
 				run = {
-					hos = nil,
 					cbt = nil,
+					hos = nil,
 					hos = {
+						bwd = 268,
 						strafe = 282,
-						fwd = 350,
-						bwd = 268
+						fwd = 350
 					},
 					cbt = {
+						bwd = 268,
 						strafe = 282,
-						fwd = 312,
-						bwd = 268
+						fwd = 312
 					}
 				}
 			}
@@ -7716,20 +7726,20 @@ function CharacterTweakData:_presets(tweak_data)
 			significant_chance = 0.1,
 			base_chance = 0.75,
 			reasons = {
-				pants_down = 1,
-				weapon_down = 0.8,
 				health = nil,
 				isolated = 0.1,
+				pants_down = 1,
+				weapon_down = 0.8,
 				health = {
 					[1.0] = 0.2,
 					[0.3] = 1
 				}
 			},
 			factors = {
-				unaware_of_aggressor = 0.08,
-				flanked = 0.07,
 				aggressor_dis = nil,
 				enemy_weap_cold = 0.15,
+				unaware_of_aggressor = 0.08,
+				flanked = 0.07,
 				aggressor_dis = {
 					[300.0] = 0.15,
 					[1000.0] = 0.02
@@ -7743,20 +7753,20 @@ function CharacterTweakData:_presets(tweak_data)
 			significant_chance = 0.2,
 			base_chance = 0.5,
 			reasons = {
-				pants_down = 1,
-				weapon_down = 0.5,
 				health = nil,
 				isolated = 0.08,
+				pants_down = 1,
+				weapon_down = 0.5,
 				health = {
 					[1.0] = 0,
 					[0.5] = 0.5
 				}
 			},
 			factors = {
-				unaware_of_aggressor = 0.1,
-				flanked = 0.05,
 				aggressor_dis = nil,
 				enemy_weap_cold = 0.11,
+				unaware_of_aggressor = 0.1,
+				flanked = 0.05,
 				aggressor_dis = {
 					[300.0] = 0.1,
 					[1000.0] = 0
@@ -7770,9 +7780,9 @@ function CharacterTweakData:_presets(tweak_data)
 			significant_chance = 0.25,
 			base_chance = 0.35,
 			reasons = {
+				health = nil,
 				pants_down = 0.8,
 				weapon_down = 0.2,
-				health = nil,
 				health = {
 					[1.0] = 0,
 					[0.35] = 0.5
@@ -7797,32 +7807,32 @@ function CharacterTweakData:_presets(tweak_data)
 			significant_chance = 0.25,
 			base_chance = 0.25,
 			reasons = {
+				health = nil,
 				pants_down = 0.6,
 				weapon_down = 0.02,
-				health = nil,
 				health = {
 					[0.5] = 0,
 					[0.2] = 0.25
 				}
 			},
 			factors = {
-				unaware_of_aggressor = 0.02,
-				flanked = 0.015,
 				enemy_weap_cold = 0.05,
-				isolated = 0.05
+				isolated = 0.05,
+				unaware_of_aggressor = 0.02,
+				flanked = 0.015
 			}
 		}
 	}
 	presets.suppression = {
-		hard_agg = nil,
 		easy = nil,
 		hard_def = nil,
 		no_supress = nil,
+		hard_agg = nil,
 		easy = {
-			duration = nil,
-			panic_chance_mul = 1,
 			brown_point = nil,
 			react_point = nil,
+			duration = nil,
+			panic_chance_mul = 1,
 			duration = {
 				10,
 				15
@@ -7837,10 +7847,10 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		hard_def = {
-			duration = nil,
-			panic_chance_mul = 0.7,
 			brown_point = nil,
 			react_point = nil,
+			duration = nil,
+			panic_chance_mul = 0.7,
 			duration = {
 				5,
 				10
@@ -7855,10 +7865,10 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		hard_agg = {
-			duration = nil,
-			panic_chance_mul = 0.7,
 			brown_point = nil,
 			react_point = nil,
+			duration = nil,
+			panic_chance_mul = 0.7,
 			duration = {
 				5,
 				8
@@ -7873,10 +7883,10 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		no_supress = {
-			duration = nil,
-			panic_chance_mul = 0,
 			brown_point = nil,
 			react_point = nil,
+			duration = nil,
+			panic_chance_mul = 0,
 			duration = {
 				0.1,
 				0.15
@@ -7892,36 +7902,36 @@ function CharacterTweakData:_presets(tweak_data)
 		}
 	}
 	presets.enemy_chatter = {
-		no_chatter = nil,
 		cop = nil,
-		swat = nil,
+		no_chatter = nil,
 		shield = nil,
+		swat = nil,
 		no_chatter = {},
 		cop = {
+			incomming_commander = true,
+			clear = true,
+			follow_me = true,
+			smoke = true,
+			ready = true,
 			suppress = true,
 			contact = true,
 			go_go = true,
 			retreat = true,
 			aggressive = true,
-			incomming_flamer = true,
-			incomming_commander = true,
-			clear = true,
-			follow_me = true,
-			smoke = true,
-			ready = true
+			incomming_flamer = true
 		},
 		swat = {
+			incomming_commander = true,
+			clear = true,
+			follow_me = true,
+			smoke = true,
+			ready = true,
 			suppress = true,
 			contact = true,
 			go_go = true,
 			retreat = true,
 			aggressive = true,
-			incomming_flamer = true,
-			incomming_commander = true,
-			clear = true,
-			follow_me = true,
-			smoke = true,
-			ready = true
+			incomming_flamer = true
 		},
 		shield = {
 			follow_me = true
@@ -8038,11 +8048,11 @@ function CharacterTweakData:_set_difficulty_1()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.8,
 				0.95
@@ -8059,11 +8069,11 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			acc = nil,
-			r = 15000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 15000,
 			acc = {
 				0.4,
 				0.95
@@ -8080,11 +8090,11 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			acc = nil,
-			r = 40000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 40000,
 			acc = {
 				0.1,
 				0.75
@@ -8101,11 +8111,11 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			acc = nil,
-			r = 80000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 80000,
 			acc = {
 				0,
 				0.25
@@ -8143,11 +8153,11 @@ function CharacterTweakData:_set_difficulty_2()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.8,
 				0.95
@@ -8164,11 +8174,11 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			acc = nil,
-			r = 15000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 15000,
 			acc = {
 				0.4,
 				0.95
@@ -8185,11 +8195,11 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			acc = nil,
-			r = 40000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 40000,
 			acc = {
 				0.1,
 				0.75
@@ -8206,11 +8216,11 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			acc = nil,
-			r = 80000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 80000,
 			acc = {
 				0,
 				0.25
@@ -8248,11 +8258,11 @@ function CharacterTweakData:_set_difficulty_3()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.8,
 				0.95
@@ -8269,11 +8279,11 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			acc = nil,
-			r = 15000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 15000,
 			acc = {
 				0.4,
 				0.95
@@ -8290,11 +8300,11 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			acc = nil,
-			r = 40000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 40000,
 			acc = {
 				0.1,
 				0.75
@@ -8311,11 +8321,11 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			acc = nil,
-			r = 80000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 80000,
 			acc = {
 				0,
 				0.25
@@ -8354,11 +8364,11 @@ function CharacterTweakData:_set_difficulty_4()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			acc = nil,
-			r = 1000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 1000,
 			acc = {
 				0.8,
 				0.95
@@ -8375,11 +8385,11 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			acc = nil,
-			r = 15000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 3.5,
+			acc = nil,
+			r = 15000,
 			acc = {
 				0.4,
 				0.95
@@ -8396,11 +8406,11 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			acc = nil,
-			r = 40000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 2.5,
+			acc = nil,
+			r = 40000,
 			acc = {
 				0.1,
 				0.75
@@ -8417,11 +8427,11 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			acc = nil,
-			r = 80000,
 			mode = nil,
 			recoil = nil,
 			dmg_mul = 1.5,
+			acc = nil,
+			r = 80000,
 			acc = {
 				0,
 				0.25

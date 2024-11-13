@@ -72,14 +72,14 @@ end
 
 function RaidMenuHeader:set_header_icon(icon_data)
 	self._header_icon = self._root_panel:image({
-		w = nil,
+		h = nil,
 		y = 0,
 		x = 0,
-		texture = nil,
 		name = "header_icon",
-		h = nil,
-		texture_rect = nil,
+		w = nil,
 		color = nil,
+		texture_rect = nil,
+		texture = nil,
 		w = icon_data.tex_rect[3],
 		h = icon_data.tex_rect[4],
 		texture = icon_data.texture,

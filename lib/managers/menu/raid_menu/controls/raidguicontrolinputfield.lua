@@ -229,10 +229,10 @@ function RaidGUIControlInputField:show_onscreen_keyboard()
 		local input_text = self._input_panel:child("input_text"):text()
 
 		managers.system_menu:show_keyboard_input({
-			title = nil,
+			input_text = nil,
 			text = nil,
 			callback_func = nil,
-			input_text = nil,
+			title = nil,
 			title = self._osk_title,
 			text = self._osk_text,
 			input_text = input_text,

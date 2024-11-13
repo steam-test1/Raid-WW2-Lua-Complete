@@ -32,11 +32,11 @@ function CorePlaySoundUnitElement:update_selected(t, dt, selected_unit, all_unit
 
 		if draw then
 			self:_draw_link({
+				g = 0,
 				r = 0.75,
 				to_unit = nil,
 				from_unit = nil,
 				b = 0,
-				g = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -46,8 +46,8 @@ end
 
 function CorePlaySoundUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then
@@ -144,8 +144,8 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 
 	if #paths <= 0 then
 		local help = {
-			panel = nil,
 			sizer = nil,
+			panel = nil,
 			panel = panel,
 			sizer = panel_sizer,
 			text = "No scene sounds available in project!"
@@ -162,12 +162,12 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 
 	local path_value = managers.sound_environment:scene_path(self._hed.sound_event)
 	local _, _ = CoreEws.combobox_and_list({
+		options = nil,
 		panel = nil,
-		sizer = nil,
 		value = nil,
 		name = "Category:",
 		value_changed_cb = nil,
-		options = nil,
+		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = paths,
@@ -183,8 +183,8 @@ end
 
 function CorePlaySoundUnitElement:add_to_mission_package()
 	managers.editor:add_to_sound_package({
-		category = "soundbanks",
 		name = nil,
+		category = "soundbanks",
 		name = managers.sound_environment:scene_soundbank(self._hed.sound_event)
 	})
 end

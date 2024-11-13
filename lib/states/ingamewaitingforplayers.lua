@@ -268,13 +268,13 @@ end
 
 function IngameWaitingForPlayersState:show_intro_video()
 	local params_root_panel = {
-		x = nil,
-		background_color = nil,
-		is_root_panel = true,
 		layer = nil,
 		w = nil,
 		h = nil,
 		y = nil,
+		x = nil,
+		background_color = nil,
+		is_root_panel = true,
 		x = self._full_panel:x(),
 		y = self._full_panel:y(),
 		h = self._full_panel:h(),
@@ -299,13 +299,13 @@ function IngameWaitingForPlayersState:show_intro_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		text = nil,
-		alpha = 0,
-		color = nil,
 		layer = nil,
 		font = nil,
 		name = "press_any_key_prompt",
 		font_size = nil,
+		text = nil,
+		alpha = 0,
+		color = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

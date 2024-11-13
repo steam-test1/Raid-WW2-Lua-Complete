@@ -451,9 +451,9 @@ end
 function VehicleManager:queue_vehicle_state_change(vehicle_unit, state, npc)
 	Application:debug("[VehicleManager:queue_vehicle_state_change]", vehicle_unit, state, npc)
 	table.insert(self._queue_state_change, {
+		state = nil,
 		npc = nil,
 		vehicle_unit = nil,
-		state = nil,
 		vehicle_unit = vehicle_unit,
 		state = state,
 		npc = npc

@@ -17,11 +17,11 @@ end
 
 function RaidGUIControlSuggestedCardsLarge:layout()
 	self._suggested_cards_panel = self._panel:panel({
-		x = nil,
 		name = nil,
 		h = nil,
 		w = nil,
 		y = nil,
+		x = nil,
 		name = "suggested_cards_panel_large_" .. self._name,
 		x = self._params.x,
 		y = self._params.y,

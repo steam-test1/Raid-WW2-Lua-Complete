@@ -269,8 +269,8 @@ function CopActionTase:update(t)
 			end
 
 			self._tase_effect = World:effect_manager():spawn({
-				parent = nil,
 				force_synch = true,
+				parent = nil,
 				effect = nil,
 				effect = tweak_data.common_effects.taser_thread,
 				parent = self._ext_inventory:equipped_unit():get_object(Idstring("fire"))
@@ -363,27 +363,27 @@ function CopActionTase:clbk_malfunction()
 	end
 
 	World:effect_manager():spawn({
-		effect = nil,
 		position = nil,
 		normal = nil,
+		effect = nil,
 		effect = tweak_data.common_effects.taser_stop,
 		position = self._ext_movement:m_head_pos(),
 		normal = math.UP
 	})
 
 	local action_data = {
-		col_ray = nil,
-		damage_effect = nil,
-		damage = 0,
 		attacker_unit = nil,
 		variant = "melee",
 		attack_dir = nil,
+		col_ray = nil,
+		damage_effect = nil,
+		damage = 0,
 		damage_effect = self._unit:character_damage()._HEALTH_INIT * 10,
 		attacker_unit = managers.player:player_unit() or self._unit,
 		attack_dir = -self._common_data.fwd,
 		col_ray = {
-			body = nil,
 			position = nil,
+			body = nil,
 			position = mvector3.copy(self._ext_movement:m_head_pos()),
 			body = self._unit:body("body")
 		}

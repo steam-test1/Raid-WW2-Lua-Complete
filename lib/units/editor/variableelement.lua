@@ -28,13 +28,13 @@ function VariableElement:_build_panel(panel, panel_sizer)
 	input:set_tool_tip("Name of the variable to be used.")
 	text_sizer:add(input, 3, 0, "RIGHT,EXPAND")
 	input:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "variable",
+		ctrlr = nil,
 		ctrlr = input
 	})
 	input:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "variable",
+		ctrlr = nil,
 		ctrlr = input
 	})
 	panel_sizer:add(text_sizer, 0, 0, "EXPAND")

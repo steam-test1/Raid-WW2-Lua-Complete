@@ -95,23 +95,23 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
-		add_filter = nil,
 		single = true,
 		remove_result = nil,
 		remove_filter = nil,
 		add_result = nil,
+		add_filter = nil,
 		add_filter = callback(self, self, "_add_counter_filter"),
 		add_result = callback(self, self, "_set_counter_id"),
 		remove_filter = callback(self, self, "_remove_counter_filter"),
 		remove_result = callback(self, self, "_remove_counter_id")
 	})
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 1,
-		floats = 0
+		floats = 0,
+		min = 1
 	}, "Specifies the amount of elements to be executed")
 	self:_build_value_number(panel, panel_sizer, "amount_random", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Add a random amount to amount")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled")
 	self:_add_help_text("Use 'Amount' only to specify an exact amount of elements to execute. Use 'Amount Random' to add a random amount to 'Amount' ('Amount' + random('Amount Random').")

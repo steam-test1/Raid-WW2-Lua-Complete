@@ -27,9 +27,9 @@ end
 
 function RaidGUIControlMissionUnlock:_create_panel()
 	local panel_params = {
+		h = nil,
 		name = nil,
 		w = nil,
-		h = nil,
 		name = "mission_unlock_" .. self._params.mission,
 		w = RaidGUIControlMissionUnlock.WIDTH,
 		h = RaidGUIControlMissionUnlock.HEIGHT
@@ -39,10 +39,10 @@ end
 
 function RaidGUIControlMissionUnlock:_create_background()
 	local background_params = {
-		name = "background",
-		layer = 1,
 		color = nil,
 		visible = false,
+		name = "background",
+		layer = 1,
 		color = tweak_data.gui.colors.raid_unlock_select_background
 	}
 	self._background = self._object:rect(background_params)
@@ -51,10 +51,10 @@ end
 function RaidGUIControlMissionUnlock:_create_selector_triangles()
 	local top_select_triangle_params = {
 		texture_rect = nil,
-		texture = nil,
 		layer = 3,
 		rotation = 90,
 		visible = false,
+		texture = nil,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
@@ -64,10 +64,10 @@ function RaidGUIControlMissionUnlock:_create_selector_triangles()
 
 	local bottom_select_triangle_params = {
 		texture_rect = nil,
-		texture = nil,
 		layer = 3,
 		rotation = 45,
 		visible = false,
+		texture = nil,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	}
@@ -86,22 +86,22 @@ function RaidGUIControlMissionUnlock:_create_active_border()
 	}
 	self._border_panel = self._object:panel(border_panel_params)
 	local top_border_params = {
-		h = nil,
-		w = nil,
 		color = nil,
 		name = "top_border",
 		layer = 2,
+		h = nil,
+		w = nil,
 		w = self._border_panel:w(),
 		h = border_thickness,
 		color = border_color
 	}
 	local top_border = self._border_panel:rect(top_border_params)
 	local bottom_border_params = {
-		h = nil,
-		w = nil,
 		color = nil,
 		name = "bottom_border",
 		layer = 2,
+		h = nil,
+		w = nil,
 		w = self._object:w(),
 		h = border_thickness,
 		color = border_color
@@ -111,22 +111,22 @@ function RaidGUIControlMissionUnlock:_create_active_border()
 	bottom_border:set_bottom(self._border_panel:h())
 
 	local left_border_params = {
-		h = nil,
-		w = nil,
 		color = nil,
 		name = "left_border",
 		layer = 2,
+		h = nil,
+		w = nil,
 		w = border_thickness,
 		h = self._border_panel:h(),
 		color = border_color
 	}
 	local left_border = self._border_panel:rect(left_border_params)
 	local right_border_params = {
-		h = nil,
-		w = nil,
 		color = nil,
 		name = "right_border",
 		layer = 2,
+		h = nil,
+		w = nil,
 		w = border_thickness,
 		h = self._border_panel:h(),
 		color = border_color
@@ -146,19 +146,19 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	end
 
 	local folder_panel_params = {
+		name = "folder_panel",
 		h = 448,
-		layer = 5,
-		name = "folder_panel"
+		layer = 5
 	}
 	self._folder_panel = self._object:panel(folder_panel_params)
 
 	self._folder_panel:set_center_y(self._object:h() / 2)
 
 	local folder_image_params = {
-		name = "folder_image",
-		texture = nil,
 		texture_rect = nil,
 		layer = 50,
+		name = "folder_image",
+		texture = nil,
 		texture = tweak_data.gui.icons.folder_mission_selection.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission_selection.texture_rect
 	}
@@ -171,14 +171,14 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	local icon_w = tweak_data.gui:icon_w(icon_id)
 	local icon_h = tweak_data.gui:icon_h(icon_id)
 	local mission_image_params = {
-		texture = nil,
-		w = nil,
 		valign = "center",
 		halign = "center",
 		name = "mission_icon",
 		layer = nil,
 		texture_rect = nil,
+		w = nil,
 		color = nil,
+		texture = nil,
 		texture = tweak_data.gui.icons[icon_id].texture,
 		texture_rect = tweak_data.gui.icons[icon_id].texture_rect,
 		w = self._folder_image:w() * 0.7,
@@ -193,16 +193,16 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._mission_image:set_center_y(self._folder_image:center_y() - 20)
 
 	local mission_title_params = {
-		h = 32,
-		w = 192,
 		text = nil,
 		vertical = "center",
 		align = "center",
 		layer = nil,
-		name = "folder_mission_title",
-		font_size = nil,
 		font = nil,
+		font_size = nil,
+		name = "folder_mission_title",
 		color = nil,
+		h = 32,
+		w = 192,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_light_red,
@@ -223,10 +223,10 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	local mission_photo_data = table.remove(mission_photos)
 	local mission_photo_params = {
-		alpha = 0,
-		layer = 1,
 		static = true,
 		photo = nil,
+		alpha = 0,
+		layer = 1,
 		photo = mission_photo_data.photo
 	}
 	local mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
@@ -240,14 +240,14 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	mission_photo:set_rotation(rotation)
 	table.insert(self._mission_photos, {
-		rotation = nil,
-		position_y = nil,
-		initial_alpha = 1,
+		position_x = nil,
 		photo = nil,
 		final_alpha = 1,
-		position_x = nil,
+		rotation = nil,
 		initial_y = 0.25,
 		initial_x = 0.5,
+		initial_alpha = 1,
+		position_y = nil,
 		photo = mission_photo,
 		rotation = rotation,
 		position_x = position_x,
@@ -256,10 +256,10 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	mission_photo_data = table.remove(mission_photos)
 	mission_photo_params = {
-		alpha = 0,
-		layer = 3,
 		static = true,
 		photo = nil,
+		alpha = 0,
+		layer = 3,
 		photo = mission_photo_data.photo
 	}
 	mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
@@ -273,14 +273,14 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	mission_photo:set_rotation(rotation)
 	table.insert(self._mission_photos, {
-		rotation = nil,
-		position_y = nil,
-		initial_alpha = 1,
+		position_x = nil,
 		photo = nil,
 		final_alpha = 1,
-		position_x = nil,
+		rotation = nil,
 		initial_y = nil,
 		initial_x = 0.5,
+		initial_alpha = 1,
+		position_y = nil,
 		photo = mission_photo,
 		rotation = rotation,
 		position_x = position_x,
@@ -290,10 +290,10 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	mission_photo_data = table.remove(mission_photos)
 	mission_photo_params = {
-		alpha = 0,
-		layer = nil,
 		static = true,
 		photo = nil,
+		alpha = 0,
+		layer = nil,
 		photo = mission_photo_data.photo,
 		layer = self._folder_mission_title:layer() + 1
 	}
@@ -308,14 +308,14 @@ function RaidGUIControlMissionUnlock:_create_folder()
 
 	mission_photo:set_rotation(rotation)
 	table.insert(self._mission_photos, {
-		rotation = nil,
-		position_y = nil,
-		initial_alpha = 0,
+		position_x = nil,
 		photo = nil,
 		final_alpha = 1,
-		position_x = nil,
+		rotation = nil,
 		initial_y = 0.6,
 		initial_x = 0.5,
+		initial_alpha = 0,
+		position_y = nil,
 		photo = mission_photo,
 		rotation = rotation,
 		position_x = position_x,
@@ -349,11 +349,11 @@ end
 function RaidGUIControlMissionUnlock:_create_mission_description()
 	local mission_tweak_data = tweak_data.operations:mission_data(self._mission)
 	local mission_description_panel_params = {
-		h = 192,
 		w = 384,
-		y = nil,
 		alpha = 0,
 		name = "mission_description_panel",
+		h = 192,
+		y = nil,
 		y = RaidGUIControlMissionUnlock.DESCRIPTION_Y
 	}
 	self._description_panel = self._object:panel(mission_description_panel_params)
@@ -361,14 +361,14 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 	self._description_panel:set_center_x(self._object:w() / 2)
 
 	local mission_title_params = {
-		h = 32,
-		color = nil,
 		font = nil,
 		vertical = "center",
 		name = "mission_title",
 		align = "center",
-		text = nil,
+		color = nil,
 		font_size = nil,
+		h = 32,
+		text = nil,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -376,16 +376,16 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 	}
 	self._mission_title = self._description_panel:text(mission_title_params)
 	local mission_description_params = {
-		h = nil,
-		font = nil,
 		text = nil,
 		vertical = "top",
 		align = "center",
+		font = nil,
 		name = "mission_description",
 		font_size = nil,
 		y = 48,
 		color = nil,
 		wrap = true,
+		h = nil,
 		h = self._description_panel:h() - 32,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.extra_small,

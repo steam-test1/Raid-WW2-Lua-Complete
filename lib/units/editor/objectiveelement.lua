@@ -1,12 +1,12 @@
 ObjectiveUnitElement = ObjectiveUnitElement or class(MissionElement)
 ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "objective",
-		value = "objective"
+		value = "objective",
+		type = "objective"
 	},
 	{
-		type = "number",
-		value = "amount"
+		value = "amount",
+		type = "number"
 	}
 }
 
@@ -57,8 +57,8 @@ end
 
 function ObjectiveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
@@ -146,14 +146,14 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(self._sub_objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		max = 100,
 		min = 0,
-		floats = 0
+		floats = 0,
+		max = 100
 	}, "Overrides objective amount counter with this value.")
 
 	local help = {
-		panel = nil,
 		sizer = nil,
+		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "State complete_and_activate will complete any previous objective and activate the selected objective. Note that it might not function well with objectives using amount"

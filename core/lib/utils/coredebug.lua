@@ -155,9 +155,9 @@ function catprint_save()
 	for name, allow_print in pairs(Global.category_print) do
 		if Global.original_category_print[name] ~= allow_print then
 			table.insert(data, {
-				print = nil,
-				name = nil,
 				_meta = "category",
+				name = nil,
+				print = nil,
 				name = name,
 				print = allow_print
 			})

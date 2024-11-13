@@ -37,11 +37,11 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 					if draw then
 						self:_draw_link({
+							r = 0,
 							to_unit = nil,
 							from_unit = nil,
 							b = 0.75,
 							g = 0,
-							r = 0,
 							from_unit = self._unit,
 							to_unit = unit
 						})
@@ -65,11 +65,11 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 
 			if draw then
 				self:_draw_link({
+					r = 0,
 					to_unit = nil,
 					from_unit = nil,
 					b = 0.75,
 					g = 0,
-					r = 0,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -139,8 +139,8 @@ end
 
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -156,8 +156,8 @@ end
 
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -259,8 +259,8 @@ function SpecialObjectiveGroupElement:_lmb()
 			self._hed.followup_patrol_elements = self._hed.followup_patrol_elements or {}
 
 			table.insert(self._hed.followup_patrol_elements, {
-				type = nil,
 				id = nil,
+				type = nil,
 				id = id,
 				type = self:_element_type(id)
 			})
@@ -379,15 +379,15 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
-		value = nil,
 		name = "Mode:",
-		panel = nil,
 		options = nil,
-		sizer = nil,
 		tooltip = nil,
+		sizer = nil,
+		panel = nil,
 		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -403,8 +403,8 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	local mode = CoreEws.combobox(mode_params)
 
 	mode:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "mode",
 		ctrlr = nil,
+		value = "mode",
 		ctrlr = mode
 	})
 
@@ -412,23 +412,23 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "use_instigator",
 		ctrlr = nil,
+		value = "use_instigator",
 		ctrlr = use_instigator
 	})
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
 
 	local base_chance_params = {
-		value = nil,
 		name = "Base chance:",
-		panel = nil,
 		sizer = nil,
-		max = 1,
-		min = 0,
 		tooltip = "Used to specify chance to happen (1.0 == 100%)",
+		max = 1,
+		panel = nil,
+		min = 0,
 		floats = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance
@@ -436,13 +436,13 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	local base_chance = CoreEws.number_controller(base_chance_params)
 
 	base_chance:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "base_chance",
 		ctrlr = nil,
+		value = "base_chance",
 		ctrlr = base_chance
 	})
 	base_chance:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "base_chance",
 		ctrlr = nil,
+		value = "base_chance",
 		ctrlr = base_chance
 	})
 

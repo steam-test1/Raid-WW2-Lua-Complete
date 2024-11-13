@@ -126,11 +126,11 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		end
 	else
 		entry = {
-			ref_c = 1,
 			package_name = nil,
-			callbacks = nil,
 			resource_name = nil,
 			resource_type = nil,
+			ref_c = 1,
+			callbacks = nil,
 			resource_type = resource_type,
 			resource_name = resource_name,
 			package_name = package_name,
@@ -151,7 +151,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		self:clbk_resource_loaded(true, resource_type, resource_name, package_name)
 	else
 		if not complete_clbk then
-			Application:error("[DynamicResourceManager:load]", resource_type, resource_name, package_name, complete_clbk)
+			Application:debug("[DynamicResourceManager:load]", resource_type, resource_name, package_name, complete_clbk)
 		end
 
 		PackageManager:package(package_name):load_temp_resource(resource_type, resource_name, complete_clbk and callback(self, DynamicResourceManager, "clbk_resource_loaded") or nil, true)

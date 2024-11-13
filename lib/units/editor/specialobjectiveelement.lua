@@ -1,8 +1,8 @@
 SpecialObjectiveUnitElement = SpecialObjectiveUnitElement or class(MissionElement)
 SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "special_objective_action",
-		value = "so_action"
+		value = "so_action",
+		type = "special_objective_action"
 	}
 }
 SpecialObjectiveUnitElement._AI_SO_types = {
@@ -19,10 +19,10 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 }
 SpecialObjectiveUnitElement.PRESETS = {
 	security = nil,
-	civilians = nil,
 	team_ai = nil,
 	acrobats = nil,
 	heavies = nil,
+	civilians = nil,
 	civilians = {
 		"civ_male",
 		"civ_female"
@@ -151,8 +151,8 @@ function SpecialObjectiveUnitElement:test_element()
 	enemy:movement():set_root_blend(false)
 
 	local t = {
-		id = nil,
 		editor_name = nil,
+		id = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
@@ -215,11 +215,11 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 			if draw then
 				self:_draw_link({
-					g = 0,
 					r = 0,
 					to_unit = nil,
 					from_unit = nil,
 					b = 0.75,
+					g = 0,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -233,11 +233,11 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 		if draw and unit and self._unit then
 			self:_draw_link({
-				g = 0,
 				r = 0,
 				to_unit = nil,
 				from_unit = nil,
 				b = 0.75,
+				g = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -319,11 +319,11 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					g = 0.75,
 					r = 0,
 					to_unit = nil,
 					from_unit = nil,
 					b = 0,
+					g = 0.75,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -341,8 +341,8 @@ end
 
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -358,8 +358,8 @@ end
 
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -379,8 +379,8 @@ end
 
 function SpecialObjectiveUnitElement:_turret_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body",
-		mask = 1
+		mask = 1,
+		ray_type = "body"
 	})
 
 	if not ray or not ray.unit then
@@ -507,8 +507,8 @@ function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
 		self:_toggle_nav_link_filter_value({
-			name = nil,
 			ctrlr = nil,
+			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -519,8 +519,8 @@ function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
 		self:_toggle_nav_link_filter_value({
-			name = nil,
 			ctrlr = nil,
+			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -535,8 +535,8 @@ function SpecialObjectiveUnitElement:_set_preset_nav_link_filters(value)
 
 		ctrlr:set_value(state)
 		self:_toggle_nav_link_filter_value({
-			name = nil,
 			ctrlr = nil,
+			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -570,14 +570,14 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
+		name_proportions = 1,
+		name = "Preset:",
+		tooltip = "Select a preset.",
 		options = nil,
 		sizer = nil,
 		ctrlr_proportions = 2,
 		sorted = true,
 		panel = nil,
-		name_proportions = 1,
-		name = "Preset:",
-		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -603,8 +603,8 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 		check:set_value(table.contains(self._nav_link_filter, o))
 		check:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_toggle_nav_link_filter_value"), {
-			name = nil,
 			ctrlr = nil,
+			name = nil,
 			ctrlr = check,
 			name = o
 		})
@@ -639,8 +639,8 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "allow_followup_self", "Allow self-followup", "Allow self-followup")
 	self:_build_value_checkbox(panel, panel_sizer, "is_alert_point", "Alert point", "Alert point")
 	self:_build_value_number(panel, panel_sizer, "search_distance", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Used to specify the distance to use when searching for an AI")
 
 	local options = table.list_add({
@@ -658,24 +658,24 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interrupt_dis", {
-		floats = 1,
-		min = -1
+		min = -1,
+		floats = 1
 	}, "Interrupt if a threat is detected closer than this distance (meters). -1 means at any distance. For non-visible threats this value is multiplied with 0.7.", "Interrupt Distance:")
 	self:_build_value_number(panel, panel_sizer, "interrupt_dmg", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Interrupt if total damage received as a ratio of total health exceeds this ratio. value: 0-1.", "Interrupt Damage:")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 	self:_build_value_number(panel, panel_sizer, "action_duration_min", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "How long the character stays in his specified action.")
 	self:_build_value_number(panel, panel_sizer, "action_duration_max", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "How long the character stays in his specified action. Zero means indefinitely.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

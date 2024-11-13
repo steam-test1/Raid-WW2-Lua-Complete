@@ -11,12 +11,12 @@ CivilianBrain = CivilianBrain or class(CopBrain)
 CivilianBrain.set_attention_settings = PlayerMovement.set_attention_settings
 CivilianBrain._logics = {
 	escort = nil,
-	inactive = nil,
-	travel = nil,
 	flee = nil,
-	trade = nil,
+	travel = nil,
 	surrender = nil,
+	trade = nil,
 	idle = nil,
+	inactive = nil,
 	inactive = CivilianLogicInactive,
 	idle = CivilianLogicIdle,
 	surrender = CivilianLogicSurrender,
@@ -100,13 +100,13 @@ function CivilianBrain:on_cool_state_changed(state)
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
 		alert_types = {
-			vo_cbt = true,
-			bullet = true,
 			footstep = true,
 			explosion = true,
 			aggression = true,
 			vo_distress = true,
-			vo_intimidate = true
+			vo_intimidate = true,
+			vo_cbt = true,
+			bullet = true
 		}
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
@@ -135,10 +135,10 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		local stand_action_desc = {
-			variant = "stand_tied",
 			clamp_to_graph = true,
 			type = "act",
-			body_part = 1
+			body_part = 1,
+			variant = "stand_tied"
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)
 
@@ -149,15 +149,15 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		self._unit:movement():set_stance("cbt", nil, true)
 
 		local follow_objective = {
+			fail_clbk = nil,
+			stance = "cbt",
+			distance = 500,
 			lose_track_dis = 2000,
 			interrupt_health = 0,
 			type = "follow",
 			interrupt_dis = 0,
 			nav_seg = nil,
 			follow_unit = nil,
-			fail_clbk = nil,
-			stance = "cbt",
-			distance = 500,
 			follow_unit = interacting_unit,
 			nav_seg = interacting_unit:movement():nav_tracker():nav_segment(),
 			fail_clbk = callback(self, self, "on_hostage_follow_objective_failed")
@@ -177,9 +177,9 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		self:set_objective({
-			amount = 1,
 			type = "surrender",
 			aggressor_unit = nil,
+			amount = 1,
 			aggressor_unit = interacting_unit
 		})
 
@@ -188,10 +188,10 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		local stand_action_desc = {
-			variant = "drop",
 			clamp_to_graph = true,
 			type = "act",
-			body_part = 1
+			body_part = 1,
+			variant = "drop"
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)
 
@@ -224,9 +224,9 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		self._unit:movement():set_stance("hos", nil, true)
 
 		local stand_action_desc = {
-			variant = "panic",
 			body_part = 1,
-			type = "act"
+			type = "act",
+			variant = "panic"
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)
 

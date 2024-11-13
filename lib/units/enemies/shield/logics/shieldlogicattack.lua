@@ -240,11 +240,11 @@ end
 function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
-			body_part = 2,
 			variant = "walk",
 			nav_path = nil,
-			end_rot = nil,
 			type = "walk",
+			end_rot = nil,
+			body_part = 2,
 			nav_path = my_data.optimal_path,
 			end_rot = end_rot
 		}
@@ -587,8 +587,8 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	local ray_params = {
 		trace = true,
 		pos_from = nil,
-		tracker_from = nil,
 		pos_to = nil,
+		tracker_from = nil,
 		tracker_from = not tracker_lost and my_tracker or nil,
 		pos_from = tracker_lost and my_tracker:field_position() or nil,
 		pos_to = pos + my_fwd * data.char_tweak.wall_fwd_offset

@@ -10,10 +10,10 @@ function RaidGUIControlListItemCharacterCreateNation:init(parent, params, item_d
 	self._on_double_click_callback = self._params.on_double_click_callback
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._object = self._panel:panel({
+		x = nil,
 		h = nil,
 		w = nil,
 		y = nil,
-		x = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -25,35 +25,35 @@ end
 
 function RaidGUIControlListItemCharacterCreateNation:_layout()
 	self._background = self._object:rect({
-		h = nil,
-		w = 416,
-		y = 0,
 		x = 0,
 		color = nil,
 		visible = false,
+		h = nil,
+		w = 416,
+		y = 0,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._red_selected_line = self._object:rect({
-		h = nil,
-		w = 2,
-		y = 0,
 		x = 0,
 		color = nil,
 		visible = false,
+		h = nil,
+		w = 2,
+		y = 0,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_red
 	})
 	local nationality_text = self:translate("character_profile_creation_" .. self._nation_name, true)
 	self._nation_name_label = self._object:label({
-		h = 32,
-		w = 272,
-		y = 32,
 		x = 96,
 		font_size = nil,
 		text = nil,
 		color = nil,
 		font = nil,
+		h = 32,
+		w = 272,
+		y = 32,
 		text = nationality_text,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -65,12 +65,12 @@ function RaidGUIControlListItemCharacterCreateNation:_layout()
 	local nation_icon_data = tweak_data.gui.icons["character_creation_nationality_" .. self._nation_name] or tweak_data.gui.icons.ico_flag_empty
 	local tex_rect = nation_icon_data.texture_rect
 	self._nationality_icon = self._object:image({
-		h = nil,
-		w = nil,
-		y = 24,
 		x = 22,
 		texture_rect = nil,
 		texture = nil,
+		h = nil,
+		w = nil,
+		y = 24,
 		w = tex_rect[3],
 		h = tex_rect[4],
 		texture = nation_icon_data.texture,

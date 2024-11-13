@@ -99,8 +99,8 @@ function SentryGunDamage:damage_bullet(attack_data)
 
 	dmg_adjusted = dmg_adjusted + self._sync_dmg_leftover
 	local result = {
-		type = "dmg_rcv",
-		variant = "bullet"
+		variant = "bullet",
+		type = "dmg_rcv"
 	}
 	local damage_sync = self:_apply_damage(dmg_adjusted, true)
 

@@ -56,9 +56,9 @@ function BarrageManager:spawn_flare(spotter, target)
 	local rot = spotter:rotation()
 
 	managers.dialog:queue_dialog("player_gen_barrage_flare_drop", {
-		skip_idle_check = true,
-		instigator = nil,
 		position = nil,
+		instigator = nil,
+		skip_idle_check = true,
 		instigator = target,
 		position = target:position()
 	})
@@ -267,8 +267,8 @@ function BarrageManager:_start_barrage(barrage_params)
 
 				if distance < 6400 then
 					managers.dialog:queue_dialog("player_gen_mortars_started", {
-						instigator = nil,
 						skip_idle_check = true,
+						instigator = nil,
 						instigator = player
 					})
 
@@ -287,8 +287,8 @@ function BarrageManager:_comment_on_barrage_end(barrage_pos)
 
 			if distance < 6400 then
 				managers.dialog:queue_dialog("player_gen_mortars_end", {
-					instigator = nil,
 					skip_idle_check = true,
+					instigator = nil,
 					instigator = player
 				})
 
@@ -311,13 +311,13 @@ function BarrageManager:_waypoint_barrage_add(running_barrage)
 	local color = tweak_data.gui.colors.raid_red
 	local icon = "waypoint_special_air_strike"
 	local data = {
-		lifetime = nil,
 		waypoint_type = "spotter",
-		position = nil,
-		icon = nil,
-		waypoint_color = nil,
 		distance = false,
 		range_max = nil,
+		icon = nil,
+		waypoint_color = nil,
+		position = nil,
+		lifetime = nil,
 		icon = icon,
 		lifetime = running_barrage.duration + 7,
 		position = running_barrage.center_target + Vector3(0, 0, 65),
@@ -393,8 +393,8 @@ end
 
 function BarrageManager:_queue_projectile(barrage_params)
 	local queued_projectile = {
-		time = nil,
 		barrage_params = nil,
+		time = nil,
 		barrage_params = barrage_params,
 		time = TimerManager:game():time() + (barrage_params.barrage_launch_sound_delay or 0)
 	}

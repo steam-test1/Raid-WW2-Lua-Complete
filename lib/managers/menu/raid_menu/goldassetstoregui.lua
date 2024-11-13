@@ -29,9 +29,9 @@ function GoldAssetStoreGui:_layout()
 	local gold_asset_store_grid_scrollable_area_params = {
 		h = 612,
 		w = 498,
-		y = 120,
-		x = 0,
 		name = "gold_asset_store_grid_scrollable_area",
+		x = 0,
+		y = 120,
 		scrollbar_offset = 14,
 		scroll_step = 30
 	}
@@ -39,10 +39,10 @@ function GoldAssetStoreGui:_layout()
 	local gold_asset_store_grid_params = {
 		scrollable_area_ref = nil,
 		w = 480,
-		y = 0,
-		x = 0,
-		item_params = nil,
 		name = "gold_asset_store_grid",
+		x = 0,
+		y = 0,
+		item_params = nil,
 		grid_params = nil,
 		scrollable_area_ref = self._gold_asset_store_grid_scrollable_area,
 		grid_params = {
@@ -72,9 +72,9 @@ function GoldAssetStoreGui:_layout()
 	local params_rotate_gold_item = {
 		h = 750,
 		w = 800,
-		y = 90,
+		name = "rotate_gold_item",
 		x = 500,
-		name = "rotate_gold_item"
+		y = 90
 	}
 	self._rotate_gold_item = self._root_panel:rotate_unit(params_rotate_gold_item)
 	self._item_title = self._root_panel:label({
@@ -112,11 +112,11 @@ function GoldAssetStoreGui:_layout()
 
 	self._coord_center_y = 864
 	self._buy_button = self._root_panel:short_primary_gold_button({
-		on_click_callback = nil,
 		layer = nil,
+		on_click_callback = nil,
+		name = "buy_button",
 		x = 0,
 		visible = false,
-		name = "buy_button",
 		text = nil,
 		text = self:translate("gold_asset_store_buy_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -126,11 +126,11 @@ function GoldAssetStoreGui:_layout()
 	self._buy_button:set_center_y(self._coord_center_y)
 
 	self._apply_button = self._root_panel:short_primary_gold_button({
-		on_click_callback = nil,
 		layer = nil,
+		on_click_callback = nil,
+		name = "buy_button",
 		x = 0,
 		visible = false,
-		name = "buy_button",
 		text = nil,
 		text = self:translate("gold_asset_store_apply_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -140,12 +140,12 @@ function GoldAssetStoreGui:_layout()
 	self._apply_button:set_center_y(self._coord_center_y)
 
 	self._info_label = self._root_panel:label({
-		font = nil,
-		font_size = nil,
 		layer = nil,
+		font = nil,
+		name = "info_label",
 		x = 0,
 		visible = false,
-		name = "info_label",
+		font_size = nil,
 		text = nil,
 		text = self:translate("grid_item_insuficient_gold_label", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -158,12 +158,12 @@ function GoldAssetStoreGui:_layout()
 	self._info_label:set_center_y(self._coord_center_y)
 
 	self._gold_currency_label = self._root_panel:label({
-		color = nil,
-		font = nil,
 		layer = nil,
+		color = nil,
+		name = "gold_currency_label",
 		x = 250,
 		visible = false,
-		name = "gold_currency_label",
+		font = nil,
 		font_size = nil,
 		text = "",
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -179,12 +179,12 @@ function GoldAssetStoreGui:_layout()
 	self._gold_currency_label:set_right(self._gold_asset_store_grid_scrollable_area:x() + self._gold_asset_store_grid:x() + self._gold_asset_store_grid:w())
 
 	self._gold_currency_icon = self._root_panel:bitmap({
-		color = nil,
-		texture_rect = nil,
 		layer = nil,
+		color = nil,
+		name = "gold_currency_icon",
 		x = 200,
 		visible = false,
-		name = "gold_currency_icon",
+		texture_rect = nil,
 		texture = nil,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		color = tweak_data.gui.colors.gold_orange,
@@ -196,12 +196,12 @@ function GoldAssetStoreGui:_layout()
 	self._gold_currency_icon:set_right(self._gold_currency_label:x() - 14)
 
 	self._gold_item_bought_icon = self._root_panel:bitmap({
-		texture = nil,
-		texture_rect = nil,
 		layer = nil,
+		texture_rect = nil,
+		name = "gold_item_bought_icon",
 		x = 200,
 		visible = false,
-		name = "gold_item_bought_icon",
+		texture = nil,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		texture = tweak_data.gui.icons.consumable_purchased_confirmed.texture,
 		texture_rect = tweak_data.gui.icons.consumable_purchased_confirmed.texture_rect
@@ -228,8 +228,8 @@ function GoldAssetStoreGui:_layout_greed_info()
 	local greed_panel_bottom = 896
 	local greed_info_panel_params = {
 		h = nil,
-		name = "greed_info_panel",
 		w = 352,
+		name = "greed_info_panel",
 		h = greed_panel_default_h
 	}
 	self._greed_info_panel = self._root_panel:panel(greed_info_panel_params)
@@ -241,15 +241,15 @@ function GoldAssetStoreGui:_layout_greed_info()
 	greed_bar:set_data_from_manager()
 
 	local greed_description_params = {
-		valign = "top",
 		wrap = true,
+		y = nil,
 		color = nil,
 		font_size = nil,
 		h = nil,
-		y = nil,
-		font = nil,
-		name = "greed_description",
 		halign = "left",
+		name = "greed_description",
+		valign = "top",
+		font = nil,
 		text = nil,
 		y = greed_bar:h(),
 		h = self._greed_info_panel:h() - greed_bar:h(),
@@ -295,8 +295,8 @@ function GoldAssetStoreGui:_on_click_button_buy()
 	local selected_item = self._gold_asset_store_grid:selected_grid_item()
 	local selected_item_data = selected_item:get_data()
 	local dialog_params = {
-		callback_yes = nil,
 		item_name = nil,
+		callback_yes = nil,
 		amount = nil,
 		amount = selected_item_data.gold_price,
 		item_name = self:translate(selected_item_data.name_id, true),

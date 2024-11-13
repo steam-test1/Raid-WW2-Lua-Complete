@@ -158,23 +158,23 @@ function MenuManager:show_smartmatch_inexact_match_dialog(params)
 			timeout = params.timeout
 		}),
 		text = managers.localization:text("menu_smm_contract_inexact_match_body", {
+			job_name = nil,
 			host = nil,
 			difficulty = nil,
-			job_name = nil,
 			host = params.host_name,
 			job_name = params.job_name,
 			difficulty = params.difficulty
 		})
 	}
 	local yes_button = {
-		text = nil,
 		callback_func = nil,
+		text = nil,
 		text = managers.localization:text("dialog_inexact_match_yes"),
 		callback_func = params.yes_clbk
 	}
 	local no_button = {
-		text = nil,
 		callback_func = nil,
+		text = nil,
 		text = managers.localization:text("dialog_inexact_match_no"),
 		callback_func = params.no_clbk,
 		class = RaidGUIControlButtonShortSecondary
@@ -269,9 +269,9 @@ end
 
 function MenuManager:show_searching_match_dialog(params)
 	local cancel_button = {
+		callback_func = nil,
 		cancel_button = true,
 		text = nil,
-		callback_func = nil,
 		text = managers.localization:text("dialog_cancel"),
 		callback_func = params.cancel_func
 	}
@@ -2671,8 +2671,8 @@ end
 
 function MenuManager:show_loyalty_reward_message(text_id, amount)
 	local dialog_data = {
-		title = nil,
 		button_list = nil,
+		title = nil,
 		text = nil,
 		title = managers.localization:text("dialog_loyalty_reward_title"),
 		text = managers.localization:text(text_id, {
@@ -2692,29 +2692,29 @@ end
 
 function MenuManager:show_skill_profile_rename_dialog(params)
 	local yes_button = {
-		text = nil,
-		callback_func = nil,
 		class = nil,
+		callback_func = nil,
+		text = nil,
 		text = managers.localization:to_upper_text("dialog_rename"),
 		class = RaidGUIControlButtonShortPrimary,
 		callback_func = params.callback_yes
 	}
 	local no_button = {
-		cancel_button = true,
-		text = nil,
 		class = nil,
 		callback_func = nil,
+		cancel_button = true,
+		text = nil,
 		text = managers.localization:to_upper_text("dialog_cancel"),
 		class = RaidGUIControlButtonShortSecondary,
 		callback_func = params.callback_no
 	}
 	local dialog_data = {
-		button_list = nil,
-		textbox_value = nil,
-		focus_button = 1,
 		textbox = true,
+		button_list = nil,
+		focus_button = 1,
 		title = nil,
 		capitalize = false,
+		textbox_value = nil,
 		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
 		textbox_value = params.textbox_value,
 		button_list = {
@@ -2728,23 +2728,23 @@ end
 
 function MenuManager:show_skill_profile_purchase_dialog(params)
 	local yes_button = {
-		text = nil,
-		callback_func = nil,
 		class = nil,
+		callback_func = nil,
+		text = nil,
 		text = managers.localization:to_upper_text("dialog_yes"),
 		class = RaidGUIControlButtonShortPrimaryGold,
 		callback_func = params.callback_yes
 	}
 	local no_button = {
+		class = nil,
 		cancel_button = true,
 		text = nil,
-		class = nil,
 		text = managers.localization:to_upper_text("dialog_no"),
 		class = RaidGUIControlButtonShortSecondary
 	}
 	local dialog_data = {
-		title = nil,
 		button_list = nil,
+		title = nil,
 		text = nil,
 		title = managers.localization:text("menu_skill_profile_purchase_title"),
 		text = managers.localization:text("menu_skill_profile_purchase_message", {

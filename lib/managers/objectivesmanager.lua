@@ -80,6 +80,7 @@ function ObjectivesManager:_parse_objective(data)
 
 	self._objectives[id] = {
 		id = nil,
+		text = nil,
 		current_amount = nil,
 		sub_objectives = nil,
 		xp_weight = nil,
@@ -88,7 +89,6 @@ function ObjectivesManager:_parse_objective(data)
 		amount = nil,
 		prio = nil,
 		description = nil,
-		text = nil,
 		text = text,
 		description = description,
 		prio = prio,
@@ -110,10 +110,10 @@ function ObjectivesManager:_parse_objective(data)
 		end
 
 		self._objectives[id].sub_objectives[sub.id] = {
-			text = nil,
-			description = nil,
 			start_completed = nil,
 			id = nil,
+			text = nil,
+			description = nil,
 			id = sub.id,
 			text = sub_text,
 			description = sub_description,
@@ -179,10 +179,10 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
-			title = nil,
-			[""] = nil,
 			time = 4,
 			text = nil,
+			title = nil,
+			[""] = nil,
 			text = text,
 			title = title_message
 		})
@@ -250,9 +250,9 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	objective.amount = load_data and load_data.amount or data and data.amount or objective.amount
 	objective.world_id = world_id
 	local activate_params = {
+		current_amount = nil,
 		sub_objectives = nil,
 		text = nil,
-		current_amount = nil,
 		id = nil,
 		amount_text = nil,
 		amount = nil,
@@ -280,10 +280,10 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			title = nil,
-			[""] = nil,
 			time = 4.5,
 			text = nil,
+			title = nil,
+			show_objectives = nil,
 			text = text,
 			title = title_message
 		})
@@ -315,8 +315,8 @@ function ObjectivesManager:remove_objective(id, load_data)
 
 	managers.hud:complete_objective({
 		text = nil,
-		remove = true,
 		id = nil,
+		remove = true,
 		id = id,
 		text = objective.text
 	})
@@ -334,8 +334,8 @@ function ObjectivesManager:remove_objective_for_world(world_id)
 		if objective.world_id == world_id then
 			managers.hud:complete_objective({
 				text = nil,
-				remove = true,
 				id = nil,
+				remove = true,
 				id = id,
 				text = objective.text
 			})
@@ -384,8 +384,8 @@ function ObjectivesManager:complete_objective(id, load_data)
 		objective.current_amount = objective.current_amount + 1
 
 		managers.hud:update_amount_objective({
-			text = nil,
 			current_amount = nil,
+			text = nil,
 			id = nil,
 			amount_text = nil,
 			amount = nil,
@@ -449,10 +449,10 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 		sub_objective.current_amount = sub_objective.current_amount + 1
 
 		managers.hud:update_amount_sub_objective({
-			sub_id = nil,
-			text = nil,
 			current_amount = nil,
+			sub_id = nil,
 			id = nil,
+			text = nil,
 			amount_text = nil,
 			amount = nil,
 			id = id,

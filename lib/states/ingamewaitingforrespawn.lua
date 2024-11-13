@@ -86,9 +86,9 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 
 	self._listener_activation_id = managers.listener:activate_set("main", "spectator_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
+		primary = true,
 		active = true,
 		object = nil,
-		primary = true,
 		object = self._camera_object
 	})
 end
@@ -157,8 +157,8 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 
 			local sp_id = "IngameWaitingForRespawnState"
 			local spawn_point = {
-				rotation = nil,
 				position = nil,
+				rotation = nil,
 				position = pos_rot[1],
 				rotation = pos_rot[2]
 			}

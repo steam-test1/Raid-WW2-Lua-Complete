@@ -20,11 +20,11 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 
 	local sound_event = self._explosion_sound_event or ExplodingProp.DEFAULT_EXPLODE_EVENT
 	local effect_params = {
-		effect = "effects/vanilla/explosions/exp_hand_grenade_001",
 		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
 		feedback_range = nil,
+		effect = "effects/vanilla/explosions/exp_hand_grenade_001",
 		sound_event = sound_event,
 		feedback_range = range * 2
 	}
@@ -33,15 +33,15 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 		local normal = math.UP
 		local slot_mask = managers.slot:get_mask("explosion_targets")
 		local damage_params = {
-			collision_slotmask = nil,
-			hit_pos = nil,
-			damage = nil,
 			range = nil,
 			player_damage = 0,
 			alert_radius = nil,
 			no_raycast_check_characters = true,
 			ignore_unit = nil,
 			curve_pow = 3,
+			collision_slotmask = nil,
+			hit_pos = nil,
+			damage = nil,
 			hit_pos = pos,
 			range = range,
 			collision_slotmask = slot_mask,
@@ -65,11 +65,11 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 		end
 
 		table.insert(self._data_list, {
+			range = nil,
+			pos = nil,
 			effect_params = nil,
 			player_damage = nil,
 			damage = nil,
-			range = nil,
-			pos = nil,
 			range = range,
 			damage = damage,
 			player_damage = player_damage,

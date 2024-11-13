@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			comparision_type = nil
+			restart_the_game = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -189,8 +189,8 @@ function NetworkMatchMakingXBL:_join_invite_accepted(host_info, host_name)
 
 	managers.system_menu:force_close_all()
 	self:join_server_with_check(host_info:id(), true, {
-		info = nil,
 		host_name = nil,
+		info = nil,
 		info = host_info,
 		host_name = host_name
 	})
@@ -517,8 +517,8 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 	end
 
 	local info = {
-		attribute_list = nil,
 		room_list = nil,
+		attribute_list = nil,
 		room_list = {},
 		attribute_list = {}
 	}
@@ -531,8 +531,8 @@ function NetworkMatchMakingXBL:_find_server_callback(cancel_id, servers, mode)
 		if self._session:id() ~= server.info:id() and server.properties.LEVELINDEX ~= 0 then
 			table.insert(info.room_list, {
 				xuid = nil,
-				room_id = nil,
 				owner_name = nil,
+				room_id = nil,
 				info = nil,
 				owner_name = server.properties.GAMERHOSTNAME,
 				xuid = server.properties.GAMERHOSTXUID,
@@ -654,9 +654,9 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 	if data and data.info then
 		f({
 			{
+				host_name = nil,
 				open_private_slots = 0,
 				info = nil,
-				host_name = nil,
 				info = data.info,
 				host_name = data.host_name
 			}
@@ -1111,8 +1111,8 @@ function NetworkMatchMakingXBL:_create_lobby_failed()
 
 	local title = managers.localization:text("dialog_error_title")
 	local dialog_data = {
-		title = nil,
 		text = nil,
+		title = nil,
 		title = title,
 		text = managers.localization:text("dialog_err_failed_creating_lobby"),
 		button_list = {
@@ -1285,13 +1285,13 @@ function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatc
 
 			self._join_smartmatch = "confirm_inexact"
 			local params = {
-				yes_clbk = nil,
-				job_name = nil,
 				host_name = nil,
-				timeout_clbk = nil,
-				no_clbk = nil,
 				timeout = nil,
 				difficulty = nil,
+				job_name = nil,
+				timeout_clbk = nil,
+				no_clbk = nil,
+				yes_clbk = nil,
 				yes_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_yes"),
 				no_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_no"),
 				timeout_clbk = callback(self, self, "clbk_smartmatch_client_inexact_join_no"),
@@ -1434,7 +1434,7 @@ function NetworkMatchMakingXBL:get_all_players_info()
 
 			if peer_data then
 				local peer_level = peer_data:level() or "-"
-				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or "-"
+				local peer_class = managers.network:session():all_peers()[peer_id]:class() or "-"
 				local peer_name = peer_data:name() or ""
 				local peer_nationality = peer_data:nationality() or ""
 				local peer_xuid = peer_data:xuid()
@@ -1484,7 +1484,7 @@ function NetworkMatchMakingXBL:add_player_info(peer_id)
 			if index == peer_id then
 				if managers.network and managers.network:session() and managers.network:session():all_peers() then
 					local peer_data = managers.network:session():all_peers()[peer_id]
-					local peer_level = managers.network:session():all_peers()[peer_id]:level()
+					local peer_level = peer_data:level()
 					local peer_class = "-"
 					players_info = players_info .. peer_class .. "," .. peer_level .. ";"
 				else

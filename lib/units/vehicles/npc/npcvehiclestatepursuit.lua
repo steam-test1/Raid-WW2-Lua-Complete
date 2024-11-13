@@ -7,34 +7,34 @@ function NpcVehicleStatePursuit:init(unit)
 	self._vehicle = self._unit:vehicle()
 	self._next_checkpoint_distance = {
 		{
+			relative_angle_max = 60,
+			relative_angle_min = 30,
 			distance = 1200,
 			v_max = 40,
-			v_min = 30,
-			relative_angle_max = 60,
-			relative_angle_min = 30
+			v_min = 30
 		},
 		{
+			relative_angle_max = 90,
+			relative_angle_min = 30,
 			distance = 1400,
 			v_max = 60,
-			v_min = 40,
-			relative_angle_max = 90,
-			relative_angle_min = 30
+			v_min = 40
 		},
 		{
+			relative_angle_max = 90,
+			relative_angle_min = 30,
 			distance = 2000,
 			v_max = 90,
-			v_min = 60,
-			relative_angle_max = 90,
-			relative_angle_min = 30
+			v_min = 60
 		}
 	}
 	local cop_position = self._unit:position()
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
-		distance = 0,
 		last_pos = nil,
 		tick_at = nil,
 		timeframe = 1,
+		distance = 0,
 		tick_at = delayed_tick,
 		last_pos = cop_position
 	}
@@ -46,10 +46,10 @@ function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 	local cop_position = self._unit:position()
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
-		distance = 0,
 		last_pos = nil,
 		tick_at = nil,
 		timeframe = 1,
+		distance = 0,
 		tick_at = delayed_tick,
 		last_pos = cop_position
 	}

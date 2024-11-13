@@ -18,11 +18,11 @@ function ElementAreaTrigger:init(...)
 	if not self._values.use_shape_element_ids then
 		if not self._values.shape_type or self._values.shape_type == "box" then
 			self:_add_shape(CoreShapeManager.ShapeBoxMiddle:new({
+				height = nil,
 				depth = nil,
 				width = nil,
 				rotation = nil,
 				position = nil,
-				height = nil,
 				position = self._values.position,
 				rotation = self._values.rotation,
 				width = self._values.width,

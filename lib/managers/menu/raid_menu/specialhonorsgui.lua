@@ -58,22 +58,22 @@ end
 
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		name = "top_stats_big_panel"
 	}
 	self._top_stats_big_panel = self._root_panel:panel(top_stats_big_panel_params)
 	local title_text = game_state_machine:current_state():is_success() and SpecialHonorsGui.TOP_STATS_TITLE_TEXT or SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE
 	local top_stats_title_params = {
-		color = nil,
-		text = nil,
 		alpha = 0,
 		vertical = "center",
 		align = "center",
 		name = "top_stats_title",
+		color = nil,
 		font_size = nil,
 		font = nil,
 		h = nil,
+		text = nil,
 		h = SpecialHonorsGui.TOP_STATS_TITLE_H,
 		font = SpecialHonorsGui.FONT,
 		font_size = SpecialHonorsGui.TOP_STATS_TITLE_FONT_SIZE,
@@ -88,8 +88,8 @@ function SpecialHonorsGui:_layout_first_screen()
 
 	for i = 1, 3 do
 		local top_stat_big_params = {
-			name = nil,
 			x = nil,
+			name = nil,
 			name = "top_stat_big_" .. tostring(i),
 			x = (i - 1) * self._root_panel:w() / 3
 		}
@@ -140,16 +140,16 @@ function SpecialHonorsGui:show_honors()
 		end
 
 		local data = {
+			icon_texture_rect = nil,
+			sound_effect = nil,
+			icon_texture = nil,
+			icon = nil,
 			text_id = nil,
 			stat = nil,
 			player_nickname = nil,
-			sound_effect = nil,
 			mission_successful = nil,
 			score_format = nil,
 			score = nil,
-			icon_texture_rect = nil,
-			icon_texture = nil,
-			icon = nil,
 			player_nickname = honors[i].peer_name,
 			stat = honors[i].id,
 			text_id = tweak_data.statistics[stats_used][honors[i].id].text_id,
@@ -267,8 +267,8 @@ function SpecialHonorsGui:bind_controller_inputs()
 
 					table.insert(bindings, binding)
 					table.insert(stats_per_peer, {
-						name = nil,
 						buttons = nil,
+						name = nil,
 						name = peer_name,
 						buttons = {
 							SpecialHonorsGui.GAMERCARD_BUTTONS[gamercard_prompts_shown][3]

@@ -281,10 +281,10 @@ function SentryGunBase._attach(pos, rot, sentrygun_unit)
 	if ray then
 		local attached_data = {
 			index = 1,
-			body = nil,
-			rotation = nil,
 			max_index = 3,
 			position = nil,
+			body = nil,
+			rotation = nil,
 			body = ray.body,
 			position = ray.body:position(),
 			rotation = ray.body:rotation()

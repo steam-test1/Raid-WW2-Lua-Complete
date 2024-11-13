@@ -45,9 +45,9 @@ function SpawnGrenadeUnitElement:update_editing(time, rel_time)
 	local from = self._unit:position()
 	local to = from + self._hed.spawn_dir * 100000
 	local ray = managers.editor:unit_by_raycast({
+		from = nil,
 		mask = nil,
 		to = nil,
-		from = nil,
 		from = from,
 		to = to,
 		mask = managers.slot:get_mask("statics_layer")
