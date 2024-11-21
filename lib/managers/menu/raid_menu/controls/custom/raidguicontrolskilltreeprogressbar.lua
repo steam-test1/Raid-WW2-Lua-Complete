@@ -57,12 +57,10 @@ end
 function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 	local progress_bar_params = {
 		x = 0,
-		w = nil,
 		name = "progress_bar",
 		center = "slider_large_center",
 		right = "slider_large_right",
 		left = "slider_large_left",
-		h = nil,
 		y = 0,
 		w = self._bar_w + self._horizontal_padding * 2,
 		h = self._params.progress_bar_h or RaidGUIControlSkilltreeProgressBar.PROGRESS_BAR_H
@@ -77,11 +75,7 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local background_panel_params = {
-		x = nil,
-		w = nil,
 		name = "background_panel",
-		layer = nil,
-		h = nil,
 		y = 0,
 		x = self._progress_bar:x(),
 		w = self._progress_bar:w(),
@@ -94,14 +88,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local texture_right = "skl_level_bg_right"
 	local background_params = {
 		name = "background",
-		right = nil,
-		w = nil,
-		center = nil,
-		color = nil,
-		left = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		w = self._background_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
@@ -112,14 +100,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	self._background = self._background_panel:three_cut_bitmap(background_params)
 	local line_texture = "skl_bg_vline"
 	local progress_line_params = {
-		x = nil,
-		w = nil,
-		texture_rect = nil,
 		name = "progress_line",
-		texture = nil,
 		halign = "right",
-		h = nil,
-		y = nil,
 		x = self._background_panel:w() - tweak_data.gui:icon_w(line_texture),
 		y = self._background_panel:h() - tweak_data.gui:icon_h(line_texture),
 		w = tweak_data.gui:icon_w(line_texture),
@@ -138,33 +120,21 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	local icon_h = tweak_data.gui:icon_h(icon)
 	self._slider_pimples_panel = self._object:panel({
 		x = 0,
-		w = nil,
 		name = "slider_pimples_panel",
-		layer = nil,
-		h = nil,
-		y = nil,
 		y = RaidGUIControlSkilltreeProgressBar.SLIDER_PIN_Y,
 		w = self._object:w(),
 		h = icon_h,
 		layer = self._progress_bar:layer() + 10
 	})
 	self._current_level_pimple = self._slider_pimples_panel:image({
-		x = nil,
 		name = "slider_pimple_current",
-		texture_rect = nil,
-		texture = nil,
-		color = nil,
 		x = self._params.horizontal_padding - icon_w / 2,
 		color = RaidGUIControlSkilltreeProgressBar.SLIDER_PIN_COLOR,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	})
 	self._next_level_pimple = self._slider_pimples_panel:image({
-		x = nil,
 		name = "slider_pimple_next",
-		texture_rect = nil,
-		texture = nil,
-		color = nil,
 		x = self._progress_bar:w() - self._params.horizontal_padding - icon_w / 2,
 		color = RaidGUIControlSkilltreeProgressBar.SLIDER_PIN_COLOR_INACTIVE,
 		texture = tweak_data.gui.icons[icon].texture,
@@ -175,9 +145,7 @@ end
 function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar()
 	self._level_marks_panel = self._object:panel({
 		x = 0,
-		w = nil,
 		name = "level_marks_panel",
-		h = nil,
 		y = 0,
 		w = self._object:w(),
 		h = self._progress_bar:h()
@@ -189,14 +157,6 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar(
 
 	for i = 2, RaidGUIControlSkilltreeProgressBar.MARKS_PER_LEVEL do
 		local level_mark_params = {
-			x = nil,
-			w = nil,
-			texture_rect = nil,
-			color = nil,
-			texture = nil,
-			name = nil,
-			h = nil,
-			y = nil,
 			name = "level_label_" .. tostring(i),
 			x = self._params.horizontal_padding + (i - 1) * self._bar_w / RaidGUIControlSkilltreeProgressBar.MARKS_PER_LEVEL - RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE / 2,
 			y = self._level_marks_panel:h() / 2 - RaidGUIControlSkilltreeProgressBar.LEVEL_MARK_ICON_SIZE / 2,
@@ -213,31 +173,21 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	self._level_labels_panel = self._object:panel({
-		w = nil,
 		name = "level_labels_panel",
-		h = nil,
 		w = self._object:w(),
 		h = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H
 	})
 	self._current_level_label = self._level_labels_panel:text({
-		font = nil,
 		name = "level_label_curent",
-		color = nil,
 		text = "1",
-		h = nil,
-		font_size = nil,
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._next_level_label = self._level_labels_panel:text({
-		font = nil,
 		name = "level_label_next",
-		color = nil,
 		text = "2",
-		h = nil,
-		font_size = nil,
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
@@ -246,11 +196,7 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	self._experience_label = self._level_labels_panel:text({
 		align = "center",
 		name = "level_label_xp",
-		font = nil,
 		text = "100 XP UNTIL NEXT LEVEL",
-		color = nil,
-		h = nil,
-		font_size = nil,
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
@@ -269,7 +215,6 @@ function RaidGUIControlSkilltreeProgressBar:update_progress(level)
 		local xp_formatted = managers.experience:experience_string(next_level_data.points - next_level_data.current_points)
 		xp_progress = next_level_data.current_points / next_level_data.points
 		xp_string = utf8.to_upper(managers.localization:text("menu_skills_next_level", {
-			XP = nil,
 			XP = tostring(xp_formatted)
 		}))
 	end

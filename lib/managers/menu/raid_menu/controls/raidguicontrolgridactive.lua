@@ -31,7 +31,6 @@ function RaidGUIControlGridActive:set_selected(value, dont_fire_select_callback)
 		local first_item_data = self._grid_items[1]:get_data()
 
 		self:activate_item_by_value({
-			value = nil,
 			key = "key_name",
 			value = first_item_data.key_name
 		})

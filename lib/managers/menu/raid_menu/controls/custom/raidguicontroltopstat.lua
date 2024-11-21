@@ -46,14 +46,9 @@ function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
 		align = "center",
 		vertical = "center",
-		font_size = nil,
 		alpha = 0,
 		layer = 1,
-		font = nil,
 		name = "player_name_label",
-		h = nil,
-		w = nil,
-		color = nil,
 		y = 0,
 		x = 0,
 		text = "PLAYER NAME",
@@ -68,15 +63,9 @@ function RaidGUIControlTopStat:_create_stat_info()
 		align = "center",
 		vertical = "top",
 		word_wrap = true,
-		font_size = nil,
 		alpha = 0,
 		layer = 3,
-		font = nil,
 		name = "stat_name_label",
-		h = nil,
-		w = nil,
-		color = nil,
-		y = nil,
 		x = 0,
 		wrap = true,
 		text = "Most things done well",
@@ -92,11 +81,7 @@ end
 
 function RaidGUIControlTopStat:_create_icon_panel()
 	local icon_panel_params = {
-		h = nil,
-		w = nil,
-		y = nil,
 		x = 0,
-		layer = nil,
 		name = "icon_panel",
 		y = self._player_name_label:y() + self._player_name_label:h(),
 		w = RaidGUIControlTopStat.STAT_ICON_SIZE,
@@ -111,12 +96,8 @@ function RaidGUIControlTopStat:set_data(data)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local params_stat_icon = {
-		h = nil,
-		w = nil,
-		texture_rect = nil,
 		y = 0,
 		x = 0,
-		texture = nil,
 		alpha = 0,
 		name = "stat_icon",
 		w = data.icon_texture_rect[3],

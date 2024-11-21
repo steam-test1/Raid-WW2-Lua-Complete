@@ -4,8 +4,6 @@ ElementSoundSwitch.SWITCHES = {
 	"daytime_set_night"
 }
 ElementSoundSwitch.SWITCH_VALUES = {
-	daytime_set_day = nil,
-	daytime_set_night = nil,
 	daytime_set_day = {
 		value = "day",
 		name = "daytime_switch",

@@ -14,14 +14,11 @@ function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local amount_params = {
-		panel = nil,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		min = 0,
 		tooltip = "Set amount of enemy forces in area. Use 0 to define dynamic spawn area for \"street\" GroupAI.",
 		floats = 0,
-		value = nil,
-		sizer = nil,
 		name = "Amount:",
 		panel = panel,
 		sizer = panel_sizer,
@@ -30,12 +27,10 @@ function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 	local amount_points = CoreEWS.number_controller(amount_params)
 
 	amount_points:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "amount",
 		ctrlr = amount_points
 	})
 	amount_points:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "amount",
 		ctrlr = amount_points
 	})

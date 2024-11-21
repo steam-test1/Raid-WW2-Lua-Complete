@@ -6,22 +6,11 @@ end
 
 function SyncUnitData:save(data)
 	local state = {
-		lights = nil,
 		lights = {}
 	}
 
 	for _, light in ipairs(self._unit:get_objects_by_type(Idstring("light"))) do
 		local l = {
-			spot_angle_end = nil,
-			spot_angle_start = nil,
-			color = nil,
-			near_range = nil,
-			far_range = nil,
-			enabled = nil,
-			name = nil,
-			falloff_exponent = nil,
-			specular_multiplier_nr = nil,
-			multiplier_nr = nil,
 			name = light:name(),
 			enabled = light:enable(),
 			far_range = light:far_range(),

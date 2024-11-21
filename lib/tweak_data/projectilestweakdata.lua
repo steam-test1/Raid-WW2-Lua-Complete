@@ -433,7 +433,6 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 		height_offset = -14,
 		distance_offset = -80,
 		rotation_offset = 3,
-		initial_rotation = nil,
 		display_offset = 10,
 		initial_rotation = {
 			pitch = 60,
@@ -525,7 +524,6 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 		height_offset = -14,
 		distance_offset = -140,
 		rotation_offset = 3,
-		initial_rotation = nil,
 		display_offset = 22,
 		initial_rotation = {
 			pitch = 80,

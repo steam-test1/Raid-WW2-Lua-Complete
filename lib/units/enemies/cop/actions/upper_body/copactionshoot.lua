@@ -23,8 +23,6 @@ local bezier_curve = {
 }
 CopActionShoot = CopActionShoot or class()
 CopActionShoot._ik_presets = {
-	r_arm = nil,
-	spine = nil,
 	spine = {
 		start = "_begin_ik_spine",
 		update = "_update_ik_spine",
@@ -167,8 +165,6 @@ function CopActionShoot:on_attention(attention, old_attention)
 			local t = TimerManager:game():time()
 			self._aim_transition = {
 				duration = 0.333,
-				start_t = nil,
-				start_vec = nil,
 				start_t = t + 0.0001,
 				start_vec = mvector3.copy(self._common_data.look_vec)
 			}
@@ -216,10 +212,6 @@ function CopActionShoot:on_attention(attention, old_attention)
 				shoot_hist.m_last_pos = mvector3.copy(target_pos)
 			else
 				shoot_hist = {
-					focus_delay = nil,
-					m_last_pos = nil,
-					focus_error_roll = nil,
-					focus_start_t = nil,
 					focus_error_roll = focus_error_roll,
 					focus_start_t = TimerManager:game():time(),
 					focus_delay = usage_tweak.focus_delay,
@@ -311,7 +303,6 @@ function CopActionShoot:update(t)
 					local spin = tar_vec_flat:to_polar_with_reference(fwd, math.UP).spin
 					local new_action_data = {
 						body_part = 2,
-						angle = nil,
 						type = "turn",
 						angle = spin
 					}
@@ -951,21 +942,13 @@ function CopActionShoot:anim_clbk_melee_strike()
 	end
 
 	local action_data = {
-		attacker_unit = nil,
-		weapon_unit = nil,
-		damage = nil,
 		variant = "melee",
-		melee_weapon = nil,
-		push_vel = nil,
-		col_ray = nil,
 		damage = damage,
 		weapon_unit = self._weapon_unit,
 		attacker_unit = self._common_data.unit,
 		melee_weapon = melee_weapon,
 		push_vel = push_vel,
 		col_ray = {
-			position = nil,
-			ray = nil,
 			position = shoot_from_pos + fwd * 50,
 			ray = mvector3.copy(target_vec)
 		}
@@ -975,16 +958,11 @@ function CopActionShoot:anim_clbk_melee_strike()
 	if defense_data == "countered" then
 		self._common_data.melee_countered_t = TimerManager:game():time()
 		local action_data = {
-			attacker_unit = nil,
 			damage_effect = 1,
 			damage = 0,
 			variant = "counter_spooc",
-			attack_dir = nil,
-			col_ray = nil,
 			attacker_unit = self._strike_unit,
 			col_ray = {
-				position = nil,
-				body = nil,
 				body = self._unit:body("body"),
 				position = self._common_data.pos + math.UP * 100
 			},

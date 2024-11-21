@@ -29,8 +29,6 @@ function AttentionTweakData:_init_player()
 	self.settings.pl_mask_off_friend_combatant = {
 		filter = "combatant",
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		relation = "friend",
 		notice_requires_FOV = false,
 		release_delay = 3,
@@ -63,8 +61,6 @@ function AttentionTweakData:_init_player()
 	self.settings.pl_mask_on_friend_combatant_whisper_mode = {
 		filter = "combatant",
 		reaction = "REACT_CHECK",
-		pause = nil,
-		duration = nil,
 		relation = "friend",
 		notice_requires_FOV = true,
 		release_delay = 3,
@@ -83,8 +79,6 @@ function AttentionTweakData:_init_player()
 	self.settings.pl_mask_off_foe_non_combatant = {
 		filter = "non_combatant",
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		attract_chance = 0.5,
 		notice_interval = 0.5,
 		notice_requires_FOV = true,
@@ -105,8 +99,6 @@ function AttentionTweakData:_init_player()
 		filter = "non_combatant",
 		attract_chance = 0.5,
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		relation = "friend",
 		notice_interval = 0.5,
 		notice_requires_FOV = true,
@@ -171,8 +163,6 @@ function AttentionTweakData:_init_player()
 	self.settings.pl_friend_combatant_cbt = {
 		filter = "combatant",
 		reaction = "REACT_CHECK",
-		pause = nil,
-		duration = nil,
 		relation = "friend",
 		notice_requires_FOV = false,
 		release_delay = 3,
@@ -237,8 +227,6 @@ function AttentionTweakData:_init_team_AI()
 	self.settings.team_team_idle = {
 		filter = "all",
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		relation = "friend",
 		notice_requires_FOV = false,
 		release_delay = 2,
@@ -256,8 +244,6 @@ function AttentionTweakData:_init_team_AI()
 	self.settings.team_enemy_idle = {
 		filter = "combatant",
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		relation = "foe",
 		notice_requires_FOV = false,
 		release_delay = 1,
@@ -289,11 +275,9 @@ end
 function AttentionTweakData:_init_civilian()
 	self.settings.civ_all_peaceful = {
 		filter = "all",
-		pause = nil,
 		reaction = "REACT_IDLE",
 		release_delay = 2,
 		verification_interval = 2,
-		duration = nil,
 		max_range = 2000,
 		notice_requires_FOV = true,
 		duration = {
@@ -310,7 +294,6 @@ function AttentionTweakData:_init_civilian()
 		notice_delay_mul = 1,
 		reaction = "REACT_SCARED",
 		notice_clbk = "clbk_attention_notice_corpse",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 6,
 		verification_interval = 0.0556,
@@ -354,7 +337,6 @@ function AttentionTweakData:_init_civilian()
 		release_delay = 6,
 		verification_interval = 0.0546,
 		notice_delay_mul = 0.0586,
-		duration = nil,
 		notice_requires_FOV = true,
 		duration = {
 			3,
@@ -367,8 +349,6 @@ function AttentionTweakData:_init_enemy()
 	self.settings.enemy_team_idle = {
 		filter = "combatant",
 		reaction = "REACT_IDLE",
-		pause = nil,
-		duration = nil,
 		relation = "foe",
 		notice_requires_FOV = false,
 		release_delay = 1,
@@ -400,7 +380,6 @@ function AttentionTweakData:_init_enemy()
 		filter = "combatant",
 		notice_requires_cool = true,
 		reaction = "REACT_CHECK",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 1,
 		verification_interval = 0.25,
@@ -426,7 +405,6 @@ function AttentionTweakData:_init_enemy()
 		filter = "non_combatant",
 		notice_delay_mul = 0.2,
 		reaction = "REACT_SCARED",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 6,
 		verification_interval = 0.25,
@@ -449,11 +427,9 @@ function AttentionTweakData:_init_custom()
 	}
 	self.settings.custom_team_idle = {
 		filter = "criminal",
-		pause = nil,
 		reaction = "REACT_IDLE",
 		release_delay = 1,
 		verification_interval = 3,
-		duration = nil,
 		max_range = 2000,
 		notice_requires_FOV = false,
 		duration = {
@@ -487,7 +463,6 @@ function AttentionTweakData:_init_custom()
 		reaction = "REACT_SHOOT",
 		release_delay = 2,
 		verification_interval = 1.5,
-		duration = nil,
 		max_range = 10000,
 		duration = {
 			2,
@@ -637,7 +612,6 @@ function AttentionTweakData:_init_custom()
 		reaction = "REACT_SCARED",
 		release_delay = 2,
 		verification_interval = 5,
-		duration = nil,
 		duration = {
 			2,
 			4
@@ -664,7 +638,6 @@ function AttentionTweakData:_init_custom()
 		filter = "all_enemy",
 		notice_delay_mul = 0.2,
 		reaction = "REACT_CURIOUS",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 6,
 		verification_interval = 1.5,
@@ -686,7 +659,6 @@ function AttentionTweakData:_init_custom()
 	}
 	self.settings.custom_look_at_FOV = {
 		filter = "all_enemy",
-		duration = nil,
 		reaction = "REACT_CURIOUS",
 		release_delay = 6,
 		verification_interval = 1.5,
@@ -702,7 +674,6 @@ function AttentionTweakData:_init_custom()
 		filter = "all_enemy",
 		notice_delay_mul = 0.2,
 		reaction = "REACT_SCARED",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 6,
 		verification_interval = 1.5,
@@ -717,7 +688,6 @@ function AttentionTweakData:_init_custom()
 		filter = "criminal",
 		notice_delay_mul = 0.2,
 		reaction = "REACT_SHOOT",
-		duration = nil,
 		notice_requires_FOV = true,
 		release_delay = 6,
 		verification_interval = 1.5,

@@ -26,9 +26,7 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		name = "tabs_keybind_types",
 		y = 96,
 		x = 0,
-		tabs_params = nil,
 		dont_trigger_special_buttons = true,
-		on_click_callback = nil,
 		initial_tab_idx = 1,
 		tab_align = "center",
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
@@ -36,21 +34,16 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 			{
 				callback_param = "normal",
 				name = "tab_on_foot",
-				text = nil,
 				text = self:translate("menu_options_binding_type_on_foot", true)
 			},
 			{
 				callback_param = "vehicle",
 				name = "tab_in_vehicle",
-				text = nil,
 				text = self:translate("menu_options_binding_type_in_vehicle", true)
 			}
 		}
 	})
 	local default_controls_keybinds_params = {
-		text = nil,
-		layer = nil,
-		on_click_callback = nil,
 		name = "default_controls_keybinds",
 		y = 832,
 		x = 1472,
@@ -128,14 +121,7 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 		start_x = (type_no - 1) * column_padding
 
 		self._keybind_panel:text({
-			color = nil,
 			align = "left",
-			text = nil,
-			font = nil,
-			font_size = nil,
-			name = nil,
-			y = nil,
-			x = nil,
 			name = "column_title" .. keybind_type,
 			x = start_x,
 			y = column_title_y,
@@ -147,15 +133,7 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 
 		for row, keybind_params in ipairs(self._keybinds[keybind_type]) do
 			local keybind_control = self._keybind_panel:keybind({
-				ws = nil,
-				keybind_params = nil,
-				name = nil,
-				y = nil,
-				x = nil,
 				keybind_w = 120,
-				text = nil,
-				h = nil,
-				w = nil,
 				name = "keybind_" .. keybind_params.button,
 				x = start_x,
 				y = start_y + row * RaidGuiBase.PADDING,
@@ -201,12 +179,6 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				if btn_connection then
 					local name_id = name
 					local params = {
-						binding = nil,
-						text_id = nil,
-						connection_name = nil,
-						button = nil,
-						name = nil,
-						axis = nil,
 						localize = "false",
 						name = btn_name,
 						connection_name = name,
@@ -221,11 +193,6 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 			end
 		else
 			local params = {
-				binding = nil,
-				text_id = nil,
-				connection_name = nil,
-				name = nil,
-				button = nil,
 				localize = "false",
 				name = name_id,
 				connection_name = name,
@@ -241,9 +208,6 @@ end
 
 function RaidMenuOptionsControlsKeybinds:on_click_default_controls_keybinds()
 	local params = {
-		callback = nil,
-		message = nil,
-		title = nil,
 		title = managers.localization:text("dialog_reset_controls_keybinds_title"),
 		message = managers.localization:text("dialog_reset_controls_keybinds_message"),
 		callback = function ()
@@ -263,14 +227,11 @@ end
 
 function RaidMenuOptionsControlsKeybinds:bind_controller_inputs()
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}

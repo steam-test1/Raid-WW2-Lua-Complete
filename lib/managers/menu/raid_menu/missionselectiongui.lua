@@ -129,31 +129,23 @@ function MissionSelectionGui:_layout_lists()
 	local list_tabs_params = {
 		y = 0,
 		x = 3,
-		on_click_callback = nil,
 		name = "list_tabs",
 		tab_align = "center",
-		tabs_params = nil,
 		on_click_callback = callback(self, self, "_on_mission_type_changed"),
 		tabs_params = {
 			{
-				breadcrumb = nil,
 				callback_param = "raids",
-				text = nil,
 				name = "tab_raid",
 				text = self:translate("menu_mission_selected_mission_type_raid", true),
 				breadcrumb = {
-					category = nil,
 					category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION
 				}
 			},
 			{
-				breadcrumb = nil,
 				callback_param = "operations",
-				text = nil,
 				name = "tab_operation",
 				text = self:translate("menu_mission_selected_mission_type_operation", true),
 				breadcrumb = {
-					category = nil,
 					category = BreadcrumbManager.CATEGORY_OPERATIONS
 				}
 			}
@@ -163,33 +155,23 @@ function MissionSelectionGui:_layout_lists()
 	self._list_tabs = self._primary_lists_panel:tabs(list_tabs_params)
 	self._current_mission_type = "raids"
 	local raid_list_scrollable_area_params = {
-		y = nil,
 		x = 0,
 		scroll_step = 35,
 		name = "raid_list_scrollable_area",
-		h = nil,
-		w = nil,
 		y = self._list_tabs:h(),
 		w = self._primary_lists_panel:w(),
 		h = self._primary_lists_panel:h() - self._list_tabs:h()
 	}
 	self._raid_list_panel = self._primary_lists_panel:scrollable_area(raid_list_scrollable_area_params)
 	local raid_list_params = {
-		on_item_double_clicked_callback = nil,
 		x = 0,
-		on_item_selected_callback = nil,
 		name = "raid_list",
-		on_item_clicked_callback = nil,
 		padding_top = 2,
 		vertical_spacing = 2,
 		y = 0,
 		on_mouse_click_sound_event = "menu_enter",
 		selection_enabled = true,
 		on_mouse_over_sound_event = "highlight",
-		scrollable_area_ref = nil,
-		item_class = nil,
-		data_source_callback = nil,
-		w = nil,
 		w = self._raid_list_panel:w(),
 		on_item_clicked_callback = callback(self, self, "_on_raid_clicked"),
 		on_item_selected_callback = callback(self, self, "_on_raid_selected"),
@@ -210,11 +192,8 @@ function MissionSelectionGui:_layout_slot_list()
 		self._slot_list_panel:clear()
 	else
 		local slot_list_panel_params = {
-			y = nil,
 			x = 0,
 			name = "slot_list_panel",
-			h = nil,
-			w = nil,
 			y = self._list_tabs:h(),
 			w = self._primary_lists_panel:w(),
 			h = self._primary_lists_panel:h() - self._list_tabs:h()
@@ -226,21 +205,14 @@ function MissionSelectionGui:_layout_slot_list()
 	end
 
 	local slot_list_params = {
-		on_item_double_clicked_callback = nil,
 		x = 0,
-		on_item_selected_callback = nil,
 		name = "slot_list",
-		on_item_clicked_callback = nil,
 		padding_top = 2,
 		vertical_spacing = 2,
-		data_source_callback = nil,
 		on_mouse_click_sound_event = "menu_enter",
 		y = 0,
 		on_mouse_over_sound_event = "highlight",
 		selection_enabled = true,
-		item_class = nil,
-		h = nil,
-		w = nil,
 		w = self._slot_list_panel:w(),
 		h = self._slot_list_panel:h(),
 		on_item_clicked_callback = callback(self, self, "_on_slot_clicked"),
@@ -254,28 +226,19 @@ end
 
 function MissionSelectionGui:_layout_operations_list()
 	local operations_list_panel_params = {
-		y = nil,
 		visible = false,
-		h = nil,
 		name = "operations_list_panel",
 		y = self._list_tabs:h(),
 		h = self._list_panel:h() - self._list_tabs:h()
 	}
 	self._operations_list_panel = self._list_panel:panel(operations_list_panel_params)
 	local operations_list_params = {
-		on_item_double_clicked_callback = nil,
 		padding_top = 2,
-		on_item_selected_callback = nil,
 		name = "operation_list",
-		on_item_clicked_callback = nil,
-		unselected_callback = nil,
 		vertical_spacing = 2,
-		selected_callback = nil,
 		on_mouse_click_sound_event = "menu_enter",
 		selection_enabled = true,
 		on_mouse_over_sound_event = "highlight",
-		item_class = nil,
-		data_source_callback = nil,
 		on_item_clicked_callback = callback(self, self, "_on_operation_selected"),
 		on_item_selected_callback = callback(self, self, "_on_operation_selected"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
@@ -292,8 +255,6 @@ function MissionSelectionGui:_layout_raid_wrapper_panel()
 		y = 0,
 		x = 0,
 		name = "raid_wrapper_panel",
-		h = nil,
-		w = nil,
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
@@ -317,11 +278,7 @@ function MissionSelectionGui:_layout_settings()
 
 	self._settings_controls = {}
 	local difficulty_stepper_params = {
-		data_source_callback = nil,
-		on_menu_move = nil,
-		on_item_selected_callback = nil,
 		name = "difficulty",
-		description = nil,
 		description = self:translate("menu_difficulty_title", true),
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
@@ -335,12 +292,7 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._difficulty_stepper)
 
 	local permission_stepper_params = {
-		y = nil,
-		data_source_callback = nil,
-		on_item_selected_callback = nil,
 		name = "permission",
-		on_menu_move = nil,
-		description = nil,
 		y = self._difficulty_stepper:y() + self._difficulty_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_permission_title", true),
 		on_item_selected_callback = callback(self, self, "_on_permission_selected"),
@@ -356,12 +308,8 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._permission_stepper)
 
 	local drop_in_checkbox_params = {
-		y = nil,
 		value = true,
-		on_click_callback = nil,
 		name = "drop_in_checkbox",
-		on_menu_move = nil,
-		description = nil,
 		y = self._permission_stepper:y() + self._permission_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_allow_drop_in_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_drop_in"),
@@ -376,12 +324,8 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._drop_in_checkbox)
 
 	local team_ai_checkbox_params = {
-		y = nil,
 		value = true,
-		on_click_callback = nil,
 		name = "team_ai_checkbox",
-		on_menu_move = nil,
-		description = nil,
 		y = self._drop_in_checkbox:y() + self._drop_in_checkbox:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_play_with_team_ai_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
@@ -398,7 +342,6 @@ end
 function MissionSelectionGui:_layout_event()
 	local event_name = managers.event_system:active_event()
 	self._event_display = self._right_panel:create_custom_control(RaidGUIControlEventDisplay, {
-		on_menu_move = nil,
 		name = "special_event_display",
 		on_menu_move = {
 			up = "team_ai_checkbox"
@@ -413,25 +356,17 @@ end
 
 function MissionSelectionGui:_layout_operation_tutorialization()
 	self._operation_tutorialization_panel = self._root_panel:panel({
-		y = nil,
-		x = nil,
 		alpha = 0,
 		name = "operation_tutorialization",
-		h = nil,
-		w = nil,
 		x = self._right_panel:x(),
 		y = self._right_panel:y(),
 		w = self._right_panel:w(),
 		h = self._right_panel:h()
 	})
 	local title = self._operation_tutorialization_panel:text({
-		font = nil,
-		font_size = nil,
 		vertical = "center",
 		h = 40,
 		halign = "left",
-		color = nil,
-		text = nil,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		text = self:translate("operations_tutorialization_title", true),
@@ -442,12 +377,8 @@ function MissionSelectionGui:_layout_operation_tutorialization()
 
 	local description = self._operation_tutorialization_panel:text({
 		y = 64,
-		font_size = nil,
-		text = nil,
 		wrap = true,
 		halign = "left",
-		color = nil,
-		font = nil,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
@@ -462,11 +393,7 @@ function MissionSelectionGui:_layout_settings_offline()
 	local difficulty_stepper_params = {
 		y = 0,
 		x = 0,
-		on_item_selected_callback = nil,
 		name = "difficulty",
-		data_source_callback = nil,
-		on_menu_move = nil,
-		description = nil,
 		description = self:translate("menu_difficulty_title", true),
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
@@ -480,13 +407,9 @@ function MissionSelectionGui:_layout_settings_offline()
 	table.insert(self._settings_controls, self._difficulty_stepper)
 
 	local team_ai_checkbox_params = {
-		y = nil,
 		x = 0,
-		on_click_callback = nil,
 		name = "team_ai_checkbox",
 		value = true,
-		on_menu_move = nil,
-		description = nil,
 		y = self._difficulty_stepper:y() + self._difficulty_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 		description = self:translate("menu_play_with_team_ai_title", true),
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
@@ -509,16 +432,11 @@ function MissionSelectionGui:_layout_difficulty_warning()
 	self._difficulty_warning_panel:set_y(self._difficulty_stepper:bottom())
 
 	local difficulty_warning_text_params = {
-		x = nil,
 		align = "left",
 		vertical = "top",
 		name = "difficulty_warning_text",
 		text = "Bla bla bla",
-		color = nil,
-		font_size = nil,
 		wrap = true,
-		font = nil,
-		w = nil,
 		x = self._difficulty_stepper:label_x(),
 		w = self._difficulty_warning_panel:w() - self._difficulty_stepper:label_x(),
 		font = tweak_data.gui.fonts.lato,
@@ -536,8 +454,6 @@ function MissionSelectionGui:_layout_folder_front_page()
 		halign = "center",
 		valign = "scale",
 		name = "front_page_panel",
-		layer = nil,
-		h = nil,
 		w = 704,
 		h = self._root_panel:h(),
 		layer = self._primary_paper_panel:layer() + 1000
@@ -549,9 +465,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 	local front_page_params = {
 		valign = "center",
 		halign = "center",
-		texture = nil,
 		name = "front_page_image",
-		texture_rect = nil,
 		texture = tweak_data.gui.icons.folder_mission.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission.texture_rect
 	}
@@ -569,11 +483,7 @@ function MissionSelectionGui:_layout_folder_front_page()
 	local front_page_icon_params = {
 		valign = "center",
 		halign = "center",
-		texture = nil,
 		name = "front_page_icon",
-		color = nil,
-		layer = nil,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons.xp_events_mission_raid_railyard.texture,
 		texture_rect = tweak_data.gui.icons.xp_events_mission_raid_railyard.texture_rect,
 		layer = self._front_page_image:layer() + 1,
@@ -585,14 +495,10 @@ function MissionSelectionGui:_layout_folder_front_page()
 	self._front_page_icon:set_center_y(self._front_page_image:center_y() - 42)
 
 	local front_page_title_params = {
-		font = nil,
 		align = "center",
 		vertical = "center",
 		name = "front_page_title",
 		text = "TRAINYARD",
-		color = nil,
-		font_size = nil,
-		layer = nil,
 		h = 80,
 		w = 448,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -613,7 +519,6 @@ function MissionSelectionGui:_layout_primary_paper()
 		y = 117,
 		x = 580,
 		name = "primary_paper_panel",
-		layer = nil,
 		h = 768,
 		w = 524,
 		layer = RaidGuiBase.FOREGROUND_LAYER + 150
@@ -622,11 +527,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local primary_paper_params = {
 		y = 0,
 		x = 0,
-		texture = nil,
 		name = "primary_paper",
-		texture_rect = nil,
-		h = nil,
-		w = nil,
 		w = self._primary_paper_panel:w(),
 		h = self._primary_paper_panel:h(),
 		texture = tweak_data.gui.images[paper_image].texture,
@@ -636,10 +537,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local soe_emblem_params = {
 		y = 22,
 		x = 384,
-		texture = nil,
 		name = "soe_emblem",
-		layer = nil,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[soe_emblem_image].texture,
 		texture_rect = tweak_data.gui.icons[soe_emblem_image].texture_rect,
 		layer = self._primary_paper:layer() + 1
@@ -648,11 +546,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local mission_icon_params = {
 		y = 44,
 		x = 32,
-		texture = nil,
 		name = "mission_icon",
-		color = nil,
-		layer = nil,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[soe_emblem_image].texture,
 		texture_rect = tweak_data.gui.icons[soe_emblem_image].texture_rect,
 		layer = self._primary_paper:layer() + 1,
@@ -662,11 +556,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local title_params = {
 		y = 44,
 		x = 112,
-		font_size = nil,
 		name = "primary_paper_title",
-		layer = nil,
-		color = nil,
-		font = nil,
 		text = "",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -677,11 +567,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local subtitle_params = {
 		y = 78,
 		x = 112,
-		font_size = nil,
 		name = "primary_paper_title",
-		layer = nil,
-		color = nil,
-		font = nil,
 		text = "",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
@@ -692,10 +578,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local mission_difficulty_params = {
 		y = 78,
 		x = 112,
-		amount = nil,
 		name = "mission_difficulty",
-		unavailable_color = nil,
-		fill_color = nil,
 		fill_color = tweak_data.gui.colors.raid_black,
 		unavailable_color = tweak_data.gui.colors.raid_dark_grey,
 		amount = tweak_data:number_of_difficulties()
@@ -704,9 +587,7 @@ function MissionSelectionGui:_layout_primary_paper()
 	local separator_params = {
 		y = 123,
 		x = 34,
-		color = nil,
 		name = "primary_paper_separator",
-		layer = nil,
 		h = 2,
 		w = 350,
 		layer = self._primary_paper:layer() + 1,
@@ -724,13 +605,9 @@ function MissionSelectionGui:_layout_raid_description()
 	local mission_description_params = {
 		y = 136,
 		x = 38,
-		font = nil,
 		name = "mission_descripton",
 		text = "",
-		color = nil,
-		font_size = nil,
 		wrap = true,
-		layer = nil,
 		h = 528,
 		w = 432,
 		font = tweak_data.gui.fonts.lato,
@@ -747,8 +624,6 @@ end
 
 function MissionSelectionGui:_layout_operation_progress_text()
 	local operation_progress_panel_params = {
-		y = nil,
-		x = nil,
 		name = "operation_progress_panel",
 		h = 490,
 		w = 440,
@@ -761,8 +636,6 @@ function MissionSelectionGui:_layout_operation_progress_text()
 		x = 0,
 		name = "operation_progress",
 		operation = "clear_skies",
-		h = nil,
-		w = nil,
 		w = self._operation_progress_panel:w(),
 		h = self._operation_progress_panel:h()
 	}
@@ -777,28 +650,16 @@ function MissionSelectionGui:_layout_operation_list()
 		y = 136,
 		x = 31,
 		name = "operation_list_panel",
-		layer = nil,
 		h = 448,
 		w = 432,
 		layer = self._primary_paper_panel:layer() + 1
 	}
 	self._operation_list_panel = self._primary_paper_panel:panel(operation_list_panel_params)
 	local operation_list_params = {
-		on_item_double_clicked_callback = nil,
 		x = 0,
-		on_item_selected_callback = nil,
 		name = "operation_list",
-		on_item_clicked_callback = nil,
-		unselected_callback = nil,
-		data_source_callback = nil,
-		selected_callback = nil,
 		selection_enabled = true,
-		on_menu_move = nil,
-		item_params = nil,
 		y = 0,
-		item_class = nil,
-		h = nil,
-		w = nil,
 		w = self._operation_list_panel:w(),
 		h = self._operation_list_panel:h(),
 		on_item_clicked_callback = callback(self, self, "_on_operation_selected"),
@@ -807,7 +668,6 @@ function MissionSelectionGui:_layout_operation_list()
 		data_source_callback = callback(self, self, "_operation_list_data_source"),
 		item_class = RaidGUIControlListItemIconDescription,
 		item_params = {
-			icon_color = nil,
 			icon_color = Color.black
 		},
 		on_menu_move = {
@@ -826,10 +686,7 @@ function MissionSelectionGui:_layout_intel_image_grid()
 	local intel_image_grid_params = {
 		y = 128,
 		x = 10,
-		on_click_callback = nil,
 		name = "intel_image_grid",
-		on_menu_move = nil,
-		layer = nil,
 		on_click_callback = callback(self, self, "_on_intel_image_selected"),
 		layer = self._primary_paper_panel:layer() + 1,
 		on_menu_move = {
@@ -850,11 +707,8 @@ function MissionSelectionGui:_layout_info_buttons()
 	local wrapper_panel_padding = 10
 	local info_buttons_panel_params = {
 		y = 0,
-		x = nil,
 		name = "info_buttons_panel",
-		layer = nil,
 		h = 96,
-		w = nil,
 		x = self._primary_paper_title:x(),
 		w = self._primary_paper_panel:w() * 0.85,
 		layer = self._primary_paper_panel:layer() + 1
@@ -866,12 +720,8 @@ function MissionSelectionGui:_layout_info_buttons()
 
 	local info_button_params = {
 		icon = "ico_info",
-		x = nil,
-		on_click_callback = nil,
 		name = "info_button",
-		on_menu_move = nil,
 		active = true,
-		text = nil,
 		x = wrapper_panel_padding,
 		text = self:translate("menu_info_button_title", true),
 		on_click_callback = callback(self, self, "_on_info_clicked"),
@@ -887,10 +737,7 @@ function MissionSelectionGui:_layout_info_buttons()
 
 	local intel_button_params = {
 		icon = "ico_intel",
-		on_click_callback = nil,
-		on_menu_move = nil,
 		name = "intel_button",
-		text = nil,
 		text = self:translate("menu_intel_button_title", true),
 		on_menu_move = {
 			up = "intel_image_grid",
@@ -906,11 +753,8 @@ function MissionSelectionGui:_layout_info_buttons()
 
 	local audio_button_params = {
 		icon = "ico_play_audio",
-		on_click_callback = nil,
-		on_menu_move = nil,
 		name = "audio_button",
 		auto_deactivate = true,
-		text = nil,
 		text = self:translate("menu_audio_button_title", true),
 		on_menu_move = {
 			up = "intel_image_grid",
@@ -931,7 +775,6 @@ function MissionSelectionGui:_layout_secondary_paper()
 		y = 118,
 		x = 580,
 		name = "secondary_paper_panel",
-		layer = nil,
 		h = 768,
 		w = 524,
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -940,11 +783,7 @@ function MissionSelectionGui:_layout_secondary_paper()
 	local secondary_paper_params = {
 		y = 0,
 		x = 0,
-		texture = nil,
 		name = "secondary_paper",
-		texture_rect = nil,
-		h = nil,
-		w = nil,
 		w = self._secondary_paper_panel:w(),
 		h = self._secondary_paper_panel:h(),
 		texture = tweak_data.gui.images[paper_image].texture,
@@ -980,9 +819,6 @@ function MissionSelectionGui:_layout_secondary_save_info()
 		y = 0,
 		x = 0,
 		name = "save_info",
-		layer = nil,
-		h = nil,
-		w = nil,
 		w = self._secondary_paper_panel:w(),
 		h = self._secondary_paper_panel:h(),
 		layer = self._secondary_paper_panel:layer() + 1
@@ -992,12 +828,9 @@ end
 
 function MissionSelectionGui:_layout_start_button()
 	local raid_start_button_params = {
-		y = nil,
 		x = 6,
-		on_click_callback = nil,
 		name = "raid_start_button",
 		layer = 1,
-		text = nil,
 		y = self._right_panel:y() + self._right_panel:h() + 248,
 		text = self:translate("menu_start_button_title", true),
 		on_click_callback = callback(self, self, "_on_start_button_click")
@@ -1010,11 +843,7 @@ function MissionSelectionGui:_layout_start_button()
 		self._raid_start_button:set_visible(false)
 
 		local client_message_params = {
-			text = nil,
-			font_size = nil,
 			name = "client_message",
-			color = nil,
-			font = nil,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_32,
 			color = tweak_data.gui.colors.raid_red,
@@ -1031,14 +860,10 @@ end
 function MissionSelectionGui:_layout_start_disabled_message()
 	local start_disabled_message_params = {
 		text = "",
-		font = nil,
 		vertical = "center",
 		name = "start_disabled_message",
-		color = nil,
-		font_size = nil,
 		visible = false,
 		h = 96,
-		w = nil,
 		w = self._list_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -1051,12 +876,9 @@ end
 
 function MissionSelectionGui:_layout_delete_button()
 	local save_delete_button_params = {
-		y = nil,
 		x = 6,
-		on_click_callback = nil,
 		name = "save_delete_button",
 		layer = 1,
-		text = nil,
 		y = self._right_panel:y() + self._right_panel:h() + 248,
 		text = self:translate("menu_delete_save_button_title", true),
 		on_click_callback = callback(self, self, "_on_delete_button_click")
@@ -1079,10 +901,7 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 	local progression_timer_icon_params = {
 		valign = "center",
 		halign = "left",
-		texture = nil,
 		name = "progression_timer_icon",
-		color = nil,
-		texture_rect = nil,
 		texture = tweak_data.gui.icons.missions_raids_category_menu.texture,
 		texture_rect = tweak_data.gui.icons.missions_raids_category_menu.texture_rect,
 		color = tweak_data.gui.colors.raid_dirty_white
@@ -1093,14 +912,10 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 
 	local is_final_unlock_cycle = managers.progression:at_final_unlock_cycle()
 	local timer_title_params = {
-		text = nil,
 		x = 64,
 		vertical = "center",
 		name = "progression_timer_title",
-		font = nil,
-		color = nil,
 		halign = "left",
-		font_size = nil,
 		h = 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -1109,14 +924,10 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 	}
 	local timer_title = self._progression_timer_panel:text(timer_title_params)
 	local timer_description_params = {
-		text = nil,
 		x = 64,
 		vertical = "center",
 		name = "progression_timer_description",
-		font = nil,
-		color = nil,
 		halign = "left",
-		font_size = nil,
 		h = 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
@@ -1132,10 +943,7 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 		horizontal = "right",
 		vertical = "center",
 		name = "timer",
-		font = nil,
-		color = nil,
 		halign = "right",
-		font_size = nil,
 		h = 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -1194,8 +1002,6 @@ function MissionSelectionGui:_play_operations_intro_video()
 
 	if operations_intro_video_id then
 		managers.unlock:unlock({
-			slot = nil,
-			identifier = nil,
 			slot = UnlockManager.SLOT_PROFILE,
 			identifier = UnlockManager.CATEGORY_CONTROL_ARCHIVE
 		}, {
@@ -1213,14 +1019,11 @@ function MissionSelectionGui:_play_operations_intro_video()
 		halign = "scale",
 		valign = "scale",
 		name = "video_background",
-		color = nil,
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
-		width = nil,
 		layer = 2,
-		video = nil,
 		layer = self._video_panel:layer() + 1,
 		video = operations_intro_video,
 		width = self._video_panel:w()
@@ -1234,12 +1037,7 @@ function MissionSelectionGui:_play_operations_intro_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		font_size = nil,
-		layer = nil,
 		name = "press_any_key_prompt",
-		text = nil,
-		color = nil,
-		font = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -1744,7 +1542,6 @@ function MissionSelectionGui:_on_slot_clicked(slot_data)
 	if managers.progression:operations_state() == ProgressionManager.OPERATIONS_STATE_LOCKED then
 		if Network:is_server() then
 			local message_text = utf8.to_upper(managers.localization:text("operations_locked_progression", {
-				LEVEL = nil,
 				LEVEL = tostring(tweak_data.operations.progression.operations_unlock_level)
 			}))
 
@@ -1994,9 +1791,7 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 
 		if first_n_missions ~= nil then
 			self._intel_image_grid:set_data({
-				mission = nil,
 				image_selected = 1,
-				only_first_n_events = nil,
 				mission = self._selected_job_id,
 				only_first_n_events = first_n_missions
 			})
@@ -2006,8 +1801,6 @@ function MissionSelectionGui:_prepare_intel_image_for_selected_job()
 
 			self._intel_image_grid:set_data({
 				save_data.current_event,
-				mission = nil,
-				save_data = nil,
 				image_selected = 1,
 				mission = save_data.job_id,
 				save_data = save_data
@@ -2054,9 +1847,6 @@ function MissionSelectionGui:_on_intel_clicked()
 	end
 
 	local clbk = callback(self._intel_image_grid, self._intel_image_grid, "set_data", {
-		mission = nil,
-		save_data = nil,
-		only_first_n_events = nil,
 		mission = self._selected_job_id or managers.raid_job:get_save_slots()[self._continue_slot_selected].current_job.job_id,
 		only_first_n_events = first_n_missions,
 		save_data = save_data
@@ -2120,25 +1910,21 @@ function MissionSelectionGui:data_source_difficulty_stepper()
 
 	table.insert(difficulties, {
 		info = "difficulty_1",
-		text = nil,
 		value = "difficulty_1",
 		text = self:translate("menu_difficulty_1", true)
 	})
 	table.insert(difficulties, {
 		info = "difficulty_2",
-		text = nil,
 		value = "difficulty_2",
 		text = self:translate("menu_difficulty_2", true)
 	})
 	table.insert(difficulties, {
 		info = "difficulty_3",
-		text = nil,
 		value = "difficulty_3",
 		text = self:translate("menu_difficulty_3", true)
 	})
 	table.insert(difficulties, {
 		info = "difficulty_4",
-		text = nil,
 		value = "difficulty_4",
 		text = self:translate("menu_difficulty_4", true)
 	})
@@ -2179,8 +1965,6 @@ function MissionSelectionGui:_check_difficulty_warning()
 
 	if difficulty_available < difficulty then
 		local message = managers.localization:text("raid_difficulty_warning", {
-			NEEDED_DIFFICULTY = nil,
-			TARGET_DIFFICULTY = nil,
 			TARGET_DIFFICULTY = managers.localization:text("menu_difficulty_" .. tostring(difficulty)),
 			NEEDED_DIFFICULTY = managers.localization:text("menu_difficulty_" .. tostring(difficulty - 1))
 		})
@@ -2336,19 +2120,16 @@ function MissionSelectionGui:data_source_permission_stepper()
 
 	table.insert(permissions, {
 		info = "public",
-		text = nil,
 		value = "public",
 		text = self:translate("menu_permission_public", true)
 	})
 	table.insert(permissions, {
 		info = "friends_only",
-		text = nil,
 		value = "friends_only",
 		text = self:translate("menu_permission_friends", true)
 	})
 	table.insert(permissions, {
 		info = "private",
-		text = nil,
 		value = "private",
 		text = self:translate("menu_permission_private", true)
 	})
@@ -2386,8 +2167,6 @@ function MissionSelectionGui:_raid_list_data_source()
 		local item_text = self:translate(mission_data.name_id)
 		local item_icon_name = mission_data.icon_menu
 		local item_icon = {
-			texture = nil,
-			texture_rect = nil,
 			texture = tweak_data.gui.icons[item_icon_name].texture,
 			texture_rect = tweak_data.gui.icons[item_icon_name].texture_rect
 		}
@@ -2395,19 +2174,12 @@ function MissionSelectionGui:_raid_list_data_source()
 		if mission_data.consumable then
 			if managers.consumable_missions:is_mission_unlocked(mission_name) then
 				table.insert(consumable_list, {
-					selected_color = nil,
 					unlocked = true,
-					icon = nil,
-					value = nil,
-					breadcrumb = nil,
-					text = nil,
 					text = item_text,
 					value = mission_name,
 					icon = item_icon,
 					selected_color = tweak_data.gui.colors.raid_gold,
 					breadcrumb = {
-						category = nil,
-						identifiers = nil,
 						category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
 						identifiers = {
 							mission_name
@@ -2417,15 +2189,6 @@ function MissionSelectionGui:_raid_list_data_source()
 			end
 		else
 			table.insert(mission_data.debug and debug_list or non_consumable_list, {
-				selected_color = nil,
-				unlocked = nil,
-				debug = nil,
-				icon = nil,
-				index = nil,
-				color = nil,
-				value = nil,
-				breadcrumb = nil,
-				text = nil,
 				index = raid_index,
 				text = item_text,
 				value = mission_name,
@@ -2433,8 +2196,6 @@ function MissionSelectionGui:_raid_list_data_source()
 				color = tweak_data.gui.colors.raid_white,
 				selected_color = tweak_data.gui.colors.raid_red,
 				breadcrumb = {
-					category = nil,
-					identifiers = nil,
 					category = BreadcrumbManager.CATEGORY_NEW_RAID,
 					identifiers = {
 						mission_name
@@ -2478,18 +2239,11 @@ function MissionSelectionGui:_operation_list_data_source()
 		local item_description = self:translate(operation_tweak_data.briefing_id)
 		local item_icon_name = operation_tweak_data.icon_menu
 		local item_icon = {
-			texture = nil,
-			texture_rect = nil,
 			texture = tweak_data.gui.icons[item_icon_name].texture,
 			texture_rect = tweak_data.gui.icons[item_icon_name].texture_rect
 		}
 
 		table.insert(operation_list, {
-			value = nil,
-			icon = nil,
-			index = nil,
-			description = nil,
-			title = nil,
 			index = index,
 			title = item_title,
 			description = item_description,
@@ -2518,8 +2272,6 @@ function MissionSelectionGui:_slot_list_data_source()
 			current_slot.text = self:translate(current_save_slots[i].current_job.name_id)
 			local icon_name = tweak_data.operations:mission_data(current_save_slots[i].current_job.job_id).icon_menu
 			current_slot.icon = {
-				texture = nil,
-				texture_rect = nil,
 				texture = tweak_data.gui.icons[icon_name].texture,
 				texture_rect = tweak_data.gui.icons[icon_name].texture_rect
 			}
@@ -2528,8 +2280,6 @@ function MissionSelectionGui:_slot_list_data_source()
 			current_slot.text = self:translate("menu_empty_save_slot_title")
 			local icon_name = "missions_operation_empty_slot_menu"
 			current_slot.icon = {
-				texture = nil,
-				texture_rect = nil,
 				texture = tweak_data.gui.icons[icon_name].texture,
 				texture_rect = tweak_data.gui.icons[icon_name].texture_rect
 			}
@@ -3070,27 +2820,19 @@ end
 function MissionSelectionGui:_bind_raid_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			label = "",
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_list_tabs_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_column_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_column_right")
 		}
@@ -3098,8 +2840,6 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 
 	if Network:is_server() then
 		table.insert(bindings, {
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_start_raid")
 		})
@@ -3108,8 +2848,6 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
@@ -3118,7 +2856,6 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -3135,27 +2872,19 @@ end
 function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			label = "",
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_list_tabs_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_column_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_column_right")
 		}
@@ -3164,8 +2893,6 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
@@ -3174,7 +2901,6 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -3187,21 +2913,15 @@ end
 function MissionSelectionGui:_bind_save_slot_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			label = "",
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_list_tabs_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_delete_save")
 		}
@@ -3209,8 +2929,6 @@ function MissionSelectionGui:_bind_save_slot_controller_inputs()
 
 	if Network:is_server() then
 		table.insert(bindings, {
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_continue_save")
 		})
@@ -3219,8 +2937,6 @@ function MissionSelectionGui:_bind_save_slot_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
@@ -3229,7 +2945,6 @@ function MissionSelectionGui:_bind_save_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -3246,27 +2961,19 @@ end
 function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			label = "",
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_list_tabs_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_list_tabs_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_column_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_column_right")
 		}
@@ -3274,8 +2981,6 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 
 	if Network:is_server() then
 		table.insert(bindings, {
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_start_operation")
 		})
@@ -3284,8 +2989,6 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_raids",
@@ -3294,7 +2997,6 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -3311,14 +3013,10 @@ end
 function MissionSelectionGui:_bind_operation_list_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_column_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_column_right")
 		}
@@ -3326,8 +3024,6 @@ function MissionSelectionGui:_bind_operation_list_controller_inputs()
 
 	if Network:is_server() then
 		table.insert(bindings, {
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_start_operation")
 		})
@@ -3336,15 +3032,12 @@ function MissionSelectionGui:_bind_operation_list_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_column"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -3364,14 +3057,11 @@ function MissionSelectionGui:_bind_locked_operation_list_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}

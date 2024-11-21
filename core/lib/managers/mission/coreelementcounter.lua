@@ -137,8 +137,6 @@ end
 function ElementCounter:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
-		callback = nil,
-		amount = nil,
 		amount = amount,
 		callback = callback
 	}

@@ -165,7 +165,6 @@ CarryData.EXPLOSION_SETTINGS = {
 }
 CarryData.EXPLOSION_CUSTOM_PARAMS = {
 	camera_shake_mul = 4,
-	effect = nil,
 	effect = CarryData.EXPLOSION_SETTINGS.effect
 }
 local mvec1 = Vector3()
@@ -183,13 +182,7 @@ function CarryData:_explode()
 	managers.explosion:play_sound_and_effects(pos, normal, range, CarryData.EXPLOSION_CUSTOM_PARAMS)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
-		collision_slotmask = nil,
-		damage = nil,
-		ignore_unit = nil,
-		curve_pow = nil,
-		hit_pos = nil,
 		player_damage = 0,
-		range = nil,
 		hit_pos = pos,
 		range = range,
 		collision_slotmask = slot_mask,
@@ -420,12 +413,6 @@ function CarryData:_chk_register_steal_SO()
 		pose = "crouch",
 		action_duration = 2,
 		type = "act",
-		action = nil,
-		area = nil,
-		nav_seg = nil,
-		pos = nil,
-		complete_clbk = nil,
-		fail_clbk = nil,
 		interrupt_health = 0.9,
 		interrupt_dis = 700,
 		haste = "walk",
@@ -443,16 +430,8 @@ function CarryData:_chk_register_steal_SO()
 	}
 	local pickup_objective = {
 		pose = "crouch",
-		action_duration = nil,
 		type = "act",
-		action = nil,
-		area = nil,
-		nav_seg = nil,
-		pos = nil,
 		haste = "run",
-		complete_clbk = nil,
-		followup_objective = nil,
-		fail_clbk = nil,
 		interrupt_health = 0.9,
 		interrupt_dis = 700,
 		destroy_clbk_key = false,
@@ -471,15 +450,10 @@ function CarryData:_chk_register_steal_SO()
 		followup_objective = drop_objective
 	}
 	local so_descriptor = {
-		admin_clbk = nil,
-		AI_group = nil,
 		usage_amount = 1,
-		verification_clbk = nil,
-		search_pos = nil,
 		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
-		objective = nil,
 		objective = pickup_objective,
 		search_pos = pickup_objective.pos,
 		verification_clbk = callback(self, self, "clbk_pickup_SO_verification"),
@@ -488,11 +462,8 @@ function CarryData:_chk_register_steal_SO()
 	}
 	local so_id = "carrysteal" .. tostring(self._unit:key())
 	self._steal_SO_data = {
-		pickup_objective = nil,
-		pickup_area = nil,
 		SO_registered = true,
 		picked_up = false,
-		SO_id = nil,
 		SO_id = so_id,
 		pickup_area = pickup_area,
 		pickup_objective = pickup_objective

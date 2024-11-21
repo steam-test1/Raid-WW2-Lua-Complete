@@ -80,9 +80,6 @@ function SentryGunDamage:damage_bullet(attack_data)
 		dmg_adjusted = damage
 
 		managers.hud:on_hit_confirmed({
-			is_crit = nil,
-			hit_type = nil,
-			is_killshot = nil,
 			hit_type = HUDHitConfirm.HIT_NORMAL,
 			is_killshot = self._dead and true or false,
 			is_crit = critical_hit
@@ -222,9 +219,6 @@ function SentryGunDamage:damage_explosion(attack_data)
 		damage = crit_damage
 
 		managers.hud:on_hit_confirmed({
-			is_crit = nil,
-			hit_type = nil,
-			is_killshot = nil,
 			hit_type = HUDHitConfirm.HIT_NORMAL,
 			is_killshot = self._dead and true or false,
 			is_crit = critical_hit

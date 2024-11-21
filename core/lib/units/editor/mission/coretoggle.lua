@@ -31,8 +31,6 @@ function CoreToggleUnitElement:draw_links(t, dt, selected_unit, all_units)
 				b = 0,
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

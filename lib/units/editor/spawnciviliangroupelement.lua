@@ -32,8 +32,6 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 			self:_draw_link({
 				g = 0.75,
 				r = 0,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				from_unit = self._unit,
 				to_unit = unit

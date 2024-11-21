@@ -8,9 +8,6 @@ function VoiceOverManager:_setup()
 	self._disabled = false
 	self._investigated = {}
 	self._idle_timers = {
-		rnd_delay = nil,
-		delay = nil,
-		cooldown = nil,
 		delay = tweak_data.voiceover.idle_delay,
 		rnd_delay = tweak_data.voiceover.idle_rnd_delay,
 		cooldown = tweak_data.voiceover.idle_cooldown
@@ -44,9 +41,6 @@ function VoiceOverManager:_update_idle_chatter()
 			if self._idle_queue[unit_key] then
 				local time_offset = math.random(self._idle_timers.rnd_delay)
 				self._idle_queue[unit_key] = {
-					registered_at = nil,
-					unit = nil,
-					time_offset = nil,
 					unit = self._idle_queue[unit_key].unit,
 					registered_at = Application:time(),
 					time_offset = time_offset
@@ -63,7 +57,6 @@ function VoiceOverManager:_update_idle_chatter()
 				self:_play_sound(data.unit, math.rand_bool() and "ste_idle" or "ste_patrol")
 
 				self._idle_cooldowns[unit_key] = {
-					started_at = nil,
 					started_at = current_time
 				}
 			else
@@ -80,9 +73,6 @@ function VoiceOverManager:guard_register_idle(source_unit)
 
 	local time_offset = math.random(self._idle_timers.rnd_delay)
 	self._idle_queue[source_unit:key()] = {
-		registered_at = nil,
-		unit = nil,
-		time_offset = nil,
 		unit = source_unit,
 		registered_at = Application:time(),
 		time_offset = time_offset

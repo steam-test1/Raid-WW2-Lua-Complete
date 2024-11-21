@@ -17,13 +17,7 @@ function RaidGUIControlProgressBar:init(parent, params)
 	self._bg_color = params.bar_background_color
 	self._bg = self._object:rect({
 		params.layer,
-		name = nil,
-		color = nil,
-		w = nil,
-		h = nil,
 		y = 0,
-		x = nil,
-		layer = nil,
 		name = self._name .. "_bg",
 		color = self._bg_color,
 		x = self._object:w() - self._bar_width,
@@ -32,14 +26,8 @@ function RaidGUIControlProgressBar:init(parent, params)
 		layer = self._params.layer + 1
 	})
 	self._description = self._object:text({
-		font_size = nil,
-		text = nil,
 		align = "left",
-		font = nil,
-		color = nil,
 		x = 0,
-		layer = nil,
-		w = nil,
 		w = self._object:w() / 5 * 4,
 		text = utf8.to_upper(params.description),
 		color = self._params.description_color or Color.white,

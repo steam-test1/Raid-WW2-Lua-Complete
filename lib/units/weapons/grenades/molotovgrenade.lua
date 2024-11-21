@@ -24,12 +24,7 @@ function MolotovGrenade:_setup_from_tweak_data()
 	local sound_event_impact_duration = self._tweak_data.sound_event_impact_duration or 1
 	self._custom_params = {
 		camera_shake_max_mul = 4,
-		sound_event_burning = nil,
 		sound_muffle_effect = true,
-		sound_event = nil,
-		feedback_range = nil,
-		effect = nil,
-		sound_event_impact_duration = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2,
@@ -135,17 +130,8 @@ function MolotovGrenade:_do_damage()
 
 				if Network:is_server() then
 					local hit_units, splinters = managers.fire:detect_and_give_dmg({
-						damage = nil,
-						hit_pos = nil,
-						range = nil,
 						push_units = false,
-						fire_dot_data = nil,
-						alert_radius = nil,
 						player_damage = 0,
-						user = nil,
-						ignore_unit = nil,
-						collision_slotmask = nil,
-						curve_pow = nil,
 						hit_pos = effect_position,
 						range = damage_range,
 						collision_slotmask = slot_mask,
@@ -176,15 +162,10 @@ end
 function MolotovGrenade:detonate(normal)
 	managers.explosion:detect_and_give_dmg({
 		damage = 3,
-		hit_pos = nil,
 		range = 250,
 		push_units = false,
 		ignite_character = true,
-		alert_radius = nil,
 		player_damage = 0,
-		user = nil,
-		ignore_unit = nil,
-		collision_slotmask = nil,
 		curve_pow = 0.1,
 		hit_pos = self._unit:position(),
 		collision_slotmask = managers.slot:get_mask("explosion_targets"),

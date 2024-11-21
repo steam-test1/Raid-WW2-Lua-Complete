@@ -31,19 +31,12 @@ function HUDControllerHotswap:_create_panel(hud)
 		halign = "center",
 		valign = "center",
 		visible = false,
-		h = nil,
-		w = nil,
-		name = nil,
 		name = HUDControllerHotswap.HOTSWAP_HUD_ID,
 		w = HUDControllerHotswap.W,
 		h = HUDControllerHotswap.H
 	})
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDControllerHotswap.BACKGROUND_IMAGE)
 	self._background = self._object:bitmap({
-		texture = nil,
-		h = nil,
-		w = nil,
-		texture_rect = nil,
 		w = HUDControllerHotswap.W,
 		h = HUDControllerHotswap.H,
 		texture = gui_data.texture,
@@ -51,11 +44,6 @@ function HUDControllerHotswap:_create_panel(hud)
 	})
 	local thickness = 4
 	self._timer_bar = self._object:rect({
-		color = nil,
-		layer = nil,
-		h = nil,
-		w = nil,
-		y = nil,
 		y = self._object:h() - thickness,
 		w = self._object:w(),
 		h = thickness,
@@ -72,12 +60,7 @@ function HUDControllerHotswap:update_input_device()
 		self._icon:set_texture_rect(unpack(gui.texture_rect))
 	else
 		self._icon = self._object:bitmap({
-			h = nil,
-			layer = nil,
-			texture_rect = nil,
-			texture = nil,
 			x = 4,
-			w = nil,
 			y = 4,
 			w = HUDControllerHotswap.H - 8,
 			h = HUDControllerHotswap.H - 8,
@@ -91,10 +74,6 @@ function HUDControllerHotswap:update_input_device()
 
 	if not self._text then
 		self._text = self._object:text({
-			font_size = nil,
-			font = nil,
-			layer = nil,
-			x = nil,
 			vertical = "center",
 			align = "center",
 			x = self._icon:w() / 2,

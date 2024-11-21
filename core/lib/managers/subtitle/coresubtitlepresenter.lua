@@ -130,12 +130,9 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 
 	local label = self.__subtitle_panel:child("label") or self.__subtitle_panel:text({
 		layer = 1,
-		color = nil,
 		wrap = true,
-		font_size = nil,
 		vertical = "top",
 		align = "center",
-		font = nil,
 		y = 1,
 		x = 32,
 		name = "label",
@@ -145,14 +142,11 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 	})
 	local shadow = self.__subtitle_panel:child("shadow") or self.__subtitle_panel:text({
 		word_wrap = true,
-		color = nil,
 		layer = 0,
 		visible = false,
 		wrap = true,
-		font_size = nil,
 		vertical = "top",
 		align = "center",
-		font = nil,
 		y = 2,
 		x = 33,
 		name = "shadow",
@@ -170,8 +164,6 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 			visible = true,
 			layer = 1,
 			h = 32,
-			texture_rect = nil,
-			texture = nil,
 			y = 1,
 			x = 1,
 			name = "nation_icon",
@@ -273,12 +265,9 @@ function OverlayPresenter:_layout_text_field()
 	return self.__subtitle_panel:child("layout") or self.__subtitle_panel:text({
 		word_wrap = true,
 		visible = false,
-		width = nil,
 		wrap = true,
-		font_size = nil,
 		vertical = "top",
 		align = "center",
-		font = nil,
 		name = "layout",
 		width = self.__subtitle_panel:w() - 64,
 		font = self.__font_name,
@@ -290,8 +279,6 @@ function OverlayPresenter:_string_width(subtitle_string)
 	local string_width_measure_text_field = self.__ws:panel():child("string_width") or self.__ws:panel():text({
 		wrap = true,
 		visible = false,
-		font = nil,
-		font_size = nil,
 		name = "string_width",
 		font = self.__font_name,
 		font_size = self.__font_size

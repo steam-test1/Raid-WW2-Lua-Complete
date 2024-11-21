@@ -342,7 +342,6 @@ function VoteManager:_message(response, peer_id, kick_peer_id)
 
 	if response == self.VOTES.cancel then
 		managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_vote_cancel", {
-			name = nil,
 			name = peer:name()
 		}))
 	else
@@ -351,20 +350,16 @@ function VoteManager:_message(response, peer_id, kick_peer_id)
 		if self._type == "kick" then
 			if kick_peer then
 				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_kick_yes" or "menu_chat_vote_kick_no", {
-					kick_name = nil,
-					name = nil,
 					name = peer:name(),
 					kick_name = kick_peer:name()
 				}))
 			else
 				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_kick_yes_unknown" or "menu_chat_vote_kick_no_unknown", {
-					name = nil,
 					name = peer:name()
 				}))
 			end
 		elseif self._type == "restart" or self._type == "restart_mission" then
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(response == self.VOTES.yes and "menu_chat_vote_restart_yes" or "menu_chat_vote_restart_no", {
-				name = nil,
 				name = peer:name()
 			}))
 		end
@@ -390,7 +385,6 @@ end
 function VoteManager:help_text()
 	if not self:available() and self._cooldown then
 		return managers.localization:text("menu_vote_kick_cooldown", {
-			time = nil,
 			time = math.ceil(self._cooldown - TimerManager:wall():time())
 		})
 	end
@@ -445,7 +439,6 @@ function VoteManager:network_package(type, value, result, peer_id)
 
 		if peer and result ~= 0 then
 			managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text(self:kick_reason_to_string(result), {
-				name = nil,
 				name = peer:name()
 			}))
 		end
@@ -507,7 +500,6 @@ function VoteManager:update(t, dt)
 
 			if self._callback_counter_print > self._callback_counter - current_time and self._callback_counter_print >= 0 then
 				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_restart_timer", {
-					time = nil,
 					time = self._callback_counter_print
 				}))
 
@@ -520,7 +512,6 @@ function VoteManager:update(t, dt)
 
 			if self._callback_counter_print > self._callback_counter - current_time and self._callback_counter_print >= 0 then
 				managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_restart_mission_timer", {
-					time = nil,
 					time = self._callback_counter_print
 				}))
 
@@ -540,7 +531,6 @@ function VoteManager:update(t, dt)
 					self._next_hint_t = t + 6
 
 					managers.notification:add_notification({
-						text = nil,
 						id = "waiting_for_player_dropin",
 						shelf_life = 5,
 						duration = 2,
@@ -654,8 +644,6 @@ function VoteManager:message_vote()
 	end
 
 	dialog_data.text = managers.localization:text(message, {
-		time = nil,
-		name = nil,
 		name = peer and peer:name(),
 		time = count
 	})
@@ -677,8 +665,6 @@ function VoteManager:message_vote()
 
 				if dlg then
 					dlg:set_text(managers.localization:text(message, {
-						time = nil,
-						name = nil,
 						name = peer and peer:name(),
 						time = count
 					}), true)
@@ -699,7 +685,6 @@ function VoteManager:message_host_kick(peer)
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_kick_player_title"),
 		text = managers.localization:text("dialog_mp_kick_player_message", {
-			PLAYER = nil,
 			PLAYER = peer:name()
 		})
 	}

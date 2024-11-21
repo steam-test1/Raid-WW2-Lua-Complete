@@ -29,11 +29,9 @@ function HUDPlayerCustody:init(hud)
 		align = "center",
 		name = "timer_msg",
 		text = "custodddddy in",
-		font = nil,
 		h = 40,
 		w = 400,
 		vertical = "center",
-		font_size = nil,
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
 	}
@@ -51,11 +49,8 @@ function HUDPlayerCustody:init(hud)
 		align = "center",
 		name = "timer",
 		text = "00:00",
-		font = nil,
 		h = 32,
-		w = nil,
 		vertical = "bottom",
-		font_size = nil,
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list
@@ -91,8 +86,6 @@ end
 function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel = parent:panel({
 		name = "spectator_panel",
-		w = nil,
-		h = nil,
 		valign = "bottom",
 		halign = "left",
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
@@ -103,11 +96,7 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel:set_bottom(parent:h() - 25)
 
 	local spectator_background = self._spectator_panel:bitmap({
-		texture = nil,
 		name = "spectator_background",
-		h = nil,
-		w = nil,
-		texture_rect = nil,
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		texture = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture,
@@ -115,10 +104,6 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 	})
 	self._spectator_text = self._spectator_panel:text({
 		name = "spectator_text",
-		layer = nil,
-		font_size = nil,
-		font = nil,
-		h = nil,
 		vertical = "center",
 		align = "center",
 		text = "SPECTATING",
@@ -132,11 +117,8 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 	self._button_prompt = self._spectator_panel:text({
 		name = "prompt_previous",
 		text = "",
-		font_size = nil,
-		font = nil,
 		vertical = "bottom",
 		align = "center",
-		color = nil,
 		valign = "center",
 		halign = "center",
 		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
@@ -152,15 +134,11 @@ function HUDPlayerCustody:_refresh_button_prompt()
 
 	if managers.controller:is_using_controller() then
 		btn_macros = {
-			BTN_LEFT = nil,
-			BTN_RIGHT = nil,
 			BTN_LEFT = managers.localization:get_default_macros().BTN_PRIMARY,
 			BTN_RIGHT = managers.localization:get_default_macros().BTN_SECONDARY
 		}
 	else
 		btn_macros = {
-			BTN_LEFT = nil,
-			BTN_RIGHT = nil,
 			BTN_LEFT = managers.localization:btn_macro("left"),
 			BTN_RIGHT = managers.localization:btn_macro("right")
 		}

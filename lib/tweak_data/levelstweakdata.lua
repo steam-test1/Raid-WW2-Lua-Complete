@@ -123,10 +123,7 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			world_borders = nil,
 			base_icon = "map_camp",
-			panel_shape = nil,
-			base_location = nil,
 			texture = "map",
 			base_location = {
 				y = -2850,
@@ -159,10 +156,7 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			world_borders = nil,
 			base_icon = "map_camp",
-			panel_shape = nil,
-			base_location = nil,
 			texture = "map",
 			base_location = {
 				y = -2850,
@@ -195,10 +189,7 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			world_borders = nil,
 			base_icon = "map_camp",
-			panel_shape = nil,
-			base_location = nil,
 			texture = "map",
 			base_location = {
 				y = -2850,
@@ -231,10 +222,7 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			world_borders = nil,
 			base_icon = "map_camp",
-			panel_shape = nil,
-			base_location = nil,
 			texture = "map",
 			base_location = {
 				y = -2850,
@@ -267,10 +255,7 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			world_borders = nil,
 			base_icon = "map_camp",
-			panel_shape = nil,
-			base_location = nil,
 			texture = "map",
 			base_location = {
 				y = -2850,
@@ -500,21 +485,13 @@ function LevelsTweakData:get_team_setup()
 		teams = deep_clone(teams)
 	else
 		teams = {
-			neutral1 = nil,
-			hacked_turret = nil,
-			law1 = nil,
-			criminal1 = nil,
-			converted_enemy = nil,
-			mobster1 = nil,
 			criminal1 = {
-				foes = nil,
 				foes = {
 					law1 = true,
 					mobster1 = true
 				}
 			},
 			law1 = {
-				foes = nil,
 				foes = {
 					criminal1 = true,
 					converted_enemy = true,
@@ -522,7 +499,6 @@ function LevelsTweakData:get_team_setup()
 				}
 			},
 			mobster1 = {
-				foes = nil,
 				foes = {
 					criminal1 = true,
 					converted_enemy = true,
@@ -530,18 +506,15 @@ function LevelsTweakData:get_team_setup()
 				}
 			},
 			converted_enemy = {
-				foes = nil,
 				foes = {
 					law1 = true,
 					mobster1 = true
 				}
 			},
 			neutral1 = {
-				foes = nil,
 				foes = {}
 			},
 			hacked_turret = {
-				foes = nil,
 				foes = {
 					law1 = true,
 					mobster1 = true
@@ -562,10 +535,6 @@ function LevelsTweakData:get_default_team_IDs()
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 	local default_team_IDs = lvl_tweak and lvl_tweak.default_teams
 	default_team_IDs = default_team_IDs or {
-		non_combatant = nil,
-		player = nil,
-		gangster = nil,
-		combatant = nil,
 		player = self:get_default_team_ID("player"),
 		combatant = self:get_default_team_ID("combatant"),
 		non_combatant = self:get_default_team_ID("non_combatant"),

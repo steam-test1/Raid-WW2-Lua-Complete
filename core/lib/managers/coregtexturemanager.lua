@@ -23,8 +23,6 @@ function GTextureManager:set_texture(variable_name, texture_name, texture_type)
 
 	if texture_name and texture_name ~= "" then
 		local data = {
-			texture_type = nil,
-			texture_name = nil,
 			texture_name = texture_name,
 			texture_type = texture_type,
 			texture = TextureCache:retrieve(texture_name, texture_type)

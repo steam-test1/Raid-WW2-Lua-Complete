@@ -19,16 +19,8 @@ CopActionHurt.running_death_anim_variants = {
 	male = 26
 }
 CopActionHurt.death_anim_variants = {
-	normal = nil,
-	heavy = nil,
 	normal = {
-		not_crouching = nil,
-		crouching = nil,
 		crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 5,
 				high = 14
@@ -47,10 +39,6 @@ CopActionHurt.death_anim_variants = {
 			}
 		},
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 5,
 				high = 14
@@ -70,13 +58,7 @@ CopActionHurt.death_anim_variants = {
 		}
 	},
 	heavy = {
-		not_crouching = nil,
-		crouching = nil,
 		crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 2,
 				high = 7
@@ -95,10 +77,6 @@ CopActionHurt.death_anim_variants = {
 			}
 		},
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 2,
 				high = 6
@@ -119,16 +97,8 @@ CopActionHurt.death_anim_variants = {
 	}
 }
 CopActionHurt.death_anim_fe_variants = {
-	normal = nil,
-	heavy = nil,
 	normal = {
-		not_crouching = nil,
-		crouching = nil,
 		crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 2,
 				high = 5
@@ -147,10 +117,6 @@ CopActionHurt.death_anim_fe_variants = {
 			}
 		},
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 2,
 				high = 6
@@ -170,13 +136,7 @@ CopActionHurt.death_anim_fe_variants = {
 		}
 	},
 	heavy = {
-		not_crouching = nil,
-		crouching = nil,
 		crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 0,
 				high = 0
@@ -195,10 +155,6 @@ CopActionHurt.death_anim_fe_variants = {
 			}
 		},
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 0,
 				high = 0
@@ -220,17 +176,8 @@ CopActionHurt.death_anim_fe_variants = {
 }
 CopActionHurt.hurt_anim_variants_highest_num = 18
 CopActionHurt.hurt_anim_variants = {
-	fire_hurt = nil,
-	expl_hurt = nil,
-	heavy_hurt = nil,
-	hurt = nil,
 	hurt = {
-		not_crouching = nil,
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 5,
 				high = 13
@@ -250,12 +197,7 @@ CopActionHurt.hurt_anim_variants = {
 		}
 	},
 	heavy_hurt = {
-		not_crouching = nil,
 		not_crouching = {
-			l = nil,
-			r = nil,
-			fwd = nil,
-			bwd = nil,
 			fwd = {
 				low = 7,
 				high = 18
@@ -578,15 +520,6 @@ function CopActionHurt:init(action_desc, common_data)
 
 			if old_variant ~= nil then
 				old_info = {
-					low = nil,
-					high = nil,
-					fwd = nil,
-					hvy = nil,
-					mod = nil,
-					crh = nil,
-					r = nil,
-					l = nil,
-					bwd = nil,
 					fwd = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "fwd"),
 					bwd = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "bwd"),
 					l = self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "l"),
@@ -728,10 +661,6 @@ function CopActionHurt:init(action_desc, common_data)
 
 		if not self._shoot_history then
 			self._shoot_history = {
-				focus_delay = nil,
-				focus_start_t = nil,
-				focus_error_roll = nil,
-				m_last_pos = nil,
 				focus_error_roll = math.random(360),
 				focus_start_t = t,
 				focus_delay = weapon_usage_tweak.focus_delay,
@@ -833,7 +762,6 @@ function CopActionHurt:init(action_desc, common_data)
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
 				radius = 30,
-				position = nil,
 				position = mvector3.copy(common_data.pos)
 			})
 		end
@@ -871,7 +799,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 	end
 
 	managers.fire:start_burn_body_sound({
-		enemy_unit = nil,
 		enemy_unit = self._unit
 	}, anim_duration)
 
@@ -883,8 +810,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 
 	if bone_spine then
 		World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_spine
 		})
@@ -892,8 +817,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 
 	if bone_left_arm then
 		World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_left_arm
 		})
@@ -901,8 +824,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 
 	if bone_right_arm then
 		World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_right_arm
 		})
@@ -910,8 +831,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 
 	if bone_left_leg then
 		World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_left_leg
 		})
@@ -919,8 +838,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 
 	if bone_right_leg then
 		World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
 			effect = enemy_effect_name,
 			parent = bone_right_leg
 		})
@@ -1070,8 +987,6 @@ function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 		mvec3_set_z(h, new_pos.z)
 
 		ray_params = {
-			pos_to = nil,
-			tracker_from = nil,
 			trace = true,
 			tracker_from = tracker,
 			pos_to = h
@@ -1092,7 +1007,6 @@ function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 		end
 	else
 		ray_params = {
-			tracker_from = nil,
 			tracker_from = tracker
 		}
 	end

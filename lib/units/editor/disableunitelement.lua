@@ -48,8 +48,6 @@ function DisableUnitUnitElement:update_selected()
 				b = 0,
 				g = 0,
 				r = 1,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			}
@@ -86,8 +84,6 @@ function DisableUnitUnitElement:draw_links_unselected(...)
 			b = 0,
 			g = 0,
 			r = 0.5,
-			to_unit = nil,
-			from_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit
 		}
@@ -101,7 +97,6 @@ function DisableUnitUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		sample = true,
 		ray_type = "body editor",
-		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -114,7 +109,6 @@ function DisableUnitUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		sample = true,
 		ray_type = "body editor",
-		mask = nil,
 		mask = managers.slot:get_mask("all")
 	})
 

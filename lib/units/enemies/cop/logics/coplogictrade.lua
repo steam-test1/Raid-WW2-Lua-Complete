@@ -3,7 +3,6 @@ CopLogicTrade.butchers_traded = 0
 
 function CopLogicTrade.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -36,9 +35,6 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 		local text = managers.localization:text("debug_trade_hostage")
 
 		managers.hud:add_waypoint(wp_id, {
-			distance = nil,
-			position = nil,
-			text = nil,
 			waypoint_type = "hostage_trade",
 			icon = "wp_trade",
 			text = text,
@@ -68,7 +64,6 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 				if not unit:brain():is_tied() then
 					action_data = {
 						type = "act",
-						blocks = nil,
 						clamp_to_graph = true,
 						variant = "tied",
 						body_part = 1,
@@ -83,7 +78,6 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 			else
 				action_data = {
 					type = "act",
-					blocks = nil,
 					clamp_to_graph = true,
 					variant = "tied_all_in_one",
 					body_part = 1,
@@ -221,7 +215,6 @@ end
 
 function CopLogicTrade._get_all_paths(data)
 	return {
-		flee_path = nil,
 		flee_path = data.internal_data.flee_path
 	}
 end

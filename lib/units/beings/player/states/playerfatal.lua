@@ -88,7 +88,6 @@ function PlayerFatal:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
-		equip_weapon = nil,
 		equip_weapon = self._reequip_weapon
 	}
 

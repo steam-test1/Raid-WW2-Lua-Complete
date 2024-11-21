@@ -29,12 +29,7 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 	self:_create_rotation_panel(ring_w, ring_h)
 
 	self._cylinder = self._rotation_panel:bitmap({
-		h = nil,
-		texture = nil,
-		rotation = nil,
 		name = "clip_left_background",
-		texture_rect = nil,
-		w = nil,
 		texture = gui_cylinder.texture,
 		texture_rect = gui_cylinder.texture_rect,
 		w = ring_w,
@@ -49,11 +44,7 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 		local dx, dy = self:_orbit_math(self._offset_from_center, single_bullet_angle * i + self._initial_rotation + single_bullet_angle / 2)
 		local bullet = self._rotation_panel:bitmap({
 			h = 8,
-			texture = nil,
-			name = nil,
-			texture_rect = nil,
 			w = 8,
-			layer = nil,
 			name = "bullet" .. i,
 			texture = gui_bullet.texture,
 			texture_rect = gui_bullet.texture_rect,
@@ -68,11 +59,9 @@ end
 
 function HUDWeaponRevolver:_create_rotation_panel(w, h)
 	self._rotation_panel = self._ammo_panel:panel({
-		h = nil,
 		halign = "center",
 		valign = "center",
 		name = "rotation_panel",
-		w = nil,
 		w = w,
 		h = h
 	})

@@ -15,10 +15,7 @@ function HUDStatusEffects:init(hud)
 	self._hud_panel = hud.panel
 	self._icons = {}
 	self._object = self._hud_panel:panel({
-		x = nil,
-		h = nil,
 		name = "status_effects_panel",
-		w = nil,
 		x = self.LEFT,
 		w = self.WIDTH,
 		h = self.HEIGHT
@@ -128,22 +125,14 @@ function HUDStatusEffects:_make_status_box(status_data)
 	local index = #self._icons
 	local padding = self.PANEL_W + self.ICON_PADDING
 	local status_effect_panel = self._object:panel({
-		x = nil,
-		h = nil,
 		name = "status_effects_panel",
-		w = nil,
 		x = (index - 1) * padding,
 		w = self.PANEL_W,
 		h = self.PANEL_H
 	})
 	local background = status_effect_panel:bitmap({
-		color = nil,
 		layer = 1,
 		name = "status_background",
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
 		w = status_effect_panel:w(),
 		h = status_effect_panel:h(),
 		texture = background_icon.texture,
@@ -151,15 +140,10 @@ function HUDStatusEffects:_make_status_box(status_data)
 		color = status_color
 	})
 	local background_fill = status_effect_panel:bitmap({
-		texture_rect = nil,
 		alpha = 0.8,
 		name = "status_background_fill",
 		render_template = "VertexColorTexturedRadial",
 		layer = 2,
-		color = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons.warcry_bar_fill.texture,
 		texture_rect = tweak_data.gui.icons.warcry_bar_fill.texture_rect,
 		w = status_effect_panel:w() * 1.65,
@@ -168,14 +152,9 @@ function HUDStatusEffects:_make_status_box(status_data)
 	})
 	local icon = status_effect_panel:bitmap({
 		valign = "center",
-		color = nil,
 		name = "icon",
 		halign = "center",
 		layer = 3,
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
 		w = self.ICON_SIZE,
 		h = self.ICON_SIZE,
 		texture = status_icon.texture,
@@ -198,9 +177,6 @@ function HUDStatusEffects:_realign_status()
 		local status_effect_panel = status_data._panel
 		to_x = (i - 1) * padding
 		local panel_data = {
-			end_x = nil,
-			panel = nil,
-			start_x = nil,
 			panel = status_effect_panel,
 			start_x = status_effect_panel:x(),
 			end_x = to_x

@@ -25,7 +25,6 @@ function MenuMainState:at_enter(old_state)
 					fade_out = 0.5,
 					sustain = 0.5,
 					fade_in = 0,
-					color = nil,
 					color = Color.black
 				})
 				managers.menu:external_enter_online_menus()
@@ -39,7 +38,6 @@ function MenuMainState:at_enter(old_state)
 				fade_out = 0.25,
 				sustain = 0.25,
 				fade_in = 0,
-				color = nil,
 				color = Color.black
 			})
 		end
@@ -127,15 +125,12 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		managers.menu:show_question_start_tutorial({
-			yes_func = nil,
 			yes_func = yes_func
 		})
 	end
 
 	if Global.exe_argument_level then
 		MenuCallbackHandler:start_job({
-			job_id = nil,
-			difficulty = nil,
 			job_id = Global.exe_argument_level,
 			difficulty = Global.exe_argument_difficulty
 		})
@@ -143,7 +138,6 @@ function MenuMainState:at_enter(old_state)
 
 	if Global.requestShowDisconnectedMessage then
 		managers.menu:show_mp_disconnected_internet_dialog({
-			ok_func = nil,
 			ok_func = function ()
 				Global.requestShowDisconnectedMessage = nil
 			end

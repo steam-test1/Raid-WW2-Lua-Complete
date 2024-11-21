@@ -22,10 +22,6 @@ end
 
 function HUDCardDetails:_create_panel(panel, params)
 	local panel_params = {
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "card_details_panel",
 		x = params.x or 0,
 		y = params.y or 0,
@@ -38,8 +34,6 @@ end
 function HUDCardDetails:_create_card()
 	local card_panel_params = {
 		is_root_panel = true,
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
 		visible = true,
@@ -49,13 +43,9 @@ function HUDCardDetails:_create_card()
 	}
 	self._card_panel = RaidGUIPanel:new(self._object, card_panel_params)
 	local card_params = {
-		panel = nil,
-		card_image_params = nil,
 		name = "card",
 		panel = self._card_panel,
 		card_image_params = {
-			h = nil,
-			w = nil,
 			w = self._params.card_image_params.w,
 			h = self._params.card_image_params.h
 		}
@@ -65,9 +55,6 @@ end
 
 function HUDCardDetails:_create_bonus()
 	local bonus_panel_params = {
-		h = nil,
-		w = nil,
-		y = nil,
 		x = 0,
 		name = "bonus_panel",
 		y = HUDCardDetails.BONUS_Y,
@@ -76,9 +63,7 @@ function HUDCardDetails:_create_bonus()
 	}
 	self._bonus_panel = self._object:panel(bonus_panel_params)
 	local bonus_icon_params = {
-		texture_rect = nil,
 		valign = "top",
-		texture = nil,
 		name = "bonus_icon",
 		texture = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture_rect
@@ -86,14 +71,9 @@ function HUDCardDetails:_create_bonus()
 	self._bonus_icon = self._bonus_panel:bitmap(bonus_icon_params)
 	local bonus_text_params = {
 		vertical = "top",
-		font_size = nil,
 		align = "left",
-		w = nil,
 		y = 4,
-		x = nil,
-		font = nil,
 		name = "bonus_text",
-		h = nil,
 		valign = "scale",
 		text = "",
 		wrap = true,
@@ -108,9 +88,6 @@ end
 
 function HUDCardDetails:_create_malus()
 	local malus_panel_params = {
-		h = nil,
-		w = nil,
-		y = nil,
 		x = 0,
 		name = "malus_panel",
 		y = HUDCardDetails.MALUS_Y,
@@ -119,9 +96,7 @@ function HUDCardDetails:_create_malus()
 	}
 	self._malus_panel = self._object:panel(malus_panel_params)
 	local malus_icon_params = {
-		texture_rect = nil,
 		valign = "top",
-		texture = nil,
 		name = "malus_icon",
 		texture = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture_rect
@@ -129,14 +104,9 @@ function HUDCardDetails:_create_malus()
 	self._malus_icon = self._malus_panel:bitmap(malus_icon_params)
 	local malus_text_params = {
 		vertical = "top",
-		font_size = nil,
 		align = "left",
-		w = nil,
 		y = 4,
-		x = nil,
-		font = nil,
 		name = "malus_text",
-		h = nil,
 		valign = "scale",
 		text = "",
 		wrap = true,

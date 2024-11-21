@@ -375,8 +375,6 @@ end
 
 function CharacterCustomizationManager:save(data)
 	local state = {
-		random_customization_awards = nil,
-		owned_customizations = nil,
 		owned_customizations = self:get_all_owned_customizations(),
 		random_customization_awards = self._global.random_customization_awards
 	}

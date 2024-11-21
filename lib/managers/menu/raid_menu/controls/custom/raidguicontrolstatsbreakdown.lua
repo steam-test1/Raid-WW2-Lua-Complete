@@ -53,14 +53,6 @@ end
 function RaidGUIControlStatsBreakdown:_create_stats_label()
 	local stats_label_params = {
 		vertical = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
-		x = nil,
-		h = nil,
-		w = nil,
-		text = nil,
 		name = "stats_label",
 		x = RaidGUIControlStatsBreakdown.STATS_LABEL_X,
 		y = RaidGUIControlStatsBreakdown.STATS_LABEL_Y,
@@ -76,21 +68,13 @@ end
 
 function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	local breakdown_table_params = {
-		table_params = nil,
 		use_selector_mark = false,
-		w = nil,
-		y = nil,
 		x = 0,
 		name = "breakdown_table",
 		y = self._stats_label:y() + self._stats_label:h() + RaidGUIControlStatsBreakdown.LABEL_PADDING_DOWN,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
 		table_params = {
-			columns = nil,
-			data_source_callback = nil,
-			row_params = nil,
 			row_params = {
-				height = nil,
-				font_size = nil,
 				height = RaidGUIControlStatsBreakdown.TABLE_ROW_HEIGHT,
 				font_size = RaidGUIControlStatsBreakdown.TABLE_FONT_SIZE
 			},
@@ -98,11 +82,7 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 			columns = {
 				{
 					vertical = "center",
-					cell_class = nil,
 					align = "left",
-					w = nil,
-					color = nil,
-					h = nil,
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_DESCRIPTION_W_PERCENT / 100,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlTableCell,
@@ -110,11 +90,7 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 				},
 				{
 					vertical = "center",
-					cell_class = nil,
 					align = "right",
-					w = nil,
-					color = nil,
-					h = nil,
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_VALUE_W_PERCENT / 100,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlTableCell,

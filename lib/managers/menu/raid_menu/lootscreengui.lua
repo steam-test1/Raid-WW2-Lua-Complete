@@ -136,10 +136,8 @@ function LootScreenGui:_create_flares()
 	}
 	self._flare_panel = self._fullscreen_panel:panel(flare_panel_params)
 	local lens_glint_params = {
-		texture = nil,
 		alpha = 0,
 		blend_mode = "add",
-		texture_rect = nil,
 		name = "loot_screen_glint",
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
@@ -149,10 +147,8 @@ function LootScreenGui:_create_flares()
 	self._lens_glint:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
 
 	local lens_iris_params = {
-		texture = nil,
 		alpha = 0,
 		blend_mode = "add",
-		texture_rect = nil,
 		name = "loot_screen_iris",
 		texture = tweak_data.gui.icons.lens_iris.texture,
 		texture_rect = tweak_data.gui.icons.lens_iris.texture_rect
@@ -162,10 +158,8 @@ function LootScreenGui:_create_flares()
 	self._lens_iris:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
 
 	local lens_orbs_params = {
-		texture = nil,
 		alpha = 0,
 		blend_mode = "add",
-		texture_rect = nil,
 		name = "loot_screen_orbs",
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
@@ -175,10 +169,8 @@ function LootScreenGui:_create_flares()
 	self._lens_orbs:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
 
 	local lens_shimmer_params = {
-		texture = nil,
 		alpha = 0,
 		blend_mode = "add",
-		texture_rect = nil,
 		name = "loot_screen_shimmer",
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
@@ -188,10 +180,8 @@ function LootScreenGui:_create_flares()
 	self._lens_shimmer:set_center(self._flare_panel:w() / 2, self._flare_panel:h() / 2)
 
 	local lens_spike_ball_params = {
-		texture = nil,
 		alpha = 0,
 		blend_mode = "add",
-		texture_rect = nil,
 		name = "loot_screen_spike_ball",
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect
@@ -205,11 +195,7 @@ function LootScreenGui:_layout_profile_name()
 	local x, y, w, h = self._node.components.raid_menu_header:get_screen_name_rect()
 	local profile_name_label_params = {
 		w = 400,
-		font = nil,
-		font_size = nil,
 		y = 0,
-		x = nil,
-		text = nil,
 		h = 64,
 		name = "loot_screen_profile_name_label",
 		x = x + w + LootScreenGui.PROFILE_NAME_PADDING_LEFT,
@@ -234,7 +220,6 @@ function LootScreenGui:_layout_loot_breakdown_items()
 	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		y = 51,
-		visible = nil,
 		h = 426,
 		name = "loot_screen_loot_data_panel",
 		visible = v
@@ -249,11 +234,6 @@ function LootScreenGui:_layout_loot_breakdown_items()
 	for index, loot_id in ipairs(LootScreenGui.LOOT_DATA_ORDER) do
 		if loot_breakdown_items[loot_id] then
 			local loot_item_params = {
-				icon = nil,
-				title = nil,
-				acquired = nil,
-				total = nil,
-				name = nil,
 				name = "loot_screen_loot_item_" .. index,
 				title = loot_breakdown_items[loot_id].title,
 				icon = loot_breakdown_items[loot_id].icon,
@@ -289,11 +269,7 @@ function LootScreenGui:_layout_loot_crates()
 	if not managers.challenge_cards.forced_loot_card then
 		for index, crate_image in ipairs(LootScreenGui.LOOT_BOXES_IMAGES) do
 			local crate_image_params = {
-				texture = nil,
 				alpha = 0,
-				layer = nil,
-				texture_rect = nil,
-				name = nil,
 				name = "loot_screen_crate_image_" .. index,
 				texture = tweak_data.gui.icons[crate_image].texture,
 				texture_rect = tweak_data.gui.icons[crate_image].texture_rect,
@@ -329,11 +305,9 @@ end
 
 function LootScreenGui:_layout_first_screen()
 	local first_screen_panel_params = {
-		w = nil,
 		alpha = 0,
 		y = 0,
 		x = 0,
-		h = nil,
 		name = "first_screen_panel",
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
@@ -341,10 +315,7 @@ function LootScreenGui:_layout_first_screen()
 	self._first_screen_panel = self._root_panel:panel(first_screen_panel_params)
 	self._brackets = self:_get_loot_point_data()
 	local loot_progress_bar_params = {
-		brackets = nil,
 		total_points = 1100,
-		y = nil,
-		x = nil,
 		name = "loot_progress_bar",
 		x = LootScreenGui.LOOT_PROGRESS_BAR_X,
 		y = LootScreenGui.LOOT_PROGRESS_BAR_Y,
@@ -352,17 +323,10 @@ function LootScreenGui:_layout_first_screen()
 	}
 	self._loot_progress_bar = self._first_screen_panel:create_custom_control(RaidGUIControlLootProgressBar, loot_progress_bar_params)
 	local total_loot_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		h = nil,
 		name = "total_loot",
-		color = nil,
 		vertical = "center",
 		align = "center",
 		text = "0000",
-		font_size = nil,
-		font = nil,
 		x = self._first_screen_panel:w() / 2,
 		y = self._loot_progress_bar:y() + self._loot_progress_bar:h() + LootScreenGui.LOOT_PROGRESS_BAR_PADDING_DOWN,
 		w = LootScreenGui.TOTAL_LOOT_W,
@@ -373,17 +337,9 @@ function LootScreenGui:_layout_first_screen()
 	}
 	self._total_loot_label = self._first_screen_panel:text(total_loot_params)
 	local total_loot_description_params = {
-		w = nil,
-		y = nil,
-		x = nil,
-		h = nil,
 		name = "total_loot",
-		color = nil,
 		vertical = "center",
 		align = "center",
-		text = nil,
-		font_size = nil,
-		font = nil,
 		x = self._first_screen_panel:w() / 2,
 		y = self._total_loot_label:y() + self._total_loot_label:h(),
 		w = LootScreenGui.TOTAL_LOOT_W,
@@ -395,16 +351,10 @@ function LootScreenGui:_layout_first_screen()
 	}
 	local total_loot_description = self._first_screen_panel:text(total_loot_description_params)
 	local acquired_loot_params = {
-		w = nil,
-		y = nil,
-		h = nil,
 		name = "acquired_loot",
-		color = nil,
 		vertical = "center",
 		align = "center",
 		text = "0000",
-		font_size = nil,
-		font = nil,
 		y = self._total_loot_label:y(),
 		w = LootScreenGui.ACQUIRED_LOOT_W,
 		h = LootScreenGui.ACQUIRED_LOOT_H,
@@ -417,16 +367,9 @@ function LootScreenGui:_layout_first_screen()
 	self._acquired_loot_label:set_right(self._first_screen_panel:w() / 2)
 
 	local acquired_loot_description_params = {
-		w = nil,
-		y = nil,
-		h = nil,
 		name = "total_loot",
-		color = nil,
 		vertical = "center",
 		align = "center",
-		text = nil,
-		font_size = nil,
-		font = nil,
 		y = total_loot_description:y(),
 		w = LootScreenGui.ACQUIRED_LOOT_W,
 		h = LootScreenGui.ACQUIRED_LOOT_H,
@@ -441,17 +384,11 @@ function LootScreenGui:_layout_first_screen()
 
 	local bracket_unlocked_title_params = {
 		w = 400,
-		y = nil,
 		x = 0,
-		h = nil,
 		name = "bracket_unlocked_title",
-		color = nil,
 		vertical = "top",
 		alpha = 0,
 		align = "left",
-		text = nil,
-		font_size = nil,
-		font = nil,
 		y = LootScreenGui.BRACKET_UNLOCKED_TITLE_Y,
 		h = LootScreenGui.BRACKET_UNLOCKED_TITLE_H,
 		font = LootScreenGui.FONT,
@@ -462,17 +399,12 @@ function LootScreenGui:_layout_first_screen()
 	self._bracket_unlocked_title = self._first_screen_panel:text(bracket_unlocked_title_params)
 	local bracket_unlocked_label_params = {
 		w = 100,
-		y = nil,
 		x = 0,
-		h = nil,
 		name = "bracket_unlocked_label",
-		color = nil,
 		vertical = "center",
 		alpha = 0,
 		align = "center",
 		text = "",
-		font_size = nil,
-		font = nil,
 		y = self._bracket_unlocked_title:y() + self._bracket_unlocked_title:h(),
 		h = LootScreenGui.BRACKET_UNLOCKED_LABEL_H,
 		font = LootScreenGui.FONT,
@@ -484,22 +416,16 @@ end
 
 function LootScreenGui:_layout_second_screen()
 	local second_screen_panel_params = {
-		w = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		name = "second_screen_panel",
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
 	self._second_screen_panel = self._root_panel:panel(second_screen_panel_params)
 	self._local_loot_panel = self._second_screen_panel:panel({
-		w = nil,
 		visible = false,
-		y = nil,
-		x = nil,
 		layer = 10,
-		h = nil,
 		name = "local_loot_panel",
 		x = LootScreenGui.LOCAL_LOOT_X,
 		y = LootScreenGui.LOCAL_LOOT_Y,
@@ -507,12 +433,8 @@ function LootScreenGui:_layout_second_screen()
 		h = LootScreenGui.LOCAL_LOOT_H
 	})
 	self._peer_loot_panel = self._second_screen_panel:panel({
-		w = nil,
 		visible = false,
 		alpha = 0,
-		y = nil,
-		x = nil,
-		h = nil,
 		name = "peer_loot_panel",
 		x = LootScreenGui.PEER_LOOT_PANEL_X,
 		y = LootScreenGui.PEER_LOOT_PANEL_Y,
@@ -520,12 +442,9 @@ function LootScreenGui:_layout_second_screen()
 		h = LootScreenGui.PEER_LOOT_PANEL_H
 	})
 	local customization_reward_params = {
-		redeem_customization_callback = nil,
-		w = nil,
 		visible = false,
 		y = 0,
 		x = 0,
-		h = nil,
 		name = "customization_reward",
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H,
@@ -538,11 +457,9 @@ function LootScreenGui:_layout_second_screen()
 
 	local card_pack_reward_params = {
 		name = "card_pack_reward",
-		w = nil,
 		y = 0,
 		x = 0,
 		layer = 15,
-		h = nil,
 		visible = false,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
@@ -550,10 +467,8 @@ function LootScreenGui:_layout_second_screen()
 	self._card_pack_reward = self._local_loot_panel:create_custom_control(RaidGUIControlRewardCardPack, card_pack_reward_params)
 	local xp_reward_params = {
 		name = "xp_reward",
-		w = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		visible = false,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
@@ -561,10 +476,8 @@ function LootScreenGui:_layout_second_screen()
 	self._xp_reward = self._local_loot_panel:create_custom_control(RaidGUIControlXPRewardDetails, xp_reward_params)
 	local weapon_point_reward_params = {
 		name = "weapon_point_reward",
-		w = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		visible = false,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
@@ -572,10 +485,8 @@ function LootScreenGui:_layout_second_screen()
 	self._weapon_point_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponPointRewardDetails, weapon_point_reward_params)
 	local melee_weapon_reward_params = {
 		name = "melee_weapon_reward",
-		w = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		visible = false,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
@@ -583,10 +494,8 @@ function LootScreenGui:_layout_second_screen()
 	self._melee_weapon_reward = self._local_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponRewardDetails, melee_weapon_reward_params)
 	local gold_bar_reward_params = {
 		name = "gold_bar_reward",
-		w = nil,
 		y = 0,
 		x = 0,
-		h = nil,
 		visible = false,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		h = LootScreenGui.LOCAL_LOOT_H
@@ -598,19 +507,16 @@ function LootScreenGui:_get_loot_point_data()
 	local tree = {
 		{
 			activated = false,
-			points_needed = nil,
 			tier = "bronze",
 			points_needed = LootDropTweakData.BRONZE_POINT_REQUIREMENT
 		},
 		{
 			activated = false,
-			points_needed = nil,
 			tier = "silver",
 			points_needed = LootDropTweakData.SILVER_POINT_REQUIREMENT
 		},
 		{
 			activated = false,
-			points_needed = nil,
 			tier = "gold",
 			points_needed = LootDropTweakData.GOLD_POINT_REQUIREMENT
 		}
@@ -741,9 +647,6 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 
 	if not slot then
 		slot = {
-			peer_id = nil,
-			index = nil,
-			peer_name = nil,
 			peer_id = drop.peer_id,
 			peer_name = drop.peer_name,
 			index = #self._peer_slots + 1
@@ -753,8 +656,6 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	end
 
 	local peer_loot_params = {
-		name = nil,
-		y = nil,
 		x = 0,
 		text = "",
 		visible = true,
@@ -1189,7 +1090,6 @@ function LootScreenGui:_animate_bracket_unlocked_label(label, new_bracket)
 	self._bracket_unlocked_label:set_alpha(0)
 
 	local text = managers.localization:text("menu_loot_screen_bracket_unlocked", {
-		BRACKET = nil,
 		BRACKET = managers.localization:text("menu_loot_screen_bracket_" .. tostring(new_bracket))
 	})
 
@@ -1273,15 +1173,12 @@ end
 function LootScreenGui:bind_controller_inputs()
 	local bindings = {}
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_continue"
 		},
 		keyboard = {
 			{
 				key = "footer_continue",
-				callback = nil,
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}
 		}
@@ -1295,13 +1192,10 @@ end
 function LootScreenGui:bind_controller_inputs_card_rewards()
 	local bindings = {}
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {},
 		keyboard = {
 			{
 				key = "footer_continue",
-				callback = nil,
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}
 		}
@@ -1313,9 +1207,7 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 		self._confirm_pressed_flag = "continue"
 	else
 		table.insert(legend.controller, {
-			translated_text = nil,
 			translated_text = utf8.to_upper(managers.localization:text("menu_legend_loot_reward_reveal_challenge_card", {
-				BTN_Y = nil,
 				BTN_Y = managers.localization:get_default_macros().BTN_A
 			}))
 		})
@@ -1335,8 +1227,6 @@ function LootScreenGui:_check_gamercard_prompts(bindings, legend)
 
 		for i = 1, #self._peer_slots do
 			local keybind = {
-				key = nil,
-				callback = nil,
 				key = Idstring(LootScreenGui.GAMERCARD_BUTTONS[i][1]),
 				callback = callback(self, self, "show_gamercard", i)
 			}
@@ -1347,7 +1237,6 @@ function LootScreenGui:_check_gamercard_prompts(bindings, legend)
 			translated_text = translated_text .. utf8.to_upper(self._peer_slots[i].peer_name)
 
 			table.insert(legend.controller, {
-				translated_text = nil,
 				translated_text = translated_text
 			})
 

@@ -16,12 +16,7 @@ function RaidGUIControlInputField:init(parent, params)
 
 	self._ws = params.ws
 	local panel_params = {
-		name = nil,
 		is_root_panel = true,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "input_field_panel_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -32,14 +27,8 @@ function RaidGUIControlInputField:init(parent, params)
 	self._object = self._panel
 	local background_params = {
 		name = "background_bar",
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
-		color = nil,
-		right = nil,
-		center = nil,
-		left = nil,
 		w = self._params.w,
 		h = self._params.h,
 		left = RaidGUIControlInputField.ICON_LEFT,
@@ -51,12 +40,8 @@ function RaidGUIControlInputField:init(parent, params)
 	self._output_width = 256
 	self._panel_width = 256
 	self._character_name_frame = self._object:rect({
-		name = nil,
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
-		color = nil,
 		name = "test_rect_input_field_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -73,8 +58,6 @@ function RaidGUIControlInputField:init(parent, params)
 		layer = 10,
 		name = "input_panel",
 		alpha = 0,
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
 		w = self._params.w,
@@ -87,22 +70,15 @@ function RaidGUIControlInputField:init(parent, params)
 	end
 
 	self._input_text = self._input_panel:text({
-		font = nil,
-		font_size = nil,
-		text = nil,
 		wrap = true,
-		w = nil,
 		y = 0,
 		x = 30,
-		color = nil,
-		selection_color = nil,
 		name = "input_text",
 		word_wrap = false,
 		hvertical = "center",
 		vertical = "center",
 		halign = "left",
 		align = "left",
-		layer = nil,
 		w = self._params.w - 60,
 		text = text_value,
 		font = params.font or tweak_data.gui.fonts.din_compressed,
@@ -114,12 +90,8 @@ function RaidGUIControlInputField:init(parent, params)
 	local caret = self._input_panel:rect({
 		vertical = "center",
 		name = "caret",
-		layer = nil,
-		h = nil,
 		w = 0,
-		y = nil,
 		x = 0,
-		color = nil,
 		y = RaidGUIControlInputField.CARET_Y,
 		h = self._input_text:h(),
 		color = Color(0.05, 1, 0.5, 1),
@@ -229,10 +201,6 @@ function RaidGUIControlInputField:show_onscreen_keyboard()
 		local input_text = self._input_panel:child("input_text"):text()
 
 		managers.system_menu:show_keyboard_input({
-			input_text = nil,
-			text = nil,
-			callback_func = nil,
-			title = nil,
 			title = self._osk_title,
 			text = self._osk_text,
 			input_text = input_text,

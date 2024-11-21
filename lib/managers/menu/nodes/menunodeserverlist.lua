@@ -16,25 +16,21 @@ end
 function MenuNodeServerList:_setup_columns()
 	self:_add_column({
 		align = "left",
-		text = nil,
 		proportions = 1.9,
 		text = string.upper("")
 	})
 	self:_add_column({
 		align = "right",
-		text = nil,
 		proportions = 1.7,
 		text = string.upper("")
 	})
 	self:_add_column({
 		align = "right",
-		text = nil,
 		proportions = 1,
 		text = string.upper("")
 	})
 	self:_add_column({
 		align = "right",
-		text = nil,
 		proportions = 0.225,
 		text = string.upper("")
 	})

@@ -55,11 +55,6 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_panel(params)
 	local panel_params = {
-		y = nil,
-		h = nil,
-		w = nil,
-		name = nil,
-		x = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -72,11 +67,7 @@ end
 function RaidGUIControlListItemSaveSlots:_layout_background(params)
 	local background_params = {
 		y = 1,
-		h = nil,
-		w = nil,
-		name = nil,
 		x = 0,
-		color = nil,
 		visible = false,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
@@ -89,11 +80,8 @@ end
 function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 	local marker_params = {
 		y = 1,
-		h = nil,
 		w = 3,
-		name = nil,
 		x = 0,
-		color = nil,
 		visible = false,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
@@ -104,12 +92,6 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_icon(params, data)
 	local icon_params = {
-		texture = nil,
-		texture_rect = nil,
-		y = nil,
-		name = nil,
-		x = nil,
-		color = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		y = (RaidGUIControlListItemSaveSlots.HEIGHT - data.icon.texture_rect[4]) / 2,
@@ -125,16 +107,8 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 	local raid_name_params = {
-		w = nil,
-		text = nil,
 		y = 0,
-		color = nil,
 		vertical = "center",
-		h = nil,
-		font_size = nil,
-		name = nil,
-		x = nil,
-		font = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		w = params.w,
@@ -152,12 +126,6 @@ end
 function RaidGUIControlListItemSaveSlots:_layout_difficulty_locked()
 	local locked_subtext = "--"
 	local difficulty_locked_params = {
-		color = nil,
-		text = nil,
-		font_size = nil,
-		name = nil,
-		x = nil,
-		font = nil,
 		vertical = "center",
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
@@ -176,8 +144,6 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_difficulty()
 	local difficulty_params = {
-		x = nil,
-		amount = nil,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		amount = tweak_data:number_of_difficulties()
 	}
@@ -194,9 +160,6 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_lock_icon()
 	local lock_icon_params = {
-		texture = nil,
-		texture_rect = nil,
-		color = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlListItemSaveSlots.LOCK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlListItemSaveSlots.LOCK_ICON].texture_rect,
 		color = tweak_data.gui.colors.raid_dark_grey
@@ -209,8 +172,6 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_breadcrumb()
 	local breadcrumb_params = {
-		category = nil,
-		identifiers = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

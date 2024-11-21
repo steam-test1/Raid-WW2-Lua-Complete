@@ -49,8 +49,6 @@ end
 function ConsumableMissionManager:register_document(unit, world_id)
 	self._registered_intel_documents[world_id] = self._registered_intel_documents[world_id] or {}
 	local loot_data = {
-		world_id = nil,
-		unit = nil,
 		unit = unit,
 		world_id = world_id
 	}
@@ -142,8 +140,6 @@ end
 
 function ConsumableMissionManager:on_document_spawn_chance_received(chance, peer_id)
 	table.insert(self._peer_document_spawn_chances, {
-		chance = nil,
-		peer_id = nil,
 		chance = chance,
 		peer_id = peer_id
 	})
@@ -266,9 +262,6 @@ end
 
 function ConsumableMissionManager:save(data)
 	local state = {
-		intel_spawn_modifier = nil,
-		inventory = nil,
-		version = nil,
 		version = ConsumableMissionManager.VERSION,
 		inventory = {},
 		intel_spawn_modifier = Global.consumable_missions_manager.intel_spawn_modifier

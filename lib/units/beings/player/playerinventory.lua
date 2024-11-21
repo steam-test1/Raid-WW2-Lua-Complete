@@ -28,12 +28,10 @@ function PlayerInventory:init(unit)
 	self._align_places = {
 		right_hand = {
 			on_body = false,
-			obj3d_name = nil,
 			obj3d_name = Idstring("a_weapon_right")
 		},
 		left_hand = {
 			on_body = false,
-			obj3d_name = nil,
 			obj3d_name = Idstring("a_weapon_left")
 		}
 	}
@@ -150,10 +148,6 @@ function PlayerInventory:get_latest_addition_hud_data()
 	local _, _, amount = unit:base():ammo_info()
 
 	return {
-		inventory_index = nil,
-		unit = nil,
-		amount = nil,
-		is_equip = nil,
 		is_equip = self._latest_addition == self._selected_primary,
 		amount = amount,
 		inventory_index = self._latest_addition,
@@ -165,10 +159,7 @@ function PlayerInventory:recreate_weapon_panels()
 	for i = PlayerInventory.SLOT_1, PlayerInventory.SLOT_2 do
 		local unit = self._available_selections[i].unit
 		local hud_data = {
-			inventory_index = nil,
-			unit = nil,
 			force = true,
-			is_equip = nil,
 			is_equip = i == self._selected_primary,
 			inventory_index = i,
 			unit = unit
@@ -188,12 +179,9 @@ function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
-		user_unit = nil,
-		alert_filter = nil,
 		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
-		ignore_units = nil,
 		user_unit = self._unit,
 		ignore_units = {
 			self._unit,
@@ -229,13 +217,9 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 	end
 
 	local setup_data = {
-		user_unit = nil,
-		timer = nil,
-		alert_filter = nil,
 		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
-		ignore_units = nil,
 		user_unit = self._unit,
 		ignore_units = {
 			self._unit,
@@ -411,7 +395,6 @@ function PlayerInventory:equip_selection(selection_index, instant)
 				managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
 			elseif equipped_unit_base.can_reload and equipped_unit_base:can_reload() and equipped_unit_base.clip_empty and equipped_unit_base:clip_empty() then
 				managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-					BTN_RELOAD = nil,
 					BTN_RELOAD = managers.localization:btn_macro("reload")
 				})))
 			else

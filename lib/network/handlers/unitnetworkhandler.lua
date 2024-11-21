@@ -151,17 +151,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	end
 
 	local action_desc = {
-		end_rot = nil,
-		end_pose = nil,
-		no_strafe = nil,
-		no_walk = nil,
-		blocks = nil,
 		persistent = true,
 		path_simplified = true,
 		body_part = 2,
-		variant = nil,
 		type = "walk",
-		nav_path = nil,
 		variant = haste_code == 1 and "walk" or "run",
 		end_rot = end_rot,
 		nav_path = nav_path,
@@ -231,9 +224,7 @@ function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, 
 	end
 
 	local action_desc = {
-		rotation = nil,
 		type = "warp",
-		position = nil,
 		body_part = 1,
 		position = has_pos and pos,
 		rotation = has_rot and Rotation(360 * (yaw - 1) / 254, 0, 0)
@@ -900,10 +891,6 @@ function UnitNetworkHandler:set_attention(unit, target_unit, reaction, sender)
 	end
 
 	unit:movement():synch_attention({
-		reaction = nil,
-		handler = nil,
-		u_key = nil,
-		unit = nil,
 		unit = target_unit,
 		u_key = target_unit:key(),
 		handler = handler,
@@ -917,8 +904,6 @@ function UnitNetworkHandler:cop_set_attention_pos(unit, pos)
 	end
 
 	unit:movement():synch_attention({
-		pos = nil,
-		reaction = nil,
 		pos = pos,
 		reaction = AIAttentionObject.REACT_IDLE
 	})
@@ -1052,7 +1037,6 @@ function UnitNetworkHandler:action_idle_start(unit, body_part, sender)
 	end
 
 	unit:movement():action_request({
-		body_part = nil,
 		type = "idle",
 		body_part = body_part
 	})
@@ -1397,8 +1381,6 @@ function UnitNetworkHandler:from_server_sentry_gun_place_result(owner_peer_id, e
 	sentry_gun_unit:brain():setup(1 / rot_speed_mul)
 
 	local setup_data = {
-		spread_mul = nil,
-		ignore_units = nil,
 		spread_mul = spread_mul,
 		ignore_units = {
 			sentry_gun_unit
@@ -1753,9 +1735,6 @@ function UnitNetworkHandler:give_equipment(equipment, amount, transfer, sender)
 	end
 
 	managers.player:add_special({
-		name = nil,
-		transfer = nil,
-		amount = nil,
 		name = equipment,
 		amount = amount,
 		transfer = transfer
@@ -1899,7 +1878,6 @@ function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage
 
 		if fill_percentage then
 			managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-				current = nil,
 				total = 100,
 				current = fill_percentage
 			})
@@ -1922,14 +1900,6 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 
 	if local_peer:unit() and unit:key() == local_peer:unit():key() then
 		local valid_transitions = {
-			bleed_out = nil,
-			standard = nil,
-			clean = nil,
-			fatal = nil,
-			mask_off = nil,
-			carry = nil,
-			incapacitated = nil,
-			tased = nil,
 			standard = {
 				bleed_out = true,
 				carry = true,
@@ -2329,7 +2299,6 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 			managers.hud:set_teammate_health(character_data.panel_id, {
 				max = 1,
 				total = 1,
-				current = nil,
 				current = percent / 100
 			})
 			character_data.unit:character_damage():set_health_ratio(percent / 100)
@@ -2345,7 +2314,6 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 			managers.hud:set_teammate_armor(character_data.panel_id, {
 				max = 1,
 				total = 1,
-				current = nil,
 				current = percent / 100
 			})
 		else
@@ -2379,7 +2347,6 @@ function UnitNetworkHandler:set_armor(unit, percent, sender)
 		managers.hud:set_teammate_armor(character_data.panel_id, {
 			max = 1,
 			total = 1,
-			current = nil,
 			current = percent / 100
 		})
 	else
@@ -2401,7 +2368,6 @@ function UnitNetworkHandler:set_health(unit, percent, sender)
 		managers.hud:set_teammate_health(character_data.panel_id, {
 			max = 1,
 			total = 1,
-			current = nil,
 			current = health_ratio
 		})
 	else
@@ -2641,8 +2607,6 @@ function UnitNetworkHandler:mission_ended(win, num_is_inside, sender)
 	if managers.platform:presence() == "Playing" then
 		if win then
 			game_state_machine:change_state_by_name("victoryscreen", {
-				personal_win = nil,
-				num_winners = nil,
 				num_winners = num_is_inside,
 				personal_win = not managers.groupai:state()._failed_point_of_no_return and alive(managers.player:player_unit())
 			})
@@ -2720,11 +2684,6 @@ function UnitNetworkHandler:sync_player_kill_statistic(tweak_table_name, is_head
 	end
 
 	local data = {
-		head_shot = nil,
-		name = nil,
-		stats_name = nil,
-		weapon_unit = nil,
-		variant = nil,
 		name = tweak_table_name,
 		stats_name = stats_name,
 		head_shot = is_headshot,
@@ -2879,12 +2838,6 @@ function UnitNetworkHandler:start_timespeed_effect(effect_id, timer_name, affect
 	end
 
 	local effect_desc = {
-		fade_in = nil,
-		speed = nil,
-		timer = nil,
-		affect_timer = nil,
-		fade_out = nil,
-		sustain = nil,
 		timer = timer_name,
 		affect_timer = affect_timer_names,
 		speed = speed,
@@ -3653,17 +3606,13 @@ end
 local function warcry_dmg_func(peer_name, data)
 	local percent = Utl.mul_to_string_percent(data)
 	local notification_data = {
-		notification_type = nil,
 		icon = "test_icon",
 		force = true,
 		id = "skill_ammo_warcry_from",
-		text = nil,
 		priority = 1,
 		duration = 5,
 		notification_type = HUDNotification.ICON,
 		text = managers.localization:text("skill_ammo_warcry_from", {
-			PERCENT = nil,
-			NAME = nil,
 			NAME = peer_name,
 			PERCENT = percent
 		})

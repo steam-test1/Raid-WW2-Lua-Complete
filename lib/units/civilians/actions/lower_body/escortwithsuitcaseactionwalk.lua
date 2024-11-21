@@ -1,10 +1,7 @@
 EscortWithSuitcaseActionWalk = EscortWithSuitcaseActionWalk or class(CopActionWalk)
 EscortWithSuitcaseActionWalk._walk_anim_velocities = {
-	stand = nil,
 	stand = {
-		hos = nil,
 		hos = {
-			walk = nil,
 			walk = {
 				l = 93,
 				bwd = 70,
@@ -15,11 +12,8 @@ EscortWithSuitcaseActionWalk._walk_anim_velocities = {
 	}
 }
 EscortWithSuitcaseActionWalk._walk_anim_lengths = {
-	stand = nil,
 	stand = {
-		hos = nil,
 		hos = {
-			walk = nil,
 			walk = {
 				l = 45,
 				bwd = 32,
@@ -42,11 +36,8 @@ end
 
 EscortPrisonerActionWalk = EscortPrisonerActionWalk or class(CopActionWalk)
 EscortPrisonerActionWalk._walk_anim_velocities = {
-	stand = nil,
 	stand = {
-		ntl = nil,
 		ntl = {
-			run = nil,
 			run = {
 				l = 170,
 				bwd = 170,
@@ -57,11 +48,8 @@ EscortPrisonerActionWalk._walk_anim_velocities = {
 	}
 }
 EscortPrisonerActionWalk._walk_anim_lengths = {
-	stand = nil,
 	stand = {
-		ntl = nil,
 		ntl = {
-			run = nil,
 			run = {
 				l = 25,
 				bwd = 19,

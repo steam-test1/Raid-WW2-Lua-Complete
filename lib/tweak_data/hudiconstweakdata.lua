@@ -2,7 +2,6 @@ HudIconsTweakData = HudIconsTweakData or class()
 
 function HudIconsTweakData:init()
 	self.scroll_up = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			0,
@@ -12,7 +11,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.scroll_dn = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			15,
@@ -22,7 +20,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.scrollbar = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			30,
@@ -32,7 +29,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_buy = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			45,
@@ -42,7 +38,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_repair = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			45,
@@ -52,7 +47,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_addon = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			45,
@@ -62,7 +56,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_equipped = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			45,
@@ -72,7 +65,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_locked = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			0,
@@ -82,7 +74,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlebg = {
-		texture_rect = nil,
 		texture = "guis/textures/scroll_items",
 		texture_rect = {
 			45,
@@ -92,7 +83,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill0 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			0,
@@ -102,7 +92,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill1 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			0,
@@ -112,7 +101,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill2 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			16,
@@ -122,7 +110,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill3 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			32,
@@ -132,7 +119,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill4 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			48,
@@ -142,7 +128,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill5 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			0,
@@ -152,7 +137,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill6 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			16,
@@ -162,7 +146,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill7 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			32,
@@ -172,7 +155,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill8 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			48,
@@ -182,7 +164,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill9 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			0,
@@ -192,7 +173,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill10 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			16,
@@ -202,7 +182,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill11 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			32,
@@ -212,7 +191,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill12 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			48,
@@ -222,7 +200,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill13 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			0,
@@ -232,7 +209,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill14 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			16,
@@ -242,7 +218,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill15 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			32,
@@ -252,7 +227,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.icon_circlefill16 = {
-		texture_rect = nil,
 		texture = "guis/textures/circlefill",
 		texture_rect = {
 			48,
@@ -262,7 +236,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.fallback = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			480,
@@ -272,7 +245,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.develop = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			0,
@@ -282,7 +254,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.locked = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			192,
@@ -292,7 +263,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.loading = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			464,
@@ -302,7 +272,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.beretta92 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			0,
@@ -312,7 +281,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.m4 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			48,
@@ -322,7 +290,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.r870_shotgun = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			96,
@@ -332,7 +299,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mp5 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			144,
@@ -342,7 +308,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.c45 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			192,
@@ -352,7 +317,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.raging_bull = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -362,7 +326,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mossberg = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			288,
@@ -372,7 +335,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.hk21 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			384,
@@ -382,7 +344,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.m14 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			336,
@@ -392,7 +353,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mac11 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -402,7 +362,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.glock = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			368,
@@ -412,7 +371,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.ak = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			416,
@@ -422,7 +380,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.m79 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			464,
@@ -432,7 +389,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_vial = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -442,7 +398,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_standard = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -452,7 +407,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_revive = {
-		texture_rect = nil,
 		texture = "ui/atlas/raid_atlas_waypoint",
 		texture_rect = {
 			320,
@@ -462,7 +416,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_rescue = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			464,
@@ -472,7 +425,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_trade = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -482,7 +434,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_powersupply = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			70,
@@ -492,7 +443,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_watersupply = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			104,
@@ -502,7 +452,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_drill = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			2,
@@ -512,7 +461,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_hack = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			2,
@@ -522,7 +470,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_talk = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			36,
@@ -532,7 +479,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_c4 = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			36,
@@ -542,7 +488,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_crowbar = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			70,
@@ -552,7 +497,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_planks = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			104,
@@ -562,7 +506,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_door = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			2,
@@ -572,7 +515,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_saw = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			36,
@@ -582,7 +524,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_bag = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			70,
@@ -592,7 +533,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_exit = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			104,
@@ -602,7 +542,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_can = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			2,
@@ -612,7 +551,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_target = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			36,
@@ -622,7 +560,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_key = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			70,
@@ -632,7 +569,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_winch = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			104,
@@ -642,7 +578,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_escort = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			138,
@@ -652,7 +587,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_powerbutton = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			172,
@@ -662,7 +596,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_server = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			206,
@@ -672,7 +605,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_powercord = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -682,7 +614,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_phone = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			480,
@@ -692,7 +623,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_scrubs = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			480,
@@ -702,7 +632,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_sentry = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			480,
@@ -712,9 +641,7 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_suspicious = {
-		texture_rect_over = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
-		texture_rect = nil,
 		texture_rect = {
 			0,
 			0,
@@ -729,7 +656,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_detected = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			64,
@@ -739,7 +665,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_investigating = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			0,
@@ -749,7 +674,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_aiming = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			0,
@@ -759,7 +683,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_calling_in = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			96,
@@ -769,9 +692,7 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_spotter_progress = {
-		texture_rect_over = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
-		texture_rect = nil,
 		texture_rect = {
 			0,
 			0,
@@ -786,7 +707,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.wp_spotter_barrage = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			416,
@@ -796,7 +716,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_trip_mine = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			0,
@@ -806,7 +725,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_ammo_bag = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			48,
@@ -816,7 +734,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_doctor_bag = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			96,
@@ -826,7 +743,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_ecm_jammer = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			272,
@@ -836,7 +752,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_bank_manager_key = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			288,
@@ -846,7 +761,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_chavez_key = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			192,
@@ -856,7 +770,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_drill = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -866,7 +779,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_ejection_seat = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			384,
@@ -876,7 +788,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_saw = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			336,
@@ -886,7 +797,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_cutter = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			384,
@@ -896,7 +806,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_hack_ipad = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -906,7 +815,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_gold = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			384,
@@ -916,7 +824,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_thermite = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			288,
@@ -926,7 +833,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_bleed_out = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			96,
@@ -936,7 +842,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_planks = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			144,
@@ -946,7 +851,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_sentry = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			320,
@@ -956,7 +860,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_stash_server = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			272,
@@ -966,7 +869,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_vialOK = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			336,
@@ -976,7 +878,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.equipment_vial = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			416,
@@ -986,7 +887,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_free = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			48,
@@ -996,7 +896,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_trade = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -1006,7 +905,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_intimidate = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			96,
@@ -1016,7 +914,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_money_wrap = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			144,
@@ -1026,7 +923,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_christmas_present = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			144,
@@ -1036,7 +932,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_powerbox = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			192,
@@ -1046,7 +941,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_gold = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			384,
@@ -1056,7 +950,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_open_door = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			96,
@@ -1066,7 +959,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_diamond = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			432,
@@ -1076,7 +968,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_powercord = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			272,
@@ -1086,7 +977,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_help = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			192,
@@ -1096,7 +986,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_answerphone = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			368,
@@ -1106,7 +995,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_patientfile = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			320,
@@ -1116,7 +1004,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_wirecutter = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			464,
@@ -1126,7 +1013,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_elevator = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			464,
@@ -1136,7 +1022,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_sentrygun = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			320,
@@ -1146,7 +1031,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_keyboard = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			368,
@@ -1156,7 +1040,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.laptop_objective = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -1166,7 +1049,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_bar = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			1,
@@ -1176,7 +1058,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.interaction_bar_background = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			0,
@@ -1186,7 +1067,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_health_background = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -1196,7 +1076,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_health_armor = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			252,
@@ -1206,7 +1085,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_health_health = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			264,
@@ -1216,7 +1094,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_talk = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			240,
@@ -1226,7 +1103,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_in_custody = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			0,
@@ -1236,7 +1112,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_downed = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			128,
@@ -1246,7 +1121,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_cuffed = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			288,
@@ -1256,7 +1130,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_electrified = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			336,
@@ -1266,7 +1139,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.mugshot_turret = {
-		texture_rect = nil,
 		texture = "ui/ingame/textures/hud/hud_icons_01",
 		texture_rect = {
 			64,
@@ -1276,7 +1148,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.control_marker = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			352,
@@ -1286,7 +1157,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.control_left = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			304,
@@ -1296,7 +1166,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.control_right = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			256,
@@ -1306,7 +1175,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.assault = {
-		texture_rect = nil,
 		texture = "guis/textures/hud_icons",
 		texture_rect = {
 			276,
@@ -1316,7 +1184,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.raid_prisoner = {
-		texture_rect = nil,
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			241,
@@ -1326,7 +1193,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.raid_wp_wait = {
-		texture_rect = nil,
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			201,
@@ -1336,7 +1202,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.waypoint_escort_stand = {
-		texture_rect = nil,
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			281,
@@ -1346,7 +1211,6 @@ function HudIconsTweakData:init()
 		}
 	}
 	self.waypoint_escort_crouch = {
-		texture_rect = nil,
 		texture = "ui/atlas/raid_atlas_waypoints",
 		texture_rect = {
 			241,

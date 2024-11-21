@@ -10,63 +10,6 @@ end
 function StatisticsManager:_setup(reset)
 	self._defaults = {
 		killed = {
-			german_heavy_commander_backup = nil,
-			german_light_commander_backup_shotgun = nil,
-			german_grunt_light = nil,
-			german_grunt_light_mp38 = nil,
-			german_grunt_light_kar98 = nil,
-			total = nil,
-			other = nil,
-			soviet_nkvd_int_security_captain_b = nil,
-			soviet_nkvd_int_security_captain = nil,
-			german_spotter = nil,
-			german_sniper = nil,
-			german_flamer = nil,
-			german_officer = nil,
-			german_og_commander = nil,
-			german_commander = nil,
-			german_waffen_ss_shotgun = nil,
-			german_waffen_ss_kar98 = nil,
-			german_waffen_ss = nil,
-			german_fallschirmjager_heavy_shotgun = nil,
-			german_fallschirmjager_heavy_kar98 = nil,
-			german_fallschirmjager_heavy_mp38 = nil,
-			german_fallschirmjager_heavy = nil,
-			german_fallschirmjager_light_shotgun = nil,
-			german_fallschirmjager_light_kar98 = nil,
-			german_fallschirmjager_light_mp38 = nil,
-			german_fallschirmjager_light = nil,
-			german_grunt_heavy_mp38 = nil,
-			german_grunt_heavy = nil,
-			german_grunt_mid_shotgun = nil,
-			german_grunt_mid_kar98 = nil,
-			german_grunt_mid_mp38 = nil,
-			german_grunt_mid = nil,
-			german_light_commander_backup_kar98 = nil,
-			german_light_commander_backup = nil,
-			german_gasmask_shotgun = nil,
-			german_gasmask = nil,
-			german_heavy_shotgun = nil,
-			german_heavy_kar98 = nil,
-			german_heavy = nil,
-			german_light_shotgun = nil,
-			german_light_kar98 = nil,
-			german_light = nil,
-			german_gebirgsjager_heavy_shotgun = nil,
-			german_gebirgsjager_heavy_kar98 = nil,
-			german_gebirgsjager_heavy_mp38 = nil,
-			german_gebirgsjager_heavy = nil,
-			german_gebirgsjager_light_shotgun = nil,
-			german_gebirgsjager_light_kar98 = nil,
-			german_gebirgsjager_light_mp38 = nil,
-			german_gebirgsjager_light = nil,
-			german_grunt_heavy_shotgun = nil,
-			german_grunt_heavy_kar98 = nil,
-			german_gasmask_commander_backup_shotgun = nil,
-			german_gasmask_commander_backup = nil,
-			german_heavy_commander_backup_shotgun = nil,
-			german_heavy_commander_backup_kar98 = nil,
-			german_grunt_light_shotgun = nil,
 			german_grunt_light = {
 				count = 0,
 				dismembered = 0,
@@ -919,7 +862,6 @@ function StatisticsManager:publish_camp_stats_to_steam()
 		stats[stat_name] = {
 			method = "set",
 			type = "int",
-			value = nil,
 			value = tonumber(stat_value) or 0
 		}
 	end
@@ -936,13 +878,11 @@ function StatisticsManager:publish_top_stats_to_steam()
 		ach_top_stats_award = {
 			method = "set",
 			type = "int",
-			value = nil,
 			value = self._global.misc.best_of_stats or 0
 		},
 		ach_all_3_top_stats_award = {
 			method = "set",
 			type = "int",
-			value = nil,
 			value = self._global.misc.best_of_stats_all_3 or 0
 		}
 	}
@@ -1154,12 +1094,10 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 				}
 				stats["weapon_shots_" .. weapon_name] = {
 					type = "int",
-					value = nil,
 					value = weapon_data.total
 				}
 				stats["weapon_hits_" .. weapon_name] = {
 					type = "int",
-					value = nil,
 					value = weapon_data.hits
 				}
 			end
@@ -1184,7 +1122,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		if weapon_data.count > 0 and table.contains(weapon_list, weapon_name) then
 			stats["weapon_kills_" .. weapon_name] = {
 				type = "int",
-				value = nil,
 				value = weapon_data.count
 			}
 		end
@@ -1194,7 +1131,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		if melee_kill > 0 and table.contains(melee_list, melee_name) then
 			stats["melee_kills_" .. melee_name] = {
 				type = "int",
-				value = nil,
 				value = melee_kill
 			}
 		end
@@ -1204,7 +1140,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		if grenade_kill > 0 and table.contains(grenade_list, grenade_name) then
 			stats["grenade_kills_" .. grenade_name] = {
 				type = "int",
-				value = nil,
 				value = grenade_kill
 			}
 		end
@@ -1214,7 +1149,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		if enemy_data.count > 0 and enemy_name ~= "total" and table.contains(enemy_list, enemy_name) then
 			stats["enemy_kills_" .. enemy_name] = {
 				type = "int",
-				value = nil,
 				value = enemy_data.count
 			}
 		end
@@ -1222,309 +1156,256 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 
 	stats.ach_kill_enemies = {
 		type = "int",
-		value = nil,
 		value = session.killed.total.count
 	}
 	stats.ach_dismember_enemies = {
 		type = "int",
-		value = nil,
 		value = session.killed.total.dismembered
 	}
 	stats.ach_kill_enemies_with_headshot = {
 		type = "int",
-		value = nil,
 		value = session.killed.total.head_shots
 	}
 	stats.ach_kill_enemies_with_melee = {
 		type = "int",
-		value = nil,
 		value = self:session_killed_by_melee()
 	}
 	stats.ach_kill_enemies_with_grenades = {
 		type = "int",
-		value = nil,
 		value = self:session_killed_by_stat_group("grenade")
 	}
 	stats.ach_kill_enemies_with_mines = {
 		type = "int",
-		value = nil,
 		value = self:session_killed_by_stat_group("mine")
 	}
 	stats.ach_kill_enemies_with_secondary_weap = {
 		type = "int",
-		value = nil,
 		value = self:session_killed_by_secondary_weapons()
 	}
 	stats.ach_kill_enemies_with_turret = {
 		type = "int",
-		value = nil,
 		value = session.killed_by_turret.count or 0
 	}
 	stats.ach_run_over_enemies_with_jeep = {
 		type = "int",
-		value = nil,
 		value = session.killed_by_vehicle.count or 0
 	}
 	stats.challenge_cards_complete_operation_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_operation_common_count or 0
 	}
 	stats.challenge_cards_complete_operation_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_operation_rare_count or 0
 	}
 	stats.challenge_cards_complete_operation_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_operation_halloween_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_raid_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_raid_common_count or 0
 	}
 	stats.challenge_cards_complete_raid_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_raid_rare_count or 0
 	}
 	stats.challenge_cards_complete_raid_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_raid_halloween_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_start_operation_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_operation_common_count or 0
 	}
 	stats.challenge_cards_start_operation_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_operation_rare_count or 0
 	}
 	stats.challenge_cards_start_operation_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_start_operation_halloween_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_start_raid_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_raid_common_count or 0
 	}
 	stats.challenge_cards_start_raid_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_raid_rare_count or 0
 	}
 	stats.challenge_cards_start_raid_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_start_raid_halloween_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.challenge_cards.complete_operation_common_count or 0) + (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_operation_uncommon_count or 0) + (self._global.challenge_cards.complete_operation_halloween_count or 0)
 	}
 	stats.challenge_cards_complete_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.challenge_cards.complete_raid_common_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0) + (self._global.challenge_cards.complete_raid_uncommon_count or 0) + (self._global.challenge_cards.complete_raid_halloween_count or 0)
 	}
 	stats.challenge_cards_start_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.challenge_cards.start_operation_common_count or 0) + (self._global.challenge_cards.start_operation_rare_count or 0) + (self._global.challenge_cards.start_operation_uncommon_count or 0) + (self._global.challenge_cards.start_operation_halloween_count or 0)
 	}
 	stats.challenge_cards_start_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.challenge_cards.start_raid_common_count or 0) + (self._global.challenge_cards.start_raid_rare_count or 0) + (self._global.challenge_cards.start_raid_uncommon_count or 0) + (self._global.challenge_cards.start_raid_halloween_count or 0)
 	}
 	stats.challenge_cards_complete_mission_rare_total = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0)
 	}
 	stats.challenge_cards_complete_mission_grand_total = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.challenge_cards.complete_mission_grand_total or 0
 	}
 	stats.booster_cards_complete_operation_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_operation_common_count or 0
 	}
 	stats.booster_cards_complete_operation_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_operation_rare_count or 0
 	}
 	stats.booster_cards_complete_operation_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_operation_uncommon_count or 0
 	}
 	stats.booster_cards_complete_raid_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_raid_common_count or 0
 	}
 	stats.booster_cards_complete_raid_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_raid_rare_count or 0
 	}
 	stats.booster_cards_complete_raid_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_raid_uncommon_count or 0
 	}
 	stats.booster_cards_start_operation_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_operation_common_count or 0
 	}
 	stats.booster_cards_start_operation_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_operation_rare_count or 0
 	}
 	stats.booster_cards_start_operation_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_operation_uncommon_count or 0
 	}
 	stats.booster_cards_start_raid_common_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_raid_common_count or 0
 	}
 	stats.booster_cards_start_raid_rare_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_raid_rare_count or 0
 	}
 	stats.booster_cards_start_raid_uncommon_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.start_raid_uncommon_count or 0
 	}
 	stats.booster_cards_complete_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.booster_cards.complete_operation_common_count or 0) + (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_operation_uncommon_count or 0) + (self._global.booster_cards.complete_operation_halloween_count or 0)
 	}
 	stats.booster_cards_complete_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.booster_cards.complete_raid_common_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0) + (self._global.booster_cards.complete_raid_uncommon_count or 0) + (self._global.booster_cards.complete_raid_halloween_count or 0)
 	}
 	stats.booster_cards_start_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.booster_cards.start_operation_common_count or 0) + (self._global.booster_cards.start_operation_rare_count or 0) + (self._global.booster_cards.start_operation_uncommon_count or 0) + (self._global.booster_cards.start_operation_halloween_count or 0)
 	}
 	stats.booster_cards_start_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.booster_cards.start_raid_common_count or 0) + (self._global.booster_cards.start_raid_rare_count or 0) + (self._global.booster_cards.start_raid_uncommon_count or 0) + (self._global.booster_cards.start_raid_halloween_count or 0)
 	}
 	stats.booster_cards_complete_mission_rare_total = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0)
 	}
 	stats.booster_cards_complete_mission_grand_total = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.booster_cards.complete_mission_grand_total or 0
 	}
 	stats.ach_open_loot_crates = {
 		type = "int",
-		value = nil,
 		value = session.misc.open_loot_crate or 0
 	}
 	stats.ach_reach_level_40_count = {
 		method = "set",
 		type = "int",
-		value = nil,
 		value = self._global.misc.character_level_40_count or 0
 	}
 	stats.dogtags_collected = {
 		type = "int",
-		value = nil,
 		value = session.misc.dogtags_collected or 0
 	}
 	local count_revives = session.revives.player_count + session.revives.npc_count
 	stats.ach_revive_teammates = {
 		type = "int",
-		value = nil,
 		value = count_revives
 	}
 
@@ -1585,37 +1466,31 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 			stats["level_" .. level_name .. "_completed"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.completed
 			}
 			stats["level_" .. level_name .. "_started"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.started
 			}
 			stats["level_" .. level_name .. "_drop_in"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.drop_in
 			}
 			stats["level_" .. level_name .. "_quit"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.quited
 			}
 			stats["level_" .. level_name .. "_from_beginning"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.from_beginning
 			}
 			stats["level_" .. level_name .. "_time"] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = level_data.time
 			}
 		end
@@ -1628,7 +1503,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 			stats["jobs_" .. job_name] = {
 				type = "int",
 				method = "set",
-				value = nil,
 				value = job_data
 			}
 		end
@@ -1640,7 +1514,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 
 			stats["mission_" .. name] = {
 				type = "int",
-				value = nil,
 				value = count
 			}
 		end
@@ -1659,7 +1532,6 @@ function StatisticsManager:publish_level_to_steam()
 	stats.player_level = {
 		type = "int",
 		method = "set",
-		value = nil,
 		value = current_level
 	}
 	local max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
@@ -1694,7 +1566,6 @@ function StatisticsManager:publish_gold_to_steam()
 		stats.player_gold_amount = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = player_gold_amount
 		}
 
@@ -1752,7 +1623,6 @@ function StatisticsManager:publish_equipped_to_steam()
 		stats.equipped_primary = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = primary_index
 		}
 	end
@@ -1764,7 +1634,6 @@ function StatisticsManager:publish_equipped_to_steam()
 		stats.equipped_secondary = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = secondary_index
 		}
 	end
@@ -1776,7 +1645,6 @@ function StatisticsManager:publish_equipped_to_steam()
 		stats.equipped_melee = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = melee_index
 		}
 	end
@@ -1788,7 +1656,6 @@ function StatisticsManager:publish_equipped_to_steam()
 		stats.equipped_grenade = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = grenade_index
 		}
 	end
@@ -1800,7 +1667,6 @@ function StatisticsManager:publish_equipped_to_steam()
 		stats.equipped_character = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = character_index
 		}
 	end
@@ -1851,7 +1717,6 @@ function StatisticsManager:check_version()
 		stats.stat_version = {
 			type = "int",
 			method = "set",
-			value = nil,
 			value = CURRENT_VERSION
 		}
 	end
@@ -2257,7 +2122,6 @@ end
 function StatisticsManager:recieved_experience(data)
 	self._global.experience[data.size] = self._global.experience[data.size] or {
 		count = 0,
-		actions = nil,
 		actions = {}
 	}
 	self._global.experience[data.size].count = self._global.experience[data.size].count + 1
@@ -2267,7 +2131,6 @@ function StatisticsManager:recieved_experience(data)
 	if self._session_started then
 		self._global.session.experience[data.size] = self._global.session.experience[data.size] or {
 			count = 0,
-			actions = nil,
 			actions = {}
 		}
 		self._global.session.experience[data.size].count = self._global.session.experience[data.size].count + 1
@@ -2699,7 +2562,6 @@ function StatisticsManager:calculate_top_stats(all_peers)
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 		stats[stat_id] = {
 			score = 0,
-			id = nil,
 			score_difference = 0,
 			weight = 0,
 			id = stat_id
@@ -2770,7 +2632,6 @@ function StatisticsManager:calculate_bottom_stats(all_peers)
 	for index, bottom_stat in pairs(tweak_data.statistics.bottom_stats_calculated) do
 		stats[bottom_stat] = {
 			score_difference = 0,
-			id = nil,
 			weight = 0,
 			id = bottom_stat
 		}
@@ -2850,8 +2711,6 @@ function StatisticsManager:calculate_downed_stats(all_peers)
 	end
 
 	self.downed_stats = {
-		all_players_downed = nil,
-		total_downs = nil,
 		total_downs = total_downs,
 		all_players_downed = all_players_downed
 	}
@@ -2863,30 +2722,18 @@ function StatisticsManager:set_top_stats(top_stat_1_id, top_stat_1_peer_id, top_
 	self.top_stats = {}
 
 	table.insert(self.top_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = top_stat_1_id,
 		peer_id = top_stat_1_peer_id,
 		peer_name = top_stat_1_peer_name,
 		score = top_stat_1_score
 	})
 	table.insert(self.top_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = top_stat_2_id,
 		peer_id = top_stat_2_peer_id,
 		peer_name = top_stat_2_peer_name,
 		score = top_stat_2_score
 	})
 	table.insert(self.top_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = top_stat_3_id,
 		peer_id = top_stat_3_peer_id,
 		peer_name = top_stat_3_peer_name,
@@ -2912,30 +2759,18 @@ function StatisticsManager:set_bottom_stats(bottom_stat_1_id, bottom_stat_1_peer
 	self.bottom_stats = {}
 
 	table.insert(self.bottom_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = bottom_stat_1_id,
 		peer_id = bottom_stat_1_peer_id,
 		peer_name = bottom_stat_1_peer_name,
 		score = bottom_stat_1_score
 	})
 	table.insert(self.bottom_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = bottom_stat_2_id,
 		peer_id = bottom_stat_2_peer_id,
 		peer_name = bottom_stat_2_peer_name,
 		score = bottom_stat_2_score
 	})
 	table.insert(self.bottom_stats, {
-		id = nil,
-		peer_name = nil,
-		score = nil,
-		peer_id = nil,
 		id = bottom_stat_3_id,
 		peer_id = bottom_stat_3_peer_id,
 		peer_name = bottom_stat_3_peer_name,
@@ -2945,8 +2780,6 @@ end
 
 function StatisticsManager:set_downed_stats(total_downs, all_players_downed)
 	self.downed_stats = {
-		all_players_downed = nil,
-		total_downs = nil,
 		total_downs = total_downs,
 		all_players_downed = all_players_downed
 	}
@@ -3007,7 +2840,6 @@ end
 
 function StatisticsManager:sync_save(data)
 	local state = {
-		session_started = nil,
 		session_started = self._session_started
 	}
 	data.StatisticsManager = state
@@ -3026,27 +2858,6 @@ end
 
 function StatisticsManager:save(data)
 	local state = {
-		killed_by_vehicle = nil,
-		killed_by_turret = nil,
-		killed_by_grenade = nil,
-		killed_by_weapon = nil,
-		killed_by_melee = nil,
-		play_time = nil,
-		misc = nil,
-		experience = nil,
-		camp = nil,
-		health = nil,
-		reloads = nil,
-		challenge_cards = nil,
-		booster_cards = nil,
-		killed = nil,
-		tier_4_weapon_skill_bought = nil,
-		downed = nil,
-		shots_fired = nil,
-		objectives = nil,
-		revives = nil,
-		sessions = nil,
-		shots_by_weapon = nil,
 		downed = self._global.downed,
 		killed = self._global.killed,
 		objectives = self._global.objectives,

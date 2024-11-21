@@ -40,8 +40,6 @@ end
 
 function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 	local params_xp_image = {
-		texture_rect = nil,
-		texture = nil,
 		x = 0,
 		name = "xp_image",
 		texture = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture,
@@ -53,15 +51,9 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 
 	local params_player_name = {
 		align = "left",
-		font_size = nil,
-		font = nil,
-		color = nil,
-		y = nil,
 		layer = 1,
 		text = "aa",
 		name = "peer_xp_name_label",
-		w = nil,
-		x = nil,
 		x = RaidGUIControlExperiencePeerLoot.TEXT_X,
 		y = RaidGUIControlExperiencePeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlExperiencePeerLoot.TEXT_X,
@@ -76,15 +68,9 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 
 	local params_customization_xp_value = {
 		align = "left",
-		font_size = nil,
-		font = nil,
-		color = nil,
-		y = nil,
 		layer = 1,
 		text = "a",
 		name = "customization_xp_value_label",
-		w = nil,
-		x = nil,
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlExperiencePeerLoot.NAME_PADDING_DOWN,
 		w = self._name_label:w(),

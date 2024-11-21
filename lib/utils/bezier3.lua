@@ -345,12 +345,6 @@ function recursive_bezier(write, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4,
 end
 
 return {
-	to_bezier2 = nil,
-	bounding_box = nil,
-	split = nil,
-	interpolate = nil,
-	length = nil,
-	point = nil,
 	bounding_box = bounding_box,
 	to_bezier2 = to_bezier2,
 	interpolate = interpolate,

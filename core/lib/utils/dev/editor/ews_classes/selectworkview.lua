@@ -110,8 +110,6 @@ function SelectWorkView:build_cbs()
 		self._continents_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_continent_cb"), {
-			cb = nil,
-			name = nil,
 			cb = cb,
 			name = name
 		})
@@ -247,9 +245,6 @@ function SelectWorkView:fill_views_list()
 					if string.find(v_name, filter, 1, true) then
 						local i = self._list:append_item(v_name)
 						self._views[j] = {
-							view = nil,
-							continent = nil,
-							name = nil,
 							view = view,
 							continent = c_name,
 							name = v_name

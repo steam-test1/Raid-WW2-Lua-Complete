@@ -162,15 +162,6 @@ end
 function VehicleDrivingExt:_setup_states()
 	local unit = self._unit
 	self._states = {
-		frozen = nil,
-		locked = nil,
-		secured = nil,
-		broken = nil,
-		driving = nil,
-		parked = nil,
-		inactive = nil,
-		invalid = nil,
-		blocked = nil,
 		broken = VehicleStateBroken:new(unit),
 		driving = VehicleStateDriving:new(unit),
 		inactive = VehicleStateInactive:new(unit),
@@ -322,8 +313,6 @@ function VehicleDrivingExt:_create_position_reservation()
 	if self._pos_reservation_id then
 		self._pos_reservation = {
 			radius = 500,
-			position = nil,
-			filter = nil,
 			position = self._unit:position(),
 			filter = self._pos_reservation_id
 		}
@@ -476,8 +465,6 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	end
 
 	table.insert(self._loot, {
-		carry_id = nil,
-		multiplier = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -510,8 +497,6 @@ function VehicleDrivingExt:sync_loot(carry_id, multiplier)
 	end
 
 	table.insert(self._loot, {
-		carry_id = nil,
-		multiplier = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -1016,7 +1001,6 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 
 					managers.dialog:queue_dialog(dialog, {
 						skip_idle_check = true,
-						instigator = nil,
 						instigator = player
 					})
 				end
@@ -1210,8 +1194,6 @@ function VehicleDrivingExt:find_exit_position(player)
 	local seat = self:find_seat_for_player(player)
 	local exit_position = self._unit:get_object(Idstring(VehicleDrivingExt.EXIT_PREFIX .. seat.name))
 	local result = {
-		position = nil,
-		rotation = nil,
 		position = exit_position:position(),
 		rotation = exit_position:rotation()
 	}
@@ -1259,8 +1241,6 @@ function VehicleDrivingExt:find_exit_position(player)
 		end
 
 		result = {
-			position = nil,
-			rotation = nil,
 			position = exit_position:position(),
 			rotation = exit_position:rotation()
 		}
@@ -1493,7 +1473,6 @@ function VehicleDrivingExt:on_vehicle_death()
 	if occupant then
 		managers.dialog:queue_dialog("gen_vehicle_at_0_percent", {
 			skip_idle_check = true,
-			instigator = nil,
 			instigator = occupant
 		})
 	end
@@ -1684,14 +1663,12 @@ function VehicleDrivingExt:_detect_npc_collisions()
 			if occupant then
 				managers.dialog:queue_dialog("gen_vehicle_hits_enemy", {
 					skip_idle_check = true,
-					instigator = nil,
 					instigator = occupant
 				})
 			end
 
 			local damage_ext = unit:character_damage()
 			local attack_data = {
-				damage = nil,
 				variant = "explosion",
 				damage = damage_ext._HEALTH_INIT or 1000
 			}
@@ -1830,7 +1807,6 @@ function VehicleDrivingExt:_detect_invalid_possition(t, dt)
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
 				skip_idle_check = true,
-				instigator = nil,
 				instigator = occupant
 			})
 		end
@@ -1982,7 +1958,6 @@ function VehicleDrivingExt:_play_sound_events(t, dt)
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_rough_ride", {
 				skip_idle_check = true,
-				instigator = nil,
 				instigator = occupant
 			})
 		end
@@ -2164,16 +2139,8 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		action = nil,
-		rot = nil,
-		fail_clbk = nil,
-		area = nil,
-		nav_seg = nil,
 		destroy_clbk_key = false,
-		pos = nil,
 		pose = "stand",
-		objective_type = nil,
-		haste = nil,
 		type = "act",
 		haste = haste,
 		nav_seg = align_nav_seg,
@@ -2183,10 +2150,8 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
 			align_sync = false,
-			variant = nil,
 			needs_full_blend = true,
 			body_part = 1,
-			blocks = nil,
 			type = "act",
 			variant = team_ai_animation,
 			blocks = {
@@ -2200,15 +2165,11 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
 	}
 	local SO_descriptor = {
-		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
-		verification_clbk = nil,
-		search_pos = nil,
 		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
-		objective = nil,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),
@@ -2216,10 +2177,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
 	seat.drive_SO_data = {
-		align_area = nil,
-		ride_objective = nil,
 		SO_registered = true,
-		SO_id = nil,
 		SO_id = SO_id,
 		align_area = align_area,
 		ride_objective = ride_objective
@@ -2365,8 +2323,6 @@ function VehicleDrivingExt:on_impact(ray, gforce, velocity)
 	end
 
 	local attack_data = {
-		damage = nil,
-		col_ray = nil,
 		damage = damage_ammount,
 		col_ray = ray
 	}
@@ -2431,9 +2387,6 @@ end
 
 function VehicleDrivingExt:save(data)
 	data.vehicle_driving = {
-		sequence_applied = nil,
-		accepting_loot_enabled = nil,
-		loot_interaction_enabled = nil,
 		loot_interaction_enabled = self._loot_interaction_enabled,
 		accepting_loot_enabled = self._accepting_loot_enabled,
 		sequence_applied = self._skin_sequence

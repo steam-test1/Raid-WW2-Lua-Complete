@@ -5,8 +5,6 @@ require("lib/managers/test/TestPhysXCrash")
 require("lib/managers/test/TestUtilities")
 
 local tests = {
-	PhysXRandom = nil,
-	PhysX = nil,
 	PhysX = TestPhysXCrash,
 	PhysXRandom = TestPhysXCrashRandom
 }

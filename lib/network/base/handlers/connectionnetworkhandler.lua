@@ -363,10 +363,6 @@ function ConnectionNetworkHandler:lobby_info(level, character, mask_set, sender)
 
 		if lobby_menu and lobby_menu.renderer:is_open() then
 			lobby_menu.renderer:_set_player_slot(peer:id(), {
-				peer_id = nil,
-				character = nil,
-				level = nil,
-				name = nil,
 				name = peer:name(),
 				peer_id = peer:id(),
 				level = level,
@@ -712,7 +708,6 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 
 		managers.statistics:shot_fired({
 			hit = false,
-			weapon_unit = nil,
 			weapon_unit = weapon_unit
 		})
 
@@ -720,7 +715,6 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 			managers.statistics:shot_fired({
 				hit = true,
 				skip_bullet_count = true,
-				weapon_unit = nil,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -743,7 +737,6 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 
 		managers.statistics:shot_fired({
 			hit = false,
-			weapon_unit = nil,
 			weapon_unit = weapon_unit
 		})
 
@@ -751,7 +744,6 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 			managers.statistics:shot_fired({
 				hit = true,
 				skip_bullet_count = true,
-				weapon_unit = nil,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -828,8 +820,6 @@ function ConnectionNetworkHandler:send_loaded_packages(package, count, sender)
 	Global.game_settings.packages_packed = Global.game_settings.packages_packed or {}
 
 	table.insert(Global.game_settings.packages_packed, {
-		count = nil,
-		package = nil,
 		package = package,
 		count = count
 	})
@@ -968,9 +958,6 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 	managers.lootdrop:set_picked_up_total(picked_up_total)
 	managers.notification:add_notification({
 		duration = 2,
-		total = nil,
-		acquired = nil,
-		notification_type = nil,
 		id = "hud_hint_grabbed_nazi_gold",
 		shelf_life = 5,
 		notification_type = HUDNotification.DOG_TAG,
@@ -994,8 +981,6 @@ function ConnectionNetworkHandler:start_statistics_session(from_beginning, drop_
 	end
 
 	managers.statistics:start_session({
-		from_beginning = nil,
-		drop_in = nil,
 		from_beginning = from_beginning,
 		drop_in = drop_in
 	})
@@ -1007,9 +992,6 @@ function ConnectionNetworkHandler:stop_statistics_session(success, quit, end_typ
 	end
 
 	managers.statistics:stop_session({
-		success = nil,
-		type = nil,
-		quit = nil,
 		success = success,
 		quit = quit,
 		type = end_type
@@ -1112,7 +1094,6 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 
 	if managers.hud and character_data then
 		managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-			current = nil,
 			total = 100,
 			current = fill_percentage
 		})
@@ -1184,7 +1165,6 @@ function ConnectionNetworkHandler:sync_queue_dialog(id, instigator, sender)
 	if Network:is_server() then
 		managers.dialog:queue_dialog(id, {
 			skip_idle_check = true,
-			instigator = nil,
 			instigator = instigator
 		})
 	else
@@ -1371,10 +1351,6 @@ function ConnectionNetworkHandler:sync_warcry_team_buff_status_effect_add(skill_
 		local buff_icon = skill_data.upgrades_team_buff_icon
 
 		managers.hud:add_status_effect({
-			tier = nil,
-			id = nil,
-			color = nil,
-			icon = nil,
 			id = skill_id,
 			icon = buff_icon,
 			color = tweak_data.gui.colors.progress_green,

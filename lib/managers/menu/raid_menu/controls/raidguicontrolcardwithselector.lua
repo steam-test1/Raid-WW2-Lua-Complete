@@ -11,20 +11,15 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._params.hover_selects = params.hover_selects or false
 	self._select_background_panel = self._object:panel({
 		y = 0,
-		w = nil,
 		x = 0,
 		visible = false,
-		h = nil,
 		layer = 1,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h
 	})
 	self._select_background = self._select_background_panel:rect({
 		y = 0,
-		w = nil,
 		x = 0,
-		color = nil,
-		h = nil,
 		layer = 2,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h,
@@ -32,11 +27,7 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	})
 	self._top_select_triangle = self._select_background_panel:image({
 		y = 0,
-		w = nil,
 		x = 0,
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
 		layer = 15,
 		w = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		h = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
@@ -44,12 +35,6 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect
 	})
 	self._bottom_select_triangle = self._select_background_panel:image({
-		y = nil,
-		w = nil,
-		x = nil,
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
 		layer = 15,
 		x = self._select_background_panel:w() - RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		y = self._select_background_panel:h() - RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,

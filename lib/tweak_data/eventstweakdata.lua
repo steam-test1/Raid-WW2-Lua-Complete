@@ -22,37 +22,26 @@ function EventsTweakData:_init_active_duty_rewards()
 	self.login_rewards.active_duty = {
 		{
 			amount = 5,
-			icon = nil,
-			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_SINGLE
 		},
 		{
 			amount = 10,
-			icon = nil,
-			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_FEW
 		},
 		{
 			amount = 20,
-			icon = nil,
-			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_FEW
 		},
 		{
 			amount = 30,
-			icon = nil,
-			reward = nil,
 			reward = EventsTweakData.REWARD_TYPE_GOLD,
 			icon = EventsTweakData.REWARD_ICON_MANY
 		},
 		{
 			amount = 50,
-			icon = nil,
-			reward = nil,
-			icon_outlaw = nil,
 			reward = EventsTweakData.REWARD_TYPE_OUTLAW,
 			icon_outlaw = EventsTweakData.REWARD_ICON_OUTLAW,
 			icon = EventsTweakData.REWARD_ICON_MANY
@@ -64,27 +53,18 @@ function EventsTweakData:_init_halloween_rewards()
 	self.login_rewards.halloween = {
 		{
 			amount = 10,
-			generator_id = nil,
-			reward = nil,
-			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
 		},
 		{
 			amount = 20,
-			generator_id = nil,
-			reward = nil,
-			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
 		},
 		{
 			amount = 40,
-			generator_id = nil,
-			reward = nil,
-			icon = nil,
 			reward = self.REWARD_TYPE_CARD,
 			generator_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 			icon = self.REWARD_ICON_SINGLE
@@ -96,12 +76,8 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 	self.special_events.trick_or_treat = {
 		name_id = "hud_trick_or_treat_title",
 		challenge_id = "candy_gold_bar",
-		date = nil,
 		card_id = "ra_trick_or_treat",
-		milestones = nil,
 		camp_continent = "event_halloween",
-		game_logo = nil,
-		upgrades = nil,
 		accent_color = "progress_orange",
 		login_rewards = "halloween",
 		package = "packages/halloween_candy",
@@ -135,40 +111,31 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 		},
 		malus_effects = {
 			{
-				name = nil,
 				desc_id = "effect_set_bleedout_timer",
 				value = 15,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER,
 				desc_params = {
 					EFFECT_VALUE_1 = "15"
 				}
 			},
 			{
-				name = nil,
 				desc_id = "effect_player_slower_reload",
 				value = 0.8,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
 				desc_params = {
 					EFFECT_VALUE_1 = "20%"
 				}
 			},
 			{
-				name = nil,
 				desc_id = "effect_health_drain_per_minute",
 				value = -0.005,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN,
 				desc_params = {
 					EFFECT_VALUE_1 = "30%"
 				}
 			},
 			{
-				name = nil,
-				desc_id = nil,
 				value = 4,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
 				desc_id = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
 				desc_params = {
@@ -178,10 +145,7 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 			{
 				stage = 3,
 				desc_id = "effect_enemies_deal_increased_damage",
-				name = nil,
-				blocked_by = nil,
 				value = 1.15,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE,
 				desc_params = {
 					EFFECT_VALUE_1 = "15%"
@@ -191,10 +155,7 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 			{
 				stage = 3,
 				desc_id = "effect_enemies_health_increased",
-				name = nil,
-				blocked_by = nil,
 				value = 1.2,
-				desc_params = nil,
 				name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
 				desc_params = {
 					EFFECT_VALUE_1 = "20%"
@@ -205,7 +166,6 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				stage = 4,
 				desc_id = "effect_warcries_disabled",
 				chance = 50,
-				name = nil,
 				value = true,
 				name = BuffEffectManager.EFFECT_WARCRIES_DISABLED
 			},
@@ -213,9 +173,7 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				stage = 4,
 				desc_id = "effect_enemies_vulnerable_only_to_headshots",
 				chance = 30,
-				name = nil,
 				value = true,
-				blocked_by = nil,
 				name = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT,
 				blocked_by = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE
 			},
@@ -223,14 +181,11 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				stage = 4,
 				desc_id = "effect_headshot_doesnt_do_damage",
 				chance = 30,
-				name = nil,
 				value = true,
-				blocked_by = nil,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE,
 				blocked_by = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT
 			},
 			{
-				name = nil,
 				desc_id = "effect_shooting_your_primary_weapon_consumes_both_ammos",
 				stage = 5,
 				value = true,
@@ -241,7 +196,6 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				desc_id = "effect_player_can_only_walk_backwards_or_sideways",
 				chance = 5,
 				value = true,
-				name = nil,
 				name = BuffEffectManager.EFFECT_PLAYER_CAN_MOVE_ONLY_BACK_AND_SIDE
 			}
 		}

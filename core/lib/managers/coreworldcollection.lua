@@ -62,8 +62,6 @@ end
 
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
 	self._world_spawns[world_id] = {
-		plant_loot = nil,
-		editor_name = nil,
 		active = true,
 		editor_name = editor_name,
 		plant_loot = spawn_loot
@@ -235,11 +233,6 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 
 	local params = {
 		file_type = "world",
-		world_dir = nil,
-		translation = nil,
-		world_id = nil,
-		excluded_continents = nil,
-		file_path = nil,
 		file_path = file_path,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -296,9 +289,6 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 
 	self._missions[index] = MissionManager:new()
 	self._mission_params[index] = {
-		worlddefinition = nil,
-		sync_id = nil,
-		file_path = nil,
 		file_path = self._mission_paths[index],
 		worlddefinition = definition,
 		sync_id = index
@@ -478,8 +468,6 @@ end
 
 function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	local params = {
-		stage = nil,
-		world_id = nil,
 		world_id = world_id,
 		stage = stage
 	}
@@ -699,7 +687,6 @@ function CoreWorldCollection:check_finished_destroy()
 				definition.queued_destroyed = true
 
 				managers.queued_tasks:queue(nil, self.finish_destroy, self, {
-					world_id = nil,
 					world_id = key
 				}, 0.8, nil)
 
@@ -907,8 +894,6 @@ function CoreWorldCollection:sync_save(data)
 	Application:debug("[CoreWorldCollection:sync_save]", inspect(self._synced_peers))
 
 	local state = {
-		synced_units = nil,
-		missions = nil,
 		missions = {},
 		synced_units = {}
 	}
@@ -926,8 +911,6 @@ function CoreWorldCollection:sync_save(data)
 
 	for world_id, world in pairs(self._world_definitions) do
 		table.insert(state.synced_units, {
-			units = nil,
-			world_id = nil,
 			world_id = world_id,
 			units = world._units_synced_on_dropin
 		})
@@ -1201,7 +1184,6 @@ function CoreWorldCollection:set_alarm_for_world(editor_name, alarm)
 
 	if not found then
 		self._world_spawns[editor_name] = {
-			alarm = nil,
 			alarm = alarm
 		}
 	end

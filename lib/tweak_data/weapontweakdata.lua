@@ -257,9 +257,7 @@ end
 function WeaponTweakData:_init_data_weapon_skins()
 	self.weapon_skins = {
 		garand_special_edition = {
-			replaces_parts = nil,
 			name_id = "bm_w_garand_se",
-			dlc = nil,
 			weapon_id = "garand",
 			dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
 			replaces_parts = {
@@ -279,7 +277,6 @@ function WeaponTweakData:_init_data_weapon_skins()
 			}
 		},
 		lead_bar_gold = {
-			replaces_units = nil,
 			name_id = "bm_lead_bar_gold",
 			challenge = "candy_gold_bar",
 			weapon_id = "gold_bar",
@@ -869,23 +866,16 @@ function WeaponTweakData:_init_data_gold_bar(tweak_data)
 		alert_size = 0,
 		weapon_movement_penalty = 1,
 		hold = "grenade",
-		timers = nil,
 		weapon_hold = "mills",
-		hud = nil,
 		stat_group = "brick",
-		gui = nil,
 		name_id = "bm_lead_bar",
-		crosshair = nil,
 		damage_melee_effect_mul = 1,
 		damage_melee = 86,
 		sound_event = "new_grenade_explode",
 		usage = "c45",
-		use_data = nil,
-		sounds = nil,
 		stance = "mills",
 		transition_duration = 0,
 		exit_run_speed_multiplier = 1,
-		auto = nil,
 		sounds = {
 			single = "new_grenade_explode",
 			prefix = "",
@@ -893,9 +883,6 @@ function WeaponTweakData:_init_data_gold_bar(tweak_data)
 			autofire_stop = nil
 		},
 		use_data = {
-			selection_index = nil,
-			unequip = nil,
-			equip = nil,
 			equip = {
 				align_place = "right_hand"
 			},
@@ -926,29 +913,21 @@ end
 
 function WeaponTweakData:_init_data_anti_tank(tweak_data)
 	self.anti_tank = {
-		sounds = nil,
 		weapon_movement_penalty = 1,
 		suppression = 1,
 		alert_size = 0,
-		timers = nil,
 		hold = "grenade",
 		sound_event = "new_grenade_explode",
-		category = nil,
-		hud = nil,
 		stat_group = "anti_tank",
-		gui = nil,
 		name_id = "bm_grenade_anti_tank",
-		crosshair = nil,
 		damage_melee_effect_mul = 1,
 		damage_melee = 86,
 		usage_anim = "c45",
 		usage = "c45",
-		use_data = nil,
 		weapon_hold = "m24",
 		stance = "m24",
 		transition_duration = 0,
 		exit_run_speed_multiplier = 1,
-		auto = nil,
 		sounds = {
 			single = "new_grenade_explode",
 			prefix = "",
@@ -956,9 +935,6 @@ function WeaponTweakData:_init_data_anti_tank(tweak_data)
 			autofire_stop = nil
 		},
 		use_data = {
-			selection_index = nil,
-			unequip = nil,
-			equip = nil,
 			equip = {
 				align_place = "right_hand"
 			},
@@ -2439,22 +2415,6 @@ function WeaponTweakData:_init_data_player_weapons(tweak_data)
 
 	self.factory = WeaponFactoryTweakData:new()
 	local autohit_data = {
-		autohit_smg_default = nil,
-		autohit_snp_default = nil,
-		autohit_lmg_default = nil,
-		autohit_shotgun_default = nil,
-		autohit_pistol_default = nil,
-		autohit_rifle_default = nil,
-		damage_melee_effect_multiplier_default = nil,
-		damage_melee_default = nil,
-		aim_assist_minigun_default = nil,
-		aim_assist_smg_default = nil,
-		aim_assist_snp_default = nil,
-		aim_assist_lmg_default = nil,
-		aim_assist_shotgun_default = nil,
-		aim_assist_pistol_default = nil,
-		aim_assist_rifle_default = nil,
-		autohit_minigun_default = nil,
 		autohit_rifle_default = autohit_rifle_default,
 		autohit_pistol_default = autohit_pistol_default,
 		autohit_shotgun_default = autohit_shotgun_default,
@@ -2480,9 +2440,6 @@ end
 function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs = {
 		pistol = {
-			crouching = nil,
-			standing = nil,
-			steelsight = nil,
 			style = "pistol",
 			standing = {
 				moving_offset = 0.1,
@@ -2507,9 +2464,6 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.smg = deep_clone(self._crosshairs.pistol)
 	self._crosshairs.smg.style = "smg"
 	self._crosshairs.shotgun = {
-		crouching = nil,
-		standing = nil,
-		steelsight = nil,
 		style = "shotgun",
 		standing = {
 			moving_offset = 0.1,
@@ -2533,9 +2487,6 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.shotgun_db = deep_clone(self._crosshairs.shotgun)
 	self._crosshairs.shotgun_db.style = "shotgun_db"
 	self._crosshairs.lmg = {
-		crouching = nil,
-		standing = nil,
-		steelsight = nil,
 		style = "lmg",
 		standing = {
 			moving_offset = 0.1,
@@ -2561,9 +2512,6 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.lmg_dp28 = deep_clone(self._crosshairs.lmg)
 	self._crosshairs.lmg_dp28.style = "lmg_dp28"
 	self._crosshairs.assault_rifle = {
-		crouching = nil,
-		standing = nil,
-		steelsight = nil,
 		style = "assault_rifle",
 		standing = {
 			moving_offset = 0.1,
@@ -2588,33 +2536,21 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.sniper.style = "sniper"
 	local v = 1
 	self._crosshairs.grenade = {
-		crouching = nil,
-		standing = nil,
-		steelsight = nil,
 		style = "grenade",
 		standing = {
-			moving_offset = nil,
-			offset = nil,
 			hidden = false,
-			kick_offset = nil,
 			offset = v,
 			moving_offset = v,
 			kick_offset = v
 		},
 		crouching = {
-			moving_offset = nil,
-			offset = nil,
 			hidden = false,
-			kick_offset = nil,
 			offset = v,
 			moving_offset = v,
 			kick_offset = v
 		},
 		steelsight = {
-			moving_offset = nil,
-			offset = nil,
 			hidden = true,
-			kick_offset = nil,
 			offset = v,
 			moving_offset = v,
 			kick_offset = v
@@ -3560,7 +3496,6 @@ function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 	self.webley = {
 		category = WeaponTweakData.WEAPON_CATEGORY_PISTOL,
 		upgrade_blocks = {
-			pistol = nil,
 			pistol = {
 				"clipazines_magazine_upgrade"
 			}
@@ -4435,7 +4370,6 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 		use_shotgun_reload = false,
 		dismember_chance = 0.33,
 		upgrade_blocks = {
-			shotgun = nil,
 			shotgun = {
 				"clipazines_magazine_upgrade"
 			}
@@ -4580,7 +4514,6 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 		use_shotgun_reload = false,
 		dismember_chance = 0.33,
 		upgrade_blocks = {
-			shotgun = nil,
 			shotgun = {
 				"clipazines_magazine_upgrade"
 			}

@@ -2,7 +2,6 @@ core:module("CoreEnvironmentHandler")
 core:import("CoreClass")
 
 local dummy_material = {
-	set_variable = nil,
 	set_variable = function ()
 	end
 }

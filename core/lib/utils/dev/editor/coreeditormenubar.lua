@@ -55,22 +55,16 @@ function CoreEditor:build_menubar()
 
 		self._disable_layer_menu:append_check_item("DISABLE_" .. text, text, "Disable layer " .. text)
 		Global.frame:connect("DISABLE_" .. text, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_disable_layer"), {
-			name = nil,
-			id = nil,
 			name = text,
 			id = "DISABLE_" .. text
 		})
 		self._hide_layer_menu:append_item("HIDE_" .. text, text, "Hide layer " .. text)
 		Global.frame:connect("HIDE_" .. text, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_hide_layer"), {
-			name = nil,
-			id = nil,
 			name = text,
 			id = "HIDE_" .. text
 		})
 		self._unhide_layer_menu:append_item("UNHIDE_" .. text, text, "Unhide layer " .. text)
 		Global.frame:connect("UNHIDE_" .. text, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_unhide_layer"), {
-			name = nil,
-			id = nil,
 			name = text,
 			id = "UNHIDE_" .. text
 		})
@@ -526,7 +520,6 @@ function CoreEditor:on_save()
 		self:do_save(self._lastfile, self._lastdir)
 
 		local rules = {
-			ignore = nil,
 			ignore = {
 				dds = true
 			}
@@ -632,8 +625,6 @@ function CoreEditor:on_disable_layers()
 		if layer ~= self._current_layer then
 			self._disable_layer_menu:set_checked("DISABLE_" .. name, true)
 			self:on_disable_layer({
-				name = nil,
-				id = nil,
 				name = name,
 				id = "DISABLE_" .. name
 			})
@@ -921,18 +912,12 @@ function CoreEditor:on_check_duality()
 				if data.pos == pos then
 					if data.rot == rot then
 						table.insert(collisions.complete, {
-							pos = nil,
-							u2 = nil,
-							u1 = nil,
 							u1 = data.unit,
 							u2 = unit,
 							pos = pos
 						})
 					else
 						table.insert(collisions.only_positions, {
-							pos = nil,
-							u2 = nil,
-							u1 = nil,
 							u1 = data.unit,
 							u2 = unit,
 							pos = pos
@@ -942,9 +927,6 @@ function CoreEditor:on_check_duality()
 			end
 
 			table.insert(unit_name, {
-				pos = nil,
-				unit = nil,
-				rot = nil,
 				unit = unit,
 				pos = pos,
 				rot = rot
@@ -952,9 +934,6 @@ function CoreEditor:on_check_duality()
 		else
 			units[unit:name():s()] = {
 				{
-					pos = nil,
-					unit = nil,
-					rot = nil,
 					unit = unit,
 					pos = pos,
 					rot = rot
@@ -1015,8 +994,6 @@ function CoreEditor:queue_hide_units(units, data)
 	self._hide_helper_queue = self._hide_helper_queue or {}
 
 	table.insert(self._hide_helper_queue, {
-		units = nil,
-		data = nil,
 		data = data,
 		units = units
 	})
@@ -1048,8 +1025,6 @@ function CoreEditor:_hide_these_units(units, data)
 				end
 
 				cache[u_key] = {
-					vis_state = nil,
-					skip = nil,
 					vis_state = vis_state,
 					skip = not affected
 				}

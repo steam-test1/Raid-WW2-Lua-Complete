@@ -416,10 +416,6 @@ function SentryGunBrain:_select_focus_attention(t)
 	if current_focus ~= best_focus_attention then
 		if best_focus_attention then
 			local attention_data = {
-				u_key = nil,
-				handler = nil,
-				unit = nil,
-				reaction = nil,
 				unit = best_focus_attention.unit,
 				u_key = best_focus_attention.u_key,
 				handler = best_focus_attention.handler,

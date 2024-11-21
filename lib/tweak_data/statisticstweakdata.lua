@@ -3,15 +3,7 @@ StatisticsTweakData = StatisticsTweakData or class()
 function StatisticsTweakData:init()
 	self.session = {}
 	self.killed = {
-		cop = nil,
-		security = nil,
-		swat = nil,
-		total = nil,
-		civilian = nil,
 		civilian = {
-			total = nil,
-			session = nil,
-			head_shots = nil,
 			total = {
 				type = "normal",
 				count = 0

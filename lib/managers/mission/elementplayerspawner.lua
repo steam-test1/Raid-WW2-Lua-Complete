@@ -39,8 +39,6 @@ function ElementPlayerSpawner:on_executed(instigator)
 	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
 	managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
 	managers.network:register_spawn_point(self:_unique_string_id(), {
-		rotation = nil,
-		position = nil,
 		position = self._values.position,
 		rotation = self._values.rotation
 	})

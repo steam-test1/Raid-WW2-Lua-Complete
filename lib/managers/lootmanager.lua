@@ -43,8 +43,6 @@ end
 function LootManager:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
-		amount = nil,
-		callback = nil,
 		amount = amount,
 		callback = callback
 	}
@@ -84,8 +82,6 @@ end
 
 function LootManager:add_to_respawn(carry_id, multiplier)
 	table.insert(self._respawns, {
-		carry_id = nil,
-		multiplier = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -118,8 +114,6 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	local multiplier = 1
 
 	table.insert(self._global.secured, {
-		carry_id = nil,
-		multiplier = nil,
 		carry_id = carry_id,
 		multiplier = multiplier
 	})
@@ -142,16 +136,12 @@ function LootManager:_present(carry_id, multiplier)
 	local type_text = carry_data.name_id and managers.localization:text(carry_data.name_id)
 	local text = managers.localization:text("hud_loot_secured", {
 		AMOUNT = "",
-		CARRY_TYPE = nil,
 		CARRY_TYPE = type_text
 	})
 	local icon = nil
 
 	managers.hud:present_mid_text({
-		title = nil,
 		time = 4,
-		text = nil,
-		icon = nil,
 		text = text,
 		title = title,
 		icon = icon

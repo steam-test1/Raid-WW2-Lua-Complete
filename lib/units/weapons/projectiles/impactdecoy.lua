@@ -7,11 +7,8 @@ function ImpactDecoy:_setup_from_tweak_data()
 	self._pathing_searches = {}
 	local sound_event = self._tweak_data.sound_event or "grenade_explode"
 	self._custom_params = {
-		effect = nil,
-		sound_event = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
-		feedback_range = nil,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = self._range * 2
@@ -86,13 +83,7 @@ function ImpactDecoy:_on_collision(col_ray)
 
 		local search_id = "ImpactDecoy._on_collision" .. tostring(closest_cop:key())
 		local search_params = {
-			access_pos = nil,
-			cop = nil,
-			result_clbk = nil,
-			id = nil,
-			pos_to = nil,
 			finished = false,
-			pos_from = nil,
 			pos_from = closest_cop:movement():m_pos(),
 			pos_to = final_lure_position,
 			id = search_id,
@@ -160,13 +151,10 @@ function ImpactDecoy:clbk_pathing_results(search_id, path)
 			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
 			attention_info.m_pos = search.pos_to
 			attention_info.settings = {
-				reaction = nil,
 				reaction = AIAttentionObject.REACT_SUSPICIOUS
 			}
 			attention_info.u_key = 1
 			local search_data = {
-				activated_clbk = nil,
-				unit = nil,
 				unit = self._unit,
 				activated_clbk = callback(self, self, "_guard_picked_up")
 			}

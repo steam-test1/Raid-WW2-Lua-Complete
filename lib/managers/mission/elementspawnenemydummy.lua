@@ -106,8 +106,6 @@ function ElementSpawnEnemyDummy:produce(params)
 		if action.type == "act" then
 			objective = {
 				type = "act",
-				action = nil,
-				stance = nil,
 				action = action,
 				stance = stance
 			}
@@ -115,7 +113,6 @@ function ElementSpawnEnemyDummy:produce(params)
 
 		local spawn_ai = {
 			init_state = "idle",
-			objective = nil,
 			objective = objective
 		}
 
@@ -189,8 +186,6 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 		local followup_objective = objective
 		objective = {
 			type = "act",
-			action = nil,
-			followup_objective = nil,
 			action = entry_action,
 			followup_objective = followup_objective
 		}
@@ -198,9 +193,6 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 
 	return {
 		init_state = "idle",
-		objective = nil,
-		stance = nil,
-		params = nil,
 		stance = stance,
 		objective = objective,
 		params = {
@@ -218,8 +210,6 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 		}
 	else
 		return {
-			blocks = nil,
-			variant = nil,
 			body_part = 1,
 			type = "act",
 			align_sync = true,

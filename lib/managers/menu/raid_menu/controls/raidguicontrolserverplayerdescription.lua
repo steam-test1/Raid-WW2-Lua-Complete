@@ -18,7 +18,6 @@ function RaidGUIControlServerPlayerDescription:_create_selector()
 		visible = false,
 		name = "selector",
 		layer = 1,
-		color = nil,
 		color = tweak_data.gui.colors.raid_list_background
 	}
 	self._selector = self._object:rect(selector_params)
@@ -28,11 +27,8 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
 		x = 0,
-		texture_rect = nil,
-		texture = nil,
 		y = 0,
 		name = "class_icon",
-		layer = nil,
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect,
 		layer = self._selector:layer() + 1
@@ -43,13 +39,9 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_name = self._object:label({
 		x = 80,
 		vertical = "center",
-		font = nil,
 		align = "left",
-		layer = nil,
 		h = 64,
 		w = 336,
-		font_size = nil,
-		color = nil,
 		y = 0,
 		name = "player_name",
 		text = "PLAYER NAME 1",
@@ -64,13 +56,9 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_class_nation = self._object:label({
 		x = 80,
 		vertical = "center",
-		font = nil,
 		align = "left",
-		layer = nil,
 		h = 64,
 		w = 336,
-		font_size = nil,
-		color = nil,
 		y = 32,
 		name = "player_class_nation",
 		text = "INFILTRATOR  |  GERMAN",
@@ -84,11 +72,8 @@ function RaidGUIControlServerPlayerDescription:_layout()
 
 	self._host_icon = self._object:bitmap({
 		x = 416,
-		texture_rect = nil,
-		texture = nil,
 		y = 16,
 		name = "host_icon",
-		layer = nil,
 		texture = tweak_data.gui.icons.player_panel_host_indicator.texture,
 		texture_rect = tweak_data.gui.icons.player_panel_host_indicator.texture_rect,
 		layer = self._selector:layer() + 1
@@ -99,13 +84,9 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_level = self._object:label({
 		x = 450,
 		vertical = "center",
-		font = nil,
 		align = "right",
-		layer = nil,
 		h = 64,
 		w = 64,
-		font_size = nil,
-		color = nil,
 		y = 0,
 		name = "player_level",
 		text = "17",

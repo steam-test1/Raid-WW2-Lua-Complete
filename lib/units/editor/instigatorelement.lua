@@ -43,8 +43,6 @@ function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_unit
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -140,8 +138,6 @@ function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})

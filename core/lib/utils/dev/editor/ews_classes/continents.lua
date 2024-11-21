@@ -225,8 +225,6 @@ function ContinentPanel:create_world_setting_dialog()
 
 	if path and dir then
 		CreateWorldSettingFile:new({
-			dir = nil,
-			name = nil,
 			name = managers.database:entry_name(path),
 			dir = dir
 		})
@@ -238,7 +236,6 @@ function ContinentPanel:open_world_setting_dialog()
 
 	if path and dir then
 		CreateWorldSettingFile:new({
-			path = nil,
 			path = path
 		})
 	end

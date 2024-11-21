@@ -30,11 +30,9 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				from_unit = nil,
 				b = 0,
 				g = 0.75,
 				r = 0,
-				to_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -87,7 +85,6 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "use_instigator",
 		ctrlr = use_instigator
 	})
@@ -98,23 +95,18 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	ignore_disabled:set_tool_tip("Select if disabled spawn points should be ignored or not")
 	ignore_disabled:set_value(self._hed.ignore_disabled)
 	ignore_disabled:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "ignore_disabled",
 		ctrlr = ignore_disabled
 	})
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
 	local team_params = {
-		value = nil,
 		sorted = true,
-		panel = nil,
 		name_proportions = 1,
 		ctrlr_proportions = 2,
 		tooltip = "Select wanted team for the character.",
 		default = "",
 		name = "Team:",
-		options = nil,
-		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = tweak_data.levels:get_team_names_indexed(),
@@ -123,12 +115,10 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	local team_combo_box = CoreEWS.combobox(team_params)
 
 	team_combo_box:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "team",
 		ctrlr = team_combo_box
 	})
 	team_combo_box:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "team",
 		ctrlr = team_combo_box
 	})

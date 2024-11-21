@@ -11,29 +11,22 @@ function NpcVehicleStateManeuverBackRight:on_enter(npc_driving_ext)
 	self._maneuver_actions = {
 		{
 			duration = 1,
-			input = nil,
-			tick_at = nil,
 			tick_at = delayed_tick,
 			input = {
 				handbrake = 0,
 				brake = 0,
-				steering = nil,
 				acceleration = 1,
-				gear = nil,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_LEFT,
 				gear = NpcVehicleDrivingExt.DRIVE_CONTROLS_GEAR_REVERSE
 			}
 		},
 		{
 			duration = 1,
-			input = nil,
 			tick_at = 0,
 			input = {
 				handbrake = 0,
 				brake = 0,
-				steering = nil,
 				acceleration = 1,
-				gear = nil,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_STRAIGHT,
 				gear = NpcVehicleDrivingExt.DRIVE_CONTROLS_GEAR_FIRST
 			}

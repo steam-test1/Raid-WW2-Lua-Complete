@@ -353,8 +353,6 @@ function NpcVehicleDrivingExt:drive_to_point(cop_path, unit_and_pos, dt)
 
 	if self._debug then
 		self._debug.nav_paths.ai_cost = {
-			fps = nil,
-			cost = nil,
 			cost = profiler_time * 1000,
 			fps = percentage_of_current_fps
 		}
@@ -409,9 +407,6 @@ function NpcVehicleDrivingExt:calc_cop_position_info(cop_points, unit_and_pos)
 	end
 
 	return {
-		checkpoint_distance = nil,
-		target_spin = nil,
-		angle_to_target = nil,
 		target_spin = target_spin_relative_to_vehicle,
 		angle_to_target = angle_to_target,
 		checkpoint_distance = target_distance
@@ -583,14 +578,6 @@ end
 function NpcVehicleDrivingExt:_init_states()
 	local unit = self._unit
 	self._states = {
-		maneuver = nil,
-		inactive = nil,
-		maneuver_back_left = nil,
-		broken = nil,
-		maneuver_back_right = nil,
-		player_proximity = nil,
-		maneuver_u_turn = nil,
-		pursuit = nil,
 		inactive = NpcVehicleStateInactive:new(unit),
 		pursuit = NpcVehicleStatePursuit:new(unit),
 		player_proximity = NpcVehicleStatePlayerProximity:new(unit),
@@ -626,12 +613,9 @@ function NpcVehicleDrivingExt:_debug_show()
 	}
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
-		color = nil,
-		font = nil,
 		x = 14,
 		font_size = 14,
 		text = "",
-		y = nil,
 		name = "debug_info",
 		layer = 2000,
 		y = 100 + debug_output_offset,

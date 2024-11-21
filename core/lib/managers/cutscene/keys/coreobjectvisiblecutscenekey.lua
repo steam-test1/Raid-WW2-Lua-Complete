@@ -27,8 +27,6 @@ end
 function CoreObjectVisibleCutsceneKey:play(player, undo, fast_forward)
 	if undo then
 		local preceeding_key = self:preceeding_key({
-			object_name = nil,
-			unit_name = nil,
 			unit_name = self:unit_name(),
 			object_name = self:object_name()
 		})

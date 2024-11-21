@@ -38,7 +38,6 @@ end
 
 function TeamAIBase:save(data)
 	data.base = {
-		tweak_table = nil,
 		tweak_table = self._tweak_table
 	}
 end

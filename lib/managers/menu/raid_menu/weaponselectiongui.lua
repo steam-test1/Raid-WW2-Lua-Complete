@@ -167,11 +167,8 @@ end
 function WeaponSelectionGui:_layout_category_tabs()
 	local category_tabs_params = {
 		name = "category_tabs",
-		tabs_params = nil,
 		y = 0,
 		x = 0,
-		parent_control_ref = nil,
-		on_click_callback = nil,
 		initial_tab_idx = 1,
 		tab_align = "center",
 		tab_height = 64,
@@ -180,49 +177,33 @@ function WeaponSelectionGui:_layout_category_tabs()
 		tabs_params = {
 			{
 				name = "tab_primary",
-				breadcrumb = nil,
-				callback_param = nil,
-				text = nil,
 				text = self:translate("menu_weapons_tab_category_primary", true),
 				callback_param = WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID,
 				breadcrumb = {
-					check_callback = nil,
 					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
-						weapon_category = nil,
 						weapon_category = WeaponInventoryManager.CATEGORY_NAME_PRIMARY
 					})
 				}
 			},
 			{
 				name = "tab_secondary",
-				breadcrumb = nil,
-				callback_param = nil,
-				text = nil,
 				text = self:translate("menu_weapons_tab_category_secondary", true),
 				callback_param = WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID,
 				breadcrumb = {
-					check_callback = nil,
 					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
-						weapon_category = nil,
 						weapon_category = WeaponInventoryManager.CATEGORY_NAME_SECONDARY
 					})
 				}
 			},
 			{
 				name = "tab_grenades",
-				callback_param = nil,
-				text = nil,
 				text = self:translate("menu_weapons_tab_category_grenades", true),
 				callback_param = WeaponInventoryManager.BM_CATEGORY_GRENADES_ID
 			},
 			{
 				name = "tab_melee",
-				breadcrumb = nil,
-				callback_param = nil,
-				text = nil,
 				text = self:translate("menu_weapons_tab_category_melee", true),
 				breadcrumb = {
-					category = nil,
 					category = BreadcrumbManager.CATEGORY_WEAPON_MELEE
 				},
 				callback_param = WeaponInventoryManager.BM_CATEGORY_MELEE_ID
@@ -232,14 +213,10 @@ function WeaponSelectionGui:_layout_category_tabs()
 	self._list_tabs = self._weapon_selection_panel:tabs(category_tabs_params)
 	self._selected_weapon_category_id = WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID
 	self._equippable_filters_tabs = self._weapon_selection_panel:tabs({
-		item_class = nil,
 		name = "equippable_filters_tabs",
-		tabs_params = nil,
-		icon = nil,
 		y = 54,
 		x = 0,
 		tab_width = 140,
-		on_click_callback = nil,
 		initial_tab_idx = 1,
 		tab_align = "center",
 		tab_height = 64,
@@ -250,13 +227,11 @@ function WeaponSelectionGui:_layout_category_tabs()
 			{
 				name = "tab_all",
 				callback_param = "all",
-				text = nil,
 				text = self:translate("menu_filter_all", true)
 			},
 			{
 				name = "tab_equippable",
 				callback_param = "equippable",
-				text = nil,
 				text = self:translate("menu_weapons_filter_equippable", true)
 			}
 		}
@@ -270,7 +245,6 @@ function WeaponSelectionGui:_layout_lists()
 		name = "weapon_list_scrollable_area",
 		scroll_step = 19,
 		h = 456,
-		w = nil,
 		y = 128,
 		x = 0,
 		w = weapon_list_width
@@ -278,20 +252,13 @@ function WeaponSelectionGui:_layout_lists()
 	self._weapon_list_scrollable_area = self._weapon_selection_panel:scrollable_area(weapon_list_scrollable_area_params)
 	local weapon_list_params = {
 		x = 0,
-		on_item_double_clicked_callback = nil,
-		on_item_clicked_callback = nil,
-		on_item_selected_callback = nil,
-		w = nil,
 		y = 0,
 		item_h = 62,
 		on_mouse_click_sound_event = "weapon_click",
 		name = "weapon_list",
-		item_class = nil,
 		on_mouse_over_sound_event = "highlight",
 		use_unlocked = false,
 		selection_enabled = true,
-		scrollable_area_ref = nil,
-		data_source_callback = nil,
 		w = weapon_list_width,
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_weapon_list"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_weapon_list"),
@@ -306,7 +273,6 @@ end
 function WeaponSelectionGui:_layout_weapon_stats()
 	local weapon_stats_params = {
 		name = "weapon_stats",
-		label_class = nil,
 		data_source_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
@@ -318,7 +284,6 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._weapon_stats = self._root_panel:create_custom_control(RaidGUIControlWeaponStats, weapon_stats_params)
 	local melee_weapon_stats_params = {
 		name = "melee_weapon_stats",
-		label_class = nil,
 		data_source_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
@@ -330,7 +295,6 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._melee_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlMeleeWeaponStats, melee_weapon_stats_params)
 	local grenade_weapon_stats_params = {
 		name = "grenade_weapon_stats",
-		label_class = nil,
 		data_source_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
@@ -345,10 +309,7 @@ end
 function WeaponSelectionGui:_layout_equip_button()
 	local equip_button_params = {
 		name = "equip_button",
-		on_click_callback = nil,
 		layer = 1,
-		text = nil,
-		on_click_sound = nil,
 		y = 710,
 		x = 0,
 		visible = false,
@@ -360,7 +321,6 @@ function WeaponSelectionGui:_layout_equip_button()
 	local equip_disabled_button_params = {
 		name = "equip_disabled_button",
 		layer = 1,
-		text = nil,
 		y = 710,
 		x = 0,
 		visible = true,
@@ -374,7 +334,6 @@ function WeaponSelectionGui:_layout_equip_button()
 	end
 
 	local cant_equip_explanation_label_params = {
-		font = nil,
 		align = "left",
 		layer = 1,
 		h = 60,
@@ -384,9 +343,7 @@ function WeaponSelectionGui:_layout_equip_button()
 		wrap = true,
 		name = "cant_equip_explenation_label",
 		text = "",
-		color = nil,
 		word_wrap = true,
-		font_size = nil,
 		visible = false,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -397,17 +354,12 @@ end
 
 function WeaponSelectionGui:_layout_skill_panel()
 	local weapon_skills_params = {
-		on_mouse_exit_callback = nil,
-		on_mouse_enter_callback = nil,
 		layer = 1,
 		h = 440,
 		w = 448,
 		y = 11,
 		x = 0,
 		name = "weapon_skills",
-		on_click_weapon_skill_callback = nil,
-		on_unselected_weapon_skill_callback = nil,
-		on_selected_weapon_skill_callback = nil,
 		on_mouse_enter_callback = callback(self, self, "_on_mouse_enter_weapon_skill_button"),
 		on_mouse_exit_callback = callback(self, self, "_on_mouse_exit_weapon_skill_button"),
 		on_selected_weapon_skill_callback = callback(self, self, "_on_selected_weapon_skill_callback"),
@@ -419,7 +371,6 @@ function WeaponSelectionGui:_layout_skill_panel()
 		name = "skill_desc",
 		layer = 1,
 		h = 244,
-		w = nil,
 		y = 447,
 		x = 0,
 		w = self._weapon_skills_panel:w()
@@ -427,12 +378,9 @@ function WeaponSelectionGui:_layout_skill_panel()
 	self._skill_desc = self._weapon_skills_panel:create_custom_control(RaidGUIControlWeaponSkillDesc, skill_desc_params)
 	local apply_button_params = {
 		name = "apply_button",
-		on_click_callback = nil,
 		layer = 1,
-		text = nil,
 		y = 710,
 		x = 0,
-		on_click_sound = nil,
 		text = self:translate("menu_weapons_apply", true),
 		on_click_callback = callback(self, self, "on_apply_button_click"),
 		on_click_sound = WeaponSelectionGui.WEAPON_EQUIP_SOUND
@@ -442,7 +390,6 @@ function WeaponSelectionGui:_layout_skill_panel()
 	self._apply_button:disable()
 
 	local available_points_skills_params = {
-		text = nil,
 		value_align = "left",
 		layer = 1,
 		h = 64,
@@ -451,11 +398,7 @@ function WeaponSelectionGui:_layout_skill_panel()
 		x = 0,
 		value_padding = 3,
 		name = "available_points_skills",
-		value = nil,
-		value_color = nil,
-		value_font_size = nil,
 		align = "left",
-		font_size = nil,
 		visible = false,
 		text = self:translate("menu_available_points", true),
 		value = "" .. managers.weapon_skills:get_available_weapon_skill_points(),
@@ -465,7 +408,6 @@ function WeaponSelectionGui:_layout_skill_panel()
 	}
 	self._available_points_skills_label = self._weapon_skills_panel:label_named_value(available_points_skills_params)
 	local upgrade_cost_params = {
-		text = nil,
 		value_align = "left",
 		layer = 1,
 		h = 64,
@@ -475,10 +417,7 @@ function WeaponSelectionGui:_layout_skill_panel()
 		value_padding = 3,
 		name = "upgrade_cost",
 		value = "00",
-		value_color = nil,
-		value_font_size = nil,
 		align = "left",
-		font_size = nil,
 		visible = false,
 		text = self:translate("menu_upgrade_cost", true),
 		value_color = tweak_data.gui.colors.raid_red,
@@ -507,15 +446,12 @@ end
 function WeaponSelectionGui:_layout_available_points()
 	local available_points_params = {
 		y = 672,
-		text = nil,
 		layer = 1,
 		h = 90,
 		w = 192,
-		value_color = nil,
 		x = 1536,
 		value_padding = 10,
 		name = "available_points_label",
-		value = nil,
 		text = self:translate("menu_available_points", true),
 		value = "" .. managers.weapon_skills:get_available_weapon_skill_points(),
 		value_color = tweak_data.gui.colors.raid_red
@@ -529,11 +465,8 @@ function WeaponSelectionGui:_layout_upgrade_button()
 	local x_off = self._equip_button:x() + self._equip_button:w() + 60
 	local upgrade_button_params = {
 		name = "upgrade_button",
-		on_click_callback = nil,
 		layer = 1,
-		text = nil,
 		y = 806,
-		x = nil,
 		x = x_off,
 		text = self:translate("menu_weapons_upgrade", true),
 		on_click_callback = callback(self, self, "on_upgrade_button_click")
@@ -548,14 +481,9 @@ function WeaponSelectionGui:_layout_skins_button()
 	local y_off = self._equip_button:y() + 15
 	local skins_button_params = {
 		layer = 1,
-		on_item_selected_callback = nil,
 		w = 450,
-		y = nil,
-		x = nil,
 		name = "skins_button",
 		stepper_w = 280,
-		description = nil,
-		data_source_callback = nil,
 		description = self:translate("menu_weapons_skins", true),
 		x = x_off,
 		y = y_off,
@@ -590,9 +518,7 @@ function WeaponSelectionGui:_get_skins_list()
 	local list = {}
 
 	table.insert(list, {
-		info = nil,
 		value = "default",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_weapon_no_skin")),
 		info = utf8.to_upper(managers.localization:text("menu_weapon_no_skin"))
 	})
@@ -607,9 +533,6 @@ function WeaponSelectionGui:_get_skins_list()
 				local name_id = tweak_data.weapon:get_weapon_skin_name_id(skin)
 
 				table.insert(list, {
-					info = nil,
-					value = nil,
-					text = nil,
 					value = skin,
 					text = utf8.to_upper(managers.localization:text(name_id)),
 					info = utf8.to_upper(managers.localization:text(name_id))
@@ -681,17 +604,12 @@ end
 function WeaponSelectionGui:_layout_weapon_name()
 	local font_size = tweak_data.gui.font_sizes.size_46
 	local weapon_name_params = {
-		font = nil,
-		color = nil,
 		align = "right",
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 1500,
 		text = "THOMPSON\nGUNGUN",
 		name = "weapon_name",
 		vertical = "bottom",
-		font_size = nil,
 		w = self._root_panel:w() / 2,
 		h = font_size,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -707,23 +625,19 @@ end
 function WeaponSelectionGui:_layout_weapon_desc()
 	local font_size = tweak_data.gui.font_sizes.size_24
 	local weapon_name_params = {
-		font = nil,
 		text = [[
 Despite Sterlings attitude he is infact a right bugger.
 Slap his buns for me.
 Ok but seriously now what is up with space?
 I am not joking about the buns thing.]],
 		align = "right",
-		h = nil,
 		w = 520,
 		y = 0,
 		x = 1500,
 		wrap = true,
 		name = "weapon_desc",
-		color = nil,
 		vertical = "top",
 		word_wrap = true,
-		font_size = nil,
 		h = font_size * 6,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -852,12 +766,7 @@ function WeaponSelectionGui:data_source_weapon_list()
 
 					if weapon_data.unlocked then
 						breadcrumb = {
-							category = nil,
-							identifiers = nil,
-							check_callback = nil,
 							check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
-								weapon_id = nil,
-								weapon_category = nil,
 								weapon_category = weapon_category,
 								weapon_id = weapon_data.weapon_id
 							}),
@@ -871,10 +780,6 @@ function WeaponSelectionGui:data_source_weapon_list()
 					local selected = self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id
 
 					table.insert(result, {
-						breadcrumb = nil,
-						value = nil,
-						selected = nil,
-						text = nil,
 						text = self:translate(name_id, false),
 						value = weapon_data,
 						breadcrumb = breadcrumb,
@@ -883,8 +788,6 @@ function WeaponSelectionGui:data_source_weapon_list()
 				elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 					equipped_weapon_id = managers.weapon_inventory:get_equipped_melee_weapon_id()
 					local breadcrumb = {
-						identifiers = nil,
-						category = nil,
 						category = BreadcrumbManager.CATEGORY_WEAPON_MELEE,
 						identifiers = {
 							weapon_data.weapon_id
@@ -893,19 +796,13 @@ function WeaponSelectionGui:data_source_weapon_list()
 
 					if self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id then
 						table.insert(result, {
-							breadcrumb = nil,
-							value = nil,
 							selected = true,
-							text = nil,
 							text = self:translate(tweak_data.blackmarket.melee_weapons[weapon_data.weapon_id].name_id, false),
 							value = weapon_data,
 							breadcrumb = breadcrumb
 						})
 					else
 						table.insert(result, {
-							breadcrumb = nil,
-							value = nil,
-							text = nil,
 							text = self:translate(tweak_data.blackmarket.melee_weapons[weapon_data.weapon_id].name_id, false),
 							value = weapon_data,
 							breadcrumb = breadcrumb
@@ -925,9 +822,6 @@ function WeaponSelectionGui:data_source_weapon_list()
 					local selected = self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id
 
 					table.insert(result, {
-						selected = nil,
-						value = nil,
-						text = nil,
 						text = self:translate(name_id, false),
 						value = weapon_data,
 						selected = selected
@@ -1075,7 +969,6 @@ function WeaponSelectionGui:_selected_weapon_skill_button(button, data, tier)
 
 		if upgrade_level > 0 then
 			managers.weapon_skills:update_weapon_skill(data.value.skill_name, {
-				value = nil,
 				value = upgrade_level
 			}, self._selected_weapon_category_id, WeaponSkillsManager.UPGRADE_ACTION_DEACTIVATE)
 		end
@@ -1096,7 +989,6 @@ function WeaponSelectionGui:_unselected_weapon_skill_button(button, data)
 
 		if upgrade_level > 0 then
 			managers.weapon_skills:update_weapon_skill(data.value.skill_name, {
-				value = nil,
 				value = upgrade_level
 			}, self._selected_weapon_category_id, WeaponSkillsManager.UPGRADE_ACTION_DEACTIVATE)
 		end
@@ -1189,13 +1081,6 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 
 		if reset_applied_stats then
 			self._weapon_stats:set_applied_stats({
-				stability_applied_value = nil,
-				accuracy_as_spread = nil,
-				rate_of_fire_applied_value = nil,
-				total_ammo_applied_value = nil,
-				magazine_applied_value = nil,
-				damage_applied_value = nil,
-				accuracy_applied_value = nil,
 				accuracy_as_spread = accuracy_as_spread,
 				damage_applied_value = damage,
 				magazine_applied_value = magazine,
@@ -1207,13 +1092,6 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		end
 
 		self._weapon_stats:set_modified_stats({
-			stability_modified_value = nil,
-			accuracy_as_spread = nil,
-			accuracy_modified_value = nil,
-			rate_of_fire_modified_value = nil,
-			total_ammo_modified_value = nil,
-			magazine_modified_value = nil,
-			damage_modified_value = nil,
 			accuracy_as_spread = accuracy_as_spread,
 			damage_modified_value = damage,
 			magazine_modified_value = magazine,
@@ -1429,13 +1307,11 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 				if challenge and challenge.challenge_name_id then
 					local challenge_name = managers.localization:to_upper_text(challenge.challenge_name_id)
 					info_label_text = managers.localization:to_upper_text("character_customization_locked_challenge_label", {
-						CHALLENGE = nil,
 						CHALLENGE = challenge_name
 					})
 				end
 			elseif level then
 				info_label_text = managers.localization:to_upper_text("menu_weapons_locked_higher_level", {
-					LEVEL = nil,
 					LEVEL = level
 				})
 			elseif weapon_unlocks then
@@ -1447,7 +1323,6 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 
 				classes = string.sub(classes, 0, -3)
 				info_label_text = managers.localization:to_upper_text("menu_weapons_locked_wrong_class", {
-					CLASSES = nil,
 					CLASSES = classes
 				})
 			end
@@ -1527,17 +1402,6 @@ function WeaponSelectionGui:_show_weapon(weapon_id, pre_created_blueprint, weapo
 	self._loading_units[unit_path] = true
 
 	managers.dyn_resource:load(IDS_UNIT, unit_path_id, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_unit_loading_complete", {
-		weapon_id = nil,
-		weapon_switched = nil,
-		pre_created_blueprint = nil,
-		weapon_factory_id = nil,
-		unit_path_id = nil,
-		unit_path = nil,
-		display_offset = nil,
-		height_offset = nil,
-		distance_offset = nil,
-		rotation_offset = nil,
-		weapon_tweak_data = nil,
 		weapon_tweak_data = weapon_tweak_data,
 		rotation_offset = rotation_offset,
 		distance_offset = distance_offset,
@@ -1583,12 +1447,6 @@ function WeaponSelectionGui:_unit_loading_complete(params)
 	local weapon_blueprint = params.pre_created_blueprint or managers.blackmarket:get_weapon_blueprint(weapon_category, selected_weapon_slot)
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(params.weapon_id)
 	local parts, blueprint = managers.weapon_factory:preload_blueprint(params.weapon_factory_id, weapon_blueprint, false, callback(self, self, "_preload_blueprint_completed", {
-		weapon_blueprint = nil,
-		height_offset = nil,
-		direction_up = nil,
-		direction_forward = nil,
-		distance_offset = nil,
-		weapon_factory_id = nil,
 		weapon_factory_id = params.weapon_factory_id,
 		weapon_blueprint = weapon_blueprint,
 		direction_forward = direction_forward,
@@ -1683,44 +1541,30 @@ end
 function WeaponSelectionGui:bind_controller_inputs_choose_weapon()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_weapon_category_tab_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_weapon_category_tab_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_equipable_tab_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_equipable_tab_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_upgrade_weapon_click")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_dpad_left"),
 			callback = callback(self, self, "_on_weapon_skin_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_dpad_right"),
 			callback = callback(self, self, "_on_weapon_skin_right")
 		}
@@ -1733,12 +1577,9 @@ function WeaponSelectionGui:bind_controller_inputs_choose_weapon()
 		"menu_legend_weapons_upgrade"
 	}
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = controller_legend,
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -1752,38 +1593,26 @@ end
 function WeaponSelectionGui:bind_controller_inputs_choose_weapon_no_upgrade()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_weapon_category_tab_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_weapon_category_tab_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_left"),
 			callback = callback(self, self, "_on_equipable_tab_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_trigger_right"),
 			callback = callback(self, self, "_on_equipable_tab_right")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_dpad_left"),
 			callback = callback(self, self, "_on_weapon_skin_left")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_dpad_right"),
 			callback = callback(self, self, "_on_weapon_skin_right")
 		}
@@ -1795,12 +1624,9 @@ function WeaponSelectionGui:bind_controller_inputs_choose_weapon_no_upgrade()
 		"menu_legend_weapons_equip"
 	}
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = controller_legend,
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -1814,14 +1640,10 @@ end
 function WeaponSelectionGui:bind_controller_inputs_upgrade_weapon()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_apply_weapon_skills_click")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_on_select_weapon_skills_click")
 		}
@@ -1830,8 +1652,6 @@ function WeaponSelectionGui:bind_controller_inputs_upgrade_weapon()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_weapons_weapon_skill_select",
@@ -1839,7 +1659,6 @@ function WeaponSelectionGui:bind_controller_inputs_upgrade_weapon()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -1855,15 +1674,12 @@ function WeaponSelectionGui:bind_controller_inputs_upgrade_weapon_upgrade_forbid
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_weapons_weapon_skill_select"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}

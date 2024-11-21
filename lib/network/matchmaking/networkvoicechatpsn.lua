@@ -373,7 +373,6 @@ end
 function NetworkVoiceChatPSN:voice_ui_update_callback(user_info)
 	if user_info and managers.network and managers.network:session() then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
-			user_data = nil,
 			status_type = "talk",
 			user_data = user_info
 		})
@@ -423,7 +422,6 @@ function NetworkVoiceChatPSN:mute_player(peer, mute)
 	}
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.UPDATE_VOICE_CHAT_UI, {
-		user_data = nil,
 		status_type = "mute",
 		user_data = user_info
 	})

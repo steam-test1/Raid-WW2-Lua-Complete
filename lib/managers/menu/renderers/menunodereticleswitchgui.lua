@@ -81,7 +81,6 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self:_set_reticle_texture(self._texture)
 
 	self.boxgui = BoxGuiObject:new(self.box_panel, {
-		sides = nil,
 		sides = {
 			1,
 			1,
@@ -94,7 +93,6 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
 		rotation = 360,
-		color = nil,
 		alpha = 0.6,
 		color = Color.black
 	})
@@ -178,10 +176,7 @@ end
 function MenuNodeReticleSwitchGui:_texture_done_callback(texture_ids)
 	if self and alive(self._texture_panel) then
 		self._texture_panel:bitmap({
-			texture = nil,
 			blend_mode = "add",
-			h = nil,
-			w = nil,
 			texture = texture_ids,
 			w = self._texture_panel:w(),
 			h = self._texture_panel:h()

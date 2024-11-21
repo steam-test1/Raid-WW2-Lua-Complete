@@ -59,10 +59,6 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 	})
 	local text_offset = self._clipping_panel:height() - 50
 	self._credits_panel = self._clipping_panel:panel({
-		w = nil,
-		y = nil,
-		x = nil,
-		h = nil,
 		x = safe_rect_pixels.x + side_padding,
 		y = text_offset,
 		w = safe_rect_pixels.width - side_padding * 2,
@@ -97,16 +93,9 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
 				x = 0,
-				font = nil,
-				color = nil,
 				vertical = "top",
 				halign = "left",
-				h = nil,
 				align = "center",
-				w = nil,
-				y = nil,
-				font_size = nil,
-				text = nil,
 				word_wrap = true,
 				wrap = true,
 				layer = 3,
@@ -124,8 +113,6 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			if data.src then
 				bitmap = self._credits_panel:bitmap({
-					texture = nil,
-					y = nil,
 					x = 0,
 					layer = 3,
 					y = ypos,
@@ -133,9 +120,6 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 				})
 			elseif data.atlas_src then
 				local icon_params = {
-					texture = nil,
-					y = nil,
-					texture_rect = nil,
 					y = ypos,
 					texture = tweak_data.gui.icons[data.atlas_src].texture,
 					texture_rect = tweak_data.gui.icons[data.atlas_src].texture_rect
@@ -156,9 +140,6 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 			ypos = ypos + 32
 		elseif data._meta == "command" then
 			table.insert(self._commands, {
-				param = nil,
-				cmd = nil,
-				pos = nil,
 				pos = ypos - text_offset + (data.offset or 0) + self._clipping_panel:height() / 2,
 				cmd = data.cmd,
 				param = data.param
@@ -176,16 +157,13 @@ function RaidMenuCreditsGui:_show_intro_video()
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		color = nil,
 		name = "video_background",
 		layer = 1,
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
-		width = nil,
 		layer = 2,
-		video = nil,
 		layer = self._video_panel:layer() + 1,
 		video = RaidMenuCreditsGui.INTRO_VIDEO,
 		width = self._video_panel:w()
@@ -198,13 +176,8 @@ function RaidMenuCreditsGui:_show_intro_video()
 	self._playing_intro_video = true
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		font = nil,
 		name = "press_any_key_prompt",
-		font_size = nil,
-		text = nil,
-		color = nil,
 		alpha = 0,
-		layer = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -447,14 +420,11 @@ end
 
 function RaidMenuCreditsGui:bind_controller_inputs()
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "back_pressed", nil)
 			}

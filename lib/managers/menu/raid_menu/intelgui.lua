@@ -25,15 +25,11 @@ end
 
 function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
-		parent_control_ref = nil,
-		tab_font_size = nil,
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 220,
 		y = 80,
-		tabs_params = nil,
 		name = "category_tabs",
-		on_click_callback = nil,
 		initial_tab_idx = 1,
 		tab_font_size = tweak_data.gui.font_sizes.small,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
@@ -66,16 +62,8 @@ function IntelGui:_layout_list()
 	local category_items_list_params = {
 		use_unlocked = false,
 		selection_enabled = true,
-		w = nil,
-		item_class = nil,
-		item_font_size = nil,
-		data_source_callback = nil,
 		on_mouse_over_sound_event = "highlight",
-		on_item_selected_callback = nil,
-		on_item_clicked_callback = nil,
 		name = "category_items_list",
-		scrollable_area_ref = nil,
-		item_font = nil,
 		item_h = 62,
 		w = category_items_list_scrollable_area_params.w,
 		item_font = tweak_data.gui.fonts.lato,
@@ -133,8 +121,6 @@ function IntelGui:data_source_category_items_list()
 		for list_item_index, list_item_data in pairs(data_source_table) do
 			if self._selected_category == IntelGui.CATEGORY_CONTROL_ARCHIVE then
 				is_unlocked = managers.unlock:is_unlocked({
-					identifier = nil,
-					slot = nil,
 					slot = UnlockManager.SLOT_PROFILE,
 					identifier = UnlockManager.CATEGORY_CONTROL_ARCHIVE
 				}, {
@@ -149,9 +135,6 @@ function IntelGui:data_source_category_items_list()
 
 			if is_unlocked then
 				table.insert(result, {
-					selected = nil,
-					text = nil,
-					value = nil,
 					text = self:translate(list_item_data.list_item_name_id, false),
 					value = list_item_data.id,
 					selected = #result == 0
@@ -287,21 +270,15 @@ end
 function IntelGui:bind_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_weapon_category_tab_left")
 		},
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_weapon_category_tab_right")
 		}
 	}
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_intel_tabs"
@@ -309,7 +286,6 @@ function IntelGui:bind_controller_inputs()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -322,21 +298,15 @@ end
 function IntelGui:bind_controller_inputs_play_video()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_shoulder_left"),
 			callback = callback(self, self, "_on_weapon_category_tab_left")
 		},
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_shoulder_right"),
 			callback = callback(self, self, "_on_weapon_category_tab_right")
 		}
 	}
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_intel_tabs",
@@ -345,7 +315,6 @@ function IntelGui:bind_controller_inputs_play_video()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

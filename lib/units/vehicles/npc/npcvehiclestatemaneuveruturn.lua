@@ -10,14 +10,10 @@ function NpcVehicleStateManeuverUTurn:on_enter(npc_driving_ext)
 	local delayed_tick = Application:time() + 0.5
 	self._maneuver_actions = {
 		{
-			tick_at = nil,
 			duration = 0.5,
-			input = nil,
 			tick_at = delayed_tick,
 			input = {
-				steering = nil,
 				acceleration = 1,
-				gear = nil,
 				handbrake = 1,
 				brake = 1,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_LEFT,
@@ -25,14 +21,10 @@ function NpcVehicleStateManeuverUTurn:on_enter(npc_driving_ext)
 			}
 		},
 		{
-			tick_at = nil,
 			duration = 1,
-			input = nil,
 			tick_at = delayed_tick,
 			input = {
-				steering = nil,
 				acceleration = 1,
-				gear = nil,
 				handbrake = 0,
 				brake = 0,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_FULL_RIGHT,
@@ -42,11 +34,8 @@ function NpcVehicleStateManeuverUTurn:on_enter(npc_driving_ext)
 		{
 			tick_at = 0,
 			duration = 0.5,
-			input = nil,
 			input = {
-				steering = nil,
 				acceleration = 1,
-				gear = nil,
 				handbrake = 0,
 				brake = 0,
 				steering = NpcVehicleDrivingExt.DRIVE_CONTROLS_STEER_STRAIGHT,

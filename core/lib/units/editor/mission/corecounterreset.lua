@@ -25,8 +25,6 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				g = 0,
 				from_unit = self._unit,
@@ -84,12 +82,9 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	local counter_target_params = {
 		tooltip = "Specifies what the selected counted should reset to",
 		floats = 0,
-		value = nil,
-		sizer = nil,
 		ctrlr_proportions = 2,
 		sorted = false,
 		name = "Counter target:",
-		panel = nil,
 		name_proportions = 1,
 		min = 0,
 		panel = panel,
@@ -99,12 +94,10 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	local counter_target = CoreEWS.number_controller(counter_target_params)
 
 	counter_target:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "counter_target",
 		ctrlr = counter_target
 	})
 	counter_target:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "counter_target",
 		ctrlr = counter_target
 	})

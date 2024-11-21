@@ -34,9 +34,6 @@ function CorePlayEffectUnitElement:test_element()
 		local position = self._hed.screen_space and Vector3() or self._unit:position()
 		local rotation = self._hed.screen_space and Rotation() or self._unit:rotation()
 		self._effect = World:effect_manager():spawn({
-			position = nil,
-			rotation = nil,
-			effect = nil,
 			effect = self._hed.effect:id(),
 			position = position,
 			rotation = rotation
@@ -103,8 +100,6 @@ end
 function CorePlayEffectUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.effect ~= "none" then
 		managers.editor:add_to_world_package({
-			name = nil,
-			continent = nil,
 			category = "effects",
 			name = self._hed.effect,
 			continent = self._unit:unit_data().continent
@@ -140,8 +135,6 @@ function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 			self:_draw_link({
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				from_unit = self._unit,
 				to_unit = unit

@@ -10,11 +10,6 @@ LaserTriggerUnitElement.ON_EXECUTED_ALTERNATIVES = {
 LaserTriggerUnitElement.USES_INSTIGATOR_RULES = true
 LaserTriggerUnitElement.CLOSE_DISTANCE = 25
 LaserTriggerUnitElement.COLORS = {
-	black = nil,
-	grey = nil,
-	blue = nil,
-	green = nil,
-	red = nil,
 	red = {
 		1,
 		0,
@@ -236,8 +231,6 @@ function LaserTriggerUnitElement:_rmb()
 	end
 
 	table.insert(self._hed.points, {
-		pos = nil,
-		rot = nil,
 		pos = pos,
 		rot = rot
 	})
@@ -277,8 +270,6 @@ function LaserTriggerUnitElement:_lmb()
 
 			if not self:_check_remove_connection(self._creating_connection, index) then
 				table.insert(self._hed.connections, {
-					from = nil,
-					to = nil,
 					from = self._creating_connection,
 					to = index
 				})
@@ -496,9 +487,7 @@ function LaserTriggerUnitElement:add_to_mission_package()
 	local unit_name = self._dummy_unit_name
 
 	managers.editor:add_to_world_package({
-		continent = nil,
 		category = "units",
-		name = nil,
 		name = unit_name:s(),
 		continent = self._unit:unit_data().continent
 	})
@@ -509,10 +498,8 @@ function LaserTriggerUnitElement:add_to_mission_package()
 
 	for _, file in ipairs(sequence_files) do
 		managers.editor:add_to_world_package({
-			continent = nil,
 			category = "script_data",
 			init = true,
-			name = nil,
 			name = file:s() .. ".sequence_manager",
 			continent = self._unit:unit_data().continent
 		})

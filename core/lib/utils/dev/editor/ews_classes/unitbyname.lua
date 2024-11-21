@@ -89,8 +89,6 @@ function UnitByName:init(name, unit_filter_function, ...)
 		self._layer_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
-			cb = nil,
-			name = nil,
 			cb = cb,
 			name = name
 		})

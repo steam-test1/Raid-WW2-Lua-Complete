@@ -21,8 +21,6 @@ function collect_member_names(members, member_names)
 		local vi = v()
 
 		table.insert(member_names, {
-			key = nil,
-			ui_name = nil,
 			ui_name = vi:ui_name(),
 			key = k
 		})
@@ -34,17 +32,11 @@ function collect_member_names(members, member_names)
 end
 
 stack_members = {
-	simulator = nil,
-	initializer = nil,
-	visualizer = nil,
 	initializer = {},
 	simulator = {},
 	visualizer = {}
 }
 stack_member_names = {
-	simulator = nil,
-	initializer = nil,
-	visualizer = nil,
 	initializer = {},
 	simulator = {},
 	visualizer = {}
@@ -149,8 +141,6 @@ function CoreParticleEditor:new_dialog()
 	local description_text = EWS:StaticText(dialog, "", "", "ST_NO_AUTORESIZE")
 
 	type_combo:connect("EVT_COMMAND_TEXT_UPDATED", on_select_type, {
-		combo = nil,
-		desc = nil,
 		combo = type_combo,
 		desc = description_text
 	})
@@ -161,8 +151,6 @@ function CoreParticleEditor:new_dialog()
 	end
 
 	on_select_type({
-		combo = nil,
-		desc = nil,
 		combo = type_combo,
 		desc = description_text
 	})

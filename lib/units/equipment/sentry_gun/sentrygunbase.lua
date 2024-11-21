@@ -95,8 +95,6 @@ function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	local weapon_setup_data = {
 		autoaim = true,
 		expend_ammo = true,
-		ignore_units = nil,
-		bullet_slotmask = nil,
 		auto_reload = true,
 		spread_mul = 1,
 		alert_AI = false,
@@ -134,7 +132,6 @@ end
 
 function SentryGunBase:set_server_information(peer_id)
 	self._server_information = {
-		owner_peer_id = nil,
 		owner_peer_id = peer_id
 	}
 
@@ -192,11 +189,7 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, damage_mu
 	local setup_data = {
 		autoaim = true,
 		expend_ammo = true,
-		ignore_units = nil,
-		user_unit = nil,
-		alert_filter = nil,
 		creates_alerts = true,
-		spread_mul = nil,
 		alert_AI = true,
 		user_unit = self._owner,
 		ignore_units = {
@@ -282,9 +275,6 @@ function SentryGunBase._attach(pos, rot, sentrygun_unit)
 		local attached_data = {
 			index = 1,
 			max_index = 3,
-			position = nil,
-			body = nil,
-			rotation = nil,
 			body = ray.body,
 			position = ray.body:position(),
 			rotation = ray.body:rotation()
@@ -430,18 +420,12 @@ function SentryGunBase:sync_net_event(event_id, peer)
 				if ammo_ratio < ammo_reduction then
 					leftover = leftover + ammo_reduction - ammo_ratio
 					weapon_list[id] = {
-						unit = nil,
-						total = nil,
-						amount = nil,
 						unit = weapon.unit,
 						amount = ammo_ratio,
 						total = ammo_ratio
 					}
 				else
 					weapon_list[id] = {
-						unit = nil,
-						total = nil,
-						amount = nil,
 						unit = weapon.unit,
 						amount = ammo_reduction,
 						total = ammo_ratio

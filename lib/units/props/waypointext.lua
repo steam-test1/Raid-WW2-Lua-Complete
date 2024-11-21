@@ -8,11 +8,6 @@ end
 
 function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon, show_on_hud)
 	self:add_waypoint_external({
-		show_on_hud = nil,
-		map_icon = nil,
-		pos_locator = nil,
-		pos_z_offset = nil,
-		icon_name = nil,
 		icon_name = icon_name,
 		pos_z_offset = pos_z_offset,
 		pos_locator = pos_locator,
@@ -40,21 +35,8 @@ function WaypointExt:add_waypoint_external(data)
 	self._icon_rot = rotation
 	self._waypoint_data = {
 		waypoint_type = "unit_waypoint",
-		icon = nil,
-		unit = nil,
 		radius = 200,
-		position = nil,
-		rotation = nil,
 		waypoint_origin = "waypoint_extension",
-		show_on_screen = nil,
-		waypoint_color = nil,
-		color = nil,
-		lifetime = nil,
-		map_icon = nil,
-		present_timer = nil,
-		range_max = nil,
-		range_min = nil,
-		distance = nil,
 		no_sync = false,
 		icon = self._icon_name,
 		map_icon = self._map_icon,
@@ -107,12 +89,6 @@ end
 
 function WaypointExt:save(save_data)
 	save_data.Waypoint = {
-		show_on_hud = nil,
-		map_icon = nil,
-		pos_locator = nil,
-		pos_z_offset = nil,
-		icon_name = nil,
-		active = nil,
 		active = self:active(),
 		icon_name = self._icon_name,
 		pos_z_offset = self._pos_z_offset and self._pos_z_offset.z,

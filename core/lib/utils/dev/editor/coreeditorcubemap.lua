@@ -16,8 +16,6 @@ function CoreEditor:create_projection_light(type)
 
 			if light_name then
 				table.insert(units, {
-					light_name = nil,
-					unit = nil,
 					unit = unit,
 					light_name = light_name
 				})
@@ -31,8 +29,6 @@ function CoreEditor:create_projection_light(type)
 
 			if light_name then
 				table.insert(units, {
-					light_name = nil,
-					unit = nil,
 					unit = unit,
 					light_name = light_name
 				})
@@ -44,8 +40,6 @@ function CoreEditor:create_projection_light(type)
 
 	for _, light in ipairs(CoreEditorUtils.all_lights()) do
 		table.insert(self._saved_all_lights, {
-			enabled = nil,
-			light = nil,
 			light = light,
 			enabled = light:enable()
 		})
@@ -59,16 +53,7 @@ function CoreEditor:create_projection_light(type)
 		resolution = resolution or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
 		table.insert(lights, {
-			unit = nil,
-			enabled = nil,
-			light = nil,
 			name = "",
-			resolution = nil,
-			spot = nil,
-			output_name = nil,
-			saved_rotation = nil,
-			rotation = nil,
-			position = nil,
 			position = light:position(),
 			rotation = light:rotation(),
 			saved_rotation = unit:rotation(),
@@ -103,8 +88,6 @@ function CoreEditor:create_projection_light(type)
 	managers.viewport:set_default_environment("core/environments/default_depthlight", nil, nil)
 	self:_create_cube_light({
 		simple_postfix = true,
-		cubes = nil,
-		saved_environment = nil,
 		cubes = lights,
 		saved_environment = saved_environment
 	})
@@ -138,8 +121,6 @@ function CoreEditor:create_cube_map(params)
 	if #self._cubes_que == 0 then
 		table.insert(self._cubes_que, {
 			name = "camera",
-			rotation = nil,
-			position = nil,
 			position = self:camera():position(),
 			rotation = self:camera():rotation()
 		})
@@ -210,15 +191,6 @@ function CoreEditor:next_cube()
 		self:_set_appwin_fixed_resolution(Vector3(resolution + 4, resolution + 4, 0))
 
 		local params = {
-			name = nil,
-			light = nil,
-			simple_postfix = nil,
-			done_callback = nil,
-			spot = nil,
-			output_path = nil,
-			output_name = nil,
-			source_path = nil,
-			unit = nil,
 			done_callback = callback(self, self, "cube_map_done"),
 			name = cube.name,
 			output_name = cube.output_name,

@@ -163,10 +163,6 @@ function InventoryGenerator._items_content(safe_items, contains)
 						id = InventoryGenerator._create_id(category, entry, quality, false)
 						safe_items[id] = {
 							bonus = false,
-							quality = nil,
-							data = nil,
-							category = nil,
-							entry = nil,
 							category = category,
 							entry = entry,
 							quality = quality,
@@ -178,10 +174,6 @@ function InventoryGenerator._items_content(safe_items, contains)
 						id = InventoryGenerator._create_id(category, entry, quality, true)
 						safe_items[id] = {
 							bonus = true,
-							quality = nil,
-							data = nil,
-							category = nil,
-							entry = nil,
 							category = category,
 							entry = entry,
 							quality = quality,
@@ -191,9 +183,6 @@ function InventoryGenerator._items_content(safe_items, contains)
 				else
 					id = InventoryGenerator._create_id(category, entry)
 					safe_items[id] = {
-						data = nil,
-						entry = nil,
-						category = nil,
 						category = category,
 						entry = entry,
 						data = item_data
@@ -207,10 +196,6 @@ end
 function InventoryGenerator._items_add(category, entry, def_id, content_data, safe_items, unique_def_ids)
 	local id = InventoryGenerator._create_id(category, entry)
 	safe_items[id] = {
-		def_id = nil,
-		data = nil,
-		entry = nil,
-		category = nil,
 		entry = entry,
 		category = category,
 		def_id = def_id,
@@ -286,12 +271,7 @@ function InventoryGenerator._probability_list(content, item_list)
 					id = InventoryGenerator._create_id(category, entry, quality, false)
 
 					table.insert(probability_list, {
-						id = nil,
-						quality = nil,
 						bonus = false,
-						category = nil,
-						entry = nil,
-						weight = nil,
 						id = id,
 						category = category,
 						entry = entry,
@@ -304,12 +284,7 @@ function InventoryGenerator._probability_list(content, item_list)
 					id = InventoryGenerator._create_id(category, entry, quality, true)
 
 					table.insert(probability_list, {
-						id = nil,
-						quality = nil,
 						bonus = true,
-						category = nil,
-						entry = nil,
-						weight = nil,
 						id = id,
 						category = category,
 						entry = entry,
@@ -321,10 +296,6 @@ function InventoryGenerator._probability_list(content, item_list)
 				id = InventoryGenerator._create_id(category, entry)
 
 				table.insert(probability_list, {
-					id = nil,
-					weight = nil,
-					entry = nil,
-					category = nil,
 					id = id,
 					category = category,
 					entry = entry,
@@ -449,8 +420,6 @@ function InventoryGenerator.create_description_safe(safe_entry)
 	for category, items in pairs(content_td.contains) do
 		for _, item in ipairs(items) do
 			items_list[#items_list + 1] = {
-				entry = nil,
-				category = nil,
 				category = category,
 				entry = item
 			}
@@ -665,11 +634,6 @@ function InventoryGenerator._fill_defids(list, json_path)
 
 				defid_list[def_id] = true
 				defid_data[id] = {
-					bonus = nil,
-					quality = nil,
-					def_id = nil,
-					category = nil,
-					entry = nil,
 					category = item.item_slot,
 					entry = item.item_name,
 					quality = item.dsl_quality,
@@ -703,11 +667,6 @@ function InventoryGenerator._fill_defids_OLD(list, json_path)
 
 				defid_list[def_id] = true
 				defid_data[id] = {
-					bonus = nil,
-					quality = nil,
-					def_id = nil,
-					category = nil,
-					entry = nil,
 					category = item.item_slot,
 					entry = item.item_name,
 					quality = item.dsl_quality,

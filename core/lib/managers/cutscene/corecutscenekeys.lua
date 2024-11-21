@@ -1,5 +1,4 @@
 CoreCutsceneKey = CoreCutsceneKey or {
-	_classes = nil,
 	_classes = {}
 }
 

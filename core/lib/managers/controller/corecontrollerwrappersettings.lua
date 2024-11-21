@@ -450,7 +450,6 @@ end
 
 function ControllerWrapperConnection:populate_data(data)
 	local sub_data = {
-		_meta = nil,
 		_meta = self.TYPE
 	}
 
@@ -586,8 +585,6 @@ function ControllerWrapperAxis:read_axis_btns(node)
 
 		if (child_name == "button" or child_name == "axis") and child.name and child.input then
 			self._btn_connections[child.name] = {
-				name = nil,
-				type = nil,
 				type = child_name,
 				name = child.input
 			}
@@ -768,7 +765,6 @@ end
 function ControllerWrapperDelayConnection:populate_data(data)
 	local list = data.connections
 	local sub_data = {
-		_meta = nil,
 		_meta = self.TYPE
 	}
 
@@ -821,7 +817,6 @@ end
 
 function ControllerWrapperEditable:populate_data(data)
 	local sub_data = {
-		_meta = nil,
 		_meta = self.TYPE,
 		name = self._connection_name,
 		caption = self._caption,
@@ -884,7 +879,6 @@ end
 
 function ControllerWrapperUnselectable:populate_data(data)
 	local sub_data = {
-		_meta = nil,
 		_meta = self.TYPE,
 		name = self._input_name
 	}

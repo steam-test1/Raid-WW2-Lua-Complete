@@ -174,8 +174,6 @@ function HubTimeline:_add_unit(unit)
 	local ha = self._hub_unit:hub_element():get_hub_action(unit)
 
 	key:set_metadata({
-		unit = nil,
-		data = nil,
 		unit = unit,
 		data = ha
 	})

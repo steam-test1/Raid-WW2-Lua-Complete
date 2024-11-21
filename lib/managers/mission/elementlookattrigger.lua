@@ -51,11 +51,6 @@ function ElementLookAtTrigger:update_lookat()
 
 	local player = managers.player:player_unit()
 	local is_player_looking_at = managers.player:is_player_looking_at(self._values.position, {
-		at_facing = nil,
-		distance = nil,
-		player_unit = nil,
-		raycheck = nil,
-		sensitivity = nil,
 		distance = self._values.distance,
 		at_facing = self._values.in_front and self._values.rotation:y(),
 		sensitivity = self._values.sensitivity,

@@ -22,7 +22,6 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage, attacker_unit
 		if Network:is_server() then
 			if self._kill_parent and self._unit:parent() and self._unit:parent():character_damage() then
 				local attack_data = {
-					damage = nil,
 					damage = self._unit:parent():character_damage():health() * 10
 				}
 
@@ -42,14 +41,8 @@ function FlamerTank:detonate(in_pos, range, damage, player_damage, attacker_unit
 		end
 
 		managers.explosion:detect_and_give_dmg({
-			collision_slotmask = nil,
-			hit_pos = nil,
-			player_damage = nil,
-			damage = nil,
-			range = nil,
 			ignite_character = true,
 			no_raycast_check_characters = true,
-			ignore_unit = nil,
 			curve_pow = 3,
 			hit_pos = pos,
 			range = range,

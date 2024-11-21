@@ -63,8 +63,6 @@ end
 
 function ElementLogicChance:add_trigger(id, outcome, callback)
 	self._triggers[id] = {
-		outcome = nil,
-		callback = nil,
 		outcome = outcome,
 		callback = callback
 	}

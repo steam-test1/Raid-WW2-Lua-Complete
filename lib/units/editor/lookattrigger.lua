@@ -52,11 +52,8 @@ function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 		floats = 3,
 		number_ctrlr_proportions = 1,
 		slider_ctrlr_proportions = 3,
-		panel = nil,
 		name_proportions = 1,
 		max = 0.999,
-		value = nil,
-		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.sensitivity
@@ -65,22 +62,18 @@ function LookAtTriggerUnitElement:_build_panel(panel, panel_sizer)
 	CoreEws.slider_and_number_controller(sensitivity_params)
 	sensitivity_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
 		value = "sensitivity",
-		ctrlr = nil,
 		ctrlr = sensitivity_params.number_ctrlr
 	})
 	sensitivity_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
 		value = "sensitivity",
-		ctrlr = nil,
 		ctrlr = sensitivity_params.number_ctrlr
 	})
 	sensitivity_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "sensitivity",
-		ctrlr = nil,
 		ctrlr = sensitivity_params.number_ctrlr
 	})
 	sensitivity_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "sensitivity",
-		ctrlr = nil,
 		ctrlr = sensitivity_params.number_ctrlr
 	})
 	self:_build_value_number(panel, panel_sizer, "distance", {

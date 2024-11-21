@@ -18,7 +18,6 @@ end
 function HUDMapTab:_create_panel(panel, params)
 	local panel_params = {
 		valign = "scale",
-		layer = nil,
 		name = "map_panel",
 		halign = "scale",
 		layer = params.layer or panel:layer()
@@ -29,7 +28,6 @@ end
 function HUDMapTab:_create_inner_panel()
 	local inner_panel_params = {
 		valign = "center",
-		layer = nil,
 		name = "inner_panel",
 		halign = "center",
 		layer = HUDMapTab.INNER_PANEL_LAYER
@@ -45,7 +43,6 @@ function HUDMapTab:_create_pin_panel()
 
 	local player_pins_panel_params = {
 		valign = "scale",
-		layer = nil,
 		name = "player_pins_panel",
 		halign = "scale",
 		layer = HUDMapTab.PLAYER_PINS_LAYER
@@ -61,7 +58,6 @@ function HUDMapTab:_create_waypoint_panel()
 
 	local waypoint_panel_params = {
 		valign = "scale",
-		layer = nil,
 		name = "waypoint_panel",
 		halign = "scale",
 		layer = HUDMapTab.WAYPOINT_PANEL_LAYER
@@ -96,8 +92,6 @@ function HUDMapTab:_create_peer_pins(panel)
 
 	for index, peer in pairs(peers) do
 		local peer_pin_params = {
-			id = nil,
-			nationality = nil,
 			id = index,
 			nationality = peer:character()
 		}
@@ -117,8 +111,6 @@ function HUDMapTab:_create_ai_pins(panel)
 
 	for index, ai_character in pairs(ai_characters) do
 		local peer_pin_params = {
-			nationality = nil,
-			id = nil,
 			ai = true,
 			id = peer_pins_number + index,
 			nationality = ai_character.name
@@ -146,10 +138,7 @@ function HUDMapTab:_create_map_background()
 	local map_texture = tweak_data.levels[self._current_level].map.texture
 	local background_panel_params = {
 		valign = "center",
-		h = nil,
 		name = "map_background_panel",
-		w = nil,
-		layer = nil,
 		halign = "center",
 		w = tweak_data.gui:icon_w(map_texture),
 		h = tweak_data.gui:icon_h(map_texture),
@@ -161,9 +150,7 @@ function HUDMapTab:_create_map_background()
 	background_panel:set_center_y(self._object:h() / 2)
 
 	local background_image_params = {
-		texture_rect = nil,
 		name = "background_image",
-		texture = nil,
 		texture = tweak_data.gui.icons[map_texture].texture,
 		texture_rect = tweak_data.gui.icons[map_texture].texture_rect
 	}
@@ -180,9 +167,7 @@ function HUDMapTab:_create_base_icon()
 	local base_x, base_y = self:_get_map_position(tweak_data.levels[self._current_level].map.base_location.x, tweak_data.levels[self._current_level].map.base_location.y)
 	local base_icon_texture = tweak_data.levels[self._current_level].map.base_icon or "map_camp"
 	local base_icon_params = {
-		texture_rect = nil,
 		name = "base_icon",
-		texture = nil,
 		texture = tweak_data.gui.icons[base_icon_texture].texture,
 		texture_rect = tweak_data.gui.icons[base_icon_texture].texture_rect
 	}

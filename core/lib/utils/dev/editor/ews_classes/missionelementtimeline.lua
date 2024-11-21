@@ -165,8 +165,6 @@ function MissionElementTimeline:_add_unit(unit, params)
 	local key = EWS:SequencerKey()
 
 	key:set_metadata({
-		unit = nil,
-		params = nil,
 		unit = unit,
 		params = params
 	})

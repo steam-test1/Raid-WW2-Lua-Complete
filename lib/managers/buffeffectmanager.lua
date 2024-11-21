@@ -89,10 +89,6 @@ function BuffEffectManager:activate_effect(effect_data)
 
 	if effect_data.name == BuffEffectManager.EFFECT_COMPLETE_RAID_WITHIN then
 		self._timers[effect_data.name] = {
-			effect_id = nil,
-			start_time = nil,
-			effect_name = nil,
-			value = nil,
 			start_time = TimerManager:game():time(),
 			value = effect_data.value,
 			effect_id = effect.effect_id,
@@ -260,10 +256,6 @@ function BuffEffectManager:save_dropin(data)
 	end
 
 	local state = {
-		dt_sum = nil,
-		timers = nil,
-		active_effects = nil,
-		effect_id_counter = nil,
 		active_effects = active_effects,
 		dt_sum = self._dt_sum,
 		effect_id_counter = self._effect_id_counter,

@@ -89,15 +89,9 @@ function CoreEditorGroups:save()
 			end
 
 			local t = {
-				data = nil,
-				continent = nil,
 				entry = "editor_groups",
 				continent = group:continent() and group:continent_name(),
 				data = {
-					units = nil,
-					reference = nil,
-					name = nil,
-					continent = nil,
 					name = group:name(),
 					reference = group:reference():unit_data().unit_id,
 					continent = group:continent() and group:continent_name(),

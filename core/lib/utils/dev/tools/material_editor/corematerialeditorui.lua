@@ -249,8 +249,6 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 			local check_box = tree:append(child:parameter("ui_name"))
 			local define_struct = {
 				_checked = false,
-				_check_box = nil,
-				_define_node = nil,
 				_define_node = child,
 				_check_box = check_box
 			}

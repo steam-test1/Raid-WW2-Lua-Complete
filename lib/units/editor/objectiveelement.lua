@@ -38,8 +38,6 @@ function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -152,8 +150,6 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	}, "Overrides objective amount counter with this value.")
 
 	local help = {
-		sizer = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "State complete_and_activate will complete any previous objective and activate the selected objective. Note that it might not function well with objectives using amount"

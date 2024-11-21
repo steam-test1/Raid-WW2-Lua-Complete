@@ -9,12 +9,6 @@ require("lib/units/player_team/logics/TeamAILogicSurrender")
 TeamAIBrain = TeamAIBrain or class(CopBrain)
 TeamAIBrain._create_attention_setting_from_descriptor = PlayerMovement._create_attention_setting_from_descriptor
 TeamAIBrain._logics = {
-	travel = nil,
-	assault = nil,
-	surrender = nil,
-	disabled = nil,
-	idle = nil,
-	inactive = nil,
 	inactive = TeamAILogicInactive,
 	idle = TeamAILogicIdle,
 	surrender = TeamAILogicSurrender,

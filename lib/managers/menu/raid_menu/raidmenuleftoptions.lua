@@ -28,8 +28,6 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
 		loop_items = true,
 		selection_enabled = true,
-		data_source_callback = nil,
-		on_item_clicked_callback = nil,
 		h = 640,
 		w = 480,
 		y = 144,
@@ -43,12 +41,9 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self.list_menu_options:set_selected(true)
 
 	local default_video_params = {
-		text = nil,
 		y = 832,
 		x = 1472,
-		layer = nil,
 		name = "default_video",
-		on_click_callback = nil,
 		text = utf8.to_upper(managers.localization:text("menu_option_default")),
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_default"
@@ -57,12 +52,9 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	}
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_params)
 	local reset_progress_params = {
-		text = nil,
 		y = 768,
 		x = 1472,
-		layer = nil,
 		name = "reset_progress",
-		on_click_callback = nil,
 		text = utf8.to_upper(managers.localization:text("menu_clear_progress")),
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_reset_progress"
@@ -79,27 +71,22 @@ function RaidMenuLeftOptions:_list_menu_options_data_source()
 
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_controls",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_controls"))
 	})
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_video",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_video"))
 	})
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_interface",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_interface"))
 	})
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_sound",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_sound"))
 	})
 	table.insert(_list_items, {
 		callback = "menu_options_on_click_network",
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_network"))
 	})
 
@@ -122,8 +109,6 @@ end
 function RaidMenuLeftOptions:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_list_menu_options_item_selected", {
 				callback = "menu_options_on_click_default"
@@ -134,15 +119,12 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_default_options"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
@@ -155,16 +137,12 @@ end
 function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_list_menu_options_item_selected", {
 				callback = "menu_options_on_click_reset_progress"
 			})
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_list_menu_options_item_selected", {
 				callback = "menu_options_on_click_default"
@@ -175,8 +153,6 @@ function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_clear_progress",
@@ -184,7 +160,6 @@ function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}

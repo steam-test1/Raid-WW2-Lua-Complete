@@ -438,7 +438,6 @@ function EnemyManager:_init_enemy_data()
 	enemy_data.corpses = {}
 	enemy_data.nr_corpses = 0
 	self._civilian_data = {
-		unit_data = nil,
 		unit_data = {}
 	}
 	self._queued_tasks = {}
@@ -479,13 +478,6 @@ end
 
 function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
 	local task_data = {
-		t = nil,
-		id = nil,
-		clbk = nil,
-		asap = nil,
-		v_cb = nil,
-		queue_time = nil,
-		data = nil,
 		clbk = task_clbk,
 		id = id,
 		data = data,
@@ -742,7 +734,6 @@ function EnemyManager:queued_tasks_by_callback()
 		else
 			categorised_queued_tasks[task_data.clbk] = {
 				amount = 1,
-				key = nil,
 				key = task_data.id
 			}
 		end
@@ -767,11 +758,6 @@ function EnemyManager:register_enemy(enemy)
 	local char_tweak = tweak_data.character[enemy:base()._tweak_table]
 	local u_data = {
 		importance = 0,
-		char_tweak = nil,
-		so_access = nil,
-		unit = nil,
-		tracker = nil,
-		m_pos = nil,
 		unit = enemy,
 		m_pos = enemy:movement():m_pos(),
 		tracker = enemy:movement():nav_tracker(),
@@ -808,7 +794,6 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 
 		if not alarm and is_cool then
 			managers.dialog:queue_dialog("player_gen_stealth_kill", {
-				instigator = nil,
 				skip_idle_check = true,
 				instigator = damage_info.attacker_unit
 			})
@@ -848,9 +833,6 @@ function EnemyManager:add_corpse_lootbag(corpse)
 		local enemy_data = self._enemy_data
 		enemy_data.nr_corpses = enemy_data.nr_corpses + 1
 		enemy_data.corpses[corpse:id()] = {
-			death_t = nil,
-			m_pos = nil,
-			unit = nil,
 			unit = corpse,
 			m_pos = corpse:position(),
 			death_t = self._t
@@ -909,11 +891,6 @@ function EnemyManager:register_civilian(unit)
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
 	self._civilian_data.unit_data[unit:key()] = {
 		is_civilian = true,
-		char_tweak = nil,
-		so_access = nil,
-		unit = nil,
-		tracker = nil,
-		m_pos = nil,
 		unit = unit,
 		m_pos = unit:movement():m_pos(),
 		tracker = unit:movement():nav_tracker(),
@@ -1174,9 +1151,6 @@ function EnemyManager:load(data)
 				corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
 
 				self._enemy_data.corpses[u_id] = {
-					unit = nil,
-					m_pos = nil,
-					u_id = nil,
 					death_t = 0,
 					unit = corpse,
 					u_id = u_id,
@@ -1189,7 +1163,6 @@ function EnemyManager:load(data)
 					corpse:damage():run_sequence_simple("unfreeze_ragdoll")
 					corpse:set_extension_update_enabled(Idstring("movement"), false)
 					managers.queued_tasks:queue(nil, self._queue_freeze_ragdoll, self, {
-						corpse = nil,
 						corpse = corpse
 					}, 6, nil)
 				end
@@ -1270,10 +1243,8 @@ function EnemyManager:register_commander()
 
 		if count < 5 then
 			managers.hud:set_big_prompt({
-				description = nil,
 				id = "commander_arrived",
 				duration = 5,
-				title = nil,
 				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
 				description = managers.localization:text("hint_commander_arrived_desc")
 			})

@@ -31,12 +31,10 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "key",
 		ctrlr = key
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "key",
 		ctrlr = key
 	})
@@ -53,12 +51,10 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	value_sizer:add(value, 2, 0, "ALIGN_CENTER_VERTICAL")
 	value:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "value",
 		ctrlr = value
 	})
 	value:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "value",
 		ctrlr = value
 	})
@@ -100,8 +96,6 @@ function JobValueFilterUnitElement:_build_panel(panel, panel_sizer)
 	}, "Select which check operation to perform")
 
 	local help = {
-		sizer = nil,
-		panel = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		text = "Key is what to check. Value is what it is supposed to be to pass the filter. Different check types can be used i the value is known to be a number, for example, greater_then checks if the stored value is greater then the input value."
@@ -138,8 +132,6 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
@@ -200,12 +192,10 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "key",
 		ctrlr = key
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "key",
 		ctrlr = key
 	})
@@ -214,7 +204,6 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	save:set_value(self._hed.save)
 	save:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "save",
 		ctrlr = save
 	})

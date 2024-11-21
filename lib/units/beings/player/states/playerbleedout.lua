@@ -15,7 +15,6 @@ function PlayerBleedOut:enter(state_data, enter_data)
 
 	local t = managers.player:player_timer():time()
 	self._revive_SO_data = {
-		unit = nil,
 		unit = self._unit
 	}
 
@@ -41,8 +40,6 @@ function PlayerBleedOut:enter(state_data, enter_data)
 	end
 
 	self:_start_action_unequip_weapon(t, {
-		selection_wanted = nil,
-		delay = nil,
 		selection_wanted = selection_wanted,
 		delay = self.TILT_BLEND_TIME
 	})
@@ -154,10 +151,6 @@ function PlayerBleedOut:exit(state_data, new_state_name)
 
 	self._tilt_blend_t = nil
 	local exit_data = {
-		unequip_weapon_expire_t = nil,
-		change_weapon_data = nil,
-		equip_weapon_expire_t = nil,
-		equip_weapon = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data,
@@ -334,9 +327,7 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	local followup_objective = {
 		scan = true,
 		type = "act",
-		action = nil,
 		action = {
-			blocks = nil,
 			type = "act",
 			body_part = 1,
 			variant = "crouch",
@@ -351,17 +342,9 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	}
 	local objective = {
 		pose = "stand",
-		complete_clbk = nil,
 		haste = "run",
-		action = nil,
 		scan = true,
-		fail_clbk = nil,
 		type = "revive",
-		followup_objective = nil,
-		action_duration = nil,
-		action_start_clbk = nil,
-		nav_seg = nil,
-		follow_unit = nil,
 		destroy_clbk_key = false,
 		called = true,
 		follow_unit = revive_SO_data.unit,
@@ -372,7 +355,6 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			blocks = nil,
 			align_sync = true,
 			body_part = 1,
 			variant = "revive",
@@ -388,15 +370,11 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		}
 	}
 	local so_descriptor = {
-		search_pos = nil,
 		AI_group = "friendlies",
-		objective = nil,
 		usage_amount = 1,
 		chance_inc = 0,
 		base_chance = 1,
 		interval = 0,
-		verification_clbk = nil,
-		admin_clbk = nil,
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),
 		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),

@@ -64,8 +64,6 @@ function UnhideByName:init(...)
 		self._layer_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
-			name = nil,
-			cb = nil,
 			cb = cb,
 			name = name
 		})
@@ -144,8 +142,6 @@ function UnhideByName:build_continent_cbs()
 		self._continents_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_continent_cb"), {
-			name = nil,
-			cb = nil,
 			cb = cb,
 			name = name
 		})

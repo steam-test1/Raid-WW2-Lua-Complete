@@ -36,8 +36,6 @@ function DialogueUnitElement:test_element()
 
 	local queue_dialog_unit = {
 		skip_idle_check = true,
-		on_unit = nil,
-		done_cbk = nil,
 		on_unit = managers.dialog._ventrilo_unit,
 		done_cbk = callback(self, self, "stop_test_element")
 	}

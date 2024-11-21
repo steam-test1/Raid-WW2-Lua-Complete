@@ -225,14 +225,12 @@ function MenuCallbackHandler:on_account_picker()
 		end
 
 		managers.system_menu:show_select_user({
-			callback_func = nil,
 			count = 1,
 			callback_func = f
 		})
 	end
 
 	managers.menu:show_account_picker_dialog({
-		yes_func = nil,
 		yes_func = confirm_cb
 	})
 end
@@ -601,8 +599,6 @@ function MenuCallbackHandler:lobby_create_campaign(item)
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 	MenuCallbackHandler:start_job({
-		job_id = nil,
-		difficulty = nil,
 		job_id = job_id,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	})
@@ -667,12 +663,10 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 	if game_state_machine:current_state()._name ~= "menu_main" and alive(fullscreen_ws) then
 		local black_overlay = fullscreen_ws:panel():panel({
 			name = "apply_render_settings_panel",
-			layer = nil,
 			layer = tweak_data.gui.MOUSE_LAYER - 1
 		})
 
 		black_overlay:rect({
-			color = nil,
 			color = Color.black
 		})
 		black_overlay:animate(function (o)
@@ -910,7 +904,6 @@ function MenuCallbackHandler:_find_online_games(friends_only)
 
 				if node_gui.set_mini_info then
 					node_gui:set_mini_info(managers.localization:text("menu_players_online", {
-						COUNT = nil,
 						COUNT = amount
 					}))
 				end
@@ -1129,7 +1122,6 @@ end
 
 function MenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	managers.menu:show_restart_game_dialog({
-		yes_func = nil,
 		yes_func = function ()
 			managers.game_play_central:restart_the_game()
 		end
@@ -1138,7 +1130,6 @@ end
 
 function MenuCallbackHandler:singleplayer_restart_mission(item)
 	managers.menu:show_restart_game_dialog({
-		yes_func = nil,
 		yes_func = function ()
 			managers.game_play_central:restart_the_game()
 		end
@@ -1297,7 +1288,6 @@ function MenuCallbackHandler:leave_safehouse()
 	end
 
 	managers.menu:show_leave_safehouse_dialog({
-		yes_func = nil,
 		yes_func = yes_func
 	})
 end
@@ -1314,7 +1304,6 @@ function MenuCallbackHandler:abort_mission()
 	end
 
 	managers.menu:show_abort_mission_dialog({
-		yes_func = nil,
 		yes_func = yes_func
 	})
 end
@@ -1333,8 +1322,6 @@ end
 
 function MenuCallbackHandler:set_default_options()
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_default_options_message"),
 		callback = function ()
 			managers.user:reset_setting_map()
@@ -1347,8 +1334,6 @@ end
 
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_default_controls_options_message"),
 		callback = function ()
 			managers.user:reset_controls_setting_map()
@@ -1361,8 +1346,6 @@ end
 
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_default_video_options_message"),
 		callback = function ()
 			managers.user:reset_video_setting_map()
@@ -1375,8 +1358,6 @@ end
 
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_default_sound_options_message"),
 		callback = function ()
 			managers.user:reset_sound_setting_map()
@@ -1390,8 +1371,6 @@ end
 
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_default_network_options_message"),
 		callback = function ()
 			managers.user:reset_network_setting_map()
@@ -1451,8 +1430,6 @@ end
 
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
-		callback = nil,
-		text = nil,
 		text = managers.localization:text("dialog_use_default_keys_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")
@@ -1548,8 +1525,6 @@ end
 function MenuCallbackHandler:play_single_player_job(item)
 	self:play_single_player()
 	self:start_single_player_job({
-		job_id = nil,
-		difficulty = nil,
 		job_id = item:parameter("job_id"),
 		difficulty = Global.DEFAULT_DIFFICULTY
 	})
@@ -1557,8 +1532,6 @@ end
 
 function MenuCallbackHandler:play_quick_start_job(item)
 	self:start_job({
-		job_id = nil,
-		difficulty = nil,
 		job_id = item:parameter("job_id"),
 		difficulty = Global.DEFAULT_DIFFICULTY
 	})

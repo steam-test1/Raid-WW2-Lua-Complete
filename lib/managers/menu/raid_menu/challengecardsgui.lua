@@ -37,13 +37,10 @@ function ChallengeCardsGui:_layout()
 		y = 0
 	})
 	self._cards_suggest_title = self._root_panel:label({
-		font_size = nil,
-		font = nil,
 		visible = true,
 		y = 0,
 		x = 0,
 		name = "cards_suggest_title",
-		color = nil,
 		vertical = "top",
 		h = 60,
 		w = 800,
@@ -54,51 +51,38 @@ function ChallengeCardsGui:_layout()
 	})
 	local tabs_params = {
 		{
-			callback_param = nil,
-			text = nil,
 			name = "tab_common",
 			text = self:translate("loot_rarity_common", true),
 			callback_param = LootDropTweakData.RARITY_COMMON
 		},
 		{
-			callback_param = nil,
-			text = nil,
 			name = "tab_uncommon",
 			text = self:translate("loot_rarity_uncommon", true),
 			callback_param = LootDropTweakData.RARITY_UNCOMMON
 		},
 		{
-			callback_param = nil,
-			text = nil,
 			name = "tab_rare",
 			text = self:translate("loot_rarity_rare", true),
 			callback_param = LootDropTweakData.RARITY_RARE
 		},
 		{
-			callback_param = nil,
-			text = nil,
 			name = "tab_other",
 			text = self:translate("menu_filter_other", true),
 			callback_param = LootDropTweakData.RARITY_OTHER
 		},
 		{
 			callback_param = nil,
-			text = nil,
 			name = "tab_all",
 			text = self:translate("menu_filter_all", true)
 		}
 	}
 	self._rarity_filters_tabs = self._phase_one_panel:tabs({
 		dont_trigger_special_buttons = true,
-		on_click_callback = nil,
-		initial_tab_idx = nil,
 		y = 96,
 		x = 0,
 		name = "rarity_filters_tabs",
 		tab_align = "center",
 		tab_height = 64,
-		tab_width = nil,
-		tabs_params = nil,
 		tab_width = 640 / #tabs_params,
 		initial_tab_idx = #tabs_params,
 		on_click_callback = callback(self, self, "on_click_filter_rarity"),
@@ -114,18 +98,12 @@ function ChallengeCardsGui:_layout()
 	}
 	self._challenge_cards_grid_scrollable_area = self._phase_one_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
 	local challenge_cards_grid_params = {
-		scrollable_area_ref = nil,
 		x = 0,
-		item_params = nil,
 		y = 0,
 		w = 636,
 		name = "challenge_cards_grid",
-		grid_params = nil,
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
 		grid_params = {
-			on_select_callback = nil,
-			on_click_callback = nil,
-			data_source_callback = nil,
 			scroll_marker_w = 32,
 			vertical_spacing = 5,
 			data_source_callback = callback(self, self, "data_source_inventory_cards"),
@@ -134,7 +112,6 @@ function ChallengeCardsGui:_layout()
 		},
 		item_params = {
 			key_value_field = "key_name",
-			row_class = nil,
 			selected_marker_h = 250,
 			selected_marker_w = 192,
 			item_h = 216,
@@ -144,7 +121,6 @@ function ChallengeCardsGui:_layout()
 	}
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
 	local card_details_params = {
-		x = nil,
 		card_w = 272,
 		card_h = 384,
 		y = 96,
@@ -160,12 +136,8 @@ function ChallengeCardsGui:_layout()
 	local suggested_cards_grid_params = {
 		w = 856,
 		h = 265,
-		item_params = nil,
-		y = nil,
-		x = nil,
 		visible = true,
 		name = "suggested_cards_grid",
-		grid_params = nil,
 		x = self._card_details:left(),
 		y = ChallengeCardsGui.SUGGESTED_CARDS_Y,
 		grid_params = {
@@ -179,8 +151,6 @@ function ChallengeCardsGui:_layout()
 	}
 	self._suggested_cards_grid = self._phase_one_panel:suggested_cards_grid(suggested_cards_grid_params)
 	self._suggest_card_button = self._phase_one_panel:short_primary_button({
-		on_click_callback = nil,
-		y = nil,
 		x = 0,
 		text = "",
 		name = "suggest_card_button",
@@ -188,10 +158,7 @@ function ChallengeCardsGui:_layout()
 		on_click_callback = callback(self, self, "suggest_card")
 	})
 	self._clear_card_button = self._phase_one_panel:short_secondary_button({
-		on_click_callback = nil,
-		y = nil,
 		x = 0,
-		text = nil,
 		name = "clear_card_button",
 		text = self:translate("menu_clear_selection", true),
 		y = self._suggest_card_button:top(),
@@ -202,34 +169,26 @@ function ChallengeCardsGui:_layout()
 	self:_setup_single_player()
 
 	self._cards_title_ph2_host = self._root_panel:label({
-		font_size = nil,
-		font = nil,
 		visible = false,
 		y = 0,
 		x = 0,
 		name = "cards_title_ph2_host",
-		color = nil,
 		vertical = "top",
 		h = 60,
 		w = 800,
-		text = nil,
 		text = self:translate("menu_challenge_cards_title_ph2_host", true),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	self._cards_title_ph2_client = self._root_panel:label({
-		font_size = nil,
-		font = nil,
 		visible = false,
 		y = 0,
 		x = 0,
 		name = "cards_title_ph2_client",
-		color = nil,
 		vertical = "top",
 		h = 60,
 		w = 800,
-		text = nil,
 		text = self:translate("menu_challenge_cards_title_ph2_client", true),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -238,14 +197,11 @@ function ChallengeCardsGui:_layout()
 	local host_activates_card_grid_params = {
 		w = 1725,
 		h = 675,
-		item_params = nil,
 		y = 96,
 		x = 0,
 		visible = true,
 		name = "host_activates_card_grid",
-		grid_params = nil,
 		grid_params = {
-			on_click_callback = nil,
 			on_click_callback = callback(self, self, "on_item_host_clicks_suggested_card_grid")
 		},
 		item_params = {
@@ -257,20 +213,14 @@ function ChallengeCardsGui:_layout()
 	}
 	self._host_activates_card_grid = self._phase_two_panel:suggested_cards_grid_large(host_activates_card_grid_params)
 	self._phase_two_activate_button = self._phase_two_panel:long_primary_button({
-		on_click_callback = nil,
-		y = nil,
 		x = 0,
-		text = nil,
 		name = "phase_two_activate_button",
 		y = self._suggested_cards_grid:bottom() + 32,
 		text = self:translate("menu_select_card_button", true),
 		on_click_callback = callback(self, self, "phase_two_activate")
 	})
 	self._continue_without_a_card_button = self._phase_two_panel:long_secondary_button({
-		on_click_callback = nil,
-		y = nil,
 		x = 0,
-		text = nil,
 		name = "continue_without_a_card",
 		y = self._suggested_cards_grid:bottom() + 32,
 		text = self:translate("menu_challenge_cards_host_skip_suggestions", true),
@@ -295,19 +245,13 @@ function ChallengeCardsGui:_layout()
 	if not Network:is_server() then
 		local host_name = managers.network:session():all_peers()[1]:name()
 		self._host_ph2_message = self._phase_two_panel:label({
-			font_size = nil,
-			y = nil,
 			align = "center",
-			font = nil,
 			x = 0,
 			name = "client_waiting_message",
 			h = 36,
-			w = nil,
-			text = nil,
 			y = self._phase_two_activate_button:y() - 48,
 			w = self._phase_two_panel:w(),
 			text = utf8.to_upper(managers.localization:text("menu_challenge_cards_waiting_choose_card_msg", {
-				PEER_NAME = nil,
 				PEER_NAME = host_name
 			})),
 			font = tweak_data.gui.fonts.din_compressed,
@@ -322,11 +266,8 @@ function ChallengeCardsGui:_layout()
 
 	if ChallengeCardsGui.PHASE == 2 then
 		self._timer_label = self._root_panel:label({
-			font_size = nil,
 			visible = true,
-			font = nil,
 			name = "timer_label",
-			color = nil,
 			vertical = "top",
 			h = 60,
 			w = 200,
@@ -340,8 +281,6 @@ function ChallengeCardsGui:_layout()
 
 		self._timer_icon = self._root_panel:image({
 			x = 0,
-			texture_rect = nil,
-			texture = nil,
 			y = 20,
 			w = 34,
 			h = 34,
@@ -357,7 +296,6 @@ function ChallengeCardsGui:_layout()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(true)
 	managers.network.account:inventory_load()
 	self:_players_inventory_processed({
-		list = nil,
 		list = managers.challenge_cards:get_readyup_card_cache()
 	})
 end
@@ -390,9 +328,6 @@ function ChallengeCardsGui:sync_host_selects_suggested_card(card_key_name, peer_
 		self._host_selected_card = nil
 	else
 		self._host_selected_card = {
-			peer_id = nil,
-			steam_instance_id = nil,
-			key_name = nil,
 			key_name = card_key_name,
 			peer_id = peer_id,
 			steam_instance_id = steam_instance_id
@@ -679,8 +614,6 @@ end
 
 function ChallengeCardsGui:bind_controller_inputs()
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {},
 		keyboard = {}
 	}
@@ -689,32 +622,22 @@ function ChallengeCardsGui:bind_controller_inputs()
 	if ChallengeCardsGui.PHASE == 1 then
 		bindings = {
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_shoulder_left"),
 				callback = callback(self, self, "_on_tabs_rarity_left")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_shoulder_right"),
 				callback = callback(self, self, "_on_tabs_rarity_right")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_face_bottom"),
 				callback = callback(self, self, "suggest_card")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_face_left"),
 				callback = callback(self, self, "cancel_card")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_face_right"),
 				callback = callback(self, self, "back_pressed")
 			}
@@ -726,8 +649,6 @@ function ChallengeCardsGui:bind_controller_inputs()
 		end
 
 		legend = {
-			keyboard = nil,
-			controller = nil,
 			controller = {
 				"menu_legend_challenge_cards_rarity",
 				selection_legend_string,
@@ -737,7 +658,6 @@ function ChallengeCardsGui:bind_controller_inputs()
 			keyboard = {
 				{
 					key = "footer_back",
-					callback = nil,
 					callback = callback(self, self, "_on_legend_pc_back", nil)
 				}
 			}
@@ -745,33 +665,23 @@ function ChallengeCardsGui:bind_controller_inputs()
 	elseif Network:is_server() then
 		bindings = {
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_shoulder_left"),
 				callback = callback(self, self, "_on_select_card_left")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_shoulder_right"),
 				callback = callback(self, self, "_on_select_card_right")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_face_bottom"),
 				callback = callback(self, self, "phase_two_activate")
 			},
 			{
-				callback = nil,
-				key = nil,
 				key = Idstring("menu_controller_face_top"),
 				callback = callback(self, self, "_on_continue_without_card")
 			}
 		}
 		legend = {
-			keyboard = nil,
-			controller = nil,
 			controller = {
 				"menu_legend_challenge_cards_toggle",
 				"menu_legend_challenge_cards_select_card",
@@ -780,7 +690,6 @@ function ChallengeCardsGui:bind_controller_inputs()
 			keyboard = {
 				{
 					key = "footer_back",
-					callback = nil,
 					callback = callback(self, self, "_on_legend_pc_back", nil)
 				}
 			}

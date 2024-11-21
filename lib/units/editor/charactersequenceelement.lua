@@ -30,12 +30,10 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "sequence",
-		ctrlr = nil,
 		ctrlr = text
 	})
 	text:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "sequence",
-		ctrlr = nil,
 		ctrlr = text
 	})
 	panel_sizer:add(text, 0, 0, "EXPAND")
@@ -53,8 +51,6 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 				b = 0,
 				g = 0.75,
 				r = 0,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

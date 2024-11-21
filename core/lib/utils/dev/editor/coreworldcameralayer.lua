@@ -32,11 +32,8 @@ function WorldCameraLayer:save(save_params)
 	local file_name = "world_cameras"
 	local t = {
 		single_data_block = true,
-		entry = nil,
-		data = nil,
 		entry = self._save_name,
 		data = {
-			file = nil,
 			file = file_name
 		}
 	}
@@ -184,26 +181,21 @@ function WorldCameraLayer:build_panel(notebook)
 	edit_sizer:add(in_out_sizer, 0, 0, "EXPAND")
 
 	self._duration_params = {
-		events = nil,
-		panel = nil,
 		name_proportions = 1,
 		min = 0,
 		ctrlr_proportions = 1,
 		tooltip = "Specifies the camera lenght in seconds",
 		name = "Camera Duration [sec]:",
 		value = 2.5,
-		sizer = nil,
 		floats = 2,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_duration")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_duration")
 			}
@@ -213,26 +205,21 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._duration_params)
 
 	self._delay_params = {
-		events = nil,
-		panel = nil,
 		name_proportions = 1,
 		min = 0,
 		ctrlr_proportions = 1,
 		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
 		name = "End Delay [sec]:",
 		value = 0,
-		sizer = nil,
 		floats = 2,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_delay")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_delay")
 			}
@@ -242,27 +229,21 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._delay_params)
 
 	self._dof_paddding_params = {
-		events = nil,
-		panel = nil,
 		name_proportions = 1,
 		min = 0,
 		ctrlr_proportions = 1,
 		tooltip = "The fade distance from max dof to no dof",
 		name = "Dof Padding [cm]:",
-		value = nil,
-		sizer = nil,
 		floats = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_padding(),
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_dof_padding")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_dof_padding")
 			}
@@ -272,15 +253,11 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._dof_paddding_params)
 
 	self._dof_clamp_params = {
-		events = nil,
-		panel = nil,
 		name_proportions = 1,
 		min = 0,
 		ctrlr_proportions = 1,
 		tooltip = "A value to specify how much dof it should have",
 		name = "Dof Amount [0-1]:",
-		value = nil,
-		sizer = nil,
 		floats = 2,
 		max = 1,
 		panel = self._ews_panel,
@@ -288,12 +265,10 @@ function WorldCameraLayer:build_panel(notebook)
 		value = managers.worldcamera:default_dof_clamp(),
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "set_dof_clamp")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "set_dof_clamp")
 			}
@@ -361,14 +336,10 @@ function WorldCameraLayer:build_panel(notebook)
 
 	keys_sizer:add(time, 0, 5, "ALIGN_RIGHT,EXPAND,BOTTOM")
 	time:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_time"), {
-		text = nil,
-		slider = nil,
 		slider = time,
 		text = self._time_text
 	})
 	time:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_time"), {
-		text = nil,
-		slider = nil,
 		slider = time,
 		text = self._time_text
 	})
@@ -444,25 +415,20 @@ function WorldCameraLayer:build_panel(notebook)
 	keys_sizer:add(key_far_dof_sizer, 0, 0, "EXPAND")
 
 	local roll_params = {
-		events = nil,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
-		panel = nil,
 		floats = 0,
 		tooltip = "An angle value specifying the roll",
 		name = "Roll:",
 		value = 0,
-		sizer = nil,
 		panel = self._ews_panel,
 		sizer = keys_sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "on_set_roll")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "on_set_roll")
 			}
@@ -997,8 +963,6 @@ function WorldCameraLayer:set_key(index)
 		self._time:set_value(key.time * self._time_precision)
 		self._keys:set_value(index)
 		self:set_time({
-			text = nil,
-			slider = nil,
 			slider = self._time,
 			text = self._time_text
 		})

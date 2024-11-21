@@ -43,14 +43,9 @@ end
 
 function HUDTabCandyProgression:_create_panel(panel, params)
 	self._object = panel:panel({
-		x = nil,
 		name = "hud_tab_candy_progress",
 		halign = "right",
-		layer = nil,
 		valign = "bottom",
-		h = nil,
-		w = nil,
-		y = nil,
 		x = params.x or 0,
 		y = params.y or self.Y,
 		w = self.WIDTH,
@@ -61,11 +56,7 @@ end
 
 function HUDTabCandyProgression:_create_card()
 	local title = self._object:text({
-		font = nil,
 		name = "candy_progression_title",
-		text = nil,
-		color = nil,
-		font_size = nil,
 		text = managers.localization:to_upper_text("hud_active_event_details"),
 		font = tweak_data.gui:get_font_path(self.TITLE_FONT, self.TITLE_FONT_SIZE),
 		font_size = self.TITLE_FONT_SIZE,
@@ -76,21 +67,14 @@ function HUDTabCandyProgression:_create_card()
 		name = "candy_progress_bar_panel",
 		is_root_panel = true,
 		layer = 3,
-		h = nil,
-		w = nil,
-		y = nil,
 		y = self.CARD_Y,
 		w = self.PROGRESS_BAR_W,
 		h = self.CARD_H
 	})
 	self._card = self._card_panel:create_custom_control(RaidGUIControlCardBase, {
 		name = "card",
-		card_image_params = nil,
-		panel = nil,
 		panel = self._card_panel,
 		card_image_params = {
-			w = nil,
-			h = nil,
 			w = self.PROGRESS_BAR_W,
 			h = self.CARD_H
 		}
@@ -103,9 +87,6 @@ function HUDTabCandyProgression:_create_progress_bar()
 		name = "candy_progress_bar_panel",
 		layer = 3,
 		is_root_panel = true,
-		h = nil,
-		w = nil,
-		y = nil,
 		y = self.PROGRESS_BAR_Y,
 		w = self.PROGRESS_BAR_W,
 		h = self.PROGRESS_BAR_H
@@ -114,12 +95,7 @@ function HUDTabCandyProgression:_create_progress_bar()
 	self._progress_bar_panel:three_cut_bitmap({
 		layer = 1,
 		name = "candy_progress_bar_background",
-		center = nil,
-		right = nil,
 		alpha = 0.5,
-		h = nil,
-		left = nil,
-		w = nil,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		left = self.PROGRESS_IMAGE_LEFT,
@@ -132,18 +108,11 @@ function HUDTabCandyProgression:_create_progress_bar()
 		name = "candy_progress_bar_foreground_panel",
 		halign = "scale",
 		valign = "scale",
-		h = nil,
 		w = 0,
 		h = self._progress_bar_panel:h()
 	})
 	local progress_bar = self._progress_bar_foreground_panel:three_cut_bitmap({
-		w = nil,
 		name = "candy_progress_bar_background",
-		center = nil,
-		right = nil,
-		color = nil,
-		h = nil,
-		left = nil,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		left = self.PROGRESS_IMAGE_LEFT,
@@ -154,16 +123,10 @@ function HUDTabCandyProgression:_create_progress_bar()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	self._progress_bar_overlay = self._progress_bar_foreground_panel:bitmap({
-		layer = nil,
 		name = "candy_progress_bar_background",
 		blend_mode = "add",
-		color = nil,
 		alpha = 0.3,
-		h = nil,
-		w = nil,
 		wrap_mode = "wrap",
-		texture = nil,
-		texture_rect = nil,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -177,12 +140,6 @@ function HUDTabCandyProgression:_create_tier_info()
 	local font = tweak_data.gui:get_font_path(self.TIER_TITLE_FONT, self.TIER_TITLE_FONT_SIZE)
 	local tier = 1
 	self._tier_title = self._object:text({
-		layer = nil,
-		font_size = nil,
-		color = nil,
-		w = nil,
-		y = nil,
-		font = nil,
 		name = "tier_title",
 		text = "TIER",
 		align = "center",
@@ -194,11 +151,8 @@ function HUDTabCandyProgression:_create_tier_info()
 		layer = self._progress_bar_panel:layer() + 5
 	})
 	self._malus_effects_panel = self._object:panel({
-		x = nil,
 		name = "malus_effects_panel",
 		h = 0,
-		w = nil,
-		y = nil,
 		x = self._card_panel:right(),
 		y = self._card_panel:y(),
 		w = self.DEBUFF_W
@@ -234,12 +188,8 @@ function HUDTabCandyProgression:set_data(data)
 		local y = self._malus_effects_panel:h()
 		local icon_data = tweak_data.gui:get_full_gui_data(data.malus_effect.icon)
 		local malus_icon = self._malus_effects_panel:bitmap({
-			texture = nil,
-			name = nil,
-			texture_rect = nil,
 			h = 28,
 			w = 28,
-			y = nil,
 			name = "malus_icon_" .. data.malus_effect.name,
 			y = y + 2,
 			texture = icon_data.texture,
@@ -248,14 +198,6 @@ function HUDTabCandyProgression:set_data(data)
 		local malus_text = self._malus_effects_panel:text({
 			wrap = true,
 			word_wrap = true,
-			x = nil,
-			font_size = nil,
-			color = nil,
-			w = nil,
-			y = nil,
-			font = nil,
-			name = nil,
-			text = nil,
 			name = "malus_text_" .. data.malus_effect.name,
 			x = malus_icon:right() + 4,
 			y = y,

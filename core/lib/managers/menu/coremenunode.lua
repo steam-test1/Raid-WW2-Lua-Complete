@@ -91,9 +91,6 @@ function MenuNode:_parse_items(data_node)
 			self._default_item_name = c.name
 		elseif type == "legend" then
 			table.insert(self._legends, {
-				visible_callback = nil,
-				pc = nil,
-				string_id = nil,
 				string_id = c.name,
 				pc = c.pc,
 				visible_callback = c.visible_callback

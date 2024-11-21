@@ -27,8 +27,6 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	local gameversion = managers.network.matchmake.GAMEVERSION or -1
 	local join_req_id = self:_get_join_attempt_identifier()
 	self._join_request_params = {
-		host_rpc = nil,
-		params = nil,
 		host_rpc = request_rpc,
 		params = {
 			self._local_peer:name(),
@@ -242,12 +240,6 @@ end
 function ClientNetworkSession:on_host_discovered(new_host, new_host_name, level_name, my_ip, state, difficulty)
 	if self._discovered_hosts then
 		local new_host_data = {
-			state = nil,
-			my_ip = nil,
-			host_name = nil,
-			level_name = nil,
-			difficulty = nil,
-			rpc = nil,
 			rpc = new_host,
 			host_name = new_host_name,
 			level_name = level_name,
@@ -580,8 +572,6 @@ function ClientNetworkSession:notify_host_when_outfits_loaded(request_id, outfit
 	print("[ClientNetworkSession:notify_host_when outfits_loaded] request_id", request_id)
 
 	self._notify_host_when_outfits_loaded = {
-		request_id = nil,
-		outfit_versions_str = nil,
 		request_id = request_id,
 		outfit_versions_str = outfit_versions_str
 	}

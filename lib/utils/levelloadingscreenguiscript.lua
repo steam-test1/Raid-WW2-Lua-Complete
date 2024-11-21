@@ -25,7 +25,6 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	local base_panel = self._back_drop_gui:get_new_base_layer()
 	local level_image = base_panel:bitmap({
-		texture = nil,
 		layer = 0,
 		texture = self._gui_data.bg_texture
 	})
@@ -46,9 +45,7 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 		h = 36,
 		layer = 0,
 		vertical = "bottom",
-		text = nil,
 		align = "left",
-		color = nil,
 		font_size = 36,
 		font = "fonts/font_large_mf",
 		y = 0,
@@ -71,13 +68,8 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 		for id, data in pairs(self._coords) do
 			data.text = background_safepanel:text({
-				text = nil,
-				vertical = nil,
 				halign = "center",
 				valign = "center",
-				align = nil,
-				name = nil,
-				color = nil,
 				font_size = 24,
 				font = "fonts/font_medium_mf",
 				name = data.id,

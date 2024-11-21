@@ -227,8 +227,6 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					seat = nil,
-					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.driver.name
 				}
@@ -246,8 +244,6 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					seat = nil,
-					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_front.name
 				}
@@ -265,8 +261,6 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					seat = nil,
-					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_back_left.name
 				}
@@ -284,8 +278,6 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 
 			if peer then
 				managers.player._global.synced_vehicle_data[peer:id()] = {
-					seat = nil,
-					vehicle_unit = nil,
 					vehicle_unit = vehicle_unit,
 					seat = v_ext._seats.passenger_back_right.name
 				}
@@ -451,9 +443,6 @@ end
 function VehicleManager:queue_vehicle_state_change(vehicle_unit, state, npc)
 	Application:debug("[VehicleManager:queue_vehicle_state_change]", vehicle_unit, state, npc)
 	table.insert(self._queue_state_change, {
-		state = nil,
-		npc = nil,
-		vehicle_unit = nil,
 		vehicle_unit = vehicle_unit,
 		state = state,
 		npc = npc

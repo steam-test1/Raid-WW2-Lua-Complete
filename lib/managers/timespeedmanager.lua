@@ -86,7 +86,6 @@ end
 
 function TimeSpeedManager:play_effect(id, effect_desc)
 	local effect = {
-		desc = nil,
 		desc = effect_desc,
 		timer = effect_desc.timer == "pausable" and self._pausable_timer or self._game_timer
 	}
@@ -126,7 +125,6 @@ function TimeSpeedManager:play_effect(id, effect_desc)
 			self._affected_timers[timer_key] = {
 				ref_count = 1,
 				mul = 1,
-				timer = nil,
 				timer = affect_timer
 			}
 		end

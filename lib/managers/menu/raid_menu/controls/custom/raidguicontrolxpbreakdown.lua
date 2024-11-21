@@ -53,15 +53,7 @@ end
 function RaidGUIControlXPBreakdown:_create_experience_label()
 	local experience_label_params = {
 		vertical = "center",
-		text = nil,
 		name = "experience_label",
-		color = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
-		h = nil,
-		x = nil,
-		w = nil,
 		x = RaidGUIControlStatsBreakdown.EXPERIENCE_LABEL_X,
 		y = RaidGUIControlStatsBreakdown.EXPERIENCE_LABEL_Y,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
@@ -76,43 +68,27 @@ end
 
 function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
 	self._breakdown_table = self._control_panel:table({
-		y = nil,
-		table_params = nil,
-		w = nil,
 		name = "breakdown_table",
 		y = self._experience_label:bottom() + RaidGUIControlXPBreakdown.LABEL_PADDING_DOWN,
 		w = RaidGUIControlXPBreakdown.DEFAULT_W,
 		table_params = {
-			data_source_callback = nil,
-			columns = nil,
-			row_params = nil,
 			data_source_callback = params.data_source_callback,
 			row_params = {
-				height = nil,
-				font_size = nil,
 				height = RaidGUIControlXPBreakdown.TABLE_ROW_HEIGHT,
 				font_size = RaidGUIControlXPBreakdown.TABLE_FONT_SIZE
 			},
 			columns = {
 				{
-					h = nil,
-					color = nil,
-					cell_class = nil,
 					vertical = "center",
 					align = "left",
-					w = nil,
 					w = self._object:w() * RaidGUIControlXPBreakdown.TABLE_DESCRIPTION_W_PERCENT / 100,
 					h = RaidGUIControlXPBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlXPCell,
 					color = RaidGUIControlXPBreakdown.TABLE_COLOR
 				},
 				{
-					h = nil,
-					color = nil,
-					cell_class = nil,
 					vertical = "center",
 					align = "right",
-					w = nil,
 					w = self._object:w() * RaidGUIControlXPBreakdown.TABLE_VALUE_W_PERCENT / 100,
 					h = RaidGUIControlXPBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlXPCell,

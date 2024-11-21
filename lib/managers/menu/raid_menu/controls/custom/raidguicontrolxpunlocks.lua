@@ -51,19 +51,13 @@ end
 function RaidGUIControlXPSkillSet:_create_text()
 	local title_text_params = {
 		name = "skill_set_unlock_title_text",
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.TITLE_FONT_SIZE,
 		color = RaidGUIControlXPSkillSet.TITLE_COLOR,
 		text = utf8.to_upper(managers.localization:text("menu_skill_set_unlocked", {
-			LEVEL = nil,
 			LEVEL = tostring(1)
 		}))
 	}
@@ -76,13 +70,8 @@ function RaidGUIControlXPSkillSet:_create_text()
 
 	local flavor_text_params = {
 		name = "skill_set_unlock_flavor_text",
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.FLAVOR_TEXT_FONT_SIZE,
@@ -101,7 +90,6 @@ function RaidGUIControlXPSkillSet:set_level(level)
 	local title = self._content_panel:child("skill_set_unlock_title_text")
 
 	title:set_text(utf8.to_upper(managers.localization:text("menu_skill_set_unlocked", {
-		LEVEL = nil,
 		LEVEL = tostring(level)
 	})))
 
@@ -141,11 +129,7 @@ function RaidGUIControlXPSkillSet:_create_icons(skills)
 		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
 		local gui_data = tweak_data.gui:get_full_gui_data(icon)
 		local icon = self._icon_panel:bitmap({
-			name = nil,
 			blend_mode = "add",
-			color = nil,
-			texture_rect = nil,
-			texture = nil,
 			name = "skill_" .. tostring(skill.name_id) .. "_icon",
 			texture = gui_data.texture,
 			texture_rect = gui_data.texture_rect,
@@ -251,13 +235,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	local weapon_panel_params = {
-		h = nil,
 		name = "weapon_panel",
 		alpha = 0,
 		halign = "scale",
-		y = nil,
 		valign = "scale",
-		w = nil,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2
@@ -273,11 +254,7 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 		name = "weapon_name",
 		text = "",
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -291,14 +268,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	local skill_panel_params = {
-		h = nil,
 		name = "skill_panel",
 		alpha = 0,
-		x = nil,
 		halign = "scale",
-		y = nil,
 		valign = "scale",
-		w = nil,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		x = self._object:w() / 2,
@@ -315,11 +288,7 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 		name = "skill_set_title",
 		text = "",
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -334,13 +303,8 @@ end
 function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	local title_text_params = {
 		name = "skill_set_unlock_title_text",
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.TITLE_FONT_SIZE,
@@ -356,13 +320,8 @@ function RaidGUIControlXPDoubleUnlock:_create_title_text()
 
 	local flavor_text_params = {
 		name = "skill_set_unlock_flavor_text",
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.FLAVOR_TEXT_FONT_SIZE,
@@ -379,7 +338,6 @@ end
 
 function RaidGUIControlXPDoubleUnlock:set_level(level)
 	self._skill_set_title:set_text(utf8.to_upper(managers.localization:text("menu_skill_set_title", {
-		LEVEL = nil,
 		LEVEL = tostring(level)
 	})))
 
@@ -415,11 +373,7 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_icons(skills)
 		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
 		local gui_data = tweak_data.gui:get_full_gui_data(icon)
 		local icon = self._skill_icon_panel:bitmap({
-			name = nil,
 			blend_mode = "add",
-			color = nil,
-			texture_rect = nil,
-			texture = nil,
 			name = "skill_" .. tostring(skill.name_id) .. "_icon",
 			texture = gui_data.texture,
 			texture_rect = gui_data.texture_rect,
@@ -464,8 +418,6 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_icons(weapon_unlocks)
 	local weapon_tweak_data = tweak_data.weapon[tweak_data.skilltree.skills[weapon_skill_unlock].upgrades[1]]
 	local icon_params = {
 		name = "weapon_icon",
-		texture_rect = nil,
-		texture = nil,
 		texture = tweak_data.gui.icons[weapon_tweak_data.gui.icon_large].texture,
 		texture_rect = tweak_data.gui.icons[weapon_tweak_data.gui.icon_large].texture_rect
 	}

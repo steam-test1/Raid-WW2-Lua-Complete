@@ -257,10 +257,6 @@ function EnvironmentLayer:save()
 			local name_id = unit:unit_data().name_id
 
 			table.insert(effects, {
-				rotation = nil,
-				name_id = nil,
-				name = nil,
-				position = nil,
 				name = effect,
 				name_id = name_id,
 				position = unit:position(),
@@ -287,12 +283,6 @@ function EnvironmentLayer:save()
 	end
 
 	local wind = {
-		tilt = nil,
-		angle = nil,
-		speed = nil,
-		speed_variation = nil,
-		tilt_var = nil,
-		angle_var = nil,
 		angle = self._wind_rot:yaw(),
 		angle_var = self._wind_dir_var,
 		tilt = self._wind_rot:roll(),
@@ -301,12 +291,6 @@ function EnvironmentLayer:save()
 		speed_variation = self._wind_speed_variation
 	}
 	local data = {
-		cubemap_gizmos = nil,
-		effects = nil,
-		environment_values = nil,
-		wind = nil,
-		environment_areas = nil,
-		dome_occ_shapes = nil,
 		environment_values = self._environment_values,
 		wind = wind,
 		effects = effects,
@@ -319,8 +303,6 @@ function EnvironmentLayer:save()
 
 	local t = {
 		single_data_block = true,
-		entry = nil,
-		data = nil,
 		entry = self._save_name,
 		data = data
 	}
@@ -341,8 +323,6 @@ end
 function EnvironmentLayer:_save_to_world_package(category, name)
 	if name and name ~= "none" then
 		managers.editor:add_to_world_package({
-			name = nil,
-			category = nil,
 			category = category,
 			name = name
 		})
@@ -414,12 +394,7 @@ end
 
 function EnvironmentLayer:_build_environment_combobox_and_list()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		panel = nil,
-		value = nil,
 		name = "World Default:",
-		value_changed_cb = nil,
-		options = nil,
-		sizer = nil,
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
@@ -448,7 +423,6 @@ function EnvironmentLayer:build_panel(notebook)
 	cat_print("editor", "EnvironmentLayer:build_panel")
 	EnvironmentLayer.super.build_panel(self, notebook, {
 		units_noteboook_proportion = 0,
-		units_notebook_min_size = nil,
 		units_notebook_min_size = Vector3(32, 200, 0)
 	})
 
@@ -475,12 +449,7 @@ function EnvironmentLayer:build_panel(notebook)
 
 	self._environment_area_ctrls = {}
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		panel = nil,
-		value = nil,
 		name = "Area Environment:",
-		value_changed_cb = nil,
-		options = nil,
-		sizer = nil,
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
 		options = managers.database:list_entries_of_type("environment"),
@@ -534,7 +503,6 @@ function EnvironmentLayer:build_panel(notebook)
 	self._dome_occ_sizer:add(draw_occ_cb, 0, 0, "EXPAND")
 	draw_occ_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_draw_occ_shape",
-		cb = nil,
 		cb = draw_occ_cb
 	})
 
@@ -575,7 +543,6 @@ function EnvironmentLayer:build_panel(notebook)
 	wind_sizer:add(show_wind_cb, 0, 0, "EXPAND")
 	show_wind_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
 		value = "_draw_wind",
-		cb = nil,
 		cb = show_wind_cb
 	})
 
@@ -703,9 +670,6 @@ function EnvironmentLayer:create_cube_map(type)
 		for _, unit in ipairs(self._created_units) do
 			if unit:name() == Idstring(self._cubemap_unit) then
 				table.insert(cubes, {
-					output_name = nil,
-					name = nil,
-					position = nil,
 					position = unit:position(),
 					name = unit:unit_data().name_id,
 					output_name = output_name .. unit:unit_data().name_id
@@ -714,9 +678,6 @@ function EnvironmentLayer:create_cube_map(type)
 		end
 	elseif type == "selected" and self._selected_unit:name() == Idstring(self._cubemap_unit) then
 		table.insert(cubes, {
-			output_name = nil,
-			name = nil,
-			position = nil,
 			position = self._selected_unit:position(),
 			name = self._selected_unit:unit_data().name_id,
 			output_name = output_name .. self._selected_unit:name()
@@ -724,7 +685,6 @@ function EnvironmentLayer:create_cube_map(type)
 	end
 
 	local params = {
-		cubes = nil,
 		cubes = cubes,
 		output_path = managers.database:base_path() .. "environments\\cubemaps\\"
 	}
@@ -946,9 +906,6 @@ function EnvironmentLayer:play_effect(unit, effect)
 		CoreEngineAccess._editor_load(Idstring("effect"), effect:id())
 
 		unit:unit_data().current_effect = World:effect_manager():spawn({
-			effect = nil,
-			rotation = nil,
-			position = nil,
 			effect = Idstring(effect),
 			position = unit:position(),
 			rotation = unit:rotation()

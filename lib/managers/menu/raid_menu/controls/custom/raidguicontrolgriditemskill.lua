@@ -48,13 +48,8 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	local image_coord_y = (params.selected_marker_h - params.item_h) / 2
 	local gui_icon = tweak_data.gui:get_full_gui_data(self._item_data[self._params.grid_item_icon])
 	self._grid_item_icon = self._object:rect({
-		color = nil,
 		layer = 10,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "grid_item_icon",
-		h = nil,
 		x = image_coord_x,
 		y = image_coord_y,
 		w = params.item_w,
@@ -63,15 +58,8 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	})
 	local grid_item_fg = tweak_data.gui:get_full_gui_data("grid_item_fg")
 	self._grid_item_icon_fg = self._object:bitmap({
-		color = nil,
 		layer = 12,
-		texture_rect = nil,
-		texture = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "grid_item_icon_fg",
-		h = nil,
 		x = image_coord_x + RaidGUIControlGridItemSkill.OUTLINE_THICKNESS,
 		y = image_coord_y + RaidGUIControlGridItemSkill.OUTLINE_THICKNESS,
 		w = params.item_w - RaidGUIControlGridItemSkill.OUTLINE_THICKNESS * 2,
@@ -83,10 +71,6 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	self._grid_item_icon_sprite = self._object:bitmap({
 		name = "grid_item_icon_sprite",
 		layer = 13,
-		w = nil,
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
 		texture = gui_icon.texture,
 		texture_rect = gui_icon.texture_rect,
 		w = params.icon_size_off or params.item_w * 0.6,
@@ -105,9 +89,6 @@ function RaidGUIControlGridItemSkill:_layout_level_tier(level)
 			h = 32,
 			align = "left",
 			layer = 50,
-			font_size = nil,
-			font = nil,
-			text = nil,
 			w = 32,
 			name = "level_tier_text",
 			vertical = "center",
@@ -143,12 +124,7 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 
 	local grid_item_locked = tweak_data.gui:get_full_gui_data("grid_item_locked")
 	local status_lock_bg = self._item_status_panel:image({
-		texture = nil,
-		color = nil,
-		w = nil,
-		texture_rect = nil,
 		name = "grid_item_lock_bg",
-		h = nil,
 		w = self._item_status_panel:w(),
 		h = self._item_status_panel:h(),
 		texture = grid_item_locked.texture,
@@ -157,11 +133,7 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 	})
 	local ico_locker = tweak_data.gui:get_full_gui_data("ico_locker")
 	self._item_status_lock_icon = self._item_status_panel:image({
-		texture = nil,
-		color = nil,
-		layer = nil,
 		w = 40,
-		texture_rect = nil,
 		name = "grid_item_lock_icon",
 		h = 40,
 		texture = ico_locker.texture,
@@ -175,11 +147,6 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 
 	local text = tostring(math.round(self._item_data.level_required or 0))
 	self._item_status_lock_text = self._item_status_panel:text({
-		font = nil,
-		text = nil,
-		color = nil,
-		layer = nil,
-		font_size = nil,
 		align = "center",
 		name = "grid_item_lock_text",
 		h = 24,
@@ -199,11 +166,8 @@ function RaidGUIControlGridItemSkill:_layout_lock_purchasable()
 
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 	self._item_status_resource_icon = self._item_status_panel:image({
-		texture = nil,
 		name = "grid_item_resource_icon",
 		w = 25,
-		texture_rect = nil,
-		color = nil,
 		h = 25,
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
@@ -220,8 +184,6 @@ function RaidGUIControlGridItemSkill:_layout_lock_dlc()
 	local ico_dlc = tweak_data.gui:get_full_gui_data("ico_dlc")
 	self._item_status_dlc_lock = self._item_status_panel:image({
 		name = "grid_item_dlc_lock_icon",
-		texture_rect = nil,
-		texture = nil,
 		layer = 20,
 		texture = ico_dlc.texture,
 		texture_rect = ico_dlc.texture_rect
@@ -235,10 +197,7 @@ function RaidGUIControlGridItemSkill:_layout_triangles()
 	local layer = 50
 	local ico_sel_rect_top_left_white = tweak_data.gui:get_full_gui_data("ico_sel_rect_top_left_white")
 	local params = {
-		layer = nil,
 		w = -18,
-		texture_rect = nil,
-		texture = nil,
 		h = 18,
 		texture = ico_sel_rect_top_left_white.texture,
 		texture_rect = ico_sel_rect_top_left_white.texture_rect,
@@ -326,7 +285,6 @@ function RaidGUIControlGridItemSkill:activate()
 			local confirm_callback = callback(self, self, "on_skill_purchase_confirmed")
 
 			managers.menu:show_skill_selection_confirm_dialog({
-				yes_callback = nil,
 				yes_callback = confirm_callback
 			})
 		else
@@ -511,10 +469,6 @@ function RaidGUIControlGridItemSkill:_init_state_data()
 		[RaidGUIControlGridItemSkill.STATE_NORMAL] = {
 			locks_alpha_highlight_off = 0,
 			show_selector_triangles_alpha = 1,
-			highlight_off = nil,
-			highlight_on = nil,
-			icon_on = nil,
-			icon_off = nil,
 			locks_alpha_highlight_on = 0,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_red,
@@ -524,10 +478,6 @@ function RaidGUIControlGridItemSkill:_init_state_data()
 		[RaidGUIControlGridItemSkill.STATE_APPLIED] = {
 			locks_alpha_highlight_off = 0,
 			show_selector_triangles_alpha = 1,
-			highlight_off = nil,
-			highlight_on = nil,
-			icon_on = nil,
-			icon_off = nil,
 			locks_alpha_highlight_on = 0,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_red,
@@ -537,10 +487,6 @@ function RaidGUIControlGridItemSkill:_init_state_data()
 		[RaidGUIControlGridItemSkill.STATE_PURCHASABLE] = {
 			locks_alpha_highlight_off = 1,
 			show_selector_triangles_alpha = 0,
-			highlight_off = nil,
-			highlight_on = nil,
-			icon_on = nil,
-			icon_off = nil,
 			locks_alpha_highlight_on = 0.35,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_gold,
@@ -550,10 +496,6 @@ function RaidGUIControlGridItemSkill:_init_state_data()
 		[RaidGUIControlGridItemSkill.STATE_LOCKED] = {
 			locks_alpha_highlight_off = 0.85,
 			show_selector_triangles_alpha = 0,
-			highlight_off = nil,
-			highlight_on = nil,
-			icon_on = nil,
-			icon_off = nil,
 			locks_alpha_highlight_on = 0.1,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_brown_red,

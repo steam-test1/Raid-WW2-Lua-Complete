@@ -1,9 +1,5 @@
 CriminalActionWalk = CriminalActionWalk or class(CopActionWalk)
 CriminalActionWalk._anim_block_presets = {
-	block_none = nil,
-	block_all = nil,
-	block_upper = nil,
-	block_lower = nil,
 	block_all = {
 		light_hurt = -1,
 		turn = -1,

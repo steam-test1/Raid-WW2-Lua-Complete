@@ -41,10 +41,7 @@ function ElementDialogue:_queue_dialog(instigator)
 
 	local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator)
 	local queue_dialog_unit = {
-		position = nil,
 		skip_idle_check = true,
-		instigator = nil,
-		done_cbk = nil,
 		instigator = char,
 		done_cbk = done_cbk,
 		position = self._values.position

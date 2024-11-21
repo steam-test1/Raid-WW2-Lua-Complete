@@ -21,7 +21,6 @@ function DLCTweakData:_init_descriptions()
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].free = true
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
 		loot_global_value = "normal",
-		gold_award = nil,
 		gold_award = {
 			amount = 50,
 			item = "starter_kit_army_crate"
@@ -29,9 +28,6 @@ function DLCTweakData:_init_descriptions()
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {
 		content = {
-			gold_award = nil,
-			weapon_skins = nil,
-			customizations = nil,
 			customizations = {
 				{
 					item = "american_highlander_jacket_upper"
@@ -71,12 +67,6 @@ function DLCTweakData:_init_descriptions()
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_SPECIAL_EDITION] = {
 		content = {
-			vehicle_skins = nil,
-			weapon_skins = nil,
-			melee_weapons = nil,
-			customizations = nil,
-			camp_customizations = nil,
-			gold_award = nil,
 			customizations = {
 				{
 					item = "american_highlander_jacket_upper"
@@ -144,7 +134,6 @@ function DLCTweakData:_init_descriptions()
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK] = {
 		content = {
-			melee_weapons = nil,
 			melee_weapons = {
 				{
 					item = "marching_mace"
@@ -160,9 +149,6 @@ function DLCTweakData:get_eligible_gold_awards()
 	for dlc_name, dlc_desc in pairs(self.descriptions) do
 		if dlc_desc.content.gold_award and managers.dlc:is_dlc_unlocked(dlc_name) then
 			table.insert(eligible_awards, {
-				item = nil,
-				name = nil,
-				amount = nil,
 				name = dlc_name,
 				item = dlc_desc.content.gold_award.item,
 				amount = dlc_desc.content.gold_award.amount
@@ -179,7 +165,6 @@ function DLCTweakData:get_eligible_random_customizations()
 	for dlc_name, dlc_desc in pairs(self.descriptions) do
 		if dlc_desc.content.random_customization and managers.dlc:is_dlc_unlocked(dlc_name) then
 			table.insert(eligible_awards, {
-				item = nil,
 				item = dlc_desc.content.random_customization.item
 			})
 		end

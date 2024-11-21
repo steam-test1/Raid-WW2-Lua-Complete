@@ -742,9 +742,6 @@ function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_s
 	end
 
 	World:effect_manager():spawn({
-		effect = nil,
-		normal = nil,
-		position = nil,
 		effect = Idstring("effects/vanilla/explosions/exp_projectile_001"),
 		position = flashbang_pos,
 		normal = Vector3(0, 0, 1)

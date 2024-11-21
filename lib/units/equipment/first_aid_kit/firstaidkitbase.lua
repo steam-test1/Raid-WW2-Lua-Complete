@@ -12,7 +12,6 @@ end
 
 function FirstAidKitBase:set_server_information(peer_id)
 	self._server_information = {
-		owner_peer_id = nil,
 		owner_peer_id = peer_id
 	}
 

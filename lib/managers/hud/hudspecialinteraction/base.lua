@@ -27,7 +27,6 @@ function HUDSpecialInteraction:_create_panel(hud)
 	end
 
 	self._object = hud.panel:panel({
-		layer = nil,
 		halign = "center",
 		valign = "center",
 		name = "special_interaction_panel",
@@ -40,13 +39,9 @@ function HUDSpecialInteraction:_create_background()
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._bg_panel = self._workspace:panel()
 	self._background = self._bg_panel:bitmap({
-		layer = nil,
 		halign = "center",
 		valign = "center",
-		alpha = nil,
-		texture_rext = nil,
 		name = "special_interaction_background",
-		texture = nil,
 		texture = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture,
 		texture_rext = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture_rext,
 		alpha = HUDSpecialInteraction.BACKGROUND_ALPHA,
@@ -60,9 +55,6 @@ function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text = self._object:text({
 		vertical = "center",
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		name = "legend_interact_text",
 		valign = "bottom",
 		text = "[F] LOCKPICK",
@@ -77,9 +69,6 @@ function HUDSpecialInteraction:_create_legend()
 	self._legend_exit_text = self._object:text({
 		vertical = "center",
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		name = "legend_exit_text",
 		valign = "bottom",
 		text = "[SPACE] CANCEL",
@@ -99,14 +88,12 @@ function HUDSpecialInteraction:show()
 	local interact_text_id = self._tweak_data.legend_interact_text_id or HUDSpecialInteraction.INTERACT_TEXT_ID
 
 	self._legend_interact_text:set_text(managers.localization:to_upper_text(interact_text_id, {
-		BTN_INTERACT = nil,
 		BTN_INTERACT = managers.localization:btn_macro("interact")
 	}))
 
 	local exit_text_id = self._tweak_data.legend_exit_text_id or HUDSpecialInteraction.EXIT_TEXT_ID
 
 	self._legend_exit_text:set_text(managers.localization:to_upper_text(exit_text_id, {
-		BTN_CANCEL = nil,
 		BTN_CANCEL = managers.localization:btn_macro("jump") or utf8.char(57344)
 	}))
 	self._object:stop()

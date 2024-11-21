@@ -19,10 +19,6 @@ function RaidGUIControlVideo:init(parent, params)
 	local font_size = tweak_data.gui.font_sizes.size_24
 	self._subtitle = safe_panel:text({
 		text = "",
-		font = nil,
-		font_size = nil,
-		layer = nil,
-		color = nil,
 		wrap = true,
 		align = "center",
 		vertical = "center",

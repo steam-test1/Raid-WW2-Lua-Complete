@@ -14,10 +14,8 @@ function ControllerWrapperXB1:init(manager, id, name, controller, setup, debug, 
 	}
 
 	ControllerWrapperXB1.super.init(self, manager, id, name, {
-		xb1pad = nil,
 		xb1pad = controller
 	}, "xb1pad", setup, debug, skip_virtual_controller, {
-		xb1pad = nil,
 		xb1pad = func_map
 	})
 end

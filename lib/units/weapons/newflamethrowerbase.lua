@@ -24,7 +24,6 @@ function NewFlamethrowerBase:_create_use_setups()
 	local player_setup = {
 		selection_index = tweak_data.weapon[self._name_id].use_data.selection_index,
 		equip = {
-			align_place = nil,
 			align_place = tweak_data.weapon[self._name_id].use_data.align_place or "left_hand"
 		},
 		unequip = {
@@ -138,8 +137,6 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 					local spread_direction = mvector3.copy(mvec_spread_direction)
 
 					table.insert(col_rays, {
-						position = nil,
-						ray = nil,
 						position = ray_to,
 						ray = spread_direction
 					})
@@ -208,7 +205,6 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 
 	managers.statistics:shot_fired({
 		hit = false,
-		weapon_unit = nil,
 		weapon_unit = self._unit
 	})
 
@@ -216,7 +212,6 @@ function NewFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_m
 		if true or false then
 			managers.statistics:shot_fired({
 				skip_bullet_count = true,
-				weapon_unit = nil,
 				hit = true,
 				weapon_unit = self._unit
 			})

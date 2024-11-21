@@ -3,7 +3,6 @@ CopLogicIntimidated = class(CopLogicBase)
 
 function CopLogicIntimidated.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -153,7 +152,6 @@ function CopLogicIntimidated._update_enemy_detection(data, my_data)
 		}
 
 		data.brain:set_objective({
-			action = nil,
 			scan = true,
 			type = "free",
 			action = new_action
@@ -237,10 +235,8 @@ function CopLogicIntimidated.on_intimidated(data, amount, aggressor_unit)
 		end
 
 		local action_data = {
-			variant = nil,
 			type = "act",
 			clamp_to_graph = true,
-			blocks = nil,
 			body_part = 1,
 			variant = anim,
 			blocks = blocks
@@ -257,17 +253,11 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 	local objective_pos = data.unit:position() - data.unit:rotation():y() * 100
 	local objective_rot = data.unit:rotation()
 	local objective = {
-		pos = nil,
 		stance = "hos",
 		interrupt_health = 0.85,
 		interrupt_dis = 700,
-		rot = nil,
 		scan = true,
-		action = nil,
 		type = "act",
-		fail_clbk = nil,
-		action_start_clbk = nil,
-		nav_seg = nil,
 		pos = objective_pos,
 		rot = objective_rot,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -275,7 +265,6 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 		fail_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_harassment_SO_failed", data),
 		action = {
 			variant = "kick_fwd",
-			blocks = nil,
 			type = "act",
 			body_part = 1,
 			blocks = {
@@ -288,12 +277,9 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 		AI_group = "friendlies",
 		usage_amount = 1,
 		interval = 10,
-		search_pos = nil,
 		search_dis_sq = 2250000,
-		objective = nil,
 		chance_inc = 0,
 		base_chance = 1,
-		admin_clbk = nil,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_harassment_SO_administered", data)
@@ -313,7 +299,6 @@ function CopLogicIntimidated.on_harassment_SO_action_start(ignore_this, data, re
 	local my_data = data.internal_data
 	local action = {
 		variant = "harassed_kicked_from_behind",
-		blocks = nil,
 		type = "act",
 		body_part = 1,
 		blocks = {
@@ -336,7 +321,6 @@ function CopLogicIntimidated.on_harassment_SO_failed(ignore_this, data, receiver
 	if my_data.being_harassed then
 		local action_data = {
 			variant = "tied",
-			blocks = nil,
 			type = "act",
 			body_part = 1,
 			blocks = {
@@ -482,14 +466,11 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 	local my_tracker = data.unit:movement():nav_tracker()
 	local objective_pos = my_tracker:field_position()
 	local followup_objective = {
-		action_duration = nil,
 		stance = "hos",
 		type = "act",
-		action = nil,
 		scan = true,
 		action = {
 			variant = "idle",
-			blocks = nil,
 			type = "act",
 			body_part = 1,
 			blocks = {
@@ -500,20 +481,12 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local objective = {
-		pos = nil,
 		stance = "hos",
 		interrupt_health = 0.85,
 		interrupt_dis = 700,
-		action = nil,
 		scan = true,
-		followup_objective = nil,
-		complete_clbk = nil,
-		follow_unit = nil,
-		action_duration = nil,
 		type = "act",
-		fail_clbk = nil,
 		destroy_clbk_key = false,
-		nav_seg = nil,
 		follow_unit = data.unit,
 		pos = mvector3.copy(objective_pos),
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -521,7 +494,6 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		complete_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_rescue_SO_completed", data),
 		action = {
 			variant = "untie",
-			blocks = nil,
 			type = "act",
 			body_part = 1,
 			blocks = {
@@ -536,13 +508,9 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		AI_group = "enemies",
 		usage_amount = 1,
 		interval = 10,
-		search_pos = nil,
 		search_dis_sq = 1000000,
-		objective = nil,
 		chance_inc = 0,
 		base_chance = 1,
-		verification_clbk = nil,
-		admin_clbk = nil,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_rescue_SO_administered", data),
@@ -640,10 +608,8 @@ function CopLogicIntimidated._start_action_hands_up(data)
 	local my_data = data.internal_data
 	local anim_name = managers.groupai:state():whisper_mode() and "tied_all_in_one" or "hands_up"
 	local action_data = {
-		variant = nil,
 		type = "act",
 		clamp_to_graph = true,
-		blocks = nil,
 		body_part = 1,
 		variant = anim_name,
 		blocks = {

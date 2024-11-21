@@ -13,11 +13,6 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._bg_image = self._object:bitmap({
 		y = 0,
 		x = 0,
-		h = nil,
-		texture = nil,
-		texture_rect = nil,
-		w = nil,
-		layer = nil,
 		layer = self._object:layer() + 1,
 		w = tweak_data.gui.icons.intel_table_opposition_card.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_opposition_card.texture_rect[4],
@@ -27,12 +22,8 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._title = self._object:text({
 		h = 64,
 		x = 96,
-		color = nil,
 		w = 384,
-		layer = nil,
 		y = 96,
-		font_size = nil,
-		font = nil,
 		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -47,7 +38,6 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		scroll_step = 19,
 		scrollbar_width = 10,
 		w = 416,
-		layer = nil,
 		layer = self._object:layer() + 2
 	}
 	self._scrollable_area_description = self._object:scrollable_area(scrollable_area_description_params)
@@ -55,7 +45,6 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		y = 0,
 		x = 0,
 		w = 384,
-		layer = nil,
 		layer = self._object:layer() + 2
 	}
 	self._content_panel = self._scrollable_area_description:get_panel():panel(content_panel_params)
@@ -63,14 +52,10 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._scrollable_area_description:setup_scroll_area()
 
 	self._description = self._content_panel:text({
-		layer = nil,
 		x = 0,
-		color = nil,
 		w = 380,
 		wrap = true,
 		y = 0,
-		font_size = nil,
-		font = nil,
 		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,

@@ -26,9 +26,6 @@ function MousePointerManager:_setup()
 	local y = 360
 	self._mouse = self._ws:panel():panel({
 		h = 23,
-		layer = nil,
-		y = nil,
-		x = nil,
 		w = 19,
 		name = "mouse",
 		name_s = "mouse",
@@ -44,8 +41,6 @@ function MousePointerManager:_setup()
 		name = "pointer",
 		rotation = 360,
 		y = -2,
-		color = nil,
-		texture_rect = nil,
 		texture = "guis/textures/mouse_pointer",
 		texture_rect = {
 			0,
@@ -92,11 +87,6 @@ end
 
 function MousePointerManager:set_pointer_image(type)
 	local types = {
-		hand = nil,
-		link = nil,
-		arrow = nil,
-		none = nil,
-		grab = nil,
 		arrow = {
 			0,
 			0,

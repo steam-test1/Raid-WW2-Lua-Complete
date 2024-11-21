@@ -19,9 +19,6 @@ end
 
 function HUDWeaponGrenade:_create_panel(weapons_panel)
 	local panel_params = {
-		h = nil,
-		w = nil,
-		name = nil,
 		halign = "right",
 		valign = "bottom",
 		name = "grenade_" .. tostring(self._index),
@@ -33,8 +30,6 @@ end
 
 function HUDWeaponGrenade:_create_icon(icon)
 	local icon_panel_params = {
-		h = nil,
-		w = nil,
 		valign = "top",
 		name = "icon_panel",
 		halign = "center",
@@ -45,9 +40,6 @@ function HUDWeaponGrenade:_create_icon(icon)
 	}
 	self._icon_panel = self._object:panel(icon_panel_params)
 	local icon_params = {
-		texture = nil,
-		alpha = nil,
-		texture_rect = nil,
 		name = "weapon_icon",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
@@ -62,11 +54,7 @@ end
 function HUDWeaponGrenade:_create_amount_text()
 	local amount_text_params = {
 		name = "amount_text",
-		alpha = nil,
 		text = "",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		font = HUDWeaponGrenade.AMOUNT_FONT,
 		font_size = HUDWeaponGrenade.AMOUNT_FONT_SIZE,
 		color = HUDWeaponGrenade.AMOUNT_TEXT_COLOR,

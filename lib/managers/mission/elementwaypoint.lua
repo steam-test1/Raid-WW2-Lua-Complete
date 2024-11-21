@@ -40,18 +40,10 @@ function ElementWaypoint:on_executed(instigator)
 		local wp_color = wp_data and wp_data.color or Color(1, 1, 1)
 
 		managers.hud:add_waypoint(self:_get_unique_id(), {
-			waypoint_color = nil,
-			waypoint_radius = nil,
-			position = nil,
-			waypoint_depth = nil,
-			waypoint_width = nil,
-			text = nil,
-			waypoint_display = nil,
 			waypoint_type = "objective",
 			show_on_screen = true,
 			state = "sneak_present",
 			distance = true,
-			icon = nil,
 			text = text,
 			icon = self._values.icon,
 			waypoint_display = self._values.map_display,

@@ -9,10 +9,6 @@ end
 
 function BuffEffect:save()
 	local state = {
-		name = nil,
-		challenge_card_key = nil,
-		value = nil,
-		fail_message = nil,
 		name = self.effect_name,
 		value = self.value,
 		challenge_card_key = self.challenge_card_key,

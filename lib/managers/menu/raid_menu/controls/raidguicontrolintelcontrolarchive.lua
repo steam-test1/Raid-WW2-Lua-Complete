@@ -26,13 +26,8 @@ end
 function RaidGUIControlIntelControlArchive:_layout()
 	self._bg_image = self._object:bitmap({
 		x = 0,
-		texture = nil,
-		layer = nil,
 		visible = false,
-		w = nil,
 		y = 0,
-		h = nil,
-		texture_rect = nil,
 		w = tweak_data.gui.icons.intel_table_archive.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_archive.texture_rect[4],
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
@@ -41,48 +36,35 @@ function RaidGUIControlIntelControlArchive:_layout()
 	})
 	self._image = self._object:bitmap({
 		x = 112,
-		layer = nil,
-		texture = nil,
 		visible = false,
 		w = 796,
 		y = 128,
 		h = 448,
-		texture_rect = nil,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect
 	})
 	self._play_panel = self._object:panel({
 		x = 0,
-		layer = nil,
 		visible = false,
-		w = nil,
 		y = 0,
-		h = nil,
 		w = tweak_data.gui.icons.play_icon_outline.texture_rect[3],
 		h = tweak_data.gui.icons.play_icon_outline.texture_rect[4],
 		layer = self._object:layer() + 2
 	})
 	self._play_circle = self._play_panel:bitmap({
 		x = 0,
-		texture = nil,
 		visible = false,
-		layer = nil,
 		y = 0,
-		color = nil,
-		texture_rect = nil,
 		layer = self._object:layer() + 3,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		texture = tweak_data.gui.icons.play_icon_outline.texture,
 		texture_rect = tweak_data.gui.icons.play_icon_outline.texture_rect
 	})
 	self._play_icon = self._play_panel:bitmap({
-		texture = nil,
 		visible = false,
-		layer = nil,
 		y = 0,
 		x = 0,
-		texture_rect = nil,
 		layer = self._object:layer() + 4,
 		texture = tweak_data.gui.icons.play_icon.texture,
 		texture_rect = tweak_data.gui.icons.play_icon.texture_rect
@@ -259,13 +241,7 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	self._safe_rect_workspace = gui:create_screen_workspace()
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		h = nil,
-		layer = nil,
-		background_color = nil,
 		is_root_panel = true,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "control_video_root_panel",
 		x = full_panel:x(),
 		y = full_panel:y(),
@@ -277,9 +253,6 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	self._panel = RaidGUIPanel:new(full_panel, params_root_panel)
 	local video = self._data.video_path
 	local control_video_params = {
-		layer = nil,
-		video = nil,
-		width = nil,
 		name = "control_video",
 		layer = self._panel:layer() + 1,
 		video = video,
@@ -294,12 +267,7 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	self._safe_panel = self._safe_rect_workspace:panel()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		layer = nil,
 		alpha = 0,
-		font = nil,
-		text = nil,
-		font_size = nil,
-		color = nil,
 		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,

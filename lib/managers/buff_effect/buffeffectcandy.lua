@@ -40,9 +40,6 @@ function BuffEffectCandy:init(effect_name, value, challenge_card_key, fail_messa
 	local active_card = managers.challenge_cards:get_active_card()
 
 	managers.hud:register_tab_event_panel(HUDTabCandyProgression, {
-		tier = nil,
-		card = nil,
-		progress = nil,
 		tier = self._current_stage - 1,
 		progress = progress,
 		card = active_card
@@ -58,17 +55,13 @@ function BuffEffectCandy:init(effect_name, value, challenge_card_key, fail_messa
 					managers.experience:mission_xp_award("sugar_high_bonus")
 
 					local malus_effect = {
-						desc_id = nil,
-						name = nil,
 						icon = "ico_malus",
-						desc_params = nil,
 						name = effect.name,
 						desc_id = effect.desc_id,
 						desc_params = effect.desc_params
 					}
 
 					managers.hud:set_tab_event_panel_data({
-						malus_effect = nil,
 						malus_effect = malus_effect
 					})
 
@@ -104,9 +97,6 @@ function BuffEffectCandy:save()
 	local state = BuffEffectCandy.super.save(self)
 	state.effect_class = "BuffEffectCandy"
 	state.params = {
-		candy_consumed = nil,
-		active_effects = nil,
-		current_stage = nil,
 		current_stage = self._current_stage,
 		candy_consumed = self._candy_consumed,
 		active_effects = {}
@@ -114,8 +104,6 @@ function BuffEffectCandy:save()
 
 	for effect_name, id in pairs(self._active_effects) do
 		table.insert(state.params.active_effects, {
-			name = nil,
-			id = nil,
 			id = id,
 			name = effect_name
 		})
@@ -220,18 +208,13 @@ function BuffEffectCandy:_activate_sugar_high(effect)
 
 	local effects = {
 		{
-			desc_id = nil,
-			name = nil,
 			icon = "ico_bonus",
 			name = chosen_buff,
 			desc_id = self._tweak_data.bonus_effects[chosen_buff]
 		}
 	}
 	local malus_effect = {
-		desc_id = nil,
-		name = nil,
 		icon = "ico_malus",
-		desc_params = nil,
 		name = effect.name,
 		desc_id = effect.desc_id,
 		desc_params = effect.desc_params
@@ -239,23 +222,17 @@ function BuffEffectCandy:_activate_sugar_high(effect)
 
 	table.insert(effects, malus_effect)
 	managers.notification:add_notification({
-		notification_type = nil,
-		sugar_high = nil,
 		progress = 1,
 		initial_progress = 1,
 		priority = 0,
 		id = "candy_progress",
 		notification_type = HUDNotification.CANDY_PROGRESSION,
 		sugar_high = {
-			tier = nil,
-			buffs = nil,
 			tier = self._current_stage - 1,
 			buffs = effects
 		}
 	})
 	managers.hud:set_tab_event_panel_data({
-		tier = nil,
-		malus_effect = nil,
 		progress = 1,
 		tier = self._current_stage - 1,
 		malus_effect = malus_effect
@@ -273,9 +250,6 @@ function BuffEffectCandy:sync_candy_consumed(tweak_id)
 	local progress = (self._candy_consumed - self._previous_target) / (self._candy_target - self._previous_target)
 
 	managers.notification:add_notification({
-		notification_type = nil,
-		progress = nil,
-		initial_progress = nil,
 		priority = 0,
 		id = "candy_progress",
 		notification_type = HUDNotification.CANDY_PROGRESSION,
@@ -283,7 +257,6 @@ function BuffEffectCandy:sync_candy_consumed(tweak_id)
 		initial_progress = initial_progress
 	})
 	managers.hud:set_tab_event_panel_data({
-		progress = nil,
 		progress = progress
 	})
 	Application:info("[BuffEffectCandy:_on_candy_consumed] consumed", self._candy_consumed, value, initial_progress, progress)

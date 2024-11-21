@@ -201,7 +201,6 @@ function ElementSpecialObjective:clbk_objective_administered(unit)
 		else
 			unit_rsrv = {
 				radius = 30,
-				position = nil,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
 			self._pos_rsrv[unit:key()] = unit_rsrv
@@ -278,7 +277,6 @@ function ElementSpecialObjective:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
 			radius = 30,
-			position = nil,
 			position = self._values.position
 		}
 		local pos_rsrv = self._tmp_pos_rsrv
@@ -361,17 +359,6 @@ function ElementSpecialObjective:on_executed(instigator)
 			local search_dis_sq = self._values.search_distance
 			search_dis_sq = search_dis_sq and search_dis_sq * search_dis_sq or nil
 			local so_descriptor = {
-				search_dis_sq = nil,
-				interval = nil,
-				base_chance = nil,
-				objective = nil,
-				admin_clbk = nil,
-				repeatable = nil,
-				access = nil,
-				AI_group = nil,
-				usage_amount = nil,
-				search_pos = nil,
-				chance_inc = nil,
 				objective = objective,
 				base_chance = self:_get_default_value_if_nil("base_chance"),
 				chance_inc = self:_get_default_value_if_nil("chance_inc"),
@@ -419,26 +406,6 @@ function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		trigger_on = nil,
-		attitude = nil,
-		pose = nil,
-		verification_clbk = nil,
-		complete_clbk = nil,
-		fail_clbk = nil,
-		action_start_clbk = nil,
-		followup_SO = nil,
-		interaction_voice = nil,
-		action_duration = nil,
-		element = nil,
-		interrupt_dis = nil,
-		haste = nil,
-		interrupt_health = nil,
-		rot = nil,
-		pos = nil,
-		stance = nil,
-		scan = nil,
-		path_style = nil,
-		forced = nil,
 		type = false,
 		element = self,
 		pos = pos,
@@ -528,9 +495,7 @@ function ElementSpecialObjective:get_objective(instigator)
 				body_part = 1,
 				align_sync = true,
 				type = "act",
-				variant = nil,
 				needs_full_blend = true,
-				blocks = nil,
 				variant = self._values.so_action,
 				blocks = {
 					action = -1,
@@ -736,7 +701,6 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 		if not unit:brain():objective() then
 			local idle_objective = {
 				type = "free",
-				followup_objective = nil,
 				followup_objective = objective
 			}
 
@@ -818,8 +782,6 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 
 				if followup_element and followup_element:enabled() and weight > 0 then
 					table.insert(pool, {
-						element = nil,
-						weight = nil,
 						element = followup_element,
 						weight = weight
 					})

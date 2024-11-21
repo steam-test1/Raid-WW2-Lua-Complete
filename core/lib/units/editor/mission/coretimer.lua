@@ -63,8 +63,6 @@ function CoreTimerUnitElement:update_selected()
 				b = 0,
 				g = 1,
 				r = 0,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			}
@@ -101,8 +99,6 @@ function CoreTimerUnitElement:draw_links_unselected(...)
 			b = 0,
 			g = 0.5,
 			r = 0,
-			to_unit = nil,
-			from_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit
 		}
@@ -115,7 +111,6 @@ end
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -128,7 +123,6 @@ end
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -179,10 +173,6 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
-		remove_result = nil,
-		remove_filter = nil,
-		add_result = nil,
-		add_filter = nil,
 		add_filter = callback(self, self, "_add_unit_filter"),
 		add_result = callback(self, self, "_add_unit"),
 		remove_filter = callback(self, self, "_remove_unit_filter"),
@@ -234,8 +224,6 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 				b = 0.25,
 				g = 0.75,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -337,8 +325,6 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})

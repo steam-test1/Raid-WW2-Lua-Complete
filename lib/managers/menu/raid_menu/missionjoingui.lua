@@ -73,17 +73,9 @@ function MissionJoinGui:_layout_filters()
 	local filter_stepper_width = 470
 	local row_spacing = 5
 	self._friends_only_button = self._filters_panel:toggle_button({
-		description_color = nil,
 		name = "friends_only_button",
-		description = nil,
 		no_highlight = true,
-		on_menu_move = nil,
-		on_click_callback = nil,
 		text = "",
-		font_size = nil,
-		button_h = nil,
-		button_w = nil,
-		h = nil,
 		w = 470,
 		y = 32,
 		x = 0,
@@ -100,20 +92,10 @@ function MissionJoinGui:_layout_filters()
 		}
 	})
 	self._in_camp_servers_only = self._filters_panel:toggle_button({
-		description_color = nil,
 		name = "in_camp_servers_only",
-		description = nil,
 		no_highlight = true,
-		on_menu_move = nil,
-		on_click_callback = nil,
 		text = "",
-		font_size = nil,
-		button_h = nil,
-		button_w = nil,
-		h = nil,
 		w = 470,
-		y = nil,
-		x = nil,
 		x = self._friends_only_button:x(),
 		y = self._friends_only_button:y() + 50,
 		h = MissionJoinGui.FILTER_HEIGHT,
@@ -129,23 +111,7 @@ function MissionJoinGui:_layout_filters()
 		}
 	})
 	self._distance_filter_stepper = self._filters_panel:stepper({
-		description_color = nil,
-		on_menu_move = nil,
-		font_size = nil,
-		button_h = nil,
-		button_w = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "distance_filter_stepper",
-		description = nil,
-		arrow_highlight_color = nil,
-		arrow_color = nil,
-		highlight_color = nil,
-		color = nil,
-		data_source_callback = nil,
-		stepper_w = nil,
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		x = self._in_camp_servers_only:x(),
 		y = self._in_camp_servers_only:y() + 50,
@@ -167,23 +133,7 @@ function MissionJoinGui:_layout_filters()
 		}
 	})
 	self._difficulty_filter_stepper = self._filters_panel:stepper({
-		description_color = nil,
-		on_menu_move = nil,
-		font_size = nil,
-		button_h = nil,
-		button_w = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "difficulty_filter_stepper",
-		description = nil,
-		arrow_highlight_color = nil,
-		arrow_color = nil,
-		highlight_color = nil,
-		color = nil,
-		data_source_callback = nil,
-		stepper_w = nil,
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		x = self._distance_filter_stepper:x(),
 		y = self._distance_filter_stepper:y() + 50,
@@ -205,23 +155,7 @@ function MissionJoinGui:_layout_filters()
 		}
 	})
 	self._mission_filter_stepper = self._filters_panel:stepper({
-		description_color = nil,
-		on_menu_move = nil,
-		font_size = nil,
-		button_h = nil,
-		button_w = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "mission_filter_stepper",
-		description = nil,
-		arrow_highlight_color = nil,
-		arrow_color = nil,
-		highlight_color = nil,
-		color = nil,
-		data_source_callback = nil,
-		stepper_w = nil,
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		x = self._difficulty_filter_stepper:x(),
 		y = self._difficulty_filter_stepper:y() + 50,
@@ -246,14 +180,10 @@ end
 
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
-		color = nil,
 		name = "servers_title_label",
 		vertical = "top",
-		font = nil,
 		h = 69,
 		w = 320,
-		text = nil,
-		font_size = nil,
 		text = utf8.to_upper(managers.localization:text("menu_mission_join_server_list_title")),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -267,46 +197,23 @@ function MissionJoinGui:_layout_server_list_table()
 		y = 96
 	})
 	self._params_servers_table = {
-		on_selected_callback = nil,
 		name = "servers_table",
 		use_selector_mark = true,
 		use_row_dividers = true,
-		scrollable_area_ref = nil,
-		w = nil,
-		table_params = nil,
 		loop_items = true,
 		w = self._server_list_scrollable_area:w(),
 		scrollable_area_ref = self._server_list_scrollable_area,
 		on_selected_callback = callback(self, self, "bind_controller_inputs"),
 		table_params = {
-			header_params = nil,
-			data_source_callback = nil,
-			columns = nil,
-			row_params = nil,
 			data_source_callback = callback(self, self, "data_source_servers_table"),
 			header_params = {
-				font = nil,
-				font_size = nil,
-				text_color = nil,
 				header_height = 32,
 				text_color = tweak_data.gui.colors.raid_white,
 				font = tweak_data.gui.fonts.din_compressed,
 				font_size = tweak_data.gui.font_sizes.small
 			},
 			row_params = {
-				height = nil,
-				on_row_double_clicked_callback = nil,
-				selected_color = nil,
-				on_row_click_callback = nil,
-				highlight_color = nil,
-				on_row_select_callback = nil,
-				font = nil,
-				font_size = nil,
 				spacing = 0,
-				color = nil,
-				row_selected_background_color = nil,
-				row_highlight_background_color = nil,
-				row_background_color = nil,
 				row_background_color = tweak_data.gui.colors.raid_white:with_alpha(0),
 				row_highlight_background_color = tweak_data.gui.colors.raid_white:with_alpha(0.1),
 				row_selected_background_color = tweak_data.gui.colors.raid_white:with_alpha(0.1),
@@ -323,14 +230,8 @@ function MissionJoinGui:_layout_server_list_table()
 			columns = {
 				{
 					w = 480,
-					color = nil,
-					selected_color = nil,
-					cell_class = nil,
-					on_cell_click_callback = nil,
-					highlight_color = nil,
 					align = "left",
 					vertical = "center",
-					header_text = nil,
 					header_padding = 32,
 					padding = 32,
 					header_text = self:translate("menu_mission_join_server_list_columns_mission_type", true),
@@ -342,14 +243,8 @@ function MissionJoinGui:_layout_server_list_table()
 				},
 				{
 					w = 224,
-					color = nil,
-					selected_color = nil,
-					cell_class = nil,
-					on_cell_click_callback = nil,
-					highlight_color = nil,
 					align = "left",
 					vertical = "center",
-					header_text = nil,
 					header_padding = 0,
 					padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_difficulty", true),
@@ -361,14 +256,8 @@ function MissionJoinGui:_layout_server_list_table()
 				},
 				{
 					w = 352,
-					color = nil,
-					selected_color = nil,
-					cell_class = nil,
-					on_cell_click_callback = nil,
-					highlight_color = nil,
 					align = "left",
 					vertical = "center",
-					header_text = nil,
 					header_padding = 0,
 					padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_host_name", true),
@@ -380,14 +269,8 @@ function MissionJoinGui:_layout_server_list_table()
 				},
 				{
 					w = 144,
-					color = nil,
-					selected_color = nil,
-					cell_class = nil,
-					on_cell_click_callback = nil,
-					highlight_color = nil,
 					align = "left",
 					vertical = "center",
-					header_text = nil,
 					header_padding = 0,
 					padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_players", true),
@@ -415,15 +298,11 @@ end
 function MissionJoinGui:_layout_game_description()
 	local desc_mission_icon_name = tweak_data.operations.missions.flakturm.icon_menu
 	local desc_mission_icon = {
-		texture_rect = nil,
-		texture = nil,
 		texture = tweak_data.gui.icons[desc_mission_icon_name].texture,
 		texture_rect = tweak_data.gui.icons[desc_mission_icon_name].texture_rect
 	}
 	self._desc_mission_icon = self._game_description_panel:bitmap({
-		texture_rect = nil,
 		visible = false,
-		texture = nil,
 		y = 0,
 		x = 0,
 		texture = desc_mission_icon.texture,
@@ -431,10 +310,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_mission_name = self._game_description_panel:label({
 		vertical = "center",
-		font = nil,
-		color = nil,
 		text = "FLAKTURM",
-		font_size = nil,
 		align = "left",
 		visible = false,
 		h = 96,
@@ -447,10 +323,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_mission_name_small = self._game_description_panel:label({
 		vertical = "center",
-		font = nil,
-		color = nil,
 		text = "FLAKTURM",
-		font_size = nil,
 		align = "left",
 		visible = false,
 		h = 32,
@@ -462,7 +335,6 @@ function MissionJoinGui:_layout_game_description()
 		color = tweak_data.gui.colors.raid_red
 	})
 	local difficulty_params = {
-		amount = nil,
 		name = "mission_difficulty",
 		amount = tweak_data:number_of_difficulties()
 	}
@@ -472,10 +344,7 @@ function MissionJoinGui:_layout_game_description()
 
 	self._desc_xp_amount = self._game_description_panel:label({
 		vertical = "center",
-		font = nil,
-		color = nil,
 		text = "1000 XP",
-		font_size = nil,
 		align = "right",
 		visible = false,
 		h = 32,
@@ -497,10 +366,8 @@ function MissionJoinGui:_layout_game_description()
 
 	for counter = 1, 3 do
 		local player_description_params = {
-			name = nil,
 			h = 96,
 			w = 480,
-			y = nil,
 			x = 0,
 			name = "player_description_" .. tostring(counter),
 			y = (counter - 1) * 96
@@ -508,9 +375,7 @@ function MissionJoinGui:_layout_game_description()
 
 		if IS_XB1 then
 			player_description_params.on_menu_move = {
-				up = nil,
 				left = "servers_table",
-				down = nil,
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
 				down = "player_description_" .. tostring(counter % 3 + 1)
 			}
@@ -531,8 +396,6 @@ function MissionJoinGui:_layout_game_description()
 		x = 0
 	})
 	self.desc_challenge_card_icon = self._desc_challenge_card_panel:bitmap({
-		texture_rect = nil,
-		texture = nil,
 		h = 138,
 		w = 96,
 		y = 64,
@@ -542,9 +405,6 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_challenge_card_name = self._desc_challenge_card_panel:label({
 		text = "SWITCH HITLER",
-		color = nil,
-		font = nil,
-		font_size = nil,
 		align = "left",
 		vertical = "center",
 		h = 64,
@@ -557,8 +417,6 @@ function MissionJoinGui:_layout_game_description()
 	})
 	local desc_challenge_card_rarity_icon = tweak_data.gui.icons.loot_rarity_uncommon
 	self._desc_challenge_card_rarity_icon = self._desc_challenge_card_panel:bitmap({
-		texture_rect = nil,
-		texture = nil,
 		h = 32,
 		w = 32,
 		y = 16,
@@ -568,9 +426,6 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_challenge_card_xp = self._desc_challenge_card_panel:label({
 		text = "X1.5",
-		color = nil,
-		font = nil,
-		font_size = nil,
 		align = "right",
 		vertical = "center",
 		h = 64,
@@ -583,16 +438,9 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_challenge_card_name_on_card = self._desc_challenge_card_panel:label({
 		wrap = true,
-		font = nil,
-		color = nil,
 		text = "SWITCH HITLER",
-		font_size = nil,
 		align = "center",
 		vertical = "center",
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		w = self.desc_challenge_card_icon:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 		h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.TITLE_H,
 		x = self.desc_challenge_card_icon:x() + self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.TITLE_PADDING,
@@ -607,12 +455,6 @@ function MissionJoinGui:_layout_game_description()
 	local card_rarity_h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.ICON_H
 	local card_rarity_w = card_rarity_h * card_rarity_icon_texture_rect[3] / card_rarity_icon_texture_rect[4]
 	self._desc_challenge_card_rarity_icon_on_card = self._desc_challenge_card_panel:bitmap({
-		texture_rect = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		w = card_rarity_w,
 		h = card_rarity_h,
 		x = self.desc_challenge_card_icon:w() - card_rarity_w - self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.ICON_LEFT_PADDING,
@@ -624,14 +466,7 @@ function MissionJoinGui:_layout_game_description()
 	local card_type_h = card_rarity_h
 	local card_type_w = card_type_h * card_type.texture_rect[3] / card_type.texture_rect[4]
 	local params_card_type = {
-		texture_rect = nil,
 		name = "card_type_icon",
-		layer = nil,
-		texture = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		w = card_type_w,
 		h = card_type_h,
 		x = self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.ICON_LEFT_PADDING,
@@ -643,14 +478,8 @@ function MissionJoinGui:_layout_game_description()
 	self._desc_challenge_card_type_icon_on_card = self._desc_challenge_card_panel:image(params_card_type)
 	self._desc_challenge_card_xp_on_card = self._desc_challenge_card_panel:label({
 		text = "X1.5",
-		color = nil,
-		font = nil,
-		font_size = nil,
 		align = "center",
 		vertical = "center",
-		h = nil,
-		w = nil,
-		y = nil,
 		x = 0,
 		y = self.desc_challenge_card_icon:y() + self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.XP_BONUS_Y,
 		w = self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.XP_BONUS_W,
@@ -661,10 +490,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_challenge_card_bonus = self._desc_challenge_card_panel:label({
 		wrap = true,
-		font = nil,
-		color = nil,
 		text = "+ shooting your secondary weapon fills up your primary ammo",
-		font_size = nil,
 		align = "left",
 		vertical = "top",
 		h = 64,
@@ -677,10 +503,7 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self._desc_challenge_card_malus = self._desc_challenge_card_panel:label({
 		wrap = true,
-		font = nil,
-		color = nil,
 		text = "- shooting your primary weapon consumes both primary and secondary ammo",
-		font_size = nil,
 		align = "left",
 		vertical = "top",
 		h = 64,
@@ -695,10 +518,7 @@ end
 
 function MissionJoinGui:_layout_footer_buttons()
 	self._join_button = self._footer_buttons_panel:short_primary_button({
-		on_click_callback = nil,
 		name = "join_button",
-		text = nil,
-		on_menu_move = nil,
 		on_click_callback = callback(self, self, "on_click_join_button"),
 		text = self:translate("menu_mission_join_join", true),
 		on_menu_move = {
@@ -709,13 +529,7 @@ function MissionJoinGui:_layout_footer_buttons()
 	self._apply_filters_button = self._footer_buttons_panel:short_tertiary_button({
 		vertical = "center",
 		name = "apply_filters_button",
-		texture_color = nil,
-		texture_highlight_color = nil,
-		on_click_callback = nil,
-		text = nil,
-		highlight_color = nil,
 		align = "center",
-		color = nil,
 		h = 28,
 		w = 128,
 		x = 1280,
@@ -727,13 +541,7 @@ function MissionJoinGui:_layout_footer_buttons()
 		texture_highlight_color = tweak_data.menu.raid_red
 	})
 	self._show_filters_button = self._footer_buttons_panel:short_secondary_button({
-		color = nil,
 		name = "show_filters_button",
-		texture_color = nil,
-		texture_highlight_color = nil,
-		on_click_callback = nil,
-		text = nil,
-		highlight_color = nil,
 		align = "center",
 		vertical = "center",
 		h = 28,
@@ -749,11 +557,8 @@ function MissionJoinGui:_layout_footer_buttons()
 	self._online_users_count = self._footer_buttons_panel:label({
 		vertical = "center",
 		name = "online_users_count",
-		font = nil,
 		text = "",
-		font_size = nil,
 		align = "left",
-		color = nil,
 		h = 64,
 		w = 320,
 		x = 960,
@@ -821,36 +626,24 @@ function MissionJoinGui:data_source_servers_table()
 	for key, value in pairs(self._gui_jobs) do
 		if utf8.to_lower(value.level_id) == OperationsTweakData.IN_LOBBY or utf8.to_lower(value.level_id) == OperationsTweakData.ENTRY_POINT_LEVEL then
 			mission_data = {
-				info = nil,
-				text = nil,
-				value = nil,
 				text = self:translate(tweak_data.operations.missions.camp.name_id, true),
 				value = value.room_id,
 				info = value.level_name
 			}
 		elseif utf8.to_upper(value.job_name) == RaidJobManager.SINGLE_MISSION_TYPE_NAME then
 			mission_data = {
-				info = nil,
-				text = nil,
-				value = nil,
 				text = utf8.to_upper(value.level_name),
 				value = value.room_id,
 				info = value.level_name
 			}
 		elseif value.progress ~= nil then
 			mission_data = {
-				info = nil,
-				text = nil,
-				value = nil,
 				text = utf8.to_upper(value.job_name .. " " .. value.progress .. ": " .. value.level_name),
 				value = value.room_id,
 				info = value.level_name
 			}
 		else
 			mission_data = {
-				info = nil,
-				text = nil,
-				value = nil,
 				text = utf8.to_upper(value.job_name .. " " .. "WRONG PROGRESS" .. ": " .. value.level_name),
 				value = value.room_id,
 				info = value.level_name
@@ -860,31 +653,21 @@ function MissionJoinGui:data_source_servers_table()
 		table.insert(missions, {
 			mission_data,
 			{
-				info = nil,
-				text = nil,
-				value = nil,
 				text = utf8.to_upper(value.difficulty),
 				value = value.room_id,
 				info = value.difficulty
 			},
 			{
-				info = nil,
-				text = nil,
-				value = nil,
 				text = utf8.to_upper(value.host_name),
 				value = value.room_id,
 				info = value.host_name
 			},
 			{
-				info = nil,
-				text = nil,
-				value = nil,
 				text = value.num_plrs .. "",
 				value = value.room_id,
 				info = value.num_plrs .. ""
 			},
 			{
-				value = nil,
 				value = value
 			}
 		})
@@ -916,19 +699,16 @@ function MissionJoinGui:data_source_distance_filter_stepper()
 
 	table.insert(result, {
 		info = "Close",
-		text = nil,
 		value = 0,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_close"))
 	})
 	table.insert(result, {
 		info = "Far",
-		text = nil,
 		value = 2,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_far"))
 	})
 	table.insert(result, {
 		info = "Worldwide",
-		text = nil,
 		value = 3,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_worldwide"))
 	})
@@ -942,16 +722,12 @@ function MissionJoinGui:data_source_difficulty_filter_stepper()
 	if tweak_data.difficulties then
 		table.insert(result, {
 			info = "Any",
-			text = nil,
 			value = 0,
 			text = utf8.to_upper(managers.localization:text("menu_any"))
 		})
 
 		for diff_index, diff_name in pairs(tweak_data.difficulties) do
 			table.insert(result, {
-				info = nil,
-				text = nil,
-				value = nil,
 				text = self:translate("menu_" .. diff_name),
 				value = diff_index,
 				info = diff_name
@@ -967,7 +743,6 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 
 	table.insert(result, {
 		info = "Any",
-		text = nil,
 		value = -1,
 		text = utf8.to_upper(managers.localization:text("menu_any"))
 	})
@@ -977,8 +752,6 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 		local mission_name = self:translate(mission_data.name_id, true)
 
 		table.insert(result, {
-			text = nil,
-			value = nil,
 			text = mission_name,
 			value = mission_name_id
 		})
@@ -989,8 +762,6 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 		local mission_name = self:translate(mission_data.name_id, true)
 
 		table.insert(result, {
-			text = nil,
-			value = nil,
 			text = mission_name,
 			value = mission_name_id
 		})
@@ -1091,8 +862,6 @@ function MissionJoinGui:_set_game_description_data(data)
 
 		if desc_mission_icon_name then
 			local desc_mission_icon = {
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons[desc_mission_icon_name].texture,
 				texture_rect = tweak_data.gui.icons[desc_mission_icon_name].texture_rect
 			}
@@ -1188,9 +957,7 @@ function MissionJoinGui:_set_game_description_data(data)
 			end
 
 			local on_menu_move = {
-				up = nil,
 				left = "servers_table",
-				down = nil,
 				up = "player_description_" .. tostring(i > 1 and i - 1 or control_counter),
 				down = "player_description_" .. tostring(i % control_counter + 1)
 			}
@@ -1409,31 +1176,6 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 							}
 
 							self:add_gui_job({
-								job_id = nil,
-								id = nil,
-								level_name = nil,
-								job_name = nil,
-								room_id = nil,
-								players_info_2 = nil,
-								mission_type = nil,
-								players_info_3 = nil,
-								xuid = nil,
-								players_info_4 = nil,
-								level_id = nil,
-								challenge_card = nil,
-								players_info_1 = nil,
-								players_info = nil,
-								state_name = nil,
-								job_plan = nil,
-								kick_option = nil,
-								custom_text = nil,
-								num_plrs = nil,
-								host_name = nil,
-								difficulty = nil,
-								difficulty_id = nil,
-								state = nil,
-								progress = nil,
-								is_friend = nil,
 								room_id = room.room_id,
 								id = room.room_id,
 								level_id = level_id,
@@ -1463,31 +1205,6 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 						end
 					else
 						self:update_gui_job({
-							job_id = nil,
-							id = nil,
-							level_name = nil,
-							job_name = nil,
-							room_id = nil,
-							players_info_2 = nil,
-							mission_type = nil,
-							players_info_3 = nil,
-							xuid = nil,
-							players_info_4 = nil,
-							level_id = nil,
-							challenge_card = nil,
-							players_info_1 = nil,
-							players_info = nil,
-							state_name = nil,
-							job_plan = nil,
-							kick_option = nil,
-							custom_text = nil,
-							num_plrs = nil,
-							host_name = nil,
-							difficulty = nil,
-							difficulty_id = nil,
-							state = nil,
-							progress = nil,
-							is_friend = nil,
 							room_id = room.room_id,
 							id = room.room_id,
 							level_id = level_id,
@@ -1693,32 +1410,6 @@ function MissionJoinGui:_find_online_games_xb1(friends_only)
 							}
 
 							self:add_gui_job({
-								job_id = nil,
-								id = nil,
-								level_name = nil,
-								info = nil,
-								room_id = nil,
-								job_name = nil,
-								mission_type = nil,
-								xuid = nil,
-								players_info_2 = nil,
-								players_info_4 = nil,
-								level_id = nil,
-								challenge_card = nil,
-								players_info_1 = nil,
-								players_info = nil,
-								players_info_3 = nil,
-								state_name = nil,
-								job_plan = nil,
-								kick_option = nil,
-								custom_text = nil,
-								num_plrs = nil,
-								host_name = nil,
-								difficulty = nil,
-								difficulty_id = nil,
-								state = nil,
-								progress = nil,
-								is_friend = nil,
 								room_id = room.room_id,
 								id = room.room_id,
 								level_id = level_id,
@@ -1749,32 +1440,6 @@ function MissionJoinGui:_find_online_games_xb1(friends_only)
 						end
 					else
 						self:update_gui_job({
-							job_id = nil,
-							id = nil,
-							level_name = nil,
-							info = nil,
-							room_id = nil,
-							job_name = nil,
-							mission_type = nil,
-							xuid = nil,
-							players_info_2 = nil,
-							players_info_4 = nil,
-							level_id = nil,
-							challenge_card = nil,
-							players_info_1 = nil,
-							players_info = nil,
-							players_info_3 = nil,
-							state_name = nil,
-							job_plan = nil,
-							kick_option = nil,
-							custom_text = nil,
-							num_plrs = nil,
-							host_name = nil,
-							difficulty = nil,
-							difficulty_id = nil,
-							state = nil,
-							progress = nil,
-							is_friend = nil,
 							room_id = room.room_id,
 							id = room.room_id,
 							level_id = level_id,
@@ -2001,32 +1666,6 @@ function MissionJoinGui:_find_online_games_ps4(friends_only)
 								}
 
 								self:add_gui_job({
-									job_id = nil,
-									id = nil,
-									level_name = nil,
-									info = nil,
-									room_id = nil,
-									job_name = nil,
-									mission_type = nil,
-									xuid = nil,
-									players_info_2 = nil,
-									players_info_4 = nil,
-									level_id = nil,
-									challenge_card = nil,
-									players_info_1 = nil,
-									players_info = nil,
-									players_info_3 = nil,
-									state_name = nil,
-									job_plan = nil,
-									kick_option = nil,
-									custom_text = nil,
-									num_plrs = nil,
-									host_name = nil,
-									difficulty = nil,
-									difficulty_id = nil,
-									state = nil,
-									progress = nil,
-									is_friend = nil,
 									room_id = room.room_id,
 									id = lroom_Id,
 									level_id = level_id,
@@ -2057,32 +1696,6 @@ function MissionJoinGui:_find_online_games_ps4(friends_only)
 							end
 						else
 							self:update_gui_job({
-								job_id = nil,
-								id = nil,
-								level_name = nil,
-								info = nil,
-								room_id = nil,
-								job_name = nil,
-								mission_type = nil,
-								xuid = nil,
-								players_info_2 = nil,
-								players_info_4 = nil,
-								level_id = nil,
-								challenge_card = nil,
-								players_info_1 = nil,
-								players_info = nil,
-								players_info_3 = nil,
-								state_name = nil,
-								job_plan = nil,
-								kick_option = nil,
-								custom_text = nil,
-								num_plrs = nil,
-								host_name = nil,
-								difficulty = nil,
-								difficulty_id = nil,
-								state = nil,
-								progress = nil,
-								is_friend = nil,
 								room_id = room.room_id,
 								id = lroom_Id,
 								level_id = level_id,
@@ -2205,14 +1818,10 @@ end
 function MissionJoinGui:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_refresh")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_filter")
 		}
@@ -2221,8 +1830,6 @@ function MissionJoinGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_join_refresh",
@@ -2232,7 +1839,6 @@ function MissionJoinGui:bind_controller_inputs()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -2244,14 +1850,10 @@ end
 function MissionJoinGui:bind_controller_inputs_no_join()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_refresh")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_filter")
 		}
@@ -2260,8 +1862,6 @@ function MissionJoinGui:bind_controller_inputs_no_join()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_join_refresh",
@@ -2270,7 +1870,6 @@ function MissionJoinGui:bind_controller_inputs_no_join()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -2282,14 +1881,10 @@ end
 function MissionJoinGui:bind_controller_inputs_player_description()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_top"),
 			callback = callback(self, self, "_on_refresh")
 		},
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "_on_filter")
 		}
@@ -2298,21 +1893,17 @@ function MissionJoinGui:bind_controller_inputs_player_description()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_mission_join_refresh",
 			"menu_legend_mission_join_filter",
 			{
-				translated_text = nil,
 				translated_text = managers.localization:get_default_macros().BTN_A .. " " .. self:translate("menu_gamercard_widget_label", true)
 			}
 		},
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

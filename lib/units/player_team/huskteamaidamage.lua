@@ -124,7 +124,6 @@ function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, r
 	local result_type = result_index ~= 0 and self._RESULT_NAME_TABLE[result_index] or nil
 	local result = {
 		variant = "bullet",
-		type = nil,
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -147,10 +146,6 @@ function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, r
 
 	local attack_data = {
 		variant = "bullet",
-		result = nil,
-		attacker_unit = nil,
-		pos = nil,
-		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,
@@ -174,8 +169,6 @@ function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_a
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	local result_type = result_index ~= 0 and self._RESULT_NAME_TABLE[result_index] or nil
 	local result = {
-		variant = nil,
-		type = nil,
 		variant = variant,
 		type = result_type
 	}
@@ -198,11 +191,6 @@ function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_a
 	end
 
 	local attack_data = {
-		variant = nil,
-		result = nil,
-		attacker_unit = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
@@ -227,8 +215,6 @@ function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	local result_type = result_index ~= 0 and self._RESULT_NAME_TABLE[result_index] or nil
 	local result = {
-		variant = nil,
-		type = nil,
 		variant = variant,
 		type = result_type
 	}
@@ -251,11 +237,6 @@ function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack
 	end
 
 	local attack_data = {
-		variant = nil,
-		result = nil,
-		attacker_unit = nil,
-		pos = nil,
-		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
@@ -280,7 +261,6 @@ function HuskTeamAIDamage:sync_damage_melee(attacker_unit, hit_offset_height, re
 	local result_type = result_index ~= 0 and self._RESULT_NAME_TABLE[result_index] or nil
 	local result = {
 		variant = "melee",
-		type = nil,
 		type = result_type
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
@@ -305,10 +285,6 @@ function HuskTeamAIDamage:sync_damage_melee(attacker_unit, hit_offset_height, re
 
 	local attack_data = {
 		variant = "melee",
-		result = nil,
-		attacker_unit = nil,
-		pos = nil,
-		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		attack_dir = attack_dir,
 		pos = hit_pos,
@@ -327,7 +303,6 @@ end
 function HuskTeamAIDamage:sync_damage_bleeding()
 	local dmg_info = {
 		variant = "bleeding",
-		result = nil,
 		result = {
 			type = "death"
 		}
@@ -345,7 +320,6 @@ function HuskTeamAIDamage:sync_damage_incapacitated()
 
 	local dmg_info = {
 		variant = "bleeding",
-		result = nil,
 		result = {
 			type = "fatal"
 		}

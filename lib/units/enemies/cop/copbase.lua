@@ -89,8 +89,6 @@ function CopBase:_init_spawn_gear()
 	end
 
 	self._gear_data = self._char_tweak.gear and deep_clone(self._char_tweak.gear) or {
-		items = nil,
-		run_char_seqs = nil,
 		items = {},
 		run_char_seqs = {}
 	}
@@ -124,8 +122,6 @@ function CopBase:_init_spawn_gear()
 
 					self._unit:link(align_ids, sp_unit, sp_unit:orientation_object():name())
 					table.insert(self._gear_data.spawned_gear, {
-						align_key = nil,
-						unit = nil,
 						unit = sp_unit,
 						align_key = align_key
 					})

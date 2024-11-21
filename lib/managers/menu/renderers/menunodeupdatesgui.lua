@@ -140,11 +140,7 @@ function MenuNodeUpdatesGui:setup()
 	local title_text = managers.localization:to_upper_text(self._tweak_data.title_id or "menu_content_updates")
 
 	panel:text({
-		font = nil,
-		font_size = nil,
-		text = nil,
 		vertical = "top",
-		color = nil,
 		align = "left",
 		text = title_text,
 		font_size = tweak_data.menu.pd2_large_font_size,
@@ -153,10 +149,6 @@ function MenuNodeUpdatesGui:setup()
 	})
 
 	local back_button = panel:text({
-		font = nil,
-		font_size = nil,
-		color = nil,
-		text = nil,
 		vertical = "bottom",
 		name = "back_button",
 		align = "right",
@@ -174,14 +166,10 @@ function MenuNodeUpdatesGui:setup()
 	if MenuBackdropGUI then
 		local bg_text = panel:text({
 			layer = -1,
-			font_size = nil,
-			font = nil,
-			text = nil,
 			vertical = "top",
 			align = "left",
 			rotation = 360,
 			alpha = 0.4,
-			color = nil,
 			text = title_text,
 			font_size = tweak_data.menu.pd2_massive_font_size,
 			font = tweak_data.menu.pd2_massive_font,
@@ -195,14 +183,10 @@ function MenuNodeUpdatesGui:setup()
 		if managers.menu:is_pc_controller() then
 			local bg_back = panel:text({
 				layer = -1,
-				font_size = nil,
-				font = nil,
-				text = nil,
 				vertical = "bottom",
 				align = "right",
 				rotation = 360,
 				alpha = 0.4,
-				color = nil,
 				text = managers.localization:to_upper_text("menu_back"),
 				font_size = tweak_data.menu.pd2_massive_font_size,
 				font = tweak_data.menu.pd2_massive_font,
@@ -234,8 +218,6 @@ function MenuNodeUpdatesGui:setup()
 		name = "lastest_content_update",
 		y = 70,
 		x = 0,
-		h = nil,
-		w = nil,
 		w = panel:w() / 2,
 		h = panel:w() / 4
 	})
@@ -246,7 +228,6 @@ function MenuNodeUpdatesGui:setup()
 	end
 
 	local selected = BoxGuiObject:new(latest_update_panel, {
-		sides = nil,
 		sides = {
 			2,
 			2,
@@ -256,7 +237,6 @@ function MenuNodeUpdatesGui:setup()
 	})
 
 	BoxGuiObject:new(latest_update_panel, {
-		sides = nil,
 		sides = {
 			1,
 			1,
@@ -274,10 +254,6 @@ function MenuNodeUpdatesGui:setup()
 	local dech_panel_h = IS_PC and latest_update_panel:h() or panel:h() / 2
 	local latest_desc_panel = panel:panel({
 		name = "latest_description",
-		y = nil,
-		x = nil,
-		h = nil,
-		w = nil,
 		w = panel:w() - latest_update_panel:w() - padding,
 		h = dech_panel_h,
 		x = latest_update_panel:right() + padding,
@@ -285,7 +261,6 @@ function MenuNodeUpdatesGui:setup()
 	})
 
 	BoxGuiObject:new(latest_desc_panel, {
-		sides = nil,
 		sides = {
 			1,
 			1,
@@ -298,12 +273,6 @@ function MenuNodeUpdatesGui:setup()
 	local date_string = latest_update.date_id and managers.localization:to_upper_text(latest_update.date_id) or self:_get_db_text(latest_update.id, "date") or ""
 	local desc_string = latest_update.desc_id and managers.localization:text(latest_update.desc_id) or self:_get_db_text(latest_update.id, "desc") or ""
 	local title_text = latest_desc_panel:text({
-		font = nil,
-		y = nil,
-		x = nil,
-		text = nil,
-		color = nil,
-		font_size = nil,
 		name = "title_text",
 		text = title_string,
 		font = tweak_data.menu.pd2_large_font,
@@ -313,11 +282,6 @@ function MenuNodeUpdatesGui:setup()
 		y = self.PADDING
 	})
 	local date_text = latest_desc_panel:text({
-		font = nil,
-		font_size = nil,
-		x = nil,
-		text = nil,
-		color = nil,
 		name = "date_text",
 		text = date_string,
 		font = tweak_data.menu.pd2_medium_font,
@@ -326,14 +290,9 @@ function MenuNodeUpdatesGui:setup()
 		x = self.PADDING
 	})
 	local desc_text = latest_desc_panel:text({
-		font = nil,
-		font_size = nil,
-		x = nil,
-		text = nil,
 		word_wrap = true,
 		wrap = true,
 		name = "desc_text",
-		color = nil,
 		text = desc_string,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
@@ -362,13 +321,9 @@ function MenuNodeUpdatesGui:setup()
 
 		if self._tweak_data.button.text_id then
 			local text = top_button:text({
-				font = nil,
-				font_size = nil,
 				halign = "right",
-				text = nil,
 				valign = "top",
 				vertical = "top",
-				color = nil,
 				align = "right",
 				text = managers.localization:to_upper_text(self._tweak_data.button.text_id),
 				font_size = tweak_data.menu.pd2_medium_font_size,
@@ -388,8 +343,6 @@ function MenuNodeUpdatesGui:setup()
 			local bitmap = top_button:bitmap({
 				valign = "top",
 				halign = "right",
-				color = nil,
-				texture = nil,
 				texture = self._tweak_data.button.image,
 				color = tweak_data.screen_colors.button_stage_3
 			})
@@ -409,19 +362,12 @@ function MenuNodeUpdatesGui:setup()
 	local small_width = w / num_previous_updates - self.PADDING * 2
 	local previous_updates_panel = panel:panel({
 		name = "previous_content_updates",
-		y = nil,
 		x = 0,
-		h = nil,
-		w = nil,
 		w = w,
 		h = small_width / 2 + self.PADDING * 2,
 		y = math.max(latest_update_panel:bottom(), latest_desc_panel:bottom()) + 30
 	})
 	local previous_update_text = panel:text({
-		font = nil,
-		font_size = nil,
-		color = nil,
-		text = nil,
 		name = "previous_update_text",
 		text = self._tweak_data.choice_id and managers.localization:to_upper_text(self._tweak_data.choice_id) or "",
 		font = tweak_data.menu.pd2_medium_font,
@@ -441,11 +387,6 @@ function MenuNodeUpdatesGui:setup()
 		local x = self.PADDING + (index - 1) * (w + self.PADDING * 2)
 		local y = self.PADDING
 		local content_panel = previous_updates_panel:panel({
-			name = nil,
-			y = nil,
-			x = nil,
-			h = nil,
-			w = nil,
 			name = data.id,
 			w = w,
 			h = h,
@@ -455,19 +396,12 @@ function MenuNodeUpdatesGui:setup()
 		local texture_count = managers.menu_component:request_texture(data.image, callback(self, self, "texture_done_clbk", content_panel))
 
 		table.insert(self._requested_textures, {
-			texture_count = nil,
-			texture = nil,
 			texture_count = texture_count,
 			texture = data.image
 		})
 
 		local text_string = data.name_id and managers.localization:to_upper_text(data.name_id) or self:_get_db_text(data.id, "desc") or " "
 		local text = panel:text({
-			font = nil,
-			font_size = nil,
-			color = nil,
-			text = nil,
-			name = nil,
 			name = data.name_id,
 			text = text_string,
 			font = tweak_data.menu.pd2_small_font,
@@ -486,7 +420,6 @@ function MenuNodeUpdatesGui:setup()
 
 		self._previous_update_texts[data.id] = text
 		local selected = BoxGuiObject:new(content_panel, {
-			sides = nil,
 			sides = {
 				2,
 				2,
@@ -498,7 +431,6 @@ function MenuNodeUpdatesGui:setup()
 	end
 
 	BoxGuiObject:new(previous_updates_panel, {
-		sides = nil,
 		sides = {
 			1,
 			1,
@@ -519,23 +451,16 @@ function MenuNodeUpdatesGui:setup()
 	if num_previous_updates < #content_updates then
 		local num_pages = self._num_pages
 		self._prev_page = panel:panel({
-			h = nil,
 			name = "previous_page",
-			w = nil,
 			w = tweak_data.menu.pd2_medium_font_size,
 			h = tweak_data.menu.pd2_medium_font_size
 		})
 		self._next_page = panel:panel({
-			h = nil,
 			name = "next_page",
-			w = nil,
 			w = tweak_data.menu.pd2_medium_font_size,
 			h = tweak_data.menu.pd2_medium_font_size
 		})
 		local prev_text = self._prev_page:text({
-			font = nil,
-			font_size = nil,
-			text = nil,
 			vertical = "center",
 			name = "text_obj",
 			align = "center",
@@ -544,9 +469,6 @@ function MenuNodeUpdatesGui:setup()
 			font_size = tweak_data.menu.pd2_medium_font_size
 		})
 		local next_text = self._next_page:text({
-			font = nil,
-			font_size = nil,
-			text = nil,
 			vertical = "center",
 			name = "text_obj",
 			align = "center",
@@ -555,11 +477,7 @@ function MenuNodeUpdatesGui:setup()
 			font_size = tweak_data.menu.pd2_medium_font_size
 		})
 		local page_text = panel:text({
-			font = nil,
-			font_size = nil,
-			text = nil,
 			vertical = "center",
-			color = nil,
 			align = "center",
 			text = tostring(current_page) .. "/" .. tostring(num_pages),
 			font = tweak_data.menu.pd2_medium_font,
@@ -589,9 +507,6 @@ end
 
 function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	panel:bitmap({
-		h = nil,
-		w = nil,
-		texture = nil,
 		name = "texture",
 		texture = texture_ids,
 		w = panel:w(),
@@ -887,8 +802,6 @@ function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refre
 			local texture = content_highlighted.image
 			local texture_count = managers.menu_component:request_texture(texture, callback(self, self, "texture_done_clbk", latest_update_panel))
 			self._lastest_texture_request = {
-				texture_count = nil,
-				texture = nil,
 				texture_count = texture_count,
 				texture = texture
 			}

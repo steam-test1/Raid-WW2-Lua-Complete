@@ -15,11 +15,6 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._on_double_click_callback = params.on_double_click_callback
 	self._data = data
 	self._object = self._panel:panel({
-		x = nil,
-		name = nil,
-		h = nil,
-		w = nil,
-		y = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -29,14 +24,6 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._color = params.color or tweak_data.gui.colors.raid_white
 	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
 	self._item_icon = self._object:image({
-		x = nil,
-		texture = nil,
-		texture_rect = nil,
-		color = nil,
-		name = nil,
-		h = nil,
-		w = nil,
-		y = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemIcon.ICON_PADDING,
 		y = (params.h - RaidGUIControlListItemIcon.ICON_HEIGHT) / 2,
@@ -47,16 +34,8 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 		color = params.color or tweak_data.gui.colors.raid_white
 	})
 	self._item_label = self._object:label({
-		font = nil,
-		text = nil,
-		color = nil,
-		name = nil,
-		h = nil,
-		w = nil,
 		y = 0,
-		x = nil,
 		vertical = "center",
-		font_size = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemIcon.ICON_PADDING,
 		w = params.w,
@@ -69,10 +48,6 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._item_background = self._object:rect({
 		x = 0,
 		visible = false,
-		color = nil,
-		name = nil,
-		h = nil,
-		w = nil,
 		y = 1,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
@@ -82,9 +57,6 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 	self._item_highlight_marker = self._object:rect({
 		x = 0,
 		visible = false,
-		color = nil,
-		name = nil,
-		h = nil,
 		w = 3,
 		y = 1,
 		name = "list_item_highlight_" .. self._name,
@@ -103,8 +75,6 @@ end
 
 function RaidGUIControlListItemIcon:_layout_breadcrumb()
 	local breadcrumb_params = {
-		identifiers = nil,
-		category = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

@@ -84,11 +84,6 @@ end
 
 function CameraDataInterpreter:dof()
 	return {
-		near_max = nil,
-		near_min = nil,
-		amount = nil,
-		far_max = nil,
-		far_min = nil,
 		amount = self._dof_amount,
 		near_min = self._dof_near_min,
 		near_max = self._dof_near_max,

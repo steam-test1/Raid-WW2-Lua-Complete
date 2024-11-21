@@ -18,11 +18,6 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_phalanx"
 }
 SpecialObjectiveUnitElement.PRESETS = {
-	security = nil,
-	team_ai = nil,
-	acrobats = nil,
-	heavies = nil,
-	civilians = nil,
 	civilians = {
 		"civ_male",
 		"civ_female"
@@ -151,8 +146,6 @@ function SpecialObjectiveUnitElement:test_element()
 	enemy:movement():set_root_blend(false)
 
 	local t = {
-		editor_name = nil,
-		id = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
@@ -164,7 +157,6 @@ function SpecialObjectiveUnitElement:test_element()
 	t.values.followup_elements = nil
 	t.values.spawn_instigator_ids = nil
 	self._script = MissionScript:new({
-		elements = nil,
 		elements = {}
 	})
 	self._so_class = ElementSpecialObjective:new(self._script, t)
@@ -216,8 +208,6 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 			if draw then
 				self:_draw_link({
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					b = 0.75,
 					g = 0,
 					from_unit = unit,
@@ -234,8 +224,6 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 		if draw and unit and self._unit then
 			self:_draw_link({
 				r = 0,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.75,
 				g = 0,
 				from_unit = unit,
@@ -320,8 +308,6 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 			if draw then
 				self:_draw_link({
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					b = 0,
 					g = 0.75,
 					from_unit = self._unit,
@@ -507,8 +493,6 @@ function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
 		self:_toggle_nav_link_filter_value({
-			ctrlr = nil,
-			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -519,8 +503,6 @@ function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
 		self:_toggle_nav_link_filter_value({
-			ctrlr = nil,
-			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -535,8 +517,6 @@ function SpecialObjectiveUnitElement:_set_preset_nav_link_filters(value)
 
 		ctrlr:set_value(state)
 		self:_toggle_nav_link_filter_value({
-			ctrlr = nil,
-			name = nil,
 			ctrlr = ctrlr,
 			name = name
 		})
@@ -573,11 +553,8 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		name_proportions = 1,
 		name = "Preset:",
 		tooltip = "Select a preset.",
-		options = nil,
-		sizer = nil,
 		ctrlr_proportions = 2,
 		sorted = true,
-		panel = nil,
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -588,7 +565,6 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	local filter_preset = CoreEWS.combobox(filter_preset_params)
 
 	filter_preset:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_apply_preset"), {
-		ctrlr = nil,
 		ctrlr = filter_preset
 	})
 
@@ -603,8 +579,6 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 		check:set_value(table.contains(self._nav_link_filter, o))
 		check:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_toggle_nav_link_filter_value"), {
-			ctrlr = nil,
-			name = nil,
 			ctrlr = check,
 			name = o
 		})

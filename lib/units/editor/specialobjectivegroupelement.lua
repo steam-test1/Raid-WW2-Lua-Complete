@@ -38,8 +38,6 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 					if draw then
 						self:_draw_link({
 							r = 0,
-							to_unit = nil,
-							from_unit = nil,
 							b = 0.75,
 							g = 0,
 							from_unit = self._unit,
@@ -66,8 +64,6 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 			if draw then
 				self:_draw_link({
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					b = 0.75,
 					g = 0,
 					from_unit = unit,
@@ -259,8 +255,6 @@ function SpecialObjectiveGroupElement:_lmb()
 			self._hed.followup_patrol_elements = self._hed.followup_patrol_elements or {}
 
 			table.insert(self._hed.followup_patrol_elements, {
-				id = nil,
-				type = nil,
 				id = id,
 				type = self:_element_type(id)
 			})
@@ -380,14 +374,9 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
 		name = "Mode:",
-		options = nil,
-		tooltip = nil,
-		sizer = nil,
-		panel = nil,
 		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -403,7 +392,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	local mode = CoreEws.combobox(mode_params)
 
 	mode:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "mode",
 		ctrlr = mode
 	})
@@ -412,7 +400,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "use_instigator",
 		ctrlr = use_instigator
 	})
@@ -420,15 +407,12 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	local base_chance_params = {
 		name = "Base chance:",
-		sizer = nil,
 		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		max = 1,
-		panel = nil,
 		min = 0,
 		floats = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		value = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance
@@ -436,12 +420,10 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	local base_chance = CoreEws.number_controller(base_chance_params)
 
 	base_chance:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "base_chance",
 		ctrlr = base_chance
 	})
 	base_chance:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "base_chance",
 		ctrlr = base_chance
 	})

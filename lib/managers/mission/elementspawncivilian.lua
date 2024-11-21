@@ -46,14 +46,11 @@ function ElementSpawnCivilian:produce(params)
 				align_sync = true,
 				type = "act",
 				body_part = 1,
-				variant = nil,
 				variant = state
 			}
 			local spawn_ai = {
-				objective = nil,
 				init_state = "idle",
 				objective = {
-					action = nil,
 					type = "act",
 					interrupt_health = 1,
 					interrupt_dis = -1,

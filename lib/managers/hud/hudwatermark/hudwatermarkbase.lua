@@ -17,12 +17,10 @@ end
 
 function HUDWatermarkBase:_create_panel(hud)
 	local panel_params = {
-		w = nil,
 		name = "watermark_panel",
 		layer = 1000,
 		halign = "center",
 		valign = "center",
-		h = nil,
 		w = HUDWatermarkBase.W,
 		h = HUDWatermarkBase.H
 	}
@@ -38,17 +36,11 @@ function HUDWatermarkBase:_create_text()
 	watermark_title = watermark_title or "wm_unset_warning"
 	watermark_title = utf8.to_upper(managers.localization:text(watermark_title))
 	self._wmtitle = self._object:text({
-		w = nil,
 		name = "watermark_title",
-		alpha = nil,
-		font_size = nil,
-		font = nil,
 		vertical = "top",
 		align = "center",
 		halign = "scale",
-		text = nil,
 		valign = "scale",
-		h = nil,
 		w = self._object:w(),
 		h = self._object:h(),
 		font = HUDWatermarkBase.TITLE_FONT,

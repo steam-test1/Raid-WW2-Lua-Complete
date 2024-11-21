@@ -23,7 +23,6 @@ CopLogicIdle.allowed_transitional_actions = {
 
 function CopLogicIdle.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -443,7 +442,6 @@ function CopLogicIdle._scan_for_dangerous_areas(data)
 	local nav_manager = managers.navigation
 	local all_nav_segs = nav_manager._nav_segments
 	local walk_params = {
-		tracker_from = nil,
 		tracker_from = nav_tracker
 	}
 	local slotmask = data.visibility_slotmask
@@ -696,7 +694,6 @@ end
 
 function CopLogicIdle._get_all_paths(data)
 	return {
-		stare_path = nil,
 		stare_path = data.internal_data.stare_path
 	}
 end

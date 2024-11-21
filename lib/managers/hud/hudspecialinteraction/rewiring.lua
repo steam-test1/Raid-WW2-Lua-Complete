@@ -27,8 +27,6 @@ function HUDSpecialInteractionRewiring:init(hud, params)
 	local size_inside_x = HUDSpecialInteractionRewiring.GAME_WIDTH - HUDSpecialInteractionRewiring.PADDING_X * 2
 	local size_inside_y = HUDSpecialInteractionRewiring.GAME_HEIGHT - HUDSpecialInteractionRewiring.PADDING_Y * 2
 	self._interact_rewire_inside_panel = self._object:panel({
-		h = nil,
-		w = nil,
 		name = "_interact_rewire_inside_panel",
 		layer = 5,
 		w = size_inside_x,
@@ -45,8 +43,6 @@ end
 
 function HUDSpecialInteractionRewiring:_create_interact_rewire_bg()
 	self._interact_rewire_bg = self._object:bitmap({
-		texture_rect = nil,
-		texture = nil,
 		name = "_interact_rewire_bg",
 		layer = 1,
 		texture = tweak_data.gui.icons.interact_rewire_bg.texture,
@@ -58,8 +54,6 @@ end
 
 function HUDSpecialInteractionRewiring:_create_interact_rewire_fg()
 	self._interact_rewire_fg = self._object:bitmap({
-		texture_rect = nil,
-		texture = nil,
 		name = "_interact_rewire_fg",
 		layer = 10,
 		texture = tweak_data.gui.icons.interact_rewire_fg.texture,
@@ -90,10 +84,7 @@ function HUDSpecialInteractionRewiring:_setup_slot_queue()
 			y = 100,
 			x = 160,
 			w = 2000,
-			font_size = nil,
 			layer = 99,
-			font = nil,
-			color = nil,
 			h = 75,
 			text = "WABBUBUBU 1",
 			name = "_debuggery_queue",
@@ -140,17 +131,11 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 	for y = 1, node_count_y do
 		self._interact_nodes[y] = self._interact_nodes[y] or {}
 		self._interact_node_row_data[y] = self._interact_node_row_data[y] or {
-			row_nodes = nil,
-			row_x_id = nil,
 			row_x_id = {},
 			row_nodes = {}
 		}
 		local node_panel = self._interact_rewire_inside_panel:panel({
-			y = nil,
-			w = nil,
-			name = nil,
 			x = 0,
-			h = nil,
 			visible = true,
 			name = "_interact_node_panel_" .. tostring(y),
 			y = (y - 1) * size_y,
@@ -162,16 +147,11 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 		if HUDSpecialInteractionRewiring._DEBUGGERY then
 			local node_panel_debuggery = self._object:text({
-				y = nil,
 				x = 100,
 				w = 600,
-				font_size = nil,
 				layer = 99,
-				font = nil,
-				color = nil,
 				h = 80,
 				text = "WABBUBUBU",
-				name = nil,
 				name = "_debuggery_" .. tostring(y),
 				color = Color(0.937, 0.6, 0.2),
 				font = HUDSpecialInteraction.LEGEND_FONT,
@@ -188,13 +168,6 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 			local gui_id = math.rand_bool() and "interact_rewire_node_dead" or "interact_rewire_node_line"
 			local bitmap_data = {
-				texture_rect = nil,
-				x = nil,
-				name = nil,
-				w = nil,
-				h = nil,
-				texture = nil,
-				color = nil,
 				name = "_interact_node_" .. tostring(y) .. "_" .. tostring(x),
 				texture = tweak_data.gui.icons[gui_id].texture,
 				texture_rect = tweak_data.gui.icons[gui_id].texture_rect,
@@ -230,15 +203,9 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 			local txt = HUDSpecialInteractionRewiring._DEBUGGERY and node_panel:text({
 				y = 4,
-				x = nil,
 				w = 80,
-				font_size = nil,
 				layer = 99,
-				font = nil,
-				color = nil,
 				h = 80,
-				text = nil,
-				name = nil,
 				name = "_debuggery_txtid_" .. tostring(y),
 				text = "X" .. tostring(x) .. "\nY" .. tostring(y),
 				color = Color(1, 0.1, 1),

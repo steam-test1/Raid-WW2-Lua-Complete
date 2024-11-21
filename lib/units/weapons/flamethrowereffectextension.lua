@@ -79,9 +79,6 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 	local nozzle_pos = nozzle_obj:position()
 	local attach_obj = self._unit
 	local effect_id = World:effect_manager():spawn({
-		position = nil,
-		normal = nil,
-		effect = nil,
 		effect = self._flame_effect.effect,
 		position = nozzle_pos,
 		normal = math.UP
@@ -90,9 +87,6 @@ function FlamethrowerEffectExtension:_spawn_muzzle_effect(from_pos, direction)
 
 	table.insert(self._flamethrower_effect_collection, {
 		been_alive = false,
-		direction = nil,
-		id = nil,
-		position = nil,
 		id = effect_id,
 		position = nozzle_pos,
 		direction = mvector3.copy(direction)

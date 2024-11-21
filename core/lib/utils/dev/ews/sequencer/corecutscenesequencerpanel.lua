@@ -117,7 +117,6 @@ function CoreCutsceneSequencerPanel:set_active_film_track(active_track)
 	end
 
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = nil,
 		position = function ()
 			return position
 		end
@@ -192,7 +191,6 @@ function CoreCutsceneSequencerPanel:remove_items(clip_list)
 
 	self:thaw()
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = nil,
 		position = function ()
 			return position
 		end
@@ -225,7 +223,6 @@ function CoreCutsceneSequencerPanel:remove_all_items()
 	end
 
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = nil,
 		position = function ()
 			return position
 		end
@@ -281,7 +278,6 @@ end
 
 function CoreCutsceneSequencerPanel:_evaluate_frame_at_playhead()
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = nil,
 		position = function ()
 			return self:playhead_position()
 		end
@@ -332,7 +328,6 @@ function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 	self._playhead_ornaments = {}
 	self._box_selection_ornaments = {}
 	self._audio_track = responder_map({
-		default = nil,
 		remove_clip = false,
 		default = {}
 	})

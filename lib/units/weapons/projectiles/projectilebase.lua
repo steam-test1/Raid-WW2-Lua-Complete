@@ -180,8 +180,6 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	local projectile_entry = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type)
 
 	self:throw({
-		dir = nil,
-		projectile_entry = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})
@@ -346,8 +344,6 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	end
 
 	unit:base():throw({
-		dir = nil,
-		projectile_entry = nil,
 		dir = dir,
 		projectile_entry = projectile_entry
 	})

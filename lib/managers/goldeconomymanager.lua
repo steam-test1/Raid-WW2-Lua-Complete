@@ -88,13 +88,6 @@ end
 
 function GoldEconomyManager:save(data)
 	local state = {
-		current = nil,
-		gold_awards = nil,
-		owned_upgrades = nil,
-		total = nil,
-		loyalty_rewards = nil,
-		version = nil,
-		applied_upgrades = nil,
 		version = GoldEconomyManager.VERSION,
 		total = self._global.total,
 		current = self._global.current,
@@ -228,8 +221,6 @@ function GoldEconomyManager:upgrade_player_camp()
 		if not found then
 			Application:debug("[GoldEconomyManager:upgrade_player_camp()] Adding new camp asset", data.upgrade)
 			table.insert(self._global.applied_upgrades, {
-				upgrade = nil,
-				level = nil,
 				level = data.level,
 				upgrade = data.upgrade
 			})
@@ -402,8 +393,6 @@ function GoldEconomyManager:update_camp_upgrade(upgrade_slot_name, upgrade_level
 
 	if not self:is_upgrade_owned(upgrade_slot_name, upgrade_level) then
 		table.insert(self._global.owned_upgrades, {
-			upgrade = nil,
-			level = nil,
 			upgrade = upgrade_slot_name,
 			level = upgrade_level
 		})

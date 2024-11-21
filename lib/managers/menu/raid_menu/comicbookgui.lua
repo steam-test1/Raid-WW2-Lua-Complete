@@ -35,8 +35,6 @@ function ComicBookGui:_set_initial_data()
 	self._bullets_active = {}
 	self._zoom_position = Vector3()
 	self._texture_rect = {
-		left = nil,
-		right = nil,
 		left = {
 			0,
 			0,
@@ -66,14 +64,10 @@ end
 
 function ComicBookGui:_layout_comic_pages()
 	self._pages_panel = self._root_panel:panel({
-		h = nil,
 		h = self.PAGE_HEIGHT
 	})
 	self._page_left = self._pages_panel:bitmap({
-		texture_rect = nil,
 		texture = "ui/comic_book/raid_comic_01",
-		w = nil,
-		h = nil,
 		rotation = 0,
 		w = self.PAGE_WIDTH,
 		h = self.PAGE_HEIGHT,
@@ -83,10 +77,7 @@ function ComicBookGui:_layout_comic_pages()
 	self._page_left:set_right(self._pages_panel:w() / 2)
 
 	self._page_right = self._pages_panel:bitmap({
-		texture_rect = nil,
 		texture = "ui/comic_book/raid_comic_01",
-		w = nil,
-		h = nil,
 		rotation = 0,
 		w = self.PAGE_WIDTH,
 		h = self.PAGE_HEIGHT,
@@ -96,10 +87,7 @@ function ComicBookGui:_layout_comic_pages()
 	self._page_right:set_center_x(self._pages_panel:w() / 2)
 
 	self._fake_page = self._pages_panel:bitmap({
-		layer = nil,
 		visible = false,
-		h = nil,
-		w = nil,
 		w = self.PAGE_WIDTH,
 		h = self.PAGE_HEIGHT,
 		layer = self._page_left:layer() + 1
@@ -109,8 +97,6 @@ end
 function ComicBookGui:_layout_nav_arrows()
 	local circle_icon = tweak_data.gui:get_full_gui_data("players_icon_outline")
 	local left_arrow_panel = self._root_panel:panel({
-		h = nil,
-		w = nil,
 		w = circle_icon.texture_rect[3],
 		h = circle_icon.texture_rect[4]
 	})
@@ -119,12 +105,6 @@ function ComicBookGui:_layout_nav_arrows()
 	left_arrow_panel:set_center_y(self._root_panel:h() / 2)
 
 	self._left_arrow_circle = left_arrow_panel:image_button({
-		highlight_color = nil,
-		color = nil,
-		texture = nil,
-		texture_rect = nil,
-		on_click_callback = nil,
-		disabled_color = nil,
 		texture = circle_icon.texture,
 		texture_rect = circle_icon.texture_rect,
 		color = ComicBookGui.CIRCLE_NORMAL_COLOR,
@@ -136,9 +116,6 @@ function ComicBookGui:_layout_nav_arrows()
 	self._left_arrow_circle:set_enabled(false)
 
 	self._left_arrow_arrow = left_arrow_panel:bitmap({
-		texture_rect = nil,
-		color = nil,
-		texture = nil,
 		texture = tweak_data.gui.icons.ico_page_turn_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_page_turn_left.texture_rect,
 		color = ComicBookGui.ARROW_DISABLED_COLOR
@@ -147,8 +124,6 @@ function ComicBookGui:_layout_nav_arrows()
 	self._left_arrow_arrow:set_center(self._left_arrow_circle:center())
 
 	local right_arrow_panel = self._root_panel:panel({
-		h = nil,
-		w = nil,
 		w = circle_icon.texture_rect[3],
 		h = circle_icon.texture_rect[4]
 	})
@@ -157,12 +132,6 @@ function ComicBookGui:_layout_nav_arrows()
 	right_arrow_panel:set_center_y(self._root_panel:h() / 2)
 
 	self._right_arrow_circle = right_arrow_panel:image_button({
-		highlight_color = nil,
-		color = nil,
-		texture = nil,
-		texture_rect = nil,
-		on_click_callback = nil,
-		disabled_color = nil,
 		texture = circle_icon.texture,
 		texture_rect = circle_icon.texture_rect,
 		color = ComicBookGui.CIRCLE_NORMAL_COLOR,
@@ -171,9 +140,6 @@ function ComicBookGui:_layout_nav_arrows()
 		on_click_callback = callback(self, self, "_on_right_arrow_clicked")
 	})
 	self._right_arrow_arrow = right_arrow_panel:bitmap({
-		texture_rect = nil,
-		color = nil,
-		texture = nil,
 		texture = tweak_data.gui.icons.ico_page_turn_right.texture,
 		texture_rect = tweak_data.gui.icons.ico_page_turn_right.texture_rect,
 		color = ComicBookGui.ARROW_NORMAL_COLOR
@@ -184,7 +150,6 @@ end
 
 function ComicBookGui:_layout_page_bullets()
 	self._bullet_panel = self._root_panel:panel({
-		h = nil,
 		h = ComicBookGui.BULLET_PANEL_HEIGHT
 	})
 
@@ -198,14 +163,6 @@ function ComicBookGui:_layout_page_bullets()
 	for i = 0, ComicBookGui.TOTAL_PAGE_COUNT - 1 do
 		local bullet_x = i * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING)
 		local normal_bullet = self._bullet_panel:image_button({
-			texture_rect = nil,
-			color = nil,
-			texture = nil,
-			w = nil,
-			h = nil,
-			highlight_color = nil,
-			x = nil,
-			on_click_callback = nil,
 			x = bullet_x,
 			w = ComicBookGui.BULLET_WIDTH,
 			h = ComicBookGui.BULLET_HEIGHT,
@@ -219,12 +176,8 @@ function ComicBookGui:_layout_page_bullets()
 		table.insert(self._bullets_normal, normal_bullet)
 
 		local active_bullet = self._bullet_panel:bitmap({
-			texture_rect = nil,
 			h = 0,
-			texture = nil,
 			w = 0,
-			layer = nil,
-			x = nil,
 			x = bullet_x,
 			texture = bullet_active_icon.texture,
 			texture_rect = bullet_active_icon.texture_rect,
@@ -347,15 +300,12 @@ end
 function ComicBookGui:bind_controller_inputs()
 	local bindings = {}
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back"
 		},
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}
@@ -429,8 +379,6 @@ function ComicBookGui:_animate_pages(current_page)
 		current_page = math.step(current_page, wanted_page, step)
 
 		self._bullet_panel:animate(callback(self, self, "_animate_bullets", {
-			current_page = nil,
-			previous_page = nil,
 			current_page = current_page,
 			previous_page = previous_page
 		}))

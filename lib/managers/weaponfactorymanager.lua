@@ -237,9 +237,7 @@ function WeaponFactoryManager:_indexed_parts(factory_id)
 			end
 
 			table.insert(i_table, {
-				amount = nil,
 				i = 1,
-				parts = nil,
 				parts = parts,
 				amount = #parts
 			})
@@ -292,10 +290,6 @@ function WeaponFactoryManager:_preload_parts(factory_id, factory_weapon, bluepri
 	if not only_record and self._uses_streaming then
 		async_task_data = {
 			spawn = false,
-			done_cb = nil,
-			third_person = nil,
-			blueprint = nil,
-			parts = nil,
 			third_person = third_person,
 			parts = parts,
 			done_cb = done_cb,
@@ -416,7 +410,6 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 		if DB:has(Idstring("package"), Idstring(package)) then
 			parts[part_id] = {
-				package = nil,
 				package = package
 			}
 
@@ -430,8 +423,6 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 	if not package then
 		parts[part_id] = {
-			name = nil,
-			is_streaming = nil,
 			name = ids_unit_name,
 			is_streaming = async_task_data and true or nil
 		}
@@ -551,7 +542,6 @@ function WeaponFactoryManager:_add_part_for_visual_only(p_unit, factory_id, part
 
 	local unit = World:spawn_unit(Idstring(part.unit), link_to_unit:get_object(Idstring(part.a_obj)):position(), link_to_unit:get_object(Idstring(part.a_obj)):rotation())
 	parts[part_id] = {
-		unit = nil,
 		unit = unit
 	}
 end
@@ -684,17 +674,8 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 	if self._uses_tasks and not skip_queue then
 		table.insert(self._tasks, {
-			need_parent = nil,
-			done_cb = nil,
-			third_person = nil,
-			blueprint = nil,
-			override = nil,
-			p_unit = nil,
-			forbidden = nil,
 			need_parent_i = 1,
-			factory_id = nil,
 			blueprint_i = 1,
-			parts = nil,
 			done_cb = done_cb,
 			p_unit = p_unit,
 			factory_id = factory_id,
@@ -711,10 +692,6 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 		if self._uses_streaming then
 			async_task_data = {
 				spawn = true,
-				done_cb = nil,
-				third_person = nil,
-				blueprint = nil,
-				parts = nil,
 				third_person = third_person,
 				parts = parts,
 				done_cb = done_cb,
@@ -848,12 +825,7 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	if async_task_data then
 		parts[part_id] = {
-			link_to_unit = nil,
-			animations = nil,
-			parent = nil,
 			is_streaming = true,
-			name = nil,
-			a_obj = nil,
 			animations = part.animations,
 			name = ids_unit_name,
 			link_to_unit = link_to_unit,
@@ -869,10 +841,6 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 		local unit = self:_spawn_and_link_unit(ids_unit_name, Idstring(part.a_obj), third_person, link_to_unit)
 		parts[part_id] = {
-			name = nil,
-			animations = nil,
-			unit = nil,
-			package = nil,
 			unit = unit,
 			animations = part.animations,
 			name = ids_unit_name,
@@ -1179,8 +1147,6 @@ function WeaponFactoryManager:get_part_desc_by_part_id_from_weapon(part_id, fact
 	local part = self:_part_data(part_id, factory_id, override)
 	local desc_id = part.desc_id or tweak_data.blackmarket.weapon_mods[part_id].desc_id
 	local params = {
-		BTN_BIPOD = nil,
-		BTN_GADGET = nil,
 		BTN_GADGET = managers.localization:btn_macro("weapon_gadget", true),
 		BTN_BIPOD = managers.localization:btn_macro("deploy_bipod", true)
 	}
@@ -1226,7 +1192,6 @@ function WeaponFactoryManager:get_part_desc_by_part_id(part_id)
 	local desc_id = tweak_data.blackmarket.weapon_mods[part_id].desc_id
 
 	return desc_id and managers.localization:text(desc_id, {
-		BTN_GADGET = nil,
 		BTN_GADGET = managers.localization:btn_macro("weapon_gadget", true)
 	}) or Application:production_build() and "Add ##desc_id## to ##" .. part_id .. "## in tweak_data.blackmarket.weapon_mods" or ""
 end
@@ -1554,9 +1519,6 @@ function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second
 	end
 
 	return {
-		translation = nil,
-		lens_distortion = nil,
-		rotation = nil,
 		translation = translation,
 		rotation = rotation,
 		lens_distortion = lens_distortion

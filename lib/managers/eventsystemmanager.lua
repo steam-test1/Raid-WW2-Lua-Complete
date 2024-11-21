@@ -26,12 +26,6 @@ end
 
 function EventSystemManager:save_profile_slot(data)
 	local state = {
-		last_login_utc = nil,
-		last_login_year = nil,
-		last_login_day = nil,
-		consecutive_logins = nil,
-		version = nil,
-		daily_event_id = nil,
 		version = EventSystemManager.VERSION,
 		consecutive_logins = self._consecutive_logins,
 		last_login_day = self._last_login_day,
@@ -167,8 +161,6 @@ function EventSystemManager:_fire_daily_event()
 	local reward = reward_data.reward
 	local notification_params = {
 		name = "active_duty_bonus",
-		total = nil,
-		consecutive = nil,
 		priority = 4,
 		duration = 13,
 		notification_type = "active_duty_bonus",

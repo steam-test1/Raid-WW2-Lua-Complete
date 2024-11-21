@@ -552,7 +552,6 @@ function CoreUnitDamage:water_check_enter(name, water_check, src_unit, body, nor
 
 	if element then
 		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {
-			water_depth = nil,
 			water_depth = water_depth
 		}, self._unit_element)
 
@@ -565,7 +564,6 @@ function CoreUnitDamage:water_check_exit(name, water_check, src_unit, body, norm
 
 	if element then
 		local env = CoreSequenceManager.SequenceEnvironment:new("water", src_unit, self._unit, body, normal, position, direction, damage, velocity, {
-			water_depth = nil,
 			water_depth = water_depth
 		}, self._unit_element)
 
@@ -658,8 +656,6 @@ function CoreUnitDamage:save(data)
 		local anim_time = self._unit:anim_time(anim_name)
 
 		table.insert(state.anim, {
-			name = nil,
-			time = nil,
 			name = anim_name,
 			time = anim_time
 		})
@@ -681,8 +677,6 @@ function CoreUnitDamage:save(data)
 					local anim_time = state_machine:segment_real_time(segment)
 
 					table.insert(state.state_machine, {
-						anim_state = nil,
-						anim_time = nil,
 						anim_state = anim_state,
 						anim_time = anim_time
 					})
@@ -1729,8 +1723,6 @@ function CoreUnitDamage:add_queued_sequence(name, params)
 
 	self._queued_sequences = self._queued_sequences or {}
 	local new_entry = {
-		name = nil,
-		params = nil,
 		name = name,
 		params = params
 	}
@@ -2726,7 +2718,6 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 
 								if self._enter_element_func then
 									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {
-										distance = nil,
 										distance = distance
 									}, self._unit_element)
 
@@ -2737,7 +2728,6 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 							if was_inflicting or self._instant then
 								if self._damage_element_func then
 									local env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, normal, position, direction, damage, self._velocity, {
-										distance = nil,
 										distance = distance
 									}, self._unit_element)
 
@@ -2752,7 +2742,6 @@ function CoreInflictFireUpdator:check_damage(t, dt)
 							end
 						elseif self._exit_element_func and not exit_inflict_env then
 							exit_inflict_env = CoreSequenceManager.SequenceEnvironment:new(self.DAMAGE_TYPE, unit, self._unit, self._body, -direction, body_center, direction, damage, self._velocity, {
-								distance = nil,
 								distance = distance
 							}, self._unit_element)
 						end

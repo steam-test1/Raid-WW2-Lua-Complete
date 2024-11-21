@@ -34,8 +34,6 @@ function CorePlaySoundUnitElement:update_selected(t, dt, selected_unit, all_unit
 			self:_draw_link({
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
@@ -144,8 +142,6 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 
 	if #paths <= 0 then
 		local help = {
-			sizer = nil,
-			panel = nil,
 			panel = panel,
 			sizer = panel_sizer,
 			text = "No scene sounds available in project!"
@@ -162,12 +158,7 @@ function CorePlaySoundUnitElement:_build_panel(panel, panel_sizer)
 
 	local path_value = managers.sound_environment:scene_path(self._hed.sound_event)
 	local _, _ = CoreEws.combobox_and_list({
-		options = nil,
-		panel = nil,
-		value = nil,
 		name = "Category:",
-		value_changed_cb = nil,
-		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer,
 		options = paths,
@@ -183,7 +174,6 @@ end
 
 function CorePlaySoundUnitElement:add_to_mission_package()
 	managers.editor:add_to_sound_package({
-		name = nil,
 		category = "soundbanks",
 		name = managers.sound_environment:scene_soundbank(self._hed.sound_event)
 	})

@@ -36,13 +36,9 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		local card_rarity = tweak_data.challenge_cards:get_card_by_key_name(card).rarity
 		local card_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect
 		self._card_panel = self._panel:panel({
-			x = nil,
 			halign = "center",
 			name = "card_panel",
 			valign = "center",
-			w = nil,
-			h = nil,
-			y = nil,
 			x = params.x or 0,
 			y = params.y or 0,
 			h = params.item_h or self._panel:h(),
@@ -56,24 +52,14 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local card_texture_rect = tweak_data.challenge_cards.challenge_card_texture_rect
 	local cip = self._params.card_image_params
 	local card_rect = {
-		x = nil,
-		w = nil,
-		h = nil,
-		y = nil,
 		x = cip and cip.x or 0,
 		y = cip and cip.y or 0,
 		w = cip and cip.w or self._card_panel:w(),
 		h = cip and cip.h or self._card_panel:h()
 	}
 	self._card_image = self._card_panel:bitmap({
-		x = nil,
 		layer = 100,
 		name = "card_image",
-		texture = nil,
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		y = nil,
 		x = card_rect.x or 0,
 		y = card_rect.y or 0,
 		w = card_rect.w or self._card_panel:w(),
@@ -84,18 +70,10 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
 	local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * self._card_image:h() / 255)
 	self._card_title = self._card_panel:label({
-		font_size = nil,
-		font = nil,
 		name = "card_title",
 		align = "center",
-		x = nil,
-		text = nil,
 		blend_mode = "normal",
-		color = nil,
-		layer = nil,
-		w = nil,
 		vertical = "center",
-		h = nil,
 		wrap = true,
 		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 		h = title_h,
@@ -116,15 +94,10 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	end
 
 	local params_card_description = {
-		font_size = nil,
-		font = nil,
 		name = "card_description",
 		wrap = true,
 		x = 0,
 		align = "left",
-		color = nil,
-		text = nil,
-		layer = nil,
 		visible = false,
 		w = 0,
 		h = 0,
@@ -137,17 +110,9 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	}
 	self._card_description = self._card_panel:label(params_card_description)
 	local params_xp_bonus = {
-		font_size = nil,
-		font = nil,
 		name = "xp_bonus",
-		text = nil,
 		align = "center",
-		layer = nil,
-		color = nil,
-		w = nil,
 		vertical = "center",
-		h = nil,
-		y = nil,
 		y = self._card_image:y() + self._card_image:h() * RaidGUIControlCardBase.XP_BONUS_Y,
 		w = self._card_image:w() * RaidGUIControlCardBase.XP_BONUS_W,
 		h = self._card_image:h() * RaidGUIControlCardBase.XP_BONUS_H,
@@ -163,14 +128,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local card_rarity_h = self._card_image:h() * RaidGUIControlCardBase.ICON_H
 	local card_rarity_w = card_rarity_h * rarity_definitions_icon.texture_rect[3] / rarity_definitions_icon.texture_rect[4]
 	self._card_rarity_icon = self._card_panel:image({
-		x = nil,
-		layer = nil,
 		name = "card_rarity_icon",
-		texture = nil,
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		y = nil,
 		w = card_rarity_w,
 		h = card_rarity_h,
 		x = self._card_image:w() - card_rarity_w - self._card_image:w() * RaidGUIControlCardBase.ICON_LEFT_PADDING,
@@ -184,14 +142,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local card_type_h = card_rarity_h
 	local card_type_w = card_type_h * type_definitions_icon.texture_rect[3] / type_definitions_icon.texture_rect[4]
 	self._card_type_icon = self._card_panel:image({
-		x = nil,
-		layer = nil,
 		name = "card_type_icon",
-		texture = nil,
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		y = nil,
 		w = card_type_w,
 		h = card_type_h,
 		x = self._card_image:w() * RaidGUIControlCardBase.ICON_LEFT_PADDING,
@@ -212,12 +163,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local image_size_multiplier = self._card_image:w() / tweak_data.challenge_cards.challenge_card_texture_rect[3]
 	image_size_multiplier = image_size_multiplier * 1.75
 	self._card_stackable_image = self._object:bitmap({
-		w = nil,
-		layer = nil,
 		visible = false,
-		texture = nil,
-		texture_rect = nil,
-		h = nil,
 		w = self._card_image:w(),
 		h = self._card_image:h(),
 		texture = tweak_data.challenge_cards.challenge_card_stackable_2_texture_path,
@@ -228,15 +174,8 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	self._card_stackable_image:set_center(self._card_image:center())
 
 	self._card_amount_background = self._card_panel:image({
-		x = nil,
 		name = "card_amount_background",
-		texture = nil,
-		texture_rect = nil,
-		layer = nil,
 		visible = false,
-		w = nil,
-		h = nil,
-		y = nil,
 		layer = self._card_image:layer() + 1,
 		x = self._card_image:w() * 0.145,
 		y = self._card_image:h() * 0.7,
@@ -246,17 +185,11 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture_rect = tweak_data.gui.icons.card_counter_bg_large.texture_rect
 	})
 	self._card_amount_label = self._card_panel:label({
-		x = nil,
-		h = nil,
 		name = "card_amount_label",
 		text = "99x",
-		font_size = nil,
-		layer = nil,
 		visible = false,
-		w = nil,
 		vertical = "center",
 		align = "center",
-		y = nil,
 		layer = self._card_amount_background:layer() + 1,
 		w = self._card_amount_background:w() * 0.9,
 		h = self._card_amount_background:h(),

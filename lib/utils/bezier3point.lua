@@ -70,14 +70,6 @@ local function reflect_point_distance(x, y, cx, cy, length)
 end
 
 return {
-	distance2 = nil,
-	hypot = nil,
-	rotate_point = nil,
-	reflect_point_distance = nil,
-	reflect_point = nil,
-	distance = nil,
-	point_angle = nil,
-	point_around = nil,
 	hypot = hypot,
 	distance = distance,
 	distance2 = distance2,

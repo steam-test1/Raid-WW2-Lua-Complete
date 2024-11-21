@@ -39,8 +39,6 @@ end
 function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_image = {
 		x = 0,
-		texture_rect = nil,
-		texture = nil,
 		y = 0,
 		name = "weapon_point_image",
 		texture = tweak_data.gui.icons[RaidGUIControlWeaponPointPeerLoot.ICON].texture,
@@ -50,14 +48,8 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	local params_player_name = {
 		layer = 1,
 		align = "left",
-		font_size = nil,
-		font = nil,
-		color = nil,
 		text = "",
 		name = "peer_weapon_point_name_label",
-		w = nil,
-		x = nil,
-		y = nil,
 		x = RaidGUIControlWeaponPointPeerLoot.TEXT_X,
 		y = RaidGUIControlWeaponPointPeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlWeaponPointPeerLoot.TEXT_X,
@@ -73,14 +65,7 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_description = {
 		layer = 1,
 		align = "left",
-		font_size = nil,
-		font = nil,
-		color = nil,
-		text = nil,
 		name = "weapon_point_description_label",
-		w = nil,
-		x = nil,
-		y = nil,
 		text = self:translate("weapon_point", true),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlWeaponPointPeerLoot.NAME_PADDING_DOWN,

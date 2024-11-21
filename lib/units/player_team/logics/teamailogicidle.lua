@@ -8,7 +8,6 @@ TeamAILogicIdle = TeamAILogicIdle or class(TeamAILogicBase)
 
 function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -86,7 +85,6 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.revive_complete_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_revive_complete", data), revive_t)
 				managers.dialog:queue_dialog("player_gen_revive_start", {
-					instigator = nil,
 					skip_idle_check = true,
 					instigator = data.unit
 				})
@@ -150,7 +148,6 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 
 		my_data.performing_act_objective = nil
 		local crouch_action = {
-			blocks = nil,
 			type = "act",
 			variant = "crouch",
 			body_part = 1,
@@ -317,8 +314,6 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 
 	if objective_type == "follow" then
 		objective = {
-			follow_unit = nil,
-			type = nil,
 			scan = true,
 			destroy_clbk_key = false,
 			called = true,
@@ -329,9 +324,7 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 		local followup_objective = {
 			scan = true,
 			type = "act",
-			action = nil,
 			action = {
-				blocks = nil,
 				type = "act",
 				variant = "crouch",
 				body_part = 1,
@@ -345,22 +338,15 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			}
 		}
 		objective = {
-			nav_seg = nil,
 			type = "revive",
-			action = nil,
-			followup_objective = nil,
 			destroy_clbk_key = false,
 			called = true,
-			follow_unit = nil,
-			action_duration = nil,
 			scan = true,
 			follow_unit = other_unit,
 			nav_seg = other_unit:movement():nav_tracker():nav_segment(),
 			action = {
 				align_sync = true,
 				type = "act",
-				blocks = nil,
-				variant = nil,
 				body_part = 1,
 				variant = objective_action,
 				blocks = {
@@ -534,9 +520,6 @@ function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_sh
 					local inv_wgt = dis * dis * (1 - vec:dot(look_vec))
 
 					table.insert(intimidateable_civilians, {
-						unit = nil,
-						key = nil,
-						inv_wgt = nil,
 						unit = unit,
 						key = key,
 						inv_wgt = inv_wgt
@@ -592,7 +575,6 @@ function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_a
 		local new_action = {
 			align_sync = true,
 			type = "act",
-			variant = nil,
 			body_part = 3,
 			variant = act_name
 		}

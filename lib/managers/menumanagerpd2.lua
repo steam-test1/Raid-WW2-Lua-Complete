@@ -87,11 +87,6 @@ end
 
 function MenuInitiatorBase:create_divider(node, id, text_id, size, color)
 	local params = {
-		color = nil,
-		size = nil,
-		text_id = nil,
-		no_text = nil,
-		name = nil,
 		name = "divider_" .. id,
 		no_text = not text_id,
 		text_id = text_id,
@@ -182,10 +177,6 @@ end
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		type = "CoreMenuItemSlider.ItemSlider",
-		step = nil,
-		max = nil,
-		min = nil,
-		show_value = nil,
 		show_value = params.show_value,
 		min = params.min,
 		max = params.max,

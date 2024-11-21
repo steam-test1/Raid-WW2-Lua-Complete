@@ -32,10 +32,6 @@ end
 function WeaponInventoryManager:init()
 	self._categories = {
 		[WeaponInventoryManager.CATEGORY_NAME_MELEE] = {
-			save = nil,
-			index_table = nil,
-			bm_id = nil,
-			bm_name = nil,
 			save = WeaponInventoryManager.SAVE_TYPE_ACCOUNT,
 			bm_name = WeaponInventoryManager.BM_CATEGORY_MELEE_NAME,
 			bm_id = WeaponInventoryManager.BM_CATEGORY_MELEE_ID,
@@ -68,11 +64,6 @@ function WeaponInventoryManager:_setup_initial_weapons()
 				if weapon_data.default then
 					self._weapons[category_name][weapon_id] = {
 						unlocked = true,
-						default = nil,
-						is_challenge_reward = nil,
-						redeemed_xp = nil,
-						droppable = nil,
-						slot = nil,
 						owned = true,
 						slot = weapon_data.slot,
 						droppable = weapon_data.droppable,
@@ -83,11 +74,6 @@ function WeaponInventoryManager:_setup_initial_weapons()
 				elseif weapon_tweaks.dlc and unlocked_melee_weapons[weapon_data.weapon_id] then
 					self._weapons[category_name][weapon_id] = {
 						unlocked = true,
-						default = nil,
-						is_challenge_reward = nil,
-						redeemed_xp = nil,
-						droppable = nil,
-						slot = nil,
 						owned = true,
 						slot = weapon_data.slot,
 						droppable = weapon_data.droppable,
@@ -98,11 +84,6 @@ function WeaponInventoryManager:_setup_initial_weapons()
 				else
 					self._weapons[category_name][weapon_id] = {
 						unlocked = false,
-						default = nil,
-						is_challenge_reward = nil,
-						redeemed_xp = nil,
-						droppable = nil,
-						slot = nil,
 						owned = true,
 						slot = weapon_data.slot,
 						droppable = weapon_data.droppable,
@@ -129,7 +110,6 @@ function WeaponInventoryManager:_setup_weapon_challenges()
 				tweak_data.challenge[skin_data.challenge]
 			}
 			local challenge_data = {
-				unlock = nil,
 				unlock = skin_data.name_id
 			}
 
@@ -257,9 +237,6 @@ end
 
 function WeaponInventoryManager:save_account_wide_info(data)
 	local state = {
-		melee_weapons = nil,
-		version_account_wide = nil,
-		weapon_skins = nil,
 		version_account_wide = self.version_account_wide,
 		melee_weapons = self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE],
 		weapon_skins = self._weapon_skins
@@ -284,11 +261,6 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 		if not self._weapons.melee_weapons[weapon_id] then
 			self._weapons.melee_weapons[weapon_id] = {
 				unlocked = false,
-				default = nil,
-				is_challenge_reward = nil,
-				redeemed_xp = nil,
-				droppable = nil,
-				slot = nil,
 				owned = true,
 				slot = melee_weapon_data.slot,
 				droppable = melee_weapon_data.droppable,
@@ -402,14 +374,6 @@ function WeaponInventoryManager:get_owned_melee_weapons()
 				local unlocked = weapon_data.unlocked or unlocked_weapons[weapon_id]
 
 				table.insert(result, {
-					unlocked = nil,
-					default = nil,
-					redeemed_xp = nil,
-					is_challenge_reward = nil,
-					weapon_id = nil,
-					droppable = nil,
-					slot = nil,
-					owned = nil,
 					weapon_id = weapon_id,
 					owned = weapon_data.owned,
 					unlocked = unlocked,
@@ -442,9 +406,6 @@ function WeaponInventoryManager:get_owned_weapon_skins()
 
 			if not item_tweaks.dlc or unlocked_items[skin_id] then
 				table.insert(result, {
-					unlocked = nil,
-					skin_id = nil,
-					owned = nil,
 					skin_id = skin_id,
 					owned = skin_data.owned,
 					unlocked = skin_data.unlocked or unlocked_items[skin_id]

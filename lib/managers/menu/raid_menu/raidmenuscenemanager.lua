@@ -351,7 +351,6 @@ function RaidMenuSceneManager:on_escape(flag_close_all_menus)
 	if managers.menu:is_open("menu_main") then
 		local callback_handler = RaidMenuCallbackHandler:new()
 		local params = {
-			yes_func = nil,
 			yes_func = callback(callback_handler, callback_handler, "_dialog_quit_yes")
 		}
 

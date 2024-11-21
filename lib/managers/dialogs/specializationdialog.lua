@@ -16,19 +16,8 @@ function SpecializationDialog:init(manager, data, is_title_outside)
 
 	self._ws = self._data.ws or manager:_get_ws()
 	local text_config = {
-		title_font = nil,
-		is_title_outside = nil,
-		text_blend_mode = nil,
-		text_formating_color_table = nil,
-		text_formating_color = nil,
-		use_text_formating = nil,
 		no_scroll_legend = true,
 		no_close_legend = true,
-		h = nil,
-		w = nil,
-		font_size = nil,
-		font = nil,
-		title_font_size = nil,
 		title_font = data.title_font,
 		title_font_size = data.title_font_size,
 		font = data.font,

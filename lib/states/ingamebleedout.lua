@@ -59,7 +59,6 @@ function IngameBleedOutState:at_enter()
 
 	managers.warcry:downed()
 	managers.dialog:queue_dialog("player_gen_downed", {
-		instigator = nil,
 		skip_idle_check = true,
 		instigator = managers.player:local_player()
 	})

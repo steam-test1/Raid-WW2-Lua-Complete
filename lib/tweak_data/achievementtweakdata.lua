@@ -39,7 +39,6 @@ function AchievementTweakData:_init_mission_awards()
 	self.missions = {
 		clear_skies = {
 			{
-				difficulty = nil,
 				id = "ach_clear_skies_hardest",
 				difficulty = very_hard
 			},
@@ -51,14 +50,12 @@ function AchievementTweakData:_init_mission_awards()
 			{
 				num_peers = 2,
 				no_bleedout = true,
-				difficulty = nil,
 				id = "ach_clear_skies_hardest_no_bleedout",
 				difficulty = very_hard
 			}
 		},
 		oper_flamable = {
 			{
-				difficulty = nil,
 				id = "ach_burn_hardest",
 				difficulty = very_hard
 			},
@@ -70,14 +67,12 @@ function AchievementTweakData:_init_mission_awards()
 			{
 				num_peers = 2,
 				no_bleedout = true,
-				difficulty = nil,
 				id = "ach_burn_hardest_no_bleedout",
 				difficulty = very_hard
 			}
 		},
 		flakturm = {
 			{
-				difficulty = nil,
 				id = "ach_flak_hardest",
 				difficulty = very_hard
 			},
@@ -88,7 +83,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		settlement = {
 			{
-				difficulty = nil,
 				id = "ach_castle_hardest",
 				difficulty = very_hard
 			},
@@ -99,7 +93,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		train_yard = {
 			{
-				difficulty = nil,
 				id = "ach_trainyard_hardest",
 				difficulty = very_hard
 			},
@@ -110,7 +103,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		gold_rush = {
 			{
-				difficulty = nil,
 				id = "ach_bank_hardest",
 				difficulty = very_hard
 			},
@@ -121,7 +113,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		radio_defense = {
 			{
-				difficulty = nil,
 				id = "ach_radiodefence_hardest",
 				difficulty = very_hard
 			},
@@ -132,7 +123,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		ger_bridge = {
 			{
-				difficulty = nil,
 				id = "ach_bridge_hardest",
 				difficulty = very_hard
 			},
@@ -143,7 +133,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		hunters = {
 			{
-				difficulty = nil,
 				id = "ach_hunters_hardest",
 				difficulty = very_hard
 			},
@@ -158,7 +147,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		tnd = {
 			{
-				difficulty = nil,
 				id = "ach_tank_depot_hardest",
 				difficulty = very_hard
 			},
@@ -169,7 +157,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		bunker_test = {
 			{
-				difficulty = nil,
 				id = "ach_bunkers_hardest",
 				difficulty = very_hard
 			},
@@ -180,7 +167,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		convoy = {
 			{
-				difficulty = nil,
 				id = "ach_sommelier_hardest",
 				difficulty = very_hard
 			},
@@ -191,7 +177,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		spies_test = {
 			{
-				difficulty = nil,
 				id = "ach_airfield_hardest",
 				difficulty = very_hard
 			},
@@ -202,7 +187,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		silo = {
 			{
-				difficulty = nil,
 				id = "ach_silo_hardest",
 				difficulty = very_hard
 			},
@@ -213,7 +197,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		kelly = {
 			{
-				difficulty = nil,
 				id = "ach_kelly_hardest",
 				difficulty = very_hard
 			},
@@ -228,7 +211,6 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		sto = {
 			{
-				difficulty = nil,
 				id = "ach_gallery_hardest",
 				difficulty = very_hard
 			},
@@ -239,14 +221,12 @@ function AchievementTweakData:_init_mission_awards()
 		},
 		forest_gumpy = {
 			{
-				difficulty = nil,
 				id = "ach_forest_convoy_hardest",
 				difficulty = very_hard
 			}
 		},
 		fury_railway = {
 			{
-				difficulty = nil,
 				id = "ach_fury_railway_hardest",
 				difficulty = very_hard
 			}

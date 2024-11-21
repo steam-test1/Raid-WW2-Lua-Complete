@@ -191,11 +191,7 @@ function ElementSpecialObjectiveGroup:get_grp_objective()
 	end
 
 	local grp_objective = {
-		fail_clbk = nil,
-		type = nil,
 		no_retry = true,
-		area = nil,
-		element = nil,
 		element = self,
 		type = self._values.mode,
 		area = self._area,

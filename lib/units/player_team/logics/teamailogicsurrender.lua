@@ -5,7 +5,6 @@ TeamAILogicSurrender.on_recovered = TeamAILogicDisabled.on_recovered
 
 function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 

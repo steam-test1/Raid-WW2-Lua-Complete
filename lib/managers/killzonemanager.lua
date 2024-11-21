@@ -71,7 +71,6 @@ function KillzoneManager:_warning_shot(unit)
 
 	if col_ray and col_ray.unit then
 		managers.game_play_central:play_impact_sound_and_effects({
-			col_ray = nil,
 			col_ray = col_ray
 		})
 	end
@@ -87,8 +86,6 @@ function KillzoneManager:_deal_damage(unit, damage)
 	ray = ray:with_z(-0.4):normalized()
 	col_ray.ray = ray
 	local attack_data = {
-		col_ray = nil,
-		damage = nil,
 		damage = damage,
 		col_ray = col_ray
 	}
@@ -98,11 +95,8 @@ end
 
 function KillzoneManager:_deal_gas_damage(unit, damage)
 	local attack_data = {
-		col_ray = nil,
-		damage = nil,
 		damage = damage,
 		col_ray = {
-			ray = nil,
 			ray = math.UP
 		}
 	}
@@ -112,12 +106,8 @@ end
 
 function KillzoneManager:_deal_fire_damage(unit, damage, death_on_down)
 	local attack_data = {
-		damage = nil,
-		col_ray = nil,
-		death_on_down = nil,
 		damage = damage,
 		col_ray = {
-			ray = nil,
 			ray = math.UP
 		},
 		death_on_down = death_on_down
@@ -139,9 +129,6 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_shot = math.rand(1)
 		self._units[unit:key()] = {
 			timer = 0,
-			type = nil,
-			unit = nil,
-			next_shot = nil,
 			type = type,
 			next_shot = next_shot,
 			unit = unit
@@ -150,9 +137,6 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_gas = math.rand(1)
 		self._units[unit:key()] = {
 			timer = 0,
-			type = nil,
-			unit = nil,
-			next_gas = nil,
 			type = type,
 			next_gas = next_gas,
 			unit = unit
@@ -161,9 +145,6 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_fire = math.rand(1)
 		self._units[unit:key()] = {
 			timer = 0,
-			type = nil,
-			next_fire = nil,
-			unit = nil,
 			type = type,
 			next_fire = next_fire,
 			unit = unit
@@ -172,9 +153,6 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_inferno = math.rand(1)
 		self._units[unit:key()] = {
 			timer = 0,
-			type = nil,
-			unit = nil,
-			next_inferno = nil,
 			type = type,
 			next_inferno = next_inferno,
 			unit = unit

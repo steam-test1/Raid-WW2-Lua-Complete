@@ -53,8 +53,6 @@ function FleePointElement:test_element()
 	enemy:movement():set_root_blend(false)
 
 	local t = {
-		editor_name = nil,
-		id = nil,
 		id = self._unit:unit_data().unit_id,
 		editor_name = self._unit:unit_data().name_id,
 		values = self:new_save_values()
@@ -65,7 +63,6 @@ function FleePointElement:test_element()
 	t.values.followup_elements = nil
 	t.values.spawn_instigator_ids = nil
 	self._script = MissionScript:new({
-		elements = nil,
 		elements = {}
 	})
 	self._so_class = ElementFleePoint:new(self._script, t)

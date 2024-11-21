@@ -30,8 +30,6 @@ function AIRemoveUnitElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				g = 0,
 				r = 0.75,
@@ -88,7 +86,6 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "use_instigator",
-		ctrlr = nil,
 		ctrlr = use_instigator
 	})
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
@@ -98,7 +95,6 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	true_death:set_value(self._hed.true_death)
 	true_death:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "true_death",
-		ctrlr = nil,
 		ctrlr = true_death
 	})
 	panel_sizer:add(true_death, 0, 0, "EXPAND")
@@ -108,7 +104,6 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	force_ragdoll:set_value(self._hed.force_ragdoll)
 	force_ragdoll:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "force_ragdoll",
-		ctrlr = nil,
 		ctrlr = force_ragdoll
 	})
 	panel_sizer:add(force_ragdoll, 0, 0, "EXPAND")
@@ -118,7 +113,6 @@ function AIRemoveUnitElement:_build_panel(panel, panel_sizer)
 	drop_loot:set_value(self._hed.drop_loot)
 	drop_loot:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "drop_loot",
-		ctrlr = nil,
 		ctrlr = drop_loot
 	})
 	panel_sizer:add(drop_loot, 0, 0, "EXPAND")

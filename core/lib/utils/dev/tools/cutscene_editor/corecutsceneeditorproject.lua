@@ -51,7 +51,6 @@ function CoreCutsceneEditorProject:save(audio_clips, film_clips, cutscene_keys, 
 		for blend_set, animation in pairs(patches) do
 			if is_valid(blend_set) and is_valid(animation) then
 				local actor_node = self:child_node("actor", animation_patches_node, {
-					name = nil,
 					name = tostring(actor_name)
 				}) or animation_patches_node:make_child("actor")
 
@@ -116,8 +115,6 @@ function CoreCutsceneEditorProject:audio_clips()
 
 	for clip_node in audio_track_node:children() do
 		table.insert(clips, {
-			sound = nil,
-			offset = nil,
 			offset = tonumber(clip_node:parameter("offset") or "0"),
 			sound = clip_node:parameter("sound")
 		})
@@ -137,12 +134,6 @@ function CoreCutsceneEditorProject:film_clips()
 
 		for clip_node in track_node:children() do
 			table.insert(clips, {
-				cutscene = nil,
-				track_index = nil,
-				from = nil,
-				to = nil,
-				camera = nil,
-				offset = nil,
 				track_index = index + 1,
 				offset = tonumber(clip_node:parameter("offset") or "0"),
 				cutscene = clip_node:parameter("cutscene"),

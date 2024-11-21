@@ -33,7 +33,6 @@ end
 
 function InteractionUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
-		continent = nil,
 		name = "units/dev_tools/mission_elements/point_interaction/interaction_dummy",
 		category = "units",
 		continent = self._unit:unit_data().continent

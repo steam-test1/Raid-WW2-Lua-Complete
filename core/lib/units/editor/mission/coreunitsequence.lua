@@ -29,7 +29,6 @@ function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units
 		for _, unit in ipairs(self:_get_sequence_units()) do
 			table.insert(links.on_executed, {
 				alternative = "unit",
-				unit = nil,
 				unit = unit
 			})
 		end
@@ -65,11 +64,6 @@ end
 function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	for _, unit in ipairs(self:_get_sequence_units()) do
 		local params = {
-			r = nil,
-			g = nil,
-			from_unit = nil,
-			b = nil,
-			to_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit,
 			r = r,
@@ -107,11 +101,6 @@ function CoreUnitSequenceUnitElement:_set_trigger_list()
 				if trigger_data and #trigger_data > 0 then
 					for _, data in ipairs(trigger_data) do
 						table.insert(self._hed.trigger_list, {
-							name = nil,
-							notify_unit_sequence = nil,
-							time = nil,
-							notify_unit_id = nil,
-							id = nil,
 							name = data.trigger_name,
 							id = data.id,
 							notify_unit_id = data.notify_unit:unit_data().unit_id,
@@ -142,13 +131,11 @@ end
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/units/run_sequence_dummy/run_sequence_dummy",
-		continent = nil,
 		category = "units",
 		continent = self._unit:unit_data().continent
 	})
 	managers.editor:add_to_world_package({
 		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
-		continent = nil,
 		category = "script_data",
 		continent = self._unit:unit_data().continent
 	})

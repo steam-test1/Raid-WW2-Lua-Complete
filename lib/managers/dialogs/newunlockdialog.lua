@@ -16,19 +16,8 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 
 	self._ws = self._data.ws or manager:_get_ws()
 	local text_config = {
-		text_formating_color_table = nil,
-		text_formating_color = nil,
-		use_text_formating = nil,
 		no_scroll_legend = true,
 		no_close_legend = true,
-		h = nil,
-		w = nil,
-		font_size = nil,
-		font = nil,
-		title_font_size = nil,
-		title_font = nil,
-		is_title_outside = nil,
-		text_blend_mode = nil,
 		title_font = data.title_font,
 		title_font_size = data.title_font_size,
 		font = data.font,
@@ -42,20 +31,9 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 		text_blend_mode = data.text_blend_mode
 	}
 	local image_config = {
-		video = nil,
-		shapes = nil,
-		valign = nil,
-		render_template = nil,
-		halign = nil,
-		h = nil,
-		w = nil,
-		texture = nil,
-		textures = nil,
 		keep_ratio = true,
 		layer = 2,
 		padding = 10,
-		video_loop = nil,
-		blend_mode = nil,
 		w = data.image_w or 128,
 		h = data.image_h or 128,
 		textures = data.textures,

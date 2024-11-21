@@ -199,7 +199,6 @@ end
 
 function EnvironmentEffectsManager:save(data)
 	local state = {
-		mission_effects = nil,
 		mission_effects = {}
 	}
 

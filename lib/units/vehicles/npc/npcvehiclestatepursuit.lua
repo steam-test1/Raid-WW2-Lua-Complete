@@ -31,8 +31,6 @@ function NpcVehicleStatePursuit:init(unit)
 	local cop_position = self._unit:position()
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
-		last_pos = nil,
-		tick_at = nil,
 		timeframe = 1,
 		distance = 0,
 		tick_at = delayed_tick,
@@ -46,8 +44,6 @@ function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 	local cop_position = self._unit:position()
 	local delayed_tick = Application:time() + NpcVehicleStatePursuit.STUCK_WAIT_TIME
 	self._tachograph = {
-		last_pos = nil,
-		tick_at = nil,
 		timeframe = 1,
 		distance = 0,
 		tick_at = delayed_tick,
@@ -175,7 +171,6 @@ function NpcVehicleStatePursuit:_loco_unit_proximity(npc_driving_ext, target_ste
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PLAYER_PROXIMITY)
 
 		retval = {
-			steering = nil,
 			handbrake = 1,
 			brake = 1,
 			acceleration = 0,

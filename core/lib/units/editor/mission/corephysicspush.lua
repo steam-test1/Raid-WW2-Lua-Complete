@@ -32,12 +32,10 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 	range_sizer:add(range, 0, 0, "EXPAND")
 	range:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
 		value = "physicspush_range",
-		ctrlr = nil,
 		ctrlr = range
 	})
 	range:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
 		value = "physicspush_range",
-		ctrlr = nil,
 		ctrlr = range
 	})
 
@@ -47,12 +45,10 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 	velocity_sizer:add(velocity, 0, 0, "EXPAND")
 	velocity:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
 		value = "physicspush_velocity",
-		ctrlr = nil,
 		ctrlr = velocity
 	})
 	velocity:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
 		value = "physicspush_velocity",
-		ctrlr = nil,
 		ctrlr = velocity
 	})
 
@@ -62,12 +58,10 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 	mass_sizer:add(mass, 0, 0, "EXPAND")
 	mass:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
 		value = "physicspush_mass",
-		ctrlr = nil,
 		ctrlr = mass
 	})
 	mass:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
 		value = "physicspush_mass",
-		ctrlr = nil,
 		ctrlr = mass
 	})
 	panel_sizer:add(range_sizer, 0, 0, "EXPAND")
@@ -78,7 +72,6 @@ end
 function CorePhysicsPushUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/physic_effects/hubelement_push",
-		continent = nil,
 		category = "physic_effects",
 		continent = self._unit:unit_data().continent
 	})

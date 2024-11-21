@@ -53,9 +53,6 @@ end
 
 function RaidMenuCallbackHandler:menu_options_on_click_default()
 	local params = {
-		callback = nil,
-		title = nil,
-		message = nil,
 		title = managers.localization:text("dialog_reset_all_options_title"),
 		message = managers.localization:text("dialog_reset_all_options_message"),
 		callback = function ()
@@ -497,7 +494,6 @@ end
 
 function RaidMenuCallbackHandler:singleplayer_restart_mission(item)
 	managers.menu:show_restart_mission_dialog({
-		yes_func = nil,
 		yes_func = RaidMenuCallbackHandler.singleplayer_restart_restart_mission_yes
 	})
 end
@@ -509,7 +505,6 @@ end
 
 function RaidMenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	managers.menu:show_return_to_camp_dialog({
-		yes_func = nil,
 		yes_func = RaidMenuCallbackHandler.singleplayer_restart_game_to_camp_yes
 	})
 end
@@ -567,8 +562,6 @@ function RaidMenuCallbackHandler:raid_play_online()
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 	MenuCallbackHandler:start_job({
-		job_id = nil,
-		difficulty = nil,
 		job_id = Global.exe_argument_level,
 		difficulty = Global.exe_argument_difficulty
 	})
@@ -590,8 +583,6 @@ end
 function RaidMenuCallbackHandler:_do_play_offline()
 	MenuCallbackHandler:play_single_player()
 	MenuCallbackHandler:start_single_player_job({
-		job_id = nil,
-		difficulty = nil,
 		job_id = Global.exe_argument_level,
 		difficulty = Global.exe_argument_difficulty
 	})
@@ -1063,8 +1054,6 @@ end
 
 function MenuCallbackHandler:set_default_options_raid(node_component)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_default_options_message"),
 		callback = function ()
 			managers.user:reset_setting_map()
@@ -1082,8 +1071,6 @@ end
 
 function MenuCallbackHandler:set_default_control_options_raid(node_component)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_default_controls_options_message"),
 		callback = function ()
 			managers.user:reset_controls_setting_map()
@@ -1096,8 +1083,6 @@ end
 
 function MenuCallbackHandler:set_default_keybinds_raid(node_component)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_use_default_keys_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")
@@ -1111,8 +1096,6 @@ end
 
 function MenuCallbackHandler:set_default_video_options_raid(node_component, callback_function)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_default_video_options_message"),
 		callback = function ()
 			managers.user:reset_video_setting_map()
@@ -1127,8 +1110,6 @@ end
 
 function MenuCallbackHandler:set_default_sound_options_raid(node_component)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_default_sound_options_message"),
 		callback = function ()
 			managers.user:reset_sound_setting_map()
@@ -1142,8 +1123,6 @@ end
 
 function MenuCallbackHandler:set_default_network_options_raid(node_component)
 	local params = {
-		text = nil,
-		callback = nil,
 		text = managers.localization:text("dialog_default_network_options_message"),
 		callback = function ()
 			managers.user:reset_network_setting_map()

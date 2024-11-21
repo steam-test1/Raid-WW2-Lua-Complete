@@ -82,7 +82,6 @@ commands:add({
 })
 commands:add({
 	label = "E&xit",
-	help = nil,
 	id = "EXIT",
 	help = "Closes the " .. CoreCutsceneEditor.EDITOR_TITLE .. " window"
 })
@@ -273,9 +272,6 @@ for _, key_type in ipairs(CoreCutsceneKey:types()) do
 		local key = "INSERT_" .. string.gsub(string.upper(key_type.NAME), " ", "_") .. "_KEY"
 
 		commands:add({
-			label = nil,
-			help = nil,
-			id = nil,
 			id = key,
 			label = key_type.NAME .. " Key",
 			help = "Inserts a " .. string.lower(key_type.NAME) .. " key at the current playhead position"
@@ -927,8 +923,6 @@ end
 function CoreCutsceneEditor:save_project()
 	if self._current_project then
 		local settings = {
-			export_type = nil,
-			animation_patches = nil,
 			export_type = self._project_settings_dialog:export_type(),
 			animation_patches = self._project_settings_dialog:unit_animation_patches()
 		}
@@ -942,8 +936,6 @@ function CoreCutsceneEditor:_serialized_audio_clips()
 
 	for _, clip in ipairs(self._sequencer:audio_track():clips()) do
 		local serialized_data = {
-			sound = nil,
-			offset = nil,
 			offset = clip:start_time(),
 			sound = clip:metadata()
 		}
@@ -966,12 +958,6 @@ function CoreCutsceneEditor:_serialized_film_clips()
 		for _, clip in ipairs(track:clips()) do
 			if clip:metadata() then
 				local serialized_data = {
-					to = nil,
-					from = nil,
-					track_index = nil,
-					offset = nil,
-					cutscene = nil,
-					camera = nil,
 					track_index = index,
 					offset = clip:start_time(),
 					cutscene = clip:metadata():footage():name(),

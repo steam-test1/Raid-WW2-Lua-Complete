@@ -24,8 +24,6 @@ function AchievmentManager:init()
 				self.handler:init()
 
 				Global.achievment_manager = {
-					handler = nil,
-					achievments = nil,
 					handler = self.handler,
 					achievments = self.achievments
 				}
@@ -40,7 +38,6 @@ function AchievmentManager:init()
 
 			if not Global.achievment_manager then
 				Global.achievment_manager = {
-					achievments = nil,
 					achievments = self.achievments
 				}
 			end
@@ -52,8 +49,6 @@ function AchievmentManager:init()
 			self:_parse_achievments("PS4")
 
 			Global.achievment_manager = {
-				trophy_requests = nil,
-				achievments = nil,
 				trophy_requests = {},
 				achievments = self.achievments
 			}
@@ -67,7 +62,6 @@ function AchievmentManager:init()
 			self:_parse_achievments("XB1")
 
 			Global.achievment_manager = {
-				achievments = nil,
 				achievments = self.achievments
 			}
 		else
@@ -175,10 +169,6 @@ function AchievmentManager:_parse_achievments(platform)
 				if reward._meta == "reward" and (Application:editor() or not platform or platform == reward.platform) then
 					self.achievments[ach.id] = {
 						awarded = false,
-						name = nil,
-						id = nil,
-						exp = nil,
-						dlc_loot = nil,
 						id = reward.id,
 						name = ach.name,
 						exp = self.exp_awards[ach.awards_exp],
@@ -260,7 +250,6 @@ function AchievmentManager:award_progress(stat, value)
 
 	local stats = {
 		[stat] = {
-			value = nil,
 			type = "int",
 			value = value or 1
 		}

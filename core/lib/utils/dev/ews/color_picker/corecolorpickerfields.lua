@@ -282,13 +282,6 @@ end
 function ColorPickerFields:_set_field_values_except(skipped_field_name, color)
 	hue, saturation, value = CoreMath.rgb_to_hsv(color.red, color.green, color.blue)
 	local field_values = {
-		Blue = nil,
-		Hue = nil,
-		Green = nil,
-		Value = nil,
-		Red = nil,
-		Alpha = nil,
-		Sat = nil,
 		Red = color.red * 255,
 		Green = color.green * 255,
 		Blue = color.blue * 255,

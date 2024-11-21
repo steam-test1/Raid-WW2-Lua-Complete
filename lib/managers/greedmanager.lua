@@ -29,9 +29,6 @@ function GreedManager:register_greed_item(unit, tweak_table, world_id)
 	self._registered_greed_items[world_id] = self._registered_greed_items[world_id] or {}
 	local item_tweak_data = tweak_data.greed.greed_items[tweak_table]
 	local greed_item_data = {
-		world_id = nil,
-		unit = nil,
-		value = nil,
 		unit = unit,
 		value = item_tweak_data.value,
 		world_id = world_id
@@ -43,8 +40,6 @@ end
 function GreedManager:register_greed_cache_item(unit, world_id)
 	self._registered_greed_cache_items[world_id] = self._registered_greed_cache_items[world_id] or {}
 	local greed_cache_item_data = {
-		unit = nil,
-		world_id = nil,
 		unit = unit,
 		world_id = world_id
 	}
@@ -170,7 +165,6 @@ end
 function GreedManager:pickup_greed_item(value, unit)
 	local notification_item = {
 		icon = "carry_gold",
-		value = nil,
 		name_id = "menu_greed_loot_title",
 		value = value
 	}
@@ -200,9 +194,6 @@ function GreedManager:secure_greed_carry_loot(carry_id, multiplier)
 
 	if value then
 		local notification_item = {
-			icon = nil,
-			value = nil,
-			name_id = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,
 			value = value
@@ -221,9 +212,6 @@ function GreedManager:on_loot_pickpocketed()
 	if tweak then
 		local value = tweak.value
 		local notification_item = {
-			icon = nil,
-			value = nil,
-			name_id = nil,
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,
 			value = value
@@ -327,8 +315,6 @@ end
 
 function GreedManager:save_profile_slot(data)
 	local state = {
-		version = nil,
-		current_loot_counter = nil,
 		version = GreedManager.VERSION,
 		current_loot_counter = self._current_loot_counter % self:loot_needed_for_gold_bar()
 	}

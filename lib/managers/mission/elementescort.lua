@@ -40,7 +40,6 @@ function ElementEscort:start_escort_path(unit)
 		if next_element then
 			local points = {
 				{
-					position = nil,
 					position = self:value("position")
 				}
 			}
@@ -48,7 +47,6 @@ function ElementEscort:start_escort_path(unit)
 
 			while next_element do
 				table.insert(points, {
-					position = nil,
 					position = next_element:value("position")
 				})
 				next_element:increment_usage()
@@ -69,14 +67,9 @@ function ElementEscort:start_escort_path(unit)
 
 			unit:brain():set_objective({
 				path_style = "coarse",
-				break_so = nil,
 				type = "escort",
-				next_escort_point = nil,
-				end_rot = nil,
 				haste = "walk",
-				path_data = nil,
 				path_data = {
-					points = nil,
 					points = points
 				},
 				next_escort_point = next_element or last_element,

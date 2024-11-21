@@ -78,8 +78,6 @@ end
 function LinkedStackMap:add(value)
 	self._last_link_id = self._last_link_id + 1
 	local link = {
-		value = nil,
-		id = nil,
 		value = value,
 		id = self._last_link_id
 	}

@@ -21,12 +21,10 @@ function InstanceInputUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = event
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = event
 	})
 end
@@ -54,12 +52,10 @@ function InstanceOutputUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = event
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = event
 	})
 end
@@ -84,8 +80,6 @@ function InstanceEventUnitElement:layer_finished(...)
 
 	if self._hed.instance then
 		table.insert(self._hed.event_list, {
-			event = nil,
-			instance = nil,
 			instance = self._hed.instance,
 			event = self._hed.event
 		})
@@ -185,8 +179,6 @@ end
 function InstanceEventUnitElement:_add_instance_by_name(instance_name)
 	local events = self:_get_events(instance_name)
 	local event_list_data = {
-		event = nil,
-		instance = nil,
 		instance = instance_name,
 		event = events[1]
 	}
@@ -208,11 +200,7 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 
 	local events_params = {
 		name_proportions = 0,
-		panel = nil,
 		tooltip = "Select an event from the combobox",
-		options = nil,
-		sizer = nil,
-		value = nil,
 		sorted = true,
 		sizer_proportions = 2,
 		ctrlr_proportions = 2,
@@ -228,11 +216,6 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 	toolbar:connect("SELECT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "remove_entry"), event_list_data)
 	toolbar:realize()
 	table.insert(self._guis, {
-		name_ctrlr = nil,
-		instance_name = nil,
-		toolbar = nil,
-		instance_name_ctrlr = nil,
-		event = nil,
 		instance_name_ctrlr = instance_name_ctrlr,
 		instance_name = instance_name,
 		event = event,
@@ -555,9 +538,6 @@ function InstanceParamsUnitElement:_add_var_dialog()
 	end
 
 	local data = {
-		default_value = nil,
-		var_name = nil,
-		type = nil,
 		var_name = var_name,
 		type = type,
 		default_value = default_value
@@ -621,8 +601,6 @@ function InstanceParamsUnitElement:_build_var_panel(data)
 	end
 
 	table.insert(self._panels, {
-		panel = nil,
-		var_name = nil,
 		var_name = data.var_name,
 		panel = panel
 	})
@@ -632,11 +610,7 @@ end
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
-		panel = nil,
 		tooltip = "Set a default number variable.",
-		value = nil,
-		sizer = nil,
-		name = nil,
 		sizer_proportions = 1,
 		floats = 0,
 		ctrlr_proportions = 2,
@@ -648,14 +622,10 @@ function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number = CoreEws.number_controller(number_params)
 
 	number:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_default_var_name"), {
-		data = nil,
-		ctrlr = nil,
 		ctrlr = number,
 		data = data
 	})
 	number:connect("EVT_KILL_FOCUS", callback(self, self, "_set_default_var_name"), {
-		data = nil,
-		ctrlr = nil,
 		ctrlr = number,
 		data = data
 	})
@@ -668,12 +638,7 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 
 	local params = {
 		name_proportions = 1,
-		panel = nil,
 		tooltip = "Select an option from the combobox",
-		options = nil,
-		sizer = nil,
-		name = nil,
-		value = nil,
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
@@ -686,8 +651,6 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	local combobox = CoreEws.combobox(params)
 
 	combobox:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_default_var_name"), {
-		data = nil,
-		ctrlr = nil,
 		ctrlr = combobox,
 		data = data
 	})
@@ -696,8 +659,6 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Set from list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_select_name_dialog"), {
-		data = nil,
-		combobox = nil,
 		combobox = params,
 		data = data
 	})
@@ -720,8 +681,6 @@ function InstanceParamsUnitElement:_on_gui_select_name_dialog(params)
 	for _, name in ipairs(dialog:_selected_item_assets()) do
 		CoreEws.change_combobox_value(params.combobox, name)
 		self:_set_default_var_name({
-			data = nil,
-			ctrlr = nil,
 			ctrlr = params.combobox.ctrlr,
 			data = params.data
 		})
@@ -959,10 +918,6 @@ function InstanceSetParamsUnitElement:_build_from_params(params)
 		end
 
 		use:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "_on_gui_toggle_use"), {
-			value_ctrlr = nil,
-			var_name = nil,
-			value_panel = nil,
-			ctrlr = nil,
 			ctrlr = use,
 			var_name = data.var_name,
 			value_panel = value_panel,
@@ -985,8 +940,6 @@ function InstanceSetParamsUnitElement:_on_gui_toggle_use(params)
 
 	if use then
 		self:_set_var_name({
-			var_name = nil,
-			ctrlr = nil,
 			ctrlr = params.value_ctrlr,
 			var_name = params.var_name
 		})
@@ -998,11 +951,7 @@ end
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
-		panel = nil,
 		tooltip = "Set a number variable.",
-		value = nil,
-		sizer = nil,
-		name = nil,
 		sizer_proportions = 1,
 		floats = 0,
 		ctrlr_proportions = 2,
@@ -1014,14 +963,10 @@ function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number = CoreEws.number_controller(number_params)
 
 	number:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_var_name"), {
-		var_name = nil,
-		ctrlr = nil,
 		ctrlr = number,
 		var_name = data.var_name
 	})
 	number:connect("EVT_KILL_FOCUS", callback(self, self, "_set_var_name"), {
-		var_name = nil,
-		ctrlr = nil,
 		ctrlr = number,
 		var_name = data.var_name
 	})
@@ -1036,12 +981,7 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 
 	local combobox_params = {
 		name_proportions = 1,
-		panel = nil,
 		tooltip = "Select an option from the combobox",
-		options = nil,
-		sizer = nil,
-		name = nil,
-		value = nil,
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
@@ -1054,8 +994,6 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 	local combobox = CoreEws.combobox(combobox_params)
 
 	combobox:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_var_name"), {
-		var_name = nil,
-		ctrlr = nil,
 		ctrlr = combobox,
 		var_name = data.var_name
 	})
@@ -1064,8 +1002,6 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Set from list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_select_name_dialog"), {
-		var_name = nil,
-		combobox = nil,
 		combobox = combobox_params,
 		var_name = data.var_name
 	})
@@ -1085,8 +1021,6 @@ function InstanceSetParamsUnitElement:_on_gui_select_name_dialog(params)
 	for _, name in ipairs(dialog:_selected_item_assets()) do
 		CoreEws.change_combobox_value(params.combobox, name)
 		self:_set_var_name({
-			var_name = nil,
-			ctrlr = nil,
 			ctrlr = params.combobox.ctrlr,
 			var_name = params.var_name
 		})

@@ -43,15 +43,10 @@ function RaidGUIControlPeerDetails:_create_profile_name()
 	local profile_name_params = {
 		text = "PROFILE NAME",
 		h = 32,
-		w = nil,
 		y = 0,
-		x = nil,
 		vertical = "center",
 		name = "profile_name",
 		align = "left",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X - RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -63,10 +58,7 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
-		texture = nil,
-		texture_rect = nil,
 		name = "class_icon",
-		color = nil,
 		texture = tweak_data.gui.icons.ico_class_infiltrator.texture,
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 		color = tweak_data.gui.colors.raid_black
@@ -78,15 +70,10 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	local nationality_params = {
 		text = "GERMAN",
 		h = 32,
-		w = nil,
 		y = 0,
-		x = nil,
 		vertical = "center",
 		name = "nationality",
 		align = "left",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -99,14 +86,10 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 
 	local level_text_params = {
 		h = 32,
-		w = nil,
 		text = "10",
 		vertical = "center",
 		name = "level_text",
 		align = "center",
-		color = nil,
-		font_size = nil,
-		font = nil,
 		w = RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -128,7 +111,6 @@ end
 
 function RaidGUIControlPeerDetails:set_nationality(nationality)
 	local params = {
-		text_size = nil,
 		icon_h = 48,
 		text_size = RaidGUIControlPeerDetails.ICON_FONT_SIZE
 	}

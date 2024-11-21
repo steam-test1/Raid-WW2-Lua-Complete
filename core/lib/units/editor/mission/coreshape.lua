@@ -70,9 +70,6 @@ end
 
 function CoreShapeUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
-		height = nil,
-		depth = nil,
-		width = nil,
 		width = self._hed.width,
 		depth = self._hed.depth,
 		height = self._hed.height
@@ -81,8 +78,6 @@ function CoreShapeUnitElement:_create_shapes()
 	self._shape:set_unit(self._unit)
 
 	self._cylinder_shape = CoreShapeManager.ShapeCylinderMiddle:new({
-		height = nil,
-		radius = nil,
 		radius = self._hed.radius,
 		height = self._hed.height
 	})
@@ -212,33 +207,21 @@ function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, va
 
 	slider_sizer:add(slider, 2, 0, "EXPAND")
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_size"), {
-		value = nil,
-		number_ctrlr_params = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_size"), {
-		value = nil,
-		number_ctrlr_params = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "size_release"), {
-		value = nil,
-		number_ctrlr_params = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBRELEASE", callback(self, self, "size_release"), {
-		value = nil,
-		number_ctrlr_params = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
@@ -276,8 +259,6 @@ function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 						b = 0.75,
 						g = 0.5,
 						r = 0,
-						to_unit = nil,
-						from_unit = nil,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -293,7 +274,6 @@ end
 function CoreShapeUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})

@@ -21,7 +21,6 @@ function AiDataManager:add_patrol_path(name)
 	end
 
 	self._data.patrol_paths[name] = {
-		points = nil,
 		points = {}
 	}
 
@@ -48,10 +47,6 @@ function AiDataManager:add_patrol_point(name, unit)
 	end
 
 	local t = {
-		unit_id = nil,
-		unit = nil,
-		rotation = nil,
-		position = nil,
 		position = unit:position(),
 		rotation = unit:rotation(),
 		unit = unit,
@@ -115,11 +110,8 @@ end
 
 function AiDataManager:destination_path(position, rotation)
 	return {
-		points = nil,
 		points = {
 			{
-				rotation = nil,
-				position = nil,
 				position = position,
 				rotation = rotation
 			}

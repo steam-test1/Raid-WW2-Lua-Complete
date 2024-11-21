@@ -7,9 +7,6 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._no_callback = self._params.no_callback
 	self._object = self._panel:panel({
 		name = "dialog_panel",
-		layer = nil,
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
 		w = self._panel:w(),
@@ -17,10 +14,7 @@ function RaidGUIControlDialogTest:init(parent, params)
 		layer = self._panel:layer() + 100
 	})
 	self._background = self._object:rect({
-		color = nil,
 		name = "background",
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
 		w = self._object:w(),
@@ -33,13 +27,8 @@ function RaidGUIControlDialogTest:init(parent, params)
 		name = "dialog_title",
 		vertical = "center",
 		align = "center",
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 32,
 		w = 576,
-		y = nil,
-		x = nil,
 		x = center_x,
 		y = center_y - 82,
 		text = self:translate("character_creation_create_title", true),
@@ -53,11 +42,8 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._input_box = self._object:input_field({
 		visible = false,
 		name = "input_field",
-		ws = nil,
 		h = 48,
 		w = 430,
-		y = nil,
-		x = nil,
 		x = center_x,
 		y = center_y,
 		ws = self._params.ws
@@ -69,10 +55,6 @@ function RaidGUIControlDialogTest:init(parent, params)
 
 	self._yes_button = self._object:short_primary_button({
 		name = "yes_button",
-		text = nil,
-		on_click_callback = nil,
-		y = nil,
-		x = nil,
 		x = center_x,
 		y = center_y + 112,
 		text = self:translate("yes", true),
@@ -84,10 +66,6 @@ function RaidGUIControlDialogTest:init(parent, params)
 
 	self._no_button = self._object:short_secondary_button({
 		name = "no_button",
-		text = nil,
-		on_click_callback = nil,
-		y = nil,
-		x = nil,
 		x = center_x,
 		y = center_y + 112,
 		text = self:translate("no", true),

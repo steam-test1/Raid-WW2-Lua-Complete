@@ -87,7 +87,6 @@ function CoreOverlayEffectHubElement:_build_panel(panel, panel_sizer)
 	effects_sizer:add(effects, 2, 0, "EXPAND")
 	effects:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
 		value = "overlay_effect",
-		ctrlr = nil,
 		ctrlr = effects
 	})
 	effects:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "changed_effect"), nil)
@@ -102,12 +101,10 @@ function CoreOverlayEffectHubElement:_build_panel(panel, panel_sizer)
 	fade_in:connect("EVT_CHAR", callback(nil, _G, "verify_number"), fade_in)
 	fade_in:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_fade_in",
-		ctrlr = nil,
 		ctrlr = fade_in
 	})
 	fade_in:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_fade_in",
-		ctrlr = nil,
 		ctrlr = fade_in
 	})
 	fade_in_sizer:add(fade_in, 3, 0, "EXPAND")
@@ -127,12 +124,10 @@ function CoreOverlayEffectHubElement:_build_panel(panel, panel_sizer)
 	sustain:connect("EVT_CHAR", callback(nil, _G, "verify_number"), sustain)
 	sustain:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_sustain",
-		ctrlr = nil,
 		ctrlr = sustain
 	})
 	sustain:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_sustain",
-		ctrlr = nil,
 		ctrlr = sustain
 	})
 	sustain_sizer:add(sustain, 3, 0, "EXPAND")
@@ -152,12 +147,10 @@ function CoreOverlayEffectHubElement:_build_panel(panel, panel_sizer)
 	fade_out:connect("EVT_CHAR", callback(nil, _G, "verify_number"), fade_out)
 	fade_out:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_fade_out",
-		ctrlr = nil,
 		ctrlr = fade_out
 	})
 	fade_out:connect("EVT_KILL_FOCUS", callback(self, self, "set_option_time"), {
 		value = "overlay_effect_fade_out",
-		ctrlr = nil,
 		ctrlr = fade_out
 	})
 	fade_out_sizer:add(fade_out, 3, 0, "EXPAND")

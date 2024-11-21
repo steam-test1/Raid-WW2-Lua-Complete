@@ -10,8 +10,6 @@ function SpecialEquipmentPickup:_pickup(unit)
 
 	if not unit:character_damage():dead() and equipment and managers.player:can_pickup_equipment(self._special) then
 		managers.player:add_special({
-			name = nil,
-			amount = nil,
 			name = self._special,
 			amount = self._amount
 		})

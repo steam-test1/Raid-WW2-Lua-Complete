@@ -26,7 +26,6 @@ function Renderer:init(logic, parameters)
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_workspace()
 	self._fullscreen_panel = self._fullscreen_ws:panel():panel({
 		halign = "scale",
-		layer = nil,
 		valign = "scale",
 		layer = self._base_layer
 	})
@@ -35,13 +34,9 @@ function Renderer:init(logic, parameters)
 
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	self._main_panel = self.ws:panel():panel({
-		layer = nil,
 		layer = self._base_layer
 	})
 	self.safe_rect_panel = self.ws:panel():panel({
-		layer = nil,
-		h = nil,
-		w = nil,
 		w = safe_rect_pixels.width,
 		h = safe_rect_pixels.height,
 		layer = self._base_layer

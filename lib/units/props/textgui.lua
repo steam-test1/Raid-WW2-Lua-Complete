@@ -72,7 +72,6 @@ function TextGui:setup()
 	if self.BG_COLOR then
 		self._bg_rect = self._panel:rect({
 			layer = -1,
-			color = nil,
 			color = self.BG_COLOR
 		})
 	end
@@ -96,11 +95,7 @@ function TextGui:_create_text_gui(row)
 		vertical = "center",
 		align = "center",
 		y = 0,
-		text = nil,
-		font = nil,
-		font_size = nil,
 		layer = 0,
-		color = nil,
 		text = text_data.text,
 		font = font,
 		font_size = font_size,
@@ -141,8 +136,6 @@ function TextGui:_create_text_gui(row)
 
 	gui:set_x(x)
 	table.insert(data.guis, {
-		gui = nil,
-		x = nil,
 		gui = gui,
 		x = x
 	})
@@ -203,7 +196,6 @@ function TextGui:set_bg_color_type(type)
 	if self.BG_COLOR then
 		self._bg_rect = self._bg_rect or self._panel:rect({
 			layer = -1,
-			color = nil,
 			color = self.BG_COLOR
 		})
 
@@ -224,11 +216,6 @@ function TextGui:add_text(row, text, color_type, font_size, align_h, font)
 	local data = self._texts_data[row]
 
 	table.insert(data.texts_data, {
-		color_type = nil,
-		font_size = nil,
-		align_h = nil,
-		text = nil,
-		font = nil,
 		text = text,
 		color_type = color_type,
 		font_size = font_size,

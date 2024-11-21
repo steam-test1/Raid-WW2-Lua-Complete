@@ -88,7 +88,6 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 	self._sound_check_object = managers.sound_environment:add_check_object({
 		primary = true,
 		active = true,
-		object = nil,
 		object = self._camera_object
 	})
 end
@@ -110,9 +109,6 @@ function IngameWaitingForRespawnState:_create_spectator_data()
 	end
 
 	self._spectator_data = {
-		watch_u_key = nil,
-		teammate_list = nil,
-		teammate_records = nil,
 		teammate_records = all_teammates,
 		teammate_list = teammate_list,
 		watch_u_key = teammate_list[1]
@@ -157,8 +153,6 @@ function IngameWaitingForRespawnState.request_player_spawn(peer_to_spawn)
 
 			local sp_id = "IngameWaitingForRespawnState"
 			local spawn_point = {
-				position = nil,
-				rotation = nil,
 				position = pos_rot[1],
 				rotation = pos_rot[2]
 			}

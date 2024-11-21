@@ -17,21 +17,6 @@ require("lib/units/beings/player/states/PlayerCharging")
 
 PlayerMovement = PlayerMovement or class()
 PlayerMovement._STATES = {
-	standard = nil,
-	bipod = nil,
-	empty = nil,
-	driving = nil,
-	carry_corpse = nil,
-	parachuting = nil,
-	carry = nil,
-	freefall = nil,
-	incapacitated = nil,
-	turret = nil,
-	tased = nil,
-	foxhole = nil,
-	fatal = nil,
-	charging = nil,
-	bleed_out = nil,
 	empty = PlayerEmpty,
 	standard = PlayerStandard,
 	bleed_out = PlayerBleedOut,
@@ -88,23 +73,17 @@ function PlayerMovement:init(unit)
 	managers.hud:reset_player_state()
 
 	self._underdog_skill_data = {
-		has_dmg_dampener = nil,
 		max_dis_sq = 3240000,
 		nr_enemies = 2,
 		chk_t = 6,
 		chk_interval_inactive = 1,
 		chk_interval_active = 6,
-		has_dmg_mul = nil,
 		has_dmg_dampener = managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered") or managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered_strong"),
 		has_dmg_mul = managers.player:has_category_upgrade("temporary", "dmg_multiplier_outnumbered")
 	}
 
 	if managers.player:has_category_upgrade("player", "morale_boost") or managers.player:has_category_upgrade("player", "long_dis_revive") then
 		self._rally_skill_data = {
-			long_dis_revive = nil,
-			morale_boost_cooldown_t = nil,
-			revive_chance = nil,
-			morale_boost_delay_t = nil,
 			range_sq = 490000,
 			morale_boost_delay_t = managers.player:has_category_upgrade("player", "morale_boost") and 0 or nil,
 			long_dis_revive = managers.player:has_category_upgrade("player", "long_dis_revive"),
@@ -394,8 +373,6 @@ end
 function PlayerMovement:linked(state, physical, parent_unit)
 	if state then
 		self._link_data = {
-			parent = nil,
-			physical = nil,
 			physical = physical,
 			parent = parent_unit
 		}
@@ -547,9 +524,6 @@ function PlayerMovement:on_suspicion(observer_unit, status)
 	if Network:is_server() then
 		self._suspicion_debug = self._suspicion_debug or {}
 		self._suspicion_debug[observer_unit:key()] = {
-			name = nil,
-			status = nil,
-			unit = nil,
 			unit = observer_unit,
 			name = observer_unit:name(),
 			status = status
@@ -784,10 +758,6 @@ function PlayerMovement:on_morale_boost(benefactor_unit)
 		managers.enemy:reschedule_delayed_clbk(self._morale_boost.expire_clbk_id, TimerManager:game():time() + tweak_data.upgrades.morale_boost_time)
 	else
 		self._morale_boost = {
-			reload_speed_bonus = nil,
-			suppression_resistance = nil,
-			expire_clbk_id = nil,
-			move_speed_bonus = nil,
 			expire_clbk_id = "PlayerMovement_morale_boost" .. tostring(self._unit:key()),
 			move_speed_bonus = tweak_data.upgrades.morale_boost_speed_bonus,
 			suppression_resistance = tweak_data.upgrades.morale_boost_suppression_resistance,
@@ -860,13 +830,6 @@ end
 function PlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	data.movement = {
-		character_name = nil,
-		outfit_version = nil,
-		look_fwd = nil,
-		peer_id = nil,
-		state_name = nil,
-		outfit = nil,
-		attentions = nil,
 		state_name = self._current_state_name,
 		look_fwd = self._m_head_rot:y(),
 		peer_id = peer_id,

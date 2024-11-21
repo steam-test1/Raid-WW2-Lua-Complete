@@ -64,7 +64,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_normal:set_value(self._hed.difficulty_normal)
 	difficulty_normal:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "difficulty_normal",
 		ctrlr = difficulty_normal
 	})
@@ -74,7 +73,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_hard:set_value(self._hed.difficulty_hard)
 	difficulty_hard:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "difficulty_hard",
 		ctrlr = difficulty_hard
 	})
@@ -84,7 +82,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_overkill:set_value(self._hed.difficulty_overkill)
 	difficulty_overkill:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "difficulty_overkill",
 		ctrlr = difficulty_overkill
 	})
@@ -94,7 +91,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_overkill_145:set_value(self._hed.difficulty_overkill_145)
 	difficulty_overkill_145:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "difficulty_overkill_145",
 		ctrlr = difficulty_overkill_145
 	})
@@ -108,7 +104,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_1:set_value(self._hed.player_1)
 	player_1:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "player_1",
 		ctrlr = player_1
 	})
@@ -118,7 +113,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_2:set_value(self._hed.player_2)
 	player_2:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "player_2",
 		ctrlr = player_2
 	})
@@ -128,7 +122,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_3:set_value(self._hed.player_3)
 	player_3:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "player_3",
 		ctrlr = player_3
 	})
@@ -138,7 +131,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_4:set_value(self._hed.player_4)
 	player_4:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "player_4",
 		ctrlr = player_4
 	})
@@ -152,7 +144,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	platform_win32:set_value(self._hed.platform_win32)
 	platform_win32:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "platform_win32",
 		ctrlr = platform_win32
 	})
@@ -162,7 +153,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	platform_console:set_value(self._hed.platform_console)
 	platform_console:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "platform_console",
 		ctrlr = platform_console
 	})
@@ -176,7 +166,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	mode_control:set_value(self._hed.mode_control == nil and true or self._hed.mode_control)
 	mode_control:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "mode_control",
 		ctrlr = mode_control
 	})
@@ -186,7 +175,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	mode_assault:set_value(self._hed.mode_assault == nil and true or self._hed.mode_assault)
 	mode_assault:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "mode_assault",
 		ctrlr = mode_assault
 	})
@@ -200,7 +188,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	alarm_on:set_value(self._hed.alarm_on == nil and true or self._hed.alarm_on)
 	alarm_on:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "alarm_on",
 		ctrlr = alarm_on
 	})
@@ -210,7 +197,6 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	alarm_off:set_value(self._hed.alarm_off == nil and true or self._hed.alarm_off)
 	alarm_off:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "alarm_off",
 		ctrlr = alarm_off
 	})

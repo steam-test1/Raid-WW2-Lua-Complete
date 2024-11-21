@@ -30,7 +30,6 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 
 	set_outline:set_value(self._hed.set_outline)
 	set_outline:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "set_outline",
 		ctrlr = set_outline
 	})
@@ -40,7 +39,6 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 
 	instigator_only:set_value(self._hed.instigator_only)
 	instigator_only:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "instigator_only",
 		ctrlr = instigator_only
 	})
@@ -66,8 +64,6 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				r = 0.9,
-				to_unit = nil,
-				from_unit = nil,
 				b = 1,
 				g = 0.5,
 				from_unit = self._unit,

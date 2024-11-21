@@ -46,10 +46,6 @@ function VehicleTweakData:_init_data_jeep_willy()
 			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_front = nil,
-			passenger_back_right = nil,
-			driver = nil,
-			passenger_back_left = nil,
 			driver = {
 				name = "driver",
 				next_seat = "passenger_front",
@@ -78,7 +74,6 @@ function VehicleTweakData:_init_data_jeep_willy()
 			}
 		},
 		loot_points = {
-			loot = nil,
 			loot = {
 				name = "loot"
 			}
@@ -134,12 +129,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_front = nil,
-			passenger_back_right = nil,
-			driver = nil,
-			passenger_back_left = nil,
 			driver = {
-				camera_limits = nil,
 				name = "driver",
 				has_shooting_mode = false,
 				allow_shooting = false,
@@ -151,8 +141,6 @@ function VehicleTweakData:_init_data_kubelwagen()
 				}
 			},
 			passenger_front = {
-				camera_limits = nil,
-				shooting_pos = nil,
 				name = "passenger_front",
 				has_shooting_mode = false,
 				allow_shooting = true,
@@ -165,8 +153,6 @@ function VehicleTweakData:_init_data_kubelwagen()
 				}
 			},
 			passenger_back_right = {
-				camera_limits = nil,
-				shooting_pos = nil,
 				name = "passenger_back_right",
 				has_shooting_mode = true,
 				allow_shooting = false,
@@ -179,8 +165,6 @@ function VehicleTweakData:_init_data_kubelwagen()
 				}
 			},
 			passenger_back_left = {
-				camera_limits = nil,
-				shooting_pos = nil,
 				name = "passenger_back_left",
 				has_shooting_mode = true,
 				allow_shooting = false,
@@ -194,7 +178,6 @@ function VehicleTweakData:_init_data_kubelwagen()
 			}
 		},
 		loot_points = {
-			loot = nil,
 			loot = {
 				name = "loot"
 			}
@@ -219,7 +202,6 @@ function VehicleTweakData:_init_data_kubelwagen()
 	}
 	self.kubelwagen.skins.special_edition = {
 		sequence = "state_collector_edition_skin",
-		dlc = nil,
 		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
 	}
 	self.kubelwagen.driver_camera_offset = Vector3(0, 2, 22)
@@ -262,10 +244,6 @@ function VehicleTweakData:_init_data_truck()
 			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			passenger_front = nil,
-			passenger_back_right = nil,
-			driver = nil,
-			passenger_back_left = nil,
 			driver = {
 				sound_environment_start = "enter_truck",
 				sound_environment_end = "leave_truck",
@@ -275,12 +253,10 @@ function VehicleTweakData:_init_data_truck()
 			},
 			passenger_front = {
 				sound_environment_start = "enter_truck",
-				shooting_pos = nil,
 				has_shooting_mode = true,
 				allow_shooting = false,
 				next_seat = "passenger_back_right",
 				driving = false,
-				camera_limits = nil,
 				name = "passenger_front",
 				sound_environment_end = "leave_truck",
 				shooting_pos = Vector3(50, -20, 50),
@@ -291,7 +267,6 @@ function VehicleTweakData:_init_data_truck()
 			},
 			passenger_back_right = {
 				name = "passenger_back_right",
-				shooting_pos = nil,
 				has_shooting_mode = true,
 				allow_shooting = true,
 				next_seat = "passenger_back_left",
@@ -299,7 +274,6 @@ function VehicleTweakData:_init_data_truck()
 				shooting_pos = Vector3(50, 0, 50)
 			},
 			passenger_back_left = {
-				shooting_pos = nil,
 				has_shooting_mode = true,
 				name = "passenger_back_left",
 				allow_shooting = true,
@@ -309,11 +283,6 @@ function VehicleTweakData:_init_data_truck()
 			}
 		},
 		loot_points = {
-			loot = nil,
-			loot_4 = nil,
-			loot_3 = nil,
-			loot_2 = nil,
-			loot_1 = nil,
 			loot_1 = {
 				name = "loot_1"
 			},
@@ -385,9 +354,7 @@ function VehicleTweakData:_init_data_foxhole()
 			slip_stop = "car_skid_stop_01"
 		},
 		seats = {
-			driver = nil,
 			driver = {
-				camera_limits = nil,
 				name = "driver",
 				has_shooting_mode = false,
 				next_seat = "driver",
@@ -399,7 +366,6 @@ function VehicleTweakData:_init_data_foxhole()
 			}
 		},
 		loot_points = {
-			loot = nil,
 			loot = {
 				name = "loot"
 			}

@@ -34,11 +34,6 @@ end
 
 function RaidGUIControlRewardCardPack:_create_panel()
 	local panel_params = {
-		layer = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		visible = false,
 		name = "local_player_card_pack_reward_panel",
 		x = self._params.x or 0,
@@ -63,8 +58,6 @@ end
 
 function RaidGUIControlRewardCardPack:_create_left_panel()
 	local left_panel_params = {
-		h = nil,
-		w = nil,
 		name = "left_panel",
 		w = RaidGUIControlRewardCardPack.LEFT_PANEL_W,
 		h = self._object:h()
@@ -74,16 +67,10 @@ end
 
 function RaidGUIControlRewardCardPack:_create_title()
 	local title_description_params = {
-		font = nil,
-		h = nil,
-		y = nil,
 		alpha = 0,
 		name = "title_description",
-		text = nil,
 		vertical = "center",
 		align = "left",
-		color = nil,
-		font_size = nil,
 		y = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlRewardCardPack.FONT,
@@ -100,15 +87,10 @@ function RaidGUIControlRewardCardPack:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		font = nil,
-		y = nil,
 		alpha = 0,
 		name = "pack_title",
-		text = nil,
 		vertical = "top",
 		align = "center",
-		color = nil,
-		font_size = nil,
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlRewardCardPack.TITLE_PADDING_TOP,
 		font = RaidGUIControlRewardCardPack.FONT,
 		font_size = RaidGUIControlRewardCardPack.TITLE_FONT_SIZE,
@@ -126,7 +108,6 @@ end
 
 function RaidGUIControlRewardCardPack:_create_cards_control()
 	local cards_control_params = {
-		item_params = nil,
 		h = 900,
 		w = 780,
 		y = 0,
@@ -147,8 +128,6 @@ end
 
 function RaidGUIControlRewardCardPack:_create_right_panel()
 	local right_panel_params = {
-		h = nil,
-		w = nil,
 		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
@@ -160,17 +139,11 @@ end
 
 function RaidGUIControlRewardCardPack:_create_description()
 	local description_params = {
-		font = nil,
-		w = nil,
-		y = nil,
 		alpha = 0,
 		name = "description",
-		text = nil,
 		wrap = true,
 		vertical = "top",
 		align = "left",
-		color = nil,
-		font_size = nil,
 		y = RaidGUIControlRewardCardPack.DESCRIPTION_Y,
 		w = RaidGUIControlRewardCardPack.DESCRIPTION_W,
 		font = RaidGUIControlRewardCardPack.DESCRIPTION_FONT,
@@ -185,18 +158,10 @@ end
 
 function RaidGUIControlRewardCardPack:_create_item_description_name()
 	local item_type_params = {
-		font = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		alpha = 0,
 		name = "item_type",
-		text = nil,
 		vertical = "center",
 		align = "left",
-		color = nil,
-		font_size = nil,
 		x = self._description:x(),
 		y = RaidGUIControlRewardCardPack.ITEM_TYPE_Y,
 		w = self._right_panel:w(),

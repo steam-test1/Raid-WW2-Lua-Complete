@@ -41,7 +41,6 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
 		EFFECT_PLAYER_CAN_ONLY_USE_WEAPON_CATEGORY = nil,
-		from = nil,
 		kills = 0,
 		from = Vector3()
 	}
@@ -55,9 +54,7 @@ function RaycastWeaponBase:init(unit)
 	self._obj_fire = self._unit:get_object(Idstring("fire"))
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
-		effect = nil,
 		force_synch = true,
-		parent = nil,
 		effect = self._muzzle_effect,
 		parent = self._obj_fire
 	}
@@ -65,9 +62,7 @@ function RaycastWeaponBase:init(unit)
 
 	if self._muzzletrail_effect then
 		self._muzzletrail_effect_table = {
-			effect = nil,
 			force_synch = true,
-			parent = nil,
 			effect = self._muzzletrail_effect,
 			parent = self._obj_fire
 		}
@@ -78,8 +73,6 @@ function RaycastWeaponBase:init(unit)
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
-			effect = nil,
-			parent = nil,
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
@@ -90,15 +83,11 @@ function RaycastWeaponBase:init(unit)
 	self._sound_fire:link(self._unit:orientation_object())
 
 	self._trail_effect_table = {
-		position = nil,
-		effect = nil,
-		normal = nil,
 		effect = self.TRAIL_EFFECT,
 		position = Vector3(),
 		normal = Vector3()
 	}
 	self._shot_fired_stats_table = {
-		weapon_unit = nil,
 		hit = false,
 		weapon_unit = self._unit
 	}
@@ -210,7 +199,6 @@ function RaycastWeaponBase:_create_use_setups()
 	use_data.player = player_setup
 	player_setup.selection_index = sel_index
 	player_setup.equip = {
-		align_place = nil,
 		align_place = align_place
 	}
 	player_setup.unequip = {
@@ -220,7 +208,6 @@ function RaycastWeaponBase:_create_use_setups()
 	use_data.npc = npc_setup
 	npc_setup.selection_index = sel_index
 	npc_setup.equip = {
-		align_place = nil,
 		align_place = align_place
 	}
 	npc_setup.unequip = {}
@@ -436,7 +423,6 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 					managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
 				else
 					managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-						BTN_RELOAD = nil,
 						BTN_RELOAD = managers.localization:btn_macro("reload")
 					})))
 				end
@@ -526,9 +512,6 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	if managers.player:local_player() == user_unit then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_FIRED_WEAPON, {
-			damage = nil,
-			weapon = nil,
-			killed_enemy = nil,
 			weapon = self._name_id,
 			damage = self:base_damage(),
 			killed_enemy = ray_res.hit_enemy and type(ray_res.hit_enemy) == "table" and ray_res.hit_enemy.type and ray_res.hit_enemy.type == "death"
@@ -565,7 +548,6 @@ end
 function RaycastWeaponBase:_check_last_clip(user_unit)
 	if self:get_ammo_total() <= self:get_ammo_max_per_clip() and alive(user_unit) and user_unit:base().is_local_player then
 		managers.dialog:queue_dialog("player_gen_out_of_ammo", {
-			instigator = nil,
 			skip_idle_check = true,
 			instigator = user_unit
 		})
@@ -1167,11 +1149,6 @@ function RaycastWeaponBase:force_hit(from_pos, direction, user_unit, impact_pos,
 	self:set_ammo_remaining_in_clip(math.max(0, self:get_ammo_remaining_in_clip() - 1))
 
 	local col_ray = {
-		position = nil,
-		unit = nil,
-		ray = nil,
-		body = nil,
-		normal = nil,
 		position = impact_pos,
 		ray = direction,
 		normal = impact_normal,
@@ -1647,8 +1624,6 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override, skip_event)
 
 	if not skip_event then
 		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_PICKED_UP_AMMO, {
-			amount = nil,
-			weapon = nil,
 			weapon = self._name_id,
 			amount = ammo_actually_picked_up
 		})
@@ -1855,8 +1830,6 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 
 		if hitmarker_type and hitmarker_type ~= "" then
 			managers.hud:on_hit_confirmed({
-				pos = nil,
-				hit_type = nil,
 				pos = col_ray.position,
 				hit_type = hitmarker_type == "armor" and HUDHitConfirm.HIT_ARMOR or hitmarker_type == "weakness" and HUDHitConfirm.HIT_WEAKPOINT or hitmarker_type == "headshot" and HUDHitConfirm.HIT_HEADSHOT or hitmarker_type == "killshot" and HUDHitConfirm.HIT_KILLSHOT or hitmarker_type == "normal" and HUDHitConfirm.HIT_NORMAL
 			})
@@ -1867,9 +1840,6 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 		local weapon_type = weapon_tweak_data and weapon_tweak_data.category
 
 		managers.game_play_central:play_impact_flesh({
-			weapon_type = nil,
-			col_ray = nil,
-			no_sound = nil,
 			col_ray = col_ray,
 			no_sound = no_sound,
 			weapon_type = weapon_type
@@ -1907,9 +1877,6 @@ end
 
 function InstantBulletBase:play_impact_sound_and_effects(col_ray, no_sound, weapon_type)
 	managers.game_play_central:play_impact_sound_and_effects({
-		weapon_type = nil,
-		col_ray = nil,
-		no_sound = nil,
 		col_ray = col_ray,
 		no_sound = no_sound,
 		weapon_type = weapon_type
@@ -1949,12 +1916,8 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
-	camera_shake_max_mul = nil,
-	feedback_range = nil,
 	sound_event = "round_explode",
-	idstr_effect = nil,
 	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
-	idstr_decal = nil,
 	on_unit = true,
 	sound_muffle_effect = true,
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
@@ -1974,7 +1937,6 @@ end
 function InstantExplosiveBulletBase:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
 		no_decal = true,
-		col_ray = nil,
 		col_ray = col_ray
 	})
 end
@@ -2022,7 +1984,6 @@ function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit
 
 		return {
 			variant = "explosion",
-			col_ray = nil,
 			col_ray = col_ray
 		}
 	end
@@ -2036,15 +1997,6 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	managers.explosion:play_sound_and_effects(position, normal, self.RANGE, self.EFFECT_PARAMS)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		user = nil,
-		player_damage = nil,
-		collision_slotmask = nil,
-		hit_pos = nil,
-		damage = nil,
-		range = nil,
-		ignore_unit = nil,
-		curve_pow = nil,
-		owner = nil,
 		hit_pos = position,
 		range = self.RANGE,
 		collision_slotmask = slot_mask,
@@ -2064,14 +2016,12 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 		local enemies_killed = (results.count_gangster_kills or 0) + (results.count_cop_kills or 0)
 
 		managers.statistics:shot_fired({
-			weapon_unit = nil,
 			hit = false,
 			weapon_unit = weapon_unit
 		})
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				weapon_unit = nil,
 				hit = true,
 				skip_bullet_count = true,
 				weapon_unit = weapon_unit
@@ -2099,12 +2049,7 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
-	camera_shake_max_mul = nil,
-	feedback_range = nil,
 	sound_event = "round_explode",
-	idstr_effect = nil,
-	pushunits = nil,
-	idstr_decal = nil,
 	on_unit = true,
 	sound_muffle_effect = true,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
@@ -2168,7 +2113,6 @@ function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, b
 	if play_impact_flesh then
 		managers.game_play_central:play_impact_flesh({
 			no_sound = true,
-			col_ray = nil,
 			col_ray = col_ray
 		})
 		self:play_impact_sound_and_effects(col_ray)
@@ -2270,7 +2214,6 @@ function DragonBreathBulletBase:on_collision(col_ray, weapon_unit, user_unit, da
 
 	if play_impact_flesh then
 		managers.game_play_central:play_impact_flesh({
-			col_ray = nil,
 			col_ray = col_ray
 		})
 		self:play_impact_sound_and_effects(col_ray)
@@ -2375,8 +2318,6 @@ function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_uni
 		end
 
 		result = self:start_dot_damage(col_ray, nil, {
-			dot_length = nil,
-			dot_damage = nil,
 			dot_damage = dot_type_data.dot_damage,
 			dot_length = dot_data.custom_length or dot_type_data.dot_length
 		})

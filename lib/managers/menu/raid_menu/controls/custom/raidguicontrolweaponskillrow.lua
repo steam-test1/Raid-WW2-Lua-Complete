@@ -47,17 +47,12 @@ end
 
 function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	local name_label_params = {
-		font_size = nil,
-		color = nil,
-		font = nil,
 		wrap = true,
 		vertical = "center",
 		align = "left",
 		h = 24,
-		w = nil,
 		y = 0,
 		x = 0,
-		name = nil,
 		text = "UNKNOWN",
 		name = self._params.name .. "_name_label",
 		w = self._object:w(),
@@ -70,11 +65,6 @@ end
 
 function RaidGUIControlWeaponSkillRow:_create_items()
 	local lines_params = {
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
-		color = nil,
 		x = RaidGUIControlWeaponSkillRow.LINE_START_X,
 		y = RaidGUIControlWeaponSkillRow.LINE_Y,
 		w = RaidGUIControlWeaponSkillRow.LINE_LENGTH,
@@ -93,19 +83,6 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 
 	local skill_params = {
 		line_enabled = true,
-		on_click_callback = nil,
-		on_mouse_exit_callback = nil,
-		on_selected_weapon_skill_callback = nil,
-		on_unselected_weapon_skill_callback = nil,
-		layer = nil,
-		toggle_select_item_callback = nil,
-		on_click_weapon_skill_callback = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
-		on_mouse_enter_callback = nil,
-		get_available_points_callback = nil,
 		text = "",
 		x = RaidGUIControlWeaponSkillRow.BUTTON_START_X,
 		y = RaidGUIControlWeaponSkillRow.BUTTON_Y,

@@ -93,11 +93,8 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 	}
 	self.skill_trees.m1911[1][4] = {
 		{
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			value = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				tweak_data.challenge.tighter_spread_easy
@@ -109,11 +106,8 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 	}
 	self.skill_trees.m1911[1][2] = {
 		{
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			value = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				tweak_data.challenge.increase_magazine_easy
@@ -126,8 +120,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 	self.skill_trees.m1911[1][3] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
@@ -138,8 +130,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 	self.skill_trees.m1911[1][1] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
@@ -151,8 +141,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
@@ -162,11 +150,8 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		},
 		[4] = {
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					tweak_data.challenge.tighter_spread_medium
@@ -178,11 +163,8 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		},
 		[2] = {
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					tweak_data.challenge.increase_magazine_medium
@@ -194,11 +176,8 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		},
 		[3] = {
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					tweak_data.challenge.kill_enemies_hipfire_medium
@@ -213,8 +192,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		{
 			{
 				value = 3,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
@@ -225,8 +202,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		[4] = {
 			{
 				value = 3,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
@@ -237,8 +212,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		[2] = {
 			{
 				value = 3,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
@@ -249,8 +222,6 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree(tweak_data)
 		[3] = {
 			{
 				value = 3,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
@@ -272,11 +243,8 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 	}
 	self.skill_trees.c96[1][1] = {
 		{
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			value = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				tweak_data.challenge.c96_kill_enemies_basic_easy
@@ -289,8 +257,6 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 	self.skill_trees.c96[1][2] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
@@ -300,11 +266,8 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 	}
 	self.skill_trees.c96[1][3] = {
 		{
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			value = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				tweak_data.challenge.c96_increase_magazine_easy
@@ -317,11 +280,8 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 	self.skill_trees.c96[2] = {
 		{
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					tweak_data.challenge.c96_kill_enemies_basic_medium
@@ -333,11 +293,8 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 		},
 		{
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					tweak_data.challenge.c96_kill_enemies_hipfire_medium
@@ -349,11 +306,8 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 		},
 		{
 			{
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				value = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					tweak_data.challenge.c96_increase_magazine_medium
@@ -366,8 +320,6 @@ function WeaponSkillsTweakData:_init_c96_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
@@ -389,8 +341,6 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 	self.skill_trees.webley[1][1] = {
 		{
 			value = 2,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
@@ -401,8 +351,6 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 	self.skill_trees.webley[1][2] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
@@ -414,8 +362,6 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 		{
 			{
 				value = 3,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
@@ -426,8 +372,6 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
@@ -438,8 +382,6 @@ function WeaponSkillsTweakData:_init_webley_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
@@ -461,25 +403,19 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 	self.skill_trees.geco[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 5,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 75,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -491,19 +427,13 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 6,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 100,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -511,7 +441,6 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 							90
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -525,16 +454,12 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -552,18 +477,13 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 7,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 130,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -571,7 +491,6 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 							110
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -582,16 +501,12 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -607,19 +522,13 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 595,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -629,7 +538,6 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -643,25 +551,19 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 	self.skill_trees.geco[4] = {
 		{
 			{
-				challenge_tasks = nil,
 				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				value = 8,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 40,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
 							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -672,25 +574,19 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 30,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							20
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -702,18 +598,13 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
 				value = 4,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 400,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -722,7 +613,6 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -746,19 +636,13 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 	self.skill_trees.dp28[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -767,7 +651,6 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -780,16 +663,12 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 	self.skill_trees.dp28[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -805,26 +684,19 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 	self.skill_trees.dp28[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -839,19 +711,13 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -861,7 +727,6 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -874,16 +739,12 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -899,19 +760,13 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -919,7 +774,6 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -933,17 +787,12 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -974,16 +823,12 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 	self.skill_trees.tt33[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 250,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -999,25 +844,19 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 	self.skill_trees.tt33[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 25,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						10,
 						20
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -1028,17 +867,12 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 	self.skill_trees.tt33[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 175,
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 					reminders = {
@@ -1056,16 +890,12 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 325,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -1081,19 +911,13 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 35,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
@@ -1101,7 +925,6 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 							30
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1115,17 +938,12 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 230,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -1142,19 +960,13 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 165,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							30,
@@ -1164,7 +976,6 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -1188,16 +999,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 	self.skill_trees.thompson[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -1213,18 +1020,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 	self.skill_trees.thompson[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -1233,7 +1035,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -1243,17 +1044,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 	self.skill_trees.thompson[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 					reminders = {
@@ -1271,16 +1067,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -1296,18 +1088,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -1317,7 +1104,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -1327,17 +1113,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -1355,19 +1136,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -1375,7 +1150,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1391,16 +1165,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -1416,19 +1186,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 425,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -1438,7 +1202,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -1451,17 +1214,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -1479,19 +1237,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 3,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 115,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -1499,7 +1251,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 							100
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1516,25 +1267,19 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -1546,19 +1291,13 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
 				value = 4,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							3,
@@ -1567,7 +1306,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1582,21 +1320,15 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				cost = 6,
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				value = 5,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_smg_thompson_m_drum"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 50,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -1604,7 +1336,6 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 							40
 						},
 						modifiers = {
-							damage_type = nil,
 							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1616,29 +1347,21 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				cost = 6,
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				value = 4,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_smg_thompson_o_m1928"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 35,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
-							enemy_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
@@ -1667,16 +1390,12 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 	self.skill_trees.mp38[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -1692,19 +1411,13 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 	self.skill_trees.mp38[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -1713,7 +1426,6 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -1726,26 +1438,19 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 	self.skill_trees.mp38[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -1760,16 +1465,12 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -1785,19 +1486,13 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -1807,7 +1502,6 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -1820,19 +1514,13 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -1840,7 +1528,6 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -1854,17 +1541,12 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -1893,25 +1575,19 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 	self.skill_trees.sterling[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -1922,17 +1598,12 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 	self.skill_trees.sterling[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 					reminders = {
@@ -1949,18 +1620,13 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 	self.skill_trees.sterling[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -1969,7 +1635,6 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -1980,19 +1645,13 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -2000,7 +1659,6 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2014,17 +1672,12 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 5,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -2042,18 +1695,13 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -2063,7 +1711,6 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -2073,16 +1720,12 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -2109,19 +1752,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 	self.skill_trees.sten[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -2130,7 +1767,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -2143,16 +1779,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 	self.skill_trees.sten[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -2168,26 +1800,19 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 	self.skill_trees.sten[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -2201,17 +1826,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 	self.skill_trees.sten[1][4] = {
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 					reminders = {
@@ -2229,19 +1849,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 1,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -2251,7 +1865,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -2264,16 +1877,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -2289,19 +1898,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 1,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -2309,7 +1912,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2323,17 +1925,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -2353,19 +1950,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 1,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 425,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -2375,7 +1966,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -2388,16 +1978,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -2413,19 +1999,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 3,
 				cost = 1,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 115,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -2433,7 +2013,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 							100
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2447,17 +2026,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -2477,18 +2051,13 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
 				value = 4,
 				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							3,
@@ -2497,7 +2066,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2508,25 +2076,19 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -2539,29 +2101,21 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				cost = 1,
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				value = 4,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_smg_sten_body_mk3_vented"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 30,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
-							enemy_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
@@ -2577,21 +2131,15 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				cost = 6,
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				value = 4,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_smg_sten_m_long_double"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 45,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -2599,7 +2147,6 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 							40
 						},
 						modifiers = {
-							damage_type = nil,
 							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2623,19 +2170,13 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 	self.skill_trees.m1903[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -2644,7 +2185,6 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -2657,26 +2197,19 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 	self.skill_trees.m1903[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 50,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -2691,19 +2224,13 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 230,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -2713,7 +2240,6 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -2726,19 +2252,13 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -2746,7 +2266,6 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2760,16 +2279,12 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -2785,17 +2300,12 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 550,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -2823,19 +2333,13 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 	self.skill_trees.kar_98k[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -2844,7 +2348,6 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -2857,26 +2360,19 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 	self.skill_trees.kar_98k[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 50,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -2891,19 +2387,13 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 230,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -2913,7 +2403,6 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -2926,19 +2415,13 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -2946,7 +2429,6 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -2960,17 +2442,12 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 550,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -2987,16 +2464,12 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3023,19 +2496,13 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 	self.skill_trees.lee_enfield[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -3044,7 +2511,6 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -3057,26 +2523,19 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 	self.skill_trees.lee_enfield[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 50,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -3091,19 +2550,13 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 230,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -3113,7 +2566,6 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -3126,19 +2578,13 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -3146,7 +2592,6 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3160,17 +2605,12 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 550,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -3187,17 +2627,12 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3227,19 +2662,13 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 	self.skill_trees.mosin[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -3248,7 +2677,6 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -3261,26 +2689,19 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 	self.skill_trees.mosin[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 50,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -3295,19 +2716,13 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 230,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -3317,7 +2732,6 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -3330,19 +2744,13 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -3350,7 +2758,6 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3364,16 +2771,12 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3400,16 +2803,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 	self.skill_trees.garand[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -3425,19 +2824,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 	self.skill_trees.garand[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -3446,7 +2839,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -3460,16 +2852,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3485,18 +2873,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 230,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -3506,7 +2889,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -3516,18 +2898,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -3535,7 +2912,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3548,16 +2924,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 850,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3573,18 +2945,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 300,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -3594,7 +2961,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -3604,19 +2970,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 3,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -3624,7 +2984,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3638,17 +2997,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 710,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -3668,25 +3022,19 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -3698,19 +3046,13 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshots_beyond_range_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshots_beyond_range_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 385,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -3718,7 +3060,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 							300
 						},
 						modifiers = {
-							damage_type = nil,
 							min_range = 1000,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
@@ -3734,29 +3075,21 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				cost = 6,
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				value = 4,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_ass_garand_s_folding"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 35,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
-							enemy_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
@@ -3772,21 +3105,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				cost = 8,
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				value = 2,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_ass_garand_m_bar_extended"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 50,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -3794,7 +3121,6 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 							40
 						},
 						modifiers = {
-							damage_type = nil,
 							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3818,16 +3144,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 	self.skill_trees.garand_golden[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -3843,19 +3165,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 	self.skill_trees.garand_golden[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 175,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						50,
@@ -3864,7 +3180,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 					},
 					modifiers = {
 						min_range = 1000,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -3878,16 +3193,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3903,18 +3214,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 300,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -3924,7 +3230,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -3934,18 +3239,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 65,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -3953,7 +3253,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 							50
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -3966,16 +3265,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -3991,18 +3286,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 300,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -4012,7 +3302,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 						},
 						modifiers = {
 							min_range = 1000,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -4022,19 +3311,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 3,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -4042,7 +3325,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4056,17 +3338,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 710,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -4086,25 +3363,19 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -4116,19 +3387,13 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshots_beyond_range_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshots_beyond_range_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 385,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -4136,7 +3401,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 							300
 						},
 						modifiers = {
-							damage_type = nil,
 							min_range = 1000,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
@@ -4152,29 +3416,21 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				cost = 6,
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
 				value = 4,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_ass_garand_s_folding"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 35,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
-							enemy_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
@@ -4190,21 +3446,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				cost = 8,
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
 				value = 2,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_ass_garand_m_bar_extended"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 50,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							15,
@@ -4212,7 +3462,6 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 							40
 						},
 						modifiers = {
-							damage_type = nil,
 							steelsight = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4236,19 +3485,13 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 	self.skill_trees.m1918[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -4257,7 +3500,6 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -4270,16 +3512,12 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 	self.skill_trees.m1918[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -4295,26 +3533,19 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 	self.skill_trees.m1918[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -4329,19 +3560,13 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -4351,7 +3576,6 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -4364,16 +3588,12 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -4389,19 +3609,13 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -4409,7 +3623,6 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4423,17 +3636,12 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -4462,19 +3670,13 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 	self.skill_trees.bren[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -4483,7 +3685,6 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -4496,16 +3697,12 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 	self.skill_trees.bren[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -4521,26 +3718,19 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 	self.skill_trees.bren[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -4555,19 +3745,13 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -4577,7 +3761,6 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -4590,17 +3773,12 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -4619,19 +3797,13 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -4639,7 +3811,6 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4653,17 +3824,12 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -4692,18 +3858,13 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 	self.skill_trees.mg42[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -4712,7 +3873,6 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -4722,26 +3882,19 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 	self.skill_trees.mg42[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 65,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -4757,19 +3910,13 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -4779,7 +3926,6 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -4792,18 +3938,13 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -4811,7 +3952,6 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4822,16 +3962,12 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -4849,19 +3985,13 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 425,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -4871,7 +4001,6 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -4884,18 +4013,13 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 115,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -4903,7 +4027,6 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 							100
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -4914,16 +4037,12 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -4939,17 +4058,12 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 5,
 				cost = 6,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -4980,16 +4094,12 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 	self.skill_trees.mp44[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -5005,17 +4115,12 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 	self.skill_trees.mp44[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			value = 1,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 					reminders = {
@@ -5033,18 +4138,13 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 	self.skill_trees.mp44[1][3] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 250,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -5053,7 +4153,6 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -5064,16 +4163,12 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -5089,17 +4184,12 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 4,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -5117,18 +4207,13 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -5138,7 +4223,6 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -5148,19 +4232,13 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 85,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							20,
@@ -5168,7 +4246,6 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 							60
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5193,19 +4270,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 	self.skill_trees.m1912[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 350,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -5214,7 +4285,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -5227,26 +4297,19 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 	self.skill_trees.m1912[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 5,
 			cost = 2,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 75,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -5261,19 +4324,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 455,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5283,7 +4340,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -5296,19 +4352,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 6,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 100,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -5316,7 +4366,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 							90
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5330,16 +4379,12 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -5357,19 +4402,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 595,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5379,7 +4418,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -5392,19 +4430,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 7,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 130,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -5412,7 +4444,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 							110
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5426,16 +4457,12 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -5453,19 +4480,13 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
 				value = 4,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 400,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5474,7 +4495,6 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5489,28 +4509,21 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				cost = 4,
 				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				value = 8,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_sho_m1912_b_heat_shield"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 50,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
 							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5521,25 +4534,19 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -5564,18 +4571,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 	self.skill_trees.ithaca[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 350,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -5584,7 +4586,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -5594,25 +4595,19 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 	self.skill_trees.ithaca[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 5,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 75,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -5624,19 +4619,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 455,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5646,7 +4635,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -5659,18 +4647,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 6,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 130,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -5678,7 +4661,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 							90
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5689,16 +4671,12 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -5716,19 +4694,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 595,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5738,7 +4710,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -5751,19 +4722,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 7,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 150,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -5771,7 +4736,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 							130
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5785,16 +4749,12 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -5812,19 +4772,13 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
 				value = 4,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 400,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -5833,7 +4787,6 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5848,28 +4801,21 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				cost = 4,
 				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
 				value = 8,
-				challenge_tasks = nil,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_sho_ithaca_b_heat_shield"
 				},
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 50,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
 							25
 						},
 						modifiers = {
-							damage_type = nil,
 							max_range = 500,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -5880,25 +4826,19 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
 				value = 4,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 15,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							5,
 							10
 						},
 						modifiers = {
-							enemy_type = nil,
 							enemy_type = {
 								CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER
 							}
@@ -5923,18 +4863,13 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 	self.skill_trees.browning[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 350,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						80,
@@ -5943,7 +4878,6 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 					},
 					modifiers = {
 						hip_fire = true,
-						damage_type = nil,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
 				}
@@ -5953,25 +4887,19 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 	self.skill_trees.browning[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 5,
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 75,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						25,
 						40
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -5983,19 +4911,13 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 455,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -6005,7 +4927,6 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -6018,18 +4939,13 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 6,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 100,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							40,
@@ -6037,7 +4953,6 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 							90
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -6048,16 +4963,12 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -6073,17 +4984,12 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 1,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 455,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -6103,19 +5009,13 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 3,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 590,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							200,
@@ -6125,7 +5025,6 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -6138,19 +5037,13 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 7,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 130,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							50,
@@ -6158,7 +5051,6 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 							100
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -6172,16 +5064,12 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -6197,17 +5085,12 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 2,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 590,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {
@@ -6237,8 +5120,6 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 	self.skill_trees.welrod[1][1] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
@@ -6249,8 +5130,6 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 	self.skill_trees.welrod[1][2] = {
 		{
 			value = 1,
-			challenge_tasks = nil,
-			skill_name = nil,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
@@ -6262,8 +5141,6 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
@@ -6274,8 +5151,6 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
@@ -6286,8 +5161,6 @@ function WeaponSkillsTweakData:_init_welrod_skill_tree(tweak_data)
 		{
 			{
 				value = 2,
-				challenge_tasks = nil,
-				skill_name = nil,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
@@ -6309,16 +5182,12 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 	self.skill_trees.shotty[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 250,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -6334,25 +5203,19 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 	self.skill_trees.shotty[1][2] = {
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 			value = 5,
 			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 			challenge_tasks = {
 				{
-					modifiers = nil,
-					type = nil,
 					target = 25,
-					reminders = nil,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
 						10,
 						20
 					},
 					modifiers = {
-						damage_type = nil,
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 					}
@@ -6364,16 +5227,12 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 325,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -6389,18 +5248,13 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 				value = 6,
 				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 35,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							10,
@@ -6408,7 +5262,6 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 							30
 						},
 						modifiers = {
-							damage_type = nil,
 							headshot = true,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
@@ -6419,18 +5272,13 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 165,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							30,
@@ -6440,7 +5288,6 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -6461,17 +5308,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 	self.skill_trees.carbine[1][1] = {
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
-			challenge_tasks = nil,
-			skill_name = nil,
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 			value = 1,
 			cost = 1,
-			weapon_parts = nil,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
-					reminders = nil,
-					type = nil,
 					target = 500,
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 					reminders = {
@@ -6491,17 +5333,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 650,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -6520,19 +5357,13 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 2,
 				cost = 2,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 325,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							70,
@@ -6542,7 +5373,6 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -6557,16 +5387,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 				value = 3,
 				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
@@ -6582,18 +5408,13 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 				value = 3,
 				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
-						modifiers = nil,
-						type = nil,
 						target = 425,
-						reminders = nil,
 						type = ChallengeTweakData.TASK_KILL_ENEMIES,
 						reminders = {
 							100,
@@ -6603,7 +5424,6 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 						},
 						modifiers = {
 							hip_fire = true,
-							damage_type = nil,
 							damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 						}
 					}
@@ -6613,17 +5433,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-				challenge_tasks = nil,
-				skill_name = nil,
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 				value = 3,
 				cost = 4,
-				weapon_parts = nil,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
-						reminders = nil,
-						type = nil,
 						target = 845,
 						type = ChallengeTweakData.TASK_COLLECT_AMMO,
 						reminders = {

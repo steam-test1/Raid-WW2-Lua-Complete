@@ -41,11 +41,8 @@ function HUDHitConfirm:_create_icon(name, icon)
 	local icon_params = {
 		halign = "center",
 		valign = "center",
-		name = nil,
-		texture_rect = nil,
 		visible = false,
 		layer = 2,
-		texture = nil,
 		name = name,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect

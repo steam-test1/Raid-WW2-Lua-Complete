@@ -19,8 +19,6 @@ DynamicResourceManager.listener_events = {
 function DynamicResourceManager:init()
 	if not Global.dyn_resource_manager_data then
 		Global.dyn_resource_manager_data = {
-			streaming_settings = nil,
-			dyn_resources = nil,
 			streaming_settings = self.STREAMING_PROFILES[self.STREAMING_PROFILE_INGAME],
 			dyn_resources = {}
 		}
@@ -126,11 +124,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		end
 	else
 		entry = {
-			package_name = nil,
-			resource_name = nil,
-			resource_type = nil,
 			ref_c = 1,
-			callbacks = nil,
 			resource_type = resource_type,
 			resource_name = resource_name,
 			package_name = package_name,

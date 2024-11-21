@@ -14,8 +14,6 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	local panel = self._ws:panel()
 	self._panel = panel
 	self._bg_gui = panel:rect({
-		layer = nil,
-		color = nil,
 		visible = false,
 		color = Color.black,
 		layer = base_layer
@@ -27,14 +25,11 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	}
 	local text = string.upper(managers.localization:text("debug_loading_level"))
 	self._title_text = self._saferect_panel:text({
-		color = nil,
 		y = 0,
 		h = 24,
-		text = nil,
 		vertical = "bottom",
 		halign = "left",
 		align = "left",
-		layer = nil,
 		font_size = 32,
 		font = "ui/fonts/pf_din_text_comp_pro_medium_32",
 		visible = false,
@@ -45,9 +40,7 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	self._stonecold_small_logo = self._saferect_panel:bitmap({
 		texture = "guis/textures/game_small_logo",
 		name = "stonecold_small_logo",
-		layer = nil,
 		h = 56,
-		texture_rect = nil,
 		visible = false,
 		texture_rect = {
 			0,
@@ -91,10 +84,6 @@ function LightLoadingScreenGuiScript:get_safe_rect()
 	local b = 1 - a * 2
 
 	return {
-		height = nil,
-		width = nil,
-		y = nil,
-		x = nil,
 		x = a,
 		y = a,
 		width = b,

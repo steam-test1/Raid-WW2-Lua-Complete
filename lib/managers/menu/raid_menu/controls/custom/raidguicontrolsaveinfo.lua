@@ -28,7 +28,6 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	local info_icons_panel_params = {
 		name = "info_icons_panel",
 		h = 96,
-		w = nil,
 		y = 18,
 		x = 0,
 		w = self._object:w() * 0.78
@@ -48,9 +47,6 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	self._dog_tag_panel = self._info_icons_panel:panel(dog_tag_panel_params)
 	local dog_tag_icon_params = {
 		name = "dog_tag_icon",
-		texture_rect = nil,
-		texture = nil,
-		color = nil,
 		texture = tweak_data.gui.icons.rewards_dog_tags_small.texture,
 		texture_rect = tweak_data.gui.icons.rewards_dog_tags_small.texture_rect,
 		color = tweak_data.gui.colors.raid_black
@@ -61,15 +57,11 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 
 	local dog_tag_count_params = {
 		name = "dog_tag_count",
-		font = nil,
 		text = "120 / 140",
-		color = nil,
 		vertical = "center",
 		h = 32,
 		align = "center",
 		y = 0,
-		x = nil,
-		font_size = nil,
 		x = RaidGUIControlSaveInfo.DOG_TAG_LABEL_X,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -78,14 +70,10 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	self._dog_tag_count = self._dog_tag_panel:text(dog_tag_count_params)
 	local dog_tag_label_params = {
 		name = "dog_tag_label",
-		font = nil,
-		text = nil,
-		color = nil,
 		vertical = "center",
 		h = 32,
 		align = "center",
 		y = 32,
-		font_size = nil,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_black,
@@ -101,7 +89,6 @@ end
 function RaidGUIControlSaveInfo:_create_separator()
 	local separator_params = {
 		name = "separator",
-		color = nil,
 		h = 2,
 		w = 446,
 		y = 123,
@@ -114,16 +101,10 @@ end
 function RaidGUIControlSaveInfo:_create_peer_details_title()
 	local peer_details_title_params = {
 		name = "peer_details_title",
-		font = nil,
 		align = "left",
-		text = nil,
-		color = nil,
 		vertical = "center",
 		h = 32,
-		w = nil,
 		y = 137,
-		x = nil,
-		font_size = nil,
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w(),
 		font = RaidGUIControlPeerDetails.FONT,
@@ -138,9 +119,7 @@ function RaidGUIControlSaveInfo:_create_peer_details()
 	local peer_info_panel_params = {
 		name = "peer_info_panel",
 		h = 512,
-		w = nil,
 		y = 202,
-		x = nil,
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w()
 	}
@@ -150,9 +129,7 @@ function RaidGUIControlSaveInfo:_create_peer_details()
 
 	for i = 1, 4 do
 		local params = {
-			y = nil,
 			x = 0,
-			w = nil,
 			y = y,
 			w = self._peer_info_panel:w()
 		}

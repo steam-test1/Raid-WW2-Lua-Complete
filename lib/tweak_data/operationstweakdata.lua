@@ -227,9 +227,6 @@ function OperationsTweakData:_init_raids()
 		"kelly"
 	}
 	self.dogtag_types = {
-		medium = nil,
-		small = nil,
-		large = nil,
 		small = {
 			diff_bonus = 1,
 			max = 18,

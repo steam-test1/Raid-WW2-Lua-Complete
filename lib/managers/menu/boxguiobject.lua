@@ -25,7 +25,6 @@ function BoxGuiObject:create_sides(panel, config)
 	self._panel = panel:panel({
 		layer = 1,
 		halign = "grow",
-		name = nil,
 		valign = "grow",
 		name = config.name
 	})
@@ -60,10 +59,7 @@ function BoxGuiObject:_create_side(panel, side, type)
 	end
 
 	local side_panel = panel:panel({
-		name = nil,
 		halign = "grow",
-		h = nil,
-		w = nil,
 		valign = "grow",
 		name = side,
 		w = w,

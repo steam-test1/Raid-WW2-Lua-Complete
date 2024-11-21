@@ -2,11 +2,6 @@ core:import("CoreMissionScriptElement")
 
 ElementLaserTrigger = ElementLaserTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 ElementLaserTrigger.COLORS = {
-	black = nil,
-	grey = nil,
-	blue = nil,
-	green = nil,
-	red = nil,
 	red = {
 		1,
 		0,
@@ -79,9 +74,6 @@ function ElementLaserTrigger:init(...)
 	for i, connection in ipairs(self._values.connections) do
 		table.insert(self._cycle_order, i)
 		table.insert(self._connections, {
-			enabled = nil,
-			to = nil,
-			from = nil,
 			enabled = not self._is_cycled,
 			from = self._values.points[connection.from],
 			to = self._values.points[connection.to]

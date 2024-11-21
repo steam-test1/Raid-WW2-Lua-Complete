@@ -14,7 +14,6 @@ FlamerLogicAttack = class(CopLogicAttack)
 
 function FlamerLogicAttack.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -177,7 +176,6 @@ function FlamerLogicAttack.update(data)
 
 			data.brain:add_pos_rsrv("path", {
 				radius = 60,
-				position = nil,
 				position = mvector3.copy(to_pos)
 			})
 			unit:brain():search_for_path(my_data.chase_path_search_id, to_pos)
@@ -285,9 +283,6 @@ function FlamerLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, 
 			type = "walk",
 			no_strafe = false,
 			body_part = 2,
-			variant = nil,
-			nav_path = nil,
-			end_rot = nil,
 			nav_path = my_data.chase_path,
 			variant = speed or "run",
 			end_rot = end_rot
@@ -309,7 +304,6 @@ end
 
 function FlamerLogicAttack._get_all_paths(data)
 	return {
-		chase_path = nil,
 		chase_path = data.internal_data.chase_path
 	}
 end

@@ -28,14 +28,8 @@ HuskPlayerMovement.sync_net_event = PlayerMovement.sync_net_event
 HuskPlayerMovement.set_friendly_fire = PlayerMovement.set_friendly_fire
 HuskPlayerMovement.friendly_fire = PlayerMovement.friendly_fire
 HuskPlayerMovement._walk_anim_velocities = {
-	stand = nil,
-	crouch = nil,
 	stand = {
-		cbt = nil,
-		ntl = nil,
 		ntl = {
-			walk = nil,
-			run = nil,
 			walk = {
 				r = 152.15,
 				l = 150.36,
@@ -50,9 +44,6 @@ HuskPlayerMovement._walk_anim_velocities = {
 			}
 		},
 		cbt = {
-			walk = nil,
-			sprint = nil,
-			run = nil,
 			walk = {
 				r = 192.75,
 				l = 192.75,
@@ -78,10 +69,7 @@ HuskPlayerMovement._walk_anim_velocities = {
 		}
 	},
 	crouch = {
-		cbt = nil,
 		cbt = {
-			walk = nil,
-			run = nil,
 			walk = {
 				r = 162.85,
 				l = 152.14,
@@ -100,16 +88,8 @@ HuskPlayerMovement._walk_anim_velocities = {
 HuskPlayerMovement._walk_anim_velocities.stand.hos = HuskPlayerMovement._walk_anim_velocities.stand.cbt
 HuskPlayerMovement._walk_anim_velocities.crouch.hos = HuskPlayerMovement._walk_anim_velocities.crouch.cbt
 HuskPlayerMovement._walk_anim_lengths = {
-	crouch = nil,
-	panic = nil,
-	stand = nil,
-	wounded = nil,
 	stand = {
-		cbt = nil,
-		ntl = nil,
 		ntl = {
-			walk = nil,
-			run = nil,
 			walk = {
 				r = 31,
 				l = 29,
@@ -124,12 +104,6 @@ HuskPlayerMovement._walk_anim_lengths = {
 			}
 		},
 		cbt = {
-			run_start_turn = nil,
-			run_start = nil,
-			run_stop = nil,
-			walk = nil,
-			sprint = nil,
-			run = nil,
 			walk = {
 				r = 26,
 				l = 26,
@@ -168,13 +142,7 @@ HuskPlayerMovement._walk_anim_lengths = {
 		}
 	},
 	crouch = {
-		cbt = nil,
 		cbt = {
-			run_start_turn = nil,
-			run_start = nil,
-			run_stop = nil,
-			walk = nil,
-			run = nil,
 			walk = {
 				r = 28,
 				l = 27,
@@ -207,10 +175,7 @@ HuskPlayerMovement._walk_anim_lengths = {
 		}
 	},
 	wounded = {
-		cbt = nil,
 		cbt = {
-			walk = nil,
-			run = nil,
 			walk = {
 				r = 29,
 				l = 29,
@@ -226,9 +191,7 @@ HuskPlayerMovement._walk_anim_lengths = {
 		}
 	},
 	panic = {
-		ntl = nil,
 		ntl = {
-			run = nil,
 			run = {
 				r = 16,
 				l = 15,
@@ -252,10 +215,6 @@ end
 HuskPlayerMovement._walk_anim_lengths.stand.hos = HuskPlayerMovement._walk_anim_lengths.stand.cbt
 HuskPlayerMovement._walk_anim_lengths.crouch.hos = HuskPlayerMovement._walk_anim_lengths.crouch.cbt
 HuskPlayerMovement._matching_walk_anims = {
-	r = nil,
-	l = nil,
-	bwd = nil,
-	fwd = nil,
 	fwd = {
 		bwd = true
 	},
@@ -348,8 +307,6 @@ function HuskPlayerMovement:init(unit)
 	self._state_enter_t = TimerManager:game():time()
 	self._pose_code = 1
 	self._tase_effect_table = {
-		effect = nil,
-		parent = nil,
 		effect = tweak_data.common_effects.taser_hit,
 		parent = self._unit:get_object(Idstring("e_taser"))
 	}
@@ -818,13 +775,11 @@ end
 function HuskPlayerMovement:_register_revive_SO()
 	local followup_objective = {
 		type = "act",
-		action = nil,
 		scan = true,
 		action = {
 			variant = "crouch",
 			type = "act",
 			body_part = 1,
-			blocks = nil,
 			blocks = {
 				aim = -1,
 				heavy_hurt = -1,
@@ -837,14 +792,7 @@ function HuskPlayerMovement:_register_revive_SO()
 	local objective = {
 		type = "revive",
 		pose = "stand",
-		action_duration = nil,
-		complete_clbk = nil,
-		followup_objective = nil,
-		fail_clbk = nil,
-		action = nil,
 		scan = true,
-		nav_seg = nil,
-		follow_unit = nil,
 		destroy_clbk_key = false,
 		called = true,
 		haste = "run",
@@ -857,7 +805,6 @@ function HuskPlayerMovement:_register_revive_SO()
 		action = {
 			align_sync = true,
 			type = "act",
-			blocks = nil,
 			variant = "revive",
 			body_part = 1,
 			blocks = {
@@ -871,15 +818,11 @@ function HuskPlayerMovement:_register_revive_SO()
 		}
 	}
 	local so_descriptor = {
-		verification_clbk = nil,
-		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
-		search_pos = nil,
 		interval = 1,
 		chance_inc = 0,
 		base_chance = 1,
-		objective = nil,
 		objective = objective,
 		search_pos = self._unit:position(),
 		admin_clbk = callback(self, self, "on_revive_SO_administered"),
@@ -931,9 +874,7 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 	if Network:is_server() then
 		if need_assistance and not self._assist_SO_id then
 			local objective = {
-				nav_seg = nil,
 				type = "follow",
-				follow_unit = nil,
 				destroy_clbk_key = false,
 				called = true,
 				scan = true,
@@ -944,11 +885,9 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 				search_dis_sq = 25000000,
 				AI_group = "friendlies",
 				usage_amount = 1,
-				search_pos = nil,
 				interval = 6,
 				chance_inc = 0,
 				base_chance = 1,
-				objective = nil,
 				objective = objective,
 				search_pos = self._unit:position()
 			}
@@ -1869,15 +1808,11 @@ function HuskPlayerMovement:sync_action_walk_nav_point(pos)
 	if Network:is_server() then
 		if not self._pos_reservation then
 			self._pos_reservation = {
-				position = nil,
-				filter = nil,
 				radius = 100,
 				position = mvector3.copy(pos),
 				filter = self._pos_rsrv_id
 			}
 			self._pos_reservation_slow = {
-				position = nil,
-				filter = nil,
 				radius = 100,
 				position = mvector3.copy(pos),
 				filter = self._pos_rsrv_id
@@ -1913,7 +1848,6 @@ function HuskPlayerMovement:sync_action_walk_nav_point(pos)
 		table.insert(self._sequenced_events[#self._sequenced_events].path, pos)
 	else
 		local event_desc = {
-			path = nil,
 			type = "move",
 			path = {
 				pos
@@ -2080,9 +2014,6 @@ function HuskPlayerMovement:_upd_move_bipod(t, dt)
 
 	self:set_rotation(body_rotation)
 	managers.player:set_bipod_data_for_peer({
-		body_pos = nil,
-		peer_id = nil,
-		bipod_pos = nil,
 		peer_id = peer_id,
 		bipod_pos = bipod_pos,
 		body_pos = body_pos
@@ -2652,12 +2583,6 @@ function HuskPlayerMovement:_change_stance(stance_code, delayed_shot)
 
 	local t = TimerManager:game():time()
 	local transition = {
-		start_values = nil,
-		delayed_shot = nil,
-		duration = nil,
-		start_t = nil,
-		end_values = nil,
-		next_upd_t = nil,
 		end_values = end_values,
 		start_values = start_values,
 		duration = delay,
@@ -2721,7 +2646,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 
 	if state == "standard" then
 		local event_desc = {
-			previous_state = nil,
 			type = "standard",
 			previous_state = previous_state
 		}
@@ -2729,7 +2653,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "fatal" then
 		local event_desc = {
-			down_time = nil,
 			type = "fatal",
 			down_time = down_time
 		}
@@ -2737,7 +2660,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "bleed_out" then
 		local event_desc = {
-			down_time = nil,
 			type = "bleedout",
 			down_time = down_time
 		}
@@ -2751,7 +2673,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "incapacitated" then
 		local event_desc = {
-			down_time = nil,
 			type = "fatal",
 			down_time = down_time
 		}
@@ -2759,7 +2680,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "carry" or state == "carry_corpse" then
 		local event_desc = {
-			previous_state = nil,
 			type = "standard",
 			previous_state = previous_state
 		}
@@ -2767,7 +2687,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "bipod" then
 		local event_desc = {
-			previous_state = nil,
 			type = "standard",
 			previous_state = previous_state
 		}
@@ -2775,7 +2694,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "driving" then
 		local event_desc = {
-			previous_state = nil,
 			type = "driving",
 			previous_state = previous_state
 		}
@@ -2783,7 +2701,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "freefall" then
 		local event_desc = {
-			previous_state = nil,
 			type = "freefall",
 			previous_state = previous_state
 		}
@@ -2791,7 +2708,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "parachuting" then
 		local event_desc = {
-			previous_state = nil,
 			type = "parachuting",
 			previous_state = previous_state
 		}
@@ -2799,7 +2715,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "turret" then
 		local event_desc = {
-			previous_state = nil,
 			type = "standard",
 			previous_state = previous_state
 		}
@@ -2975,13 +2890,6 @@ end
 function HuskPlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	data.movement = {
-		character_name = nil,
-		stance = nil,
-		peer_id = nil,
-		look_fwd = nil,
-		pose = nil,
-		state_name = nil,
-		outfit = nil,
 		state_name = self._state,
 		look_fwd = self:detect_look_dir(),
 		pose = self._pose_code,
@@ -3198,7 +3106,6 @@ end
 
 function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 	local event_desc = {
-		zipline_unit = nil,
 		type = "zipline",
 		zipline_unit = zipline_unit
 	}
@@ -3310,10 +3217,7 @@ function HuskPlayerMovement:sync_action_jump(pos, jump_vec)
 
 	local event_desc = {
 		type = "jump",
-		steer_velocity = nil,
-		jump_vec = nil,
 		is_no_move_slowdown = true,
-		pos = nil,
 		jump_vec = jump_vec,
 		pos = pos,
 		steer_velocity = Vector3()

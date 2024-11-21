@@ -14,7 +14,6 @@ function RaidMenuHeader:_layout()
 	})
 	self._screen_subtitle_label = self._root_panel:label_subtitle({
 		name = "screen_subtitle_label",
-		y = nil,
 		x = 0,
 		text = "",
 		y = self._screen_name_label:h() + RaidGuiBase.PADDING + 22
@@ -72,14 +71,9 @@ end
 
 function RaidMenuHeader:set_header_icon(icon_data)
 	self._header_icon = self._root_panel:image({
-		h = nil,
 		y = 0,
 		x = 0,
 		name = "header_icon",
-		w = nil,
-		color = nil,
-		texture_rect = nil,
-		texture = nil,
 		w = icon_data.tex_rect[3],
 		h = icon_data.tex_rect[4],
 		texture = icon_data.texture,

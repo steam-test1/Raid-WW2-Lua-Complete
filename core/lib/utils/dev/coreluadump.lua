@@ -36,7 +36,6 @@ local function dump_collect(tab, t, level, max_level)
 			if v == tab then
 				t[k_str] = {
 					_type = "recursive",
-					_value = nil,
 					_value = "(" .. tostring({}) .. ") UNKNOWN"
 				}
 			elseif v_type == "function" then
@@ -44,16 +43,12 @@ local function dump_collect(tab, t, level, max_level)
 
 				if info.what == "Lua" then
 					t[k_str] = {
-						_type = nil,
-						_value = nil,
 						_type = v_type,
 						_value = info.source .. ":" .. info.linedefined
 					}
 				end
 			elseif v_type == "table" then
 				t[k_str] = {
-					_type = nil,
-					_value = nil,
 					_type = v_type,
 					_value = dump_collect(v, {}, level + 1, max_level)
 				}
@@ -63,23 +58,17 @@ local function dump_collect(tab, t, level, max_level)
 				if meta and meta.tostring then
 					local str = meta.tostring(tab)
 					t[k_str] = {
-						_type = nil,
-						_value = nil,
 						_type = v_type,
 						_value = str
 					}
 				else
 					t[k_str] = {
-						_type = nil,
-						_value = nil,
 						_type = v_type,
 						_value = "(" .. tostring({}) .. ") UNKNOWN"
 					}
 				end
 			else
 				t[k_str] = {
-					_type = nil,
-					_value = nil,
 					_type = v_type,
 					_value = tostring(v)
 				}
@@ -88,7 +77,6 @@ local function dump_collect(tab, t, level, max_level)
 	else
 		t["(" .. tostring({}) .. ") UNKNOWN"] = {
 			_type = "unexplored",
-			_value = nil,
 			_value = "(" .. tostring({}) .. ") UNKNOWN"
 		}
 	end

@@ -3,10 +3,6 @@ CoreMaterialEditor = CoreMaterialEditor or class()
 function CoreMaterialEditor:live_update_parameter(name, param_type, param_ui_type, value)
 	if alive(self._selected_unit) then
 		table.insert(self._live_update_parameter_list, {
-			_value = nil,
-			_param_ui_type = nil,
-			_param_type = nil,
-			_name = nil,
 			_name = name,
 			_param_type = param_type,
 			_param_ui_type = param_ui_type,

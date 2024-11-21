@@ -24,12 +24,10 @@ end
 function EnvironmentAreaOperatorElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		category = "script_data",
-		name = nil,
 		name = self._hed.environment .. ".environment"
 	})
 	managers.editor:add_to_world_package({
 		category = "scenes",
-		name = nil,
 		name = self._hed.environment
 	})
 end

@@ -108,7 +108,6 @@ function NodeGui:_setup_item_rows(node)
 			row_item.type = item._type
 			row_item.name = item_name
 			row_item.position = {
-				y = nil,
 				x = 0,
 				y = self.safe_rect_panel:h() - (self.font_size * (i + 1) + self.spacing * (i + 1))
 			}
@@ -175,7 +174,6 @@ function NodeGui:_insert_row_item(item, node, i)
 		row_item.type = item._type
 		row_item.name = item_name
 		row_item.position = {
-			y = nil,
 			x = 0,
 			y = self.font_size * i + self.spacing * (i - 1)
 		}

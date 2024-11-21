@@ -28,9 +28,6 @@ end
 
 function HUDSaveIcon:_create_panel(params)
 	params = params or {
-		layer = nil,
-		h = nil,
-		w = nil,
 		w = HUDSaveIcon.DEFAULT_W,
 		h = HUDSaveIcon.DEFAULT_H,
 		layer = tweak_data.gui.SAVEFILE_LAYER
@@ -38,9 +35,6 @@ function HUDSaveIcon:_create_panel(params)
 	local panel_params = {
 		alpha = 0,
 		name = "save_icon_panel",
-		layer = nil,
-		h = nil,
-		w = nil,
 		w = params.w,
 		h = params.h,
 		layer = params.layer
@@ -58,9 +52,7 @@ end
 
 function HUDSaveIcon:_create_background()
 	local background_params = {
-		texture_rect = nil,
 		name = "background",
-		texture = nil,
 		texture = tweak_data.gui.icons[HUDSaveIcon.BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDSaveIcon.BACKGROUND].texture_rect
 	}
@@ -72,15 +64,11 @@ end
 
 function HUDSaveIcon:_create_text()
 	local text_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
 		text = "",
 		vertical = "center",
 		y = 0,
 		x = 0,
 		name = "save_icon_text",
-		h = nil,
 		h = self._panel:h(),
 		font = HUDSaveIcon.FONT,
 		font_size = HUDSaveIcon.FONT_SIZE,
@@ -92,7 +80,6 @@ end
 function HUDSaveIcon:_create_bullets()
 	local bullet_panel_params = {
 		w = 32,
-		h = nil,
 		name = "bullet_panel",
 		halign = "left",
 		valign = "center",
@@ -108,10 +95,6 @@ function HUDSaveIcon:_create_bullets()
 		local dx = HUDSaveIcon.RADIUS * math.cos(single_bullet_angle * (i - 1) - 90)
 		local dy = HUDSaveIcon.RADIUS * math.sin(single_bullet_angle * (i - 1) - 90)
 		local bullet_params = {
-			color = nil,
-			texture_rect = nil,
-			name = nil,
-			texture = nil,
 			name = "bullet_" .. tostring(i),
 			texture = tweak_data.gui.icons[HUDSaveIcon.BULLET_ICON].texture,
 			texture_rect = tweak_data.gui.icons[HUDSaveIcon.BULLET_ICON].texture_rect,

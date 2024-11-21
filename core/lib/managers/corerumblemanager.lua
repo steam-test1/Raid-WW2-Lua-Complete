@@ -132,11 +132,6 @@ function RumbleManager:play(name, controller_wrapper, multiplier_data, custom_da
 
 			if effect.engine == "hybrid" then
 				table.insert(rumble_id, 1, controller:rumble({
-					peak = nil,
-					attack = nil,
-					release = nil,
-					sustain = nil,
-					timer = nil,
 					engine = "left",
 					timer = timer,
 					peak = (effect.peak.l or 1) * multiplier,
@@ -145,11 +140,6 @@ function RumbleManager:play(name, controller_wrapper, multiplier_data, custom_da
 					release = effect.release.l
 				}))
 				table.insert(rumble_id, 2, controller:rumble({
-					peak = nil,
-					attack = nil,
-					release = nil,
-					sustain = nil,
-					timer = nil,
 					engine = "right",
 					timer = timer,
 					peak = (effect.peak.r or 1) * multiplier,
@@ -159,12 +149,6 @@ function RumbleManager:play(name, controller_wrapper, multiplier_data, custom_da
 				}))
 			else
 				rumble_id[1] = controller:rumble({
-					peak = nil,
-					attack = nil,
-					release = nil,
-					sustain = nil,
-					timer = nil,
-					engine = nil,
 					engine = effect.engine,
 					timer = timer,
 					peak = (custom_peak or effect.peak or 1) * multiplier,

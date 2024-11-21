@@ -12,11 +12,6 @@ function RaidGUIControlListItem:init(parent, params, data)
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._data = data
 	self._object = self._panel:panel({
-		y = nil,
-		x = nil,
-		name = nil,
-		h = nil,
-		w = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -25,15 +20,8 @@ function RaidGUIControlListItem:init(parent, params, data)
 	})
 	self._item_label = self._object:label({
 		vertical = "center",
-		font = nil,
-		text = nil,
-		color = nil,
-		name = nil,
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 32,
-		font_size = nil,
 		name = "list_item_label_" .. self._name,
 		w = params.w,
 		h = params.h,
@@ -46,10 +34,6 @@ function RaidGUIControlListItem:init(parent, params, data)
 		y = 1,
 		x = 0,
 		visible = false,
-		color = nil,
-		name = nil,
-		h = nil,
-		w = nil,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
@@ -59,9 +43,6 @@ function RaidGUIControlListItem:init(parent, params, data)
 		y = 1,
 		x = 0,
 		visible = false,
-		color = nil,
-		name = nil,
-		h = nil,
 		w = 3,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,

@@ -77,9 +77,6 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 		end
 
 		weight_multiplier = {
-			grenade = nil,
-			ammo = nil,
-			health = nil,
 			health = multiplier,
 			ammo = multiplier,
 			grenade = multiplier
@@ -112,10 +109,6 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 
 	if item then
 		local spawned_unit = managers.game_play_central:spawn_pickup({
-			world_id = nil,
-			name = nil,
-			position = nil,
-			rotation = nil,
 			name = item,
 			position = position,
 			rotation = rotation,

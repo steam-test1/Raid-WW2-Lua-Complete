@@ -339,8 +339,6 @@ function MissionManager:_show_debug_subtitle(debug, color)
 		font_size = 20,
 		name = "debug_fading_subtitle_text",
 		font = "core/fonts/diesel",
-		text = nil,
-		color = nil,
 		valign = "center",
 		halign = "center",
 		align = "center",

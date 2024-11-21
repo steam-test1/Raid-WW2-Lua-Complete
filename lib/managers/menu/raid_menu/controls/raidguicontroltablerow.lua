@@ -16,8 +16,6 @@ function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 		x = 0,
 		visible = false,
 		y = 0,
-		color = nil,
-		h = nil,
 		w = 2,
 		h = params.height,
 		color = tweak_data.gui.colors.raid_red

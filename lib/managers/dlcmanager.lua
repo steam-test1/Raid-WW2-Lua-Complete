@@ -18,7 +18,6 @@ end
 function GenericDLCManager:_set_dlc_save_table()
 	if not Global.dlc_save then
 		Global.dlc_save = {
-			packages = nil,
 			packages = {}
 		}
 	end
@@ -272,8 +271,6 @@ function PS4DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				full_game = nil,
-				preorder = nil,
 				full_game = {
 					verified = true
 				},
@@ -360,7 +357,6 @@ function PS4DLCManager:buy_product(product_name)
 
 	self._request = {
 		type = "buy_product",
-		product = nil,
 		product = product_name
 	}
 	self._activity = {
@@ -471,8 +467,6 @@ function XB1DLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				full_game = nil,
-				preorder = nil,
 				full_game = {
 					is_default = true,
 					verified = true,
@@ -539,16 +533,10 @@ function WINDLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
 			all_dlc_data = {
-				raid_community = nil,
-				full_game = nil,
-				special_edition = nil,
-				official_soundtrack = nil,
-				preorder = nil,
 				full_game = {
 					verified = true,
 					external = true,
 					no_install = true,
-					app_id = nil,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {

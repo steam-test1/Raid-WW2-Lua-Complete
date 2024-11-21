@@ -57,7 +57,6 @@ function BowWeaponBase:add_damage_result(unit, attacker, is_dead, damage_percent
 
 	managers.statistics:shot_fired({
 		skip_bullet_count = true,
-		weapon_unit = nil,
 		hit = true,
 		weapon_unit = self._unit
 	})

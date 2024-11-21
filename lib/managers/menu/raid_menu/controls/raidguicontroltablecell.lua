@@ -10,7 +10,6 @@ function RaidGUIControlTableCell:init(parent, params, row_data, table_params)
 
 	self._table_params = table_params
 	self._data = {
-		value = nil,
 		value = params.value
 	}
 end

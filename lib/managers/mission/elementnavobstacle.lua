@@ -12,8 +12,6 @@ function ElementNavObstacle:on_script_activated()
 	if not self._values.obstacle_list then
 		self._values.obstacle_list = {
 			{
-				obj_name = nil,
-				unit_id = nil,
 				unit_id = self._values.obstacle_unit_id,
 				obj_name = self._values.obstacle_obj_name
 			}
@@ -25,8 +23,6 @@ function ElementNavObstacle:on_script_activated()
 	for _, data in ipairs(self._values.obstacle_list) do
 		if Application:editor() then
 			table.insert(self._obstacle_units, {
-				unit = nil,
-				obj_name = nil,
 				unit = managers.editor:unit_with_id(data.unit_id),
 				obj_name = data.obj_name
 			})
@@ -35,8 +31,6 @@ function ElementNavObstacle:on_script_activated()
 
 			if unit then
 				table.insert(self._obstacle_units, {
-					unit = nil,
-					obj_name = nil,
 					unit = unit,
 					obj_name = data.obj_name
 				})
@@ -51,8 +45,6 @@ end
 
 function ElementNavObstacle:_load_unit(obj_name, unit)
 	table.insert(self._obstacle_units, {
-		unit = nil,
-		obj_name = nil,
 		unit = unit,
 		obj_name = obj_name
 	})

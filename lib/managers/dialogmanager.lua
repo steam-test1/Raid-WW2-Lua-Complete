@@ -242,7 +242,6 @@ function DialogManager:sync_queue_dialog(id, instigator)
 	end
 
 	self:do_queue_dialog(id, {
-		instigator = nil,
 		instigator = instigator
 	})
 end
@@ -367,7 +366,6 @@ function DialogManager:do_queue_dialog(id, params, test)
 		self._current_dialog.params = params
 
 		self:_play_dialog({
-			dialog = nil,
 			dialog = self._current_dialog
 		})
 	else
@@ -381,7 +379,6 @@ function DialogManager:do_queue_dialog(id, params, test)
 			self._next_dialog = nil
 
 			self:_play_dialog({
-				dialog = nil,
 				dialog = self._current_dialog
 			})
 		else
@@ -406,7 +403,6 @@ function DialogManager:finished()
 			self._next_dialog = nil
 
 			managers.queued_tasks:queue(nil, self._play_dialog, self, {
-				dialog = nil,
 				dialog = self._current_dialog
 			}, 1.5, nil)
 		elseif self._current_dialog.line then
@@ -416,8 +412,6 @@ function DialogManager:finished()
 				local delay = self._current_dialog.lines[self._current_dialog.line].delay or 0.5
 
 				managers.queued_tasks:queue(nil, self._play_dialog, self, {
-					line = nil,
-					dialog = nil,
 					dialog = self._current_dialog,
 					line = line
 				}, delay, nil)
@@ -645,13 +639,6 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._dialog_list[node.id] = {
-				chance = nil,
-				sound = nil,
-				priority = nil,
-				file_name = nil,
-				character = nil,
-				string_id = nil,
-				id = nil,
 				id = node.id,
 				character = node.character,
 				sound = node.sound,
@@ -686,8 +673,6 @@ function DialogManager:_load_dialog_data(name)
 			end
 
 			self._random_list[node.id] = {
-				id = nil,
-				dialogs = nil,
 				id = node.id,
 				dialogs = {}
 			}
@@ -713,10 +698,6 @@ function DialogManager:_parse_line_node(node)
 	end
 
 	return {
-		character = nil,
-		sound = nil,
-		string_id = nil,
-		delay = nil,
 		sound = sound,
 		character = node.character,
 		string_id = node.string_id,
@@ -727,9 +708,6 @@ end
 function DialogManager:_parse_case_node(parent_id, node)
 	self._dialog_list[parent_id].cases = self._dialog_list[parent_id].cases or {}
 	local case_node = {
-		lines = nil,
-		id = nil,
-		players_no = nil,
 		lines = {},
 		id = node.id,
 		players_no = node.players

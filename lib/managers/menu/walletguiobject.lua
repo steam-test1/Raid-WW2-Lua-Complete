@@ -8,7 +8,6 @@ function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.remove_wallet()
 
 	Global.wallet_panel = panel:panel({
-		layer = nil,
 		name = "WalletGuiObject",
 		layer = layer or 0
 	})
@@ -25,20 +24,13 @@ function WalletGuiObject.set_wallet(panel, layer)
 		name = "wallet_skillpoint_icon"
 	})
 	local money_text = Global.wallet_panel:text({
-		font_size = nil,
-		color = nil,
 		text = "",
-		font = nil,
 		name = "wallet_money_text",
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text
 	})
 	local level_text = Global.wallet_panel:text({
-		font_size = nil,
-		color = nil,
-		text = nil,
-		font = nil,
 		name = "wallet_level_text",
 		text = tostring(managers.experience:current_level()),
 		font_size = tweak_data.menu.pd2_small_font_size,
@@ -46,10 +38,6 @@ function WalletGuiObject.set_wallet(panel, layer)
 		color = tweak_data.screen_colors.text
 	})
 	local skillpoint_text = Global.wallet_panel:text({
-		font_size = nil,
-		color = nil,
-		text = nil,
-		font = nil,
 		name = "wallet_skillpoint_text",
 		text = tostring(0),
 		font_size = tweak_data.menu.pd2_small_font_size,

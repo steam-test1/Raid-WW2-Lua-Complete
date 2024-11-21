@@ -46,11 +46,6 @@ end
 
 function RaidGUIControlListItemOperations:_layout_panel(params)
 	local panel_params = {
-		name = nil,
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		name = "list_item_" .. self._name,
 		x = params.x,
 		y = params.y,
@@ -62,11 +57,7 @@ end
 
 function RaidGUIControlListItemOperations:_layout_background(params)
 	local background_params = {
-		name = nil,
-		color = nil,
 		visible = false,
-		h = nil,
-		w = nil,
 		y = 1,
 		x = 0,
 		name = "list_item_back_" .. self._name,
@@ -79,10 +70,7 @@ end
 
 function RaidGUIControlListItemOperations:_layout_highlight_marker()
 	local marker_params = {
-		name = nil,
-		color = nil,
 		visible = false,
-		h = nil,
 		w = 3,
 		y = 1,
 		x = 0,
@@ -95,12 +83,6 @@ end
 
 function RaidGUIControlListItemOperations:_layout_icon(params, data)
 	local icon_params = {
-		name = nil,
-		color = nil,
-		texture = nil,
-		texture_rect = nil,
-		y = nil,
-		x = nil,
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemOperations.ICON_PADDING,
 		y = (RaidGUIControlListItemOperations.HEIGHT - data.icon.texture_rect[4]) / 2,
@@ -116,16 +98,8 @@ end
 
 function RaidGUIControlListItemOperations:_layout_operation_name(params, data)
 	local raid_name_params = {
-		font = nil,
-		font_size = nil,
-		color = nil,
-		text = nil,
-		name = nil,
 		vertical = "center",
-		h = nil,
-		w = nil,
 		y = 0,
-		x = nil,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		w = params.w,
@@ -142,8 +116,6 @@ end
 
 function RaidGUIControlListItemOperations:_layout_difficulty()
 	local difficulty_params = {
-		amount = nil,
-		x = nil,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		amount = tweak_data:number_of_difficulties()
 	}
@@ -154,8 +126,6 @@ end
 
 function RaidGUIControlListItemOperations:_layout_breadcrumb()
 	local breadcrumb_params = {
-		identifiers = nil,
-		category = nil,
 		category = self._data.breadcrumb.category,
 		identifiers = self._data.breadcrumb.identifiers
 	}

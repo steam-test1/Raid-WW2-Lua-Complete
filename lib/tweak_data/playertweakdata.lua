@@ -145,30 +145,18 @@ function PlayerTweakData:init()
 	self.PLAYER_EYE_HEIGHT_CROUCH = 75
 	self.PLAYER_EYE_HEIGHT_BLEED_OUT = 58
 	self.stances = {
-		default = nil,
 		default = {
-			crouched = nil,
-			steelsight = nil,
-			standard = nil,
 			standard = {
-				vel_overshot = nil,
-				shoulders = nil,
-				head = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}
 			},
 			crouched = {
-				vel_overshot = nil,
-				shoulders = nil,
-				head = nil,
 				head = {},
 				shoulders = {},
 				vel_overshot = {}
 			},
 			steelsight = {
-				vel_overshot = nil,
-				shoulders = nil,
 				shoulders = {},
 				vel_overshot = {}
 			}
@@ -324,7 +312,6 @@ function PlayerTweakData:_init_default_class_tweak_data()
 		CARRY_WEIGHT_MAX = 5
 	}
 	self.class_defaults.default.movement.jump_velocity = {
-		xy = nil,
 		xy = {},
 		z = 572
 	}
@@ -1187,8 +1174,6 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.mg42.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.mg42.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -55, 0)
 	self.stances.mg42.bipod = {
-		vel_overshot = nil,
-		shoulders = nil,
 		shoulders = {},
 		vel_overshot = {}
 	}

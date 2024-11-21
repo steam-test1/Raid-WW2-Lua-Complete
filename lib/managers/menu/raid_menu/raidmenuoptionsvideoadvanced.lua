@@ -87,13 +87,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	local start_y = 320
 	local default_width = 512
 	local toggle_menu_toggle_ssao_params = {
-		x = nil,
-		on_menu_move = nil,
 		name = "toggle_menu_toggle_ssao",
-		description = nil,
-		on_click_callback = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = start_y,
 		w = default_width,
@@ -105,13 +99,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_ssao = self._root_panel:toggle_button(toggle_menu_toggle_ssao_params)
 	local toggle_menu_toggle_parallax_params = {
-		x = nil,
-		on_menu_move = nil,
 		name = "toggle_menu_toggle_parallax",
-		description = nil,
-		on_click_callback = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = toggle_menu_toggle_ssao_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -124,13 +112,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
 	local toggle_menu_toggle_motion_blur_params = {
-		x = nil,
-		on_menu_move = nil,
 		name = "toggle_menu_toggle_motion_blur",
-		description = nil,
-		on_click_callback = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = toggle_menu_toggle_parallax_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -143,13 +125,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
 	local toggle_menu_toggle_dof_params = {
-		x = nil,
-		on_menu_move = nil,
 		name = "toggle_menu_toggle_dof",
-		description = nil,
-		on_click_callback = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = toggle_menu_toggle_motion_blur_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -162,13 +138,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
 	local toggle_menu_toggle_volumetric_light_scattering_params = {
-		x = nil,
-		on_menu_move = nil,
 		name = "toggle_menu_toggle_volumetric_light_scattering",
-		description = nil,
-		on_click_callback = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = toggle_menu_toggle_dof_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -181,13 +151,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
 	local progress_bar_menu_detail_distance_params = {
-		x = nil,
 		name = "progress_bar_menu_detail_distance",
-		description = nil,
-		on_value_change_callback = nil,
-		on_menu_move = nil,
 		value_format = "%02d%%",
-		y = nil,
 		description = utf8.to_upper(managers.localization:text("menu_detail_distance")),
 		x = start_x,
 		y = toggle_menu_toggle_volumetric_light_scattering_params.y + RaidGuiBase.PADDING,
@@ -200,14 +165,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
 	start_x = 704
 	local stepper_menu_antialias_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_antialias",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = start_y,
 		w = default_width,
@@ -221,14 +179,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
 	local stepper_menu_texture_quality_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_texture_quality",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_antialias_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -242,14 +193,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
 	local stepper_menu_shadow_quality_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_shadow_quality",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_texture_quality_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -263,14 +207,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
 	local stepper_menu_anisotropic_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_anisotropic",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_shadow_quality_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -284,14 +221,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
 	local stepper_menu_anim_lod_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_anim_lod",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_anisotropic_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -305,14 +235,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
 	local stepper_menu_fps_limit_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_fps_limit",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_anim_lod_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -326,14 +249,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
 	local stepper_menu_colorblind_setting_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "stepper_menu_colorblind_setting",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_fps_limit_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -347,14 +263,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
 	local _stepper_menu_toggle_vsync_params = {
-		x = nil,
-		data_source_callback = nil,
 		name = "label_menu_vsync",
-		description = nil,
-		on_item_selected_callback = nil,
-		on_menu_move = nil,
-		w = nil,
-		y = nil,
 		x = start_x,
 		y = stepper_menu_colorblind_setting_params.y + RaidGuiBase.PADDING,
 		w = default_width,
@@ -368,10 +277,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 	local default_advanced_video_params = {
 		x = 1472,
-		text = nil,
 		name = "default_advanced_video",
-		layer = nil,
-		on_click_callback = nil,
 		y = 832,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
@@ -439,23 +345,17 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 
 	table.insert(result, {
 		value = "OFF",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_off")),
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_off"))
 	})
 	table.insert(result, {
 		value = "DOUBLE_BUFFER",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_db")),
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_db"))
 	})
 	table.insert(result, {
 		value = "TRIPLE_BUFFER",
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb")),
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb"))
 	})
@@ -474,23 +374,17 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 
 	table.insert(result, {
 		value = "OFF",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_off")),
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_off"))
 	})
 	table.insert(result, {
 		value = "FXAA",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa")),
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa"))
 	})
 	table.insert(result, {
 		value = "SMAA",
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa")),
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa"))
 	})
@@ -509,30 +403,22 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 
 	table.insert(result, {
 		value = "very low",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low"))
 	})
 	table.insert(result, {
 		value = "low",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_low"))
 	})
 	table.insert(result, {
 		value = "medium",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium"))
 	})
 	table.insert(result, {
 		value = "high",
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
@@ -551,37 +437,27 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 
 	table.insert(result, {
 		value = "very low",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low"))
 	})
 	table.insert(result, {
 		value = "low",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_low"))
 	})
 	table.insert(result, {
 		value = "medium",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium"))
 	})
 	table.insert(result, {
 		value = "high",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
 	table.insert(result, {
 		value = "very high",
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high"))
 	})
@@ -600,37 +476,27 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 
 	table.insert(result, {
 		value = 1,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_1")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_1"))
 	})
 	table.insert(result, {
 		value = 2,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_2")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_2"))
 	})
 	table.insert(result, {
 		value = 4,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_4")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_4"))
 	})
 	table.insert(result, {
 		value = 8,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_8")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_8"))
 	})
 	table.insert(result, {
 		value = 16,
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_16")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_16"))
 	})
@@ -649,23 +515,17 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 
 	table.insert(result, {
 		value = 1,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_1")),
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_1"))
 	})
 	table.insert(result, {
 		value = 2,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_2")),
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_2"))
 	})
 	table.insert(result, {
 		value = 3,
 		selected = true,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_3")),
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_3"))
 	})
@@ -745,8 +605,6 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	})
 	table.insert(result, {
 		value = 600,
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_fps_unlimited")),
 		info = utf8.to_upper(managers.localization:text("menu_fps_unlimited"))
 	})
@@ -813,29 +671,21 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_settin
 
 	table.insert(result, {
 		value = "off",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_off")),
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_off"))
 	})
 	table.insert(result, {
 		value = "protanope",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_protanope")),
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_protanope"))
 	})
 	table.insert(result, {
 		value = "deuteranope",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_deuteranope")),
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_deuteranope"))
 	})
 	table.insert(result, {
 		value = "tritanope",
-		info = nil,
-		text = nil,
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_tritanope")),
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_tritanope"))
 	})
@@ -845,9 +695,6 @@ end
 
 function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 	local params = {
-		callback = nil,
-		title = nil,
-		message = nil,
 		title = managers.localization:text("dialog_reset_advanced_video_title"),
 		message = managers.localization:text("dialog_reset_advanced_video_message"),
 		callback = function ()
@@ -879,8 +726,6 @@ end
 function RaidMenuOptionsVideoAdvanced:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_left"),
 			callback = callback(self, self, "on_click_default_advanced_video")
 		}
@@ -889,8 +734,6 @@ function RaidMenuOptionsVideoAdvanced:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_options_controls_default_controller"
@@ -898,7 +741,6 @@ function RaidMenuOptionsVideoAdvanced:bind_controller_inputs()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back", nil)
 			}
 		}

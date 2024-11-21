@@ -56,10 +56,7 @@ function PlayerCarry:exit(state_data, new_state_name)
 	self._camera_unit:base():set_target_tilt(0)
 
 	local exit_data = {
-		change_weapon_data = nil,
-		unequip_weapon_expire_t = nil,
 		skip_equip = true,
-		equip_weapon_expire_t = nil,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 		change_weapon_data = self._change_weapon_data
@@ -155,7 +152,6 @@ function PlayerCarry:_check_action_run(t, input)
 	elseif input.btn_run_press then
 		managers.notification:add_notification({
 			duration = 2,
-			text = nil,
 			shelf_life = 5,
 			id = "hint_cant_run",
 			text = managers.localization:text("hint_cant_run")

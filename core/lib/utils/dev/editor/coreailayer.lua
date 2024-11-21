@@ -59,10 +59,8 @@ function AiLayer:save(save_params)
 
 	local t = {
 		entry = "ai_nav_graphs",
-		data = nil,
 		single_data_block = true,
 		data = {
-			file = nil,
 			file = file_name
 		}
 	}
@@ -71,11 +69,8 @@ function AiLayer:save(save_params)
 
 	local t = {
 		entry = "ai_settings",
-		data = nil,
 		single_data_block = true,
 		data = {
-			ai_settings = nil,
-			ai_data = nil,
 			ai_settings = self._ai_settings,
 			ai_data = managers.ai_data:save_data()
 		}
@@ -93,10 +88,8 @@ function AiLayer:save(save_params)
 
 		local t = {
 			entry = "ai_mop_graphs",
-			data = nil,
 			single_data_block = true,
 			data = {
-				file = nil,
 				file = mop_filename
 			}
 		}
@@ -149,8 +142,6 @@ function AiLayer:_draw(t, dt)
 					for _, to_unit in ipairs(self._created_units) do
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
-								to_unit = nil,
-								from_unit = nil,
 								b = 0,
 								g = 0,
 								r = 1,
@@ -165,8 +156,6 @@ function AiLayer:_draw(t, dt)
 					for _, to_unit in ipairs(self._created_units) do
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
-								to_unit = nil,
-								from_unit = nil,
 								b = 0,
 								g = 1,
 								r = 0,
@@ -221,10 +210,7 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
-				to_unit = nil,
-				circle_multiplier = nil,
 				height_offset = 0,
-				from_unit = nil,
 				thick = true,
 				b = 1,
 				g = 1,
@@ -261,7 +247,6 @@ end
 
 function AiLayer:build_panel(notebook)
 	AiLayer.super.build_panel(self, notebook, {
-		units_notebook_min_size = nil,
 		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(-1, 140, 0)
 	})
@@ -346,8 +331,6 @@ function AiLayer:build_panel(notebook)
 		name = "Ray length [cm]:",
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		floats = 0,
-		sizer = nil,
-		panel = nil,
 		panel = self._ews_panel,
 		sizer = build_settings
 	}
@@ -395,13 +378,9 @@ function AiLayer:_build_ai_settings()
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
-		value = nil,
 		name = "Group state:",
 		tooltip = "Select a group state from the combo box",
 		sorted = true,
-		sizer = nil,
-		panel = nil,
-		options = nil,
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
 		options = managers.groupai:state_names(),
@@ -429,8 +408,6 @@ function AiLayer:_build_ai_unit_settings()
 		name = "Suspicion Multiplier:",
 		tooltip = "multiplier applied to suspicion buildup rate",
 		floats = 1,
-		sizer = nil,
-		panel = nil,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -448,8 +425,6 @@ function AiLayer:_build_ai_unit_settings()
 		name = "Detection Multiplier:",
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		floats = 2,
-		sizer = nil,
-		panel = nil,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -536,13 +511,9 @@ function AiLayer:_build_motion_path_section()
 	local mop_type = {
 		ctrlr_proportions = 3,
 		name_proportions = 1,
-		value = nil,
 		name = "Selected path type:",
 		tooltip = "Path is used for either ground or airborne units.",
 		sorted = false,
-		sizer = nil,
-		panel = nil,
-		options = nil,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
 		options = mop_path_types,
@@ -560,8 +531,6 @@ function AiLayer:_build_motion_path_section()
 		name = "Default Speed Limit [km/h]:",
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
 		floats = 1,
-		sizer = nil,
-		panel = nil,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer
 	}
@@ -798,10 +767,7 @@ function AiLayer:_get_build_settings(type, build_type)
 
 	for _, unit in ipairs(units) do
 		local ray = managers.editor:unit_by_raycast({
-			to = nil,
 			sample = true,
-			mask = nil,
-			from = nil,
 			mask = managers.slot:get_mask("all"),
 			from = unit:position() + Vector3(0, 0, 50),
 			to = unit:position() - Vector3(0, 0, 150)
@@ -809,11 +775,6 @@ function AiLayer:_get_build_settings(type, build_type)
 
 		if ray and ray.position then
 			table.insert(settings, {
-				location_id = nil,
-				position = nil,
-				id = nil,
-				color = nil,
-				barrage_allowed = nil,
 				position = unit:position(),
 				id = unit:unit_data().unit_id,
 				color = Color(),

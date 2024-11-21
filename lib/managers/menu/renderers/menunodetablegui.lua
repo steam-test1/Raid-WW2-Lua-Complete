@@ -15,18 +15,14 @@ function MenuNodeTableGui:_setup_panels(node)
 		h = 0
 	})
 	local mini_text = mini_info:text({
-		color = nil,
 		wrap = true,
 		word_wrap = true,
-		font = nil,
 		vertical = "top",
 		halign = "top",
-		layer = nil,
 		align = "left",
 		text = "",
 		y = 0,
 		x = 0,
-		font_size = nil,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		color = Color.white,
@@ -54,8 +50,6 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local columns = row_item.node:columns()
 		local total_proportions = row_item.node:parameters().total_proportions
 		row_item.gui_panel = self.item_panel:panel({
-			x = nil,
-			w = nil,
 			x = self:_right_align(),
 			w = self.item_panel:w()
 		})
@@ -64,16 +58,8 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 
 		for i, data in ipairs(columns) do
 			local text = row_item.gui_panel:text({
-				color = nil,
-				font = nil,
 				vertical = "center",
-				halign = nil,
-				layer = nil,
-				align = nil,
-				text = nil,
 				y = 0,
-				x = nil,
-				font_size = nil,
 				font_size = self.font_size,
 				x = row_item.position.x,
 				align = data.align,
@@ -105,8 +91,6 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local safe_rect = self:_scaled_size()
 		local xl_pad = 54
 		row_item.gui_panel = self.item_panel:panel({
-			x = nil,
-			w = nil,
 			x = safe_rect.width / 2 - xl_pad,
 			w = safe_rect.width / 2 + xl_pad
 		})
@@ -115,16 +99,8 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 
 		for i, data in ipairs(columns) do
 			local text = row_item.gui_panel:text({
-				color = nil,
-				font = nil,
 				vertical = "center",
-				halign = nil,
-				layer = nil,
-				align = nil,
-				text = nil,
 				y = 0,
-				x = nil,
-				font_size = nil,
 				font_size = tweak_data.menu.server_list_font_size,
 				x = row_item.position.x,
 				align = data.align,
@@ -154,24 +130,16 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local level_id = row_item.item:parameters().level_id
 		row_item.gui_info_panel = self.safe_rect_panel:panel({
 			y = 0,
-			h = nil,
-			w = nil,
 			visible = false,
 			x = 0,
-			layer = nil,
 			layer = self.layers.items,
 			w = self:_left_align(),
 			h = self._item_panel_parent:h()
 		})
 		row_item.heist_name = row_item.gui_info_panel:text({
 			align = "left",
-			text = nil,
-			color = nil,
-			font = nil,
 			vertical = "left",
 			visible = false,
-			font_size = nil,
-			layer = nil,
 			text = utf8.to_upper(row_item.item:parameters().level_name),
 			layer = self.layers.items,
 			font = self.font,
@@ -181,18 +149,13 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		local briefing_text = level_id and managers.localization:text(tweak_data.levels[level_id].briefing_id) or ""
 		row_item.heist_briefing = row_item.gui_info_panel:text({
 			visible = true,
-			color = nil,
 			wrap = true,
-			font = nil,
 			vertical = "top",
 			word_wrap = true,
 			halign = "top",
-			layer = nil,
 			align = "left",
-			text = nil,
 			y = 0,
 			x = 0,
-			font_size = nil,
 			font = tweak_data.menu.pd2_small_font,
 			font_size = tweak_data.menu.pd2_small_font_size,
 			color = Color.white,
@@ -201,31 +164,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		})
 		local font_size = tweak_data.menu.pd2_small_font_size
 		row_item.server_title = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
 			name = "server_title",
-			font_size = nil,
 			text = utf8.to_upper(managers.localization:text("menu_lobby_server_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.server_text = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
-			color = nil,
 			name = "server_text",
-			font_size = nil,
 			text = utf8.to_upper(row_item.item:parameters().host_name),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,
@@ -233,31 +187,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.server_info_title = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
 			name = "server_info_title",
-			font_size = nil,
 			text = utf8.to_upper(managers.localization:text("menu_lobby_server_state_title")) .. " ",
 			font = self.font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.server_info_text = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
-			color = nil,
 			name = "server_info_text",
-			font_size = nil,
 			text = utf8.to_upper(row_item.item:parameters().state_name) .. " " .. tostring(row_item.item:parameters().num_plrs) .. "/4 ",
 			font = self.font,
 			color = tweak_data.hud.prime_color,
@@ -265,31 +210,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.level_title = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
 			name = "level_title",
-			font_size = nil,
 			text = utf8.to_upper(managers.localization:text("menu_lobby_campaign_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.level_text = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
-			color = nil,
 			name = "level_text",
-			font_size = nil,
 			text = utf8.to_upper(row_item.item:parameters().real_level_name),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,
@@ -297,31 +233,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.difficulty_title = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
 			name = "difficulty_title",
-			font_size = nil,
 			text = utf8.to_upper(managers.localization:text("menu_lobby_difficulty_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.difficulty_text = row_item.gui_info_panel:text({
-			font = nil,
 			vertical = "center",
 			layer = 1,
 			align = "left",
-			text = nil,
-			h = nil,
 			w = 256,
-			color = nil,
 			name = "difficulty_text",
-			font_size = nil,
 			text = utf8.to_upper(managers.localization:text("menu_" .. row_item.item:parameters().difficulty)),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,

@@ -49,12 +49,7 @@ function HUDTabGreedBar:_create_panel(panel, params)
 	local panel_params = {
 		halign = "right",
 		name = "hud_tab_greed_bar",
-		layer = nil,
 		valign = "bottom",
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		x = params.x or 0,
 		y = params.y or 0,
 		w = HUDTabGreedBar.WIDTH,
@@ -69,8 +64,6 @@ function HUDTabGreedBar:_create_icons()
 		name = "icons_panel",
 		halign = "left",
 		valign = "top",
-		h = nil,
-		w = nil,
 		w = HUDTabGreedBar.ICONS_W,
 		h = self._object:h()
 	}
@@ -79,8 +72,6 @@ function HUDTabGreedBar:_create_icons()
 		halign = "center",
 		name = "frame_icon",
 		valign = "center",
-		texture_rect = nil,
-		texture = nil,
 		layer = 10,
 		texture = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture_rect
@@ -94,8 +85,6 @@ function HUDTabGreedBar:_create_icons()
 		halign = "center",
 		name = "loot_icon",
 		valign = "center",
-		texture_rect = nil,
-		texture = nil,
 		layer = 10,
 		texture = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture_rect
@@ -106,13 +95,10 @@ function HUDTabGreedBar:_create_icons()
 	self._loot_icon:set_center_y(self._icons_panel:h() / 2)
 
 	local gold_icon_params = {
-		color = nil,
 		name = "gold_icon",
 		alpha = 0,
 		valign = "center",
-		texture_rect = nil,
 		halign = "center",
-		texture = nil,
 		layer = 10,
 		texture = tweak_data.gui.icons[HUDTabGreedBar.GOLD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.GOLD_ICON].texture_rect,
@@ -129,8 +115,6 @@ function HUDTabGreedBar:_create_right_panel()
 		halign = "right",
 		name = "right_panel",
 		valign = "top",
-		h = nil,
-		w = nil,
 		w = self._object:w() - self._icons_panel:w(),
 		h = self._object:h()
 	}
@@ -141,15 +125,9 @@ end
 
 function HUDTabGreedBar:_create_title()
 	local title_params = {
-		color = nil,
 		name = "tab_greed_bar_title",
-		text = nil,
 		vertical = "center",
 		align = "center",
-		font_size = nil,
-		font = nil,
-		h = nil,
-		w = nil,
 		w = self._right_panel:w(),
 		h = HUDTabGreedBar.TITLE_H,
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.TITLE_FONT, HUDTabGreedBar.TITLE_FONT_SIZE),
@@ -165,12 +143,7 @@ end
 
 function HUDTabGreedBar:_create_bar()
 	local progress_bar_background_params = {
-		right = nil,
 		name = "tab_greed_progress_bar_background",
-		center = nil,
-		left = nil,
-		color = nil,
-		w = nil,
 		layer = 1,
 		w = HUDTabGreedBar.LOOT_BAR_W,
 		left = HUDTabGreedBar.LOOT_BAR_ICON_L,
@@ -183,10 +156,7 @@ function HUDTabGreedBar:_create_bar()
 	self._progress_bar_background:set_center_y(64)
 
 	local progress_bar_progress_panel_params = {
-		h = nil,
 		name = "tab_progress_bar_progress_panel",
-		w = nil,
-		layer = nil,
 		w = self._progress_bar_background:w(),
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1
@@ -197,12 +167,7 @@ function HUDTabGreedBar:_create_bar()
 	self._progress_bar_progress_panel:set_center_y(self._progress_bar_background:center_y())
 
 	local progress_bar_foreground_params = {
-		right = nil,
 		name = "tab_loot_bar_foreground",
-		center = nil,
-		left = nil,
-		color = nil,
-		w = nil,
 		alpha = 0,
 		w = self._progress_bar_background:w(),
 		left = HUDTabGreedBar.LOOT_BAR_ICON_L,
@@ -215,15 +180,10 @@ end
 
 function HUDTabGreedBar:_create_counter()
 	local counter_params = {
-		color = nil,
 		name = "tab_greed_bar_counter",
 		text = "0",
 		vertical = "center",
 		align = "right",
-		font_size = nil,
-		font = nil,
-		h = nil,
-		w = nil,
 		w = self._right_panel:w(),
 		h = HUDTabGreedBar.COUNTER_H,
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.COUNTER_FONT, HUDTabGreedBar.COUNTER_FONT_SIZE),
@@ -238,14 +198,8 @@ end
 
 function HUDTabGreedBar:_create_tutorialization()
 	local tutorialization_params = {
-		font = nil,
 		name = "tab_greed_tutorialization",
-		font_size = nil,
-		text = nil,
 		wrap = true,
-		w = nil,
-		y = nil,
-		color = nil,
 		y = self._object:h(),
 		w = self._object:w(),
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.TUTORIALIZATION_FONT, HUDTabGreedBar.TUTORIALIZATION_FONT_SIZE),

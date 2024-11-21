@@ -65,7 +65,6 @@ function AIAttentionObject:setup_attention_positions()
 	end
 
 	self._observer_info = {
-		m_pos = nil,
 		m_pos = self._attention_obj:position()
 	}
 end

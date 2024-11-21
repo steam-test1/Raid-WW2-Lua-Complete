@@ -18,20 +18,7 @@ require("lib/units/enemies/flamer/logics/FlamerLogicAttack")
 
 CopBrain = CopBrain or class()
 local logic_variants = {
-	security = nil,
 	security = {
-		intimidated = nil,
-		trade = nil,
-		inactive = nil,
-		phalanx = nil,
-		travel = nil,
-		turret = nil,
-		attack = nil,
-		alarm = nil,
-		idle = nil,
-		spotter = nil,
-		sniper = nil,
-		flee = nil,
 		idle = CopLogicIdle,
 		attack = CopLogicAttack,
 		travel = CopLogicTravel,
@@ -204,7 +191,6 @@ function CopBrain:post_init()
 	if Network:is_server() then
 		self:add_pos_rsrv("stand", {
 			radius = 30,
-			position = nil,
 			position = mvector3.copy(self._unit:movement():m_pos())
 		})
 
@@ -349,23 +335,6 @@ end
 
 function CopBrain:_reset_logic_data()
 	self._logic_data = {
-		pos_rsrv_id = nil,
-		pos_rsrv = nil,
-		char_tweak = nil,
-		active_searches = nil,
-		detected_attention_objects = nil,
-		m_pos = nil,
-		brain = nil,
-		key = nil,
-		objective_failed_clbk = nil,
-		objective_complete_clbk = nil,
-		cool = nil,
-		enemy_slotmask = nil,
-		visibility_slotmask = nil,
-		attention_handler = nil,
-		unit = nil,
-		SO_access_str = nil,
-		SO_access = nil,
 		unit = self._unit,
 		brain = self,
 		active_searches = {},
@@ -427,12 +396,6 @@ function CopBrain:search_for_path_to_unit(search_id, other_unit, access_neg)
 	local enemy_tracker = other_unit:movement():nav_tracker()
 	local pos_to = enemy_tracker:field_position()
 	local params = {
-		id = nil,
-		access_pos = nil,
-		access_neg = nil,
-		result_clbk = nil,
-		tracker_to = nil,
-		tracker_from = nil,
 		tracker_from = self._unit:movement():nav_tracker(),
 		tracker_to = enemy_tracker,
 		result_clbk = callback(self, self, "clbk_pathing_results", search_id),
@@ -449,14 +412,6 @@ end
 
 function CopBrain:search_for_path(search_id, to_pos, prio, access_neg, nav_segs)
 	local params = {
-		prio = nil,
-		pos_to = nil,
-		nav_segs = nil,
-		access_pos = nil,
-		access_neg = nil,
-		result_clbk = nil,
-		id = nil,
-		tracker_from = nil,
 		tracker_from = self._unit:movement():nav_tracker(),
 		pos_to = to_pos,
 		result_clbk = callback(self, self, "clbk_pathing_results", search_id),
@@ -475,14 +430,6 @@ end
 
 function CopBrain:search_for_path_from_pos(search_id, from_pos, to_pos, prio, access_neg, nav_segs)
 	local params = {
-		access_pos = nil,
-		pos_to = nil,
-		nav_segs = nil,
-		pos_from = nil,
-		access_neg = nil,
-		result_clbk = nil,
-		id = nil,
-		prio = nil,
 		pos_from = from_pos,
 		pos_to = to_pos,
 		result_clbk = callback(self, self, "clbk_pathing_results", search_id),
@@ -501,12 +448,6 @@ end
 
 function CopBrain:search_for_path_to_cover(search_id, cover, offset_pos, access_neg)
 	local params = {
-		id = nil,
-		access_pos = nil,
-		access_neg = nil,
-		result_clbk = nil,
-		tracker_to = nil,
-		tracker_from = nil,
 		tracker_from = self._unit:movement():nav_tracker(),
 		tracker_to = cover[NavigationManager.COVER_TRACKER],
 		result_clbk = callback(self, self, "clbk_pathing_results", search_id),
@@ -523,14 +464,6 @@ end
 
 function CopBrain:search_for_coarse_path(search_id, to_seg, verify_clbk, access_neg)
 	local params = {
-		access = nil,
-		results_clbk = nil,
-		from_tracker = nil,
-		verify_clbk = nil,
-		to_seg = nil,
-		access_pos = nil,
-		id = nil,
-		access_neg = nil,
 		from_tracker = self._unit:movement():nav_tracker(),
 		to_seg = to_seg,
 		access = {
@@ -1108,7 +1041,6 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 		clamp_to_graph = true,
 		type = "act",
 		variant = "attached_collar_enter",
-		blocks = nil,
 		blocks = {
 			heavy_hurt = -1,
 			light_hurt = -1,
@@ -1138,12 +1070,7 @@ function CopBrain:on_surrender_chance()
 	local window_duration = 5 + 4 * math.random()
 	local timeout_duration = 5 + 5 * math.random()
 	self._logic_data.surrender_window = {
-		timeout_duration = nil,
-		window_expire_t = nil,
-		expire_t = nil,
-		window_duration = nil,
 		chance_mul = 0.04975,
-		expire_clbk_id = nil,
 		expire_clbk_id = "CopBrain_sur_op" .. tostring(self._unit:key()),
 		window_expire_t = t + window_duration,
 		expire_t = t + window_duration + timeout_duration,
@@ -1283,7 +1210,6 @@ function CopBrain:on_pickpocket_interaction(player)
 		local value_line = tweak_data.greed:value_line_id(tweak_table and tweak_table.value)
 
 		managers.dialog:queue_dialog("player_gen_loot_" .. value_line, {
-			instigator = nil,
 			skip_idle_check = true,
 			instigator = player
 		})

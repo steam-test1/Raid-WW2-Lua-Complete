@@ -5,7 +5,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 
 	self.regroup = {}
 	self.assault = {
-		force = nil,
 		force = {}
 	}
 	self.reenforce = {}
@@ -17,9 +16,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.max_spawning_height_diff = 1440000
 	self.max_distance_to_player = 100000000
 	self.recurring_group_SO = {
-		recurring_spawn_1 = nil,
 		recurring_spawn_1 = {
-			interval = nil,
 			interval = {
 				30,
 				60
@@ -193,12 +190,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			grunt_support_range = nil,
-			grunt_chargers = nil,
-			grunt_flankers = nil,
 			grunt_flankers = {
 				75,
 				75,
@@ -232,15 +223,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			grunt_support_range = nil,
-			grunt_chargers = nil,
-			grunt_flankers = nil,
-			commander_squad = nil,
-			commanders = nil,
-			flamethrower = nil,
 			grunt_flankers = {
 				75,
 				75,
@@ -289,15 +271,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			fallschirm_flankers = nil,
-			fallschirm_support = nil,
-			fallschirm_charge = nil,
-			commander_squad = nil,
-			commanders = nil,
-			flamethrower = nil,
 			gerbish_chargers = {
 				75,
 				75,
@@ -346,15 +319,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.groups = {
-			ss_chargers = nil,
-			ss_rifle_range = nil,
-			ss_flankers = nil,
-			fallschirm_flankers = nil,
-			fallschirm_support = nil,
-			fallschirm_charge = nil,
-			commander_squad = nil,
-			commanders = nil,
-			flamethrower = nil,
 			fallschirm_charge = {
 				75,
 				75,
@@ -412,12 +376,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.reenforce.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			grunt_support_range = nil,
-			grunt_chargers = nil,
-			grunt_flankers = nil,
 			grunt_flankers = {
 				40,
 				40,
@@ -451,12 +409,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.reenforce.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			grunt_support_range = nil,
-			grunt_chargers = nil,
-			grunt_flankers = nil,
 			grunt_flankers = {
 				20,
 				20,
@@ -490,12 +442,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.reenforce.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
-			fallschirm_support = nil,
-			fallschirm_charge = nil,
-			fallschirm_flankers = nil,
 			gerbish_chargers = {
 				30,
 				30,
@@ -529,12 +475,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.reenforce.groups = {
-			ss_rifle_range = nil,
-			ss_flankers = nil,
-			fallschirm_flankers = nil,
-			fallschirm_support = nil,
-			fallschirm_charge = nil,
-			ss_chargers = nil,
 			fallschirm_charge = {
 				30,
 				30,
@@ -582,9 +522,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.recon.groups = {
-			grunt_chargers = nil,
-			grunt_flankers = nil,
-			grunt_support_range = nil,
 			grunt_flankers = {
 				10,
 				10,
@@ -603,9 +540,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.recon.groups = {
-			grunt_chargers = nil,
-			grunt_flankers = nil,
-			grunt_support_range = nil,
 			grunt_flankers = {
 				10,
 				10,
@@ -624,9 +558,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.recon.groups = {
-			gerbish_flankers = nil,
-			gerbish_rifle_range = nil,
-			gerbish_chargers = nil,
 			gerbish_chargers = {
 				10,
 				10,
@@ -645,9 +576,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.recon.groups = {
-			fallschirm_charge = nil,
-			fallschirm_flankers = nil,
-			fallschirm_support = nil,
 			fallschirm_charge = {
 				10,
 				10,

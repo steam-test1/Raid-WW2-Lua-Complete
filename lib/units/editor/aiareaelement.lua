@@ -45,8 +45,6 @@ function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 			b = 0,
 			g = 0.75,
 			r = 0,
-			to_unit = nil,
-			from_unit = nil,
 			from_unit = self._unit,
 			to_unit = unit
 		})

@@ -11,8 +11,6 @@ end
 
 function HUDCenterPrompt:_create_panel(hud)
 	local panel_params = {
-		h = nil,
-		w = nil,
 		name = "center_prompt_panel",
 		halign = "center",
 		valign = "center",
@@ -27,12 +25,8 @@ function HUDCenterPrompt:_create_text()
 		text = "",
 		halign = "scale",
 		valign = "scale",
-		h = nil,
-		w = nil,
 		alpha = 0,
 		name = "center_prompt_text",
-		font_size = nil,
-		font = nil,
 		vertical = "center",
 		align = "center",
 		w = self._object:w(),

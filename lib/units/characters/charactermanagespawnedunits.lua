@@ -37,8 +37,6 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 	end
 
 	local unit_entry = {
-		align_obj_name = nil,
-		unit = nil,
 		align_obj_name = align_obj_name,
 		unit = spawned_unit
 	}
@@ -99,9 +97,6 @@ function CharacterManageSpawnedUnits:spawn_character_debris(unit_id, align_obj_n
 	end
 
 	local que_data = {
-		push_direction = nil,
-		push_mass = nil,
-		unit = nil,
 		unit = spawned_unit,
 		push_direction = direction,
 		push_mass = push_mass

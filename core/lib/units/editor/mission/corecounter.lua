@@ -60,8 +60,6 @@ function CoreCounterUnitElement:update_selected()
 			self._digital_gui_units[id] = nil
 		else
 			local params = {
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				g = 1,
 				r = 0,
@@ -98,8 +96,6 @@ function CoreCounterUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._digital_gui_units) do
 		local params = {
-			to_unit = nil,
-			from_unit = nil,
 			b = 0,
 			g = 0.5,
 			r = 0,
@@ -115,7 +111,6 @@ end
 function CoreCounterUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -128,7 +123,6 @@ end
 function CoreCounterUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
@@ -179,10 +173,6 @@ function CoreCounterUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
-		add_filter = nil,
-		remove_result = nil,
-		remove_filter = nil,
-		add_result = nil,
 		add_filter = callback(self, self, "_add_unit_filter"),
 		add_result = callback(self, self, "_add_unit"),
 		remove_filter = callback(self, self, "_remove_unit_filter"),
@@ -239,8 +229,6 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 
 		if draw then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				g = 0.75,
 				r = 0.75,
@@ -342,8 +330,6 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 
 		if draw then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,
@@ -447,8 +433,6 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 
 		if draw then
 			self:_draw_link({
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				r = 0.85,

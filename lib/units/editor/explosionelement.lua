@@ -51,8 +51,6 @@ function ExplosionUnitElement:add_to_mission_package()
 	if self._hed.explosion_effect ~= "none" then
 		managers.editor:add_to_world_package({
 			category = "effects",
-			continent = nil,
-			name = nil,
 			name = self._hed.explosion_effect,
 			continent = self._unit:unit_data().continent
 		})

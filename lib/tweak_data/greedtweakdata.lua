@@ -148,10 +148,6 @@ function GreedTweakData:_init_cache_items()
 	}
 	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
-		sounds = nil,
-		circle_difficulty = nil,
-		circle_rotation_direction = nil,
-		circle_rotation_speed = nil,
 		number_of_circles = 3,
 		circle_rotation_speed = {
 			240,
@@ -169,7 +165,6 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
-			circles = nil,
 			dialog_enter = "player_gen_picking_lock",
 			failed = "lock_fail",
 			success = "success",
@@ -216,7 +211,6 @@ function GreedTweakData:_init_value_weights()
 					chance = 55
 				},
 				{
-					value = nil,
 					chance = 45,
 					value = self.item_value.low_end
 				}
@@ -227,7 +221,6 @@ function GreedTweakData:_init_value_weights()
 					chance = 60
 				},
 				{
-					value = nil,
 					chance = 43,
 					value = self.item_value.low_end
 				}
@@ -238,12 +231,10 @@ function GreedTweakData:_init_value_weights()
 					chance = 55
 				},
 				{
-					value = nil,
 					chance = 35,
 					value = self.item_value.low_end
 				},
 				{
-					value = nil,
 					chance = 10,
 					value = self.item_value.mid_end
 				}
@@ -254,17 +245,14 @@ function GreedTweakData:_init_value_weights()
 					chance = 50
 				},
 				{
-					value = nil,
 					chance = 32,
 					value = self.item_value.low_end
 				},
 				{
-					value = nil,
 					chance = 12,
 					value = self.item_value.mid_end
 				},
 				{
-					value = nil,
 					chance = 6,
 					value = self.item_value.high_end
 				}

@@ -141,9 +141,6 @@ function StaticLayer:set_unit_positions(pos)
 
 			for _, unit in ipairs(self._selected_units) do
 				self._undo_last_move_pos[#self._undo_last_move_pos + 1] = {
-					rot = nil,
-					pos = nil,
-					unit = nil,
 					unit = unit,
 					pos = unit:position(),
 					rot = unit:rotation()
@@ -187,9 +184,6 @@ function StaticLayer:set_unit_rotations(rot)
 
 			for _, unit in ipairs(self._selected_units) do
 				self._undo_last_move_pos[#self._undo_last_move_pos + 1] = {
-					rot = nil,
-					pos = nil,
-					unit = nil,
 					unit = unit,
 					pos = unit:position(),
 					rot = unit:rotation()
@@ -287,7 +281,6 @@ function StaticLayer:position_as()
 	if self._selected_unit and not self:condition() then
 		local data = {
 			ray_type = "body editor",
-			mask = nil,
 			sample = true,
 			mask = self._position_as_slot_mask
 		}
@@ -612,9 +605,6 @@ function StaticLayer:undo()
 				local new_pos = pos_info.pos
 				local new_rot = pos_info.rot
 				self._redo_last_move_pos[#self._redo_last_move_pos + 1] = {
-					rot = nil,
-					pos = nil,
-					unit = nil,
 					unit = unit,
 					pos = unit:position(),
 					rot = unit:rotation()

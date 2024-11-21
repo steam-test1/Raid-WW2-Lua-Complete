@@ -54,8 +54,6 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			self:_draw_link({
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
@@ -72,8 +70,6 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 					self:_draw_link({
 						g = 0.5,
 						r = 0,
-						to_unit = nil,
-						from_unit = nil,
 						b = 0.75,
 						from_unit = unit,
 						to_unit = self._unit
@@ -96,11 +92,6 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
-					g = nil,
-					r = nil,
-					to_unit = nil,
-					from_unit = nil,
-					b = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -119,11 +110,6 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				local r, g, b = unit:mission_element():get_link_color()
 
 				self:_draw_link({
-					g = nil,
-					r = nil,
-					to_unit = nil,
-					from_unit = nil,
-					b = nil,
 					from_unit = unit,
 					to_unit = self._unit,
 					r = r,
@@ -310,9 +296,6 @@ end
 
 function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
-		height = nil,
-		depth = nil,
-		width = nil,
 		width = self._hed.width,
 		depth = self._hed.depth,
 		height = self._hed.height
@@ -321,8 +304,6 @@ function CoreAreaTriggerUnitElement:_create_shapes()
 	self._shape:set_unit(self._unit)
 
 	self._cylinder_shape = CoreShapeManager.ShapeCylinderMiddle:new({
-		height = nil,
-		radius = nil,
 		radius = self._hed.radius,
 		height = self._hed.height
 	})
@@ -490,33 +471,21 @@ function CoreAreaTriggerUnitElement:scale_slider(panel, sizer, number_ctrlr_para
 
 	slider_sizer:add(slider, 2, 0, "EXPAND")
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_size"), {
-		number_ctrlr_params = nil,
-		value = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_size"), {
-		number_ctrlr_params = nil,
-		value = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_CHANGED", callback(self, self, "size_release"), {
-		number_ctrlr_params = nil,
-		value = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
 	})
 	slider:connect("EVT_SCROLL_THUMBRELEASE", callback(self, self, "size_release"), {
-		number_ctrlr_params = nil,
-		value = nil,
-		ctrlr = nil,
 		ctrlr = slider,
 		number_ctrlr_params = number_ctrlr_params,
 		value = value
@@ -594,8 +563,6 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 			self:_draw_link({
 				g = 0.75,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				from_unit = self._unit,
 				to_unit = unit

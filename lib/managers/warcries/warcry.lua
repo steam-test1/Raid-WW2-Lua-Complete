@@ -104,10 +104,6 @@ function Warcry:activate()
 		if self._tweak_data.activation_spawn_unit then
 			self._activation_spawned_unit = managers.game_play_central:spawn_warcry_unit({
 				world_id = 0,
-				rotation = nil,
-				position = nil,
-				name = nil,
-				level = nil,
 				name = self._tweak_data.activation_spawn_unit,
 				position = self._local_player:position(),
 				rotation = self._local_player:rotation(),

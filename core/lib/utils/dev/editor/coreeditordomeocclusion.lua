@@ -9,9 +9,6 @@ function CoreEditor:init_create_dome_occlusion(shape, res)
 
 	local saved_environment = managers.viewport:default_environment()
 	local params = {
-		saved_environment = nil,
-		shape = nil,
-		res = nil,
 		res = res,
 		shape = shape,
 		saved_environment = saved_environment

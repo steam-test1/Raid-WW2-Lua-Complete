@@ -10,13 +10,6 @@ require("lib/units/civilians/logics/CivilianLogicTrade")
 CivilianBrain = CivilianBrain or class(CopBrain)
 CivilianBrain.set_attention_settings = PlayerMovement.set_attention_settings
 CivilianBrain._logics = {
-	escort = nil,
-	flee = nil,
-	travel = nil,
-	surrender = nil,
-	trade = nil,
-	idle = nil,
-	inactive = nil,
 	inactive = CivilianLogicInactive,
 	idle = CivilianLogicIdle,
 	surrender = CivilianLogicSurrender,
@@ -149,15 +142,12 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		self._unit:movement():set_stance("cbt", nil, true)
 
 		local follow_objective = {
-			fail_clbk = nil,
 			stance = "cbt",
 			distance = 500,
 			lose_track_dis = 2000,
 			interrupt_health = 0,
 			type = "follow",
 			interrupt_dis = 0,
-			nav_seg = nil,
-			follow_unit = nil,
 			follow_unit = interacting_unit,
 			nav_seg = interacting_unit:movement():nav_tracker():nav_segment(),
 			fail_clbk = callback(self, self, "on_hostage_follow_objective_failed")
@@ -178,7 +168,6 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 
 		self:set_objective({
 			type = "surrender",
-			aggressor_unit = nil,
 			amount = 1,
 			aggressor_unit = interacting_unit
 		})

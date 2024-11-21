@@ -79,16 +79,6 @@ function ObjectivesManager:_parse_objective(data)
 	end
 
 	self._objectives[id] = {
-		id = nil,
-		text = nil,
-		current_amount = nil,
-		sub_objectives = nil,
-		xp_weight = nil,
-		level_id = nil,
-		amount_text = nil,
-		amount = nil,
-		prio = nil,
-		description = nil,
 		text = text,
 		description = description,
 		prio = prio,
@@ -110,10 +100,6 @@ function ObjectivesManager:_parse_objective(data)
 		end
 
 		self._objectives[id].sub_objectives[sub.id] = {
-			start_completed = nil,
-			id = nil,
-			text = nil,
-			description = nil,
 			id = sub.id,
 			text = sub_text,
 			description = sub_description,
@@ -129,7 +115,6 @@ function ObjectivesManager:_parse_objective(data)
 	if level_id then
 		self._objectives_level_id[level_id] = self._objectives_level_id[level_id] or {}
 		self._objectives_level_id[level_id][id] = {
-			xp_weight = nil,
 			xp_weight = xp_weight or 0
 		}
 	end
@@ -180,8 +165,6 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
 			time = 4,
-			text = nil,
-			title = nil,
 			[""] = nil,
 			text = text,
 			title = title_message
@@ -195,7 +178,6 @@ end
 
 function ObjectivesManager:update_objective(id, load_data)
 	self:activate_objective(id, load_data, {
-		title_message = nil,
 		title_message = managers.localization:text("mission_objective_updated")
 	})
 end
@@ -250,12 +232,6 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	objective.amount = load_data and load_data.amount or data and data.amount or objective.amount
 	objective.world_id = world_id
 	local activate_params = {
-		current_amount = nil,
-		sub_objectives = nil,
-		text = nil,
-		id = nil,
-		amount_text = nil,
-		amount = nil,
 		id = id,
 		text = objective.text,
 		sub_objectives = objective.sub_objectives,
@@ -267,7 +243,6 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if data and data.delay_presentation then
 		self._delayed_presentation = {
-			activate_params = nil,
 			t = 1,
 			activate_params = activate_params
 		}
@@ -281,8 +256,6 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	if not skip_toast then
 		managers.hud:present_mid_text({
 			time = 4.5,
-			text = nil,
-			title = nil,
 			show_objectives = nil,
 			text = text,
 			title = title_message
@@ -291,8 +264,6 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	self._active_objectives[id] = objective
 	self._remind_objectives[id] = {
-		objective = nil,
-		next_t = nil,
 		next_t = Application:time() + self.REMINDER_INTERVAL,
 		objective = objective
 	}
@@ -314,8 +285,6 @@ function ObjectivesManager:remove_objective(id, load_data)
 	local objective = self._objectives[id]
 
 	managers.hud:complete_objective({
-		text = nil,
-		id = nil,
 		remove = true,
 		id = id,
 		text = objective.text
@@ -333,8 +302,6 @@ function ObjectivesManager:remove_objective_for_world(world_id)
 	for id, objective in pairs(self._active_objectives) do
 		if objective.world_id == world_id then
 			managers.hud:complete_objective({
-				text = nil,
-				id = nil,
 				remove = true,
 				id = id,
 				text = objective.text
@@ -384,11 +351,6 @@ function ObjectivesManager:complete_objective(id, load_data)
 		objective.current_amount = objective.current_amount + 1
 
 		managers.hud:update_amount_objective({
-			current_amount = nil,
-			text = nil,
-			id = nil,
-			amount_text = nil,
-			amount = nil,
 			id = id,
 			text = objective.text,
 			amount_text = objective.amount_text,
@@ -404,8 +366,6 @@ function ObjectivesManager:complete_objective(id, load_data)
 	end
 
 	managers.hud:complete_objective({
-		text = nil,
-		id = nil,
 		id = id,
 		text = objective.text
 	})
@@ -449,12 +409,6 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 		sub_objective.current_amount = sub_objective.current_amount + 1
 
 		managers.hud:update_amount_sub_objective({
-			current_amount = nil,
-			sub_id = nil,
-			id = nil,
-			text = nil,
-			amount_text = nil,
-			amount = nil,
 			id = id,
 			sub_id = sub_id,
 			text = sub_objective.text,
@@ -481,8 +435,6 @@ function ObjectivesManager:check_and_set_subobjective_finished(objective, sub_ob
 	sub_objective.completed = true
 
 	managers.hud:complete_sub_objective({
-		sub_id = nil,
-		text = nil,
 		text = sub_objective.text,
 		sub_id = sub_objective.id
 	})
@@ -721,8 +673,6 @@ function ObjectivesManager:load(data)
 
 			if save_data.active then
 				self:activate_objective(name, {
-					current_amount = nil,
-					amount = nil,
 					current_amount = save_data.current_amount,
 					amount = save_data.amount
 				}, nil, objective_data.world_id, true)
@@ -733,8 +683,6 @@ function ObjectivesManager:load(data)
 						objective_data.sub_objectives[sub_id].completed = true
 
 						managers.hud:complete_sub_objective({
-							sub_id = nil,
-							text = nil,
 							text = sub_objective.text,
 							sub_id = sub_id
 						})

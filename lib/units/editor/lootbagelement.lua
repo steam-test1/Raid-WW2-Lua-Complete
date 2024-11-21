@@ -77,9 +77,6 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	local from = self._unit:position()
 	local to = from + self._hed.spawn_dir * 100000
 	local ray = managers.editor:unit_by_raycast({
-		mask = nil,
-		to = nil,
-		from = nil,
 		from = from,
 		to = to,
 		mask = managers.slot:get_mask("statics_layer")
@@ -130,8 +127,6 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				r = 0.85,
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.25,
 				g = 0.85,
 				from_unit = unit,

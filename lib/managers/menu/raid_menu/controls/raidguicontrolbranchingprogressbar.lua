@@ -7,10 +7,6 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 	self._levels = {}
 	self._object = self._panel:panel({
 		name = "wrap_panel",
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		x = params.x,
 		y = params.y,
 		w = params.w,
@@ -18,8 +14,6 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 	})
 	self._scrollable_panel = self._object:panel({
 		name = "scrollable_panel",
-		h = nil,
-		w = nil,
 		y = 0,
 		x = 0,
 		w = params.w,
@@ -27,10 +21,6 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 	})
 	self._elements_panel = self._scrollable_panel:panel({
 		name = "scrollable_panel",
-		h = nil,
-		w = nil,
-		y = nil,
-		x = nil,
 		x = params.elements_panel_x or 0,
 		y = params.elements_panel_y or 0,
 		w = params.elements_panel_w or self._scrollable_panel:w(),
@@ -76,8 +66,6 @@ end
 function RaidGUIControlBranchingProgressBar:_layout_skill_details()
 	local params_skill_details = {
 		name = "skill_details",
-		y = nil,
-		x = nil,
 		layer = 1000,
 		x = ExperienceGui.SKILL_DETAILS_X,
 		y = ExperienceGui.SKILL_DETAILS_Y
@@ -88,9 +76,6 @@ end
 function RaidGUIControlBranchingProgressBar:update_skill_details(button_data, skill_flavor, skill_description, color_changes)
 	local current_button = self:get_current_skill_tree_node()
 	local new_shape = {
-		y = nil,
-		x = nil,
-		h = nil,
 		x = current_button:x() + current_button:w(),
 		y = current_button:y(),
 		h = current_button:h()
@@ -143,19 +128,6 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 			node_value_data.level = level_index
 			node_value_data.index = node_index
 			local node_params = {
-				on_node_mouse_released_callback = nil,
-				on_node_mouse_pressed_callback = nil,
-				on_click_callback = nil,
-				on_mouse_exit_callback = nil,
-				value = nil,
-				on_mouse_enter_callback = nil,
-				x = nil,
-				state = nil,
-				name = nil,
-				level = nil,
-				parents = nil,
-				layer = nil,
-				on_node_mouse_moved_callback = nil,
 				name = "node_" .. tostring(level_index) .. "_" .. tostring(node_index),
 				on_click_callback = callback(self, self, "_node_click_callback"),
 				on_mouse_enter_callback = callback(self, self, "_node_enter_callback"),
@@ -185,9 +157,6 @@ function RaidGUIControlBranchingProgressBar:_create_elements(params)
 		end
 
 		local level = {
-			paths = nil,
-			nodes = nil,
-			points_needed = nil,
 			nodes = nodes,
 			paths = paths,
 			points_needed = level_data.points_needed

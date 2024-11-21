@@ -142,9 +142,6 @@ end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
 	local obj_data = {
-		text = nil,
-		description = nil,
-		id = nil,
 		xp_weight = 1,
 		prio = 1,
 		id = "dyn_" .. obj_id,
@@ -156,10 +153,6 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 	for _, t in ipairs(sub_id_list or {}) do
 		local subid = "dyn_" .. t .. "_sub"
 		obj_data[i] = {
-			start_completed = nil,
-			prio = nil,
-			text = nil,
-			id = nil,
 			id = subid,
 			text = t .. "_sub_hl",
 			prio = i,
@@ -1152,13 +1145,7 @@ function RaidJobManager:_prepare_peer_save_data()
 	local local_peer = managers.network:session():local_peer()
 	local peer_id = local_peer:id()
 	local local_player_data = {
-		level = nil,
-		name = nil,
-		nationality = nil,
-		class = nil,
-		statistics = nil,
 		is_local_player = true,
-		player_id = nil,
 		name = utf8.to_upper(managers.player:get_character_profile_name()),
 		class = managers.skilltree:get_character_profile_class(),
 		nationality = local_peer:character(),
@@ -1173,12 +1160,6 @@ function RaidJobManager:_prepare_peer_save_data()
 	for index, peer in pairs(managers.network:session():all_peers()) do
 		if not peer:id() == peer_id then
 			local peer_data = {
-				level = nil,
-				name = nil,
-				nationality = nil,
-				class = nil,
-				statistics = nil,
-				player_id = nil,
 				name = peer:name(),
 				class = peer:class(),
 				nationality = peer:character(),

@@ -21,11 +21,9 @@ function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw then
 			self:_draw_link({
-				from_unit = nil,
 				b = 0,
 				g = 0.85,
 				r = 0,
-				to_unit = nil,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -92,12 +90,10 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	local dmg_types = EWS:TextCtrl(panel, self._hed.damage_types, "", "TE_PROCESS_ENTER")
 
 	dmg_types:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "damage_types",
 		ctrlr = dmg_types
 	})
 	dmg_types:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "damage_types",
 		ctrlr = dmg_types
 	})
@@ -108,15 +104,12 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	percentage:set_value(self._hed.percentage)
 	percentage:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "percentage",
 		ctrlr = percentage
 	})
 	panel_sizer:add(percentage, 0, 0, "EXPAND")
 	self:add_help_text({
-		panel = nil,
 		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
-		sizer = nil,
 		panel = panel,
 		sizer = panel_sizer
 	})

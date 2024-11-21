@@ -35,10 +35,6 @@ function EditUnitDialog:add_page(data)
 	local nr = self._notebook:add_page(panel, name, start_page)
 
 	table.insert(self._pages, {
-		class = nil,
-		name = nil,
-		nr = nil,
-		panel = nil,
 		name = name,
 		class = class,
 		panel = panel,

@@ -63,8 +63,6 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_left_panel()
 	local left_panel_params = {
-		h = nil,
-		w = nil,
 		name = "left_panel",
 		w = RaidGUIControlXPRewardDetails.LEFT_PANEL_W,
 		h = self._object:h()
@@ -74,14 +72,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_title()
 	local title_description_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
 		align = "left",
-		h = nil,
 		alpha = 0,
-		text = nil,
 		vertical = "center",
 		name = "title_description",
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_Y,
@@ -97,13 +89,8 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
 		align = "center",
 		alpha = 0,
-		text = nil,
 		vertical = "top",
 		name = "customization_name",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlXPRewardDetails.TITLE_PADDING_TOP,
@@ -128,9 +115,6 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
-		h = nil,
-		w = nil,
-		y = nil,
 		name = "reward_image_panel",
 		y = RaidGUIControlXPRewardDetails.REWARD_ICON_PANEL_Y,
 		w = self._left_panel:w(),
@@ -139,8 +123,6 @@ function RaidGUIControlXPRewardDetails:_create_reward_image()
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
 	local reward_image_params = {
 		alpha = 0,
-		texture = nil,
-		texture_rect = nil,
 		name = "reward_image",
 		texture = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture_rect
@@ -153,9 +135,6 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_xp_value()
 	local xp_value_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
 		text = "456 XP",
 		alpha = 0,
 		name = "xp_value",
@@ -165,10 +144,6 @@ function RaidGUIControlXPRewardDetails:_create_xp_value()
 	}
 	self._xp_value_text = self._right_panel:text(xp_value_params)
 	local xp_value_label_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
-		text = nil,
 		alpha = 0,
 		name = "xp_value_label",
 		font = RaidGUIControlXPRewardDetails.FONT,
@@ -293,8 +268,6 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_right_panel()
 	local right_panel_params = {
-		h = nil,
-		w = nil,
 		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 		h = self._object:h()
@@ -306,14 +279,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
-		color = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
-		w = nil,
 		align = "left",
 		alpha = 0,
-		text = nil,
 		wrap = true,
 		vertical = "top",
 		name = "description",
@@ -329,16 +296,8 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 
 	local title_description_right_params = {
-		h = nil,
-		font_size = nil,
-		font = nil,
-		y = nil,
-		x = nil,
-		w = nil,
 		align = "left",
-		color = nil,
 		alpha = 0,
-		text = nil,
 		wrap = true,
 		vertical = "center",
 		name = "title_description_right",

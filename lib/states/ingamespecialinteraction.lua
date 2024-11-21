@@ -14,8 +14,6 @@ function IngameSpecialInteraction:_setup_controller()
 
 	self._controller = managers.controller:create_controller("ingame_special_interaction", managers.controller:get_default_wrapper_index(), false)
 	self._cb_table = {
-		interact = nil,
-		jump = nil,
 		jump = callback(self, self, "cb_leave"),
 		interact = callback(self, self, "cb_interact")
 	}

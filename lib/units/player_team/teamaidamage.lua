@@ -43,8 +43,6 @@ function TeamAIDamage:init(unit)
 	self._last_received_dmg = 0
 	self._spine2_obj = unit:get_object(Idstring("Spine2"))
 	self._tase_effect_table = {
-		effect = nil,
-		parent = nil,
 		effect = tweak_data.common_effects.taser_hit,
 		parent = self._unit:get_object(Idstring("e_taser"))
 	}
@@ -58,7 +56,6 @@ function TeamAIDamage:update(unit, t, dt)
 	if self._revive_reminder_line_t and self._revive_reminder_line_t < t then
 		managers.dialog:queue_dialog("player_gen_call_help", {
 			skip_idle_check = true,
-			instigator = nil,
 			instigator = self._unit
 		})
 
@@ -100,11 +97,8 @@ end
 function TeamAIDamage:force_bleedout()
 	local attack_data = {
 		damage = 100000,
-		col_ray = nil,
-		pos = nil,
 		pos = Vector3(),
 		col_ray = {
-			position = nil,
 			position = Vector3()
 		}
 	}
@@ -188,7 +182,6 @@ function TeamAIDamage:damage_explosion(attack_data)
 	end
 
 	local result = {
-		variant = nil,
 		variant = attack_data.variant
 	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
@@ -229,7 +222,6 @@ function TeamAIDamage:damage_fire(attack_data)
 	end
 
 	local result = {
-		variant = nil,
 		variant = attack_data.variant
 	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
@@ -258,7 +250,6 @@ function TeamAIDamage:damage_mission(attack_data)
 	attack_data.damage = self._health
 	attack_data.variant = "explosion"
 	local result = {
-		variant = nil,
 		variant = attack_data.variant
 	}
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result)
@@ -290,7 +281,6 @@ function TeamAIDamage:damage_tase(attack_data)
 
 	self._regenerate_t = nil
 	local damage_info = {
-		result = nil,
 		variant = "tase",
 		result = {
 			type = "hurt"
@@ -438,7 +428,6 @@ function TeamAIDamage:_check_bleed_out()
 
 			managers.dialog:queue_dialog("player_gen_downed", {
 				skip_idle_check = true,
-				instigator = nil,
 				instigator = self._unit
 			})
 
@@ -673,11 +662,7 @@ function TeamAIDamage:sync_damage_bullet(attacker_unit, damage, i_body, hit_offs
 	end
 
 	local attack_data = {
-		damage = nil,
 		variant = "bullet",
-		pos = nil,
-		attacker_unit = nil,
-		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		damage = damage,
 		attack_dir = attack_dir,
@@ -698,7 +683,6 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	damage = damage * self._HEALTH_TOTAL_PERCENT
 	local result = {
-		variant = nil,
 		variant = variant
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
@@ -717,11 +701,6 @@ function TeamAIDamage:sync_damage_explosion(attacker_unit, damage, i_attack_vari
 	end
 
 	local attack_data = {
-		damage = nil,
-		variant = nil,
-		pos = nil,
-		attacker_unit = nil,
-		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		damage = damage,
@@ -743,7 +722,6 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	local variant = CopDamage._ATTACK_VARIANTS[i_attack_variant]
 	damage = damage * self._HEALTH_TOTAL_PERCENT
 	local result = {
-		variant = nil,
 		variant = variant
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_com())
@@ -762,11 +740,6 @@ function TeamAIDamage:sync_damage_fire(attacker_unit, damage, i_attack_variant)
 	end
 
 	local attack_data = {
-		damage = nil,
-		variant = nil,
-		pos = nil,
-		attacker_unit = nil,
-		attack_dir = nil,
 		variant = variant,
 		attacker_unit = attacker_unit,
 		damage = damage,
@@ -811,11 +784,7 @@ function TeamAIDamage:sync_damage_melee(attacker_unit, damage, damage_effect_per
 	end
 
 	local attack_data = {
-		damage = nil,
 		variant = "melee",
-		pos = nil,
-		attacker_unit = nil,
-		attack_dir = nil,
 		attacker_unit = attacker_unit,
 		damage = damage,
 		attack_dir = attack_dir,
@@ -847,7 +816,6 @@ function TeamAIDamage:revive(reviving_unit)
 		self:_regenerated()
 
 		local action_data = {
-			blocks = nil,
 			variant = "stand",
 			body_part = 1,
 			type = "act",
@@ -873,7 +841,6 @@ function TeamAIDamage:revive(reviving_unit)
 	managers.hud:on_teammate_revived(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
 	managers.dialog:queue_dialog("player_gen_revive_thanks", {
 		skip_idle_check = true,
-		instigator = nil,
 		instigator = self._unit
 	})
 end
@@ -944,7 +911,6 @@ function TeamAIDamage:on_tase_ended()
 
 		self._to_incapacitated_clbk_id = nil
 		local action_data = {
-			blocks = nil,
 			variant = "stand",
 			body_part = 1,
 			type = "act",
@@ -992,7 +958,6 @@ function TeamAIDamage:_on_incapacitated()
 
 	self._regenerate_t = nil
 	local dmg_info = {
-		result = nil,
 		variant = "bleeding",
 		result = {
 			type = "fatal"
@@ -1023,9 +988,7 @@ function TeamAIDamage:clbk_exit_to_dead(from_client_join)
 	end
 
 	local dmg_info = {
-		join_game = nil,
 		variant = "bleeding",
-		result = nil,
 		result = {
 			type = "death"
 		},

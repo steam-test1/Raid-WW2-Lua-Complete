@@ -37,7 +37,6 @@ end
 function VehicleOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("vehicles")
 	})
@@ -60,7 +59,6 @@ end
 function VehicleOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body",
-		mask = nil,
 		sample = true,
 		mask = managers.slot:get_mask("vehicles")
 	})
@@ -82,8 +80,6 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 
 		if alive(unit) then
 			local params = {
-				to_unit = nil,
-				from_unit = nil,
 				b = 0.5,
 				g = 0,
 				r = 0,
@@ -106,8 +102,6 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = managers.editor:unit_with_id(id)
 		local params = {
-			to_unit = nil,
-			from_unit = nil,
 			b = 0.5,
 			g = 0,
 			r = 0,

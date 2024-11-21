@@ -75,15 +75,11 @@ function CharacterCreationGui:_layout()
 	self._nationality_screen_controls = {}
 
 	self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 38,
 		w = 416,
 		y = 96,
 		x = 0,
 		name = "subtitle_profiles",
-		color = nil,
 		text = self:translate("character_creation_subtitle", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_38,
 		font_size = tweak_data.gui.font_sizes.size_38,
@@ -91,15 +87,11 @@ function CharacterCreationGui:_layout()
 	})
 
 	local subtitle_class = self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 24,
 		w = 416,
 		y = 144,
 		x = 0,
 		name = "subtitle_small_profile_class",
-		color = nil,
 		text = self:translate("character_creation_subtitle_class", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -109,15 +101,11 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, subtitle_class)
 
 	local subtitle_nationality = self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 24,
 		w = 416,
 		y = 144,
 		x = 0,
 		name = "subtitle_small_profile_nationality",
-		color = nil,
 		text = self:translate("character_creation_subtitle_nationality", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -127,8 +115,6 @@ function CharacterCreationGui:_layout()
 	table.insert(self._nationality_screen_controls, subtitle_nationality)
 
 	self._class_list = self._root_panel:list_active({
-		on_item_selected_callback = nil,
-		data_source_callback = nil,
 		vertical_spacing = 2,
 		item_h = 96,
 		selection_enabled = true,
@@ -136,10 +122,7 @@ function CharacterCreationGui:_layout()
 		w = 416,
 		y = 224,
 		x = 0,
-		on_item_double_clicked_callback = nil,
 		name = "class_list",
-		on_item_clicked_callback = nil,
-		item_class = nil,
 		item_class = RaidGUIControlListItemCharacterCreateClass,
 		on_item_clicked_callback = callback(self, self, "_on_class_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -150,8 +133,6 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._class_list)
 
 	self._nation_list = self._root_panel:list_active({
-		on_item_selected_callback = nil,
-		data_source_callback = nil,
 		vertical_spacing = 2,
 		item_h = 96,
 		selection_enabled = true,
@@ -159,10 +140,7 @@ function CharacterCreationGui:_layout()
 		w = 416,
 		y = 224,
 		x = 0,
-		on_item_double_clicked_callback = nil,
 		name = "nation_list",
-		on_item_clicked_callback = nil,
-		item_class = nil,
 		item_class = RaidGUIControlListItemCharacterCreateNation,
 		on_item_clicked_callback = callback(self, self, "_on_nation_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -174,15 +152,10 @@ function CharacterCreationGui:_layout()
 
 	local list_bottom = self._class_list:bottom()
 	local your_selection = self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 24,
 		w = 256,
-		y = nil,
 		x = 0,
 		name = "label_your_selection",
-		color = nil,
 		y = list_bottom + 64,
 		text = self:translate("character_creation_your_selection", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
@@ -192,12 +165,7 @@ function CharacterCreationGui:_layout()
 	local icon_data = tweak_data.gui.icons.character_creation_1_large
 	local tex_rect = icon_data.texture_rect
 	self._number_1 = self._root_panel:image({
-		w = nil,
-		y = nil,
 		x = 0,
-		texture = nil,
-		texture_rect = nil,
-		h = nil,
 		y = your_selection:bottom() + 32,
 		w = tex_rect[3],
 		h = tex_rect[4],
@@ -205,15 +173,9 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._class_label = self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 42,
 		w = 160,
-		y = nil,
-		x = nil,
 		name = "class_label",
-		color = nil,
 		x = self._number_1:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate(tweak_data.skilltree.classes[self._selected_class].name_id, true),
@@ -224,12 +186,6 @@ function CharacterCreationGui:_layout()
 	icon_data = tweak_data.gui.icons.character_creation_2_small
 	tex_rect = icon_data.texture_rect
 	self._number_2 = self._root_panel:image({
-		w = nil,
-		y = nil,
-		x = nil,
-		texture = nil,
-		texture_rect = nil,
-		h = nil,
 		x = CharacterCreationGui.STEP_TWO_INDICATOR_DEFAULT_X,
 		y = your_selection:bottom() + 35,
 		w = tex_rect[3],
@@ -238,15 +194,9 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._nationality_label = self._root_panel:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		h = 42,
 		w = 256,
-		y = nil,
-		x = nil,
 		name = "nationality_label",
-		color = nil,
 		x = self._number_2:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate("character_profile_creation_" .. self._selected_nation, true),
@@ -262,12 +212,8 @@ function CharacterCreationGui:_layout()
 
 	self._next_button = self._root_panel:short_primary_button({
 		w = 192,
-		y = nil,
 		x = 0,
-		layer = nil,
 		name = "next_button",
-		on_click_callback = nil,
-		text = nil,
 		y = list_bottom + 224,
 		text = self:translate("character_profile_next_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -404,9 +350,6 @@ function CharacterCreationGui:_data_source_nation_list()
 		local nation_text = managers.localization:to_upper_text("menu_" .. nationality)
 
 		table.insert(nationalities, {
-			value = nil,
-			text = nil,
-			info = nil,
 			text = nation_text,
 			value = nationality,
 			info = nationality
@@ -424,8 +367,6 @@ function CharacterCreationGui:_data_source_class_list()
 		local class_text = managers.localization:to_upper_text(char_class.name_id)
 
 		table.insert(classes, {
-			text = nil,
-			value = nil,
 			text = class_text,
 			value = char_class.name
 		})
@@ -495,10 +436,7 @@ function CharacterCreationGui:show_selected_character_description()
 	local right_side_info = self._current_screen == "class" and self._right_side_info_class or self._right_side_info_nationality
 
 	right_side_info:set_data({
-		nationality = nil,
-		class_name = nil,
 		level = 0,
-		class_stats = nil,
 		class_name = self._selected_class,
 		nationality = self._selected_nation,
 		class_stats = managers.skilltree:calculate_stats(self._selected_class)
@@ -626,9 +564,6 @@ function CharacterCreationGui:_show_character_create_input_textbox()
 	}
 	local slot_index = managers.savefile:get_create_character_slot()
 	local params = {
-		callback_no = nil,
-		textbox_value = nil,
-		callback_yes = nil,
 		callback_yes = callback(self, self, "_callback_yes_function"),
 		callback_no = callback(self, self, "_callback_no_function"),
 		textbox_value = num_append_txt[slot_index - 10]
@@ -663,7 +598,6 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	if new_profile_name == "" then
 		local params = {
 			textbox_id = "dialog_err_empty_character_name",
-			callback_func = nil,
 			callback_func = callback(self, self, "_show_character_create_input_textbox")
 		}
 
@@ -673,7 +607,6 @@ function CharacterCreationGui:_callback_yes_function(button, button_data, data)
 	elseif character_name_exists(new_profile_name) then
 		local params = {
 			textbox_id = "dialog_err_duplicate_character_name",
-			callback_func = nil,
 			callback_func = callback(self, self, "_show_character_create_input_textbox")
 		}
 
@@ -787,9 +720,6 @@ function CharacterCreationGui:_load_class_default_weapons()
 		self._loading_units[unit_path] = true
 
 		managers.dyn_resource:load(IDS_UNIT, Idstring(unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_weapon_unit_load_complete_callback", {
-			weapon_id = nil,
-			unit_path = nil,
-			weapon_factory_id = nil,
 			weapon_factory_id = weapon_factory_id,
 			unit_path = unit_path,
 			weapon_id = weapon_id
@@ -809,7 +739,6 @@ function CharacterCreationGui:_weapon_unit_load_complete_callback(params)
 		local weapon_blueprint = managers.weapon_inventory:get_weapon_default_blueprint(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, params.weapon_id)
 		self._loaded_weapons[params.weapon_id] = {}
 		local parts, blueprint = managers.weapon_factory:assemble_from_blueprint(params.weapon_factory_id, weapon_unit, weapon_blueprint, true, callback(self, self, "_assemble_completed", {
-			weapon_id = nil,
 			weapon_id = params.weapon_id
 		}), true)
 		self._parts_being_loaded[params.weapon_id] = parts
@@ -876,14 +805,10 @@ end
 function CharacterCreationGui:_bind_controller_inputs()
 	local bindings = {
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_on_click_button_next")
 		},
 		{
-			key = nil,
-			callback = nil,
 			key = Idstring("menu_controller_face_right"),
 			callback = callback(self, self, "back_pressed")
 		}
@@ -892,8 +817,6 @@ function CharacterCreationGui:_bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		keyboard = nil,
-		controller = nil,
 		controller = {
 			"menu_legend_back",
 			"menu_legend_character_select"
@@ -901,7 +824,6 @@ function CharacterCreationGui:_bind_controller_inputs()
 		keyboard = {
 			{
 				key = "footer_back",
-				callback = nil,
 				callback = callback(self, self, "_on_legend_pc_back")
 			}
 		}

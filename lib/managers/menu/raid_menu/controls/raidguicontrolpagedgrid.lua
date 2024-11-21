@@ -143,12 +143,8 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 	if self._total_pages >= 1 then
 		self._current_page = 1
 		self._paging_controls_panel_params = {
-			y = nil,
 			x = 0,
 			visible = true,
-			h = nil,
-			name = nil,
-			w = nil,
 			name = self._params.name .. "_paging_controls_panel",
 			y = self._grid_panel:h(),
 			w = self._params.w,
@@ -157,12 +153,7 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
 			y = 0,
-			x = nil,
-			data_source_callback = nil,
 			h = 25,
-			name = nil,
-			w = nil,
-			on_item_selected_callback = nil,
 			name = self._params.name .. "_page_stepper_stepper",
 			x = self._params.w / 2 + 25,
 			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
@@ -177,12 +168,8 @@ end
 function RaidGUIControlPagedGrid:_create_filter_controls()
 	if not self._paging_controls_panel then
 		self._paging_controls_panel_params = {
-			y = nil,
 			x = 0,
 			visible = true,
-			h = nil,
-			name = nil,
-			w = nil,
 			name = self._params.name .. "_paging_controls_panel",
 			y = self._grid_panel:h(),
 			w = self._params.w,
@@ -195,11 +182,7 @@ function RaidGUIControlPagedGrid:_create_filter_controls()
 		self._filter_stepper_params = {
 			y = 0,
 			x = 0,
-			data_source_callback = nil,
 			h = 25,
-			name = nil,
-			w = nil,
-			on_item_selected_callback = nil,
 			name = self._params.name .. "_filter_stepper_stepper",
 			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
 			w = self._paging_controls_panel:w() / 2 - 50,
@@ -276,8 +259,6 @@ function RaidGUIControlPagedGrid:data_source_grid_page_stepper()
 
 	for i_page = 1, self._total_pages do
 		table.insert(pages, {
-			text = nil,
-			value = nil,
 			text = i_page .. "/" .. self._total_pages,
 			value = i_page
 		})

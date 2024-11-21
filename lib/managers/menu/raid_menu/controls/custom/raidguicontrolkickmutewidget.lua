@@ -34,12 +34,10 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	local parent_params = {
-		y = nil,
 		halign = "scale",
 		visible = false,
 		name = "kick_mute_widget_panel",
 		valign = "top",
-		h = nil,
 		y = params.y,
 		h = RaidGUIControlKickMuteWidget.HEIGHT
 	}
@@ -51,10 +49,6 @@ function RaidGUIControlKickMuteWidget:_create_highlight_line()
 		name = "highlight_line",
 		alpha = 0,
 		halign = "left",
-		color = nil,
-		w = nil,
-		x = nil,
-		h = nil,
 		x = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_X,
 		w = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_W,
 		h = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_H,
@@ -68,16 +62,10 @@ end
 function RaidGUIControlKickMuteWidget:_create_name_text()
 	local name_params = {
 		halign = "left",
-		color = nil,
-		w = nil,
-		x = nil,
 		vertical = "center",
 		align = "left",
 		text = "WWWWWWWWWWWWWWWW",
-		font_size = nil,
-		font = nil,
 		name = "name",
-		h = nil,
 		x = RaidGUIControlKickMuteWidget.NAME_X,
 		w = self._object:w() - RaidGUIControlKickMuteWidget.NAME_X,
 		h = RaidGUIControlKickMuteWidget.NAME_H,
@@ -92,16 +80,10 @@ function RaidGUIControlKickMuteWidget:_create_kick_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local kick_button_params = {
-		on_selected_callback = nil,
-		on_unselected_callback = nil,
-		on_menu_move = nil,
-		name = nil,
-		on_click_callback = nil,
 		inactive_icon = "players_icon_kick",
 		name = "kick_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_kick_pressed"),
 		on_menu_move = {
-			left = nil,
 			left = "mute_button_" .. tostring(self._index)
 		},
 		on_selected_callback = callback(self, self, "on_button_selected", "kick"),
@@ -123,17 +105,11 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local mute_button_params = {
-		on_selected_callback = nil,
-		on_menu_move = nil,
 		active_icon = "players_icon_unmute",
-		on_unselected_callback = nil,
-		name = nil,
-		on_click_callback = nil,
 		inactive_icon = "players_icon_mute",
 		name = "mute_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_mute_pressed"),
 		on_menu_move = {
-			right = nil,
 			right = "kick_button_" .. tostring(self._index)
 		},
 		on_selected_callback = callback(self, self, "on_mute_selected"),
@@ -157,19 +133,11 @@ function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local gamercard_button_params = {
-		on_selected_callback = nil,
-		on_unselected_callback = nil,
-		on_menu_move = nil,
-		name = nil,
-		on_click_callback = nil,
 		inactive_icon = "players_icon_gamecard",
 		name = "gamercard_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "show_gamercard"),
 		on_menu_move = {
 			left = "list_menu",
-			up = nil,
-			right = nil,
-			down = nil,
 			right = "mute_button_" .. tostring(self._index),
 			up = "gamercard_button_" .. move_up_index,
 			down = "gamercard_button_" .. move_down_index
@@ -188,20 +156,13 @@ function RaidGUIControlKickMuteWidget:_create_invite_button()
 	local move_up_index = self._index > 1 and self._index - 1 or 3
 	local move_down_index = self._index % 3 + 1
 	local invite_button_params = {
-		on_selected_callback = nil,
-		on_menu_move = nil,
 		active_icon = "players_icon_xbox_invite",
-		on_unselected_callback = nil,
-		name = nil,
-		on_click_callback = nil,
 		visible = false,
 		inactive_icon = "players_icon_xbox_invite",
 		name = "invite_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_invite_pressed"),
 		on_menu_move = {
-			up = nil,
 			left = "list_menu",
-			down = nil,
 			up = "kick_button_" .. move_up_index,
 			down = "kick_button_" .. move_down_index
 		},
@@ -403,9 +364,6 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	if IS_XB1 then
 		on_menu_move = {
 			left = "list_menu",
-			up = nil,
-			right = nil,
-			down = nil,
 			right = "mute_button_" .. tostring(self._index),
 			up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "gamercard_button_" .. tostring(move_up_index),
 			down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "gamercard_button_" .. tostring(move_down_index)
@@ -415,10 +373,6 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	end
 
 	on_menu_move = {
-		left = nil,
-		up = nil,
-		right = nil,
-		down = nil,
 		left = IS_XB1 and "gamercard_button_" .. tostring(self._index) or "list_menu",
 		right = Network:is_server() and "kick_button_" .. tostring(self._index),
 		up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
@@ -428,9 +382,6 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	self._mute_button:set_menu_move_controls(on_menu_move)
 
 	on_menu_move = {
-		up = nil,
-		left = nil,
-		down = nil,
 		left = "mute_button_" .. tostring(self._index),
 		up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "kick_button_" .. tostring(move_up_index),
 		down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "kick_button_" .. tostring(move_down_index)
@@ -439,9 +390,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	self._kick_button:set_menu_move_controls(on_menu_move)
 
 	on_menu_move = {
-		up = nil,
 		left = "list_menu",
-		down = nil,
 		up = Network:is_server() and "kick_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
 		down = Network:is_server() and "kick_button_" .. tostring(move_down_index) or "mute_button_" .. tostring(move_down_index)
 	}

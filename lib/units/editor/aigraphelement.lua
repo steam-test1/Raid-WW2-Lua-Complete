@@ -35,8 +35,6 @@ function AIGraphUnitElement:update_selected(t, dt)
 					b = 0,
 					g = 0.75,
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -112,10 +110,6 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 
 	local operations_params = {
 		tooltip = "Select an operation to perform on the selected graphs",
-		value = nil,
-		options = nil,
-		sizer = nil,
-		panel = nil,
 		sorted = true,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
@@ -128,7 +122,6 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 	local operations = CoreEWS.combobox(operations_params)
 
 	operations:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "operation",
 		ctrlr = operations
 	})

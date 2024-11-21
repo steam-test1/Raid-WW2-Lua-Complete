@@ -24,9 +24,6 @@ end
 
 function RaidGUIControlButtonToggleSmall:_create_panel()
 	local panel_params = {
-		w = nil,
-		name = nil,
-		h = nil,
 		name = "button_toggle_small_" .. tostring(self._name),
 		w = tweak_data.gui:icon_w(RaidGUIControlButtonToggleSmall.BORDER_ICON),
 		h = tweak_data.gui:icon_h(RaidGUIControlButtonToggleSmall.BORDER_ICON)
@@ -43,11 +40,8 @@ end
 
 function RaidGUIControlButtonToggleSmall:_create_border()
 	local checkbox_border_params = {
-		texture = nil,
-		color = nil,
 		valign = "scale",
 		halign = "scale",
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggleSmall.BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggleSmall.BORDER_ICON].texture_rect,
 		color = RaidGUIControlButtonToggleSmall.BORDER_COLOR
@@ -59,9 +53,7 @@ function RaidGUIControlButtonToggleSmall:_create_active_icon()
 	local active_icon = self._params.active_icon ~= nil and self._params.active_icon or self._params.inactive_icon
 	local active_icon_params = {
 		valign = "scale",
-		texture = nil,
 		halign = "scale",
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[active_icon].texture,
 		texture_rect = tweak_data.gui.icons[active_icon].texture_rect
 	}
@@ -74,9 +66,7 @@ function RaidGUIControlButtonToggleSmall:_create_inactive_icon()
 	local inactive_icon = self._params.inactive_icon ~= nil and self._params.inactive_icon or self._params.active_icon
 	local inactive_icon_params = {
 		valign = "scale",
-		texture = nil,
 		halign = "scale",
-		texture_rect = nil,
 		texture = tweak_data.gui.icons[inactive_icon].texture,
 		texture_rect = tweak_data.gui.icons[inactive_icon].texture_rect
 	}

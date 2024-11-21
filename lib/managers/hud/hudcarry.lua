@@ -21,7 +21,6 @@ function HUDCarry:_create_panel(hud)
 	local panel_params = {
 		halign = "center",
 		valign = "bottom",
-		h = nil,
 		name = "carry_panel",
 		alpha = 0,
 		h = HUDCarry.H
@@ -32,9 +31,7 @@ end
 function HUDCarry:_create_icon()
 	self._icon_panel = self._object:panel({
 		halign = "center",
-		w = nil,
 		valign = "top",
-		h = nil,
 		name = "icon_panel",
 		w = HUDCarry.ICON_SIZE,
 		h = HUDCarry.ICON_SIZE
@@ -42,10 +39,6 @@ function HUDCarry:_create_icon()
 	self._icon = self._icon_panel:bitmap({
 		valign = "center",
 		halign = "center",
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		texture = nil,
 		name = "icon",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture_rect,
@@ -56,15 +49,7 @@ function HUDCarry:_create_icon()
 		render_template = "VertexColorTexturedRadial",
 		halign = "left",
 		valign = "center",
-		texture_rect = nil,
-		h = nil,
-		texture = nil,
 		name = "icon_fill_left",
-		layer = nil,
-		w = nil,
-		color = nil,
-		y = nil,
-		x = nil,
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
 		x = HUDCarry.ICON_SIZE,
@@ -78,14 +63,7 @@ function HUDCarry:_create_icon()
 		render_template = "VertexColorTexturedRadial",
 		halign = "right",
 		valign = "center",
-		texture_rect = nil,
-		h = nil,
-		texture = nil,
 		name = "icon_fill_right",
-		layer = nil,
-		w = nil,
-		color = nil,
-		y = nil,
 		x = 0,
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
@@ -101,14 +79,10 @@ function HUDCarry:_create_prompt()
 	local prompt_params = {
 		halign = "left",
 		valign = "top",
-		h = nil,
 		name = "prompt",
-		w = nil,
 		text = "",
 		vertical = "top",
 		align = "center",
-		font_size = nil,
-		font = nil,
 		w = HUDCarry.PROMPT_W,
 		h = self._object:h(),
 		font = HUDCarry.PROMPT_FONT,
@@ -148,8 +122,6 @@ function HUDCarry:show_carry_item(carry_id)
 	local carry_item_id = carry_data.carry_item_id or HUDCarry.GENERIC_THROW_ID
 
 	self._prompt:set_text(utf8.to_upper(managers.localization:text(prompt_text_id, {
-		BTN_USE_ITEM = nil,
-		CARRY_ITEM = nil,
 		BTN_USE_ITEM = managers.localization:btn_macro("use_item"),
 		CARRY_ITEM = managers.localization:text(carry_item_id)
 	})))

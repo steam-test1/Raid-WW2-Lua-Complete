@@ -28,11 +28,6 @@ function RaidGUIControlInfoIcon:init(parent, params)
 
 	if params.icon then
 		local icon_params = {
-			texture_rect = nil,
-			h = nil,
-			color = nil,
-			texture = nil,
-			layer = nil,
 			y = 0,
 			x = 0,
 			layer = self._object:layer() + 1,
@@ -51,13 +46,7 @@ function RaidGUIControlInfoIcon:init(parent, params)
 		local title_params = {
 			align = "center",
 			vertical = "center",
-			text = nil,
-			color = nil,
 			wrap = false,
-			h = nil,
-			font_size = nil,
-			font = nil,
-			layer = nil,
 			y = 0,
 			x = 0,
 			layer = self._object:layer() + 1,
@@ -79,14 +68,8 @@ function RaidGUIControlInfoIcon:init(parent, params)
 
 	local text_params = {
 		vertical = "center",
-		color = nil,
-		text = nil,
 		align = "center",
 		wrap = false,
-		h = nil,
-		font_size = nil,
-		font = nil,
-		layer = nil,
 		y = 0,
 		x = 0,
 		h = params.text_h or 0,
@@ -155,11 +138,6 @@ function RaidGUIControlInfoIcon:set_icon(icon, params)
 	end
 
 	local icon_params = {
-		texture_rect = nil,
-		h = nil,
-		color = nil,
-		texture = nil,
-		layer = nil,
 		y = 0,
 		x = 0,
 		layer = self._object:layer() + 1,
@@ -200,13 +178,7 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	local title_params = {
 		align = "center",
 		vertical = "center",
-		text = nil,
-		color = nil,
 		wrap = false,
-		h = nil,
-		font_size = nil,
-		font = nil,
-		layer = nil,
 		y = 0,
 		x = 0,
 		layer = self._object:layer() + 1,
@@ -253,13 +225,8 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 
 	local text_params = {
 		vertical = "center",
-		color = nil,
-		text = nil,
 		align = "center",
 		wrap = false,
-		font_size = nil,
-		font = nil,
-		layer = nil,
 		y = 0,
 		x = 0,
 		font = RaidGUIControlInfoIcon.TEXT_FONT,

@@ -32,10 +32,6 @@ function HUDSpecialInteractionFuseCutting:_create_bg_plate()
 	self._bg_plate = self._object:bitmap({
 		halign = "center",
 		valign = "center",
-		h = nil,
-		w = nil,
-		texture_rect = nil,
-		texture = nil,
 		layer = 1,
 		name = "special_interaction_bg_plate",
 		texture = gui_data.texture,
@@ -50,11 +46,6 @@ end
 function HUDSpecialInteractionFuseCutting:_create_interact_arrow()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionFuseCutting.KNIFE_ICON)
 	self._interact_arrow = self._object:bitmap({
-		h = nil,
-		w = nil,
-		texture_rect = nil,
-		texture = nil,
-		layer = nil,
 		name = "special_interaction_icon",
 		w = HUDSpecialInteractionFuseCutting.SIZE * 0.9,
 		h = HUDSpecialInteractionFuseCutting.SIZE * 0.9,
@@ -72,11 +63,8 @@ function HUDSpecialInteractionFuseCutting:_create_fuse_timer()
 		valign = "center",
 		h = 60,
 		w = 240,
-		font_size = nil,
-		font = nil,
 		name = "_interact_text",
 		text = "--:--",
-		layer = nil,
 		layer = self._bg_plate:layer() + 2,
 		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
 		font_size = HUDSpecialInteractionFuseCutting.TIMER_FONT_SIZE
@@ -103,12 +91,7 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 
 	for i = 1, max_cuts do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			radius = nil,
-			rotation = nil,
-			color = nil,
 			position_z = 0,
-			image = nil,
-			layer = nil,
 			blend_mode = "add",
 			image = tweak_data.gui.icons.interact_fuse_thread.texture,
 			color = HUDSpecialInteractionFuseCutting.STATE_DEFAULT_COLOR,
@@ -123,9 +106,6 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 		local fill = current_gap * deviation
 
 		table.insert(self._circles, {
-			circle = nil,
-			rotation = nil,
-			max_size = nil,
 			cut_point = true,
 			size = 0,
 			circle = circle,
@@ -141,12 +121,7 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 
 	for i = 1, max_segments, 2 do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			radius = nil,
-			rotation = nil,
-			color = nil,
 			position_z = 0,
-			image = nil,
-			layer = nil,
 			image = tweak_data.gui.icons.interact_lockpick_circles[1].texture,
 			color = HUDSpecialInteractionFuseCutting.CIRCLE_COLOR,
 			rotation = HUDSpecialInteractionFuseCutting.ENDING_ANGLE,
@@ -159,10 +134,7 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 		local fill = 0.092 + math.random() * segment_size
 
 		table.insert(self._circles, i, {
-			circle = nil,
-			rotation = nil,
 			size = 0,
-			max_size = nil,
 			circle = circle,
 			max_size = fill * fill_mul,
 			rotation = HUDSpecialInteractionFuseCutting.TOTAL_ANGLE
@@ -355,7 +327,6 @@ end
 
 function HUDSpecialInteractionFuseCutting:get_interaction_data()
 	return {
-		successful_cuts = nil,
 		successful_cuts = self._successful_cuts
 	}
 end

@@ -2,7 +2,6 @@ EquipmentsTweakData = EquipmentsTweakData or class()
 
 function EquipmentsTweakData:init()
 	self.first_aid_kit = {
-		upgrade_deploy_time_multiplier = nil,
 		deploy_time = 1,
 		dummy_unit = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit_dummy",
 		description_id = "des_first_aid_kit",

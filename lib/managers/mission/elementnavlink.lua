@@ -165,7 +165,6 @@ function ElementNavLink:clbk_objective_administered(unit)
 			managers.navigation:unreserve_pos(unit_rsrv)
 		else
 			unit_rsrv = {
-				position = nil,
 				radius = 30,
 				position = self._values.align_position and self._values.position or unit:position()
 			}
@@ -234,7 +233,6 @@ end
 function ElementNavLink:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
-			position = nil,
 			radius = 30,
 			position = self._values.position
 		}
@@ -307,26 +305,7 @@ function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		interrupt_dis = nil,
-		path_style = nil,
-		pos = nil,
-		stance = nil,
-		rot = nil,
-		fail_clbk = nil,
-		verification_clbk = nil,
-		attitude = nil,
-		pose = nil,
-		scan = nil,
-		forced = nil,
-		trigger_on = nil,
-		action_start_clbk = nil,
-		followup_SO = nil,
 		type = "act",
-		element = nil,
-		complete_clbk = nil,
-		interaction_voice = nil,
-		haste = nil,
-		interrupt_health = nil,
 		element = self,
 		pos = pos,
 		rot = rot,
@@ -352,11 +331,9 @@ function ElementNavLink:get_objective(instigator)
 	if self._values.so_action then
 		action = {
 			body_part = 1,
-			variant = nil,
 			type = "act",
 			align_sync = true,
 			needs_full_blend = true,
-			blocks = nil,
 			variant = self._values.so_action,
 			blocks = {
 				walk = -1,
@@ -455,7 +432,6 @@ function ElementNavLink:_administer_objective(unit, objective)
 		if not unit:brain():objective() then
 			local idle_objective = {
 				type = "free",
-				followup_objective = nil,
 				followup_objective = objective
 			}
 
@@ -516,8 +492,6 @@ function ElementNavLink:choose_followup_SO(unit, skip_element_ids)
 
 			if followup_element and followup_element:enabled() and weight > 0 then
 				table.insert(pool, {
-					weight = nil,
-					element = nil,
 					element = followup_element,
 					weight = weight
 				})

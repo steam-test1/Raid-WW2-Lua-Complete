@@ -2,7 +2,6 @@ CivilianLogicFlee = class(CivilianLogicBase)
 
 function CivilianLogicFlee.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -36,8 +35,6 @@ function CivilianLogicFlee.enter(data, new_logic_name, enter_params)
 				my_data.delayed_post_react_alert_id = "postreact_alert" .. key_str
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_post_react_alert_id, callback(CivilianLogicFlee, CivilianLogicFlee, "post_react_alert_clbk", {
-					alert_data = nil,
-					data = nil,
 					data = data,
 					alert_data = clone(data.objective.alert_data)
 				}), TimerManager:game():time() + math.lerp(4, 8, math.random()))
@@ -89,7 +86,6 @@ function CivilianLogicFlee.enter(data, new_logic_name, enter_params)
 		my_data.delayed_post_react_alert_id = "postreact_alert" .. key_str
 
 		CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_post_react_alert_id, callback(CivilianLogicFlee, CivilianLogicFlee, "post_react_alert_clbk", {
-			data = nil,
 			data = data
 		}), TimerManager:game():time() + math.lerp(4, 8, math.random()))
 	end
@@ -182,7 +178,6 @@ function CivilianLogicFlee.update(data)
 					unit:brain():search_for_path_to_cover(my_data.flee_path_search_id, to_cover[1], nil, nil)
 				else
 					data.brain:add_pos_rsrv("path", {
-						position = nil,
 						radius = 30,
 						position = to_pos
 					})
@@ -328,8 +323,6 @@ function CivilianLogicFlee.on_alert(data, alert_data)
 			my_data.delayed_post_react_alert_id = "postreact_alert" .. tostring(data.key)
 
 			CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_post_react_alert_id, callback(CivilianLogicFlee, CivilianLogicFlee, "post_react_alert_clbk", {
-				alert_data = nil,
-				data = nil,
 				data = data,
 				alert_data = clone(alert_data)
 			}), TimerManager:game():time() + 1)
@@ -444,8 +437,6 @@ function CivilianLogicFlee.post_react_alert_clbk(shait, params)
 
 	if anim_data.react_enter then
 		CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_post_react_alert_id, callback(CivilianLogicFlee, CivilianLogicFlee, "post_react_alert_clbk", {
-			alert_data = nil,
-			data = nil,
 			data = data,
 			alert_data = data.objective and data.objective.alert_data and clone(data.objective.alert_data) or alert_data
 		}), TimerManager:game():time() + 1)
@@ -498,8 +489,6 @@ function CivilianLogicFlee.post_react_alert_clbk(shait, params)
 	end
 
 	CopLogicBase.add_delayed_clbk(my_data, my_data.delayed_post_react_alert_id, callback(CivilianLogicFlee, CivilianLogicFlee, "post_react_alert_clbk", {
-		alert_data = nil,
-		data = nil,
 		data = data,
 		alert_data = data.objective and data.objective.alert_data and clone(data.objective.alert_data) or alert_data
 	}), TimerManager:game():time() + 1)
@@ -657,7 +646,6 @@ function CivilianLogicFlee._start_moving_to_cover(data, my_data)
 
 	local new_action_data = {
 		variant = "run",
-		nav_path = nil,
 		body_part = 2,
 		type = "walk",
 		nav_path = my_data.flee_path
@@ -728,10 +716,8 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 
 	local so_pos, so_rot = nil
 	local ray_params = {
-		tracker_from = nil,
 		trace = true,
 		allow_entry = false,
-		pos_to = nil,
 		tracker_from = data.unit:movement():nav_tracker(),
 		pos_to = test_pos
 	}
@@ -760,15 +746,7 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 		interrupt_health = 0.75,
 		interrupt_dis = 700,
 		destroy_clbk_key = false,
-		rot = nil,
-		follow_unit = nil,
 		type = "act",
-		action_duration = nil,
-		action = nil,
-		fail_clbk = nil,
-		pos = nil,
-		complete_clbk = nil,
-		nav_seg = nil,
 		scan = true,
 		follow_unit = data.unit,
 		pos = so_pos,
@@ -779,7 +757,6 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 		action = {
 			variant = "untie",
 			body_part = 1,
-			blocks = nil,
 			type = "act",
 			blocks = {
 				action = -1,
@@ -790,12 +767,8 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	}
 	local receiver_areas = managers.groupai:state():get_areas_from_nav_seg_id(objective.nav_seg)
 	local so_descriptor = {
-		verification_clbk = nil,
-		admin_clbk = nil,
-		objective = nil,
 		AI_group = "enemies",
 		usage_amount = 1,
-		search_pos = nil,
 		search_dis_sq = 25000000,
 		interval = 10,
 		chance_inc = 0,
@@ -804,8 +777,6 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_administered", data),
 		verification_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "rescue_SO_verification", {
-			logic_data = nil,
-			areas = nil,
 			logic_data = data,
 			areas = receiver_areas
 		})
@@ -926,11 +897,6 @@ function CivilianLogicFlee._get_coarse_flee_path(data)
 	local my_data = data.internal_data
 	local verify_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "_flee_coarse_path_verify_clbk")
 	local search_params = {
-		from_tracker = nil,
-		verify_clbk = nil,
-		access_pos = nil,
-		id = nil,
-		to_seg = nil,
 		from_tracker = data.unit:movement():nav_tracker(),
 		to_seg = flee_point.nav_seg,
 		id = "CivilianLogicFlee._get_coarse_flee_path" .. tostring(data.key),
@@ -965,7 +931,6 @@ end
 
 function CivilianLogicFlee._get_all_paths(data)
 	return {
-		flee_path = nil,
 		flee_path = data.internal_data.flee_path
 	}
 end
@@ -1054,7 +1019,6 @@ function CivilianLogicFlee.clbk_chk_call_the_police(ignore_this, data)
 		local action = {
 			variant = "cmf_so_call_police",
 			body_part = 1,
-			blocks = nil,
 			type = "act",
 			blocks = {}
 		}

@@ -47,8 +47,6 @@ end
 function VehicleStateInactive:exit()
 	if self._unit:unit_data().name_label_id == nil then
 		local id = managers.hud:add_vehicle_name_label({
-			name = nil,
-			unit = nil,
 			name = self._unit:vehicle_driving()._tweak_data.name,
 			unit = self._unit
 		})

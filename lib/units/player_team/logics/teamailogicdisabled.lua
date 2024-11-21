@@ -5,7 +5,6 @@ TeamAILogicDisabled.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interac
 
 function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -221,12 +220,10 @@ end
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
 		type = "act",
-		action = nil,
 		scan = true,
 		action = {
 			type = "act",
 			variant = "crouch",
-			blocks = nil,
 			body_part = 1,
 			blocks = {
 				action = -1,
@@ -238,23 +235,15 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		}
 	}
 	local objective = {
-		nav_seg = nil,
 		destroy_clbk_key = false,
 		called = true,
-		follow_unit = nil,
-		action_duration = nil,
-		followup_objective = nil,
 		type = "revive",
-		action = nil,
 		scan = true,
-		fail_clbk = nil,
 		follow_unit = data.unit,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		action = {
 			type = "act",
-			variant = nil,
-			blocks = nil,
 			align_sync = true,
 			body_part = 1,
 			variant = rescue_type,
@@ -272,11 +261,8 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	}
 	local so_descriptor = {
 		base_chance = 1,
-		objective = nil,
-		admin_clbk = nil,
 		AI_group = "friendlies",
 		usage_amount = 1,
-		search_pos = nil,
 		search_dis_sq = 1000000,
 		interval = 6,
 		chance_inc = 0,

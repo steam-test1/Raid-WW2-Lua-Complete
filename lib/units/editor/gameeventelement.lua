@@ -37,22 +37,18 @@ function GameEventElement:_build_panel(panel, panel_sizer)
 	text_sizer_event:add(input_event, 3, 0, "RIGHT,EXPAND")
 	input_category:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "category",
-		ctrlr = nil,
 		ctrlr = input_category
 	})
 	input_category:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "category",
-		ctrlr = nil,
 		ctrlr = input_category
 	})
 	input_event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = input_event
 	})
 	input_event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
 		value = "event",
-		ctrlr = nil,
 		ctrlr = input_event
 	})
 	panel_sizer:add(text_sizer_category, 0, 0, "EXPAND")

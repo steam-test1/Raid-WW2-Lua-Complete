@@ -76,16 +76,7 @@ end
 function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 	local left_arrow_params = {
 		x = 0,
-		highlight_color = nil,
-		color = nil,
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		texture = nil,
 		name = "stepper_simple_left_arrow",
-		layer = nil,
-		on_click_callback = nil,
-		y = nil,
 		y = self._object:h() / 2 - tweak_data.gui:icon_h(RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE) / 2,
 		texture = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE].texture_rect,
@@ -98,17 +89,7 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 	}
 	self._arrow_left = self._object:image_button(left_arrow_params)
 	local right_arrow_params = {
-		x = nil,
-		highlight_color = nil,
-		color = nil,
-		w = nil,
-		texture_rect = nil,
-		h = nil,
-		texture = nil,
 		name = "stepper_simple_right_arrow",
-		layer = nil,
-		on_click_callback = nil,
-		y = nil,
 		x = self._object:w() - tweak_data.gui:icon_w(RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE),
 		y = self._object:h() / 2 - tweak_data.gui:icon_h(RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE) / 2,
 		texture = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE].texture,
@@ -122,17 +103,10 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 	}
 	self._arrow_right = self._object:image_button(right_arrow_params)
 	local label_params = {
-		x = nil,
 		vertical = "center",
-		color = nil,
 		align = "center",
-		h = nil,
 		text = "VALUE",
-		w = nil,
 		name = "stepper_simple_value",
-		layer = nil,
-		font = nil,
-		font_size = nil,
 		y = 0,
 		x = self._arrow_left:w(),
 		w = self._object:w() - self._arrow_left:w() - self._arrow_right:w(),

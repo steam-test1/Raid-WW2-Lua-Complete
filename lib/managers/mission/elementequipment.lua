@@ -14,8 +14,6 @@ function ElementEquipment:on_executed(instigator)
 	if self._values.equipment ~= "none" then
 		if instigator == managers.player:player_unit() then
 			managers.player:add_special({
-				amount = nil,
-				name = nil,
 				name = self._values.equipment,
 				amount = self._values.amount
 			})

@@ -23,12 +23,7 @@ end
 function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 	local coord_y = 200
 	local loot_reward_card_params = {
-		y = nil,
 		x = 0,
-		loot_list = nil,
-		item_params = nil,
-		h = nil,
-		w = nil,
 		y = coord_y,
 		w = self._root_panel:w(),
 		h = self._root_panel:h() - coord_y,
@@ -72,8 +67,6 @@ end
 function ChallengeCardsLootRewardGui:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_continue_button_on_click")
 		}
@@ -82,14 +75,11 @@ function ChallengeCardsLootRewardGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_continue"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}

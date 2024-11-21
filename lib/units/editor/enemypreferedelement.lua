@@ -28,8 +28,6 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 					b = 0.75,
 					g = 0,
 					r = 0,
-					to_unit = nil,
-					from_unit = nil,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -226,8 +224,6 @@ function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_uni
 				b = 0,
 				g = 0,
 				r = 0.75,
-				to_unit = nil,
-				from_unit = nil,
 				from_unit = self._unit,
 				to_unit = unit
 			})

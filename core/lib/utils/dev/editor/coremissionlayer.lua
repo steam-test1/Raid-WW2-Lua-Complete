@@ -58,15 +58,9 @@ end
 function MissionLayer:save()
 	for _, unit in ipairs(self._created_units) do
 		local t = {
-			data = nil,
-			entry = nil,
-			continent = nil,
 			entry = self._save_name,
 			continent = unit:unit_data().continent and unit:unit_data().continent:name(),
 			data = {
-				script = nil,
-				script_data = nil,
-				unit_data = nil,
 				unit_data = CoreEditorSave.save_data_table(unit),
 				script = unit:mission_element_data().script,
 				script_data = unit:mission_element():new_save_values()
@@ -82,9 +76,7 @@ function MissionLayer:save()
 
 	for name, data in pairs(self._scripts) do
 		local t = {
-			data = nil,
 			entry = "mission_scripts",
-			continent = nil,
 			continent = data.continent,
 			data = {
 				[name] = data
@@ -111,18 +103,12 @@ function MissionLayer:save_mission(params)
 
 		if not params.name or params.name and self._scripts[script].continent == params.name then
 			scripts[script] = {
-				activate_on_parsed = nil,
 				activate_on_parsed = self._scripts[script].activate_on_parsed
 			}
 			local elements = {}
 
 			for _, unit in ipairs(script_units) do
 				local t = {
-					id = nil,
-					values = nil,
-					class = nil,
-					module = nil,
-					editor_name = nil,
 					class = unit:mission_element_data().element_class,
 					module = unit:mission_element_data().element_module,
 					id = unit:unit_data().unit_id,
@@ -550,7 +536,6 @@ end
 function MissionLayer:build_panel(notebook)
 	MissionLayer.super.build_panel(self, notebook, {
 		units_noteboook_proportion = 0,
-		units_notebook_min_size = nil,
 		units_notebook_min_size = Vector3(-1, 160, 0)
 	})
 	cat_print("editor", "MissionLayer:build_panel")
@@ -564,7 +549,6 @@ function MissionLayer:build_panel(notebook)
 	self._element_toolbar:connect("EDIT_ELEMENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
 		value = "_editing_mission_element",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_element_toolbar",
 		class = self
 	})
@@ -572,7 +556,6 @@ function MissionLayer:build_panel(notebook)
 	self._ews_triggers.insert = callback(self, self, "toolbar_toggle_trg", {
 		toolbar = "_element_toolbar",
 		value = "_editing_mission_element",
-		class = nil,
 		id = "EDIT_ELEMENT",
 		class = self
 	})
@@ -630,7 +613,6 @@ function MissionLayer:_build_scripts()
 	self._scripts_right_toolbar:connect("SIMULATE_WITH_CURRENT_SCRIPT", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_simulate_with_current_script",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_scripts_right_toolbar",
 		class = self
 	})
@@ -647,7 +629,6 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:connect("DRAW_SELECTED_CONNECTIONS_ONLY", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_only_draw_selected_connections",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_btn_toolbar",
 		class = self
 	})
@@ -656,7 +637,6 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:connect("UPDATE_SELECTED_ALL", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_update_all",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_btn_toolbar",
 		class = self
 	})
@@ -670,7 +650,6 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:connect("VISUALIZE_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_visualize_flow",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_btn_toolbar",
 		class = self
 	})
@@ -679,7 +658,6 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:connect("USE_COLORED_LINKS", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_use_colored_links",
 		to_unit = nil,
-		class = nil,
 		toolbar = "_btn_toolbar",
 		class = self
 	})
@@ -1008,8 +986,6 @@ end
 
 function MissionLayer:get_unit_links(to_unit)
 	local links = {
-		executers = nil,
-		on_executed = nil,
 		executers = {},
 		on_executed = {}
 	}

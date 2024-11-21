@@ -5,12 +5,10 @@ function HuskPlayerInventory:init(unit)
 
 	self._align_places.right_hand = {
 		on_body = true,
-		obj3d_name = nil,
 		obj3d_name = Idstring("a_weapon_right_front")
 	}
 	self._align_places.left_hand = {
 		on_body = true,
-		obj3d_name = nil,
 		obj3d_name = Idstring("a_weapon_left_front")
 	}
 	self._peer_weapons = {}

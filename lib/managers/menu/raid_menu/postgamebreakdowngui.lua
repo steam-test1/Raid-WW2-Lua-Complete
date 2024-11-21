@@ -77,9 +77,6 @@ function PostGameBreakdownGui:_layout()
 
 	local params_xp_breakdown = {
 		visible = true,
-		data_source_callback = nil,
-		y = nil,
-		x = nil,
 		name = "xp_breakdown",
 		x = PostGameBreakdownGui.XP_BREAKDOWN_X,
 		y = PostGameBreakdownGui.XP_BREAKDOWN_Y,
@@ -91,9 +88,6 @@ function PostGameBreakdownGui:_layout()
 
 	self._skills_breakdown = self._root_panel:create_custom_control(RaidGUIControlSkillsBreakdown, {
 		visible = true,
-		data_source_callback = nil,
-		y = nil,
-		x = nil,
 		name = "skills_breakdown",
 		x = PostGameBreakdownGui.SKILLS_BREAKDOWN_X,
 		y = self._xp_breakdown:bottom() + PostGameBreakdownGui.SKILLS_BREAKDOWN_Y_PADDING,
@@ -104,9 +98,6 @@ function PostGameBreakdownGui:_layout()
 
 	local params_stats_breakdown = {
 		visible = true,
-		data_source_callback = nil,
-		y = nil,
-		x = nil,
 		name = "stats_breakdown",
 		x = self._root_panel:get_engine_panel():w() - RaidGuiBase.PADDING - PostGameBreakdownGui.STATS_BREAKDOWN_WIDTH,
 		y = PostGameBreakdownGui.STATS_BREAKDOWN_Y,
@@ -119,11 +110,8 @@ function PostGameBreakdownGui:_layout()
 
 	local top_stats_small_panel_params = {
 		alpha = 0,
-		w = nil,
 		halign = "right",
-		y = nil,
 		valign = "top",
-		h = nil,
 		name = "top_stats_small_panel",
 		y = PostGameBreakdownGui.TOP_STATS_SMALL_Y,
 		w = PostGameBreakdownGui.TOP_STATS_SMALL_W,
@@ -137,7 +125,6 @@ function PostGameBreakdownGui:_layout()
 
 	for i = 1, 3 do
 		local top_stat_small_params = {
-			name = nil,
 			name = "top_stat_small_" .. tostring(i)
 		}
 		local top_stat_small = self._top_stats_small_panel:create_custom_control(RaidGUIControlTopStatSmall, top_stat_small_params)
@@ -150,10 +137,6 @@ function PostGameBreakdownGui:_layout()
 
 	local progress_bar_params = {
 		bar_w = 62450,
-		w = nil,
-		initial_progress = nil,
-		initial_level = nil,
-		y = nil,
 		horizontal_padding = 64,
 		name = "progress_bar",
 		y = PostGameBreakdownGui.PROGRESS_BAR_Y,
@@ -172,21 +155,12 @@ function PostGameBreakdownGui:_layout()
 	end
 
 	local total_xp_params = {
-		value_font_size = nil,
-		value_color = nil,
 		value_align = "center",
 		align = "center",
 		value = "0",
-		y = nil,
 		x = 0,
 		name = "total_xp",
-		color = nil,
-		w = nil,
-		font_size = nil,
-		text = nil,
-		h = nil,
 		layer = 1,
-		value_padding = nil,
 		y = PostGameBreakdownGui.TOTAL_XP_Y,
 		w = self._root_panel:w(),
 		h = PostGameBreakdownGui.TOTAL_XP_H,
@@ -229,10 +203,8 @@ end
 function PostGameBreakdownGui:_layout_central_display()
 	local central_display_panel_params = {
 		alpha = 0,
-		w = nil,
 		halign = "center",
 		valign = "top",
-		h = nil,
 		name = "central_display_params",
 		w = PostGameBreakdownGui.CENTRAL_DISPLAY_W,
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_H
@@ -244,19 +216,14 @@ end
 
 function PostGameBreakdownGui:_layout_generic_win_display()
 	self._generic_win_panel = self._central_display_panel:panel({
-		visible = nil,
-		w = nil,
 		halign = "scale",
 		valign = "scale",
-		h = nil,
 		name = "generic_win_panel",
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h(),
 		visible = self.state_success
 	})
 	local icon = self._generic_win_panel:bitmap({
-		texture = nil,
-		texture_rect = nil,
 		name = "generic_win_icon",
 		texture = tweak_data.gui.icons[PostGameBreakdownGui.GENERIC_WIN_ICON].texture,
 		texture_rect = tweak_data.gui.icons[PostGameBreakdownGui.GENERIC_WIN_ICON].texture_rect
@@ -267,15 +234,9 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 
 	local is_player_max_level = managers.experience:reached_level_cap()
 	local title = self._generic_win_panel:text({
-		font_size = nil,
-		color = nil,
-		visible = nil,
 		align = "center",
 		name = "generic_win_title_text",
 		vertical = "center",
-		font = nil,
-		text = nil,
-		h = nil,
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_FONT_SIZE,
@@ -291,15 +252,9 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	title:set_center_x(self._generic_win_panel:w() / 2)
 
 	local flavor_text = self._generic_win_panel:text({
-		font_size = nil,
-		color = nil,
-		visible = nil,
 		align = "center",
 		name = "generic_win_flavor_text",
 		vertical = "center",
-		font = nil,
-		text = nil,
-		h = nil,
 		text = self:translate("menu_keep_it_up", true),
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
@@ -316,19 +271,14 @@ end
 
 function PostGameBreakdownGui:_layout_fail_display()
 	self._fail_panel = self._central_display_panel:panel({
-		visible = nil,
-		w = nil,
 		halign = "scale",
 		valign = "scale",
-		h = nil,
 		name = "fail_display_panel",
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h(),
 		visible = not self.state_success
 	})
 	local icon = self._fail_panel:bitmap({
-		texture = nil,
-		texture_rect = nil,
 		name = "fail_icon",
 		texture = tweak_data.gui.icons[PostGameBreakdownGui.FAIL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[PostGameBreakdownGui.FAIL_ICON].texture_rect
@@ -338,12 +288,7 @@ function PostGameBreakdownGui:_layout_fail_display()
 	icon:set_center_y(PostGameBreakdownGui.CENTRAL_DISPLAY_SINGLE_ICON_CENTER_Y)
 
 	local title = self._fail_panel:text({
-		color = nil,
-		font = nil,
-		font_size = nil,
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
 		name = "fail_title_text",
 		text = self:translate("menu_better_luck_next_time", true),
@@ -360,12 +305,7 @@ function PostGameBreakdownGui:_layout_fail_display()
 	title:set_center_x(self._fail_panel:w() / 2)
 
 	local flavor_text = self._fail_panel:text({
-		color = nil,
-		font = nil,
-		font_size = nil,
-		text = nil,
 		vertical = "center",
-		h = nil,
 		align = "center",
 		name = "fail_flavor_text",
 		text = self:translate("menu_fail", true),
@@ -469,13 +409,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "lvl diff",
-				text = nil,
 				text = self:translate("menu_stat_total_kills_title", true)
 			},
 			{
 				value = 200,
 				info = "lvl diff",
-				text = nil,
 				text = tostring(personal_stats.session_killed)
 			}
 		},
@@ -483,13 +421,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "surviving players",
-				text = nil,
 				text = self:translate("menu_stat_accuracy_title", true)
 			},
 			{
 				value = 500,
 				info = "surviving players",
-				text = nil,
 				text = string.format("%.0f", personal_stats.session_accuracy) .. "%"
 			}
 		},
@@ -497,13 +433,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "human players",
-				text = nil,
 				text = self:translate("menu_stat_headshots_title", true)
 			},
 			{
 				value = 450,
 				info = "human players",
-				text = nil,
 				text = tostring(personal_stats.session_headshots) .. " (" .. string.format("%.0f", personal_stats.session_headshot_percentage) .. "%)"
 			}
 		},
@@ -511,13 +445,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "most kills",
-				text = nil,
 				text = self:translate("menu_stat_special_kills_title", true)
 			},
 			{
 				value = 0,
 				info = "most kills",
-				text = nil,
 				text = tostring(personal_stats.session_special_kills)
 			}
 		},
@@ -525,13 +457,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "best acc",
-				text = nil,
 				text = self:translate("menu_stat_teammates_revived_title", true)
 			},
 			{
 				value = 0,
 				info = "best acc",
-				text = nil,
 				text = tostring(personal_stats.session_teammates_revived)
 			}
 		},
@@ -539,13 +469,11 @@ function PostGameBreakdownGui:_get_stats_breakdown()
 			{
 				value = 1,
 				info = "most specials",
-				text = nil,
 				text = self:translate("menu_stat_bleedouts_title", true)
 			},
 			{
 				value = 500,
 				info = "most specials",
-				text = nil,
 				text = tostring(personal_stats.session_bleedouts)
 			}
 		}
@@ -665,13 +593,6 @@ function PostGameBreakdownGui:animate_breakdown()
 			local stat_tweak = tweak_data.statistics.top_stats[stat_data.id]
 			local peer_id = stat_data.peer_id
 			local data = {
-				score_format = nil,
-				icon_texture_rect = nil,
-				icon_texture = nil,
-				score = nil,
-				stat = nil,
-				icon = nil,
-				player_nickname = nil,
 				player_nickname = stat_data.peer_name,
 				stat = stat_data.id,
 				score = stat_data.score,
@@ -900,8 +821,6 @@ end
 function PostGameBreakdownGui:bind_controller_inputs()
 	local bindings = {
 		{
-			callback = nil,
-			key = nil,
 			key = Idstring("menu_controller_face_bottom"),
 			callback = callback(self, self, "_continue_button_on_click")
 		}
@@ -910,14 +829,11 @@ function PostGameBreakdownGui:bind_controller_inputs()
 	self:set_controller_bindings(bindings, true)
 
 	local legend = {
-		controller = nil,
-		keyboard = nil,
 		controller = {
 			"menu_legend_continue"
 		},
 		keyboard = {
 			{
-				callback = nil,
 				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil)
 			}

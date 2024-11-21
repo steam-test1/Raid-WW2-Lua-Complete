@@ -5,7 +5,6 @@ EditZipLine = EditZipLine or class(EditUnitBase)
 
 function EditZipLine:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		class = nil,
 		name = "ZipLine",
 		class = self
 	})
@@ -31,9 +30,6 @@ function EditZipLine:init(editor)
 	self._speed_params = {
 		value = 0,
 		name = "Speed [cm/s]:",
-		sizer = nil,
-		panel = nil,
-		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
@@ -44,12 +40,10 @@ function EditZipLine:init(editor)
 		events = {
 			{
 				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = nil,
 				callback = callback(self, self, "_update_speed")
 			},
 			{
 				event = "EVT_KILL_FOCUS",
-				callback = nil,
 				callback = callback(self, self, "_update_speed")
 			}
 		}
@@ -60,9 +54,6 @@ function EditZipLine:init(editor)
 	self._slack_params = {
 		value = 0,
 		name = "Slack [cm]:",
-		sizer = nil,
-		panel = nil,
-		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
@@ -73,12 +64,10 @@ function EditZipLine:init(editor)
 		events = {
 			{
 				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = nil,
 				callback = callback(self, self, "_update_slack")
 			},
 			{
 				event = "EVT_KILL_FOCUS",
-				callback = nil,
 				callback = callback(self, self, "_update_slack")
 			}
 		}
@@ -92,9 +81,6 @@ function EditZipLine:init(editor)
 		ctrlr_proportions = 1,
 		name = "Type:",
 		sorted = true,
-		options = nil,
-		sizer = nil,
-		panel = nil,
 		panel = panel,
 		sizer = sizer,
 		options = ZipLine.TYPES

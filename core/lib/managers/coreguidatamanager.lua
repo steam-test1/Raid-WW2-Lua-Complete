@@ -235,9 +235,7 @@ function GuiDataManager:scaled_size()
 
 	return {
 		x = 0,
-		width = nil,
 		y = 0,
-		height = nil,
 		width = w,
 		height = h
 	}

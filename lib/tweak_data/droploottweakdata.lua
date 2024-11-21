@@ -54,7 +54,6 @@ function DropLootTweakData:_init_pickups_properties()
 		candy_value = 1,
 		ammo_multiplier = 1.4,
 		grenades_amount = 1,
-		interaction_detail = nil,
 		interaction_detail = {
 			text = "details_candy_simple",
 			icon = "status_effect_candy_simple"
@@ -62,7 +61,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_health_regen = {
 		candy_value = 2,
-		interaction_detail = nil,
 		upgrade = "candy_health_regen",
 		interaction_detail = {
 			text = "details_candy_health_regen",
@@ -71,7 +69,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_god_mode = {
 		candy_value = 3,
-		interaction_detail = nil,
 		upgrade = "candy_god_mode",
 		interaction_detail = {
 			text = "details_candy_god_mode",
@@ -80,7 +77,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_armor_pen = {
 		candy_value = 2,
-		interaction_detail = nil,
 		upgrade = "candy_armor_pen",
 		interaction_detail = {
 			text = "details_candy_armor_pen",
@@ -89,7 +85,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_unlimited_ammo = {
 		candy_value = 3,
-		interaction_detail = nil,
 		upgrade = "candy_unlimited_ammo",
 		interaction_detail = {
 			text = "details_candy_unlimited_ammo",
@@ -98,7 +93,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_sprint_speed = {
 		candy_value = 2,
-		interaction_detail = nil,
 		upgrade = "candy_sprint_speed",
 		interaction_detail = {
 			text = "details_candy_sprint_speed",
@@ -107,7 +101,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_jump_boost = {
 		candy_value = 3,
-		interaction_detail = nil,
 		upgrade = "candy_jump_boost",
 		interaction_detail = {
 			text = "details_candy_jump_boost",
@@ -116,7 +109,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_atk_dmg = {
 		candy_value = 2,
-		interaction_detail = nil,
 		upgrade = "candy_attack_damage",
 		interaction_detail = {
 			text = "details_candy_atk_dmg",
@@ -125,7 +117,6 @@ function DropLootTweakData:_init_pickups_properties()
 	}
 	self.candy_crit_chance = {
 		candy_value = 3,
-		interaction_detail = nil,
 		upgrade = "candy_critical_hit_chance",
 		interaction_detail = {
 			text = "details_candy_crit_chance",
@@ -311,9 +302,6 @@ end
 
 function DropLootTweakData:_init_flamer_enemy()
 	self.flamer_enemy = {
-		units = nil,
-		buff_effects_applied = nil,
-		buff_table_override = nil,
 		buff_effects_applied = {
 			[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
 		},
@@ -321,14 +309,9 @@ function DropLootTweakData:_init_flamer_enemy()
 			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_flamer_enemy"
 		},
 		units = {
-			health = nil,
-			ammo = nil,
 			health = {
-				subtypes = nil,
 				drop_rate = 60,
 				subtypes = {
-					large = nil,
-					medium = nil,
 					large = {
 						unit = "health_big_beam",
 						drop_rate = 15
@@ -340,11 +323,8 @@ function DropLootTweakData:_init_flamer_enemy()
 				}
 			},
 			ammo = {
-				subtypes = nil,
 				drop_rate = 40,
 				subtypes = {
-					large = nil,
-					medium = nil,
 					large = {
 						unit = "ammo_big_beam",
 						drop_rate = 15
@@ -362,7 +342,6 @@ end
 function DropLootTweakData:_init_candy_enemy()
 	self.candy_crate = {
 		units = {
-			simple = nil,
 			simple = {
 				unit = "candy_simple",
 				drop_rate = 100
@@ -371,8 +350,6 @@ function DropLootTweakData:_init_candy_enemy()
 	}
 	self.candy_shelf = {
 		units = {
-			simple = nil,
-			health = nil,
 			simple = {
 				unit = "candy_simple",
 				drop_rate = 20
@@ -385,21 +362,13 @@ function DropLootTweakData:_init_candy_enemy()
 	}
 	self.candy_enemy = {
 		units = {
-			simple = nil,
-			common = nil,
-			rare = nil,
 			simple = {
 				unit = "candy_simple_drop",
 				drop_rate = 40
 			},
 			common = {
-				subtypes = nil,
 				drop_rate = 30,
 				subtypes = {
-					health_regen = nil,
-					atk_dmg = nil,
-					sprint_speed = nil,
-					armor_pen = nil,
 					health_regen = {
 						unit = "candy_health_regen",
 						drop_rate = 25
@@ -419,13 +388,8 @@ function DropLootTweakData:_init_candy_enemy()
 				}
 			},
 			rare = {
-				subtypes = nil,
 				drop_rate = 25,
 				subtypes = {
-					god_mode = nil,
-					crit_chance = nil,
-					jump_boost = nil,
-					unlimited_ammo = nil,
 					unlimited_ammo = {
 						unit = "candy_unlimited_ammo",
 						drop_rate = 25
@@ -448,10 +412,6 @@ function DropLootTweakData:_init_candy_enemy()
 	}
 	self.candy_flamer_enemy = {
 		units = {
-			god_mode = nil,
-			crit_chance = nil,
-			jump_boost = nil,
-			unlimited_ammo = nil,
 			unlimited_ammo = {
 				unit = "candy_unlimited_ammo",
 				drop_rate = 25
@@ -584,15 +544,9 @@ function DropLootTweakData:_init_crowbar_crate_tier()
 	}
 	self.crowbar_crate_reduced = {
 		units = {
-			grenade = nil,
-			health = nil,
-			ammo = nil,
 			health = {
-				subtypes = nil,
 				drop_rate = 40,
 				subtypes = {
-					large = nil,
-					medium = nil,
 					large = {
 						unit = "health_big",
 						drop_rate = 25
@@ -743,8 +697,6 @@ end
 
 function DropLootTweakData:_init_drop_rate_multipliers()
 	self.drop_rate_multipliers = {
-		health = nil,
-		grenade = nil,
 		health = {
 			max_ratio = 0.5,
 			min_multiplier = 2,

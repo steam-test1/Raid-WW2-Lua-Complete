@@ -10,11 +10,7 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
 
 	self._object = self._panel:panel({
-		x = nil,
 		visible = false,
-		h = nil,
-		w = nil,
-		y = nil,
 		x = self._params.x,
 		y = self._params.y,
 		w = self._params.w,
@@ -23,11 +19,6 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	self._special_action_callback = self._params.special_action_callback
 	self._background = self._object:image({
 		x = 0,
-		texture = nil,
-		texture_rect = nil,
-		layer = nil,
-		h = nil,
-		w = nil,
 		y = 0,
 		w = CharacterSelectionGui.BUTTON_W,
 		h = CharacterSelectionGui.BUTTON_H,
@@ -37,13 +28,9 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	})
 	self._icon = self._object:image({
 		x = 0,
-		texture = nil,
-		texture_rect = nil,
-		layer = nil,
 		h = 32,
 		w = 32,
 		y = 0,
-		color = nil,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,
 		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
@@ -55,9 +42,6 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	self._label = self._object:label({
 		x = 0,
 		h = 25,
-		color = nil,
-		font_size = nil,
-		font = nil,
 		text = "",
 		vertical = "center",
 		visible = false,

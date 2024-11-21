@@ -6,31 +6,25 @@ EditLadder = EditLadder or class(EditUnitBase)
 function EditLadder:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
 		name = "Ladder",
-		class = nil,
 		class = self
 	})
 	self._panel = panel
 	self._width_params = {
-		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
 		name = "Width [cm]:",
 		tooltip = "Sets the width of the ladder in cm",
-		sizer = nil,
-		panel = nil,
 		floats = 0,
 		value = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "_update_width")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "_update_width")
 			}
@@ -40,26 +34,21 @@ function EditLadder:init(editor)
 	CoreEws.number_controller(self._width_params)
 
 	self._height_params = {
-		events = nil,
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
 		name = "Height [cm]:",
 		tooltip = "Sets the height of the ladder in cm",
-		sizer = nil,
-		panel = nil,
 		floats = 0,
 		value = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
 			{
-				callback = nil,
 				event = "EVT_COMMAND_TEXT_ENTER",
 				callback = callback(self, self, "_update_height")
 			},
 			{
-				callback = nil,
 				event = "EVT_KILL_FOCUS",
 				callback = callback(self, self, "_update_height")
 			}

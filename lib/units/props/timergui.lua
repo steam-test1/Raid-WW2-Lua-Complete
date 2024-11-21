@@ -273,7 +273,6 @@ function TimerGui:set_background_icons(background_icons)
 	})
 
 	background_icons_panel:rect({
-		color = nil,
 		layer = 3,
 		color = Color.green
 	})

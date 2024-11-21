@@ -13,10 +13,6 @@ function TankTurretWeapon:setup(setup_data, damage_multiplier)
 	TankTurretWeapon.super.setup(self, setup_data, damage_multiplier)
 
 	self._custom_params = {
-		effect = nil,
-		sound_event = nil,
-		idstr_effect = nil,
-		idstr_decal = nil,
 		effect = self._tweak_data.effect.main_cannon_fire_hit,
 		sound_event = self._tweak_data.sound.main_cannon_fire_hit,
 		idstr_decal = self._tweak_data.effect.explosion_decal,
@@ -69,9 +65,7 @@ function TankTurretWeapon:singleshot(blanks, expend_ammo, shoot_player, target_p
 	mvector3.spread(direction, weapon_tweak_data.SPREAD * self._spread_mul)
 
 	self._tank_shell = {
-		position = nil,
 		vel_gravity = 0,
-		direction = nil,
 		position = from_pos,
 		direction = direction
 	}
@@ -86,9 +80,6 @@ function TankTurretWeapon:play_singleshot_sound_and_effect(position, normal)
 	local effect_range = weapon_tweak_data.sound.main_cannon_fire_tinnitus_range
 
 	World:effect_manager():spawn({
-		position = nil,
-		effect = nil,
-		normal = nil,
 		effect = Idstring(weapon_tweak_data.effect.main_cannon_fire),
 		position = position,
 		normal = normal
@@ -103,7 +94,6 @@ function TankTurretWeapon:play_singleshot_sound_and_effect(position, normal)
 	local custom_params = {
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
-		feedback_range = nil,
 		feedback_range = effect_range
 	}
 
@@ -136,9 +126,6 @@ function TankTurretWeapon:update(unit, t, dt)
 
 	if raycast then
 		World:effect_manager():spawn({
-			position = nil,
-			effect = nil,
-			normal = nil,
 			effect = Idstring(self._tweak_data.effect.main_cannon_fire_hit),
 			position = raycast.hit_position,
 			normal = raycast.normal
@@ -174,16 +161,6 @@ function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 	managers.explosion:play_sound_and_effects(pos, normal, damage_radius, self._custom_params)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
-		range = nil,
-		ignore_unit = nil,
-		hit_pos = nil,
-		user = nil,
-		damage = nil,
-		alert_radius = nil,
-		curve_pow = nil,
-		armor_piercing = nil,
-		player_damage = nil,
-		collision_slotmask = nil,
 		hit_pos = pos,
 		range = damage_radius,
 		collision_slotmask = slot_mask,
@@ -202,10 +179,8 @@ end
 function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, player_damage, curve_pow)
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
-		effect = nil,
 		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
-		feedback_range = nil,
 		sound_event = "grenade_explode",
 		effect = self._effect_name,
 		feedback_range = damage_radius * 2

@@ -327,10 +327,6 @@ function MissionManager:client_run_mission_element(mission_id, id, unit, orienta
 	end
 
 	table.insert(managers.worldcollection.queued_client_mission_executions, {
-		unit = nil,
-		mission_id = nil,
-		id = nil,
-		orientation_element_index = nil,
 		mission_id = mission_id,
 		id = id,
 		unit = unit,
@@ -398,9 +394,6 @@ function MissionManager:server_run_mission_element_trigger(mission_id, id, unit)
 
 	Application:debug("[MissionManager:server_run_mission_element_trigger] MISSED server misssion execution!")
 	table.insert(managers.worldcollection.queued_server_mission_executions, {
-		unit = nil,
-		mission_id = nil,
-		id = nil,
 		mission_id = mission_id,
 		id = id,
 		unit = unit
@@ -452,9 +445,7 @@ function MissionManager:start_root_level_script()
 	if level then
 		local level_path = "levels/" .. tostring(level)
 		local mission_params = {
-			file_path = nil,
 			stage_name = "stage1",
-			activate_mission = nil,
 			file_path = level_path .. "/mission",
 			activate_mission = mission
 		}
@@ -464,7 +455,6 @@ function MissionManager:start_root_level_script()
 
 		if Global.mision_load_state_dropin then
 			local data = {
-				MissionManager = nil,
 				MissionManager = Global.mision_load_state_dropin
 			}
 
@@ -497,8 +487,6 @@ end
 
 function MissionManager:save_job_values(data)
 	local state = {
-		has_played_tutorial = nil,
-		saved_job_values = nil,
 		saved_job_values = Global.mission_manager.saved_job_values,
 		has_played_tutorial = Global.mission_manager.has_played_tutorial
 	}

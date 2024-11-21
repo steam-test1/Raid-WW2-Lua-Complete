@@ -54,9 +54,6 @@ end
 
 function CoreSoundEnvironmentManager:_find_emitter_events()
 	self._emitter = {
-		soundbanks = nil,
-		paths = nil,
-		events = nil,
 		events = {},
 		paths = {},
 		soundbanks = {}
@@ -83,8 +80,6 @@ end
 
 function CoreSoundEnvironmentManager:_find_ambience_events()
 	self._ambience = {
-		soundbanks = nil,
-		events = nil,
 		events = {},
 		soundbanks = {}
 	}
@@ -104,9 +99,6 @@ end
 
 function CoreSoundEnvironmentManager:_find_scene_events()
 	self._scene = {
-		soundbanks = nil,
-		paths = nil,
-		events = nil,
 		events = {},
 		paths = {},
 		soundbanks = {}
@@ -131,8 +123,6 @@ end
 
 function CoreSoundEnvironmentManager:_find_occasional_events()
 	self._occasional = {
-		soundbanks = nil,
-		events = nil,
 		events = {},
 		soundbanks = {}
 	}
@@ -310,7 +300,6 @@ function CoreSoundEnvironmentManager:_set_environment(environment)
 
 	SoundDevice:set_default_environment({
 		gain = 1,
-		effect = nil,
 		effect = environment
 	})
 end
@@ -488,24 +477,13 @@ function CoreSoundEnvironmentManager:add_check_object(data)
 
 		source:set_position(data.object:position() + offset)
 		table.insert(surround, {
-			offset = nil,
-			source = nil,
 			source = source,
 			offset = offset
 		})
 	end
 
 	local t = {
-		object = nil,
-		id = nil,
-		listener = nil,
-		primary = nil,
 		sound_area_counter = 1,
-		surround = nil,
-		next_occasional = nil,
-		soundsource = nil,
-		active = nil,
-		surround_iterator = nil,
 		object = data.object,
 		soundsource = soundsource,
 		surround = surround,
@@ -686,7 +664,6 @@ function CoreSoundEnvironmentManager:_fallback_on_camera()
 		self._fallback_id = self:add_check_object({
 			primary = true,
 			active = true,
-			object = nil,
 			object = camera
 		})
 		self:check_object(self._fallback_id).fallback = true
@@ -961,9 +938,6 @@ end
 function SoundEnvironmentArea:_add_environment()
 	if self._use_environment and not self._environment_id then
 		self._environment_id = SoundDevice:add_environment({
-			shape = nil,
-			gain = nil,
-			effect = nil,
 			effect = self._environment,
 			gain = self._gain,
 			shape = self._environment_shape
@@ -1067,9 +1041,6 @@ end
 function SoundEnvironmentArea:_update_environment()
 	if self._environment_id then
 		SoundDevice:update_environment(self._environment_id, {
-			shape = nil,
-			gain = nil,
-			effect = nil,
 			effect = self._environment,
 			gain = self._gain,
 			shape = self._environment_shape

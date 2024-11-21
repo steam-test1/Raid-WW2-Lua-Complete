@@ -194,7 +194,6 @@ function EventCompleteState:at_enter(old_state, params)
 	managers.statistics:stop_session({
 		type = "victory",
 		quit = false,
-		success = nil,
 		success = self._success
 	})
 	managers.statistics:send_statistics()
@@ -311,11 +310,9 @@ function EventCompleteState:_calculate_extra_loot_secured()
 
 	if extra_loot_value > 0 then
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
-			acquired = nil,
 			icon = "rewards_extra_loot",
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
-			acquired_value = nil,
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
@@ -336,12 +333,8 @@ function EventCompleteState:on_loot_data_ready()
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
-		total = nil,
-		acquired = nil,
 		icon = "rewards_dog_tags",
 		title = "menu_loot_screen_dog_tags",
-		total_value = nil,
-		acquired_value = nil,
 		acquired = self.loot_acquired,
 		total = self.loot_spawned,
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
@@ -433,12 +426,6 @@ function EventCompleteState:_create_debrief_video()
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		layer = nil,
-		w = nil,
-		h = nil,
-		y = nil,
-		x = nil,
-		background_color = nil,
 		name = "event_complete_video_root_panel",
 		is_root_panel = true,
 		x = full_panel:x(),
@@ -451,10 +438,7 @@ function EventCompleteState:_create_debrief_video()
 	self._panel = RaidGUIPanel:new(full_panel, params_root_panel)
 	local video = self:_get_debrief_video(self:is_success())
 	local debrief_video_params = {
-		layer = nil,
-		width = nil,
 		name = "event_complete_debrief_video",
-		video = nil,
 		layer = self._panel:layer() + 1,
 		video = video,
 		width = self._panel:w()
@@ -468,13 +452,8 @@ function EventCompleteState:_create_debrief_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_prompt = self._safe_panel:text({
-		font_size = nil,
 		alpha = 0,
-		layer = nil,
 		name = "press_any_key_prompt",
-		color = nil,
-		font = nil,
-		text = nil,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -584,17 +563,14 @@ function EventCompleteState:on_server_left(message)
 
 		if dropped_loot.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_outfit", {
-				OUTFIT = nil,
 				OUTFIT = tostring(managers.localization:text(dropped_loot.character_customization.name))
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_gold", {
-				GOLD = nil,
 				GOLD = tostring(dropped_loot.awarded_gold_bars)
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
 			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_melee", {
-				MELEE = nil,
 				MELEE = tostring(managers.localization:text(tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id].name_id))
 			})
 		end
@@ -606,14 +582,12 @@ function EventCompleteState:on_server_left(message)
 		self:award_xp(base_xp)
 
 		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_xp", {
-			XP = nil,
 			XP = tostring(self._awarded_xp)
 		})
 	end
 
 	if not self._awarded_rewards.greed_gold and managers.greed:acquired_gold_in_mission() and self:is_success() then
 		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_greed_gold", {
-			GOLD = nil,
 			GOLD = tostring(managers.greed._gold_awarded_in_mission)
 		})
 
@@ -664,12 +638,8 @@ function EventCompleteState:on_top_stats_ready()
 			end
 
 			local top_stats_loot_data = {
-				total = nil,
-				acquired = nil,
 				icon = "rewards_top_stats",
 				title = "menu_loot_screen_top_stats",
-				total_value = nil,
-				acquired_value = nil,
 				acquired = #self.player_top_stats,
 				total = #self.special_honors,
 				acquired_value = acquired_value,
@@ -775,12 +745,6 @@ function EventCompleteState:get_skill_xp_progress()
 					progress = at_max_tier and 1 or exp_progression / exp_requirement_tier
 
 					table.insert(skills_table, {
-						progress = nil,
-						at_max_tier = nil,
-						tag_color = nil,
-						id = nil,
-						tier = nil,
-						max_tier = nil,
 						id = id,
 						progress = progress,
 						tier = current_tier,
@@ -1075,12 +1039,6 @@ function EventCompleteState:_check_complete_achievements()
 		local total_downs = self.downed_stats.total_downs or 0
 		local all_players_downed = self.downed_stats.all_players_downed or false
 		local mission_data = {
-			peers_connected = nil,
-			stealthed = nil,
-			no_bleedout = nil,
-			difficulty = nil,
-			consumable = nil,
-			dogtags_collected = nil,
 			difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty),
 			dogtags_collected = dogtags_collected,
 			stealthed = self._job_memory.stealth,
@@ -1104,7 +1062,6 @@ end
 
 function EventCompleteState:_set_memory()
 	self._job_memory = {
-		stealth = nil,
 		stealth = managers.raid_job:get_memory("stealth_completion")
 	}
 end

@@ -54,14 +54,7 @@ function DOTManager:_add_doted_enemy(enemy_unit, dot_damage_received_time, weapo
 
 		if not contains then
 			local dot_info = {
-				enemy_unit = nil,
-				weapon_unit = nil,
-				dot_damage = nil,
-				variant = nil,
-				dot_length = nil,
-				hurt_animation = nil,
 				dot_counter = 0,
-				dot_damage_received_time = nil,
 				enemy_unit = enemy_unit,
 				dot_damage_received_time = dot_damage_received_time,
 				weapon_unit = weapon_unit,
@@ -102,7 +95,6 @@ end
 function DOTManager:_damage_dot(dot_info)
 	local attacker_unit = managers.player:player_unit()
 	local col_ray = {
-		unit = nil,
 		unit = dot_info.enemy_unit
 	}
 	local damage = dot_info.dot_damage

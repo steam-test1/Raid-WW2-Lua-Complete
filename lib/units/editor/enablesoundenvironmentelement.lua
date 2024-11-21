@@ -26,7 +26,6 @@ function EnableSoundEnvironmentElement:_build_panel(panel, panel_sizer)
 
 	enable_sound_env:set_value(self._hed.enable)
 	enable_sound_env:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		ctrlr = nil,
 		value = "enable",
 		ctrlr = enable_sound_env
 	})
@@ -44,8 +43,6 @@ function EnableSoundEnvironmentElement:update_selected(t, dt)
 					b = 1,
 					g = 0.5,
 					r = 0.9,
-					to_unit = nil,
-					from_unit = nil,
 					from_unit = self._unit,
 					to_unit = area:unit()
 				})

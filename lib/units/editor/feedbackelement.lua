@@ -155,8 +155,6 @@ end
 function FeedbackUnitElement:add_to_mission_package()
 	if self._hed.effect and self._hed.above_camera_effect ~= "none" then
 		managers.editor:add_to_world_package({
-			continent = nil,
-			name = nil,
 			category = "effects",
 			name = self._hed.above_camera_effect,
 			continent = self._unit:unit_data().continent

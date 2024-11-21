@@ -50,11 +50,7 @@ end
 
 function RaidGUIControlCardDetails:_create_card_details()
 	local card_params = {
-		item_w = nil,
-		item_h = nil,
 		name = "player_loot_card",
-		y = nil,
-		x = nil,
 		x = self._params.card_x or 0,
 		y = self._params.card_y or 64,
 		item_w = self._params.card_w or 496,
@@ -63,14 +59,9 @@ function RaidGUIControlCardDetails:_create_card_details()
 	self._card_control = self._object:create_custom_control(RaidGUIControlCardBase, card_params)
 	local x_spacing = self._card_control:w() + 48
 	local params_card_name_right = {
-		font_size = nil,
-		font = nil,
 		text = "",
-		layer = nil,
-		color = nil,
 		name = "card_name_label_right",
 		y = 16,
-		x = nil,
 		h = 64,
 		w = 640,
 		vertical = "bottom",
@@ -84,11 +75,7 @@ function RaidGUIControlCardDetails:_create_card_details()
 	}
 	self._card_name_label_right = self._object:label(params_card_name_right)
 	local params_card_description_right = {
-		font_size = nil,
-		font = nil,
 		name = "card_description_label_right",
-		layer = nil,
-		color = nil,
 		text = "",
 		wrap = true,
 		visible = false,
@@ -101,14 +88,9 @@ function RaidGUIControlCardDetails:_create_card_details()
 	local label_y = 160
 	local icon_y = 96
 	self._experience_bonus_count = self._object:label({
-		font_size = nil,
-		font = nil,
 		text = "",
 		visible = false,
-		color = nil,
 		name = "experience_bonus_count",
-		y = nil,
-		x = nil,
 		h = 64,
 		w = 160,
 		align = "right",
@@ -119,14 +101,8 @@ function RaidGUIControlCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._experience_bonus_label = self._object:label({
-		font_size = nil,
-		font = nil,
-		text = nil,
 		visible = false,
-		color = nil,
 		name = "experience_bonus_label",
-		y = nil,
-		x = nil,
 		h = 32,
 		w = 160,
 		align = "right",
@@ -139,25 +115,16 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local type_def_icon = tweak_data.challenge_cards.type_definition.card_type_raid.texture_gui
 	self._type_icon = self._object:image({
-		texture_rect = nil,
 		visible = false,
-		texture = nil,
 		name = "type_icon",
-		y = nil,
-		x = nil,
 		x = x_spacing,
 		y = icon_y,
 		texture = type_def_icon.texture,
 		texture_rect = type_def_icon.texture_rect
 	})
 	self._type_label = self._object:label({
-		font_size = nil,
-		font = nil,
 		text = "",
-		color = nil,
 		name = "type_label",
-		y = nil,
-		x = nil,
 		h = 32,
 		w = 96,
 		align = "center",
@@ -169,25 +136,16 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local rarity_def_icon = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_gui
 	self._rarity_icon = self._object:image({
-		texture_rect = nil,
 		visible = false,
-		texture = nil,
 		name = "rarity_icon",
-		y = nil,
-		x = nil,
 		x = x_spacing + 128,
 		y = icon_y,
 		texture = rarity_def_icon.texture,
 		texture_rect = rarity_def_icon.texture_rect
 	})
 	self._rarity_label = self._object:label({
-		font_size = nil,
-		font = nil,
 		text = "",
-		color = nil,
 		name = "rarity_label",
-		y = nil,
-		x = nil,
 		h = 32,
 		w = 128,
 		align = "center",
@@ -200,12 +158,8 @@ function RaidGUIControlCardDetails:_create_card_details()
 	self._bonus_effect_icon = self._object:image({
 		h = 64,
 		w = 64,
-		texture = nil,
 		visible = false,
-		texture_rect = nil,
 		name = "bonus_effect_icon",
-		y = nil,
-		x = nil,
 		x = x_spacing,
 		y = RaidGUIControlCardDetails.BONUS_EFFECT_Y,
 		texture = tweak_data.gui.icons.ico_bonus.texture,
@@ -214,25 +168,16 @@ function RaidGUIControlCardDetails:_create_card_details()
 	self._malus_effect_icon = self._object:image({
 		h = 64,
 		w = 64,
-		texture = nil,
 		visible = false,
-		texture_rect = nil,
 		name = "malus_effect_icon",
-		y = nil,
-		x = nil,
 		x = x_spacing,
 		y = RaidGUIControlCardDetails.MALUS_EFFECT_Y,
 		texture = tweak_data.gui.icons.ico_malus.texture,
 		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
 	})
 	self._bonus_effect_label = self._object:label({
-		font_size = nil,
-		font = nil,
 		text = "",
-		color = nil,
 		name = "bonus_effect_label",
-		y = nil,
-		x = nil,
 		h = 64,
 		w = 288,
 		vertical = "center",
@@ -245,13 +190,8 @@ function RaidGUIControlCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_grey
 	})
 	self._malus_effect_label = self._object:label({
-		font_size = nil,
-		font = nil,
 		text = "",
-		color = nil,
 		name = "malus_effect_label",
-		y = nil,
-		x = nil,
 		h = 150,
 		w = 288,
 		vertical = "center",

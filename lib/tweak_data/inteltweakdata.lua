@@ -176,20 +176,14 @@ function IntelTweakData:init(tweak_data)
 	self.categories.opposition_forces.items[1].desc_id = "opposition_heer_notes"
 	self.categories.opposition_forces.items[1].images = {
 		{
-			texture_rect = nil,
-			texture = nil,
 			texture = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture,
 			texture_rect = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture_rect
 		},
 		{
-			texture_rect = nil,
-			texture = nil,
 			texture = tweak_data.gui.icons.intel_table_opp_img_herr_b.texture,
 			texture_rect = tweak_data.gui.icons.intel_table_opp_img_herr_b.texture_rect
 		},
 		{
-			texture_rect = nil,
-			texture = nil,
 			texture = tweak_data.gui.icons.intel_table_opp_img_herr_c.texture,
 			texture_rect = tweak_data.gui.icons.intel_table_opp_img_herr_c.texture_rect
 		}
@@ -202,14 +196,10 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_gebirgsjager_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_gebirgsjager_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_gebirgsjager_a.texture_rect
 			},
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_gebirgsjager_b.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_gebirgsjager_b.texture_rect
 			}
@@ -223,14 +213,10 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_fallschirmjager_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_fallschirmjager_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_fallschirmjager_a.texture_rect
 			},
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_fallschirmjager_b.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_fallschirmjager_b.texture_rect
 			}
@@ -244,14 +230,10 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_ss_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_waffen_ss_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_waffen_ss_a.texture_rect
 			},
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_waffen_ss_b.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_waffen_ss_b.texture_rect
 			}
@@ -265,8 +247,6 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_sniper_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_sniper_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_sniper_a.texture_rect
 			}
@@ -279,8 +259,6 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_spotter_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_spotter_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_spotter_a.texture_rect
 			}
@@ -293,8 +271,6 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_flammenwerfer_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_flammen_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_flammen_a.texture_rect
 			}
@@ -308,8 +284,6 @@ function IntelTweakData:init(tweak_data)
 		desc_id = "opposition_officer_notes",
 		images = {
 			{
-				texture_rect = nil,
-				texture = nil,
 				texture = tweak_data.gui.icons.intel_table_opp_img_officer_a.texture,
 				texture_rect = tweak_data.gui.icons.intel_table_opp_img_officer_a.texture_rect
 			}

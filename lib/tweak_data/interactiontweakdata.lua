@@ -84,7 +84,6 @@ end
 function InteractionTweakData:_init_shared_sounds()
 	self.LOCKPICK_SOUNDS = {
 		dialog_success = "player_gen_lock_picked",
-		circles = nil,
 		dialog_enter = "player_gen_picking_lock",
 		failed = "lock_fail",
 		success = "success",
@@ -217,7 +216,6 @@ function InteractionTweakData:_init_interactions()
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	}
 	self.health_bag = {
-		interact_distance = nil,
 		action_text_id = "hud_action_healing",
 		blocked_hint = "hint_full_health",
 		text_id = "hud_interact_doctor_bag_heal",
@@ -1779,9 +1777,7 @@ function InteractionTweakData:_init_interactions()
 	self.close_container.action_text_id = "hud_action_closing_container"
 	self.press_take_dogtags = {
 		start_active = true,
-		timer = nil,
 		sound_done = "dogtags_pickup",
-		interact_distance = nil,
 		text_id = "hud_int_press_take_dogtags",
 		interact_distance = self.SMALL_OBJECT_INTERACTION_DISTANCE,
 		timer = self.INTERACT_TIMER_INSTA
@@ -1793,7 +1789,6 @@ function InteractionTweakData:_init_interactions()
 	self.hold_take_dogtags.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_GENERIC
 	self.press_take_loot = {
 		sound_done = "pickup_tools",
-		timer = nil,
 		start_active = true,
 		text_id = "hud_int_press_take_loot",
 		timer = self.INTERACT_TIMER_INSTA
@@ -2447,9 +2442,6 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 1.5,
 		options = {
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_yes",
 				id = "yes",
 				icon = "comm_wheel_yes",
@@ -2463,9 +2455,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_no",
 				id = "no",
 				icon = "comm_wheel_no",
@@ -2479,9 +2468,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_found_it",
 				id = "found_it",
 				icon = "comm_wheel_found_it",
@@ -2495,9 +2481,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_not_here",
 				id = "not_here",
 				icon = "comm_wheel_not_here",
@@ -2511,9 +2494,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_follow_me",
 				id = "follow_me",
 				icon = "comm_wheel_follow_me",
@@ -2527,9 +2507,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_wait",
 				id = "wait",
 				icon = "comm_wheel_wait",
@@ -2543,9 +2520,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_assistance",
 				id = "assistance",
 				icon = "comm_wheel_assistance",
@@ -2559,9 +2533,6 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
-				clbk_data = nil,
-				clbk = nil,
-				color = nil,
 				text_id = "com_wheel_enemy",
 				id = "enemy",
 				icon = "comm_wheel_enemy",
@@ -2582,7 +2553,6 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 0.35,
 		options = {
 			{
-				clbk = nil,
 				multiplier = 2,
 				text_id = "hud_carry_drop_all",
 				id = "drop_all",
@@ -2759,16 +2729,10 @@ function InteractionTweakData:_init_minigames()
 	self.sii_lockpick_medium = {
 		interact_distance = 200,
 		legend_exit_text_id = "hud_legend_lockpicking_exit",
-		sounds = nil,
 		action_text_id = "hud_action_sii_lockpicking",
 		text_id = "hud_sii_lockpick",
-		loot_table = nil,
 		icon = "develop",
-		circle_difficulty = nil,
-		circle_rotation_direction = nil,
-		circle_rotation_speed = nil,
 		number_of_circles = 2,
-		minigame_type = nil,
 		legend_interact_text_id = "hud_legend_lockpicking_interact",
 		minigame_type = self.MINIGAME_PICK_LOCK,
 		circle_rotation_speed = {
@@ -3044,12 +3008,7 @@ function InteractionTweakData:_init_minigames()
 		legend_exit_text_id = "hud_legend_lockpicking_exit",
 		action_text_id = "hud_action_lockpicking",
 		text_id = "hud_int_pick_lock",
-		sounds = nil,
-		circle_difficulty = nil,
-		circle_rotation_direction = nil,
-		circle_rotation_speed = nil,
 		number_of_circles = 4,
-		minigame_type = nil,
 		legend_interact_text_id = "hud_legend_lockpicking_interact",
 		minigame_type = self.MINIGAME_PICK_LOCK,
 		circle_rotation_speed = {
@@ -3145,8 +3104,6 @@ function InteractionTweakData:_init_minigames()
 	self.rewire_fuse_pane_hard = deep_clone(self.rewire_fuse_pane)
 	self.activate_burners = {
 		interact_distance = 200,
-		timer = nil,
-		upgrade_timer_multipliers = nil,
 		action_text_id = "hud_action_activate_burners",
 		text_id = "hud_activate_burners",
 		axis = "y",

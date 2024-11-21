@@ -128,8 +128,6 @@ function MenuInput:open(position, ...)
 	self.AXIS_STATUS_DOWN = 2
 	self.AXIS_STATUS_RELEASED = 3
 	self._axis_status = {
-		y = nil,
-		x = nil,
 		x = self.AXIS_STATUS_UP,
 		y = self.AXIS_STATUS_UP
 	}
@@ -373,9 +371,6 @@ function MenuInput:mouse_released(o, button, x, y)
 					elseif row_item.type == "slider" then
 						if row_item.gui_slider_marker:inside(x, y) then
 							self._slider_marker = {
-								button = nil,
-								item = nil,
-								row_item = nil,
 								button = button,
 								item = row_item.item,
 								row_item = row_item
@@ -388,9 +383,6 @@ function MenuInput:mouse_released(o, button, x, y)
 							self._logic:trigger_item(true, item)
 
 							self._slider_marker = {
-								button = nil,
-								item = nil,
-								row_item = nil,
 								button = button,
 								item = row_item.item,
 								row_item = row_item
