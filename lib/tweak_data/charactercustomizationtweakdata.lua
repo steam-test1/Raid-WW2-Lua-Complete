@@ -1414,7 +1414,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
 		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
 		droppable = true,
 		is_challenge_reward = true
@@ -1431,7 +1431,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		droppable = true,
 		is_challenge_reward = true
 	}
@@ -1447,7 +1447,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
 		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
 		droppable = true,
 		is_challenge_reward = true
@@ -1464,7 +1464,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		droppable = true,
 		is_challenge_reward = true
 	}
@@ -1480,7 +1480,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
 		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
 		droppable = true,
 		is_challenge_reward = true
@@ -1497,7 +1497,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		droppable = true,
 		is_challenge_reward = true
 	}
@@ -1513,7 +1513,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud",
 		path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		length = CharacterCustomizationTweakData.PART_LENGTH_SHORT,
 		droppable = true,
 		is_challenge_reward = true
@@ -1530,7 +1530,7 @@ function CharacterCustomizationTweakData:initialization()
 		path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud",
 		path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud",
 		redeem_xp = 0,
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		droppable = true,
 		is_challenge_reward = true
 	}

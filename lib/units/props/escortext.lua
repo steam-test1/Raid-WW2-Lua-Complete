@@ -18,6 +18,8 @@ function EscortExt:init(unit)
 	if Network:is_server() then
 		managers.enemy:add_delayed_clbk("EscortExt_set_logic" .. tostring(self._unit:key()), callback(self, self, "set_logic"), TimerManager:game():time())
 	end
+
+	self._unit:set_extension_update_enabled(Idstring("escort"), false)
 end
 
 function EscortExt:set_logic()
@@ -41,10 +43,10 @@ end
 function EscortExt:_setup_health_bar()
 	self._health_panel = self._ws:panel():panel({})
 	self._health_bar_bg = self._health_panel:bitmap({
-		halign = "center",
-		valign = "center",
 		name = "bg",
 		layer = -1,
+		halign = "center",
+		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture_rect
 	})
@@ -112,15 +114,15 @@ function EscortExt:add_waypoint()
 	self._position = self._unit:position() + self._wp_offset
 	self._rotation = self._unit:rotation()
 	self._waypoint_data = {
+		waypoint_type = "unit_waypoint",
+		map_icon = "waypoint_escort_crouch",
 		show_on_screen = true,
+		icon = "waypoint_escort_crouch",
+		distance = true,
 		blend_mode = "add",
 		radius = 200,
 		present_timer = 0,
 		no_sync = true,
-		waypoint_type = "unit_waypoint",
-		icon = "waypoint_escort_crouch",
-		map_icon = "waypoint_escort_crouch",
-		distance = true,
 		unit = self._unit,
 		position = self._position,
 		rotation = self._rotation,

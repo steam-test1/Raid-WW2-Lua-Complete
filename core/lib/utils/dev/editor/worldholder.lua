@@ -1021,7 +1021,7 @@ function CoreOldWorldDefinition:assign_unit_data(unit, data)
 	local is_editor = Application:editor()
 
 	if not unit:unit_data() then
-		Application:error("The unit " .. unit:name() .. " (" .. unit:author() .. ") does not have the required extension unit_data (ScriptUnitData)")
+		Application:error("The unit " .. unit:name():s() .. " (" .. unit:author() .. ") does not have the required extension unit_data (ScriptUnitData)")
 	end
 
 	if unit:unit_data().only_exists_in_editor and not is_editor then

@@ -85,8 +85,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_panel()
 	local panel_params = {
-		name = "loot_breakdown_item",
 		alpha = 0,
+		name = "loot_breakdown_item",
 		w = RaidGUIControlLootBreakdownItem.W
 	}
 	self._object = self._panel:panel(panel_params)
@@ -115,12 +115,12 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
+		text = "",
 		vertical = "center",
 		name = "counter",
 		align = "center",
 		halign = "scale",
 		valign = "top",
-		text = "",
 		h = RaidGUIControlLootBreakdownItem.COUNTER_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,
 		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
@@ -144,10 +144,10 @@ end
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
 		vertical = "center",
+		name = "counter",
 		align = "center",
 		halign = "scale",
 		valign = "top",
-		name = "counter",
 		y = self._counter:y() + self._counter:h(),
 		h = RaidGUIControlLootBreakdownItem.TITLE_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,

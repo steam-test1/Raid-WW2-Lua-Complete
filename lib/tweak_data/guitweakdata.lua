@@ -35,13 +35,10 @@ function GuiTweakData:init()
 	self:_setup_old_tweak_data()
 end
 
-function GuiTweakData:get_full_gui_data(icon)
-	local gui = self.icons[icon] or {}
+function GuiTweakData:get_full_gui_data(icon, fallback)
+	local gui = self.icons[icon] or self.icons[fallback] or {}
 
 	return {
-		texture = nil,
-		color = nil,
-		texture_rect = nil,
 		texture = gui.texture or "core/textures/default_texture_01_df",
 		texture_rect = gui.texture_rect or {
 			0,
@@ -98,6 +95,10 @@ function GuiTweakData:_setup_colors()
 	self.colors.progress_bar_dot = Color("797f88")
 	self.colors.raid_grey_effects = Color("787878")
 	self.colors.raid_grey_skills = Color("a9a9ae")
+	self.colors.loot_rarity_common = Color("9e9e9e")
+	self.colors.loot_rarity_uncommon = Color("64bc4c")
+	self.colors.loot_rarity_rare = Color("b8392e")
+	self.colors.loot_rarity_halloween = Color("c78e38")
 end
 
 function GuiTweakData:_setup_hud_colors()
@@ -126,98 +127,82 @@ function GuiTweakData:_setup_hud_colors()
 	self.colors.intel_newspapers_text = Color("d6c8b2")
 	self.colors.player_health_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_red
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.light_grey
 		}
 	}
 	self.colors.player_warcry_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.light_grey
 		}
 	}
 	self.colors.player_stamina_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_red
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.light_grey
 		}
 	}
 	self.colors.ammo_clip_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_red
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.light_grey
 		}
 	}
 	self.colors.ammo_clip_spent_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_dark_red
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.dark_grey
 		}
 	}
 	self.colors.turret_heat_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_yellow
 		}
 	}
 	self.colors.vehicle_health_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.progress_red
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.light_grey
 		}
 	}
 	self.colors.vehicle_carry_amount_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.light_grey
 		},
 		{
-			color = nil,
 			start_percentage = 0.25,
 			color = self.colors.progress_red
 		}
 	}
 	self.colors.player_carry_amount_colors = {
 		{
-			color = nil,
 			start_percentage = 0,
 			color = self.colors.raid_gold
 		},
 		{
-			color = nil,
 			start_percentage = 0.75,
 			color = self.colors.progress_red
 		}
@@ -386,19 +371,18 @@ end
 function GuiTweakData:_setup_crosshairs()
 	self.crosshairs = {
 		pistol = {
-			base_rotation = 0,
-			edge_pips = 4,
 			edge_pips_icon = "weapons_reticles_flatline",
-			degree_field = 360
+			degree_field = 360,
+			base_rotation = 0,
+			edge_pips = 4
 		},
 		smg = {
-			base_rotation = 0,
-			edge_pips = 3,
 			edge_pips_icon = "weapons_reticles_flatline",
-			degree_field = 270
+			degree_field = 270,
+			base_rotation = 0,
+			edge_pips = 3
 		},
 		lmg = {
-			edge_pips_icon = nil,
 			core_dot = "weapons_reticles_static_diamond",
 			degree_field = 225,
 			base_rotation = 0,
@@ -422,34 +406,34 @@ function GuiTweakData:_setup_crosshairs()
 		"weapons_reticles_bowbend"
 	}
 	self.crosshairs.assault_rifle = {
-		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4
+		edge_pips = 4,
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.sniper = {
-		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_tri_small",
 		degree_field = 270,
 		base_rotation = 0,
-		edge_pips = 3
+		edge_pips = 3,
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.shotgun = {
-		edge_pips_icon = "weapons_reticles_bowbend",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4
+		edge_pips = 4,
+		edge_pips_icon = "weapons_reticles_bowbend"
 	}
 	self.crosshairs.shotgun_db = deep_clone(self.crosshairs.shotgun)
 	self.crosshairs.shotgun_db.edge_pips = 2
 	self.crosshairs.grenade = {
-		edge_pips_icon = nil,
 		core_dot = "weapons_reticles_static_diamond",
 		degree_field = 0,
 		base_rotation = 0,
-		edge_pips = 0
+		edge_pips = 0,
+		edge_pips_icon = nil
 	}
 end
 
@@ -2336,6 +2320,222 @@ function GuiTweakData:_setup_icons()
 			25
 		}
 	}
+	self.icons.menu_item_resume = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			0,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_restart = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			30,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_options = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			60,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_quit = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			90,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_camp = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			120,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_missions = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			150,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_weapons = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			180,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_skills = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			210,
+			2,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_cards = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			0,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_characters = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			30,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_servers = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			60,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_controls = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			90,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_video = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			120,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_interface = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			150,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_sound = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			180,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_network = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			210,
+			32,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_credits = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			0,
+			62,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_online = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			30,
+			62,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_offline = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			60,
+			62,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_tutorial = {
+		texture = "ui/atlas/menu/raid_atlas_menu_icons",
+		texture_rect = {
+			120,
+			62,
+			28,
+			28
+		}
+	}
+	self.icons.menu_item_background = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			0,
+			0,
+			480,
+			64
+		}
+	}
+	self.icons.list_item_background_left = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			0,
+			68,
+			96,
+			64
+		}
+	}
+	self.icons.list_item_background_center = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			96,
+			68,
+			96,
+			64
+		}
+	}
+	self.icons.list_item_background_right = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			384,
+			68,
+			96,
+			64
+		}
+	}
 	local wpnskl_x = 40
 	self.icons.wpn_skill_selected = {
 		texture = "ui/atlas/menu/raid_atlas_wpn_upg",
@@ -2746,6 +2946,15 @@ function GuiTweakData:_setup_icons()
 		texture = "ui/atlas/raid_atlas_missions",
 		texture_rect = {
 			368,
+			126,
+			56,
+			56
+		}
+	}
+	self.icons.missions_forest_bunker = {
+		texture = "ui/atlas/raid_atlas_missions",
+		texture_rect = {
+			424,
 			126,
 			56,
 			56
@@ -3859,6 +4068,15 @@ function GuiTweakData:_setup_hud_icons()
 			72
 		}
 	}
+	self.icons.carry_explosive = {
+		texture = "ui/atlas/raid_atlas_carry",
+		texture_rect = {
+			288,
+			72,
+			72,
+			72
+		}
+	}
 	self.icons.carry_weight_indicator_bg = {
 		texture = "ui/atlas/raid_atlas_hud",
 		texture_rect = {
@@ -4107,6 +4325,15 @@ function GuiTweakData:_setup_hud_icons()
 		texture_rect = {
 			977,
 			1757,
+			32,
+			32
+		}
+	}
+	self.icons.equipment_panel_power_cable = {
+		texture = "ui/atlas/raid_atlas_hud",
+		texture_rect = {
+			992,
+			1984,
 			32,
 			32
 		}
@@ -5269,6 +5496,15 @@ function GuiTweakData:_setup_hud_icons()
 			42
 		}
 	}
+	self.icons.weapons_panel_gre_thermite = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			96,
+			128,
+			102,
+			42
+		}
+	}
 	self.icons.missions_consumable_fury_railway = {
 		texture = "ui/atlas/raid_atlas_hud_raids_mini",
 		texture_rect = {
@@ -6063,6 +6299,15 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 			32
 		}
 	}
+	self.icons.waypoint_special_plug_cable = {
+		texture = "ui/atlas/raid_atlas_waypoints",
+		texture_rect = {
+			1,
+			523,
+			38,
+			38
+		}
+	}
 end
 
 function GuiTweakData:_setup_hud_reticles()
@@ -6278,9 +6523,6 @@ end
 function GuiTweakData:_setup_hud_status_effects()
 	local function _make_icon(name, x, y, path, color)
 		self.icons[name] = {
-			texture = nil,
-			color = nil,
-			texture_rect = nil,
 			texture = path or "ui/atlas/raid_atlas_hud_status_effects",
 			texture_rect = {
 				64 * x,
@@ -6315,7 +6557,7 @@ function GuiTweakData:_setup_hud_status_effects()
 end
 
 function GuiTweakData:_setup_map_icons()
-	self.icons.map = {
+	self.icons.map_zone_germany = {
 		texture = "ui/atlas/raid_atlas_map",
 		texture_rect = {
 			1,
@@ -6324,7 +6566,7 @@ function GuiTweakData:_setup_map_icons()
 			1080
 		}
 	}
-	self.icons.map_camp = {
+	self.icons.map_ico_camp = {
 		texture = "ui/atlas/raid_atlas_map",
 		texture_rect = {
 			1507,
@@ -6369,13 +6611,39 @@ function GuiTweakData:_setup_map_icons()
 			72
 		}
 	}
+	self.icons.map_forest_bunker = {
+		texture = "ui/missions/forest_bunker/map_forest_bunker",
+		texture_rect = {
+			0,
+			0,
+			1024,
+			1024
+		}
+	}
+	self.icons.map_forest_bunker_int = {
+		texture = "ui/missions/forest_bunker/map_forest_bunker_int",
+		texture_rect = {
+			0,
+			0,
+			1024,
+			1024
+		}
+	}
+	self.icons.map_ico_bunker = {
+		texture = "ui/atlas/raid_atlas_map",
+		texture_rect = {
+			1507,
+			54,
+			52,
+			52
+		}
+	}
 end
 
 function GuiTweakData:_setup_skill_icons()
 	local function _make_icon(name, x, y)
 		self.icons[name] = {
 			texture = "ui/atlas/skilltree/raid_atlas_skills_new",
-			texture_rect = nil,
 			texture_rect = {
 				256 * x,
 				256 * y,
@@ -6443,6 +6711,7 @@ function GuiTweakData:_setup_skill_icons()
 	_make_icon("skills_big_game", 1, 7)
 	_make_icon("skills_sapper", 2, 7)
 	_make_icon("skills_cache_basket", 3, 7)
+	_make_icon("skills_warcry_scorched_earth", 4, 7)
 
 	self.icons.player_panel_warcry_berserk = {
 		texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small",
@@ -6457,6 +6726,15 @@ function GuiTweakData:_setup_skill_icons()
 		texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small",
 		texture_rect = {
 			0,
+			0,
+			52,
+			52
+		}
+	}
+	self.icons.player_panel_warcry_scorched_earth = {
+		texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small",
+		texture_rect = {
+			208,
 			0,
 			52,
 			52
@@ -6974,6 +7252,15 @@ function GuiTweakData:_setup_skill_big_icons()
 		texture_rect = {
 			0,
 			0,
+			96,
+			128
+		}
+	}
+	self.icons.weapon_gre_thermite_large = {
+		texture = "ui/updates/upd_blaze/atlas_weapon_icons",
+		texture_rect = {
+			0,
+			128,
 			96,
 			128
 		}
@@ -8061,6 +8348,42 @@ function GuiTweakData:_setup_mission_photos()
 			288
 		}
 	}
+	self.mission_photos.intel_forest_bunker_01 = {
+		texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker",
+		texture_rect = {
+			2,
+			2,
+			416,
+			288
+		}
+	}
+	self.mission_photos.intel_forest_bunker_02 = {
+		texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker",
+		texture_rect = {
+			2,
+			290,
+			416,
+			288
+		}
+	}
+	self.mission_photos.intel_forest_bunker_03 = {
+		texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker",
+		texture_rect = {
+			2,
+			578,
+			416,
+			288
+		}
+	}
+	self.mission_photos.intel_forest_bunker_04 = {
+		texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker",
+		texture_rect = {
+			418,
+			2,
+			416,
+			288
+		}
+	}
 end
 
 function GuiTweakData:_setup_optical_flares()
@@ -8292,6 +8615,15 @@ function GuiTweakData:_setup_xp_icons()
 			392
 		}
 	}
+	self.icons.xp_events_missions_forest_bunker = {
+		texture = "ui/atlas/raid_atlas_xp",
+		texture_rect = {
+			1574,
+			790,
+			392,
+			392
+		}
+	}
 end
 
 function GuiTweakData:_setup_paper_icons()
@@ -8429,8 +8761,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 		local h_bottom = edge_rect[4]
 		local h_center = texture_rect[4] - h_top - h_bottom
 		self.icons[nine_rect_id .. "_top"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_center,
@@ -8440,8 +8770,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_bottom"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_center,
@@ -8451,8 +8779,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_left"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_left,
@@ -8462,8 +8788,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_right"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_right,
@@ -8473,8 +8797,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_top_left"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_left,
@@ -8484,8 +8806,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_top_right"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_right,
@@ -8495,8 +8815,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_bottom_left"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_left,
@@ -8506,8 +8824,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_bottom_right"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_right,
@@ -8517,8 +8833,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 			}
 		}
 		self.icons[nine_rect_id .. "_center"] = {
-			texture = nil,
-			texture_rect = nil,
 			texture = texture,
 			texture_rect = {
 				x_center,
@@ -8538,49 +8852,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 end
 
 function GuiTweakData:_setup_old_tweak_data()
-	self.content_updates = {
-		num_items = 6,
-		choice_id = "menu_content_updates_previous",
-		title_id = "menu_content_updates"
-	}
-
-	if IS_PC then
-		self.content_updates.item_list = {}
-	elseif IS_PS4 then
-		self.content_updates.item_list = {}
-	elseif IS_XB1 then
-		self.content_updates.item_list = {}
-	end
-
-	self.fav_videos = {
-		item_list = nil,
-		button = nil,
-		num_items = 3,
-		db_url = "http://www.overkillsoftware.com/?page_id=1263",
-		title_id = "menu_fav_videos",
-		button = {
-			url = "http://www.overkillsoftware.com/?page_id=1263",
-			text_id = "menu_fav_video_homepage"
-		},
-		item_list = {
-			{
-				image = "guis/textures/pd2/fav_video3",
-				use_db = true,
-				id = "fav3"
-			},
-			{
-				image = "guis/textures/pd2/fav_video2",
-				use_db = true,
-				id = "fav2"
-			},
-			{
-				image = "guis/textures/pd2/fav_video1",
-				use_db = true,
-				id = "fav1"
-			}
-		}
-	}
-	self.masks_sort_order = {}
 	self.suspicion_to_visibility = {
 		{}
 	}
@@ -8600,11 +8871,6 @@ function GuiTweakData:_setup_old_tweak_data()
 	self.mouse_pointer.controller.acceleration_speed = 4
 	self.mouse_pointer.controller.max_acceleration = 3
 	self.mouse_pointer.controller.mouse_pointer_speed = 125
-	local min_amount_masks = 72
-	self.MASK_ROWS_PER_PAGE = 4
-	self.MASK_COLUMNS_PER_PAGE = 4
-	self.MAX_MASK_PAGES = math.ceil(min_amount_masks / (self.MASK_ROWS_PER_PAGE * self.MASK_COLUMNS_PER_PAGE))
-	self.MAX_MASK_SLOTS = self.MAX_MASK_PAGES * self.MASK_ROWS_PER_PAGE * self.MASK_COLUMNS_PER_PAGE
 	local min_amount_weapons = 72
 	self.WEAPON_ROWS_PER_PAGE = 4
 	self.WEAPON_COLUMNS_PER_PAGE = 4
@@ -8619,19 +8885,5 @@ function GuiTweakData:_setup_old_tweak_data()
 		total_active_jobs = 50,
 		max_active_server_jobs = 100
 	}
-	self.rename_max_letters = 20
-	self.rename_skill_set_max_letters = 15
-	self.mod_preview_min_fov = -20
-	self.mod_preview_max_fov = 3
 	self.stats_present_multiplier = 10
-	self.armor_damage_shake_base = 1.1
-	self.buy_weapon_category_groups = {
-		crossbow = "wpn_special",
-		bow = "wpn_special",
-		flamethrower = "wpn_special",
-		minigun = "wpn_special",
-		saw = "wpn_special",
-		grenade_launcher = "wpn_special"
-	}
-	self.weapon_texture_switches = {}
 end

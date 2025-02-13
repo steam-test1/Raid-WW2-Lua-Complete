@@ -47,11 +47,16 @@ end
 
 function GreedTweakData:_init_greed_items()
 	self.greed_items = {
-		chocolate_box = {}
+		confidential_documents = {}
 	}
-	self.greed_items.chocolate_box.name_id = "hud_carry_chocolate_box"
-	self.greed_items.chocolate_box.hud_icon = "carry_gold"
-	self.greed_items.chocolate_box.value = self.item_value.rare_commodity
+	self.greed_items.confidential_documents.name_id = "hud_confidential_documents"
+	self.greed_items.confidential_documents.hud_icon = "carry_gold"
+	self.greed_items.confidential_documents.value = self.item_value.complete_gold_bar
+	self.greed_items.chocolate_box = {
+		name_id = "hud_carry_chocolate_box",
+		hud_icon = "carry_gold",
+		value = self.item_value.rare_commodity
+	}
 	self.greed_items.cigar_box = {
 		name_id = "hud_carry_cigar_crate",
 		hud_icon = "carry_gold",
@@ -165,11 +170,11 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
+			dialog_success = "player_gen_lock_picked",
 			dialog_enter = "player_gen_picking_lock",
 			failed = "lock_fail",
 			success = "success",
 			dialog_fail = "player_gen_lockpick_fail",
-			dialog_success = "player_gen_lock_picked",
 			circles = {
 				{
 					lock = "lock_a",

@@ -23,7 +23,7 @@ end
 function ElementWorldOperator:_apply_operator(mission_script_element)
 	if mission_script_element then
 		if mission_script_element.execute_action then
-			mission_script_element:execute_action(self._values.operation)
+			mission_script_element:execute_action(self._values.operation, self._values.operation_world_id)
 		else
 			Application:error("WorldOperator applied to a unit that does not have execute action. ", self._editor_name, inspect(mission_script_element))
 		end

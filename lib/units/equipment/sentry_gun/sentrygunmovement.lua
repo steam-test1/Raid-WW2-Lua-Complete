@@ -17,8 +17,8 @@ function SentryGunMovement:init(unit)
 	self._unit_fwd = self._m_rot:y()
 	self._m_head_pos = self._head_obj:position()
 	self._vel = {
-		spin = 0,
-		pitch = 0
+		pitch = 0,
+		spin = 0
 	}
 
 	if managers.navigation:is_data_ready() then

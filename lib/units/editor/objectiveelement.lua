@@ -1,12 +1,12 @@
 ObjectiveUnitElement = ObjectiveUnitElement or class(MissionElement)
 ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "objective",
-		type = "objective"
+		type = "objective",
+		value = "objective"
 	},
 	{
-		value = "amount",
-		type = "number"
+		type = "number",
+		value = "amount"
 	}
 }
 
@@ -55,8 +55,8 @@ end
 
 function ObjectiveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then

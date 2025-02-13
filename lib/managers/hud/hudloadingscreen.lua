@@ -73,12 +73,12 @@ function HUDLoadingScreen:init(hud)
 		h = self._hud_panel:h()
 	})
 	self._black = self._panel:rect({
+		halign = "scale",
+		valign = "scale",
 		y = 0,
 		x = 0,
 		name = "loading_screen_black_rect",
 		alpha = 0,
-		halign = "scale",
-		valign = "scale",
 		w = self._panel:w(),
 		h = self._panel:h(),
 		color = Color.black
@@ -111,10 +111,10 @@ function HUDLoadingScreen:setup(data)
 	end
 
 	self._bg = self._panel:bitmap({
+		alpha = 0,
 		y = 0,
 		x = 0,
 		name = "loading_Screen_background",
-		alpha = 0,
 		texture = "ui/loading_screens/" .. data.background,
 		layer = self._black:layer() + 1
 	})
@@ -221,8 +221,8 @@ function HUDLoadingScreen:_layout_raid(current_job)
 
 	local raid_description_params = {
 		align = "center",
-		name = "raid_description",
 		wrap = true,
+		name = "raid_description",
 		vertical = "center",
 		y = HUDLoadingScreen.RAID_INFO_TEXT_Y,
 		h = self._info_panel:h() - HUDLoadingScreen.RAID_INFO_TEXT_Y,
@@ -304,9 +304,9 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 
 	local mission_status_params = {
 		align = "center",
-		wrap = true,
 		name = "mission_status",
 		vertical = "top",
+		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -393,8 +393,8 @@ function HUDLoadingScreen:_layout_operation(current_job)
 
 	local event_description_params = {
 		align = "center",
-		name = "raid_description",
 		wrap = true,
+		name = "raid_description",
 		vertical = "top",
 		y = HUDLoadingScreen.OPERATION_INFO_TEXT_Y,
 		h = self._info_panel:h() - HUDLoadingScreen.OPERATION_INFO_TEXT_Y,
@@ -496,9 +496,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 
 	local mission_status_params = {
 		align = "center",
-		wrap = true,
 		name = "mission_status",
 		vertical = "top",
+		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -566,9 +566,9 @@ function HUDLoadingScreen:_layout_camp()
 
 	local tip_params = {
 		align = "center",
-		wrap = true,
 		name = "tip",
 		vertical = "top",
+		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.TIP_TEXT_FONT, HUDLoadingScreen.TIP_TEXT_FONT_SIZE),
 		font_size = HUDLoadingScreen.TIP_TEXT_FONT_SIZE,
 		color = HUDLoadingScreen.TIP_TEXT_COLOR,

@@ -1,5 +1,5 @@
 FlamerBrain = FlamerBrain or class(CopBrain)
-FlamerBrain.UPDATE_INTERVAL = 2
+FlamerBrain.UPDATE_INTERVAL = 5
 FlamerBrain.ATTACK_INTERVAL = 0.5
 
 function FlamerBrain:stealth_action_allowed()
@@ -11,7 +11,7 @@ function FlamerBrain:init(unit)
 
 	self._ukey = "flamer_" .. tostring(self._unit:key())
 
-	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
+	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, 0)
 
 	self._old_t = Application:time()
 
@@ -65,6 +65,7 @@ function FlamerBrain:_queued_update(t, dt)
 		return
 	end
 
+	local assault_target = nil
 	local assault_candidates = {}
 	local att_obj = self._logic_data.attention_obj
 
@@ -94,26 +95,28 @@ function FlamerBrain:_queued_update(t, dt)
 		end
 	end
 
-	local assalut_target = nil
 	local should_aquire_new_pos = false
 
 	if #assault_candidates > 0 then
-		assalut_target = assault_candidates[1]
-		self._distance_to_target = mvector3.distance(assalut_target.pos, self._unit:position())
+		assault_target = assault_candidates[1]
+		self._distance_to_target = mvector3.distance(assault_target.pos, self._unit:position())
 
 		self._unit:network():send("sync_distance_to_target", self._distance_to_target)
 
-		if self._distance_to_target <= 600 and not self._pause_hunt then
+		local HUNT_RANGE = 600
+		local MIN_MOVE_DIST = 250
+
+		if self._distance_to_target <= HUNT_RANGE and not self._pause_hunt then
 			should_aquire_new_pos = true
 			self._pause_hunt = true
-		elseif self._distance_to_target > 600 then
+		elseif HUNT_RANGE < self._distance_to_target then
 			self._pause_hunt = false
 			should_aquire_new_pos = true
 
 			if self._old_assault_pos then
-				local moved_dis = mvector3.distance(assalut_target.pos, self._old_assault_pos)
+				local moved_dis = mvector3.distance(assault_target.pos, self._old_assault_pos)
 
-				if moved_dis < 250 then
+				if moved_dis < MIN_MOVE_DIST then
 					should_aquire_new_pos = false
 				end
 			end
@@ -121,14 +124,13 @@ function FlamerBrain:_queued_update(t, dt)
 	end
 
 	if should_aquire_new_pos then
-		self._old_assault_pos = mvector3.copy(assalut_target.pos)
-		local attack_objective = {
+		self._old_assault_pos = mvector3.copy(assault_target.pos)
+
+		self:set_objective({
 			type = "free",
 			attitude = "engage"
-		}
-
-		self:set_objective(attack_objective)
-		managers.queued_tasks:queue(nil, self._hunt, self, assalut_target, FlamerBrain.ATTACK_INTERVAL)
+		})
+		managers.queued_tasks:queue(nil, self._hunt, self, assault_target, FlamerBrain.ATTACK_INTERVAL)
 	end
 
 	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, FlamerBrain.UPDATE_INTERVAL)
@@ -138,18 +140,20 @@ function FlamerBrain:distance_to_target()
 	return self._distance_to_target
 end
 
-function FlamerBrain:_hunt(assalut_target)
+function FlamerBrain:_hunt(assault_target)
 	if self._current_logic_name == "inactive" then
 		return
 	end
 
-	if self:distance_to_target() > 1200 then
+	local DISTANCE_TOO_FAR = 800
+
+	if DISTANCE_TOO_FAR < self:distance_to_target() then
 		local objective = {
-			type = "defend_area",
-			area = assalut_target.area,
-			nav_seg = assalut_target.nav_seg,
-			pos = mvector3.copy(assalut_target.pos),
-			attitude = "engage"
+			attitude = "engage",
+			type = "hunt",
+			area = assault_target.area,
+			nav_seg = assault_target.nav_seg,
+			pos = mvector3.copy(assault_target.pos)
 		}
 
 		self:set_objective(objective)

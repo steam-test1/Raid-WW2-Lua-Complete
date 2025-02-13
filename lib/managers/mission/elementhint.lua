@@ -16,9 +16,15 @@ function ElementHint:on_executed(instigator)
 	end
 
 	if self._values.hint_id ~= "none" then
-		-- Nothing
-	elseif Application:editor() then
-		managers.editor:output_error("Cant show hint " .. self._values.hint_id .. " in element " .. self._editor_name .. ".")
+		local hint_text = managers.localization:to_upper_text("hint_" .. self._values.hint_id)
+		local desc_text = managers.localization:exists("hint_" .. self._values.hint_id .. "_desc") and managers.localization:to_upper_text("hint_" .. self._values.hint_id .. "_desc")
+
+		managers.hud:set_big_prompt({
+			duration = 5,
+			id = "shoot_flamer_tank",
+			title = hint_text,
+			description = desc_text
+		})
 	end
 
 	ElementHint.super.on_executed(self, instigator)

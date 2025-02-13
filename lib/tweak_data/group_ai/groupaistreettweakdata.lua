@@ -7,7 +7,7 @@ function GroupAIStreetTweakData:init(difficulty_index)
 	self.max_spawning_distance = 20000
 	self.min_spawning_distance = 1600
 	self.max_spawning_height_diff = 2560000
-	self.max_distance_to_player = 100000000
+	self.max_distance_to_player = 225000000
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.delay = {

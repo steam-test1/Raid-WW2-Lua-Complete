@@ -2,8 +2,6 @@ RaidMainMenuGui = RaidMainMenuGui or class(RaidGuiBase)
 RaidMainMenuGui.WIDGET_PANEL_Y = 256
 RaidMainMenuGui.WIDGET_PANEL_W = 576
 RaidMainMenuGui.WIDGET_PANEL_H = 256
-RaidMainMenuGui.STEAM_GROUP_BUTTON_W = 544
-RaidMainMenuGui.STEAM_GROUP_BUTTON_H = 306
 
 function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	RaidMainMenuGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -16,6 +14,20 @@ function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	end
 
 	self:_mod_overrides_warning()
+	self._list_menu:show()
+end
+
+function RaidMainMenuGui:close()
+	if self._closing then
+		return
+	end
+
+	self._closing = true
+
+	managers.system_event_listener:remove_listener("main_menu_drop_in")
+	managers.system_event_listener:remove_listener("main_menu_drop_out")
+	self._list_menu:set_selected(false)
+	RaidMainMenuGui.super.close(self)
 end
 
 function RaidMainMenuGui:_mod_overrides_warning()
@@ -66,28 +78,21 @@ function RaidMainMenuGui:_layout()
 	end
 end
 
-function RaidMainMenuGui:close()
-	managers.system_event_listener:remove_listener("main_menu_drop_in")
-	managers.system_event_listener:remove_listener("main_menu_drop_out")
-	self._list_menu:set_selected(false)
-	RaidMainMenuGui.super.close(self)
-end
-
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
+		h = 64,
 		y = 0,
 		x = 0,
 		text = "",
-		h = 64,
 		w = self._root_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_56
 	})
 	self._title_icon = self._root_panel:bitmap({
+		h = 64,
 		w = 64,
 		y = 0,
 		x = 0,
-		h = 64,
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect
 	})
@@ -110,9 +115,9 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 
 	self._raid_logo_small = self._root_panel:image({
+		name = "raid_logo_small",
 		y = 0,
 		x = 0,
-		name = "raid_logo_small",
 		texture = logo_texture,
 		texture_rect = logo_texture_rect
 	})
@@ -165,42 +170,23 @@ function RaidMainMenuGui:_layout_logo()
 end
 
 function RaidMainMenuGui:_layout_list_menu()
-	if Network:multiplayer() then
-		local list_menu_params_multiplayer = {
-			w = 480,
-			y = 120,
-			x = 15,
-			selection_enabled = true,
-			h = 972,
-			loop_items = true,
-			name = "list_menu",
-			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
-			data_source_callback = callback(self, self, "_list_menu_data_source"),
-			on_menu_move = {}
+	local list_menu_params = {
+		selection_enabled = true,
+		h = 972,
+		vertical_spacing = 2,
+		name = "list_menu",
+		w = 480,
+		y = 144,
+		x = 0,
+		loop_items = true,
+		item_class = RaidGUIControlListItemMenu,
+		on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
+		data_source_callback = callback(self, self, "_list_menu_data_source"),
+		on_menu_move = {
+			right = Network:multiplayer() and (IS_XB1 and "gamercard_button_1" or "mute_button_1")
 		}
-
-		if IS_XB1 then
-			list_menu_params_multiplayer.on_menu_move.right = "gamercard_button_1"
-		else
-			list_menu_params_multiplayer.on_menu_move.right = "mute_button_1"
-		end
-
-		self._list_menu = self._root_panel:list(list_menu_params_multiplayer)
-	else
-		local list_menu_params = {
-			w = 480,
-			y = 120,
-			x = 15,
-			selection_enabled = true,
-			h = 972,
-			loop_items = true,
-			name = "list_menu",
-			on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
-			data_source_callback = callback(self, self, "_list_menu_data_source"),
-			on_menu_move = {}
-		}
-		self._list_menu = self._root_panel:list(list_menu_params)
-	end
+	}
+	self._list_menu = self._root_panel:create_custom_control(RaidGUIControlSingleSelectList, list_menu_params)
 
 	self._list_menu:set_selected(true)
 end
@@ -223,90 +209,15 @@ function RaidMainMenuGui:_layout_version_id()
 	end
 
 	local item_params = {
-		w = 600,
-		x = 0,
 		h = 100,
 		alpha = 0.33,
 		name = "version_id",
-		y = self._root_panel:h() - 50,
+		w = 600,
+		vertical = "bottom",
+		y = self._root_panel:h() - 100,
 		text = text
 	}
 	self._version_id = self._root_panel:label(item_params)
-end
-
-function RaidMainMenuGui:mouse_over_steam_group_button()
-	self._steam_group_button_frame:set_color(Color("ff8880"))
-end
-
-function RaidMainMenuGui:mouse_exit_steam_group_button()
-	self._steam_group_button_frame:set_color(Color.white)
-	self._steam_group_button_frame:stop()
-	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
-end
-
-function RaidMainMenuGui:mouse_pressed_steam_group_button()
-	self._steam_group_button_frame:stop()
-	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_press"))
-end
-
-function RaidMainMenuGui:mouse_released_steam_group_button()
-	self._steam_group_button_frame:stop()
-	self._steam_group_button_frame:animate(callback(self, self, "_animate_steam_group_button_release"))
-	Steam:overlay_activate("url", "http://steamcommunity.com/games/414740")
-end
-
-function RaidMainMenuGui:_animate_steam_group_button_press(o)
-	local duration = 0.15
-	local t = self._steam_button_t * duration
-	local center_x = self._steam_group_panel:center_x()
-	local center_y = self._steam_group_panel:center_y()
-
-	while t < duration do
-		local dt = coroutine.yield()
-		t = t + dt
-		local current_scale = Easing.quartic_out(t, 1, self._steam_button_pressed_scale - 1, duration)
-
-		self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
-		self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * current_scale)
-		self._steam_group_panel:set_center_x(center_x)
-		self._steam_group_panel:set_center_y(center_y)
-
-		self._steam_button_t = t / duration
-	end
-
-	self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * self._steam_button_pressed_scale)
-	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * self._steam_button_pressed_scale)
-	self._steam_group_panel:set_center_x(center_x)
-	self._steam_group_panel:set_center_y(center_y)
-
-	self._steam_button_t = 1
-end
-
-function RaidMainMenuGui:_animate_steam_group_button_release(o)
-	local duration = 0.15
-	local t = (1 - self._steam_button_t) * duration
-	local center_x = self._steam_group_panel:center_x()
-	local center_y = self._steam_group_panel:center_y()
-
-	while t < duration do
-		local dt = coroutine.yield()
-		t = t + dt
-		local current_scale = Easing.quartic_out(t, self._steam_button_pressed_scale, 1 - self._steam_button_pressed_scale, duration)
-
-		self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
-		self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * current_scale)
-		self._steam_group_panel:set_center_x(center_x)
-		self._steam_group_panel:set_center_y(center_y)
-
-		self._steam_button_t = t / duration
-	end
-
-	self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
-	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._steam_group_panel:set_right(self._root_panel:w())
-	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
-
-	self._steam_button_t = 0
 end
 
 function RaidMainMenuGui:_layout_kick_mute_widget()
@@ -315,8 +226,8 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	else
 		local widget_panel_params = {
 			halign = "right",
-			valign = "top",
 			name = "widget_panel",
+			valign = "top",
 			y = RaidMainMenuGui.WIDGET_PANEL_Y,
 			w = RaidMainMenuGui.WIDGET_PANEL_W,
 			h = RaidMainMenuGui.WIDGET_PANEL_H
@@ -328,9 +239,9 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 	if not alive(self._widget_label_panel) then
 		local label_panel_params = {
-			h = 64,
-			visible = false,
 			halign = "scale",
+			visible = false,
+			h = 64,
 			name = "widget_label_panel"
 		}
 		self._widget_label_panel = self._widget_panel:get_engine_panel():panel(label_panel_params)
@@ -340,11 +251,11 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 	local widget_title_params = {
 		h = 64,
-		x = 32,
 		align = "left",
-		vertical = "center",
 		halign = "left",
+		vertical = "center",
 		name = "widget_title",
+		x = 32,
 		w = self._widget_panel:w() - 32,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.menu_list),
 		font_size = tweak_data.gui.font_sizes.menu_list,
@@ -354,12 +265,12 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	local widget_title = self._widget_label_panel:text(widget_title_params)
 	local widget_action_title_params = {
 		w = 150,
-		h = 64,
-		align = "right",
 		text = "",
-		vertical = "center",
+		h = 64,
 		halign = "right",
+		vertical = "center",
 		name = "widget_action_title",
+		align = "right",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.extra_small),
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects
@@ -496,231 +407,261 @@ function RaidMainMenuGui:on_widget_button_unselected(button)
 end
 
 function RaidMainMenuGui:_list_menu_data_source()
-	local _list_items = {}
-
-	table.insert(_list_items, {
-		callback = "resume_game_raid",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
+	local vertical_spacing = 36
+	local list_items = {
+		{
+			item_font_size = 60,
+			item_h = 72,
+			icon = "menu_item_tutorial",
+			callback = "raid_play_tutorial",
+			text = managers.localization:to_upper_text("menu_tutorial_hl"),
+			vertical_spacing = vertical_spacing,
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_resume_game"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_play_tutorial",
-		item_font_size = 48,
-		item_h = 72,
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL
+		{
+			item_font_size = 60,
+			item_h = 72,
+			icon = "menu_item_online",
+			callback = "raid_play_online",
+			text = managers.localization:to_upper_text("menu_play"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_tutorial_hl"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_skip_tutorial",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL_SKIP
+		{
+			icon = "menu_item_offline",
+			callback = "raid_play_offline",
+			text = managers.localization:to_upper_text("menu_play_offline"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_tutorial_skip_hl"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_play_online",
-		item_font_size = 60,
-		item_h = 72,
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+		{
+			icon = "menu_item_resume",
+			callback = "resume_game_raid",
+			text = managers.localization:to_upper_text("menu_resume_game"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_play"))
-	})
-	table.insert(_list_items, {
-		callback = "raid_play_offline",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+		{
+			icon = "menu_item_camp",
+			callback = "raid_skip_tutorial",
+			text = managers.localization:to_upper_text("menu_tutorial_skip_hl"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL_SKIP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_play_offline"))
-	})
-	table.insert(_list_items, {
-		callback = "singleplayer_restart_mission",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
+		{
+			icon = "menu_item_restart",
+			callback = "singleplayer_restart_mission",
+			text = managers.localization:to_upper_text("menu_restart_mission"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_mission"))
-	})
-	table.insert(_list_items, {
-		callback = "singleplayer_restart_game_to_camp",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
+		{
+			icon = "menu_item_restart",
+			callback = "restart_mission",
+			text = managers.localization:to_upper_text("menu_restart_mission"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp"))
-	})
-	table.insert(_list_items, {
-		callback = "restart_mission",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+		{
+			icon = "menu_item_restart",
+			callback = "restart_vote",
+			text = managers.localization:to_upper_text("menu_restart_vote"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_mission"))
-	})
-	table.insert(_list_items, {
-		callback = "restart_to_camp",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE
+		{
+			icon = "menu_item_camp",
+			callback = "singleplayer_restart_game_to_camp",
+			text = managers.localization:to_upper_text("menu_restart_to_camp"),
+			vertical_spacing = vertical_spacing,
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp"))
-	})
-	table.insert(_list_items, {
-		callback = "restart_to_camp_client",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT
+		{
+			icon = "menu_item_camp",
+			callback = "restart_to_camp",
+			text = managers.localization:to_upper_text("menu_restart_to_camp"),
+			vertical_spacing = vertical_spacing,
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp"))
-	})
-	table.insert(_list_items, {
-		callback = "restart_vote",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+		{
+			icon = "menu_item_camp",
+			callback = "restart_to_camp_client",
+			text = managers.localization:to_upper_text("menu_restart_to_camp"),
+			vertical_spacing = vertical_spacing,
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_restart_vote"))
-	})
-	table.insert(_list_items, {
-		callback = "on_mission_selection_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+		{
+			icon = "menu_item_missions",
+			callback = "on_mission_selection_clicked",
+			text = managers.localization:to_upper_text("menu_mission_selection"),
+			breadcrumb = {
+				delay = 0.2,
+				category = BreadcrumbManager.CATEGORY_MISSIONS
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+			}
 		},
-		breadcrumb = {
-			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_MISSIONS
+		{
+			icon = "menu_item_characters",
+			callback = "on_select_character_profile_clicked",
+			text = managers.localization:to_upper_text("menu_character_setup"),
+			breadcrumb = {
+				delay = 0.2,
+				category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_mission_selection"))
-	})
-	table.insert(_list_items, {
-		callback = "on_multiplayer_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+		{
+			icon = "menu_item_weapons",
+			callback = "on_weapon_select_clicked",
+			text = managers.localization:to_upper_text("menu_header_weapons_screen_name"),
+			breadcrumb = {
+				delay = 0.2,
+				check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs")
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_servers"))
-	})
-	table.insert(_list_items, {
-		callback = "on_multiplayer_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
+		{
+			icon = "menu_item_skills",
+			callback = "on_select_character_skills_clicked",
+			text = managers.localization:to_upper_text("menu_skills"),
+			vertical_spacing = vertical_spacing,
+			breadcrumb = {
+				delay = 0.2,
+				category = BreadcrumbManager.CATEGORY_RANK_REWARD
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+				RaidGUIItemAvailabilityFlag.IS_SINGLEPLAYER
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_servers"))
-	})
-	table.insert(_list_items, {
-		callback = "on_select_character_profile_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+		{
+			icon = "menu_item_skills",
+			callback = "on_select_character_skills_clicked",
+			text = managers.localization:to_upper_text("menu_skills"),
+			breadcrumb = {
+				delay = 0.2,
+				category = BreadcrumbManager.CATEGORY_RANK_REWARD
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+				RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
+			}
 		},
-		breadcrumb = {
-			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION
+		{
+			icon = "menu_item_cards",
+			callback = "on_select_challenge_cards_view_clicked",
+			text = managers.localization:to_upper_text("menu_challenge_cards"),
+			vertical_spacing = vertical_spacing,
+			breadcrumb = {
+				delay = 0.2,
+				category = BreadcrumbManager.CATEGORY_CARD
+			},
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+				RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_character_setup"))
-	})
-	table.insert(_list_items, {
-		callback = "on_weapon_select_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+		{
+			icon = "menu_item_camp",
+			callback = "restart_to_camp_client",
+			text = managers.localization:to_upper_text("menu_restart_to_camp"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT
+			}
 		},
-		text = utf8.to_upper(managers.localization:text("menu_header_weapons_screen_name")),
-		breadcrumb = {
-			delay = 0.2,
-			check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs")
+		{
+			icon = "menu_item_servers",
+			callback = "on_multiplayer_clicked",
+			text = managers.localization:to_upper_text("menu_servers"),
+			vertical_spacing = vertical_spacing,
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL
+			}
+		},
+		{
+			icon = "menu_item_servers",
+			callback = "on_multiplayer_clicked",
+			text = managers.localization:to_upper_text("menu_servers"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+				RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
+			}
+		},
+		{
+			icon = "menu_item_options",
+			callback = "on_options_clicked",
+			text = managers.localization:to_upper_text("menu_options")
+		},
+		{
+			icon = "menu_item_credits",
+			callback = "show_credits",
+			text = managers.localization:to_upper_text("menu_credits"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
+			}
+		},
+		{
+			icon = "menu_item_quit",
+			callback = "quit_game",
+			text = managers.localization:to_upper_text("menu_quit"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
+				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
+			}
+		},
+		{
+			icon = "menu_item_quit",
+			callback = "end_game",
+			text = managers.localization:to_upper_text("menu_quit_ingame"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.IS_IN_CAMP
+			}
+		},
+		{
+			icon = "menu_item_quit",
+			callback = "end_game_mission",
+			text = managers.localization:to_upper_text("menu_quit_ingame"),
+			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
+			}
 		}
-	})
-	table.insert(_list_items, {
-		callback = "on_select_character_skills_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
-		},
-		breadcrumb = {
-			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_RANK_REWARD
-		},
-		text = utf8.to_upper(managers.localization:text("menu_skills"))
-	})
-	table.insert(_list_items, {
-		callback = "on_select_challenge_cards_view_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER
-		},
-		breadcrumb = {
-			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_CARD
-		},
-		text = utf8.to_upper(managers.localization:text("menu_challenge_cards"))
-	})
-	table.insert(_list_items, {
-		callback = "on_options_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_options"))
-	})
-	table.insert(_list_items, {
-		callback = "on_options_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
-		},
-		text = utf8.to_upper(managers.localization:text("menu_options"))
-	})
-	table.insert(_list_items, {
-		callback = "on_options_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_options"))
-	})
-	table.insert(_list_items, {
-		callback = "show_credits",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_credits"))
-	})
-	table.insert(_list_items, {
-		callback = "end_game",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_end_game"))
-	})
-	table.insert(_list_items, {
-		callback = "quit_game",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU
-		},
-		text = utf8.to_upper(managers.localization:text("menu_quit"))
-	})
-	table.insert(_list_items, {
-		callback = "quit_game",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP
-		},
-		text = utf8.to_upper(managers.localization:text("menu_quit"))
-	})
-	table.insert(_list_items, {
-		callback = "quit_game_pause_menu",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
-			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
-		},
-		text = utf8.to_upper(managers.localization:text("menu_quit"))
-	})
+	}
 
-	return _list_items
+	return list_items
 end
 
 function RaidMainMenuGui:_on_list_menu_item_selected(data)
@@ -744,4 +685,21 @@ function RaidMainMenuGui:refresh_kick_mute_widgets()
 			end
 		end
 	end
+end
+
+function RaidMainMenuGui:_animate_close()
+	local duration = 0.22
+	local t = 0
+
+	self._list_menu:animate_hide()
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_in(t, 1, -1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+	end
+
+	self:_close()
 end

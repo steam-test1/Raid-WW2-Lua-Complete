@@ -68,7 +68,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 	self._active_greed_items = {}
 
 	if #self._registered_greed_items[world_id] == 0 then
-		print("[GreedManager][plant_greed_items_on_level] No greed units registered on the level! Not spawning anything. World id: " .. tostring(world_id), "Job id: " .. tostring(job_id))
+		Application:debug("[GreedManager] No greed units registered on the level! Not spawning anything. World id: " .. tostring(world_id), "Job id: " .. tostring(job_id))
 
 		return
 	end
@@ -103,7 +103,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 
 		chosen_cache_unit = self._registered_greed_cache_items[world_id][1].unit
 
-		print("[GreedManager][plant_greed_items_on_level] A cache item will be spawned! Unit: " .. tostring(chosen_cache_unit))
+		Application:debug("[GreedManager] A cache item will be spawned! Unit: " .. tostring(chosen_cache_unit))
 	end
 
 	if alive(chosen_cache_unit) then

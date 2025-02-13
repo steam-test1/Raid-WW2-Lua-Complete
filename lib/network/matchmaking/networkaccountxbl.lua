@@ -82,7 +82,7 @@ function NetworkAccountXBL:_clbk_inventory_load(error, list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
 		error = error,
-		list = filtered_list
+		cards = filtered_cards
 	})
 end
 
@@ -161,11 +161,11 @@ function NetworkAccountXBL:inventory_reward(key_name_id, callback_ref)
 			if not added then
 				local new_card = {
 					amount = 1,
+					quality = "",
 					bonus = false,
 					category = "challenge_card",
 					def_id = card.def_id,
-					entry = card.key_name,
-					quality = ""
+					entry = card.key_name
 				}
 
 				table.insert(Global.console_local_inventory, new_card)

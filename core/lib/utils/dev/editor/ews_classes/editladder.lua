@@ -10,13 +10,13 @@ function EditLadder:init(editor)
 	})
 	self._panel = panel
 	self._width_params = {
-		ctrlr_proportions = 1,
-		name_proportions = 1,
 		min = 0,
-		name = "Width [cm]:",
 		tooltip = "Sets the width of the ladder in cm",
 		floats = 0,
 		value = 0,
+		name = "Width [cm]:",
+		ctrlr_proportions = 1,
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -34,13 +34,13 @@ function EditLadder:init(editor)
 	CoreEws.number_controller(self._width_params)
 
 	self._height_params = {
-		ctrlr_proportions = 1,
-		name_proportions = 1,
 		min = 0,
-		name = "Height [cm]:",
 		tooltip = "Sets the height of the ladder in cm",
 		floats = 0,
 		value = 0,
+		name = "Height [cm]:",
+		ctrlr_proportions = 1,
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
 		events = {

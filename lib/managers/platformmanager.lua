@@ -23,8 +23,6 @@ end
 
 function GenericPlatformManager:event(event_type, ...)
 	table.insert(self._event_queue_list, {
-		event_type = nil,
-		param_list = nil,
 		event_type = event_type,
 		param_list = {
 			...

@@ -114,9 +114,9 @@ end
 
 function InstanceEventUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor"
+		ray_type = "body editor",
+		mask = 1
 	})
 
 	if not ray or not ray.unit then
@@ -200,10 +200,10 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 
 	local events_params = {
 		name_proportions = 0,
-		tooltip = "Select an event from the combobox",
 		sorted = true,
 		sizer_proportions = 2,
 		ctrlr_proportions = 2,
+		tooltip = "Select an event from the combobox",
 		panel = panel,
 		sizer = h_sizer,
 		options = events,
@@ -396,9 +396,9 @@ end
 
 function InstancePointUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor"
+		ray_type = "body editor",
+		mask = 1
 	})
 
 	if not ray or not ray.unit then
@@ -610,10 +610,10 @@ end
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
-		tooltip = "Set a default number variable.",
 		sizer_proportions = 1,
-		floats = 0,
 		ctrlr_proportions = 2,
+		tooltip = "Set a default number variable.",
+		floats = 0,
 		name = data.var_name,
 		panel = panel,
 		sizer = sizer,
@@ -638,10 +638,10 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 
 	local params = {
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
+		tooltip = "Select an option from the combobox",
 		name = data.var_name,
 		panel = panel,
 		sizer = horizontal_sizer,
@@ -777,9 +777,9 @@ end
 
 function InstanceSetParamsUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor"
+		ray_type = "body editor",
+		mask = 1
 	})
 
 	if not ray or not ray.unit then
@@ -951,10 +951,10 @@ end
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
-		tooltip = "Set a number variable.",
 		sizer_proportions = 1,
-		floats = 0,
 		ctrlr_proportions = 2,
+		tooltip = "Set a number variable.",
+		floats = 0,
 		name = data.var_name,
 		panel = panel,
 		sizer = sizer,
@@ -981,10 +981,10 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 
 	local combobox_params = {
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
+		tooltip = "Select an option from the combobox",
 		name = data.var_name,
 		panel = panel,
 		sizer = horizontal_sizer,

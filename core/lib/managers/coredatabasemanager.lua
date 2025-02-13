@@ -62,11 +62,7 @@ function DatabaseManager:recompile(...)
 	Application:data_compile({
 		target_db_name = "all",
 		preprocessor_definitions = "preprocessor_definitions",
-		target_db_root = nil,
-		source_root = nil,
 		verbose = false,
-		source_files = nil,
-		platform = nil,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = self:base_path(),
 		target_db_root = Application:base_path() .. "assets",

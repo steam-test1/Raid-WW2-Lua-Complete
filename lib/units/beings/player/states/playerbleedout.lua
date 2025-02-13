@@ -325,12 +325,12 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		scan = true,
 		type = "act",
+		scan = true,
 		action = {
-			type = "act",
 			body_part = 1,
 			variant = "crouch",
+			type = "act",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -341,12 +341,12 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		}
 	}
 	local objective = {
-		pose = "stand",
-		haste = "run",
-		scan = true,
-		type = "revive",
-		destroy_clbk_key = false,
 		called = true,
+		scan = true,
+		pose = "stand",
+		type = "revive",
+		haste = "run",
+		destroy_clbk_key = false,
 		follow_unit = revive_SO_data.unit,
 		nav_seg = revive_SO_data.unit:movement():nav_tracker():nav_segment(),
 		action_duration = tweak_data.interaction[variant].timer,
@@ -355,17 +355,17 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			align_sync = true,
 			body_part = 1,
 			variant = "revive",
+			align_sync = true,
 			type = "act",
 			blocks = {
-				light_hurt = -1,
 				action = -1,
 				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				walk = -1
+				walk = -1,
+				light_hurt = -1
 			}
 		}
 	}

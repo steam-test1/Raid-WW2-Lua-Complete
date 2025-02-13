@@ -5,10 +5,8 @@ local mvec3_dot = mvector3.dot
 local mvec3_dis = mvector3.distance
 local t_rem = table.remove
 local t_ins = table.insert
-local m_min = math.min
 local tmp_vec1 = Vector3()
 EnemyManager = EnemyManager or class()
-EnemyManager._MAX_NR_CORPSES = 30
 EnemyManager._nr_i_lod = {
 	{
 		2,
@@ -24,54 +22,56 @@ EnemyManager._nr_i_lod = {
 	}
 }
 EnemyManager.ENEMIES = {
-	german_gebirgsjager_heavy = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy",
-	german_black_waffen_sentry_light = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light",
-	german_gebirgsjager_light_shotgun = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun",
-	german_black_waffen_sentry_light_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98",
-	german_gebirgsjager_light_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98",
-	german_black_waffen_sentry_light_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun",
-	german_gebirgsjager_light = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light",
-	german_black_waffen_sentry_heavy = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy",
-	german_grunt_heavy_shotgun = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun",
-	german_black_waffen_sentry_heavy_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98",
-	german_grunt_heavy_kar98 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98",
-	german_black_waffen_sentry_heavy_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun",
-	german_grunt_heavy_mp38 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38",
-	german_black_waffen_sentry_gasmask = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask",
-	german_grunt_heavy = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy",
-	german_black_waffen_sentry_gasmaskshotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun",
 	german_grunt_mid_shotgun = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun",
-	german_commander = "units/vanilla/characters/enemies/models/german_commander/german_commander",
+	german_black_waffen_sentry_light = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light",
 	german_grunt_mid_kar98 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98",
-	german_og_commander = "units/vanilla/characters/enemies/models/german_og_commander/german_og_commander",
+	german_black_waffen_sentry_light_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98",
 	german_grunt_mid_mp38 = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38",
-	german_officer = "units/vanilla/characters/enemies/models/german_commander/german_officer",
+	german_black_waffen_sentry_light_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun",
 	german_grunt_mid = "units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid",
-	german_flamer = "units/vanilla/characters/enemies/models/german_flamer/german_flamer",
+	german_black_waffen_sentry_heavy = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy",
 	german_grunt_light_shotgun = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun",
-	german_sniper = "units/vanilla/characters/enemies/models/german_sniper/german_sniper",
+	german_black_waffen_sentry_heavy_kar98 = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98",
 	german_grunt_light_kar98 = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_kar98",
-	german_spotter = "units/vanilla/characters/enemies/models/german_sniper/german_spotter",
+	german_black_waffen_sentry_heavy_shotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun",
 	german_grunt_light_mp38 = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_mp38",
-	soviet_nkvd_int_security_captain = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain/soviet_nkvd_int_security_captain",
+	german_black_waffen_sentry_gasmask = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask",
 	german_grunt_light = "units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light",
-	soviet_nkvd_int_security_captain_b = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain_b/soviet_nkvd_int_security_captain_b",
+	german_black_waffen_sentry_gasmaskshotgun = "units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun",
 	german_sommilier_01 = "units/vanilla/characters/enemies/models/german_sommilier/german_sommilier",
+	german_commander = "units/vanilla/characters/enemies/models/german_commander/german_commander",
 	german_sommilier = "units/vanilla/characters/enemies/models/german_sommeleir/german_sommilier",
+	german_og_commander = "units/vanilla/characters/enemies/models/german_og_commander/german_og_commander",
 	soviet_nightwitch_02 = "units/vanilla/characters/enemies/models/soviet_nightwitch_02/soviet_nightwitch_02",
+	german_officer = "units/vanilla/characters/enemies/models/german_commander/german_officer",
 	soviet_nightwitch_01 = "units/vanilla/characters/enemies/models/soviet_nightwitch_01/soviet_nightwitch_01",
+	german_flamer = "units/vanilla/characters/enemies/models/german_flamer/german_flamer",
 	female_spy = "units/vanilla/characters/enemies/models/female_spy/female_spy",
+	german_sniper = "units/vanilla/characters/enemies/models/german_sniper/german_sniper",
 	german_fallschirmjager_light_shotgun = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_shotgun",
+	german_spotter = "units/vanilla/characters/enemies/models/german_sniper/german_spotter",
 	german_fallschirmjager_light_kar98 = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_kar98",
+	soviet_nkvd_int_security_captain = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain/soviet_nkvd_int_security_captain",
 	german_fallschirmjager_light = "units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light",
+	soviet_nkvd_int_security_captain_b = "units/vanilla/characters/enemies/models/soviet_nkvd_int_security_captain_b/soviet_nkvd_int_security_captain_b",
 	german_fallschirmjager_heavy_shotgun = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_shotgun",
+	fb_german_officer_boss = "units/upd_fb/characters/enemies/models/fb_german_commander_boss/fb_german_commander_boss",
 	german_fallschirmjager_heavy_kar98 = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98",
+	fb_german_officer = "units/upd_fb/characters/enemies/models/fb_german_commander_boss/fb_german_commander",
 	german_fallschirmjager_heavy = "units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy",
 	german_waffen_ss_shotgun = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss_shotgun",
 	german_waffen_ss_kar98 = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss_kar98",
 	german_waffen_ss = "units/vanilla/characters/enemies/models/german_waffen_ss/german_waffen_ss",
 	german_gebirgsjager_heavy_shotgun = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_shotgun",
-	german_gebirgsjager_heavy_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98"
+	german_gebirgsjager_heavy_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98",
+	german_gebirgsjager_heavy = "units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy",
+	german_gebirgsjager_light_shotgun = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun",
+	german_gebirgsjager_light_kar98 = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98",
+	german_gebirgsjager_light = "units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light",
+	german_grunt_heavy_shotgun = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun",
+	german_grunt_heavy_kar98 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98",
+	german_grunt_heavy_mp38 = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38",
+	german_grunt_heavy = "units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy"
 }
 
 function EnemyManager:init()
@@ -83,6 +83,9 @@ function EnemyManager:init()
 	self._corpse_disposal_upd_interval = 5
 	self._commander_active = 0
 	self._difficulty_difference = 0
+	self._corpse_limit = math.floor(managers.user:get_setting("corpse_limit"))
+
+	managers.user:add_setting_changed_callback("corpse_limit", callback(self, self, "corpse_limit_changed"))
 end
 
 function EnemyManager:enemy_names()
@@ -805,16 +808,34 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	end
 
 	enemy_data.nr_corpses = enemy_data.nr_corpses + 1
-	enemy_data.corpses[dead_unit:id()] = u_data
+	enemy_data.corpses[u_key] = u_data
 	u_data.death_t = self._t
 
 	self:_destroy_unit_gfx_lod_data(u_key)
 
 	u_data.u_id = dead_unit:id()
+
+	if self:is_corpse_disposal_enabled() then
+		self:_detach_network_enemy(dead_unit)
+		self:_chk_corpse_disposal()
+	end
+
 	local contour_ext = dead_unit:contour()
 
 	if contour_ext then
 		contour_ext:disable()
+	end
+end
+
+function EnemyManager:_detach_network_enemy(unit)
+	Network:detach_unit(unit)
+
+	for _, ext_name in ipairs(unit:extensions()) do
+		local extension = unit[ext_name](unit)
+
+		if extension.detach_from_network then
+			extension:detach_from_network()
+		end
 	end
 end
 
@@ -832,11 +853,17 @@ function EnemyManager:add_corpse_lootbag(corpse)
 
 		local enemy_data = self._enemy_data
 		enemy_data.nr_corpses = enemy_data.nr_corpses + 1
-		enemy_data.corpses[corpse:id()] = {
+		enemy_data.corpses[corpse:key()] = {
 			unit = corpse,
+			u_id = corpse:id(),
 			m_pos = corpse:position(),
 			death_t = self._t
 		}
+
+		if self:is_corpse_disposal_enabled() then
+			self:_detach_network_enemy(corpse)
+			self:_chk_corpse_disposal()
+		end
 	end
 end
 
@@ -856,7 +883,6 @@ end
 
 function EnemyManager:on_enemy_destroyed(enemy)
 	local u_key = enemy:key()
-	local u_id = enemy:id()
 	local enemy_data = self._enemy_data
 
 	if enemy_data.unit_data[u_key] then
@@ -865,9 +891,9 @@ function EnemyManager:on_enemy_destroyed(enemy)
 		enemy_data.unit_data[u_key] = nil
 
 		self:_destroy_unit_gfx_lod_data(u_key)
-	elseif enemy_data.corpses[u_id] then
+	elseif enemy_data.corpses[u_key] then
 		enemy_data.nr_corpses = enemy_data.nr_corpses - 1
-		enemy_data.corpses[u_id] = nil
+		enemy_data.corpses[u_key] = nil
 	end
 end
 
@@ -913,23 +939,27 @@ function EnemyManager:on_civilian_died(dead_unit, damage_info)
 	local u_data = self._civilian_data.unit_data[u_key]
 	local enemy_data = self._enemy_data
 	enemy_data.nr_corpses = enemy_data.nr_corpses + 1
-	enemy_data.corpses[dead_unit:id()] = u_data
+	enemy_data.corpses[u_key] = u_data
 	u_data.death_t = TimerManager:game():time()
 	self._civilian_data.unit_data[u_key] = nil
 
 	self:_destroy_unit_gfx_lod_data(u_key)
 
 	u_data.u_id = dead_unit:id()
+
+	if self:is_corpse_disposal_enabled() then
+		self:_detach_network_enemy(dead_unit)
+		self:_chk_corpse_disposal()
+	end
 end
 
 function EnemyManager:on_civilian_destroyed(enemy)
 	local u_key = enemy:key()
-	local u_id = enemy:id()
 	local enemy_data = self._enemy_data
 
-	if enemy_data.corpses[u_id] then
+	if enemy_data.corpses[u_key] then
 		enemy_data.nr_corpses = enemy_data.nr_corpses - 1
-		enemy_data.corpses[u_id] = nil
+		enemy_data.corpses[u_key] = nil
 	else
 		managers.groupai:state():on_civilian_unregistered(enemy)
 
@@ -947,102 +977,104 @@ function EnemyManager:on_criminal_unregistered(u_key)
 	self:_destroy_unit_gfx_lod_data(u_key)
 end
 
-function EnemyManager:_upd_corpse_disposal()
-	if not Network:is_server() then
+function EnemyManager:corpse_limit_changed(name, old_value, new_value)
+	self._corpse_limit = math.floor(new_value)
+
+	self:_chk_corpse_disposal()
+end
+
+function EnemyManager:_chk_corpse_disposal()
+	if not self:is_corpse_disposal_enabled() then
+		self:unqueue_task("EnemyManager._upd_corpse_disposal")
+
+		return
+	end
+
+	if self._enemy_data.nr_corpses <= self._corpse_limit then
+		return
+	end
+
+	if self:has_task("EnemyManager._upd_corpse_disposal") then
 		return
 	end
 
 	local t = TimerManager:game():time()
+	local queue_t = t + self._corpse_disposal_upd_interval
+
+	self:queue_task("EnemyManager._upd_corpse_disposal", self._upd_corpse_disposal, self, queue_t)
+end
+
+function EnemyManager:_upd_corpse_disposal()
 	local enemy_data = self._enemy_data
 	local nr_corpses = enemy_data.nr_corpses
-	local disposals_needed = nr_corpses - self._MAX_NR_CORPSES
+	local disposals_needed = nr_corpses - self._corpse_limit
 	local corpses = enemy_data.corpses
-
-	self:queue_task("EnemyManager._upd_corpse_disposal", EnemyManager._upd_corpse_disposal, self, t + self._corpse_disposal_upd_interval)
 
 	if not self:is_corpse_disposal_enabled() or disposals_needed <= 0 then
 		return
 	end
 
-	local function unit_remove(u_data)
-		Application:debug("[EnemyManager:_upd_corpse_disposal()] off with the corpse!", u_data.unit)
-
-		local uu = u_data.unit
-
-		if uu:base() then
-			uu:base():set_slot(uu, 0)
-		else
-			uu:set_slot(uu, 0)
-		end
-	end
-
+	local camera_pos = managers.viewport:get_current_camera_position()
+	local camera_rot = managers.viewport:get_current_camera_rotation()
+	local camera_fwd = camera_rot and camera_rot:y()
 	local to_dispose = {}
 	local nr_found = 0
-	local no_peers = 0
 
-	for peer_id, peer in pairs(managers.network:session():all_peers()) do
-		local peer_unit = peer:unit()
+	if camera_pos and camera_fwd then
+		local close_distance = 200
+		local enemy_dir = tmp_vec1
 
-		if peer:unit() then
-			no_peers = no_peers + 1
-			local cam_pos = peer_unit:position()
-			local cam_fwd = peer_unit:movement():m_head_rot():y()
+		for u_key, u_data in pairs(corpses) do
+			local u_pos = u_data.m_pos
 
-			for u_key, u_data in pairs(corpses) do
-				local u_pos = u_data.m_pos
-				local dis = mvec3_dis(cam_pos, u_pos)
+			if close_distance < mvec3_dis(camera_pos, u_pos) then
+				mvec3_dir(enemy_dir, camera_pos, u_pos)
 
-				if (dis > 1500 or dis > 200 and mvector3.dot(cam_fwd, u_pos - cam_pos) < 0) and t - u_data.death_t > 10 then
-					to_dispose[u_key] = to_dispose[u_key] or 0
-					to_dispose[u_key] = to_dispose[u_key] + 1
+				if mvec3_dot(camera_fwd, enemy_dir) < 0 then
+					to_dispose[u_key] = true
+					nr_found = nr_found + 1
+
+					if nr_found == disposals_needed then
+						break
+					end
 				end
 			end
 		end
 	end
 
-	for k, v in pairs(to_dispose) do
-		if v == no_peers then
-			to_dispose[k] = -1
-			nr_found = nr_found + 1
-
-			if nr_found == disposals_needed then
-				break
-			end
-		end
-	end
-
-	for u_key, v in pairs(to_dispose) do
-		if v == -1 then
-			local u_data = corpses[u_key]
-
-			if alive(u_data.unit) then
-				unit_remove(u_data)
-			end
-
-			corpses[u_key] = nil
-		end
-	end
-
-	enemy_data.nr_corpses = nr_corpses - nr_found
-	disposals_needed = enemy_data.nr_corpses - self._MAX_NR_CORPSES
+	disposals_needed = disposals_needed - nr_found
 
 	if disposals_needed > 0 then
 		for u_key, u_data in pairs(corpses) do
-			if t - u_data.death_t > 10 then
-				if alive(u_data.unit) then
-					unit_remove(u_data)
-				end
+			if not to_dispose[u_key] and alive(u_data.unit) then
+				to_dispose[u_key] = true
+				nr_found = nr_found + 1
 
-				disposals_needed = disposals_needed - 1
-				enemy_data.nr_corpses = enemy_data.nr_corpses - 1
-				corpses[u_key] = nil
-
-				if disposals_needed == 0 then
+				if nr_found == disposals_needed then
 					break
 				end
 			end
 		end
 	end
+
+	local is_server = Network:is_server()
+
+	for u_key, _ in pairs(to_dispose) do
+		local u_data = corpses[u_key]
+		corpses[u_key] = nil
+
+		if alive(u_data.unit) then
+			local unit = u_data.unit
+
+			if is_server or unit:id() == -1 then
+				unit:set_slot(0)
+			else
+				unit:set_enabled(false)
+			end
+		end
+	end
+
+	enemy_data.nr_corpses = nr_corpses - nr_found
 end
 
 function EnemyManager:set_hot_state(state)
@@ -1051,20 +1083,20 @@ function EnemyManager:set_hot_state(state)
 	self:set_corpse_disposal_enabled(state)
 end
 
-function EnemyManager:set_corpse_disposal_enabled(state)
-	if not Network:is_server() then
-		return
-	end
+function EnemyManager:set_corpse_disposal_enabled(enabled)
+	self._corpse_disposal_enabled = enabled
 
-	self._corpse_disposal_enabled = state
+	if enabled then
+		for _, corpse_data in pairs(self._enemy_data.corpses) do
+			local unit = corpse_data.unit
 
-	if state then
-		if not self:has_task("EnemyManager._upd_corpse_disposal") then
-			self:queue_task("EnemyManager._upd_corpse_disposal", EnemyManager._upd_corpse_disposal, self, TimerManager:game():time() + self._corpse_disposal_upd_interval)
+			if alive(unit) and unit:id() ~= -1 then
+				self:_detach_network_enemy(unit)
+			end
 		end
-	else
-		self:unqueue_task("EnemyManager._upd_corpse_disposal")
 	end
+
+	self:_chk_corpse_disposal()
 end
 
 function EnemyManager:is_corpse_disposal_enabled()
@@ -1088,12 +1120,12 @@ function EnemyManager:on_level_transition()
 end
 
 function EnemyManager:dispose_all_corpses()
-	if not Network:is_server() then
-		return
-	end
-
 	for _, corpse_data in pairs(self._enemy_data.corpses) do
 		if alive(corpse_data.unit) then
+			if corpse_data.unit:id() ~= -1 then
+				self:_detach_network_enemy(corpse_data.unit)
+			end
+
 			World:delete_unit(corpse_data.unit)
 		end
 	end
@@ -1148,9 +1180,11 @@ function EnemyManager:load(data)
 			local corpse = World:unit_manager():get_unit_by_id(u_id)
 
 			if alive(corpse) then
-				corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
+				if corpse:base() then
+					corpse:base():add_destroy_listener("EnemyManager_corpse_dummy" .. tostring(corpse:key()), callback(self, self, is_civilian and "on_civilian_destroyed" or "on_enemy_destroyed"))
+				end
 
-				self._enemy_data.corpses[u_id] = {
+				self._enemy_data.corpses[corpse:key()] = {
 					death_t = 0,
 					unit = corpse,
 					u_id = u_id,
@@ -1166,21 +1200,27 @@ function EnemyManager:load(data)
 						corpse = corpse
 					}, 6, nil)
 				end
+
+				if self:is_corpse_disposal_enabled() then
+					self:_detach_network_enemy(dead_unit)
+				end
 			else
 				Application:warn("[EnemyManager:load] Tried to use a unit that was not alive(), skipping this corpse", corpse)
 			end
 		end
 	end
+
+	self:_chk_corpse_disposal()
 end
 
 function EnemyManager:_queue_freeze_ragdoll(data)
 	if alive(data.corpse) then
-		data.corpse:damage():run_sequence_simple("freeze_ragdoll")
+		data.corpse:damage():has_then_run_sequence_simple("freeze_ragdoll")
 	end
 end
 
-function EnemyManager:get_corpse_unit_data_from_key(u_id)
-	return self._enemy_data.corpses[u_id]
+function EnemyManager:get_corpse_unit_data_from_key(u_key)
+	return self._enemy_data.corpses[u_key]
 end
 
 function EnemyManager:get_corpse_unit_data_from_id(u_id)
@@ -1195,6 +1235,8 @@ function EnemyManager:remove_corpse_by_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
 			u_data.unit:set_slot(0)
+
+			self._enemy_data.corpses[u_key] = nil
 
 			break
 		end

@@ -205,7 +205,6 @@ end
 
 function NavigationManager:get_save_data()
 	return ScriptSerializer:to_generic_xml(self._load_data or {
-		version = nil,
 		version = NavFieldBuilder._VERSION
 	})
 end
@@ -224,8 +223,6 @@ function NavigationManager:set_load_data(data, world_id, translation, yaw, stitc
 
 		if not next(self._nav_segments) then
 			local setup_data = {
-				quad_grid_size = nil,
-				sector_grid_size = nil,
 				quad_grid_size = self._grid_size,
 				sector_grid_size = self._sector_grid_size
 			}
@@ -295,8 +292,6 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 	local grid_size = self._grid_size
 	local segments = {}
 	local world = {
-		id = nil,
-		segments = nil,
 		id = world_id,
 		segments = segments
 	}
@@ -313,19 +308,13 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 		local unique_id = self:get_segment_unique_id(world_id, nav_seg.id)
 		local position = nav_seg.pos:rotate_with(Rotation(yaw, 0, 0))
 		local segment = {
-			id = nil,
-			barrage_allowed = nil,
-			parent_world_id = nil,
-			world_id = nil,
-			pos = nil,
-			unique_id = nil,
-			neighbours = nil,
 			id = nav_seg.id,
 			unique_id = unique_id,
 			pos = position + translate,
 			neighbours = {},
 			world_id = world_id,
 			barrage_allowed = nav_seg.barrage_allowed,
+			location_id = nav_seg.location_id,
 			parent_world_id = data.parent_world_id
 		}
 		world.segments[Idstring(unique_id):key()] = segment
@@ -370,22 +359,7 @@ function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
 	local segments = {}
 	local visibility_groups = {}
 	local data_v6 = {
-		quad_heights_xn_yn = nil,
-		quad_borders_y_neg = nil,
-		segments = nil,
-		quad_borders_y_pos = nil,
-		door_low_pos = nil,
-		quad_borders_x_neg = nil,
-		door_high_pos = nil,
-		quad_borders_x_pos = nil,
-		door_low_quads = nil,
-		visibility_groups = nil,
-		door_high_quads = nil,
-		quad_heights_xn_yp = nil,
-		helper_blockers = nil,
-		quad_heights_xp_yn = nil,
 		version = 6,
-		quad_heights_xp_yp = nil,
 		segments = segments,
 		visibility_groups = visibility_groups,
 		quad_borders_x_pos = data_v5.room_borders_x_pos,
@@ -407,9 +381,6 @@ function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
 		local quads = {}
 		local visible_groups = {}
 		local vis_grp = {
-			pos = nil,
-			visible_groups = nil,
-			quads = nil,
 			visible_groups = visible_groups,
 			quads = quads,
 			pos = vis_group_v5.pos
@@ -428,11 +399,6 @@ function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
 
 	for nav_seg_id, segment_v5 in pairs(data_v5.nav_segments) do
 		local segment = {
-			id = nil,
-			vis_groups = nil,
-			pos = nil,
-			location_id = nil,
-			neighbours = nil,
 			id = nav_seg_id,
 			pos = segment_v5.pos,
 			vis_groups = segment_v5.vis_groups,
@@ -521,8 +487,6 @@ function NavigationManager:build_complete_clbk(draw_options)
 		self._quad_field:clear_all()
 
 		local setup_data = {
-			quad_grid_size = nil,
-			sector_grid_size = nil,
 			quad_grid_size = self._grid_size,
 			sector_grid_size = self._sector_grid_size
 		}
@@ -566,22 +530,6 @@ function NavigationManager:_create_load_data_from_builder(world_id)
 	local door_low_quads = {}
 	local door_high_quads = {}
 	local load_data = {
-		quad_heights_xn_yn = nil,
-		quad_borders_y_neg = nil,
-		segments = nil,
-		quad_borders_y_pos = nil,
-		door_low_pos = nil,
-		quad_borders_x_neg = nil,
-		door_high_pos = nil,
-		quad_borders_x_pos = nil,
-		door_low_quads = nil,
-		visibility_groups = nil,
-		door_high_quads = nil,
-		quad_heights_xn_yp = nil,
-		helper_blockers = nil,
-		quad_heights_xp_yn = nil,
-		version = nil,
-		quad_heights_xp_yp = nil,
 		version = NavFieldBuilder._VERSION,
 		segments = segments,
 		visibility_groups = visibility_groups,
@@ -623,9 +571,6 @@ function NavigationManager:_create_load_data_from_builder(world_id)
 		local visible_groups = {}
 		local quads = {}
 		local visibility_group = {
-			pos = nil,
-			visible_groups = nil,
-			quads = nil,
 			visible_groups = visible_groups,
 			quads = quads,
 			pos = builder_vis_group.pos
@@ -644,11 +589,6 @@ function NavigationManager:_create_load_data_from_builder(world_id)
 
 	for seg_id, builder_seg in pairs(builder_nav_segments) do
 		local segment = {
-			id = nil,
-			barrage_allowed = nil,
-			vis_groups = nil,
-			pos = nil,
-			location_id = nil,
 			id = builder_seg.id,
 			pos = builder_seg.pos,
 			vis_groups = deep_clone(builder_seg.vis_groups),
@@ -705,8 +645,6 @@ function NavigationManager:delete_nav_segment(id)
 		self._quad_field:clear_all()
 
 		local setup_data = {
-			quad_grid_size = nil,
-			sector_grid_size = nil,
 			quad_grid_size = self._grid_size,
 			sector_grid_size = self._sector_grid_size
 		}
@@ -1095,7 +1033,6 @@ function NavigationManager:register_anim_nav_link(element)
 	end
 
 	local nav_link = self._quad_field:add_nav_link(element:value("position"), element:nav_link_end_pos(), {
-		element = nil,
 		element = element
 	}, element:nav_link_access(), element:chance(), element._id)
 	local is_obstructed = nav_link:is_obstructed()
@@ -1203,8 +1140,6 @@ function NavigationManager:reserve_cover(cover, filter)
 	else
 		cover[self.COVER_RESERVED] = 1
 		local reservation = {
-			position = nil,
-			filter = nil,
 			radius = 60,
 			position = cover[NavigationManager.COVER_POSITION],
 			filter = filter
@@ -1235,8 +1170,6 @@ end
 function NavigationManager:find_cover_nearest_pos(near_pos, max_near_dis)
 	local search_params = {
 		variation_z = 250,
-		near_pos = nil,
-		max_distance = nil,
 		near_pos = near_pos,
 		max_distance = max_near_dis
 	}
@@ -1246,12 +1179,7 @@ end
 
 function NavigationManager:find_cover_near_pos_1(near_pos, threat_pos, max_near_dis, min_threat_dis, allow_fwd)
 	local search_params = {
-		min_threat_distance = nil,
 		variation_z = 250,
-		max_distance = nil,
-		forbid_fwd = nil,
-		near_pos = nil,
-		threat_pos = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		forbid_fwd = not allow_fwd,
@@ -1268,11 +1196,7 @@ function NavigationManager:find_cover_away_from_pos(near_pos, threat_pos, nav_se
 	end
 
 	local search_params = {
-		in_nav_seg = nil,
 		forbid_fwd = true,
-		optimal_threat_dis = nil,
-		near_pos = nil,
-		threat_pos = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		in_nav_seg = nav_seg_id,
@@ -1288,7 +1212,6 @@ function NavigationManager:find_cover_in_nav_seg_1(nav_seg_id)
 	end
 
 	local search_params = {
-		in_nav_seg = nil,
 		in_nav_seg = nav_seg_id
 	}
 
@@ -1301,9 +1224,6 @@ function NavigationManager:find_cover_in_nav_seg_2(nav_seg_id, defend_pos, defen
 	end
 
 	local search_params = {
-		in_nav_seg = nil,
-		near_pos = nil,
-		threat_dir = nil,
 		near_pos = defend_pos,
 		in_nav_seg = nav_seg_id,
 		threat_dir = defend_dir
@@ -1318,10 +1238,6 @@ function NavigationManager:find_cover_in_nav_seg_3(nav_seg_id, max_near_dis, nea
 	end
 
 	local search_params = {
-		in_nav_seg = nil,
-		near_pos = nil,
-		threat_pos = nil,
-		max_distance = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		in_nav_seg = nav_seg_id,
@@ -1337,11 +1253,6 @@ function NavigationManager:find_cover_in_nav_seg_excluding_cones(nav_seg_id, max
 	end
 
 	local search_params = {
-		in_nav_seg = nil,
-		max_distance = nil,
-		cone_filter = nil,
-		near_pos = nil,
-		threat_pos = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		in_nav_seg = nav_seg_id,
@@ -1358,10 +1269,6 @@ function NavigationManager:find_cover_from_threat(nav_seg_id, optimal_threat_dis
 	end
 
 	local search_params = {
-		optimal_threat_dis = nil,
-		near_pos = nil,
-		threat_pos = nil,
-		in_nav_seg = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		in_nav_seg = nav_seg_id,
@@ -1383,13 +1290,7 @@ end
 
 function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_base, near_pos, cone_angle, nav_seg, rsrv_filter)
 	local search_params = {
-		threat_pos = nil,
 		variation_z = 250,
-		cone_angle = nil,
-		in_nav_seg = nil,
-		rsrv_filter = nil,
-		near_pos = nil,
-		cone_base = nil,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
 		cone_angle = cone_angle,
@@ -1408,11 +1309,6 @@ function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_b
 
 	local t2 = TimerManager:now()
 	local duration = (t2 - t) * 1000
-
-	if duration > 3 then
-		Application:debug("[NavigationManager:find_cover_in_cone_from_threat_pos] Duration(ms):", duration)
-		Application:debug("managers.navigation:find_cover_in_cone_from_threat_pos( ", threat_pos, ", ", cone_base, ", ", near_pos, ", ", cone_angle, ", ", nav_seg, ", ", rsrv_filter, ")")
-	end
 
 	return ret
 end
@@ -1441,9 +1337,6 @@ function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec,
 	end
 
 	local ray_params = {
-		pos_from = nil,
-		tracker_from = nil,
-		pos_to = nil,
 		trace = true,
 		tracker_from = tracker_from,
 		pos_from = pos_from,
@@ -1622,10 +1515,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 						if found_segs[neighbour_seg_id] then
 							if weight < found_segs[neighbour_seg_id].weight then
 								found_segs[neighbour_seg_id] = {
-									pos = nil,
-									weight = nil,
-									i_seg = nil,
-									from = nil,
 									weight = weight,
 									from = i_seg,
 									i_seg = neighbour_seg_id,
@@ -1634,10 +1523,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 							end
 						else
 							found_segs[neighbour_seg_id] = {
-								pos = nil,
-								weight = nil,
-								i_seg = nil,
-								from = nil,
 								weight = weight,
 								from = i_seg,
 								i_seg = neighbour_seg_id,
@@ -1648,10 +1533,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 					else
 						found_segs = {
 							[neighbour_seg_id] = {
-								pos = nil,
-								weight = nil,
-								i_seg = nil,
-								from = nil,
 								weight = weight,
 								from = i_seg,
 								i_seg = neighbour_seg_id,
@@ -1670,10 +1551,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 						if found_segs[neighbour_seg_id] then
 							if my_weight < found_segs[neighbour_seg_id].weight then
 								found_segs[neighbour_seg_id] = {
-									pos = nil,
-									weight = nil,
-									i_seg = nil,
-									from = nil,
 									weight = my_weight,
 									from = i_seg,
 									i_seg = neighbour_seg_id,
@@ -1682,10 +1559,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 							end
 						else
 							found_segs[neighbour_seg_id] = {
-								pos = nil,
-								weight = nil,
-								i_seg = nil,
-								from = nil,
 								weight = my_weight,
 								from = i_seg,
 								i_seg = neighbour_seg_id,
@@ -1696,10 +1569,6 @@ function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, v
 					else
 						found_segs = {
 							[neighbour_seg_id] = {
-								pos = nil,
-								weight = nil,
-								i_seg = nil,
-								from = nil,
 								weight = my_weight,
 								from = i_seg,
 								i_seg = neighbour_seg_id,
@@ -1812,17 +1681,6 @@ function NavigationManager:search_coarse(params)
 	end
 
 	local new_search_data = {
-		id = nil,
-		verify_clbk = nil,
-		discovered_seg = nil,
-		end_i_seg = nil,
-		seg_to_search = nil,
-		seg_searched = nil,
-		start_i_seg = nil,
-		to_pos = nil,
-		results_callback = nil,
-		access_neg = nil,
-		access_pos = nil,
 		id = params.id,
 		to_pos = mvec3_cpy(pos_to),
 		start_i_seg = start_i_seg,
@@ -1833,7 +1691,6 @@ function NavigationManager:search_coarse(params)
 		},
 		seg_to_search = {
 			{
-				i_seg = nil,
 				i_seg = start_i_seg
 			}
 		},
@@ -1982,11 +1839,6 @@ end
 
 function NavigationManager:reserve_pos(start_t, duration, pos, step_clbk, radius, filter)
 	local entry = {
-		expire_t = nil,
-		start_t = nil,
-		position = nil,
-		filter = nil,
-		radius = nil,
 		position = mvec3_cpy(pos),
 		radius = radius,
 		start_t = start_t,
@@ -2123,9 +1975,6 @@ function NavigationManager:_send_nav_field_to_engine(load_data, world_id, transl
 		local id = self:get_segment_unique_id(world_id, nav_seg.id)
 
 		t_ins(segments, {
-			unique_id = nil,
-			vis_groups = nil,
-			position = nil,
 			unique_id = id,
 			position = nav_seg.pos,
 			vis_groups = nav_seg.vis_groups
@@ -2133,20 +1982,6 @@ function NavigationManager:_send_nav_field_to_engine(load_data, world_id, transl
 	end
 
 	local engine_data = {
-		door_low_pos = nil,
-		quad_borders_y_neg = nil,
-		segments = nil,
-		quad_borders_y_pos = nil,
-		door_high_quads = nil,
-		quad_borders_x_neg = nil,
-		door_high_pos = nil,
-		quad_borders_x_pos = nil,
-		visibility_groups = nil,
-		quad_heights_xn_yn = nil,
-		door_low_quads = nil,
-		quad_heights_xn_yp = nil,
-		quad_heights_xp_yn = nil,
-		quad_heights_xp_yp = nil,
 		quad_borders_x_pos = load_data.quad_borders_x_pos,
 		quad_borders_x_neg = load_data.quad_borders_x_neg,
 		quad_borders_y_pos = load_data.quad_borders_y_pos,
@@ -2381,13 +2216,16 @@ end
 
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_id)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
+
+	if not obstacle_obj then
+		Application:error("[NavigationManager:add_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name, world_id)
+
+		return
+	end
+
 	local id = self._quad_field:add_obstacle(obstacle_obj)
 
 	table.insert(self._obstacles, {
-		id = nil,
-		unit = nil,
-		obstacle_obj_name = nil,
-		world_id = nil,
 		unit = obstacle_unit,
 		obstacle_obj_name = obstacle_obj_name,
 		id = id,
@@ -2398,17 +2236,28 @@ end
 function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
+	if not obstacle_obj then
+		Application:error("[NavigationManager:remove_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name)
+
+		return
+	end
+
 	self._quad_field:remove_obstacle(obstacle_obj)
 
 	local temp_array = {}
 	local removed = nil
 
 	for i, obs_data in ipairs(self._obstacles) do
+		Application:debug("[NavigationManager:remove_obstacle] Inspecting obstacles:", i, inspect(obs_data))
+
 		removed = false
 
 		if not alive(obs_data.unit) then
+			Application:debug("[NavigationManager:remove_obstacle] Found dead unit in obstalce list, removing it:", inspect(obs_data))
+
 			removed = true
 		elseif obs_data.unit:key() == obstacle_unit:key() and obs_data.obstacle_obj_name == obstacle_obj_name then
+			Application:debug("[NavigationManager:remove_obstacle] obstacle removed", obs_data.obstacle_obj_name, obs_data.id)
 			self._quad_field:remove_obstacle(obs_data.id)
 
 			removed = true
@@ -2430,7 +2279,10 @@ function NavigationManager:_remove_obstacles_for_world(world_id)
 			if alive(obs_data.unit) then
 				local obstacle_obj = obs_data.unit:get_object(obs_data.obstacle_obj_name)
 
-				self._quad_field:remove_obstacle(obstacle_obj)
+				if obstacle_obj then
+					Application:debug("[NavigationManager:_remove_obstacles_for_world] world obstacle removed", obs_data.world_id, obs_data.obstacle_obj_name)
+					self._quad_field:remove_obstacle(obstacle_obj)
+				end
 			end
 		else
 			table.insert(temp_array, self._obstacles[i])

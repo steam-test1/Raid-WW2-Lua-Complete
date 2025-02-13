@@ -84,9 +84,9 @@ end
 function RaidGUIControlCharacterCustomizationDetails:_create_title()
 	local title_description_params = {
 		align = "left",
-		alpha = 0,
 		vertical = "center",
 		name = "title_description",
+		alpha = 0,
 		y = RaidGUIControlCharacterCustomizationDetails.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlCharacterCustomizationDetails.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlCharacterCustomizationDetails.FONT,
@@ -102,10 +102,10 @@ function RaidGUIControlCharacterCustomizationDetails:_create_title()
 	local title_params = {
 		align = "left",
 		wrap = true,
-		alpha = 0,
 		text = "customization_name",
 		vertical = "top",
 		name = "customization_name",
+		alpha = 0,
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlCharacterCustomizationDetails.TITLE_PADDING_TOP,
 		font = RaidGUIControlCharacterCustomizationDetails.FONT,
 		font_size = RaidGUIControlCharacterCustomizationDetails.TITLE_FONT_SIZE,
@@ -179,8 +179,8 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 
 	local redeem_xp_button_params = {
 		x = 0,
-		alpha = 0,
 		name = "redeem_xp_button",
+		alpha = 0,
 		y = self._left_panel:h() - RaidGUIControlCharacterCustomizationDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 		text = self:translate("menu_loot_screen_redeem_xp", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -222,11 +222,11 @@ end
 function RaidGUIControlCharacterCustomizationDetails:_create_description()
 	local description_params = {
 		align = "left",
-		wrap = true,
-		alpha = 0,
 		text = "",
+		wrap = true,
 		vertical = "top",
 		name = "description",
+		alpha = 0,
 		y = RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_Y,
 		w = RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_W,
 		font = RaidGUIControlCharacterCustomizationDetails.DESCRIPTION_FONT,
@@ -241,10 +241,10 @@ end
 function RaidGUIControlCharacterCustomizationDetails:_create_item_description_name()
 	local item_type_params = {
 		align = "left",
-		alpha = 0,
-		wrap = true,
 		vertical = "center",
 		name = "item_type",
+		wrap = true,
+		alpha = 0,
 		x = self._description:x(),
 		y = RaidGUIControlCharacterCustomizationDetails.ITEM_TYPE_Y,
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,
@@ -259,10 +259,10 @@ end
 
 function RaidGUIControlCharacterCustomizationDetails:_create_customization_info()
 	local rarity_info_params = {
-		alpha = 0,
-		top_offset_y = 15,
 		text = "",
+		alpha = 0,
 		name = "rarity_info",
+		top_offset_y = 15,
 		w = RaidGUIControlCharacterCustomizationDetails.RARITY_W,
 		h = RaidGUIControlCharacterCustomizationDetails.RARITY_H,
 		icon = LootDropTweakData.RARITY_RARE,
@@ -275,11 +275,11 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 	self._rarity_info:set_x(self._description:x())
 
 	local nationality_info_params = {
-		alpha = 0,
-		top_offset_y = 6,
-		text = "",
 		icon = "ico_flag_american",
+		text = "",
+		alpha = 0,
 		name = "nationality_info",
+		top_offset_y = 6,
 		w = RaidGUIControlCharacterCustomizationDetails.NATIONALITY_W,
 		h = RaidGUIControlCharacterCustomizationDetails.NATIONALITY_H,
 		icon_color = Color.white,

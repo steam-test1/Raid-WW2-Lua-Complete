@@ -1,6 +1,6 @@
 RaidGUIControlSkillProgression = RaidGUIControlSkillProgression or class(RaidGUIControl)
 RaidGUIControlSkillProgression.DEFAULT_W = 150
-RaidGUIControlSkillProgression.DEFAULT_H = 225
+RaidGUIControlSkillProgression.DEFAULT_H = 245
 RaidGUIControlSkillProgression.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlSkillProgression.FONT_SIZE = tweak_data.gui.font_sizes.medium
 RaidGUIControlSkillProgression.COLOR = tweak_data.gui.colors.raid_dirty_white
@@ -228,9 +228,9 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 		align = "center",
 		name = "progress_text",
 		w = self._object:w(),
-		font = RaidGUIControlSkillProgression.FONT,
-		font_size = RaidGUIControlSkillProgression.FONT_SIZE,
-		color = RaidGUIControlSkillProgression.COLOR,
+		font = self.FONT,
+		font_size = self.FONT_SIZE,
+		color = self.COLOR,
 		layer = self._object:layer() + 1
 	})
 	local h = select(4, self._progress_text:text_rect())
@@ -240,13 +240,15 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 
 	self._progress_desc = self._object:label({
 		align = "center",
-		text = "UNTIL NEXT TIER",
 		name = "progress_desc",
+		word_wrap = true,
+		wrap = true,
+		text = "UNTIL NEXT TIER",
 		w = self._object:w(),
-		h = h,
-		font = RaidGUIControlSkillProgression.FONT,
-		font_size = RaidGUIControlSkillProgression.DESCRIPTION_FONT_SIZE,
-		color = RaidGUIControlSkillProgression.DESCRIPTION_COLOR,
+		h = h * 2,
+		font = self.FONT,
+		font_size = self.DESCRIPTION_FONT_SIZE,
+		color = self.DESCRIPTION_COLOR,
 		layer = self._object:layer() + 1
 	})
 
@@ -254,8 +256,8 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 	self._resource_icon = self._object:image({
-		visible = false,
 		name = "resource_icon",
+		visible = false,
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
 		color = tweak_data.gui.colors.gold_orange

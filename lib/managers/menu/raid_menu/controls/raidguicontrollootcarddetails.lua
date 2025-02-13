@@ -119,8 +119,8 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
 	})
 	self._bonus_label = self._object:label({
-		h = 64,
 		align = "left",
+		h = 64,
 		visible = false,
 		wrap = true,
 		text = "",
@@ -135,8 +135,8 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._malus_label = self._object:label({
-		h = 64,
 		align = "left",
+		h = 64,
 		visible = false,
 		wrap = true,
 		text = "",

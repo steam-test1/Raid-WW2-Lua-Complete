@@ -615,12 +615,12 @@ function CoreCutscenePlayer:_full_viewport_rect()
 	local resolution = RenderSettings.resolution
 
 	return {
+		h = 1,
 		py = 0,
 		y = 0,
-		px = 0,
-		x = 0,
-		h = 1,
 		w = 1,
+		x = 0,
+		px = 0,
 		pw = resolution.x,
 		ph = resolution.y
 	}

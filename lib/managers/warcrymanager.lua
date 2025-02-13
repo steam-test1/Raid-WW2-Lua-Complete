@@ -6,6 +6,7 @@ WarcryManager.WARCRY_READY_MESSAGE_DURATION = 4
 WarcryManager.WARCRY_BLOCKED_MESSAGE_DURATION = 3
 WarcryManager.WARCRY_BLOCKED_TEXT = "hud_warcry_blocked"
 WarcryManager.WARCRY_BLOCKED_AIR_TEXT = "hud_warcry_blocked_in_air"
+local IDS_WARCRY = Idstring("warcry")
 
 function WarcryManager.get_instance()
 	if not Global.warcry_manager then
@@ -21,10 +22,9 @@ end
 function WarcryManager:init()
 	self._meter_value = 0
 	self._meter_max_value = 1
+	self._interrupt_penalty_reduction = 0
 	self._warcries = {}
 	self._active_warcry = nil
-	self._ids_warcry_post_processor = Idstring("warcry")
-	self._ids_warcry_modifier = Idstring("warcry")
 end
 
 function WarcryManager:_setup()
@@ -43,7 +43,7 @@ function WarcryManager:set_warcry_post_effect(ids_effect)
 	local vp = managers.viewport:first_active_viewport()
 
 	if vp then
-		vp:vp():set_post_processor_effect("World", self._ids_warcry_post_processor, ids_effect)
+		vp:vp():set_post_processor_effect("World", IDS_WARCRY, ids_effect)
 	end
 end
 
@@ -51,10 +51,10 @@ function WarcryManager:warcry_post_material()
 	local vp = managers.viewport:first_active_viewport()
 
 	if vp then
-		local warcry_pp = vp:vp():get_post_processor_effect("World", self._ids_warcry_post_processor)
+		local warcry_pp = vp:vp():get_post_processor_effect("World", IDS_WARCRY)
 
 		if warcry_pp then
-			local warcry_mod = warcry_pp:modifier(self._ids_warcry_modifier)
+			local warcry_mod = warcry_pp:modifier(IDS_WARCRY)
 
 			if warcry_mod then
 				return warcry_mod:material()
@@ -346,30 +346,31 @@ function WarcryManager:_on_meter_full(skip_notification)
 			local warcry = self._active_warcry:get_type()
 			local name_id = tweak_data.warcry[warcry].name_id
 			local icon = tweak_data.warcry[warcry].hud_icon
-			local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
+			local prompt_title = managers.localization:to_upper_text("hud_hint_warcry_ready_title", {
 				WARCRY = managers.localization:text(name_id)
-			}))
+			})
 			local prompt_desc = nil
 
 			if managers.controller:is_using_controller() then
-				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-					BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R
-				}))
+				local macros = managers.localization:get_default_macros()
+				prompt_desc = managers.localization:to_upper_text("hud_interact_warcry_ready", {
+					BTN_USE_ITEM = macros.BTN_TOP_L .. " + " .. macros.BTN_TOP_R
+				})
 			else
-				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+				prompt_desc = managers.localization:to_upper_text("hud_interact_warcry_ready", {
 					BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry")
-				}))
+				})
 			end
 
 			managers.hud:set_big_prompt({
-				background = "backgrounds_warcry_msg",
 				flares = true,
-				id = "warcry_ready",
+				background = "backgrounds_warcry_msg",
 				priority = true,
+				id = "warcry_ready",
 				title = prompt_title,
 				description = prompt_desc,
 				icon = icon,
-				duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
+				duration = self.WARCRY_READY_MESSAGE_DURATION,
 				text_color = tweak_data.gui.colors.raid_gold
 			})
 		end

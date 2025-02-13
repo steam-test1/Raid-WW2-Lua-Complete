@@ -26,8 +26,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self:_init_m24(tweak_data)
 	self:_init_cluster(tweak_data)
 	self:_init_molotov(tweak_data)
-	self:_init_mortar_shell(tweak_data)
 	self:_init_flamer_death_fake(tweak_data)
+	self:_init_mortar_shell(tweak_data)
 	self:_init_concrete(tweak_data)
 	self:_init_d343(tweak_data)
 	self:_init_mills(tweak_data)
@@ -35,6 +35,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self:_init_betty(tweak_data)
 	self:_init_gold_bar(tweak_data)
 	self:_init_anti_tank(tweak_data)
+	self:_init_thermite(tweak_data)
+	self:_init_flamer_incendiary(tweak_data)
 	self:_add_desc_from_name_macro(self)
 end
 
@@ -233,6 +235,7 @@ function ProjectilesTweakData:_init_betty(tweak_data)
 		range = 550,
 		killzone_range = 0.5,
 		init_timer = 3,
+		adjust_z = -10,
 		animations = {}
 	}
 	self.betty.animations.equip_id = "equip_welrod"
@@ -327,25 +330,27 @@ function ProjectilesTweakData:_init_molotov(tweak_data)
 		init_timer = 10,
 		damage = 15,
 		player_damage = 5,
-		fire_dot_data = {
-			dot_trigger_chance = 35,
-			dot_trigger_max_distance = 3000,
-			dot_damage = 10,
-			dot_tick_period = 0.5,
-			dot_length = 2.01
-		},
 		range = 75,
 		killzone_range = 0,
-		burn_duration = 20,
-		burn_tick_period = 0.665,
-		sound_event_impact_duration = 4,
 		alert_radius = 1500,
-		fire_alert_radius = 1500,
+		fire_tweak_id = "explosive_barrel",
 		animations = {}
 	}
 	self.molotov.animations.equip_id = "equip_welrod"
 
 	table.insert(self._projectiles_index, "molotov")
+end
+
+function ProjectilesTweakData:_init_flamer_death_fake(tweak_data)
+	self.flamer_death_fake = clone(self.molotov)
+	self.flamer_death_fake.init_timer = 0.01
+	self.flamer_death_fake.adjust_z = 0
+	self.flamer_death_fake.throwable = false
+	self.flamer_death_fake.unit = "units/vanilla/dev/flamer_death_fake/flamer_death_fake"
+	self.flamer_death_fake.unit_dummy = "units/vanilla/dev/flamer_death_fake/flamer_death_fake_husk"
+	self.flamer_death_fake.fire_tweak_id = "flamer_tank"
+
+	table.insert(self._projectiles_index, "flamer_death_fake")
 end
 
 function ProjectilesTweakData:_init_decoy_coin(tweak_data)
@@ -442,6 +447,64 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 	}
 end
 
+function ProjectilesTweakData:_init_thermite(tweak_data)
+	table.insert(self._projectiles_index, "thermite")
+
+	self.thermite = {
+		damage = 10,
+		time_cheat = 1,
+		no_cheat_count = true,
+		expire_t = 1.48,
+		throw_allowed_expire_t = 0.662,
+		launch_speed = 300,
+		alert_radius = 980,
+		pickup_filter = "nopickup",
+		max_amount = 1,
+		throwable = true,
+		impact_detonation = true,
+		anim_global_param = "projectile_frag",
+		icon = "thermite_grenade",
+		range = 330,
+		unit_dummy = "units/upd_blaze/weapons/gre_thermite/wpn_tps_gre_thermite",
+		is_a_grenade = true,
+		unit_hand = "units/upd_blaze/weapons/gre_thermite/wpn_fps_gre_thermite",
+		repeat_expire_t = 1.5,
+		unit = "units/upd_blaze/weapons/gre_thermite/wpn_prj_gre_thermite",
+		name_id = "bm_grenade_thermite",
+		fire_tweak_id = "thermite_grenade",
+		init_timer = 1,
+		player_damage = 4,
+		physic_effect = tweak_data.physics_effects.damp_rotation,
+		upgrade_amount = {
+			upgrade = "warcry_grenade_refill_amounts",
+			category = "player"
+		},
+		animations = {
+			equip_id = "equip_welrod",
+			throw = Idstring("throw_thermite")
+		}
+	}
+end
+
+function ProjectilesTweakData:_init_flamer_incendiary(tweak_data)
+	self.flamer_incendiary = {
+		damage = 10,
+		player_damage = 25,
+		no_cheat_count = false,
+		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
+		launch_speed = 350,
+		alert_radius = 1500,
+		name_id = "bm_grenade_molotov",
+		fire_tweak_id = "explosive_barrel",
+		impact_detonation = true,
+		killzone_range = 0,
+		range = 250,
+		unit_dummy = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary_husk"
+	}
+
+	table.insert(self._projectiles_index, "flamer_incendiary")
+end
+
 function ProjectilesTweakData:_init_mortar_shell(tweak_data)
 	self.mortar_shell = {
 		name_id = "bm_mortar_shell",
@@ -465,19 +528,6 @@ function ProjectilesTweakData:_init_mortar_shell(tweak_data)
 	}
 
 	table.insert(self._projectiles_index, "mortar_shell")
-end
-
-function ProjectilesTweakData:_init_flamer_death_fake(tweak_data)
-	self.flamer_death_fake = clone(self.molotov)
-	self.flamer_death_fake.init_timer = 0.01
-	self.flamer_death_fake.adjust_z = 0
-	self.flamer_death_fake.throwable = false
-	self.flamer_death_fake.unit = "units/vanilla/dev/flamer_death_fake/flamer_death_fake"
-	self.flamer_death_fake.unit_dummy = "units/vanilla/dev/flamer_death_fake/flamer_death_fake_husk"
-	self.flamer_death_fake.burn_duration = 10
-	self.flamer_death_fake.sound_event_impact_duration = 1
-
-	table.insert(self._projectiles_index, "flamer_death_fake")
 end
 
 function ProjectilesTweakData:_init_gold_bar(tweak_data)
@@ -520,6 +570,10 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 		animations = {}
 	}
 	self.gold_bar.animations.equip_id = "equip_welrod"
+	self.gold_bar.sounds = {
+		flyby = "grenade_handle_fly",
+		impact = "gold_bar_hit"
+	}
 	self.gold_bar.gui = {
 		height_offset = -14,
 		distance_offset = -140,

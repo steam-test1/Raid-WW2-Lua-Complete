@@ -29,9 +29,9 @@ function GenericUserManager:init()
 	if not self:is_global_initialized() then
 		Global.user_manager = {
 			initializing = true,
-			has_setting_changed = nil,
-			SoundDevice = nil,
-			is_online_menu = nil,
+			reset_network_setting_map = nil,
+			table = nil,
+			[""] = nil,
 			setting_map = {},
 			setting_data_map = {},
 			setting_data_id_to_name_map = {},
@@ -158,6 +158,11 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(74, "hud_crosshairs", true)
 	self:setup_setting(75, "skip_cinematics", false)
 	self:setup_setting(76, "warcry_ready_indicator", true)
+	self:setup_setting(78, "corpse_limit", IS_CONSOLE and 10 or 32)
+	self:setup_setting(79, "server_filter_friends_only", false)
+	self:setup_setting(80, "server_filter_camp_only", false)
+	self:setup_setting(81, "server_filter_distance", 2)
+	self:setup_setting(82, "server_filter_difficulty", 0)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -244,8 +249,8 @@ function GenericUserManager:reset_advanced_video_setting_map()
 		"use_parallax",
 		"motion_blur_setting",
 		"vls_setting",
-		"fov_multiplier",
 		"detail_distance",
+		"corpse_limit",
 		"AA_setting",
 		"video_animation_lod",
 		"fps_cap",

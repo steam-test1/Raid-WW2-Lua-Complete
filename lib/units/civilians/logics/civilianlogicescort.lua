@@ -5,7 +5,6 @@ CivilianLogicEscort.IDLE_TALK_DELAY = 45
 
 function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -36,10 +35,10 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 
 	if data.unit:anim_data().tied then
 		local action_data = {
-			variant = "panic",
-			body_part = 1,
 			clamp_to_graph = true,
-			type = "act"
+			type = "act",
+			variant = "panic",
+			body_part = 1
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -125,10 +124,10 @@ function CivilianLogicEscort.update(data)
 			my_data.commanded_to_move = nil
 
 			data.unit:movement():action_request({
-				variant = "panic",
-				body_part = 1,
 				clamp_to_graph = true,
-				type = "act"
+				type = "act",
+				variant = "panic",
+				body_part = 1
 			})
 		end
 	elseif not data.char_tweak.immortal then
@@ -369,11 +368,8 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	local objective = data.objective
 	local haste = objective and objective.haste or "walk"
 	local new_action_data = {
-		variant = nil,
 		body_part = 2,
-		end_rot = nil,
 		type = "walk",
-		nav_path = nil,
 		nav_path = my_data.advance_path,
 		variant = haste,
 		end_rot = objective.rot
@@ -391,16 +387,15 @@ end
 
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
+		clamp_to_graph = true,
 		variant = "cm_so_escort_get_up_hesitant",
 		body_part = 1,
-		blocks = nil,
 		type = "act",
-		clamp_to_graph = true,
 		blocks = {
-			walk = -1,
-			heavy_hurt = -1,
 			hurt = -1,
-			action = -1
+			action = -1,
+			walk = -1,
+			heavy_hurt = -1
 		}
 	}
 	my_data.getting_up = data.unit:movement():action_request(action)
@@ -408,7 +403,6 @@ end
 
 function CivilianLogicEscort._get_all_paths(data)
 	return {
-		advance_path = nil,
 		advance_path = data.internal_data.advance_path
 	}
 end

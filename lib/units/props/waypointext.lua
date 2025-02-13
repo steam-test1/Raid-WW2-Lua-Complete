@@ -4,10 +4,15 @@ function WaypointExt:init(unit)
 	self._unit = unit
 	WaypointExt.debug_ext = self
 	self._is_active = false
+
+	if self._startup_waypoint then
+		self:add_waypoint(self._startup_waypoint, self._startup_waypoint_z, nil, nil, nil)
+	end
 end
 
 function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon, show_on_hud)
 	self:add_waypoint_external({
+		distance = true,
 		icon_name = icon_name,
 		pos_z_offset = pos_z_offset,
 		pos_locator = pos_locator,
@@ -34,10 +39,10 @@ function WaypointExt:add_waypoint_external(data)
 	self._icon_pos = position
 	self._icon_rot = rotation
 	self._waypoint_data = {
-		waypoint_type = "unit_waypoint",
 		radius = 200,
-		waypoint_origin = "waypoint_extension",
 		no_sync = false,
+		waypoint_type = "unit_waypoint",
+		waypoint_origin = "waypoint_extension",
 		icon = self._icon_name,
 		map_icon = self._map_icon,
 		unit = self._unit,

@@ -46,22 +46,22 @@ end
 
 function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	local selector_panel_params = {
-		y = 0,
-		halign = "scale",
-		name = "selector_panel",
 		x = 0,
-		valign = "scale",
+		name = "selector_panel",
 		alpha = 0,
+		valign = "scale",
+		halign = "scale",
+		y = 0,
 		w = self._object:w(),
 		h = self._object:h()
 	}
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_background_params = {
+		alpha = 1,
 		valign = "scale",
 		halign = "scale",
 		y = 0,
 		x = 0,
-		alpha = 1,
 		name = "selector_background",
 		w = self._selector_panel:w(),
 		h = self._selector_panel:h(),
@@ -69,11 +69,11 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	}
 	self._selector_rect = self._selector_panel:rect(selector_background_params)
 	local selector_triangle_up_params = {
+		alpha = 1,
 		valign = "top",
 		halign = "left",
 		y = 0,
 		x = 0,
-		alpha = 1,
 		name = "selector_triangle_up",
 		w = RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W,
 		h = RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H,
@@ -82,9 +82,9 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	}
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
 	local selector_triangle_down_params = {
+		alpha = 1,
 		valign = "bottom",
 		halign = "right",
-		alpha = 1,
 		name = "selector_triangle_down",
 		x = self._selector_panel:w() - RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W,
 		y = self._selector_panel:h() - RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H,

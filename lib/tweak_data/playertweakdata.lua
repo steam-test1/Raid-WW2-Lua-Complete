@@ -49,23 +49,23 @@ end
 function PlayerTweakData:init()
 	self.killzones = {
 		fire = {
-			damage = 4,
-			timer = 0.15
+			timer = 0.15,
+			damage = 4
 		},
 		inferno = {
+			damage = 8,
 			death_on_down = true,
-			timer = 0.15,
-			damage = 8
+			timer = 0.15
 		},
 		gas = {
-			damage = 3,
-			timer = 0.25
+			timer = 0.25,
+			damage = 3
 		},
 		sniper = {
+			warning_chance = 0.75,
 			warning_timer = 4,
 			timer = 1.5,
-			damage = 50,
-			warning_chance = 0.75
+			damage = 50
 		}
 	}
 	self.run_move_dir_treshold = 0.7
@@ -73,20 +73,6 @@ function PlayerTweakData:init()
 	self.damage = {
 		DODGE_INIT = 0,
 		HEALTH_REGEN = 0,
-		ARMOR_STEPS = 1,
-		ARMOR_DAMAGE_REDUCTION = 1,
-		ARMOR_DAMAGE_REDUCTION_STEPS = {
-			1,
-			0.6,
-			0.7,
-			0.8,
-			0.9,
-			0.95,
-			0.96,
-			0.97,
-			0.98,
-			0.99
-		},
 		REGENERATE_TIME = 3
 	}
 
@@ -132,11 +118,14 @@ function PlayerTweakData:init()
 	}
 	self.suspicion = {
 		max_value = 8,
-		range_mul = 1,
-		buildup_mul = 1
+		buildup_mul = 1,
+		range_mul = 1
 	}
 	self.max_nr_following_hostages = 1
-	self.max_floor_jump_angle = 58
+	self.max_floor_jump_angle = {
+		max = 72,
+		min = 58
+	}
 	self.reload_interupt_buffer = 0.58
 	self.primary_attack_buffer = 0.25
 	self.TRANSITION_DURATION = 0.26

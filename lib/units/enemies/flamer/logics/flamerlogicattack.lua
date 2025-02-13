@@ -7,6 +7,9 @@ local mvec3_dis = mvector3.distance
 local mvec3_dis_sq = mvector3.distance_sq
 local mvec3_lerp = mvector3.lerp
 local mvec3_norm = mvector3.normalize
+local math_lerp = math.lerp
+local math_within = math.within
+local math_clamp = math.clamp
 local temp_vec1 = Vector3()
 local temp_vec2 = Vector3()
 local temp_vec3 = Vector3()
@@ -28,6 +31,10 @@ function FlamerLogicAttack.enter(data, new_logic_name, enter_params)
 	my_data.weapon_range = data.char_tweak.weapon[weapon_usage].range
 	my_data.weapon_range_max = data.char_tweak.weapon[weapon_usage].max_range
 	my_data.additional_weapon_stats = data.char_tweak.weapon[weapon_usage].additional_weapon_stats
+
+	if data.char_tweak.throwable then
+		my_data.throw_projectile_chance = data.char_tweak.throwable.throw_chance or 0.1
+	end
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -187,6 +194,83 @@ function FlamerLogicAttack.update(data)
 	end
 end
 
+function FlamerLogicAttack._upd_aim(data, my_data)
+	FlamerLogicAttack.super._upd_aim(data, my_data)
+
+	local focus_enemy = data.attention_obj
+
+	if focus_enemy then
+		local enemy_visible = focus_enemy.verified
+
+		if enemy_visible then
+			FlamerLogicAttack._chk_throw_throwable(data, my_data, focus_enemy)
+		end
+	end
+end
+
+function FlamerLogicAttack._chk_throw_throwable(data, my_data, focus)
+	local projectile = data.char_tweak.throwable and data.char_tweak.throwable.projectile_id
+
+	if not projectile then
+		return
+	end
+
+	if data.projectile_thrown_t and data.t < data.projectile_thrown_t then
+		return
+	end
+
+	if not focus.last_verified_pos or not focus.verified_t then
+		return
+	end
+
+	if data.char_tweak.throwable.throw_chance < math.random() then
+		return
+	end
+
+	local mov_ext = data.unit:movement()
+
+	if mov_ext:chk_action_forbidden("action") then
+		return
+	end
+
+	local head_pos = mov_ext:m_head_pos()
+	local throw_dis = focus.verified_dis
+	local min_distance = my_data.weapon_range_max * 1.1
+
+	if not math_within(throw_dis, min_distance, 2400) then
+		return
+	end
+
+	local throw_pos = head_pos + mov_ext:m_head_rot():y() * 50
+	local enemy_pos = focus.m_head_pos
+	local slotmask = managers.slot:get_mask("world_geometry")
+
+	if data.unit:raycast("ray", throw_pos, enemy_pos, "sphere_cast_radius", 15, "slot_mask", slotmask, "report") then
+		return
+	end
+
+	local throw_dir = Vector3()
+
+	mvec3_lerp(throw_dir, throw_pos, enemy_pos, 0.6)
+	mvec3_sub(throw_dir, throw_pos)
+
+	local dis_lerp = math_clamp((throw_dis - 1000) / 1000, 0, 1)
+	local adjust = math_lerp(0, 280, dis_lerp)
+
+	mvec3_set_z(throw_dir, throw_dir.z + adjust)
+	mvec3_norm(throw_dir)
+
+	data.projectile_thrown_t = data.t + 35
+
+	if mov_ext:play_redirect("throw_grenade") then
+		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", data.unit, "throw_grenade")
+	end
+
+	local projectile_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile)
+
+	ProjectileBase.throw_projectile(projectile_index, throw_pos, throw_dir)
+end
+
 function FlamerLogicAttack.queued_update(data)
 	local my_data = data.internal_data
 	my_data.update_queued = false
@@ -208,8 +292,6 @@ function FlamerLogicAttack._process_pathing_results(data, my_data)
 		if path then
 			if path ~= "failed" then
 				my_data.chase_path = path
-			else
-				print("[FlamerLogicAttack._process_pathing_results] chase path failed")
 			end
 
 			my_data.pathing_to_chase_pos = nil

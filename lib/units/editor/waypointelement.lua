@@ -1,105 +1,45 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
+WaypointUnitElement.HED_COLOR = Color.white
 
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
-
-	WaypointUnitElement.HED_COLOR = Color(1, 1, 1, 1)
-
 	self:_add_wp_options()
 
 	self._icon_options = {
 		"map_waypoint_pov_in",
 		"map_waypoint_pov_out",
-		"waypoint_special_camp_mission_raid",
-		"waypoint_special_aim",
-		"waypoint_special_air_strike",
-		"waypoint_special_ammo",
-		"waypoint_special_boat",
-		"waypoint_special_code_book",
-		"waypoint_special_code_device",
-		"waypoint_special_crowbar",
-		"waypoint_special_cvy_foxhole",
-		"waypoint_special_cvy_landimine",
-		"waypoint_special_defend",
-		"waypoint_special_dog_tags",
-		"waypoint_special_door",
-		"waypoint_special_downed",
-		"waypoint_special_dynamite_stick",
-		"waypoint_special_escape",
-		"waypoint_special_explosive",
-		"waypoint_special_fire",
-		"waypoint_special_fix",
-		"waypoint_special_general_vip_sit",
-		"waypoint_special_gereneral_vip_move",
-		"waypoint_special_gold",
-		"waypoint_special_health",
-		"waypoint_special_key",
-		"waypoint_special_kill",
-		"waypoint_special_lockpick",
-		"waypoint_special_loot",
-		"waypoint_special_loot_drop",
-		"waypoint_special_parachute",
-		"waypoint_special_phone",
-		"waypoint_special_portable_radio",
-		"waypoint_special_power",
-		"waypoint_special_prisoner",
-		"waypoint_special_recording_device",
-		"waypoint_special_refuel",
-		"waypoint_special_refuel_empty",
-		"waypoint_special_stash_box",
-		"waypoint_special_thermite",
-		"waypoint_special_tools",
-		"waypoint_special_valve",
-		"waypoint_special_vehicle_kugelwagen",
-		"waypoint_special_vehicle_truck",
-		"waypoint_special_wait",
-		"waypoint_special_where",
 		"raid_wp_wait",
-		"raid_prisoner",
-		"pd2_lootdrop",
-		"pd2_escape",
-		"pd2_talk",
-		"pd2_kill",
-		"pd2_drill",
-		"pd2_generic_look",
-		"pd2_phone",
-		"pd2_c4",
-		"pd2_power",
-		"pd2_door",
-		"pd2_computer",
-		"pd2_wirecutter",
-		"pd2_fire",
-		"pd2_loot",
-		"pd2_methlab",
-		"pd2_generic_interact",
-		"pd2_goto",
-		"pd2_ladder",
-		"pd2_fix",
-		"pd2_question",
-		"pd2_defend",
-		"pd2_generic_saw",
-		"pd2_chainsaw"
+		"raid_prisoner"
 	}
+
+	self:_setup_waypoints_list()
+
 	self._map_display_options = {
 		"point",
-		"square",
+		"icon",
 		"circle"
 	}
 	self._hed.map_display = "point"
-	self._hed.width = 100
-	self._hed.depth = 100
 	self._hed.radius = 150
+	self._hed.range_max = nil
+	self._hed.range_min = nil
 	self._hed.icon = "map_waypoint_pov_in"
 	self._hed.text_id = "debug_none"
-	self._hed.only_in_civilian = false
 
 	table.insert(self._save_values, "icon")
 	table.insert(self._save_values, "map_display")
-	table.insert(self._save_values, "width")
-	table.insert(self._save_values, "depth")
 	table.insert(self._save_values, "radius")
+	table.insert(self._save_values, "range_max")
+	table.insert(self._save_values, "range_min")
 	table.insert(self._save_values, "text_id")
-	table.insert(self._save_values, "only_in_civilian")
+end
+
+function WaypointUnitElement:_setup_waypoints_list()
+	for key, value in pairs(tweak_data.gui.icons) do
+		if string.match(key, "^waypoint_special_") then
+			table.insert(self._icon_options, key)
+		end
+	end
 end
 
 function WaypointUnitElement:_add_wp_options()
@@ -112,11 +52,33 @@ function WaypointUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
+function WaypointUnitElement:_set_shape_type()
+	local display_type = self._hed.map_display
+
+	self._icon_ctrlr:set_enabled(display_type ~= "circle")
+	self._radius_params.number_ctrlr:set_enabled(display_type == "circle")
+	self._sliders.radius:set_enabled(display_type == "circle")
+end
+
+function WaypointUnitElement:_set_ranges()
+	if self._hed.range_max == 0 then
+		self._hed.range_max = nil
+	end
+
+	if self._hed.range_min == 0 then
+		self._hed.range_min = nil
+	end
+end
+
 function WaypointUnitElement:set_element_data(params, ...)
 	WaypointUnitElement.super.set_element_data(self, params, ...)
 
 	if params.value == "text_id" then
 		self:_set_text()
+	elseif params.value == "map_display" then
+		self:_set_shape_type()
+	elseif params.value == "range_max" or params.value == "range_min" then
+		self:_set_ranges()
 	end
 end
 
@@ -130,11 +92,9 @@ function WaypointUnitElement:update_selected(t, dt, selected_unit, all_units)
 end
 
 function WaypointUnitElement:get_shape()
-	if not self._square_shape then
-		self:_create_shapes()
-	end
+	self:_create_shapes()
 
-	return self._hed.map_display == "square" and self._square_shape or self._hed.map_display == "circle" and self._circle_shape
+	return self._hed.map_display == "circle" and self._circle_shape
 end
 
 function WaypointUnitElement:clone_data(...)
@@ -143,14 +103,6 @@ function WaypointUnitElement:clone_data(...)
 end
 
 function WaypointUnitElement:_create_shapes()
-	self._square_shape = CoreShapeManager.ShapeBoxMiddle:new({
-		height = 200,
-		width = self._hed.width,
-		depth = self._hed.depth
-	})
-
-	self._square_shape:set_unit(self._unit)
-
 	self._circle_shape = CoreShapeManager.ShapeCylinderMiddle:new({
 		height = 200,
 		radius = self._hed.radius
@@ -160,40 +112,13 @@ function WaypointUnitElement:_create_shapes()
 end
 
 function WaypointUnitElement:_recreate_shapes()
-	self._square_shape = nil
 	self._circle_shape = nil
 
 	self:_create_shapes()
 end
 
-function WaypointUnitElement:_set_shape_type()
-	local display_type = self._hed.map_display
-
-	if display_type == "point" then
-		self._icon_ctrlr:set_enabled(true)
-	else
-		self._icon_ctrlr:set_enabled(false)
-	end
-
-	self._width_params.number_ctrlr:set_enabled(display_type == "square")
-	self._depth_params.number_ctrlr:set_enabled(display_type == "square")
-	self._radius_params.number_ctrlr:set_enabled(display_type == "circle")
-	self._sliders.depth:set_enabled(display_type == "square")
-	self._sliders.width:set_enabled(display_type == "square")
-	self._sliders.radius:set_enabled(display_type == "circle")
-end
-
 function WaypointUnitElement:set_shape_property(params)
-	self._square_shape:set_property(params.property, self._hed[params.value])
 	self._circle_shape:set_property(params.property, self._hed[params.value])
-end
-
-function WaypointUnitElement:set_element_data(params, ...)
-	WaypointUnitElement.super.set_element_data(self, params, ...)
-
-	if params.value == "map_display" then
-		self:_set_shape_type()
-	end
 end
 
 function WaypointUnitElement:_split_string(inputstr, sep)
@@ -253,7 +178,6 @@ function WaypointUnitElement:set_size(params)
 		value = 10
 	end
 
-	self._square_shape:set_property(params.value, value)
 	self._circle_shape:set_property(params.value, value)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
@@ -270,50 +194,11 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_checkbox(panel, panel_sizer, "only_in_civilian", "This waypoint will only be visible for players that are in civilian mode")
 	self:_build_value_combobox(panel, panel_sizer, "map_display", self._map_display_options, "Select a map display type")
 
 	self._icon_ctrlr = self:_build_value_combobox(panel, panel_sizer, "icon", self._icon_options, "Select an icon")
 
-	if not self._square_shape then
-		self:_create_shapes()
-	end
-
-	local width, width_params = self:_build_value_number(panel, panel_sizer, "width", {
-		min = 10,
-		floats = 0
-	}, "If map display type is \"square,\" this specifies the width of the element on the map (in pixels).")
-
-	width_params.name_ctrlr:set_label("Width [cm]:")
-
-	self._width_params = width_params
-
-	width:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "width",
-		property = "width"
-	})
-	width:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "width",
-		property = "width"
-	})
-
-	local depth, depth_params = self:_build_value_number(panel, panel_sizer, "depth", {
-		min = 10,
-		floats = 0
-	}, "If map display type is \"square,\" this specifies the depth of the element on the map (in pixels).")
-
-	depth_params.name_ctrlr:set_label("Depth [cm]:")
-
-	self._depth_params = depth_params
-
-	depth:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "depth",
-		property = "depth"
-	})
-	depth:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "depth",
-		property = "depth"
-	})
+	self:_create_shapes()
 
 	local radius, radius_params = self:_build_value_number(panel, panel_sizer, "radius", {
 		min = 10,
@@ -325,16 +210,28 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self._radius_params = radius_params
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
-	self:scale_slider(panel, panel_sizer, width_params, "width", "Width scale:")
-	self:scale_slider(panel, panel_sizer, depth_params, "depth", "Depth scale:")
 	self:scale_slider(panel, panel_sizer, radius_params, "radius", "Radius scale:")
+
+	local range_max, range_max_params = self:_build_value_number(panel, panel_sizer, "range_max", {
+		min = 0,
+		floats = 0
+	}, "The maximum range within the waypoint is visible (0 for always).")
+
+	range_max_params.name_ctrlr:set_label("Max Range [cm]:")
+
+	local range_min, range_min_params = self:_build_value_number(panel, panel_sizer, "range_min", {
+		min = 0,
+		floats = 0
+	}, "The minimum range within the waypoint is visible (0 for always).")
+
+	range_min_params.name_ctrlr:set_label("Min Range [cm]:")
 	self:_build_value_combobox(panel, panel_sizer, "text_id", self._text_options, "Select a text id")
 
 	local text_sizer = EWS:BoxSizer("HORIZONTAL")

@@ -64,8 +64,8 @@ function SkillTreeTweakData:init(tweak_data)
 	}
 	self.migration_reward = 22
 	self.exp_overlevel_penalty = {
-		max = 0.85,
-		min = 0.1
+		min = 0.1,
+		max = 0.85
 	}
 	self.skill_profiles = {
 		0,
@@ -95,7 +95,8 @@ function SkillTreeTweakData:init(tweak_data)
 			"pain_train"
 		},
 		[SkillTreeTweakData.CLASS_DEMOLITIONS] = {
-			"clustertruck"
+			"clustertruck",
+			"scorched_earth"
 		}
 	}
 	self.automatic_unlock_progressions = {}
@@ -116,10 +117,10 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 	}
 	self.classes = {
 		recon = {
+			default_natioanlity = "british",
 			name = "recon",
 			desc_id = "skill_class_recon_desc",
 			name_id = "skill_class_recon_name",
-			default_natioanlity = "british",
 			icon = {
 				x = 0,
 				y = 0
@@ -131,17 +132,17 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 				64
 			},
 			stats = {
-				health = 12,
 				stamina = 68,
-				speed = 162
+				speed = 162,
+				health = 12
 			},
 			icon_data = tweak_data.gui.icons.ico_class_recon
 		},
 		assault = {
+			default_natioanlity = "american",
 			name = "assault",
 			desc_id = "skill_class_assault_desc",
 			name_id = "skill_class_assault_name",
-			default_natioanlity = "american",
 			icon = {
 				x = 384,
 				y = 0
@@ -153,17 +154,17 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 				64
 			},
 			stats = {
-				health = 13,
 				stamina = 69,
-				speed = 163
+				speed = 163,
+				health = 13
 			},
 			icon_data = tweak_data.gui.icons.ico_class_assault
 		},
 		demolitions = {
+			default_natioanlity = "german",
 			name = "demolitions",
 			desc_id = "skill_class_demolitions_desc",
 			name_id = "skill_class_demolitions_name",
-			default_natioanlity = "german",
 			icon = {
 				x = 0,
 				y = 96
@@ -175,17 +176,17 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 				64
 			},
 			stats = {
-				health = 14,
 				stamina = 70,
-				speed = 164
+				speed = 164,
+				health = 14
 			},
 			icon_data = tweak_data.gui.icons.ico_class_demolitions
 		},
 		infiltrator = {
+			default_natioanlity = "russian",
 			name = "infiltrator",
 			desc_id = "skill_class_infiltrator_desc",
 			name_id = "skill_class_infiltrator_name",
-			default_natioanlity = "russian",
 			icon = {
 				x = 0,
 				y = 96
@@ -197,9 +198,9 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 				64
 			},
 			stats = {
-				health = 15,
 				stamina = 71,
-				speed = 165
+				speed = 165,
+				health = 15
 			},
 			icon_data = tweak_data.gui.icons.ico_class_infiltrator
 		}
@@ -261,12 +262,12 @@ end
 
 function SkillTreeTweakData:_init_skill_list_warcries()
 	self.skills.warcry_sharpshooter = {
-		value_multiplier = 2,
 		default_unlocked = true,
 		warcry_id = "sharpshooter",
 		icon = "skills_warcry_sharpshooter",
 		desc_id = "skill_warcry_sharpshooter_desc",
 		name_id = "skill_warcry_sharpshooter_name",
+		value_multiplier = 2,
 		class_lock = {
 			SkillTreeTweakData.CLASS_RECON
 		},
@@ -285,13 +286,13 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		}
 	}
 	self.skills.warcry_silver_bullet = {
-		value_multiplier = 2.25,
+		level_required = 10,
+		warcry_id = "silver_bullet",
+		icon = "skills_warcry_silver_bullet",
 		desc_id = "skill_warcry_silver_bullet_desc",
 		info_id = "skill_warcry_silver_bullet_info",
 		name_id = "skill_warcry_silver_bullet_name",
-		warcry_id = "silver_bullet",
-		icon = "skills_warcry_silver_bullet",
-		level_required = 10,
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_RECON
@@ -310,12 +311,12 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		}
 	}
 	self.skills.warcry_berserk = {
-		value_multiplier = 2,
 		default_unlocked = true,
 		warcry_id = "berserk",
 		icon = "skills_warcry_berserk",
 		desc_id = "skill_warcry_berserk_desc",
 		name_id = "skill_warcry_berserk_name",
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -334,13 +335,13 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		}
 	}
 	self.skills.warcry_sentry = {
-		value_multiplier = 2.25,
+		level_required = 10,
+		warcry_id = "sentry",
+		icon = "skills_warcry_sentry",
 		desc_id = "skill_warcry_sentry_desc",
 		info_id = "skill_warcry_sentry_info",
 		name_id = "skill_warcry_sentry_name",
-		warcry_id = "sentry",
-		icon = "skills_warcry_sentry",
-		level_required = 10,
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -359,12 +360,12 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		}
 	}
 	self.skills.warcry_ghost = {
-		value_multiplier = 2,
 		default_unlocked = true,
 		warcry_id = "ghost",
 		icon = "skills_warcry_ghost",
 		desc_id = "skill_warcry_ghost_desc",
 		name_id = "skill_warcry_ghost_name",
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -383,13 +384,13 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		}
 	}
 	self.skills.warcry_pain_train = {
-		value_multiplier = 2.25,
+		level_required = 10,
+		warcry_id = "pain_train",
+		icon = "skills_warcry_pain_train",
 		desc_id = "skill_warcry_pain_train_desc",
 		info_id = "skill_warcry_pain_train_info",
 		name_id = "skill_warcry_pain_train_name",
-		warcry_id = "pain_train",
-		icon = "skills_warcry_pain_train",
-		level_required = 10,
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -402,20 +403,20 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		},
 		upgrades = {
 			{},
-			{},
 			{
 				"warcry_player_charge_activation_threshold"
 			},
+			{},
 			{}
 		}
 	}
 	self.skills.warcry_clustertruck = {
-		value_multiplier = 2,
 		default_unlocked = true,
 		warcry_id = "clustertruck",
 		icon = "skills_warcry_clustertruck",
 		desc_id = "skill_warcry_clustertruck_desc",
 		name_id = "skill_warcry_clustertruck_name",
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		class_lock = {
 			SkillTreeTweakData.CLASS_DEMOLITIONS
@@ -428,8 +429,39 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		},
 		upgrades = {
 			{},
+			{
+				"warcry_player_grenade_refill_amounts_1"
+			},
+			{},
+			{
+				"warcry_player_grenade_refill_amounts_2"
+			}
+		}
+	}
+	self.skills.scorched_earth = {
+		level_required = 10,
+		warcry_id = "scorched_earth",
+		icon = "skills_warcry_scorched_earth",
+		desc_id = "skill_warcry_scorched_earth_desc",
+		name_id = "skill_warcry_scorched_earth_name",
+		value_multiplier = 2,
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS
+		},
+		upgrades_desc = {
+			"skill_warcry_scorched_earth_stat_line_1",
+			"skill_warcry_scorched_earth_stat_line_2",
+			"skill_warcry_scorched_earth_stat_line_3",
+			"skill_warcry_scorched_earth_stat_line_4"
+		},
+		upgrades = {
 			{},
 			{},
+			{
+				"warcry_player_grenade_refill_amounts_2",
+				"warcry_player_grenade_refill_amounts_1"
+			},
 			{}
 		}
 	}
@@ -437,12 +469,12 @@ end
 
 function SkillTreeTweakData:_init_skill_list_boosts()
 	self.skills.boost_nothing = {
-		value_multiplier = 2,
-		name_id = "skill_boost_nothing_name",
+		level_required = 40,
 		info_id = "status_effect_nothing_info",
 		icon = "skills_boost_nothing",
 		desc_id = "skill_boost_nothing_desc",
-		level_required = 40,
+		name_id = "skill_boost_nothing_name",
+		value_multiplier = 2,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_boost_nothing_stat_line_1",
@@ -467,12 +499,12 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		}
 	}
 	self.skills.box_o_choc = {
-		value_multiplier = 0.8,
 		upgrades_team_buff_icon = "status_effect_health_regen",
-		level_required = 5,
 		icon = "skills_box_o_choc",
+		level_required = 5,
 		desc_id = "skill_box_o_choc_desc",
 		name_id = "skill_box_o_choc_name",
+		value_multiplier = 0.8,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_box_o_choc_stat_line_1",
@@ -506,12 +538,12 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		}
 	}
 	self.skills.sprinter = {
-		value_multiplier = 0.8,
 		upgrades_team_buff_icon = "status_effect_movement_speed",
-		level_required = 5,
 		icon = "skills_sprinter",
+		level_required = 5,
 		desc_id = "skill_sprinter_desc",
 		name_id = "skill_sprinter_name",
+		value_multiplier = 0.8,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_sprinter_stat_line_1",
@@ -545,12 +577,12 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		}
 	}
 	self.skills.painkiller = {
-		value_multiplier = 0.7,
 		upgrades_team_buff_icon = "status_effect_damage_resistance",
-		level_required = 10,
 		icon = "skills_painkiller",
+		level_required = 10,
 		desc_id = "skill_painkiller_desc",
 		name_id = "skill_painkiller_name",
+		value_multiplier = 0.7,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_painkiller_stat_line_1",
@@ -585,12 +617,12 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		}
 	}
 	self.skills.cache_basket = {
-		value_multiplier = 0.7,
 		upgrades_team_buff_icon = "status_effect_ammo_regeneration",
-		level_required = 10,
 		icon = "skills_cache_basket",
+		level_required = 10,
 		desc_id = "skill_cache_basket_desc",
 		name_id = "skill_cache_basket_name",
+		value_multiplier = 0.7,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_cache_basket_stat_line_1",
@@ -624,12 +656,12 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		}
 	}
 	self.skills.critbrain = {
-		value_multiplier = 0.7,
 		upgrades_team_buff_icon = "status_effect_crit_chances",
-		level_required = 10,
 		icon = "skills_critbrain",
+		level_required = 10,
 		desc_id = "skill_critbrain_desc",
 		name_id = "skill_critbrain_name",
+		value_multiplier = 0.7,
 		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 		upgrades_desc = {
 			"skill_critbrain_stat_line_1",
@@ -808,9 +840,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.focus = {
 		icon = "skills_focus",
+		level_required = 3,
 		desc_id = "skill_focus_desc",
 		name_id = "skill_focus_name",
-		level_required = 3,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT,
@@ -839,9 +871,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.handyman = {
 		icon = "skills_handyman",
+		level_required = 3,
 		desc_id = "skill_handyman_desc",
 		name_id = "skill_handyman_name",
-		level_required = 3,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -869,9 +901,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.do_die = {
 		icon = "skills_do_die",
+		level_required = 3,
 		desc_id = "skill_do_die_desc",
 		name_id = "skill_do_die_name",
-		level_required = 3,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_DEMOLITIONS
@@ -898,9 +930,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.medic = {
-		desc_id = "skill_medic_desc",
 		level_required = 3,
 		icon = "skills_medic",
+		desc_id = "skill_medic_desc",
 		name_id = "skill_medic_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		purchase_group = {
@@ -954,8 +986,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.holdbarred = {
-		icon = "skills_holdbarred",
 		level_required = 3,
+		icon = "skills_holdbarred",
 		desc_id = "skill_holdbarred_desc",
 		name_id = "skill_holdbarred_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -982,9 +1014,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.steadiness = {
 		icon = "skills_steadiness",
+		level_required = 8,
 		desc_id = "skill_steadiness_desc",
 		name_id = "skill_steadiness_name",
-		level_required = 8,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_RECON
@@ -1012,11 +1044,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.high_dive = {
-		name_id = "skill_high_dive_name",
-		desc_id = "skill_high_dive_desc",
-		info_id = "skill_high_dive_info",
-		icon = "skills_high_dive",
 		level_required = 8,
+		icon = "skills_high_dive",
+		info_id = "skill_high_dive_info",
+		desc_id = "skill_high_dive_desc",
+		name_id = "skill_high_dive_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -1064,11 +1096,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.helpcry = {
-		icon = "skills_helpcry",
 		info_id = "skill_helpcry_info",
+		icon = "skills_helpcry",
+		level_required = 8,
 		desc_id = "skill_helpcry_desc",
 		name_id = "skill_helpcry_name",
-		level_required = 8,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		upgrades_desc = {
 			"skill_helpcry_stat_line_1",
@@ -1093,8 +1125,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.fitness_freak = {
-		icon = "skills_fitness_freak",
 		level_required = 8,
+		icon = "skills_fitness_freak",
 		desc_id = "skill_fitness_freak_desc",
 		name_id = "skill_fitness_freak_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1120,9 +1152,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.clipazines_assault = {
-		desc_id = "skill_clipazines_desc",
 		level_required = 16,
 		icon = "skills_clipazines",
+		desc_id = "skill_clipazines_desc",
 		name_id = "skill_clipazines_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		purchase_group = {
@@ -1195,9 +1227,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.duck_and_cover = {
 		icon = "skills_duck_and_cover",
+		level_required = 13,
 		desc_id = "skill_duck_and_cover_desc",
 		name_id = "skill_duck_and_cover_name",
-		level_required = 13,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -1224,8 +1256,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.saboteur = {
-		icon = "skills_saboteur",
 		level_required = 13,
+		icon = "skills_saboteur",
 		desc_id = "skill_saboteur_desc",
 		name_id = "skill_saboteur_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1254,8 +1286,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.predator = {
-		icon = "skills_predator",
 		level_required = 13,
+		icon = "skills_predator",
 		desc_id = "skill_predator_desc",
 		name_id = "skill_predator_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1281,11 +1313,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.perseverance = {
-		icon = "skills_perseverance",
 		info_id = "skill_perseverance_info",
+		icon = "skills_perseverance",
+		level_required = 13,
 		desc_id = "skill_perseverance_desc",
 		name_id = "skill_perseverance_name",
-		level_required = 13,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		upgrades_desc = {
 			"skill_perseverance_stat_line_1",
@@ -1309,8 +1341,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.opportunist = {
-		icon = "skills_opportunist",
 		level_required = 16,
+		icon = "skills_opportunist",
 		desc_id = "skill_opportunist_desc",
 		name_id = "skill_opportunist_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1342,9 +1374,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.boxer = {
 		icon = "skills_boxer",
+		level_required = 16,
 		desc_id = "skill_boxer_desc",
 		name_id = "skill_boxer_name",
-		level_required = 16,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -1371,8 +1403,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.scuttler = {
-		icon = "skills_scuttler",
 		level_required = 16,
+		icon = "skills_scuttler",
 		desc_id = "skill_scuttler_desc",
 		name_id = "skill_scuttler_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1399,9 +1431,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.grenadier = {
 		level_required = 16,
-		desc_id = "skill_grenadier_desc",
-		info_id = "skill_grenadier_info",
 		icon = "skills_grenadier",
+		info_id = "skill_grenadier_info",
+		desc_id = "skill_grenadier_desc",
 		name_id = "skill_grenadier_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		purchase_group = {
@@ -1455,9 +1487,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.pack_mule = {
 		icon = "skills_pack_mule",
+		level_required = 20,
 		desc_id = "skill_pack_mule_desc",
 		name_id = "skill_pack_mule_name",
-		level_required = 20,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -1485,9 +1517,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.leaded = {
 		icon = "skills_leaded",
+		level_required = 20,
 		desc_id = "skill_leaded_desc",
 		name_id = "skill_leaded_name",
-		level_required = 20,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -1515,8 +1547,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.fragstone = {
-		icon = "skills_fragstone",
 		level_required = 20,
+		icon = "skills_fragstone",
 		desc_id = "skill_fragstone_desc",
 		name_id = "skill_fragstone_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1545,11 +1577,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.pickpocket = {
-		icon = "skills_pickpocket",
 		info_id = "skill_pickpocket_info",
+		icon = "skills_pickpocket",
+		level_required = 20,
 		desc_id = "skill_pickpocket_desc",
 		name_id = "skill_pickpocket_name",
-		level_required = 20,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		upgrades_desc = {
 			"skill_pickpocket_stat_line_1",
@@ -1573,8 +1605,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.fast_hands = {
-		icon = "skills_fast_hands",
 		level_required = 20,
+		icon = "skills_fast_hands",
 		desc_id = "skill_fast_hands_desc",
 		name_id = "skill_fast_hands_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1601,11 +1633,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.farsighted = {
-		name_id = "skill_farsighted_name",
-		desc_id = "skill_farsighted_desc",
-		info_id = "skill_farsighted_info",
-		icon = "skills_farsighted",
 		level_required = 24,
+		icon = "skills_farsighted",
+		info_id = "skill_farsighted_info",
+		desc_id = "skill_farsighted_desc",
+		name_id = "skill_farsighted_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_RECON
@@ -1632,8 +1664,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.bellhop = {
-		icon = "skills_bellhop",
 		level_required = 24,
+		icon = "skills_bellhop",
 		desc_id = "skill_bellhop_desc",
 		name_id = "skill_bellhop_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1664,9 +1696,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.agile = {
 		icon = "skills_agile",
+		level_required = 24,
 		desc_id = "skill_agile_desc",
 		name_id = "skill_agile_name",
-		level_required = 24,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -1694,9 +1726,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.marshal = {
 		level_required = 24,
-		desc_id = "skill_marshal_desc",
-		info_id = "skill_marshal_info",
 		icon = "skills_marshal",
+		info_id = "skill_marshal_info",
+		desc_id = "skill_marshal_desc",
 		name_id = "skill_marshal_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		purchase_group = {
@@ -1745,8 +1777,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		"pistol_marshal_stacking_damage_multiplier_1"
 	}
 	self.skills.anatomist = {
-		icon = "skills_anatomist",
 		level_required = 28,
+		icon = "skills_anatomist",
 		desc_id = "skill_anatomist_desc",
 		name_id = "skill_anatomist_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1776,11 +1808,11 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.rally = {
-		name_id = "skill_rally_name",
-		desc_id = "skill_rally_desc",
-		info_id = "skill_rally_info",
-		icon = "skills_rally",
 		level_required = 28,
+		icon = "skills_rally",
+		info_id = "skill_rally_info",
+		desc_id = "skill_rally_desc",
+		name_id = "skill_rally_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -1810,9 +1842,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.sapper = {
 		icon = "skills_sapper",
+		level_required = 28,
 		desc_id = "skill_sapper_desc",
 		name_id = "skill_sapper_name",
-		level_required = 28,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_DEMOLITIONS
@@ -1840,8 +1872,8 @@ function SkillTreeTweakData:_init_skill_list_talents()
 		}
 	}
 	self.skills.revenant = {
-		icon = "skills_revenant",
 		level_required = 28,
+		icon = "skills_revenant",
 		desc_id = "skill_revenant_desc",
 		name_id = "skill_revenant_name",
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
@@ -1870,9 +1902,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.big_game = {
 		icon = "skills_big_game",
+		level_required = 30,
 		desc_id = "skill_big_game_desc",
 		name_id = "skill_big_game_name",
-		level_required = 30,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_RECON
@@ -1901,9 +1933,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.brutality = {
 		icon = "skills_brutality",
+		level_required = 30,
 		desc_id = "skill_brutality_desc",
 		name_id = "skill_brutality_name",
-		level_required = 30,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_ASSAULT
@@ -1931,9 +1963,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.toughness = {
 		icon = "skills_toughness",
+		level_required = 30,
 		desc_id = "skill_toughness_desc",
 		name_id = "skill_toughness_name",
-		level_required = 30,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_INFILTRATOR
@@ -1961,9 +1993,9 @@ function SkillTreeTweakData:_init_skill_list_talents()
 	}
 	self.skills.blammfu = {
 		icon = "skills_blammfu",
+		level_required = 30,
 		desc_id = "skill_blammfu_desc",
 		name_id = "skill_blammfu_name",
-		level_required = 30,
 		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 		class_lock = {
 			SkillTreeTweakData.CLASS_DEMOLITIONS
@@ -1993,10 +2025,10 @@ end
 
 function SkillTreeTweakData:_init_skill_list_weapons()
 	self.skills.weapon_tier_unlocked_2 = {
+		icon_large = "skills_weapon_tier_2",
 		icon = "skills_weapon_tier_2",
 		desc_id = "skill_weapon_tier_unlocked_2_desc",
 		name_id = "skill_weapon_tier_unlocked_2_name",
-		icon_large = "skills_weapon_tier_2",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2004,10 +2036,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_tier_unlocked_3 = {
+		icon_large = "skills_weapon_tier_3",
 		icon = "skills_weapon_tier_3",
 		desc_id = "skill_weapon_tier_unlocked_3_desc",
 		name_id = "skill_weapon_tier_unlocked_3_name",
-		icon_large = "skills_weapon_tier_3",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2015,10 +2047,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_tier_unlocked_4 = {
+		icon_large = "skills_weapon_tier_4",
 		icon = "skills_weapon_tier_4",
 		desc_id = "skill_weapon_tier_unlocked_4_desc",
 		name_id = "skill_weapon_tier_unlocked_4_name",
-		icon_large = "skills_weapon_tier_4",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2026,10 +2058,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.recon_tier_4_unlocked = {
+		icon_large = "skills_weapon_tier_4",
 		icon = "skills_weapon_tier_4",
 		desc_id = "skill_recon_tier_4_unlocked_desc",
 		name_id = "skill_recon_tier_4_unlocked_name",
-		icon_large = "skills_weapon_tier_4",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2037,10 +2069,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.assault_tier_4_unlocked = {
+		icon_large = "skills_weapon_tier_4",
 		icon = "skills_weapon_tier_4",
 		desc_id = "skill_assault_tier_4_unlocked_desc",
 		name_id = "skill_assault_tier_4_unlocked_name",
-		icon_large = "skills_weapon_tier_4",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2048,10 +2080,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.infiltrator_tier_4_unlocked = {
+		icon_large = "skills_weapon_tier_4",
 		icon = "skills_weapon_tier_4",
 		desc_id = "skill_infiltrator_tier_4_unlocked_desc",
 		name_id = "skill_infiltrator_tier_4_unlocked_name",
-		icon_large = "skills_weapon_tier_4",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2059,10 +2091,10 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.demolitions_tier_4_unlocked = {
+		icon_large = "skills_weapon_tier_4",
 		icon = "skills_weapon_tier_4",
 		desc_id = "skill_demolitions_tier_4_unlocked_desc",
 		name_id = "skill_demolitions_tier_4_unlocked_name",
-		icon_large = "skills_weapon_tier_4",
 		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 		acquires = {},
 		upgrades = {
@@ -2070,8 +2102,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_springfield = {
-		name_id = "skill_weapon_unlock_springfield_name",
 		desc_id = "skill_weapon_unlock_springfield_desc",
+		name_id = "skill_weapon_unlock_springfield_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2079,8 +2111,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_m1911 = {
-		name_id = "skill_weapon_unlock_m1911_name",
 		desc_id = "skill_weapon_unlock_m1911_desc",
+		name_id = "skill_weapon_unlock_m1911_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2088,8 +2120,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_c96 = {
-		name_id = "skill_weapon_unlock_c96_name",
 		desc_id = "skill_weapon_unlock_c96_desc",
+		name_id = "skill_weapon_unlock_c96_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2097,8 +2129,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_webley = {
-		name_id = "skill_weapon_unlock_webley_name",
 		desc_id = "skill_weapon_unlock_webley_desc",
+		name_id = "skill_weapon_unlock_webley_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2106,8 +2138,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_sten = {
-		name_id = "skill_weapon_unlock_sten_name",
 		desc_id = "skill_weapon_unlock_sten_desc",
+		name_id = "skill_weapon_unlock_sten_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2115,8 +2147,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_mp38 = {
-		name_id = "skill_weapon_unlock_mp38_name",
 		desc_id = "skill_weapon_unlock_mp38_desc",
+		name_id = "skill_weapon_unlock_mp38_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2124,8 +2156,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_thompson = {
-		name_id = "skill_weapon_unlock_thompson_name",
 		desc_id = "skill_weapon_unlock_thompson_desc",
+		name_id = "skill_weapon_unlock_thompson_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2133,8 +2165,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_garand = {
-		name_id = "skill_weapon_unlock_garand_name",
 		desc_id = "skill_weapon_unlock_garand_desc",
+		name_id = "skill_weapon_unlock_garand_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2142,8 +2174,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_winchester = {
-		name_id = "skill_weapon_unlock_winchester_name",
 		desc_id = "skill_weapon_unlock_winchester_desc",
+		name_id = "skill_weapon_unlock_winchester_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2151,8 +2183,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_sterling = {
-		name_id = "skill_weapon_unlock_sterling_name",
 		desc_id = "skill_weapon_unlock_sterling_desc",
+		name_id = "skill_weapon_unlock_sterling_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2160,8 +2192,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_bar = {
-		name_id = "skill_weapon_unlock_bar_name",
 		desc_id = "skill_weapon_unlock_bar_desc",
+		name_id = "skill_weapon_unlock_bar_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2169,8 +2201,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_mp44 = {
-		name_id = "skill_weapon_unlock_mp44_name",
 		desc_id = "skill_weapon_unlock_mp44_desc",
+		name_id = "skill_weapon_unlock_mp44_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2178,8 +2210,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_mosin = {
-		name_id = "skill_weapon_unlock_mosin_name",
 		desc_id = "skill_weapon_unlock_mosin_desc",
+		name_id = "skill_weapon_unlock_mosin_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2187,8 +2219,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_carbine = {
-		name_id = "skill_weapon_unlock_carbine_name",
 		desc_id = "skill_weapon_unlock_carbine_desc",
+		name_id = "skill_weapon_unlock_carbine_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2196,8 +2228,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_mg42 = {
-		name_id = "skill_weapon_unlock_mg42_name",
 		desc_id = "skill_weapon_unlock_mg42_desc",
+		name_id = "skill_weapon_unlock_mg42_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2205,8 +2237,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_geco = {
-		name_id = "skill_weapon_unlock_geco_name",
 		desc_id = "skill_weapon_unlock_geco_desc",
+		name_id = "skill_weapon_unlock_geco_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2214,8 +2246,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_grenade_concrete = {
-		name_id = "skill_weapon_unlock_grenade_concrete_name",
 		desc_id = "skill_weapon_unlock_grenade_concrete_desc",
+		name_id = "skill_weapon_unlock_grenade_concrete_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2223,8 +2255,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_grenade_d343 = {
-		name_id = "skill_weapon_unlock_grenade_d343_name",
 		desc_id = "skill_weapon_unlock_grenade_d343_desc",
+		name_id = "skill_weapon_unlock_grenade_d343_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2232,8 +2264,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_grenade_mills = {
-		name_id = "skill_weapon_unlock_grenade_mills_name",
 		desc_id = "skill_weapon_unlock_grenade_mills_desc",
+		name_id = "skill_weapon_unlock_grenade_mills_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2241,8 +2273,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_decoy_coin = {
-		name_id = "skill_weapon_unlock_decoy_coin_name",
 		desc_id = "skill_weapon_unlock_decoy_coin_desc",
+		name_id = "skill_weapon_unlock_decoy_coin_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2250,8 +2282,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_grenade_betty = {
-		name_id = "skill_weapon_unlock_grenade_betty_name",
 		desc_id = "skill_weapon_unlock_grenade_betty_desc",
+		name_id = "skill_weapon_unlock_grenade_betty_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2259,8 +2291,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_grenade_gold_bar = {
-		name_id = "skill_weapon_unlock_grenade_gold_bar_name",
 		desc_id = "skill_weapon_unlock_grenade_gold_bar_desc",
+		name_id = "skill_weapon_unlock_grenade_gold_bar_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2268,8 +2300,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_dp28 = {
-		name_id = "skill_weapon_unlock_dp28_name",
 		desc_id = "skill_weapon_unlock_dp28_desc",
+		name_id = "skill_weapon_unlock_dp28_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2277,8 +2309,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_bren = {
-		name_id = "skill_weapon_unlock_bren_name",
 		desc_id = "skill_weapon_unlock_bren_desc",
+		name_id = "skill_weapon_unlock_bren_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2286,8 +2318,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_tt33 = {
-		name_id = "skill_weapon_unlock_tt33_name",
 		desc_id = "skill_weapon_unlock_tt33_desc",
+		name_id = "skill_weapon_unlock_tt33_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2295,8 +2327,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_kar_98k = {
-		name_id = "skill_weapon_unlock_kar_98k_name",
 		desc_id = "skill_weapon_unlock_kar_98k_desc",
+		name_id = "skill_weapon_unlock_kar_98k_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2304,8 +2336,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_lee_enfield = {
-		name_id = "skill_weapon_unlock_lee_enfield_name",
 		desc_id = "skill_weapon_unlock_lee_enfield_desc",
+		name_id = "skill_weapon_unlock_lee_enfield_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2313,8 +2345,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_ithaca = {
-		name_id = "skill_weapon_unlock_ithaca_name",
 		desc_id = "skill_weapon_unlock_ithaca_desc",
+		name_id = "skill_weapon_unlock_ithaca_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2322,8 +2354,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_browning = {
-		name_id = "skill_weapon_unlock_browning_name",
 		desc_id = "skill_weapon_unlock_browning_desc",
+		name_id = "skill_weapon_unlock_browning_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2331,8 +2363,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_welrod = {
-		name_id = "skill_weapon_unlock_welrod_name",
 		desc_id = "skill_weapon_unlock_welrod_desc",
+		name_id = "skill_weapon_unlock_welrod_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {
@@ -2340,8 +2372,8 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		}
 	}
 	self.skills.weapon_unlock_shotty = {
-		name_id = "skill_weapon_unlock_shotty_name",
 		desc_id = "skill_weapon_unlock_shotty_desc",
+		name_id = "skill_weapon_unlock_shotty_name",
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 		acquires = {},
 		upgrades = {

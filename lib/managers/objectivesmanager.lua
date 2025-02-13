@@ -71,7 +71,6 @@ function ObjectivesManager:_parse_objective(data)
 	local amount = data.amount
 	local amount_text = data.amount_text and managers.localization:text(data.amount_text)
 	local level_id = data.level_id
-	local xp_weight = data.xp_weight
 	local sub_objectives = {}
 
 	if data.difficulty_amount then
@@ -87,8 +86,7 @@ function ObjectivesManager:_parse_objective(data)
 		current_amount = amount and 0 or nil,
 		amount_text = amount_text,
 		sub_objectives = {},
-		level_id = level_id,
-		xp_weight = xp_weight
+		level_id = level_id
 	}
 
 	for _, sub in ipairs(data) do
@@ -114,9 +112,6 @@ function ObjectivesManager:_parse_objective(data)
 
 	if level_id then
 		self._objectives_level_id[level_id] = self._objectives_level_id[level_id] or {}
-		self._objectives_level_id[level_id][id] = {
-			xp_weight = xp_weight or 0
-		}
 	end
 end
 
@@ -165,7 +160,7 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
 			time = 4,
-			[""] = nil,
+			active = nil,
 			text = text,
 			title = title_message
 		})
@@ -256,7 +251,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 	if not skip_toast then
 		managers.hud:present_mid_text({
 			time = 4.5,
-			show_objectives = nil,
+			state = nil,
 			text = text,
 			title = title_message
 		})
@@ -339,7 +334,7 @@ function ObjectivesManager:complete_objective(id, load_data)
 				table.insert(self._completed_objectives_ordered, 1, id)
 			end
 
-			print("Tried to complete objective " .. tostring(id) .. ". This objective has never been given to the player.")
+			Application:warn("Tried to complete objective " .. tostring(id) .. ". This objective has never been given to the player.")
 
 			return
 		end
@@ -385,6 +380,13 @@ end
 
 function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 	local objective = self._objectives[id]
+
+	if not objective then
+		Application:warn("[ObjectivesManager:complete_sub_objective] No objectives for", id, inspect(self._objectives))
+
+		return
+	end
+
 	local sub_objective = objective.sub_objectives[sub_id]
 
 	if not sub_objective then
@@ -566,12 +568,21 @@ end
 
 function ObjectivesManager:objectives_by_name()
 	local t = {}
+	local level_id = managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 
-	for name, _ in pairs(self._objectives) do
-		table.insert(t, name)
+	Application:info("[ObjectivesManager:objectives_by_name] level_id", level_id)
+
+	if level_id then
+		for name, data in pairs(self._objectives) do
+			if data.level_id and data.level_id == level_id then
+				table.insert(t, name)
+			end
+		end
+	else
+		for name, _ in pairs(self._objectives) do
+			table.insert(t, name)
+		end
 	end
-
-	table.sort(t)
 
 	return t
 end

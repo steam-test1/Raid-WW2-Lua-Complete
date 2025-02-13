@@ -71,9 +71,9 @@ end
 function ReadyUpGui:_layout_buttons()
 	local button_y = 848
 	self._ready_up_button = self._root_panel:short_primary_button({
+		visible = false,
 		x = 0,
 		name = "ready_up_button",
-		visible = false,
 		y = button_y,
 		text = self:translate("menu_ready_button", true),
 		on_click_callback = callback(self, self, "_on_ready_up_button")
@@ -82,9 +82,9 @@ function ReadyUpGui:_layout_buttons()
 	self._ready_up_button:disable()
 
 	self._suggest_card_button = self._root_panel:short_secondary_button({
+		visible = false,
 		x = 1000,
 		name = "suggest_card_button",
-		visible = false,
 		y = button_y,
 		text = self:translate("menu_suggest_card_button", true),
 		on_click_callback = callback(self, self, "_on_select_card_button")
@@ -95,10 +95,10 @@ function ReadyUpGui:_layout_buttons()
 	self._suggest_card_button:hide()
 
 	self._no_cards_warning_label = self._root_panel:label({
-		align = "right",
-		name = "no_cards_warning_label",
 		visible = false,
+		align = "right",
 		x = 1000,
+		name = "no_cards_warning_label",
 		y = button_y,
 		text = self:translate("menu_card_dont_own", true),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -126,8 +126,8 @@ function ReadyUpGui:_layout_buttons()
 	end
 
 	local _leave_lobby_button_params = {
-		name = "leave_lobby_button",
 		visible = false,
+		name = "leave_lobby_button",
 		x = self._ready_up_button:right() + 64,
 		y = button_y
 	}
@@ -184,11 +184,11 @@ function ReadyUpGui:_layout_header()
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
-		y = 0,
-		name = "mission_name",
+		align = "left",
 		vertical = "center",
 		h = 32,
-		align = "left",
+		y = 0,
+		name = "mission_name",
 		x = mission_info_x,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -237,8 +237,8 @@ function ReadyUpGui:_layout_player_list()
 		local list_index = self:_get_list_index(peer_index)
 		local current_player = peer == managers.network:session():local_peer()
 		local player_control = self._root_panel:create_custom_control(RaidGUIControlReadyUpPlayerDescription, {
-			h = 112,
 			y = 96,
+			h = 112,
 			x = (list_index - 1) * width,
 			w = width,
 			on_click_callback = callback(self, self, "_on_player_click_callback"),
@@ -267,9 +267,9 @@ end
 function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
+		item_h = 224,
 		y = 384,
 		name = "player_loot_card",
-		item_h = 224,
 		x = self._root_panel:w() - 160,
 		item_w = card_w
 	}
@@ -288,10 +288,10 @@ function ReadyUpGui:_layout_card_info()
 		texture_rect = empty_slot_texture.texture_rect
 	})
 	self._card_not_selected_label = self._root_panel:label({
-		wrap = true,
-		h = 128,
-		name = "card_not_selected_label",
 		align = "center",
+		h = 128,
+		wrap = true,
+		name = "card_not_selected_label",
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
 		w = self._empty_card_slot:w() - 10,
@@ -305,12 +305,12 @@ function ReadyUpGui:_layout_card_info()
 	self._card_not_selected_label:set_visible(true)
 
 	self._positive_card_effect_label = self._root_panel:label({
-		wrap = true,
-		h = 128,
-		name = "positive_card_effect",
 		align = "left",
+		h = 128,
 		x = 0,
 		w = 352,
+		wrap = true,
+		name = "positive_card_effect",
 		y = self._card_control:bottom() + 32,
 		text = self:translate("hud_no_challenge_card_text", false),
 		font = tweak_data.gui.fonts.lato,
@@ -321,13 +321,13 @@ function ReadyUpGui:_layout_card_info()
 	self._positive_card_effect_label:set_right(self._root_panel:right())
 
 	self._negative_card_effect_label = self._root_panel:label({
-		wrap = true,
-		h = 64,
-		name = "negative_card_effect",
-		text = "",
 		align = "left",
+		text = "",
+		h = 64,
 		x = 0,
 		w = 352,
+		wrap = true,
+		name = "negative_card_effect",
 		y = self._card_control:bottom() + 96,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,

@@ -301,12 +301,12 @@ end
 
 function SoundLayer:_build_defaults(sizer)
 	self._default_environment = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Environment:",
 		tooltip = "Select default environment from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = managers.sound_environment:environments(),
@@ -319,12 +319,12 @@ function SoundLayer:_build_defaults(sizer)
 	local no_ambiences_availible = #managers.sound_environment:ambience_events() == 0
 	local error_text = "- No ambience soundbanks in project -"
 	self._default_ambience = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Ambience:",
 		tooltip = "Select default ambience from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = no_ambiences_availible and {
@@ -340,12 +340,12 @@ function SoundLayer:_build_defaults(sizer)
 	local no_occasionals_availible = #managers.sound_environment:occasional_events() == 0
 	local error_text = "- No occasional soundbanks in project -"
 	self._default_occasional = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Occasional:",
 		tooltip = "Select default occasional from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = sizer,
 		options = no_occasionals_availible and {
@@ -370,14 +370,14 @@ function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
 	self._priority_params = {
 		max = 9,
-		min = 1,
+		ctrlr_proportions = 3,
+		sizer_proportions = 1,
 		value = 9,
-		floats = 0,
+		name_proportions = 1,
 		name = "Priority:",
 		tooltip = "DISABLED",
-		sizer_proportions = 1,
-		name_proportions = 1,
-		ctrlr_proportions = 3,
+		floats = 0,
+		min = 1,
 		panel = self._sound_panel,
 		sizer = sound_environment_sizer
 	}
@@ -388,12 +388,12 @@ function SoundLayer:_build_environment()
 
 	local environment_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._effect_params = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Effect:",
 		tooltip = "Select an environment effect from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = environment_sizer,
 		options = managers.sound_environment:environments(),
@@ -412,12 +412,12 @@ function SoundLayer:_build_environment()
 
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._ambience_params = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Ambience:",
 		tooltip = "Select an ambience from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = ambience_sizer,
 		options = managers.sound_environment:ambience_events(),
@@ -436,12 +436,12 @@ function SoundLayer:_build_environment()
 
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._occasional_params = {
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Occasional:",
 		tooltip = "Select an occasional from the combobox",
 		sorted = true,
-		name_proportions = 1,
 		panel = self._sound_panel,
 		sizer = occasional_sizer,
 		options = managers.sound_environment:occasional_events(),

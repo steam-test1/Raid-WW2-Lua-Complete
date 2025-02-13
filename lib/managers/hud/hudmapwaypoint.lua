@@ -32,6 +32,9 @@ end
 function HUDMapWaypointBase:set_data(waypoint_data)
 end
 
+function HUDMapWaypointBase:set_scale(scale)
+end
+
 function HUDMapWaypointBase:id()
 	return self._id
 end
@@ -150,6 +153,8 @@ end
 HUDMapWaypointPoint = HUDMapWaypointPoint or class(HUDMapWaypointBase)
 HUDMapWaypointPoint.W = 96
 HUDMapWaypointPoint.H = 96
+HUDMapWaypointPoint.ICON_W = 64
+HUDMapWaypointPoint.ICON_H = 64
 HUDMapWaypointPoint.ICON = "map_waypoint_pov_in"
 HUDMapWaypointPoint.ICON_LAYER = 3
 HUDMapWaypointPoint.ICON_BACKGROUND = "map_waypoint_pov_in"
@@ -182,6 +187,8 @@ end
 function HUDMapWaypointPoint:_create_icon()
 	local icon_params = {
 		name = "icon",
+		w = HUDMapWaypointPoint.ICON_W,
+		h = HUDMapWaypointPoint.ICON_H,
 		texture = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointPoint.ICON].texture_rect
 	}
@@ -236,6 +243,17 @@ function HUDMapWaypointPoint:set_data(waypoint_data)
 	self._distance:set_text(string.format("%.0f", waypoint_distance:length() / 100) .. "m")
 end
 
+function HUDMapWaypointPoint:set_scale(scale)
+	local c_x, c_y = self._object:center()
+
+	self._icon:set_w(HUDMapWaypointPoint.ICON_W * scale)
+	self._icon:set_h(HUDMapWaypointPoint.ICON_H * scale)
+	self._icon:set_center_x(c_x)
+	self._icon:set_center_y(c_y)
+	self._background_icon:stop()
+	self._background_icon:animate(callback(self, self, "_animate_background_icon"))
+end
+
 function HUDMapWaypointPoint:_animate_background_icon()
 	while true do
 		local enhance_factor = 2
@@ -272,6 +290,8 @@ function HUDMapWaypointPoint:destroy()
 end
 
 HUDMapWaypointIcon = HUDMapWaypointIcon or class(HUDMapWaypointBase)
+HUDMapWaypointIcon.W = 96
+HUDMapWaypointIcon.H = 96
 
 function HUDMapWaypointIcon:init(panel, waypoint_data)
 	HUDMapWaypointIcon.super.init(self, waypoint_data)
@@ -285,24 +305,38 @@ function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 		halign = "center",
 		valign = "center",
 		name = "map_waypoint_icon_" .. tostring(self._id),
-		w = tweak_data.gui:icon_w(icon),
-		h = tweak_data.gui:icon_h(icon)
+		w = HUDMapWaypointIcon.W,
+		h = HUDMapWaypointIcon.H
 	}
 	self._object = panel:panel(panel_params)
 end
 
 function HUDMapWaypointIcon:_create_icon(waypoint_data)
 	local icon = waypoint_data.map_icon
+	local gui = tweak_data.gui:get_full_gui_data(icon)
 	local icon_params = {
 		name = "icon",
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect
+		w = HUDMapWaypointIcon.W,
+		h = HUDMapWaypointIcon.H,
+		texture = gui.texture,
+		texture_rect = gui.texture_rect
 	}
 	self._icon = self._object:bitmap(icon_params)
 end
 
 function HUDMapWaypointIcon:set_data(waypoint_data)
-	self:set_rotation(-waypoint_data.rotation:yaw())
+	if waypoint_data.rotation then
+		self:set_rotation(-waypoint_data.rotation:yaw())
+	end
+end
+
+function HUDMapWaypointIcon:set_scale(scale)
+	local c_x, c_y = self._object:center()
+
+	self._icon:set_w(HUDMapWaypointIcon.W * scale)
+	self._icon:set_h(HUDMapWaypointIcon.H * scale)
+	self._icon:set_center_x(c_x)
+	self._icon:set_center_y(c_y)
 end
 
 function HUDMapWaypointIcon:set_rotation(rotation)

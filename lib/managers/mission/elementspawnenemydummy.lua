@@ -42,6 +42,7 @@ function ElementSpawnEnemyDummy:_finalize_values()
 	_index_or_nil(CopActionAct._act_redirects.enemy_spawn, "spawn_action")
 	_index_or_nil(CopActionAct._act_redirects.civilian_spawn, "state")
 	_save_boolean("participate_to_group_ai")
+	_save_boolean("forbid_seen")
 	_index_or_nil(self.ACCESSIBILITIES, "accessibility")
 
 	values.voice = values.voice and values.voice ~= 0 and values.voice or nil
@@ -204,9 +205,9 @@ end
 function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	if not anim_name or anim_name == "none" then
 		return {
+			body_part = 1,
 			type = "idle",
-			sync = true,
-			body_part = 1
+			sync = true
 		}
 	else
 		return {
@@ -215,10 +216,10 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 			align_sync = true,
 			variant = anim_name,
 			blocks = {
-				walk = -1,
+				hurt = -1,
 				action = -1,
 				heavy_hurt = -1,
-				hurt = -1
+				walk = -1
 			}
 		}
 	end

@@ -1,17 +1,5 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = {
-	any_ingame_mission = nil,
-	any_ingame_playing = nil,
-	any_ingame = nil,
-	lobby = nil,
-	player_slot = nil,
-	menu = nil,
-	waiting_for_respawn = nil,
-	waiting_for_players = nil,
-	any_end_game = nil,
-	game_over = nil,
-	need_revive = nil,
-	downed = nil,
 	any_ingame = {
 		gameoverscreen = true,
 		event_complete_screen = true,
@@ -160,7 +148,7 @@ function BaseNetworkHandler._verify_character_and_sender(unit, rpc)
 end
 
 function BaseNetworkHandler._verify_character(unit)
-	return alive(unit) and not unit:character_damage():dead()
+	return alive(unit) and unit:character_damage() and not unit:character_damage():dead()
 end
 
 function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
@@ -234,9 +222,6 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 	end
 
 	local data = {
-		unit_param_index = nil,
-		params = nil,
-		fun_name = nil,
 		unit_param_index = unit_param_index,
 		fun_name = fun_name,
 		params = {

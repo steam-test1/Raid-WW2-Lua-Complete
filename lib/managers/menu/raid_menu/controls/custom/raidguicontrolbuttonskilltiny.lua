@@ -28,11 +28,7 @@ function RaidGUIControlButtonSkillTiny:_layout_grid_item_icon(params)
 	local color = params.color
 	local layer = params.layer or 5
 	self._grid_item_icon = self._object:rect({
-		layer = nil,
 		name = "grid_item_icon",
-		h = nil,
-		w = nil,
-		color = nil,
 		w = params.w,
 		h = params.h,
 		color = params.color,
@@ -40,15 +36,7 @@ function RaidGUIControlButtonSkillTiny:_layout_grid_item_icon(params)
 	})
 	local grid_item_fg = tweak_data.gui:get_full_gui_data("grid_item_fg")
 	self._grid_item_icon_fg = self._object:bitmap({
-		x = nil,
 		name = "grid_item_icon_fg",
-		layer = nil,
-		color = nil,
-		texture_rect = nil,
-		texture = nil,
-		y = nil,
-		h = nil,
-		w = nil,
 		x = RaidGUIControlButtonSkillTiny.OUTLINE_THICKNESS,
 		y = RaidGUIControlButtonSkillTiny.OUTLINE_THICKNESS,
 		w = params.w - RaidGUIControlButtonSkillTiny.OUTLINE_THICKNESS * 2,
@@ -61,13 +49,7 @@ function RaidGUIControlButtonSkillTiny:_layout_grid_item_icon(params)
 
 	if not self.locked then
 		self._grid_item_icon_sprite = self._object:bitmap({
-			texture_rect = nil,
-			texture = nil,
 			name = "grid_item_icon_sprite",
-			h = nil,
-			layer = nil,
-			w = nil,
-			color = nil,
 			texture = gui_icon.texture,
 			texture_rect = gui_icon.texture_rect,
 			w = params.w * RaidGUIControlButtonSkillTiny.SPRITE_SCALE,
@@ -91,11 +73,7 @@ function RaidGUIControlButtonSkillTiny:update_skill_data(skill_data, skill_id)
 		if not self._grid_item_icon_update then
 			local col = tweak_data.gui.colors.raid_dirty_white
 			self._grid_item_icon_update = self._object:gradient({
-				layer = nil,
 				name = "grid_item_icon_update",
-				y = nil,
-				h = nil,
-				w = nil,
 				orientation = "vertical",
 				y = self._object:h(),
 				w = self._object:w(),
@@ -124,18 +102,12 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 	local layer = params.layer + 10 or 10
 	local cx = self._object:w() / 2
 	self._item_status_lock_panel = self._object:panel({
-		layer = nil,
 		name = "grid_item_lock_panel",
 		layer = layer
 	})
 	local grid_item_locked = tweak_data.gui:get_full_gui_data("grid_item_locked")
 	local status_lock_bg = self._item_status_lock_panel:image({
-		texture_rect = nil,
-		texture = nil,
 		name = "grid_item_lock_bg",
-		h = nil,
-		w = nil,
-		color = nil,
 		w = self._item_status_lock_panel:w(),
 		h = self._item_status_lock_panel:h(),
 		texture = grid_item_locked.texture,
@@ -144,13 +116,7 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 	})
 	local ico_locker = tweak_data.gui:get_full_gui_data("ico_locker")
 	self._item_status_lock_icon = self._item_status_lock_panel:image({
-		texture_rect = nil,
-		texture = nil,
 		name = "grid_item_lock_icon",
-		h = nil,
-		layer = nil,
-		w = nil,
-		color = nil,
 		w = params.w / 2,
 		h = params.h / 2,
 		texture = ico_locker.texture,
@@ -164,14 +130,9 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 
 	local text = tostring(params.level_lock or 99)
 	self._item_status_lock_text = self._item_status_lock_panel:text({
-		align = "center",
 		name = "grid_item_lock_text",
-		font_size = nil,
 		h = 16,
-		text = nil,
-		w = nil,
-		font = nil,
-		layer = nil,
+		align = "center",
 		w = params.w,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_16,

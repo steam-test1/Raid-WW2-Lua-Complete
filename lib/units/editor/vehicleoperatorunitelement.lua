@@ -5,6 +5,7 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"unlock",
 	"secure",
 	"break_down",
+	"destroy_explode",
 	"repair",
 	"damage",
 	"activate",
@@ -16,7 +17,11 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"disable_accepting_loot",
 	"enable_accepting_loot",
 	"disable_securing_loot",
-	"enable_securing_loot"
+	"enable_securing_loot",
+	"enable_map_waypoint",
+	"disable_map_waypoint",
+	"enable_hud_waypoint",
+	"disable_hud_waypoint"
 }
 
 function VehicleOperatorUnitElement:init(unit)
@@ -130,7 +135,7 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 			return false
 		end
 
-		return managers.editor:layer("Mission"):category_map()[unit:type():s()]
+		return managers.editor:layer("Mission"):category_map()[unit:type():s()] or managers.editor:unit_in_layer(unit) == managers.editor:layer("Statics")
 	end
 
 	local dialog = SelectUnitByNameModal:new("Add Unit", f)
@@ -164,8 +169,8 @@ function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "operation", self._actions, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "damage", {
-		min = 1,
-		floats = 0
+		floats = 0,
+		min = 1
 	}, "Specify the amount of damage.")
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")

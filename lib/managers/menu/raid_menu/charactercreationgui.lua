@@ -211,21 +211,21 @@ function CharacterCreationGui:_layout()
 	self._nationality_label:set_x(self._number_2:right() + 10)
 
 	self._next_button = self._root_panel:short_primary_button({
-		w = 192,
 		x = 0,
 		name = "next_button",
+		w = 192,
 		y = list_bottom + 224,
 		text = self:translate("character_profile_next_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_next")
 	})
 	self._right_side_info_class = self._root_panel:create_custom_control(RaidGUIControlClassDescription, {
-		w = 516,
-		y = 0,
 		x = 1308,
-		name = "right_side_info_panel",
 		visible = false,
-		h = 720
+		name = "right_side_info_panel",
+		h = 720,
+		w = 516,
+		y = 0
 	}, {
 		class = nil
 	})
@@ -235,12 +235,12 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._right_side_info_class)
 
 	self._right_side_info_nationality = self._root_panel:create_custom_control(RaidGUIControlNationalityDescription, {
-		w = 480,
-		y = 0,
 		x = 1308,
-		name = "right_side_info_panel",
 		visible = false,
-		h = 620
+		name = "right_side_info_panel",
+		h = 620,
+		w = 480,
+		y = 0
 	}, {
 		class = nil
 	})

@@ -188,6 +188,10 @@ function OperationsTweakData:_init_loading_screens()
 		image = "loading_screens_07",
 		text = "menu_kelly_loading_desc"
 	}
+	self._loading_screens.forest_bunker = {
+		image = "loading_screens_07",
+		text = "forest_bunker_loading"
+	}
 end
 
 function OperationsTweakData:get_camp_goto_objective_id(level_id)
@@ -224,23 +228,24 @@ function OperationsTweakData:_init_raids()
 		"flakturm",
 		"gold_rush",
 		"silo",
-		"kelly"
+		"kelly",
+		"forest_bunker"
 	}
 	self.dogtag_types = {
 		small = {
-			diff_bonus = 1,
 			max = 18,
-			min = 14
+			min = 14,
+			diff_bonus = 1
 		},
 		medium = {
-			diff_bonus = 2,
 			max = 20,
-			min = 15
+			min = 15,
+			diff_bonus = 2
 		},
 		large = {
-			diff_bonus = 3,
 			max = 22,
-			min = 16
+			min = 16,
+			diff_bonus = 3
 		}
 	}
 	self.missions.streaming_level = {
@@ -295,23 +300,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "forest_mission_photo_1_description",
-				title_id = "forest_mission_photo_1_title",
-				photo = "intel_forest_01"
+				photo = "intel_forest_01",
+				title_id = "forest_mission_photo_1_title"
 			},
 			{
 				description_id = "forest_mission_photo_2_description",
-				title_id = "forest_mission_photo_2_title",
-				photo = "intel_forest_02"
+				photo = "intel_forest_02",
+				title_id = "forest_mission_photo_2_title"
 			},
 			{
 				description_id = "forest_mission_photo_3_description",
-				title_id = "forest_mission_photo_3_title",
-				photo = "intel_forest_03"
+				photo = "intel_forest_03",
+				title_id = "forest_mission_photo_3_title"
 			},
 			{
 				description_id = "forest_mission_photo_4_description",
-				title_id = "forest_mission_photo_4_title",
-				photo = "intel_forest_04"
+				photo = "intel_forest_04",
+				title_id = "forest_mission_photo_4_title"
 			}
 		}
 	}
@@ -358,33 +363,33 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "flak_mission_photo_1_description",
-				title_id = "flak_mission_photo_1_title",
-				photo = "intel_flak_01"
+				photo = "intel_flak_01",
+				title_id = "flak_mission_photo_1_title"
 			},
 			{
 				description_id = "flak_mission_photo_2_description",
-				title_id = "flak_mission_photo_2_title",
-				photo = "intel_flak_02"
+				photo = "intel_flak_02",
+				title_id = "flak_mission_photo_2_title"
 			},
 			{
 				description_id = "flak_mission_photo_3_description",
-				title_id = "flak_mission_photo_3_title",
-				photo = "intel_flak_03"
+				photo = "intel_flak_03",
+				title_id = "flak_mission_photo_3_title"
 			},
 			{
 				description_id = "flak_mission_photo_4_description",
-				title_id = "flak_mission_photo_4_title",
-				photo = "intel_flak_04"
+				photo = "intel_flak_04",
+				title_id = "flak_mission_photo_4_title"
 			},
 			{
 				description_id = "flak_mission_photo_5_description",
-				title_id = "flak_mission_photo_5_title",
-				photo = "intel_flak_05"
+				photo = "intel_flak_05",
+				title_id = "flak_mission_photo_5_title"
 			},
 			{
 				description_id = "flak_mission_photo_6_description",
-				title_id = "flak_mission_photo_6_title",
-				photo = "intel_flak_06"
+				photo = "intel_flak_06",
+				title_id = "flak_mission_photo_6_title"
 			}
 		}
 	}
@@ -431,23 +436,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "treasury_mission_photo_1_description",
-				title_id = "treasury_mission_photo_1_title",
-				photo = "intel_bank_01"
+				photo = "intel_bank_01",
+				title_id = "treasury_mission_photo_1_title"
 			},
 			{
 				description_id = "treasury_mission_photo_2_description",
-				title_id = "treasury_mission_photo_2_title",
-				photo = "intel_bank_02"
+				photo = "intel_bank_02",
+				title_id = "treasury_mission_photo_2_title"
 			},
 			{
 				description_id = "treasury_mission_photo_3_description",
-				title_id = "treasury_mission_photo_3_title",
-				photo = "intel_bank_03"
+				photo = "intel_bank_03",
+				title_id = "treasury_mission_photo_3_title"
 			},
 			{
 				description_id = "treasury_mission_photo_4_description",
-				title_id = "treasury_mission_photo_4_title",
-				photo = "intel_bank_04"
+				photo = "intel_bank_04",
+				title_id = "treasury_mission_photo_4_title"
 			}
 		}
 	}
@@ -493,23 +498,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "rail_yard_mission_photo_1_description",
-				title_id = "rail_yard_mission_photo_1_title",
-				photo = "intel_train_01"
+				photo = "intel_train_01",
+				title_id = "rail_yard_mission_photo_1_title"
 			},
 			{
 				description_id = "rail_yard_mission_photo_2_description",
-				title_id = "rail_yard_mission_photo_2_title",
-				photo = "intel_train_02"
+				photo = "intel_train_02",
+				title_id = "rail_yard_mission_photo_2_title"
 			},
 			{
 				description_id = "rail_yard_mission_photo_4_description",
-				title_id = "rail_yard_mission_photo_4_title",
-				photo = "intel_train_04"
+				photo = "intel_train_04",
+				title_id = "rail_yard_mission_photo_4_title"
 			},
 			{
 				description_id = "rail_yard_mission_photo_5_description",
-				title_id = "rail_yard_mission_photo_5_title",
-				photo = "intel_train_05"
+				photo = "intel_train_05",
+				title_id = "rail_yard_mission_photo_5_title"
 			}
 		}
 	}
@@ -552,28 +557,28 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "radio_base_mission_photo_1_description",
-				title_id = "radio_base_mission_photo_1_title",
-				photo = "intel_radio_01"
+				photo = "intel_radio_01",
+				title_id = "radio_base_mission_photo_1_title"
 			},
 			{
 				description_id = "radio_base_mission_photo_2_description",
-				title_id = "radio_base_mission_photo_2_title",
-				photo = "intel_radio_02"
+				photo = "intel_radio_02",
+				title_id = "radio_base_mission_photo_2_title"
 			},
 			{
 				description_id = "radio_base_mission_photo_3_description",
-				title_id = "radio_base_mission_photo_3_title",
-				photo = "intel_radio_03"
+				photo = "intel_radio_03",
+				title_id = "radio_base_mission_photo_3_title"
 			},
 			{
 				description_id = "radio_base_mission_photo_4_description",
-				title_id = "radio_base_mission_photo_4_title",
-				photo = "intel_radio_04"
+				photo = "intel_radio_04",
+				title_id = "radio_base_mission_photo_4_title"
 			},
 			{
 				description_id = "radio_base_mission_photo_5_description",
-				title_id = "radio_base_mission_photo_5_title",
-				photo = "intel_radio_05"
+				photo = "intel_radio_05",
+				title_id = "radio_base_mission_photo_5_title"
 			}
 		}
 	}
@@ -619,28 +624,28 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "bridge_mission_photo_1_description",
-				title_id = "bridge_mission_photo_1_title",
-				photo = "intel_bridge_01"
+				photo = "intel_bridge_01",
+				title_id = "bridge_mission_photo_1_title"
 			},
 			{
 				description_id = "bridge_mission_photo_2_description",
-				title_id = "bridge_mission_photo_2_title",
-				photo = "intel_bridge_02"
+				photo = "intel_bridge_02",
+				title_id = "bridge_mission_photo_2_title"
 			},
 			{
 				description_id = "bridge_mission_photo_3_description",
-				title_id = "bridge_mission_photo_3_title",
-				photo = "intel_bridge_03"
+				photo = "intel_bridge_03",
+				title_id = "bridge_mission_photo_3_title"
 			},
 			{
 				description_id = "bridge_mission_photo_4_description",
-				title_id = "bridge_mission_photo_4_title",
-				photo = "intel_bridge_04"
+				photo = "intel_bridge_04",
+				title_id = "bridge_mission_photo_4_title"
 			},
 			{
 				description_id = "bridge_mission_photo_5_description",
-				title_id = "bridge_mission_photo_5_title",
-				photo = "intel_bridge_05"
+				photo = "intel_bridge_05",
+				title_id = "bridge_mission_photo_5_title"
 			}
 		}
 	}
@@ -686,28 +691,28 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "castle_mission_photo_1_description",
-				title_id = "castle_mission_photo_1_title",
-				photo = "intel_castle_01"
+				photo = "intel_castle_01",
+				title_id = "castle_mission_photo_1_title"
 			},
 			{
 				description_id = "castle_mission_photo_2_description",
-				title_id = "castle_mission_photo_2_title",
-				photo = "intel_castle_02"
+				photo = "intel_castle_02",
+				title_id = "castle_mission_photo_2_title"
 			},
 			{
 				description_id = "castle_mission_photo_3_description",
-				title_id = "castle_mission_photo_3_title",
-				photo = "intel_castle_03"
+				photo = "intel_castle_03",
+				title_id = "castle_mission_photo_3_title"
 			},
 			{
 				description_id = "castle_mission_photo_4_description",
-				title_id = "castle_mission_photo_4_title",
-				photo = "intel_castle_05"
+				photo = "intel_castle_05",
+				title_id = "castle_mission_photo_4_title"
 			},
 			{
 				description_id = "castle_mission_photo_5_description",
-				title_id = "castle_mission_photo_5_title",
-				photo = "intel_castle_04"
+				photo = "intel_castle_04",
+				title_id = "castle_mission_photo_5_title"
 			}
 		}
 	}
@@ -736,23 +741,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "forest_mission_photo_1_description",
-				title_id = "forest_mission_photo_1_title",
-				photo = "intel_forest_01"
+				photo = "intel_forest_01",
+				title_id = "forest_mission_photo_1_title"
 			},
 			{
 				description_id = "forest_mission_photo_2_description",
-				title_id = "forest_mission_photo_2_title",
-				photo = "intel_forest_02"
+				photo = "intel_forest_02",
+				title_id = "forest_mission_photo_2_title"
 			},
 			{
 				description_id = "forest_mission_photo_3_description",
-				title_id = "forest_mission_photo_3_title",
-				photo = "intel_forest_03"
+				photo = "intel_forest_03",
+				title_id = "forest_mission_photo_3_title"
 			},
 			{
 				description_id = "forest_mission_photo_4_description",
-				title_id = "forest_mission_photo_4_title",
-				photo = "intel_forest_04"
+				photo = "intel_forest_04",
+				title_id = "forest_mission_photo_4_title"
 			}
 		}
 	}
@@ -799,23 +804,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "bunker_mission_photo_1_description",
-				title_id = "bunker_mission_photo_1_title",
-				photo = "intel_bunkers_05"
+				photo = "intel_bunkers_05",
+				title_id = "bunker_mission_photo_1_title"
 			},
 			{
 				description_id = "bunker_mission_photo_2_description",
-				title_id = "bunker_mission_photo_2_title",
-				photo = "intel_bunkers_04"
+				photo = "intel_bunkers_04",
+				title_id = "bunker_mission_photo_2_title"
 			},
 			{
 				description_id = "bunker_mission_photo_3_description",
-				title_id = "bunker_mission_photo_3_title",
-				photo = "intel_bunkers_01"
+				photo = "intel_bunkers_01",
+				title_id = "bunker_mission_photo_3_title"
 			},
 			{
 				description_id = "bunker_mission_photo_4_description",
-				title_id = "bunker_mission_photo_4_title",
-				photo = "intel_bunkers_02"
+				photo = "intel_bunkers_02",
+				title_id = "bunker_mission_photo_4_title"
 			}
 		}
 	}
@@ -860,23 +865,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "tank_depot_mission_photo_1_description",
-				title_id = "tank_depot_mission_photo_1_title",
-				photo = "intel_tank_depot_05"
+				photo = "intel_tank_depot_05",
+				title_id = "tank_depot_mission_photo_1_title"
 			},
 			{
 				description_id = "tank_depot_mission_photo_2_description",
-				title_id = "tank_depot_mission_photo_2_title",
-				photo = "intel_tank_depot_01"
+				photo = "intel_tank_depot_01",
+				title_id = "tank_depot_mission_photo_2_title"
 			},
 			{
 				description_id = "tank_depot_mission_photo_3_description",
-				title_id = "tank_depot_mission_photo_3_title",
-				photo = "intel_tank_depot_03"
+				photo = "intel_tank_depot_03",
+				title_id = "tank_depot_mission_photo_3_title"
 			},
 			{
 				description_id = "tank_depot_mission_photo_4_description",
-				title_id = "tank_depot_mission_photo_4_title",
-				photo = "intel_tank_depot_02"
+				photo = "intel_tank_depot_02",
+				title_id = "tank_depot_mission_photo_4_title"
 			}
 		}
 	}
@@ -922,18 +927,18 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "hunters_mission_photo_1_description",
-				title_id = "hunters_mission_photo_1_title",
-				photo = "intel_hunters_01"
+				photo = "intel_hunters_01",
+				title_id = "hunters_mission_photo_1_title"
 			},
 			{
 				description_id = "hunters_mission_photo_2_description",
-				title_id = "hunters_mission_photo_2_title",
-				photo = "intel_hunters_02"
+				photo = "intel_hunters_02",
+				title_id = "hunters_mission_photo_2_title"
 			},
 			{
 				description_id = "hunters_mission_photo_4_description",
-				title_id = "hunters_mission_photo_4_title",
-				photo = "intel_hunters_04"
+				photo = "intel_hunters_04",
+				title_id = "hunters_mission_photo_4_title"
 			}
 		}
 	}
@@ -975,23 +980,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "convoy_mission_photo_1_description",
-				title_id = "convoy_mission_photo_1_title",
-				photo = "intel_convoy_01"
+				photo = "intel_convoy_01",
+				title_id = "convoy_mission_photo_1_title"
 			},
 			{
 				description_id = "convoy_mission_photo_2_description",
-				title_id = "convoy_mission_photo_2_title",
-				photo = "intel_convoy_03"
+				photo = "intel_convoy_03",
+				title_id = "convoy_mission_photo_2_title"
 			},
 			{
 				description_id = "convoy_mission_photo_3_description",
-				title_id = "convoy_mission_photo_3_title",
-				photo = "intel_convoy_02"
+				photo = "intel_convoy_02",
+				title_id = "convoy_mission_photo_3_title"
 			},
 			{
 				description_id = "convoy_mission_photo_4_description",
-				title_id = "convoy_mission_photo_4_title",
-				photo = "intel_convoy_04"
+				photo = "intel_convoy_04",
+				title_id = "convoy_mission_photo_4_title"
 			}
 		}
 	}
@@ -1035,23 +1040,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "spies_mission_photo_1_description",
-				title_id = "spies_mission_photo_1_title",
-				photo = "intel_spies_05"
+				photo = "intel_spies_05",
+				title_id = "spies_mission_photo_1_title"
 			},
 			{
 				description_id = "spies_mission_photo_2_description",
-				title_id = "spies_mission_photo_2_title",
-				photo = "intel_spies_02"
+				photo = "intel_spies_02",
+				title_id = "spies_mission_photo_2_title"
 			},
 			{
 				description_id = "spies_mission_photo_3_description",
-				title_id = "spies_mission_photo_3_title",
-				photo = "intel_spies_03"
+				photo = "intel_spies_03",
+				title_id = "spies_mission_photo_3_title"
 			},
 			{
 				description_id = "spies_mission_photo_4_description",
-				title_id = "spies_mission_photo_4_title",
-				photo = "intel_spies_04"
+				photo = "intel_spies_04",
+				title_id = "spies_mission_photo_4_title"
 			}
 		}
 	}
@@ -1081,23 +1086,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "art_storage_mission_photo_1_description",
-				title_id = "art_storage_mission_photo_1_title",
-				photo = "intel_art_storage_01"
+				photo = "intel_art_storage_01",
+				title_id = "art_storage_mission_photo_1_title"
 			},
 			{
 				description_id = "art_storage_mission_photo_2_description",
-				title_id = "art_storage_mission_photo_2_title",
-				photo = "intel_art_storage_02"
+				photo = "intel_art_storage_02",
+				title_id = "art_storage_mission_photo_2_title"
 			},
 			{
 				description_id = "art_storage_mission_photo_3_description",
-				title_id = "art_storage_mission_photo_3_title",
-				photo = "intel_art_storage_03"
+				photo = "intel_art_storage_03",
+				title_id = "art_storage_mission_photo_3_title"
 			},
 			{
 				description_id = "art_storage_mission_photo_4_description",
-				title_id = "art_storage_mission_photo_4_title",
-				photo = "intel_art_storage_05"
+				photo = "intel_art_storage_05",
+				title_id = "art_storage_mission_photo_4_title"
 			}
 		}
 	}
@@ -1137,28 +1142,28 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "silo_mission_photo_1_description",
-				title_id = "silo_mission_photo_1_title",
-				photo = "intel_silo_01"
+				photo = "intel_silo_01",
+				title_id = "silo_mission_photo_1_title"
 			},
 			{
 				description_id = "silo_mission_photo_2_description",
-				title_id = "silo_mission_photo_2_title",
-				photo = "intel_silo_02"
+				photo = "intel_silo_02",
+				title_id = "silo_mission_photo_2_title"
 			},
 			{
 				description_id = "silo_mission_photo_3_description",
-				title_id = "silo_mission_photo_3_title",
-				photo = "intel_silo_03"
+				photo = "intel_silo_03",
+				title_id = "silo_mission_photo_3_title"
 			},
 			{
 				description_id = "silo_mission_photo_4_description",
-				title_id = "silo_mission_photo_4_title",
-				photo = "intel_silo_04"
+				photo = "intel_silo_04",
+				title_id = "silo_mission_photo_4_title"
 			},
 			{
 				description_id = "silo_mission_photo_5_description",
-				title_id = "silo_mission_photo_5_title",
-				photo = "intel_silo_05"
+				photo = "intel_silo_05",
+				title_id = "silo_mission_photo_5_title"
 			}
 		}
 	}
@@ -1185,8 +1190,6 @@ function OperationsTweakData:_init_raids()
 		},
 		icon_menu_big = "xp_events_missions_kelly",
 		icon_menu = "missions_kelly",
-		icon_menu_big = "xp_events_missions_kelly",
-		icon_menu = "missions_kelly",
 		icon_hud = "missions_raid_flaktower",
 		control_brief_video = {
 			"movies/vanilla/mission_briefings/02_mission_brief_a2_cause-carnage_v005",
@@ -1200,23 +1203,23 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "kelly_mission_photo_1_description",
-				title_id = "kelly_mission_photo_1_title",
-				photo = "intel_kelly_01"
+				photo = "intel_kelly_01",
+				title_id = "kelly_mission_photo_1_title"
 			},
 			{
 				description_id = "kelly_mission_photo_2_description",
-				title_id = "kelly_mission_photo_2_title",
-				photo = "intel_kelly_02"
+				photo = "intel_kelly_02",
+				title_id = "kelly_mission_photo_2_title"
 			},
 			{
 				description_id = "kelly_mission_photo_3_description",
-				title_id = "kelly_mission_photo_3_title",
-				photo = "intel_kelly_03"
+				photo = "intel_kelly_03",
+				title_id = "kelly_mission_photo_3_title"
 			},
 			{
 				description_id = "kelly_mission_photo_4_description",
-				title_id = "kelly_mission_photo_4_title",
-				photo = "intel_kelly_04"
+				photo = "intel_kelly_04",
+				title_id = "kelly_mission_photo_4_title"
 			}
 		}
 	}
@@ -1245,23 +1248,75 @@ function OperationsTweakData:_init_raids()
 		photos = {
 			{
 				description_id = "fury_railway_mission_photo_1_description",
-				title_id = "fury_railway_mission_photo_1_title",
-				photo = "intel_fury_railway_01"
+				photo = "intel_fury_railway_01",
+				title_id = "fury_railway_mission_photo_1_title"
 			},
 			{
 				description_id = "fury_railway_mission_photo_2_description",
-				title_id = "fury_railway_mission_photo_2_title",
-				photo = "intel_fury_railway_02"
+				photo = "intel_fury_railway_02",
+				title_id = "fury_railway_mission_photo_2_title"
 			},
 			{
 				description_id = "fury_railway_mission_photo_3_description",
-				title_id = "fury_railway_mission_photo_3_title",
-				photo = "intel_fury_railway_03"
+				photo = "intel_fury_railway_03",
+				title_id = "fury_railway_mission_photo_3_title"
 			},
 			{
 				description_id = "fury_railway_mission_photo_4_description",
-				title_id = "fury_railway_mission_photo_4_title",
-				photo = "intel_fury_railway_04"
+				photo = "intel_fury_railway_04",
+				title_id = "fury_railway_mission_photo_4_title"
+			}
+		}
+	}
+	self.missions.forest_bunker = {
+		level_id = "forest_bunker",
+		name_id = "forest_bunker",
+		briefing_id = "forest_bunker_briefing",
+		audio_briefing_id = "mrs_white_fb_briefing_long",
+		short_audio_briefing_id = "mrs_white_fb_briefing_short",
+		music_id = "random",
+		region = "germany",
+		xp = 4400,
+		dogtags = self.dogtag_types.medium,
+		greed_items = {
+			max = 1500,
+			min = 1200
+		},
+		progression_groups = {
+			self.PROGRESSION_GROUP_STANDARD
+		},
+		mission_state = self.STATE_LOCATION_MISSION_SELECTED,
+		mission_flag = "level_raid_forest_bunker",
+		job_type = self.JOB_TYPE_RAID,
+		icon_menu = "missions_forest_bunker",
+		icon_menu_big = "xp_events_missions_forest_bunker",
+		icon_hud = "missions_forest_bunker",
+		loading = {
+			image = "forest_bunker_loading_screen",
+			text = "forest_bunker_loading"
+		},
+		start_in_stealth = true,
+		stealth_description = self.RAID_STARTS_STEALTHABLE,
+		photos = {
+			{
+				description_id = "forest_bunker_mission_photo_1_description",
+				photo = "intel_forest_bunker_01",
+				title_id = "forest_bunker_mission_photo_1_title"
+			},
+			{
+				description_id = "forest_bunker_mission_photo_2_description",
+				photo = "intel_forest_bunker_02",
+				title_id = "forest_bunker_mission_photo_2_title"
+			},
+			{
+				description_id = "forest_bunker_mission_photo_3_description",
+				photo = "intel_forest_bunker_03",
+				title_id = "forest_bunker_mission_photo_3_title"
+			},
+			{
+				description_id = "forest_bunker_mission_photo_4_description",
+				photo = "intel_forest_bunker_04",
+				title_id = "forest_bunker_mission_photo_4_title"
 			}
 		}
 	}
@@ -1295,33 +1350,33 @@ function OperationsTweakData:_init_operations()
 		photos = {
 			{
 				description_id = "clear_skies_mission_photo_1_description",
-				title_id = "clear_skies_mission_photo_1_title",
-				photo = "intel_clear_skies_01"
+				photo = "intel_clear_skies_01",
+				title_id = "clear_skies_mission_photo_1_title"
 			},
 			{
 				description_id = "clear_skies_mission_photo_2_description",
-				title_id = "clear_skies_mission_photo_2_title",
-				photo = "intel_clear_skies_02"
+				photo = "intel_clear_skies_02",
+				title_id = "clear_skies_mission_photo_2_title"
 			},
 			{
 				description_id = "clear_skies_mission_photo_3_description",
-				title_id = "clear_skies_mission_photo_3_title",
-				photo = "intel_clear_skies_03"
+				photo = "intel_clear_skies_03",
+				title_id = "clear_skies_mission_photo_3_title"
 			},
 			{
 				description_id = "clear_skies_mission_photo_4_description",
-				title_id = "clear_skies_mission_photo_4_title",
-				photo = "intel_clear_skies_04"
+				photo = "intel_clear_skies_04",
+				title_id = "clear_skies_mission_photo_4_title"
 			},
 			{
 				description_id = "clear_skies_mission_photo_5_description",
-				title_id = "clear_skies_mission_photo_5_title",
-				photo = "intel_clear_skies_05"
+				photo = "intel_clear_skies_05",
+				title_id = "clear_skies_mission_photo_5_title"
 			},
 			{
 				description_id = "clear_skies_mission_photo_6_description",
-				title_id = "clear_skies_mission_photo_6_title",
-				photo = "intel_clear_skies_06"
+				photo = "intel_clear_skies_06",
+				title_id = "clear_skies_mission_photo_6_title"
 			}
 		}
 	}
@@ -1641,28 +1696,28 @@ function OperationsTweakData:_init_operations()
 		photos = {
 			{
 				description_id = "rhinegold_mission_photo_1_description",
-				title_id = "rhinegold_mission_photo_1_title",
-				photo = "intel_rhinegold_01"
+				photo = "intel_rhinegold_01",
+				title_id = "rhinegold_mission_photo_1_title"
 			},
 			{
 				description_id = "rhinegold_mission_photo_2_description",
-				title_id = "rhinegold_mission_photo_2_title",
-				photo = "intel_rhinegold_02"
+				photo = "intel_rhinegold_02",
+				title_id = "rhinegold_mission_photo_2_title"
 			},
 			{
 				description_id = "rhinegold_mission_photo_3_description",
-				title_id = "rhinegold_mission_photo_3_title",
-				photo = "intel_rhinegold_03"
+				photo = "intel_rhinegold_03",
+				title_id = "rhinegold_mission_photo_3_title"
 			},
 			{
 				description_id = "rhinegold_mission_photo_4_description",
-				title_id = "rhinegold_mission_photo_4_title",
-				photo = "intel_rhinegold_04"
+				photo = "intel_rhinegold_04",
+				title_id = "rhinegold_mission_photo_4_title"
 			},
 			{
 				description_id = "rhinegold_mission_photo_5_description",
-				title_id = "rhinegold_mission_photo_5_title",
-				photo = "intel_rhinegold_05"
+				photo = "intel_rhinegold_05",
+				title_id = "rhinegold_mission_photo_5_title"
 			}
 		}
 	}
@@ -1793,9 +1848,9 @@ function OperationsTweakData:_init_operations()
 		xp = 2400
 	}
 	self.missions.oper_flamable.events.dogtags = {
-		diff_bonus = 3,
 		max = 8,
-		min = 5
+		min = 5,
+		diff_bonus = 3
 	}
 	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.oper_flamable.events.bridge.checkpoint = true

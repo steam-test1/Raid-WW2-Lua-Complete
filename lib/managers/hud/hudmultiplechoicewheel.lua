@@ -43,14 +43,12 @@ end
 
 function HUDMultipleChoiceWheel:_create_panel(hud)
 	local panel_params = {
-		name = "multiple_choice_wheel_panel",
 		visible = false,
 		halign = "center",
 		layer = 1200,
 		valign = "top",
-		h = nil,
-		w = nil,
 		alpha = 0,
+		name = "multiple_choice_wheel_panel",
 		w = HUDMultipleChoiceWheel.W,
 		h = HUDMultipleChoiceWheel.H
 	}
@@ -59,11 +57,7 @@ end
 
 function HUDMultipleChoiceWheel:_create_background()
 	local background_params = {
-		texture_rect = nil,
 		name = "background",
-		texture = nil,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.BACKGROUND_IMAGE].texture_rect,
 		w = HUDMultipleChoiceWheel.W,
@@ -75,13 +69,8 @@ function HUDMultipleChoiceWheel:_create_background()
 	background:set_center_y(self._object:h() / 2)
 
 	local background_circle_params = {
-		texture_rect = nil,
-		name = "background_circle",
-		texture = nil,
-		color = nil,
 		layer = 10,
-		h = nil,
-		w = nil,
+		name = "background_circle",
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture_rect,
 		w = HUDMultipleChoiceWheel.WHEEL_RADIUS * 2,
@@ -95,14 +84,8 @@ function HUDMultipleChoiceWheel:_create_background()
 
 	local selection_arc_params = {
 		name = "selection_arc",
-		texture_rect = nil,
-		texture = nil,
 		render_template = "VertexColorTexturedRadial",
-		layer = nil,
 		visible = false,
-		color = nil,
-		h = nil,
-		w = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDMultipleChoiceWheel.CIRCLE_IMAGE),
@@ -124,9 +107,6 @@ end
 function HUDMultipleChoiceWheel:_create_pointer()
 	local pointer_params = {
 		name = "pointer",
-		texture_rect = nil,
-		texture = nil,
-		layer = nil,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.POINTER_IMAGE].texture_rect,
 		layer = self._selection_arc:layer() + 1
@@ -295,11 +275,6 @@ function HUDMultipleChoiceWheel:_create_options()
 
 		local panel, icon, text, dx, dy = self:_create_option(i, current_angle, range)
 		local option = {
-			icon = nil,
-			dy = nil,
-			panel = nil,
-			dx = nil,
-			text = nil,
 			panel = panel,
 			icon = icon,
 			text = text,
@@ -321,11 +296,6 @@ end
 
 function HUDMultipleChoiceWheel:_create_separator_line(index, angle)
 	local separator_line_params = {
-		texture_rect = nil,
-		texture = nil,
-		color = nil,
-		name = nil,
-		rotation = nil,
 		name = "separator_line_" .. tostring(index),
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.LINE_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.LINE_IMAGE].texture_rect,
@@ -343,10 +313,8 @@ end
 
 function HUDMultipleChoiceWheel:_create_option(index, angle, range)
 	local panel = self._object:panel({
-		name = nil,
 		halign = "center",
 		valign = "top",
-		layer = nil,
 		alpha = 0,
 		name = "panel_params_" .. tostring(index),
 		layer = self._selection_arc:layer() + 1
@@ -380,10 +348,6 @@ end
 
 function HUDMultipleChoiceWheel:_create_icon(index, parent)
 	local icon_params = {
-		name = nil,
-		texture_rect = nil,
-		texture = nil,
-		color = nil,
 		name = "icon_" .. tostring(self._option_data[index].id),
 		texture = tweak_data.gui.icons[self._option_data[index].icon].texture,
 		texture_rect = tweak_data.gui.icons[self._option_data[index].icon].texture_rect,
@@ -396,16 +360,11 @@ end
 
 function HUDMultipleChoiceWheel:_create_option_text(index, parent)
 	local option_text_params = {
-		font = nil,
-		text = nil,
-		align = "center",
-		name = nil,
-		color = nil,
-		layer = 5,
-		vertical = "center",
 		halign = "left",
 		valign = "top",
-		font_size = nil,
+		vertical = "center",
+		align = "center",
+		layer = 5,
 		name = "text_" .. tostring(self._option_data[index].id),
 		font = HUDMultipleChoiceWheel.TEXT_FONT,
 		font_size = HUDMultipleChoiceWheel.TEXT_FONT_SIZE,
@@ -596,8 +555,8 @@ end
 
 function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	self._last_mouse_pos = {
-		x = 0,
-		y = 0
+		y = 0,
+		x = 0
 	}
 	self._last_mouse_dist = 0
 
@@ -634,14 +593,12 @@ end
 
 function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 	local vec1 = {
-		x = nil,
-		y = nil,
 		x = x,
 		y = y
 	}
 	local vec2 = {
-		x = 0,
-		y = -3
+		y = -3,
+		x = 0
 	}
 	local angle = math.atan2(vec1.y, vec1.x) - math.atan2(vec2.y, vec2.x)
 	angle = angle + self._angle_offset
@@ -691,8 +648,9 @@ function HUDMultipleChoiceWheel:_exit_panel(id)
 	local len = string.len(self._options[id].text:text())
 
 	self._options[id].text:stop()
-	self._options[id].text:set_range_color(0, len, HUDMultipleChoiceWheel.TEXT_UNSELECTED_COLOR)
-	self._options[id].icon:set_color(HUDMultipleChoiceWheel.ICON_UNSELECTED_COLOR)
+	self._options[id].text:clear_range_color(0, len)
+	self._options[id].text:set_color(self.ICON_UNSELECTED_COLOR)
+	self._options[id].icon:set_color(self.ICON_UNSELECTED_COLOR)
 	self._separators[id]:set_color(HUDMultipleChoiceWheel.SEPARATOR_LINE_UNSELECTED_COLOR)
 	self._separators[id % #self._option_data + 1]:set_color(HUDMultipleChoiceWheel.SEPARATOR_LINE_UNSELECTED_COLOR)
 	self._pointer:set_color(HUDMultipleChoiceWheel.ICON_UNSELECTED_COLOR)

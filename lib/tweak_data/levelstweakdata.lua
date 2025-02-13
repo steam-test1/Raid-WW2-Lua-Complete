@@ -2,7 +2,6 @@ LevelsTweakData = LevelsTweakData or class()
 
 function LevelsTweakData:init()
 	self.altitude_difference_limit = 300
-	self.editor_level = "zone_germany_park"
 	self.streaming_level = {
 		name_id = "menu_stream",
 		world_name = "vanilla/streaming_level",
@@ -123,23 +122,25 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			base_icon = "map_camp",
-			texture = "map",
-			base_location = {
-				y = -2850,
-				x = -200
-			},
-			world_borders = {
-				left = -29736,
-				down = -28846,
-				up = 23122,
-				right = 34700
-			},
-			panel_shape = {
-				y = 220,
-				x = 105,
-				h = 710,
-				w = 885
+			default = {
+				texture = "map_zone_germany",
+				base_icon = "map_ico_camp",
+				base_location = {
+					x = -200,
+					y = -2850
+				},
+				world_borders = {
+					down = -28846,
+					up = 23122,
+					right = 34700,
+					left = -29736
+				},
+				panel_shape = {
+					x = 105,
+					h = 710,
+					w = 885,
+					y = 220
+				}
 			}
 		}
 	}
@@ -156,23 +157,25 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			base_icon = "map_camp",
-			texture = "map",
-			base_location = {
-				y = -2850,
-				x = -200
-			},
-			world_borders = {
-				left = -29736,
-				down = -28846,
-				up = 23122,
-				right = 34700
-			},
-			panel_shape = {
-				y = 220,
-				x = 105,
-				h = 710,
-				w = 885
+			default = {
+				texture = "map_zone_germany",
+				base_icon = "map_ico_camp",
+				base_location = {
+					x = -200,
+					y = -2850
+				},
+				world_borders = {
+					down = -28846,
+					up = 23122,
+					right = 34700,
+					left = -29736
+				},
+				panel_shape = {
+					x = 105,
+					h = 710,
+					w = 885,
+					y = 220
+				}
 			}
 		}
 	}
@@ -189,23 +192,25 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			base_icon = "map_camp",
-			texture = "map",
-			base_location = {
-				y = -2850,
-				x = -200
-			},
-			world_borders = {
-				left = -29736,
-				down = -28846,
-				up = 23122,
-				right = 34700
-			},
-			panel_shape = {
-				y = 220,
-				x = 105,
-				h = 710,
-				w = 885
+			default = {
+				texture = "map_zone_germany",
+				base_icon = "map_ico_camp",
+				base_location = {
+					x = -200,
+					y = -2850
+				},
+				world_borders = {
+					down = -28846,
+					up = 23122,
+					right = 34700,
+					left = -29736
+				},
+				panel_shape = {
+					x = 105,
+					h = 710,
+					w = 885,
+					y = 220
+				}
 			}
 		}
 	}
@@ -222,23 +227,25 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			base_icon = "map_camp",
-			texture = "map",
-			base_location = {
-				y = -2850,
-				x = -200
-			},
-			world_borders = {
-				left = -29736,
-				down = -28846,
-				up = 23122,
-				right = 34700
-			},
-			panel_shape = {
-				y = 220,
-				x = 105,
-				h = 710,
-				w = 885
+			default = {
+				texture = "map_zone_germany",
+				base_icon = "map_ico_camp",
+				base_location = {
+					x = -200,
+					y = -2850
+				},
+				world_borders = {
+					down = -28846,
+					up = 23122,
+					right = 34700,
+					left = -29736
+				},
+				panel_shape = {
+					x = 105,
+					h = 710,
+					w = 885,
+					y = 220
+				}
 			}
 		}
 	}
@@ -255,23 +262,25 @@ function LevelsTweakData:init()
 			-10000
 		},
 		map = {
-			base_icon = "map_camp",
-			texture = "map",
-			base_location = {
-				y = -2850,
-				x = -200
-			},
-			world_borders = {
-				left = -29736,
-				down = -28846,
-				up = 23122,
-				right = 34700
-			},
-			panel_shape = {
-				y = 220,
-				x = 105,
-				h = 710,
-				w = 885
+			default = {
+				texture = "map_zone_germany",
+				base_icon = "map_ico_camp",
+				base_location = {
+					x = -200,
+					y = -2850
+				},
+				world_borders = {
+					down = -28846,
+					up = 23122,
+					right = 34700,
+					left = -29736
+				},
+				panel_shape = {
+					x = 105,
+					h = 710,
+					w = 885,
+					y = 220
+				}
 			}
 		}
 	}
@@ -365,6 +374,58 @@ function LevelsTweakData:init()
 		},
 		predefined_world = "fury_railway"
 	}
+	self.forest_bunker = {
+		name_id = "forest_bunker",
+		briefing_id = "forest_bunker_briefing",
+		world_name = "levels/upg_fb/forest_bunker",
+		cube = "cube_apply_heist_bank",
+		predefined_world = "forest_bunker",
+		package = {
+			"packages/zone_germany"
+		},
+		floor_coordinates = {
+			-10000
+		},
+		map = {
+			default = {
+				texture = "map_forest_bunker",
+				pin_scale = 0.5,
+				base_icon = "map_ico_bunker",
+				base_location = {
+					x = -3600,
+					y = 2500
+				},
+				world_borders = {
+					down = -11900,
+					up = 14400,
+					right = 16900,
+					left = -16000
+				},
+				panel_shape = {
+					x = 135,
+					h = 635,
+					w = 790,
+					y = 240
+				}
+			},
+			bunker = {
+				pin_scale = 0.8,
+				texture = "map_forest_bunker_int",
+				world_borders = {
+					down = 900,
+					up = 4030,
+					right = -1400,
+					left = -6000
+				},
+				panel_shape = {
+					x = 140,
+					h = 472,
+					w = 750,
+					y = 312
+				}
+			}
+		}
+	}
 	self._level_index = {
 		"streaming_level",
 		"germany_zone",
@@ -386,7 +447,8 @@ function LevelsTweakData:init()
 		"sto",
 		"silo",
 		"kelly",
-		"fury_railway"
+		"fury_railway",
+		"forest_bunker"
 	}
 end
 
@@ -487,28 +549,28 @@ function LevelsTweakData:get_team_setup()
 		teams = {
 			criminal1 = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			},
 			law1 = {
 				foes = {
-					criminal1 = true,
 					converted_enemy = true,
-					mobster1 = true
+					mobster1 = true,
+					criminal1 = true
 				}
 			},
 			mobster1 = {
 				foes = {
-					criminal1 = true,
 					converted_enemy = true,
-					law1 = true
+					law1 = true,
+					criminal1 = true
 				}
 			},
 			converted_enemy = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			},
 			neutral1 = {
@@ -516,8 +578,8 @@ function LevelsTweakData:get_team_setup()
 			},
 			hacked_turret = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			}
 		}

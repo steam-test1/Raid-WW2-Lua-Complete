@@ -22,8 +22,8 @@ function DLCTweakData:_init_descriptions()
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
 		loot_global_value = "normal",
 		gold_award = {
-			amount = 50,
-			item = "starter_kit_army_crate"
+			item = "starter_kit_army_crate",
+			amount = 50
 		}
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {
@@ -60,8 +60,8 @@ function DLCTweakData:_init_descriptions()
 				}
 			},
 			gold_award = {
-				amount = 50,
-				item = "preorder_army_crate"
+				item = "preorder_army_crate",
+				amount = 50
 			}
 		}
 	}
@@ -112,8 +112,8 @@ function DLCTweakData:_init_descriptions()
 			},
 			vehicle_skins = {
 				{
-					vehicle = "kubelwagen",
-					item = "kubelwagen_special_edition"
+					item = "kubelwagen_special_edition",
+					vehicle = "kubelwagen"
 				}
 			},
 			camp_customizations = {
@@ -127,8 +127,8 @@ function DLCTweakData:_init_descriptions()
 				}
 			},
 			gold_award = {
-				amount = 50,
-				item = "special_edition_army_crate"
+				item = "special_edition_army_crate",
+				amount = 50
 			}
 		}
 	}

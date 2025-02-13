@@ -5,9 +5,9 @@ local function get_class_table(engine_class_name)
 
 	if class_table then
 		return class_table, nil
-	else
-		return nil, string.format("Engine-side class not found: \"%s\".", engine_class_name)
 	end
+
+	return nil, string.format("Engine-side class not found: \"%s\".", engine_class_name)
 end
 
 local function get_method_table(engine_class_name)
@@ -68,6 +68,37 @@ local function hide_static_engine_method(engine_class_name, method_name, message
 	end
 end
 
+local function clear_static_engine_method(engine_class_name, method_name)
+	assert(engine_class_name and method_name, "Invalid argument list.")
+
+	local function failure_func(failure_message)
+		return function (...)
+			error(string.format("Failed to call hidden method %s:%s(...). %s", engine_class_name, method_name, failure_message))
+		end
+	end
+
+	local method_table, problem = get_method_table(engine_class_name)
+
+	if problem then
+		return failure_func(problem)
+	end
+
+	local method = method_table[method_name]
+
+	if type(method) ~= "function" then
+		return failure_func("Method not found.")
+	end
+
+	method_table[method_name] = function ()
+	end
+
+	local class_table = assert(get_class_table(engine_class_name))
+
+	return function (...)
+		return method(class_table, ...)
+	end
+end
+
 if not __required then
 	__required = true
 	_exec = hide_static_engine_method("Application", "exec", "Use CoreSetup:exec(...) instead!")
@@ -77,4 +108,7 @@ if not __required then
 	_editor_reload = hide_static_engine_method("PackageManager", "editor_reload")
 	_editor_reload_node = hide_static_engine_method("PackageManager", "editor_reload_node")
 	_editor_unit_data = hide_static_engine_method("PackageManager", "editor_unit_data")
+	_debug = clear_static_engine_method("Application", "debug")
+	_trace = clear_static_engine_method("Application", "trace")
+	_error = clear_static_engine_method("Application", "error")
 end

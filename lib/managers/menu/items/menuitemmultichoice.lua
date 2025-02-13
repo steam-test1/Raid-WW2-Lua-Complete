@@ -232,9 +232,9 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	local base = 20
 	local height = 15
 	row_item.arrow_left = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
 		x = 0,
 		y = 0,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			0,
 			0,
@@ -247,9 +247,9 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 		blend_mode = node.row_item_blend_mode
 	})
 	row_item.arrow_right = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
 		x = 0,
 		y = 0,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			24,
 			0,
@@ -467,11 +467,11 @@ function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 	MenuItemMultiChoiceWithIcon.super.setup_gui(self, node, row_item, ...)
 
 	self._icon = row_item.gui_panel:bitmap({
-		layer = 0,
-		h = 16,
-		w = 16,
-		y = 6,
 		name = "icon",
+		w = 16,
+		h = 16,
+		y = 6,
+		layer = 0,
 		texture = self._icon_texture,
 		blend_mode = node.row_item_blend_mode
 	})

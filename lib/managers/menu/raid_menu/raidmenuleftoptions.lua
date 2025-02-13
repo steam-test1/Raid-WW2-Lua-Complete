@@ -3,6 +3,7 @@ RaidMenuLeftOptions = RaidMenuLeftOptions or class(RaidGuiBase)
 function RaidMenuLeftOptions:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuLeftOptions.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(false)
+	self.list_menu_options:show()
 end
 
 function RaidMenuLeftOptions:_set_initial_data()
@@ -26,17 +27,19 @@ end
 
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
-		loop_items = true,
 		selection_enabled = true,
+		vertical_spacing = 2,
 		h = 640,
 		w = 480,
 		y = 144,
 		x = 0,
 		name = "list_menu_options",
+		loop_items = true,
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
-		data_source_callback = callback(self, self, "_list_menu_options_data_source")
+		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
+		item_class = RaidGUIControlListItemMenu
 	}
-	self.list_menu_options = self._root_panel:list(list_menu_options_params)
+	self.list_menu_options = self._root_panel:create_custom_control(RaidGUIControlSingleSelectList, list_menu_options_params)
 
 	self.list_menu_options:set_selected(true)
 
@@ -67,30 +70,36 @@ function RaidMenuLeftOptions:_layout_list_menu()
 end
 
 function RaidMenuLeftOptions:_list_menu_options_data_source()
-	local _list_items = {}
+	local list_items = {
+		{
+			icon = "menu_item_controls",
+			callback = "menu_options_on_click_controls",
+			text = managers.localization:to_upper_text("menu_controls")
+		},
+		{
+			icon = "menu_item_video",
+			callback = "menu_options_on_click_video",
+			text = managers.localization:to_upper_text("menu_video")
+		},
+		{
+			icon = "menu_item_interface",
+			callback = "menu_options_on_click_interface",
+			text = managers.localization:to_upper_text("menu_interface")
+		},
+		{
+			icon = "menu_item_sound",
+			callback = "menu_options_on_click_sound",
+			text = managers.localization:to_upper_text("menu_sound")
+		}
+	}
 
-	table.insert(_list_items, {
-		callback = "menu_options_on_click_controls",
-		text = utf8.to_upper(managers.localization:text("menu_controls"))
-	})
-	table.insert(_list_items, {
-		callback = "menu_options_on_click_video",
-		text = utf8.to_upper(managers.localization:text("menu_video"))
-	})
-	table.insert(_list_items, {
-		callback = "menu_options_on_click_interface",
-		text = utf8.to_upper(managers.localization:text("menu_interface"))
-	})
-	table.insert(_list_items, {
-		callback = "menu_options_on_click_sound",
-		text = utf8.to_upper(managers.localization:text("menu_sound"))
-	})
-	table.insert(_list_items, {
+	table.insert(list_items, {
+		icon = "menu_item_network",
 		callback = "menu_options_on_click_network",
-		text = utf8.to_upper(managers.localization:text("menu_network"))
+		text = managers.localization:to_upper_text("menu_network")
 	})
 
-	return _list_items
+	return list_items
 end
 
 function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
@@ -104,6 +113,23 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 	if on_click_callback then
 		on_click_callback()
 	end
+end
+
+function RaidMenuLeftOptions:_animate_close()
+	local duration = 0.22
+	local t = 0
+
+	self.list_menu_options:animate_hide()
+
+	while t < duration do
+		local dt = coroutine.yield()
+		t = t + dt
+		local current_alpha = Easing.quadratic_in(t, 1, -1, duration)
+
+		self._ws_panel:set_alpha(current_alpha)
+	end
+
+	self:_close()
 end
 
 function RaidMenuLeftOptions:bind_controller_inputs()

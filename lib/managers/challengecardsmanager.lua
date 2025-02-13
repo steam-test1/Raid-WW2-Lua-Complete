@@ -83,31 +83,33 @@ function ChallengeCardsManager:set_readyup_card_cache(card_list)
 end
 
 function ChallengeCardsManager:_process_fresh_steam_inventory(params)
-	if params.list then
-		if #params.list ~= #self:get_readyup_card_cache() then
+	local cards_list = params.cards
+
+	if cards_list then
+		if #cards_list ~= #self:get_readyup_card_cache() then
 			Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] new list has different number of elements ")
-			self:set_readyup_card_cache(params.list)
+			self:set_readyup_card_cache(cards_list)
 			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
 			return
 		end
 
-		local cached_list = self:get_readyup_card_cache()
+		local cached_cards = self:get_readyup_card_cache()
 
-		table.sort(cached_list, function (a, b)
+		table.sort(cached_cards, function (a, b)
 			return a.key_name < b.key_name
 		end)
-		table.sort(params.list, function (a, b)
+		table.sort(cards_list, function (a, b)
 			return a.key_name < b.key_name
 		end)
 
-		for card_index, card_data in ipairs(cached_list) do
-			local cached_card_data = cached_list[card_index]
-			local steam_card_data = params.list[card_index]
+		for card_index, card_data in ipairs(cached_cards) do
+			local cached_card_data = cached_cards[card_index]
+			local steam_card_data = cards_list[card_index]
 
 			if cached_card_data.key_name ~= steam_card_data.key_name then
 				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Keyname) in cached and fresh list index ", card_index)
-				self:set_readyup_card_cache(params.list)
+				self:set_readyup_card_cache(cards_list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
 				return
@@ -115,12 +117,18 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 
 			if cached_card_data.key_name == steam_card_data.key_name and cached_card_data.stack_amount ~= steam_card_data.stack_amount then
 				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Amount) in cached and fresh list index ", card_index)
-				self:set_readyup_card_cache(params.list)
+				self:set_readyup_card_cache(cards_list)
 				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
 
 				return
 			end
 		end
+	end
+
+	self._crafts = {}
+
+	if params.crafts then
+		self._crafts = params.crafts
 	end
 end
 
@@ -343,16 +351,16 @@ function ChallengeCardsManager:_activate_challenge_card()
 		return
 	end
 
+	if self._active_card.peer_id == managers.network:session():local_peer()._id then
+		self:consume_steam_challenge_card(self._active_card.steam_instance_id)
+	end
+
 	self._active_card.status = ChallengeCardsManager.CARD_STATUS_ACTIVE
 
 	for _, effect in pairs(self._active_card.effects) do
 		effect.challenge_card_key = self._active_card.key_name
 		local effect_id = managers.buff_effect:activate_effect(effect)
 		effect.effect_id = effect_id
-	end
-
-	if self._active_card.peer_id == managers.network:session():local_peer()._id then
-		self:consume_steam_challenge_card(self._active_card.steam_instance_id)
 	end
 
 	if Network:is_server() then
@@ -366,10 +374,16 @@ function ChallengeCardsManager:consume_steam_challenge_card(steam_instance_id)
 	if not steam_instance_id or steam_instance_id == 0 then
 		Application:error("[ChallengeCardsManager:consume_steam_challenge_card] COULD NOT CONSUME steam_instance_id ", steam_instance_id)
 
-		return
+		return nil
 	end
 
-	local consume_status = managers.network.account:inventory_remove(steam_instance_id)
+	Application:trace("[ChallengeCardsManager:consume_steam_challenge_card] Pre-consuming steam instance ID", steam_instance_id)
+
+	local status = managers.network.account:inventory_remove(steam_instance_id)
+
+	Application:trace("[ChallengeCardsManager:consume_steam_challenge_card] Consuming steam instance ID ", steam_instance_id, status)
+
+	return status
 end
 
 function ChallengeCardsManager:set_successfull_raid_end()
@@ -427,13 +441,73 @@ end
 function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_instance_id)
 	Application:trace("[ChallengeCardsManager:suggest_challenge_card] challenge_card_key steam_instance_id ", challenge_card_key, steam_instance_id)
 
-	local local_peer = managers.network:session():local_peer()
 	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
 	card.steam_instance_id = steam_instance_id
+	local local_peer = managers.network:session():local_peer()
 	self._suggested_cards[local_peer._id] = card
 
 	managers.network:session():send_to_peers_synched("send_suggested_card_to_peers", challenge_card_key, local_peer._id, steam_instance_id)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
+end
+
+function ChallengeCardsManager:dismantle_challenge_card(challenge_card_key, steam_instance_id)
+	Application:trace("[ChallengeCardsManager:dismantle_challenge_card] challenge_card_key steam_instance_id ", challenge_card_key, steam_instance_id)
+
+	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
+	local card_def = card.def_id
+
+	if card_def then
+		local valid_item_recipes = self:get_valid_item_recipes({
+			card_def
+		})
+
+		if #valid_item_recipes > 0 then
+			Steam:inventory_reward_unlock(steam_instance_id, nil, valid_item_recipes[1].def_id, function (...)
+				print("Eco Status:", ...)
+
+				for i, v in pairs({
+					...
+				}) do
+					table.print_data(v)
+				end
+			end)
+
+			local local_peer = managers.network:session():local_peer()
+
+			if self._suggested_cards[local_peer._id] and self._suggested_cards[local_peer._id].steam_instance_id and self._suggested_cards[local_peer._id].steam_instance_id == steam_instance_id then
+				self:remove_suggested_challenge_card()
+			end
+		else
+			Application:warn("[ChallengeCardsManager:dismantle_challenge_card] No valid item recipies with this card", challenge_card_key, steam_instance_id)
+		end
+	end
+end
+
+function ChallengeCardsManager:get_valid_item_recipes_using(using_item_defs)
+	local found_recipes = {}
+
+	for craft_id, craft_data in pairs(tweak_data.challenge_cards.crafting_items) do
+		for _, recipe_data in ipairs(craft_data.recipes) do
+			if using_item_defs[1] == recipe_data[1][1] then
+				table.insert(found_recipes, craft_data)
+
+				break
+			end
+		end
+	end
+
+	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] found_recipes", inspect(found_recipes))
+
+	return found_recipes
+end
+
+function ChallengeCardsManager:get_required_items_list(recipe_data)
+	local items_needed = {}
+
+	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] recipe_data", inspect(recipe_data))
+	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] items_needed", inspect(items_needed))
+
+	return items_needed
 end
 
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
@@ -456,7 +530,7 @@ function ChallengeCardsManager:remove_suggested_challenge_card()
 
 	local active_card = self:get_active_card()
 
-	if active_card and remove_suggested_card.key_name == active_card.key_name then
+	if active_card and active_card.key_name == remove_suggested_card.key_name then
 		self:remove_active_challenge_card()
 	end
 
@@ -509,6 +583,12 @@ function ChallengeCardsManager:sync_toggle_lock_suggested_challenge_card(peer_id
 end
 
 function ChallengeCardsManager:on_restart_to_camp()
+	Application:debug("[ChallengeCardsManager:on_restart_to_camp] Restarting and consuming card")
+
+	if self._active_card then
+		self:consume_steam_challenge_card(self._active_card.steam_instance_id)
+	end
+
 	self:_on_restart_to_camp()
 
 	if managers.network:session() then
@@ -530,8 +610,8 @@ end
 
 function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id, peer_id)
 	local notification_data = {
-		duration = 10,
 		priority = 1,
+		duration = 10,
 		id = challenge_card_key,
 		notification_type = HUDNotification.CARD_FAIL,
 		card = challenge_card_key,
@@ -684,19 +764,4 @@ function ChallengeCardsManager:set_dropin_card(card_name)
 	end
 
 	Global.challenge_cards_manager.dropin_card = card_name
-end
-
-function ChallengeCardsManager:inventory_alter_stacks(source_steam_instance_id, destination_steam_instance_id, amount)
-end
-
-function ChallengeCardsManager:start_inventory_fix_all_stacks()
-end
-
-function ChallengeCardsManager:inventory_fix_all_stacks(error, list)
-end
-
-function ChallengeCardsManager:inventory_reward_unlock(instance_id_1, instance_id_2, reward_item_def_id)
-end
-
-function ChallengeCardsManager:_clbk_inventory_reward_unlock(error, items_new, items_removed)
 end

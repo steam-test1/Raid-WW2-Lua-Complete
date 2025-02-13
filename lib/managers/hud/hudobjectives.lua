@@ -11,9 +11,9 @@ end
 
 function HUDObjectives:_create_panel(panel)
 	local panel_params = {
-		valign = "top",
 		name = "objectives",
 		halign = "right",
+		valign = "top",
 		w = HUDObjectives.W,
 		h = HUDObjectives.H
 	}
@@ -70,7 +70,7 @@ function HUDObjectives:render_objective()
 	if active_objective.sub_objectives then
 		local y = y + HUDObjectives.OBJECTIVES_PADDING
 
-		for index, sub_objective in pairs(active_objective.sub_objectives) do
+		for _, sub_objective in pairs(active_objective.sub_objectives) do
 			local single_sub_objective = HUDObjectiveSub:new(self._object, sub_objective)
 
 			single_sub_objective:set_y(y)

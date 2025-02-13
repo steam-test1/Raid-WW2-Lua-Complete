@@ -468,14 +468,14 @@ function XB1DLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					is_default = true,
 					verified = true,
-					index = 0
+					index = 0,
+					is_default = true
 				},
 				preorder = {
-					is_default = false,
 					product_id = "123456",
-					index = 1
+					index = 1,
+					is_default = false
 				}
 			}
 		}
@@ -534,26 +534,26 @@ function WINDLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					verified = true,
 					external = true,
 					no_install = true,
+					verified = true,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {
-					app_id = "707070",
-					no_install = true
+					no_install = true,
+					app_id = "707070"
 				},
 				special_edition = {
-					app_id = "707080",
-					no_install = true
+					no_install = true,
+					app_id = "707080"
 				},
 				raid_community = {
-					source_id = "103582791460014708",
-					no_install = true
+					no_install = true,
+					source_id = "103582791460014708"
 				},
 				official_soundtrack = {
-					app_id = "720860",
-					no_install = true
+					no_install = true,
+					app_id = "720860"
 				}
 			}
 		}

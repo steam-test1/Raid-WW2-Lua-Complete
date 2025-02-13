@@ -166,11 +166,11 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	}
 	local combobox_params = {
 		sorted = false,
-		sizer_proportions = 1,
 		name = "Chunk Name",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select an option from the combobox",
+		sizer_proportions = 1,
 		panel = panel,
 		sizer = horizontal_sizer,
 		options = options,

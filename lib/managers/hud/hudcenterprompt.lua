@@ -22,13 +22,13 @@ end
 
 function HUDCenterPrompt:_create_text()
 	local text_params = {
+		name = "center_prompt_text",
+		vertical = "center",
+		align = "center",
 		text = "",
 		halign = "scale",
 		valign = "scale",
 		alpha = 0,
-		name = "center_prompt_text",
-		vertical = "center",
-		align = "center",
 		w = self._object:w(),
 		h = self._object:h(),
 		font = HUDCenterPrompt.TEXT_FONT,

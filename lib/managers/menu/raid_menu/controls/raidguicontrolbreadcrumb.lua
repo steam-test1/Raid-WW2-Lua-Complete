@@ -28,8 +28,8 @@ end
 
 function RaidGUIControlBreadcrumb:_create_panel()
 	local panel_params = {
-		name = "breadcrumb_panel",
 		valign = "center",
+		name = "breadcrumb_panel",
 		halign = "right",
 		w = tweak_data.gui:icon_w(RaidGUIControlBreadcrumb.IMAGE) + 2 * self._padding,
 		h = tweak_data.gui:icon_h(RaidGUIControlBreadcrumb.IMAGE) + 2 * self._padding,
@@ -41,9 +41,9 @@ end
 function RaidGUIControlBreadcrumb:_create_breadcrumb_icon()
 	local icon_params = {
 		name = "breadcrumb_icon",
-		alpha = 0,
 		valign = "center",
 		halign = "center",
+		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlBreadcrumb.IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlBreadcrumb.IMAGE].texture_rect
 	}

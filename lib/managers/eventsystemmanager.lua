@@ -22,6 +22,8 @@ function EventSystemManager:reset()
 	self._last_login_year = 0
 	self._consecutive_logins = 0
 	self._daily_event_id = "active_duty"
+
+	self:_check_special_event()
 end
 
 function EventSystemManager:save_profile_slot(data)
@@ -160,10 +162,10 @@ function EventSystemManager:_fire_daily_event()
 	local reward_data = login_rewards[self._consecutive_logins]
 	local reward = reward_data.reward
 	local notification_params = {
-		name = "active_duty_bonus",
 		priority = 4,
 		duration = 13,
 		notification_type = "active_duty_bonus",
+		name = "active_duty_bonus",
 		consecutive = self._consecutive_logins,
 		total = #login_rewards
 	}

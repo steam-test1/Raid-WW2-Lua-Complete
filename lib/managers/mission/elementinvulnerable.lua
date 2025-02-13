@@ -13,15 +13,7 @@ function ElementInvulnerable:on_executed(instigator)
 
 	if self._values.apply_instigator then
 		if alive(instigator) and instigator:character_damage() then
-			local cd = instigator:character_damage()
-
-			if cd.set_invulnerable then
-				cd:set_invulnerable(self._values.invulnerable)
-			end
-
-			if cd.set_immortal then
-				cd:set_immortal(self._values.immortal)
-			end
+			self:_set_unit_invulnerable(instigator)
 		end
 	else
 		for _, id in ipairs(self._values.elements) do
@@ -29,21 +21,29 @@ function ElementInvulnerable:on_executed(instigator)
 
 			for _, unit in ipairs(element:units()) do
 				if alive(unit) and unit:character_damage() then
-					Application:debug("[ElementInvulnerable:on_executed] Unit", unit, "is set to Invuln/Immort", self._values.invulnerable, self._values.immortal)
-
-					local cd = unit:character_damage()
-
-					if cd.set_invulnerable then
-						cd:set_invulnerable(self._values.invulnerable)
-					end
-
-					if cd.set_immortal then
-						cd:set_immortal(self._values.immortal)
-					end
+					self:_set_unit_invulnerable(unit)
+					Application:debug("[ElementInvulnerable:on_executed] setting unit to invulnerable/immortal: ", unit, self._values.invulnerable, self._values.immortal)
 				end
 			end
 		end
 	end
 
 	ElementInvulnerable.super.on_executed(self, instigator)
+end
+
+function ElementInvulnerable:client_on_executed(instigator)
+end
+
+function ElementInvulnerable:_set_unit_invulnerable(unit)
+	local damage_ext = unit:character_damage()
+
+	if damage_ext.set_invulnerable then
+		damage_ext:set_invulnerable(self._values.invulnerable)
+	end
+
+	if damage_ext.set_immortal then
+		damage_ext:set_immortal(self._values.immortal)
+	end
+
+	unit:network():send("set_unit_invulnerable", self._values.invulnerable, self._values.immortal)
 end

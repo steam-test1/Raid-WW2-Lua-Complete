@@ -21,17 +21,17 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
+		halign = "grow",
 		name = "custody_panel",
-		valign = "grow",
-		halign = "grow"
+		valign = "grow"
 	})
 	local timer_message_params = {
-		align = "center",
-		name = "timer_msg",
 		text = "custodddddy in",
 		h = 40,
 		w = 400,
 		vertical = "center",
+		align = "center",
+		name = "timer_msg",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
 	}
@@ -46,11 +46,11 @@ function HUDPlayerCustody:init(hud)
 	timer_msg:set_y(28)
 
 	local timer_params = {
-		align = "center",
-		name = "timer",
 		text = "00:00",
 		h = 32,
 		vertical = "bottom",
+		align = "center",
+		name = "timer",
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list
@@ -85,9 +85,9 @@ end
 
 function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel = parent:panel({
-		name = "spectator_panel",
 		valign = "bottom",
 		halign = "left",
+		name = "spectator_panel",
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 		h = HUDPlayerCustody.SPECTATOR_PANEL_H
 	})
@@ -103,24 +103,24 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect
 	})
 	self._spectator_text = self._spectator_panel:text({
-		name = "spectator_text",
-		vertical = "center",
-		align = "center",
 		text = "SPECTATING",
 		valign = "center",
 		halign = "center",
+		name = "spectator_text",
+		vertical = "center",
+		align = "center",
 		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
 		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		layer = spectator_background:layer() + 1
 	})
 	self._button_prompt = self._spectator_panel:text({
-		name = "prompt_previous",
 		text = "",
-		vertical = "bottom",
-		align = "center",
+		name = "prompt_previous",
 		valign = "center",
 		halign = "center",
+		vertical = "bottom",
+		align = "center",
 		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR

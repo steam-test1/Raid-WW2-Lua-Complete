@@ -20,11 +20,11 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		texture_rect = tweak_data.gui.icons.intel_table_opposition_card.texture_rect
 	})
 	self._title = self._object:text({
-		h = 64,
-		x = 96,
-		w = 384,
 		y = 96,
+		x = 96,
 		text = "",
+		h = 64,
+		w = 384,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -52,11 +52,11 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._scrollable_area_description:setup_scroll_area()
 
 	self._description = self._content_panel:text({
+		y = 0,
 		x = 0,
+		text = "",
 		w = 380,
 		wrap = true,
-		y = 0,
-		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,

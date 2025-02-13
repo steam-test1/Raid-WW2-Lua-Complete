@@ -924,7 +924,6 @@ function GlobalSelectUnit:init(...)
 
 	cb:set_value(self._only_list_used_units)
 	cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_list_used_units"), {
-		cb = nil,
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1007,8 +1006,6 @@ function GlobalSelectUnit:init(...)
 		self._layer_cbs[name] = cb
 
 		cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_layer_cb"), {
-			name = nil,
-			cb = nil,
 			cb = cb,
 			name = name
 		})
@@ -1414,9 +1411,6 @@ function ReplaceUnit:init(name, types)
 	units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 	units:thaw()
 	unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
-		units = nil,
-		filter = nil,
-		names = nil,
 		filter = unit_filter,
 		units = units,
 		names = unit_names
@@ -1446,9 +1440,6 @@ function ReplaceUnit:init(name, types)
 		units:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "replace_unit_name"), units)
 		units:thaw()
 		unit_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), {
-			units = nil,
-			filter = nil,
-			names = nil,
 			filter = unit_filter,
 			units = units,
 			names = names
@@ -1559,7 +1550,6 @@ function LayerReplaceUnit:init(layer)
 
 	cb:set_value(self._only_list_used_units)
 	cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_list_used_units"), {
-		cb = nil,
 		cb = cb
 	})
 	cb:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
@@ -1570,7 +1560,6 @@ function LayerReplaceUnit:init(layer)
 	self:update_list()
 	self._panel_sizer:add(self._units, 1, 0, "EXPAND")
 	self._units:connect("EVT_COMMAND_LISTBOX_DOUBLECLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = false,
 		units = self._units
 	})
@@ -1582,7 +1571,6 @@ function LayerReplaceUnit:init(layer)
 	local replace_btn = EWS:Button(self._panel, "Replace", "", "")
 
 	replace_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = false,
 		units = self._units
 	})
@@ -1592,7 +1580,6 @@ function LayerReplaceUnit:init(layer)
 	local replace_all_btn = EWS:Button(self._panel, "Replace All", "", "")
 
 	replace_all_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "replace_unit"), {
-		units = nil,
 		all = true,
 		units = self._units
 	})
@@ -1740,13 +1727,13 @@ end
 MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
 
 function MoveTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
-	self._dialog:set_min_size(Vector3(320, 180, 0))
+	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(500, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(480, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
 	self._max = 100000000
-	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "World Position")
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
 	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
@@ -1759,6 +1746,18 @@ function MoveTransformTypeIn:init()
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
 	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+
+	local actions_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Actions")
+	local copy_btn = EWS:Button(self._panel, "Copy", "", "")
+
+	copy_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_copy"), "")
+	actions_sizer:add(copy_btn, 0, 1, "EXPAND,LEFT")
+
+	local paste_btn = EWS:Button(self._panel, "Paste", "", "")
+
+	paste_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_paste"), "")
+	actions_sizer:add(paste_btn, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(actions_sizer, 1, 4, "EXPAND,LEFT")
 	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
@@ -1775,27 +1774,19 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1811,16 +1802,12 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = 0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = -0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -1879,6 +1866,18 @@ function MoveTransformTypeIn:update_offset(data, event)
 	end
 end
 
+function MoveTransformTypeIn:on_copy()
+	if alive(self._unit) then
+		self._clipboard_position = self._unit:position()
+	end
+end
+
+function MoveTransformTypeIn:on_paste()
+	if alive(self._unit) and self._clipboard_position then
+		managers.editor:set_selected_units_position(self._clipboard_position)
+	end
+end
+
 function MoveTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
@@ -1906,8 +1905,8 @@ end
 RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
 
 function RotateTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
-	self._dialog:set_min_size(Vector3(320, 180, 0))
+	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(500, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(480, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1925,6 +1924,18 @@ function RotateTransformTypeIn:init()
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
 	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+
+	local actions_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Actions")
+	local copy_btn = EWS:Button(self._panel, "Copy", "", "")
+
+	copy_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_copy"), "")
+	actions_sizer:add(copy_btn, 0, 1, "EXPAND,LEFT")
+
+	local paste_btn = EWS:Button(self._panel, "Paste", "", "")
+
+	paste_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_paste"), "")
+	actions_sizer:add(paste_btn, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(actions_sizer, 1, 4, "EXPAND,LEFT")
 	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
@@ -1941,27 +1952,19 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -1977,16 +1980,12 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = 0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = -0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -2047,6 +2046,18 @@ function RotateTransformTypeIn:update_offset(data, event)
 		managers.editor:set_selected_units_rotation(rot)
 		data.ctrl:change_value(0)
 		data.ctrl:set_selection(-1, -1)
+	end
+end
+
+function RotateTransformTypeIn:on_copy()
+	if alive(self._unit) then
+		self._clipboard_rotation = self._unit:rotation()
+	end
+end
+
+function RotateTransformTypeIn:on_paste()
+	if alive(self._unit) and self._clipboard_rotation then
+		managers.editor:set_selected_units_rotation(self._clipboard_rotation * self._unit:rotation():inverse())
 	end
 end
 
@@ -2111,27 +2122,19 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 
 	if type == "offset" then
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2147,16 +2150,12 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = 0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		ctrl = nil,
 		step = -0.1,
-		coor = nil,
 		ctrl = c,
 		coor = coor
 	})
@@ -2322,56 +2321,40 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	if type == "offset" then
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-rotation in degrees")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_rotation"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_rotation"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_rotation_spin"), {
-			ctrl = nil,
 			step = 1,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_rotation_spin"), {
-			ctrl = nil,
 			step = -1,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 	else
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-coordinates in cm")
 		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_position"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_position"), {
-			ctrl = nil,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_position_spin"), {
-			ctrl = nil,
 			step = 10,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_position_spin"), {
-			ctrl = nil,
 			step = -10,
-			coor = nil,
 			ctrl = ctrl,
 			coor = coor
 		})
@@ -2734,9 +2717,6 @@ function UnitDuality:build_collision(collision)
 	local del1 = EWS:Button(panel, "Del", "", "")
 
 	del1:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
-		text = nil,
-		panel = nil,
-		unit = nil,
 		unit = u1,
 		panel = panel,
 		text = text1
@@ -2750,9 +2730,6 @@ function UnitDuality:build_collision(collision)
 	local del2 = EWS:Button(panel, "Del", "", "")
 
 	del2:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_unit"), {
-		text = nil,
-		panel = nil,
-		unit = nil,
 		unit = u2,
 		panel = panel,
 		text = text2
@@ -2893,8 +2870,6 @@ function BrushLayerDebug:fill_unit_list()
 
 		self._unit_list:set_item(i, 1, "" .. stats.amount)
 		self._unit_list:set_item_data(i, {
-			amount = nil,
-			name = nil,
 			name = stats.unit_name:s(),
 			amount = stats.amount
 		})

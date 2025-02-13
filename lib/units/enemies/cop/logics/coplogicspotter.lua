@@ -6,7 +6,6 @@ CopLogicSpotter.death_clbk = CopLogicAttack.death_clbk
 
 function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -35,8 +34,8 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 	end
@@ -68,17 +67,16 @@ end
 
 function CopLogicSpotter.throw_flare_so(data)
 	local action_desc = {
+		body_part = 1,
 		variant = "spotter_cbt_sup_throw_flare",
 		type = "act",
-		blocks = nil,
-		body_part = 1,
 		blocks = {
-			heavy_hurt = -1,
-			hurt = -1,
-			light_hurt = -1,
 			walk = -1,
 			action = -1,
-			aim = -1
+			aim = -1,
+			heavy_hurt = -1,
+			hurt = -1,
+			light_hurt = -1
 		}
 	}
 
@@ -460,13 +458,13 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					body_part = 3,
-					type = "reload"
+					type = "reload",
+					body_part = 3
 				}
 			else
 				new_action = {
-					body_part = 3,
-					type = "idle"
+					type = "idle",
+					body_part = 3
 				}
 			end
 
@@ -487,8 +485,8 @@ function CopLogicSpotter._request_action_shoot(data, my_data)
 	end
 
 	local shoot_action = {
-		body_part = 3,
-		type = "shoot"
+		type = "shoot",
+		body_part = 3
 	}
 
 	if data.unit:brain():action_request(shoot_action) then

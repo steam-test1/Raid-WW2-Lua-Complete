@@ -23,6 +23,7 @@ function SpawnEnemyUnitElement:init(unit)
 	self._hed.participate_to_group_ai = true
 	self._hed.interval = 5
 	self._hed.amount = 0
+	self._hed.forbid_seen = false
 	self._hed.accessibility = "any"
 	self._hed.voice = 0
 	self._hed.team = "default"
@@ -34,6 +35,7 @@ function SpawnEnemyUnitElement:init(unit)
 	table.insert(self._save_values, "participate_to_group_ai")
 	table.insert(self._save_values, "interval")
 	table.insert(self._save_values, "amount")
+	table.insert(self._save_values, "forbid_seen")
 	table.insert(self._save_values, "accessibility")
 	table.insert(self._save_values, "voice")
 end
@@ -130,12 +132,20 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	toolbar:realize()
 	enemy_sizer:add(toolbar, 0, 0, "EXPAND,LEFT")
 
+	local forbid_seen = EWS:CheckBox(panel, "Forbid Spawn if Visible", "")
+
+	forbid_seen:set_value(self._hed.forbid_seen)
+	forbid_seen:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "forbid_seen",
+		ctrlr = forbid_seen
+	})
+	panel_sizer:add(forbid_seen, 0, 0, "EXPAND")
+
 	local participate_to_group_ai = EWS:CheckBox(panel, "Participate to group ai", "")
 
 	participate_to_group_ai:set_value(self._hed.participate_to_group_ai)
 	participate_to_group_ai:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
 		value = "participate_to_group_ai",
-		ctrlr = nil,
 		ctrlr = participate_to_group_ai
 	})
 	panel_sizer:add(participate_to_group_ai, 0, 0, "EXPAND")
@@ -145,13 +155,13 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	table.insert(spawn_action_options, "none")
 	self:_build_value_combobox(panel, panel_sizer, "spawn_action", spawn_action_options)
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "Used to specify how often this spawn can be used. 0 means no interval")
 	self:_build_value_number(panel, panel_sizer, "voice", {
+		max = 5,
 		min = 0,
-		floats = 0,
-		max = 5
+		floats = 0
 	}, "Voice variant. 1-5. 0 for random.")
 	self:_build_value_combobox(panel, panel_sizer, "accessibility", ElementSpawnEnemyDummy.ACCESSIBILITIES, "Only units with this movement type will be spawned from this element.")
 
@@ -177,8 +187,6 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
 		managers.editor:add_to_world_package({
-			continent = nil,
-			name = nil,
 			category = "units",
 			name = unit_name:s(),
 			continent = self._unit:unit_data().continent
@@ -190,10 +198,8 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
-				continent = nil,
-				name = nil,
-				init = true,
 				category = "script_data",
+				init = true,
 				name = file:s() .. ".sequence_manager",
 				continent = self._unit:unit_data().continent
 			})

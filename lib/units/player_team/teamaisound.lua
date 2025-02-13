@@ -9,6 +9,8 @@ function TeamAISound:init(unit)
 
 	ss:set_switch("hero_switch", tweak_data.character[unit:base()._tweak_table].speech_prefix)
 	ss:set_switch("actor_switch", "third")
+
+	self._sound_callback = callback(self, self, "sound_callback")
 end
 
 function TeamAISound:set_voice(voice)

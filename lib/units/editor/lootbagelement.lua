@@ -94,8 +94,8 @@ function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "push_multiplier", {
-		min = 0,
-		floats = 1
+		floats = 1,
+		min = 0
 	}, "Use this to add a velocity to a physic push on the spawned unit")
 	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({
 		"none"
@@ -126,9 +126,9 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0.85,
 				b = 0.25,
 				g = 0.85,
+				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -141,8 +141,8 @@ end
 
 function LootBagTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("units/dev_tools/mission_elements/point_loot_bag/point_loot_bag") then

@@ -41,12 +41,10 @@ end
 function GroupAITweakData:_init_chatter_data()
 	self.enemy_chatter = {
 		spotted_player = {
+			radius = 3500,
 			queue = "spotted_player",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -57,12 +55,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		aggressive = {
+			radius = 3500,
 			queue = "aggressive",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -73,12 +69,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		retreat = {
+			radius = 3500,
 			queue = "retreat",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -89,12 +83,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		follow_me = {
+			radius = 3500,
 			queue = "follow_me",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -105,12 +97,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		clear = {
+			radius = 3500,
 			queue = "clear",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -121,12 +111,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		go_go = {
+			radius = 3500,
 			queue = "go_go",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -137,12 +125,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		ready = {
+			radius = 3500,
 			queue = "ready",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				1,
 				2
@@ -153,12 +139,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		smoke = {
+			radius = 3500,
 			queue = "smoke",
 			group_min = 2,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 3500,
 			duration = {
 				0,
 				0
@@ -169,12 +153,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		incomming_flamer = {
+			radius = 4000,
 			queue = "incomming_flamer",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 4000,
 			duration = {
 				60,
 				60
@@ -185,12 +167,10 @@ function GroupAITweakData:_init_chatter_data()
 			}
 		},
 		incomming_commander = {
+			radius = 4000,
 			queue = "incomming_commander",
 			group_min = 1,
-			interval = nil,
-			duration = nil,
 			max_nr = 1,
-			radius = 4000,
 			duration = {
 				60,
 				60
@@ -207,30 +187,30 @@ local access_type_walk_only = {
 	walk = true
 }
 local access_type_all = {
-	acrobatic = true,
-	walk = true
+	walk = true,
+	acrobatic = true
 }
 
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.special_unit_spawn_limits = {
-			flamer = 0,
-			commander = 0
+			commander = 0,
+			flamer = 0
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.special_unit_spawn_limits = {
-			flamer = 1,
-			commander = 1
+			commander = 1,
+			flamer = 1
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.special_unit_spawn_limits = {
-			flamer = 2,
-			commander = 1
+			commander = 1,
+			flamer = 2
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.special_unit_spawn_limits = {
-			flamer = 3,
-			commander = 1
+			commander = 1,
+			flamer = 3
 		}
 	end
 
@@ -242,296 +222,222 @@ end
 function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 	self.unit_categories.german = {
 		german_grunt_light = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light")
 			},
 			access = access_type_all
 		},
 		german_grunt_light_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_mp38")
 			},
 			access = access_type_all
 		},
 		german_grunt_light_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_kar98")
 			},
 			access = access_type_all
 		},
 		german_grunt_light_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_light/german_grunt_light_shotgun")
 			},
 			access = access_type_all
 		},
 		german_grunt_mid = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid")
 			},
 			access = access_type_all
 		},
 		german_grunt_mid_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_mp38")
 			},
 			access = access_type_all
 		},
 		german_grunt_mid_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_kar98")
 			},
 			access = access_type_all
 		},
 		german_grunt_mid_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_mid/german_grunt_mid_shotgun")
 			},
 			access = access_type_all
 		},
 		german_grunt_heavy = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy")
 			},
 			access = access_type_walk_only
 		},
 		german_grunt_heavy_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_mp38")
 			},
 			access = access_type_walk_only
 		},
 		german_grunt_heavy_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_grunt_heavy_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_grunt_heavy/german_grunt_heavy_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_light = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light")
 			},
 			access = access_type_all
 		},
 		german_light_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_kar98")
 			},
 			access = access_type_all
 		},
 		german_light_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light/german_black_waffen_sentry_light_shotgun")
 			},
 			access = access_type_all
 		},
 		german_heavy = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy")
 			},
 			access = access_type_walk_only
 		},
 		german_heavy_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_heavy_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy/german_black_waffen_sentry_heavy_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_gasmask = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask")
 			},
 			access = access_type_all
 		},
 		german_gasmask_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask/german_black_waffen_sentry_gasmask_shotgun")
 			},
 			access = access_type_all
 		},
 		german_gebirgsjager_light = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light")
 			},
 			access = access_type_all
 		},
 		german_gebirgsjager_light_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_mp38")
 			},
 			access = access_type_all
 		},
 		german_gebirgsjager_light_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_kar98")
 			},
 			access = access_type_all
 		},
 		german_gebirgsjager_light_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_light/german_gebirgsjager_light_shotgun")
 			},
 			access = access_type_all
 		},
 		german_gebirgsjager_heavy = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy")
 			},
 			access = access_type_walk_only
 		},
 		german_gebirgsjager_heavy_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_mp38")
 			},
 			access = access_type_walk_only
 		},
 		german_gebirgsjager_heavy_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_gebirgsjager_heavy_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_gebirgsjager_heavy/german_gebirgsjager_heavy_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_fallschirmjager_heavy = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy")
 			},
 			access = access_type_walk_only
 		},
 		german_fallschirmjager_heavy_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_mp38")
 			},
 			access = access_type_walk_only
 		},
 		german_fallschirmjager_heavy_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_fallschirmjager_heavy_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_fallschirmjager_light = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light")
 			},
 			access = access_type_all
 		},
 		german_fallschirmjager_light_mp38 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_mp38")
 			},
 			access = access_type_all
 		},
 		german_fallschirmjager_light_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_kar98")
 			},
 			access = access_type_all
 		},
 		german_fallschirmjager_light_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_light/german_fallschirmjager_light_shotgun")
 			},
 			access = access_type_all
 		},
 		german_flamethrower = {
-			units = nil,
-			access = nil,
 			special_type = "flamer",
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_flamer/german_flamer")
@@ -539,8 +445,6 @@ function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 			access = access_type_walk_only
 		},
 		german_commander = {
-			units = nil,
-			access = nil,
 			special_type = "commander",
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
@@ -548,72 +452,54 @@ function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 			access = access_type_walk_only
 		},
 		german_gasmask_commander_backup = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander")
 			},
 			access = access_type_walk_only
 		},
 		german_gasmask_commander_backup_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_gasmask_commander/german_black_waffen_sentry_gasmask_commander_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_heavy_commander_backup = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander")
 			},
 			access = access_type_walk_only
 		},
 		german_heavy_commander_backup_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_heavy_commander_backup_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_heavy_commander/german_black_waffen_sentry_heavy_commander_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_light_commander_backup = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander")
 			},
 			access = access_type_walk_only
 		},
 		german_light_commander_backup_kar98 = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_kar98")
 			},
 			access = access_type_walk_only
 		},
 		german_light_commander_backup_shotgun = {
-			units = nil,
-			access = nil,
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_black_waffen_sentry_light_commander/german_black_waffen_sentry_light_commander_shotgun")
 			},
 			access = access_type_walk_only
 		},
 		german_og_commander = {
-			units = nil,
-			access = nil,
 			special_type = "commander",
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_og_commander/german_og_commander")
@@ -621,8 +507,6 @@ function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 			access = access_type_walk_only
 		},
 		german_officer = {
-			units = nil,
-			access = nil,
 			special_type = "officer",
 			units = {
 				Idstring("units/vanilla/characters/enemies/models/german_commander/german_commander")
@@ -634,29 +518,6 @@ end
 
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
-		ss_chargers = nil,
-		ss_flankers = nil,
-		ss_rifle_range = nil,
-		flamethrower = nil,
-		fallschirm_support = nil,
-		fallschirm_flankers = nil,
-		fallschirm_chargers = nil,
-		gerbish_rifle_range = nil,
-		gerbish_flankers = nil,
-		gerbish_chargers = nil,
-		grunt_support_range = nil,
-		grunt_flankers = nil,
-		commander = nil,
-		grunt_chargers = nil,
-		sniper = nil,
-		close_assault_supprise = nil,
-		close_assault_grenade_flank = nil,
-		close_assault_grenade = nil,
-		close_assault_flank = nil,
-		close_assault = nil,
-		flanker = nil,
-		defend = nil,
-		ranged_fire = nil,
 		ranged_fire = {
 			"ranged_fire"
 		},
@@ -790,13 +651,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 3,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 1,
@@ -805,7 +663,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_max = 2,
 					amount_min = 0,
 					freq = 2,
@@ -814,7 +671,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 3,
 					unit = "german_grunt_light",
@@ -824,13 +680,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_mid",
@@ -838,7 +691,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_grunt_light_mp38",
@@ -846,7 +698,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_mid_shotgun",
@@ -856,13 +707,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_shotgun",
@@ -870,7 +718,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_grunt_mid",
@@ -878,7 +725,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_heavy",
@@ -888,13 +734,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_heavy_shotgun",
@@ -902,7 +745,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_heavy",
@@ -910,7 +752,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_grunt_heavy_mp38",
@@ -922,13 +763,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 3,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 1,
@@ -937,7 +775,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_max = 2,
 					amount_min = 0,
 					freq = 2,
@@ -946,7 +783,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 4,
 					unit = "german_grunt_light_mp38",
@@ -956,13 +792,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_heavy",
@@ -970,7 +803,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_heavy_mp38",
@@ -978,7 +810,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 3,
 					unit = "german_grunt_mid_mp38",
@@ -988,13 +819,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_shotgun",
@@ -1002,7 +830,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_mid",
@@ -1010,7 +837,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_grunt_heavy",
@@ -1020,13 +846,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_grunt_mid",
@@ -1034,7 +857,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_mid_mp38",
@@ -1042,7 +864,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_heavy_shotgun",
@@ -1054,13 +875,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 4,
@@ -1069,7 +887,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 3,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_mid",
@@ -1077,7 +894,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 2,
@@ -1088,13 +904,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 2,
@@ -1103,7 +916,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_grunt_mid",
@@ -1111,7 +923,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 1,
@@ -1122,13 +933,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 1,
 					freq = 2,
@@ -1137,7 +945,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_max = 1,
 					amount_min = 0,
 					freq = 2,
@@ -1146,7 +953,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_heavy",
@@ -1156,13 +962,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_max = 2,
 					amount_min = 0,
 					freq = 2,
@@ -1171,7 +974,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_mid",
@@ -1179,7 +981,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_grunt_heavy",
@@ -1191,13 +992,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 3,
-					tactics = nil,
 					amount_max = 2,
 					amount_min = 1,
 					freq = 1,
@@ -1206,7 +1004,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_grunt_light_shotgun",
@@ -1214,7 +1011,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 3,
 					unit = "german_grunt_light",
@@ -1224,13 +1020,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_light",
@@ -1238,7 +1031,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_gebirgsjager_light_shotgun",
@@ -1246,7 +1038,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_light_mp38",
@@ -1256,13 +1047,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_gebirgsjager_heavy_mp38",
@@ -1270,7 +1058,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy_shotgun",
@@ -1278,7 +1065,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_light",
@@ -1288,13 +1074,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy",
@@ -1302,7 +1085,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_gebirgsjager_heavy_shotgun",
@@ -1314,13 +1096,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy",
@@ -1328,7 +1107,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_kar98",
@@ -1336,7 +1114,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_kar98",
@@ -1346,13 +1123,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy_kar98",
@@ -1360,7 +1134,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_gebirgsjager_light_kar98",
@@ -1368,7 +1141,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy",
@@ -1378,13 +1150,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_heavy_kar98",
@@ -1392,7 +1161,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_gebirgsjager_heavy",
@@ -1400,7 +1168,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_gebirgsjager_light_kar98",
@@ -1410,13 +1177,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_gebirgsjager_heavy",
@@ -1424,7 +1188,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_gebirgsjager_heavy_kar98",
@@ -1435,8 +1198,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	end
 
 	self.enemy_spawn_groups.german.gerbish_flankers = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_easy,
 		spawn = {}
 	}
@@ -1445,7 +1206,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		table.insert(self.enemy_spawn_groups.german.gerbish_flankers.spawn, {
 			{
 				rank = 3,
-				tactics = nil,
 				amount_max = 1,
 				freq = 1,
 				unit = "german_grunt_heavy",
@@ -1453,7 +1213,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 2,
-				tactics = nil,
 				amount_max = 2,
 				freq = 2,
 				unit = "german_gebirgsjager_light_mp38",
@@ -1461,7 +1220,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 2,
 				freq = 5,
 				unit = "german_grunt_light_mp38",
@@ -1472,7 +1230,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		table.insert(self.enemy_spawn_groups.german.gerbish_flankers.spawn, {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 0,
 				freq = 1,
 				unit = "german_gebirgsjager_heavy_mp38",
@@ -1480,7 +1237,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_gebirgsjager_light_mp38",
@@ -1488,7 +1244,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_grunt_light_mp38",
@@ -1499,7 +1254,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		table.insert(self.enemy_spawn_groups.german.gerbish_flankers.spawn, {
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 1,
 				unit = "german_gebirgsjager_light_mp38",
@@ -1507,7 +1261,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_gebirgsjager_heavy_mp38",
@@ -1515,7 +1268,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_gebirgsjager_heavy",
@@ -1526,7 +1278,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		table.insert(self.enemy_spawn_groups.german.gerbish_flankers.spawn, {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 2,
 				freq = 1,
 				unit = "german_gebirgsjager_heavy",
@@ -1534,7 +1285,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 1,
 				freq = 2,
 				unit = "german_gebirgsjager_heavy_shotgun",
@@ -1542,7 +1292,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 1,
 				freq = 2,
 				unit = "german_gebirgsjager_heavy_kar98",
@@ -1553,13 +1302,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_fallschirmjager_light",
@@ -1567,7 +1313,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_shotgun",
@@ -1575,7 +1320,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 3,
 					unit = "german_grunt_light",
@@ -1585,13 +1329,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_fallschirmjager_light_shotgun",
@@ -1599,7 +1340,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 3,
 					unit = "german_fallschirmjager_light",
@@ -1607,7 +1347,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_shotgun",
@@ -1617,13 +1356,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_light_shotgun",
@@ -1631,7 +1367,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 3,
 					unit = "german_fallschirmjager_light",
@@ -1639,7 +1374,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_heavy_shotgun",
@@ -1649,13 +1383,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_heavy_shotgun",
@@ -1663,7 +1394,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 3,
 					unit = "german_fallschirmjager_heavy",
@@ -1671,7 +1401,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_light_shotgun",
@@ -1683,13 +1412,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_fallschirmjager_light",
@@ -1697,7 +1423,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_kar98",
@@ -1705,7 +1430,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_light",
@@ -1715,13 +1439,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 3,
 					unit = "german_fallschirmjager_light",
@@ -1729,7 +1450,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_fallschirmjager_light_kar98",
@@ -1737,7 +1457,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_kar98",
@@ -1747,13 +1466,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_light_kar98",
@@ -1761,7 +1477,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_heavy_kar98",
@@ -1769,7 +1484,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 3,
 					unit = "german_fallschirmjager_heavy",
@@ -1779,13 +1493,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy",
@@ -1793,7 +1504,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_light_kar98",
@@ -1801,7 +1511,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy_kar98",
@@ -1813,13 +1522,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_fallschirmjager_light",
@@ -1827,7 +1533,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_light",
@@ -1835,7 +1540,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_light_kar98",
@@ -1845,13 +1549,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 3,
 					freq = 1,
 					unit = "german_fallschirmjager_light_mp38",
@@ -1859,7 +1560,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_fallschirmjager_heavy_mp38",
@@ -1867,7 +1567,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy",
@@ -1877,13 +1576,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_light_mp38",
@@ -1891,7 +1587,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy",
@@ -1899,7 +1594,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_heavy_mp38",
@@ -1909,13 +1603,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy_mp38",
@@ -1923,7 +1614,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_fallschirmjager_heavy",
@@ -1931,7 +1621,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_fallschirmjager_light_mp38",
@@ -1943,13 +1632,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light",
@@ -1957,7 +1643,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_light",
@@ -1965,7 +1650,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_shotgun",
@@ -1975,13 +1659,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light",
@@ -1989,7 +1670,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light_shotgun",
@@ -1997,7 +1677,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_mid_shotgun",
@@ -2007,13 +1686,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light",
@@ -2021,7 +1697,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light_shotgun",
@@ -2029,7 +1704,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_heavy_shotgun",
@@ -2039,13 +1713,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 2,
 					unit = "german_light",
@@ -2053,7 +1724,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_light_shotgun",
@@ -2061,7 +1731,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_heavy_shotgun",
@@ -2073,13 +1742,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_light",
@@ -2087,7 +1753,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_grunt_light",
@@ -2095,7 +1760,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_grunt_light_kar98",
@@ -2105,13 +1769,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_light",
@@ -2119,7 +1780,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light_kar98",
@@ -2127,7 +1787,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_heavy_kar98",
@@ -2137,13 +1796,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_light",
@@ -2151,7 +1807,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_light_kar98",
@@ -2159,7 +1814,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_heavy_kar98",
@@ -2169,13 +1823,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 3,
 					unit = "german_heavy",
@@ -2183,7 +1834,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_light_kar98",
@@ -2191,7 +1841,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_heavy_kar98",
@@ -2203,13 +1852,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 2,
 					unit = "german_light",
@@ -2217,7 +1863,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_kar98",
@@ -2225,7 +1870,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 2,
 					unit = "german_grunt_light",
@@ -2235,13 +1879,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 4,
 					freq = 2,
 					unit = "german_light",
@@ -2249,7 +1890,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_grunt_light_mp38",
@@ -2259,13 +1899,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_hard,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 3,
 					freq = 2,
 					unit = "german_light",
@@ -2273,7 +1910,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 2,
 					freq = 1,
 					unit = "german_grunt_heavy",
@@ -2283,13 +1919,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_vhrd,
 			spawn = {
 				{
 					rank = 1,
-					tactics = nil,
 					amount_min = 1,
 					freq = 1,
 					unit = "german_light",
@@ -2297,7 +1930,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					rank = 2,
-					tactics = nil,
 					amount_min = 0,
 					freq = 1,
 					unit = "german_heavy",
@@ -2308,13 +1940,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	end
 
 	self.enemy_spawn_groups.german.flamethrower = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_one,
 		spawn = {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_max = 1,
 				amount_min = 1,
 				freq = 1,
@@ -2324,8 +1953,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	}
 	self.enemy_spawn_groups.german.commanders = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_one,
 		spawn = {}
 	}
@@ -2333,7 +1960,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	if difficulty_index <= TweakData.DIFFICULTY_3 then
 		table.insert(self.enemy_spawn_groups.german.commanders.spawn, {
 			rank = 2,
-			tactics = nil,
 			amount_max = 1,
 			amount_min = 1,
 			freq = 1,
@@ -2343,7 +1969,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	else
 		table.insert(self.enemy_spawn_groups.german.commanders.spawn, {
 			rank = 2,
-			tactics = nil,
 			amount_max = 1,
 			amount_min = 1,
 			freq = 1,
@@ -2354,26 +1979,21 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.commander_squad = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
-					tactics = nil,
 					rank = 2,
 					freq = 2,
 					unit = "german_light_commander_backup",
 					tactics = self._tactics.grunt_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_light_commander_backup_shotgun",
 					tactics = self._tactics.grunt_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_light_commander_backup_kar98",
@@ -2383,26 +2003,21 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.commander_squad = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_easy,
 			spawn = {
 				{
-					tactics = nil,
 					rank = 2,
 					freq = 2,
 					unit = "german_light_commander_backup",
 					tactics = self._tactics.grunt_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_light_commander_backup_shotgun",
 					tactics = self._tactics.grunt_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_light_commander_backup_kar98",
@@ -2412,26 +2027,21 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.commander_squad = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
-					tactics = nil,
 					rank = 2,
 					freq = 2,
 					unit = "german_heavy_commander_backup",
 					tactics = self._tactics.gerbish_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_heavy_commander_backup_shotgun",
 					tactics = self._tactics.gerbish_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_heavy_commander_backup_kar98",
@@ -2441,19 +2051,15 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.commander_squad = {
-			spawn = nil,
-			amount = nil,
 			amount = amount_norm,
 			spawn = {
 				{
-					tactics = nil,
 					rank = 2,
 					freq = 3,
 					unit = "german_gasmask_commander_backup",
 					tactics = self._tactics.gerbish_chargers
 				},
 				{
-					tactics = nil,
 					rank = 1,
 					freq = 1,
 					unit = "german_gasmask_commander_backup_shotgun",
@@ -2464,13 +2070,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	end
 
 	self.enemy_spawn_groups.german.recon_grunt_chargers = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_hard,
 		spawn = {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 2,
 				freq = 2,
 				unit = "german_grunt_light",
@@ -2478,7 +2081,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_grunt_mid",
@@ -2487,13 +2089,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	}
 	self.enemy_spawn_groups.german.recon_grunt_flankers = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_hard,
 		spawn = {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 2,
 				freq = 2,
 				unit = "german_grunt_light",
@@ -2501,7 +2100,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_grunt_mid",
@@ -2510,13 +2108,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	}
 	self.enemy_spawn_groups.german.recon_grunt_support_range = {
-		spawn = nil,
-		amount = nil,
 		amount = amount_hard,
 		spawn = {
 			{
 				rank = 2,
-				tactics = nil,
 				amount_min = 2,
 				freq = 2,
 				unit = "german_grunt_light",
@@ -2524,7 +2119,6 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 			{
 				rank = 1,
-				tactics = nil,
 				amount_min = 0,
 				freq = 2,
 				unit = "german_grunt_mid",
@@ -2606,9 +2200,6 @@ end
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.phalanx = {
-		vip = nil,
-		spawn_chance = nil,
-		minions = nil,
 		minions = {},
 		vip = {},
 		spawn_chance = {}

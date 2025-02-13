@@ -1,5 +1,4 @@
 NPCFlamethrowerBase = NPCFlamethrowerBase or class(NPCRaycastWeaponBase)
-NPCFlamethrowerBase.EXPLOSION_TYPE = "flamer_death_fake"
 
 function NPCFlamethrowerBase:init(...)
 	NPCFlamethrowerBase.super.init(self, ...)

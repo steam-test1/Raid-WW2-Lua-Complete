@@ -30,10 +30,10 @@ end
 
 function HUDSuspicionDirection:_create_panel(hud)
 	local panel_params = {
+		name = "suspicion_direction_panel",
 		layer = -5,
 		halign = "center",
 		valign = "center",
-		name = "suspicion_direction_panel",
 		w = HUDSuspicionDirection.W,
 		h = HUDSuspicionDirection.H
 	}

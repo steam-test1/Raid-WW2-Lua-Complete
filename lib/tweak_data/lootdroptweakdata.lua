@@ -14,7 +14,7 @@ LootDropTweakData.RARITY_NONE = "loot_rarity_none"
 LootDropTweakData.RARITY_COMMON = "loot_rarity_common"
 LootDropTweakData.RARITY_UNCOMMON = "loot_rarity_uncommon"
 LootDropTweakData.RARITY_RARE = "loot_rarity_rare"
-LootDropTweakData.RARITY_HALLOWEEN_2017 = "loot_rarity_halloween"
+LootDropTweakData.RARITY_HALLOWEEN = "loot_rarity_halloween"
 LootDropTweakData.RARITY_LIST = {
 	LootDropTweakData.RARITY_ALL,
 	LootDropTweakData.RARITY_DEFAULT,
@@ -22,7 +22,7 @@ LootDropTweakData.RARITY_LIST = {
 	LootDropTweakData.RARITY_UNCOMMON,
 	LootDropTweakData.RARITY_RARE,
 	LootDropTweakData.RARITY_NONE,
-	LootDropTweakData.RARITY_HALLOWEEN_2017
+	LootDropTweakData.RARITY_HALLOWEEN
 }
 LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT = 1
 LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT = 4
@@ -52,7 +52,7 @@ LootDropTweakData.RARITY_PRICES = {
 	[LootDropTweakData.RARITY_COMMON] = 150,
 	[LootDropTweakData.RARITY_UNCOMMON] = 200,
 	[LootDropTweakData.RARITY_RARE] = 250,
-	[LootDropTweakData.RARITY_HALLOWEEN_2017] = 666
+	[LootDropTweakData.RARITY_HALLOWEEN] = 666
 }
 
 function LootDropTweakData:init(tweak_data)
@@ -126,7 +126,7 @@ function LootDropTweakData:_init_customization_rewards()
 		},
 		halloween = {
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
-			rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+			rarity = LootDropTweakData.RARITY_HALLOWEEN
 		}
 	}
 end
@@ -134,43 +134,43 @@ end
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {
 		tiny_raid = {
-			gold_bars_min = 1,
 			gold_bars_max = 1,
+			gold_bars_min = 1,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_raid = {
-			gold_bars_min = 2,
 			gold_bars_max = 4,
+			gold_bars_min = 2,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_raid = {
-			gold_bars_min = 5,
 			gold_bars_max = 10,
+			gold_bars_min = 5,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_raid = {
-			gold_bars_min = 11,
 			gold_bars_max = 15,
+			gold_bars_min = 11,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		tiny_operation = {
-			gold_bars_min = 25,
 			gold_bars_max = 35,
+			gold_bars_min = 25,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_operation = {
-			gold_bars_min = 35,
 			gold_bars_max = 50,
+			gold_bars_min = 35,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_operation = {
-			gold_bars_min = 50,
 			gold_bars_max = 100,
+			gold_bars_min = 50,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_operation = {
-			gold_bars_min = 100,
 			gold_bars_max = 200,
+			gold_bars_min = 100,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		}
 	}

@@ -26,8 +26,6 @@ end
 
 function ExplosionManager:add_sustain_effect(effect_id, sustain_time)
 	table.insert(self._sustain_effects, {
-		expire_t = nil,
-		id = nil,
 		id = effect_id,
 		expire_t = Application:time() + sustain_time
 	})
@@ -55,11 +53,7 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage, ignite_chara
 	if not path_blocked then
 		Application:debug("[ExplosionManager] Damage player")
 		player:character_damage():damage_explosion({
-			range = nil,
-			damage = nil,
-			ignite_character = nil,
 			variant = "explosion",
-			position = nil,
 			position = pos,
 			range = range,
 			damage = damage,
@@ -92,11 +86,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 	if alive(player) and player_dmg ~= 0 then
 		player:character_damage():damage_explosion({
-			range = nil,
-			damage = nil,
-			ignite_character = nil,
 			variant = "explosion",
-			position = nil,
 			position = hit_pos,
 			range = range,
 			damage = player_dmg,
@@ -154,11 +144,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	end
 
 	local count_cops = 0
-	local count_gangsters = 0
-	local count_civilians = 0
 	local count_cop_kills = 0
-	local count_gangster_kills = 0
-	local count_civilian_kills = 0
 	local characters_hit = {}
 	local units_to_push = {}
 	local hit_units = {}
@@ -216,16 +202,8 @@ function ExplosionManager:detect_and_give_dmg(params)
 			if ray_hit then
 				local hit_unit = hit_unit
 
-				if hit_unit:base() and hit_unit:base()._tweak_table and not hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
-
-					if CopDamage.is_civilian(type) then
-						count_civilians = count_civilians + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangsters = count_gangsters + 1
-					else
-						count_cops = count_cops + 1
-					end
+				if hit_unit:base() and not hit_unit:character_damage():dead() then
+					count_cops = count_cops + 1
 				end
 			end
 		elseif apply_dmg or hit_body:dynamic() then
@@ -264,9 +242,6 @@ function ExplosionManager:detect_and_give_dmg(params)
 					attacker_unit = user_unit,
 					weapon_unit = owner,
 					col_ray = self._col_ray or {
-						body = nil,
-						ray = nil,
-						position = nil,
 						position = hit_body:position(),
 						ray = dir,
 						body = hit_body
@@ -276,16 +251,8 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 				hit_unit:character_damage():damage_explosion(action_data)
 
-				if not dead_before and hit_unit:base() and hit_unit:base()._tweak_table and hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
-
-					if CopDamage.is_civilian(type) then
-						count_civilian_kills = count_civilian_kills + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangster_kills = count_gangster_kills + 1
-					else
-						count_cop_kills = count_cop_kills + 1
-					end
+				if not dead_before and hit_unit:character_damage():dead() then
+					count_cop_kills = count_cop_kills + 1
 				end
 			end
 		end
@@ -297,11 +264,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 	if owner then
 		results.count_cops = count_cops
-		results.count_gangsters = count_gangsters
-		results.count_civilians = count_civilians
 		results.count_cop_kills = count_cop_kills
-		results.count_gangster_kills = count_gangster_kills
-		results.count_civilian_kills = count_civilian_kills
 	end
 
 	return hit_units, splinters, results
@@ -508,9 +471,6 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 	if effect_name ~= "none" then
 		effect_id = World:effect_manager():spawn({
-			effect = nil,
-			normal = nil,
-			position = nil,
 			effect = effect_idstring,
 			position = position,
 			normal = normal
@@ -519,9 +479,6 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 	if molotov_damage_effect_table ~= nil then
 		table.insert(molotov_damage_effect_table, {
-			detonation_normal = nil,
-			effect_id = nil,
-			detonation_position = nil,
 			effect_id = effect_id,
 			detonation_position = position,
 			detonation_normal = normal
@@ -566,7 +523,6 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 			sound_source:post_event(sound_event)
 			managers.enemy:add_delayed_clbk("ExplosionManager", callback(ProjectileBase, ProjectileBase, "_dispose_of_sound", {
-				sound_source = nil,
 				sound_source = sound_source
 			}), TimerManager:game():time() + 4)
 		end
@@ -584,9 +540,6 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 
 		if redir_name ~= empty_idstr then
 			World:effect_manager():spawn({
-				effect = nil,
-				normal = nil,
-				position = nil,
 				effect = redir_name,
 				position = ray.position,
 				normal = ray.normal
@@ -595,9 +548,6 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 
 		if idstr_effect and idstr_effect ~= empty_idstr then
 			local id = World:effect_manager():spawn({
-				effect = nil,
-				normal = nil,
-				position = nil,
 				effect = idstr_effect,
 				position = ray.position,
 				normal = ray.normal

@@ -58,8 +58,8 @@ end
 function VehicleDamage:damage_mission(dmg)
 	local damage_info = {
 		result = {
-			variant = "killzone",
-			type = "hurt"
+			type = "hurt",
+			variant = "killzone"
 		}
 	}
 	local attack_data = {
@@ -109,8 +109,8 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	local damage_info = {
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -165,13 +165,15 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	self:_health_recap(attack_data)
 
-	local occupant = self._unit:vehicle_driving():get_random_occupant(false)
+	if math.random() > 0.8 then
+		local occupant = self._unit:vehicle_driving():get_random_occupant(false)
 
-	if occupant then
-		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-			skip_idle_check = true,
-			instigator = occupant
-		})
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
+				skip_idle_check = true,
+				instigator = occupant
+			})
+		end
 	end
 
 	local body_index = 1
@@ -213,15 +215,15 @@ function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body,
 
 	if death then
 		result = {
-			variant = "bullet",
-			type = "death"
+			type = "death",
+			variant = "bullet"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		}
 
 		self:set_health(self._health - damage)
@@ -248,8 +250,8 @@ function VehicleDamage:damage_explosion(attack_data)
 
 	local damage_info = {
 		result = {
-			variant = "explosion",
-			type = "hurt"
+			type = "hurt",
+			variant = "explosion"
 		}
 	}
 
@@ -384,8 +386,8 @@ function VehicleDamage:damage_fire(attack_data)
 
 	local damage_info = {
 		result = {
-			variant = "fire",
-			type = "hurt"
+			type = "hurt",
+			variant = "fire"
 		}
 	}
 
@@ -521,8 +523,8 @@ function VehicleDamage:damage_collision(attack_data)
 
 		local damage_info = {
 			result = {
-				variant = "collision",
-				type = "hurt"
+				type = "hurt",
+				variant = "collision"
 			}
 		}
 
@@ -658,7 +660,7 @@ end
 function VehicleDamage:_hit_direction(col_ray)
 	local local_player_vehicle = managers.player:get_vehicle()
 
-	if local_player_vehicle and self._unit == local_player_vehicle.vehicle_unit and col_ray then
+	if local_player_vehicle and local_player_vehicle.vehicle_unit == self._unit and col_ray then
 		local dir = col_ray.ray
 		local infront = math.dot(managers.player:local_player():camera():forward(), dir)
 
@@ -769,7 +771,7 @@ function VehicleDamage:_health_recap()
 		self._half_damaged_squence_played = true
 	end
 
-	if self:get_real_health() <= 0 and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_BROKEN then
+	if self:get_real_health() <= 0 and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_DESTROYED and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_BROKEN then
 		self:die()
 	end
 end

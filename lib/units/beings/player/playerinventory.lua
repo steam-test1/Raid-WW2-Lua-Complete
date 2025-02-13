@@ -42,6 +42,10 @@ function PlayerInventory:init(unit)
 end
 
 function PlayerInventory:pre_destroy(unit)
+	if not self._unit:brain() and self._unit == managers.player:local_player() then
+		managers.player:clear_temporary_grenade()
+	end
+
 	if self._weapon_add_clbk then
 		managers.enemy:remove_delayed_clbk(self._weapon_add_clbk)
 
@@ -392,11 +396,9 @@ function PlayerInventory:equip_selection(selection_index, instant)
 			end
 
 			if equipped_unit_base.out_of_ammo and equipped_unit_base:out_of_ammo() then
-				managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
+				managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
 			elseif equipped_unit_base.can_reload and equipped_unit_base:can_reload() and equipped_unit_base.clip_empty and equipped_unit_base:clip_empty() then
-				managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-					BTN_RELOAD = managers.localization:btn_macro("reload")
-				})))
+				managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 			else
 				managers.hud:hide_prompt("hud_reload_prompt")
 				managers.hud:hide_prompt("hud_no_ammo_prompt")

@@ -25,8 +25,8 @@ GameStateMachine = GameStateMachine or class(CoreGameStateMachine.GameStateMachi
 function GameStateMachine:init()
 	if not Global.game_state_machine then
 		Global.game_state_machine = {
-			is_boot_from_sign_out = false,
-			is_boot_intro_done = false
+			is_boot_intro_done = false,
+			is_boot_from_sign_out = false
 		}
 	end
 

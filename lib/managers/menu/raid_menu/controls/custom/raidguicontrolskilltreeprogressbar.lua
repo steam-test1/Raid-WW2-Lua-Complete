@@ -56,12 +56,12 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 	local progress_bar_params = {
-		x = 0,
-		name = "progress_bar",
 		center = "slider_large_center",
-		right = "slider_large_right",
+		name = "progress_bar",
 		left = "slider_large_left",
 		y = 0,
+		x = 0,
+		right = "slider_large_right",
 		w = self._bar_w + self._horizontal_padding * 2,
 		h = self._params.progress_bar_h or RaidGUIControlSkilltreeProgressBar.PROGRESS_BAR_H
 	}
@@ -119,8 +119,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	local icon_w = tweak_data.gui:icon_w(icon)
 	local icon_h = tweak_data.gui:icon_h(icon)
 	self._slider_pimples_panel = self._object:panel({
-		x = 0,
 		name = "slider_pimples_panel",
+		x = 0,
 		y = RaidGUIControlSkilltreeProgressBar.SLIDER_PIN_Y,
 		w = self._object:w(),
 		h = icon_h,
@@ -144,9 +144,9 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar()
 	self._level_marks_panel = self._object:panel({
-		x = 0,
 		name = "level_marks_panel",
 		y = 0,
+		x = 0,
 		w = self._object:w(),
 		h = self._progress_bar:h()
 	})
@@ -178,25 +178,25 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 		h = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H
 	})
 	self._current_level_label = self._level_labels_panel:text({
-		name = "level_label_curent",
 		text = "1",
+		name = "level_label_curent",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._next_level_label = self._level_labels_panel:text({
-		name = "level_label_next",
 		text = "2",
+		name = "level_label_next",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._experience_label = self._level_labels_panel:text({
+		text = "100 XP UNTIL NEXT LEVEL",
 		align = "center",
 		name = "level_label_xp",
-		text = "100 XP UNTIL NEXT LEVEL",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,

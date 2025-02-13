@@ -206,6 +206,10 @@ function math.min_max(a, b)
 	end
 end
 
+function math.remap(value, from_min, from_max, to_min, to_max)
+	return to_min + (to_max - to_min) / (from_max - from_min) * (value - from_min)
+end
+
 function math.vector_min_max(a, b)
 	local min_x, max_x = math.min_max(a.x, b.x)
 	local min_y, max_y = math.min_max(a.y, b.y)

@@ -548,14 +548,14 @@ function MissionLayer:build_panel(notebook)
 	self._element_toolbar:set_tool_state("EDIT_ELEMENT", self._editing_mission_element)
 	self._element_toolbar:connect("EDIT_ELEMENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
 		value = "_editing_mission_element",
-		to_unit = nil,
 		toolbar = "_element_toolbar",
+		names = nil,
 		class = self
 	})
 
 	self._ews_triggers.insert = callback(self, self, "toolbar_toggle_trg", {
-		toolbar = "_element_toolbar",
 		value = "_editing_mission_element",
+		toolbar = "_element_toolbar",
 		id = "EDIT_ELEMENT",
 		class = self
 	})
@@ -612,8 +612,8 @@ function MissionLayer:_build_scripts()
 	self._scripts_right_toolbar:set_tool_state("SIMULATE_WITH_CURRENT_SCRIPT", self._simulate_with_current_script)
 	self._scripts_right_toolbar:connect("SIMULATE_WITH_CURRENT_SCRIPT", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_simulate_with_current_script",
-		to_unit = nil,
 		toolbar = "_scripts_right_toolbar",
+		names = nil,
 		class = self
 	})
 	self._scripts_right_toolbar:realize()
@@ -628,16 +628,16 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("DRAW_SELECTED_CONNECTIONS_ONLY", self._only_draw_selected_connections)
 	self._btn_toolbar:connect("DRAW_SELECTED_CONNECTIONS_ONLY", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_only_draw_selected_connections",
-		to_unit = nil,
 		toolbar = "_btn_toolbar",
+		names = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("UPDATE_SELECTED_ALL", "Draws all element as if they where selected", CoreEws.image_path("world_editor\\layer_hubs_update_selected_all.png"), "Draws all element as if they where selected")
 	self._btn_toolbar:set_tool_state("UPDATE_SELECTED_ALL", self._update_all)
 	self._btn_toolbar:connect("UPDATE_SELECTED_ALL", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_update_all",
-		to_unit = nil,
 		toolbar = "_btn_toolbar",
+		names = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("PERSISTENT_DEBUG", "Turns on screen debug information on/off", CoreEws.image_path("world_editor\\mission_persistent_debug_16x16.png"), "Turns on screen debug information on/off")
@@ -649,16 +649,16 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("VISUALIZE_FLOW", self._visualize_flow)
 	self._btn_toolbar:connect("VISUALIZE_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_visualize_flow",
-		to_unit = nil,
 		toolbar = "_btn_toolbar",
+		names = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("USE_COLORED_LINKS", "Use colored links", CoreEws.image_path("toolbar\\color_16x16.png"), "Use colored links")
 	self._btn_toolbar:set_tool_state("USE_COLORED_LINKS", self._use_colored_links)
 	self._btn_toolbar:connect("USE_COLORED_LINKS", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		value = "_use_colored_links",
-		to_unit = nil,
 		toolbar = "_btn_toolbar",
+		names = nil,
 		class = self
 	})
 	self._btn_toolbar:add_separator()

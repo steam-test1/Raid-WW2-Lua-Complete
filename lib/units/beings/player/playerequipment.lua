@@ -148,9 +148,12 @@ function PlayerEquipment:throw_projectile()
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
-	local say_line = projectile_data.throw_shout or "player_throw_grenade"
 
-	self._unit:sound():say(say_line, nil, true)
+	if projectile_data.throw_shout ~= false then
+		local say_line = projectile_data.throw_shout or "player_throw_grenade"
+
+		self._unit:sound():say(say_line, nil, true)
+	end
 
 	local projectile_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_entry)
 	local cosmetic_id = managers.weapon_inventory:get_weapons_skin(equipped_grenade)
@@ -174,9 +177,12 @@ function PlayerEquipment:throw_grenade()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
 	local weapon_data = tweak_data.weapon[equipped_grenade]
-	local say_line = weapon_data.throw_shout or "player_throw_grenade"
 
-	self._unit:sound():say(say_line, nil, true)
+	if weapon_data.throw_shout ~= false then
+		local say_line = weapon_data.throw_shout or "player_throw_grenade"
+
+		self._unit:sound():say(say_line, nil, true)
+	end
 
 	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
 	local cooking_t = self._cooking_start and Application:time() - self._cooking_start

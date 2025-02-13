@@ -1,8 +1,8 @@
 NavLinkUnitElement = NavLinkUnitElement or class(MissionElement)
 NavLinkUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "special_objective_action",
-		value = "so_action"
+		value = "so_action",
+		type = "special_objective_action"
 	}
 }
 NavLinkUnitElement._AI_SO_types = {
@@ -146,6 +146,10 @@ function NavLinkUnitElement:test_element()
 end
 
 function NavLinkUnitElement:loop_test_element()
+	if alive(self._test_unit) then
+		self._hed.search_position = self._test_unit:position()
+	end
+
 	self._test_unit:warp_to(self._unit:rotation(), self._unit:position())
 	self._so_class:on_executed(self._test_unit)
 end
@@ -247,9 +251,9 @@ function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					g = 0.75,
 					r = 0,
 					b = 0,
+					g = 0.75,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -266,8 +270,8 @@ end
 
 function NavLinkUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -283,8 +287,8 @@ end
 
 function NavLinkUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -431,10 +435,10 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		ctrlr_proportions = 2,
 		name = "Preset:",
-		name_proportions = 1,
 		sorted = true,
+		name_proportions = 1,
+		ctrlr_proportions = 2,
 		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
@@ -498,8 +502,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

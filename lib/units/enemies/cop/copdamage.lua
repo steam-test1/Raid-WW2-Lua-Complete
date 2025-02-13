@@ -21,25 +21,25 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
-	fire = "fire_hurt",
-	explode = "expl_hurt",
-	heavy = "heavy_hurt",
 	moderate = "hurt",
 	light = "light_hurt",
 	none = false,
-	poison = "poison_hurt"
+	fire = "fire_hurt",
+	poison = "poison_hurt",
+	explode = "expl_hurt",
+	heavy = "heavy_hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
-	german_sniper = "enemy_sniper_comment_death",
-	sniper = false,
-	shield = false,
-	taser = false,
-	tank = false,
 	german_spotter = "enemy_spotter_comment_death",
 	german_og_commander = "enemy_officer_comment_death",
 	german_commander = "enemy_officer_comment_death",
 	german_officer = "enemy_officer_comment_death",
-	german_flamer = "enemy_flamer_comment_death"
+	german_flamer = "enemy_flamer_comment_death",
+	german_sniper = "enemy_sniper_comment_death",
+	sniper = false,
+	shield = false,
+	taser = false,
+	tank = false
 }
 CopDamage._impact_bones = {}
 local impact_bones_tmp = {
@@ -71,6 +71,7 @@ end
 impact_bones_tmp = nil
 local mvec_1 = Vector3()
 local mvec_2 = Vector3()
+local ids_character_damage = Idstring("character_damage")
 
 function CopDamage:init(unit)
 	self._unit = unit
@@ -120,6 +121,8 @@ function CopDamage:init(unit)
 	}
 	self._last_damage_direction = nil
 	self._dismembered_parts = {}
+
+	self._unit:set_extension_update_enabled(ids_character_damage, false)
 end
 
 function CopDamage:get_last_damage_direction()
@@ -599,10 +602,7 @@ function CopDamage:damage_bullet(attack_data)
 	end
 
 	if alive(attack_data.weapon_unit) and attack_data.weapon_unit:base() and attack_data.weapon_unit:base().add_damage_result then
-		Application:debug("[CopDamage:damage_bullet] add_damage_result", self._unit, attacker, result.type == "death", damage_percent)
 		attack_data.weapon_unit:base():add_damage_result(self._unit, attacker, result.type == "death", damage_percent)
-	else
-		Application:debug("[CopDamage:damage_bullet] cant add_damage_result")
 	end
 
 	self:_send_bullet_attack_result(attack_data, attacker, damage_percent, body_index, hit_offset_height)
@@ -681,6 +681,12 @@ function CopDamage:damage_fire(attack_data)
 		attack_data.attacker_unit = self._unit
 	end
 
+	local attacker_unit = attack_data.attacker_unit
+
+	if attacker_unit and attacker_unit:base() and attacker_unit:base().thrower_unit then
+		attacker_unit = attacker_unit:base():thrower_unit()
+	end
+
 	local is_attacker_player = attack_data.attacker_unit == managers.player:player_unit()
 
 	if attack_data.attacker_unit:brain() and attack_data.attacker_unit:brain().is_flamer then
@@ -747,6 +753,16 @@ function CopDamage:damage_fire(attack_data)
 	damage = self:_apply_damage_modifier(damage)
 	local is_kill_shot = self._health <= damage
 
+	if is_attacker_player then
+		local pos = self._spine2_obj:position()
+
+		managers.hud:on_hit_confirmed({
+			pos = pos,
+			hit_type = HUDHitConfirm.HIT_SPLINTER,
+			is_killshot = is_kill_shot
+		})
+	end
+
 	if is_kill_shot then
 		attack_data.damage = self._health
 		result = {
@@ -760,7 +776,7 @@ function CopDamage:damage_fire(attack_data)
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH) then
 			local health_amount_regen = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH) or 0
 
-			if attack_data.attacker_unit == managers.player:local_player() then
+			if is_attacker_player then
 				managers.player:local_player():character_damage():restore_health(health_amount_regen * managers.player:local_player():character_damage():get_max_health(), true)
 			end
 		end
@@ -777,19 +793,11 @@ function CopDamage:damage_fire(attack_data)
 	attack_data.result = result
 	attack_data.pos = attack_data.col_ray.position
 	attack_data.headshot = head
-
-	if self._head_body_name and attack_data.variant ~= "stun" then
-		head = attack_data.col_ray.body and self._head_body_key and attack_data.col_ray.body:key() == self._head_body_key
-		local body = self._unit:body(self._head_body_name)
-	end
-
 	local attacker = attack_data.attacker_unit
 
 	if not attacker or attacker:id() == -1 then
 		attacker = self._unit
 	end
-
-	local attacker_unit = attack_data.attacker_unit
 
 	if result.type == "death" then
 		local data = {
@@ -802,25 +810,15 @@ function CopDamage:damage_fire(attack_data)
 			head_shot = head
 		}
 
-		if not attack_data.is_fire_dot_damage then
-			managers.statistics:killed_by_anyone(data)
-		end
+		managers.statistics:killed_by_anyone(data)
 
-		if attacker_unit and attacker_unit:base() and attacker_unit:base().thrower_unit then
-			attacker_unit = attacker_unit:base():thrower_unit()
-			data.weapon_unit = attack_data.attacker_unit
-		end
-
-		if attacker_unit == managers.player:player_unit() then
+		if is_attacker_player then
 			if alive(attacker_unit) then
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
 			self:_show_death_hint(self._unit:base()._tweak_table)
-
-			if not attack_data.is_fire_dot_damage then
-				managers.statistics:killed(data)
-			end
+			managers.statistics:killed(data)
 		end
 	end
 
@@ -830,13 +828,12 @@ function CopDamage:damage_fire(attack_data)
 
 	if not attack_data.is_fire_dot_damage then
 		local fire_dot_data = attack_data.fire_dot_data
-		local flammable = nil
 		local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
-		flammable = char_tweak.flammable == nil and true or char_tweak.flammable
+		local flammable = char_tweak.flammable ~= nil and char_tweak.flammable or true
 		local distance = 1000
 		local hit_loc = attack_data.col_ray.hit_position
 
-		if hit_loc and attacker_unit and attacker_unit.position then
+		if hit_loc and alive(attacker_unit) and attacker_unit.position then
 			distance = mvector3.distance(hit_loc, attacker_unit:position())
 		end
 
@@ -844,17 +841,16 @@ function CopDamage:damage_fire(attack_data)
 		local fire_dot_trigger_chance = 30
 
 		if fire_dot_data then
-			fire_dot_max_distance = tonumber(fire_dot_data.dot_trigger_max_distance)
-			fire_dot_trigger_chance = tonumber(fire_dot_data.dot_trigger_chance)
+			fire_dot_max_distance = tonumber(fire_dot_data.trigger_max_distance)
+			fire_dot_trigger_chance = tonumber(fire_dot_data.trigger_chance)
 		end
 
 		local start_dot_damage_roll = math.random(1, 100)
 		local start_dot_dance_antimation = false
 
-		if flammable and not attack_data.is_fire_dot_damage and distance < fire_dot_max_distance and start_dot_damage_roll <= fire_dot_trigger_chance then
-			managers.fire:add_doted_enemy(self._unit, TimerManager:game():time(), attack_data.weapon_unit, fire_dot_data.dot_length, fire_dot_data.dot_damage)
-
-			start_dot_dance_antimation = true
+		if flammable and distance < fire_dot_max_distance and start_dot_damage_roll <= fire_dot_trigger_chance then
+			local _, play_animation = self:apply_dot(attack_data.fire_dot_type, attack_data.weapon_unit)
+			start_dot_dance_antimation = play_animation
 		end
 
 		if fire_dot_data then
@@ -1096,8 +1092,6 @@ function CopDamage:damage_explosion(attack_data)
 	if not attacker_unit or attacker_unit:id() == -1 then
 		attacker_unit = self._unit
 	end
-
-	result.ignite_character = attack_data.ignite_character
 
 	if result.type == "death" then
 		local dismember_victim = false
@@ -1838,8 +1832,8 @@ function CopDamage:die(attack_data)
 	self:set_mover_collision_state(false)
 
 	if self._death_sequence then
-		if self._unit:damage() and self._unit:damage():has_sequence(self._death_sequence) then
-			self._unit:damage():run_sequence_simple(self._death_sequence)
+		if self._unit:damage() then
+			self._unit:damage():has_then_run_sequence_simple(self._death_sequence)
 		else
 			debug_pause_unit(self._unit, "[CopDamage:die] does not have death sequence", self._death_sequence, self._unit)
 		end
@@ -2217,6 +2211,12 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 		end
 	end
 
+	if attacker_unit and attacker_unit:base() and attacker_unit:base().thrower_unit then
+		attacker_unit = attacker_unit:base():thrower_unit()
+	end
+
+	local is_attacker_player = attacker_unit == managers.player:player_unit()
+
 	if death then
 		result = {
 			type = "death",
@@ -2275,7 +2275,19 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 		})
 	end
 
-	if result.type == "death" then
+	local is_kill_shot = result.type == "death"
+
+	if is_attacker_player then
+		local pos = self._spine2_obj:position()
+
+		managers.hud:on_hit_confirmed({
+			pos = pos,
+			hit_type = HUDHitConfirm.HIT_SPLINTER,
+			is_killshot = is_kill_shot
+		})
+	end
+
+	if is_kill_shot then
 		local data = {
 			head_shot = false,
 			variant = "fire",
@@ -2284,29 +2296,19 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
-		local attacker_unit = attack_data.attacker_unit
 
-		if attacker_unit and attacker_unit:base() and attacker_unit:base().thrower_unit then
-			attacker_unit = attacker_unit:base():thrower_unit()
-			data.weapon_unit = attack_data.attacker_unit
-		end
-
-		if attacker_unit == managers.player:player_unit() then
+		if is_attacker_player then
 			if alive(attacker_unit) then
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
 			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
-
-			if CopDamage.is_civilian(self._unit:base()._tweak_table) then
-				-- Nothing
-			end
 		end
 	end
 
 	if alive(attacker_unit) and attacker_unit:base() and attacker_unit:base().add_damage_result then
-		attacker_unit:base():add_damage_result(self._unit, result.type == "death", damage_percent)
+		attacker_unit:base():add_damage_result(self._unit, is_kill_shot, damage_percent)
 	end
 
 	attack_data.pos = self._unit:position()
@@ -2666,8 +2668,16 @@ function CopDamage:set_invulnerable(state)
 	end
 end
 
+function CopDamage:is_invulnerable()
+	return self._invulnerable
+end
+
 function CopDamage:set_immortal(immortal)
 	self._immortal = immortal or false
+end
+
+function CopDamage:is_immortal()
+	return self._immortal
 end
 
 function CopDamage:build_suppression(amount, panic_chance)
@@ -2828,41 +2838,41 @@ function CopDamage:_create_debug_ws()
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
 		font = "fonts/font_medium_shadow_mf",
-		y = 0,
+		vertical = "top",
+		name = "health",
+		align = "left",
 		render_template = "OverlayVertexColorTextured",
 		visible = true,
 		layer = 1,
 		font_size = 30,
-		name = "health",
-		vertical = "top",
-		align = "left",
+		y = 0,
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
 		font = "fonts/font_medium_shadow_mf",
-		text = "",
-		y = 30,
+		vertical = "top",
+		name = "ld",
+		align = "left",
 		render_template = "OverlayVertexColorTextured",
 		visible = true,
 		layer = 1,
 		font_size = 30,
-		name = "ld",
-		vertical = "top",
-		align = "left",
+		text = "",
+		y = 30,
 		color = Color.white
 	})
 	self._ws:panel():text({
 		font = "fonts/font_medium_shadow_mf",
-		text = "",
-		y = 60,
+		vertical = "top",
+		name = "variant",
+		align = "left",
 		render_template = "OverlayVertexColorTextured",
 		visible = true,
 		layer = 1,
 		font_size = 30,
-		name = "variant",
-		vertical = "top",
-		align = "left",
+		text = "",
+		y = 60,
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -2955,11 +2965,32 @@ function CopDamage:save(data)
 		data.char_dmg.invulnerable = self._invulnerable
 	end
 
+	if self._immortal then
+		data.immortal = self._immortal
+	end
+
 	if self._unit:in_slot(16) then
 		data.char_dmg.is_converted = true
 	end
 
 	data.char_dmg.dead = self._dead
+
+	if self._applied_dots then
+		data.char_dmg.applied_dots = {}
+		local t = TimerManager:game():time()
+
+		for _, dot_applied in ipairs(self._applied_dots) do
+			local tick_next = dot_applied.tick_next - t
+			local save_data = {
+				tweak_id = dot_applied.tweak_id,
+				ticks_left = dot_applied.ticks_left,
+				tick_next = tick_next,
+				weapon_unit = dot_applied.weapon_unit
+			}
+
+			table.insert(data.char_dmg.applied_dots, save_data)
+		end
+	end
 end
 
 function CopDamage:load(data)
@@ -2982,10 +3013,27 @@ function CopDamage:load(data)
 		self._invulnerable = data.char_dmg.invulnerable
 	end
 
+	if data.char_dmg.immortal then
+		self._immortal = data.char_dmg.immortal
+	end
+
 	if data.char_dmg.is_converted then
 		self._unit:set_slot(16)
 		managers.groupai:state():sync_converted_enemy(self._unit)
 		self._unit:contour():add("friendly", false)
+	end
+
+	if data.char_dmg.applied_dots then
+		local t = TimerManager:game():time()
+
+		for _, dot_applied in ipairs(data.char_dmg.applied_dots) do
+			local tweak_id = dot_applied.tweak_id
+			local weapon_unit = dot_applied.weapon_unit
+			local new_dot = self:apply_dot(tweak_id, weapon_unit)
+			new_dot.ticks_left = dot_applied.ticks_left
+			new_dot.tick_next = t + dot_applied.tick_next
+			new_dot.attacker_unit = dot_applied.attacker_unit
+		end
 	end
 end
 
@@ -3071,6 +3119,150 @@ function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_ty
 	return false
 end
 
+function CopDamage:apply_dot(tweak_id, weapon_unit)
+	if not tweak_id then
+		return
+	end
+
+	local dot_data = tweak_data.fire.dot_types[tweak_id]
+	self._applied_dots = self._applied_dots or {}
+	local variant = dot_data.variant
+	local duration = dot_data.duration
+	local tick_interval = dot_data.tick_interval
+	local damage = dot_data.damage
+	local attacker_unit = managers.player:player_unit()
+
+	if alive(weapon_unit) and weapon_unit:base() and weapon_unit:base().thrower_unit then
+		attacker_unit = weapon_unit:base():thrower_unit()
+	end
+
+	local time = TimerManager:game():time()
+	local total_ticks = math.floor(duration / tick_interval)
+	local tick_next = time + tick_interval
+	local animation_chance = 0
+	local dot_applied = self:is_dot_applied(variant)
+
+	if dot_applied then
+		local total_damage = damage * total_ticks
+		local remaining_damage = dot_applied.damage * dot_applied.ticks_left
+
+		if total_damage > remaining_damage then
+			animation_chance = total_ticks + dot_applied.ticks_left
+			dot_applied.tweak_id = tweak_id
+			dot_applied.damage = damage
+			dot_applied.ticks_left = total_ticks
+			dot_applied.tick_interval = tick_interval
+			dot_applied.weapon_unit = weapon_unit
+			dot_applied.attacker_unit = attacker_unit
+		end
+	else
+		dot_applied = {
+			tweak_id = tweak_id,
+			variant = variant,
+			damage = damage,
+			tick_interval = tick_interval,
+			ticks_left = total_ticks,
+			tick_next = tick_next,
+			weapon_unit = weapon_unit,
+			attacker_unit = attacker_unit,
+			effects = {}
+		}
+
+		managers.fire:ignite_character(self._unit, dot_applied.effects)
+
+		if dot_data.variant == "fire" then
+			self._unit:sound():play("burn_loop_body")
+		end
+
+		table.insert(self._applied_dots, dot_applied)
+	end
+
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_apply_enemy_dot", self._unit, tweak_id, weapon_unit)
+	end
+
+	self._unit:set_extension_update_enabled(ids_character_damage, true)
+
+	local play_animation = animation_chance > math.random() * 50
+
+	return dot_applied, play_animation
+end
+
+function CopDamage:is_dot_applied(dot_variant)
+	if dot_variant then
+		for _, dot_applied in ipairs(self._applied_dots) do
+			if dot_applied.variant == dot_variant then
+				return dot_applied
+			end
+		end
+
+		return false
+	end
+
+	return not not next(self._applied_dots)
+end
+
+function CopDamage:_do_dot_tick(dot_data)
+	if Network:is_server() then
+		dot_data.attacker_unit = alive(dot_data.attacker_unit) and dot_data.attacker_unit
+		dot_data.attacker_unit = alive(dot_data.weapon_unit) and dot_data.weapon_unit
+		local damage = dot_data.damage
+		local attacker_unit = dot_data.attacker_unit
+		local weapon_unit = dot_data.weapon_unit
+		local col_ray = {
+			unit = self._unit
+		}
+
+		FlameBulletBase:give_fire_damage_dot(col_ray, weapon_unit, attacker_unit, damage, true)
+	end
+end
+
+function CopDamage:remove_dot(dot_data)
+	if not dot_data then
+		return
+	end
+
+	if dot_data.effects then
+		for _, effect_id in ipairs(dot_data.effects) do
+			World:effect_manager():fade_kill(effect_id)
+		end
+	end
+
+	if dot_data.variant == "fire" then
+		self._unit:sound():play("burn_loop_body_stop")
+	end
+end
+
+function CopDamage:update(unit, t, dt)
+	for i = #self._applied_dots, 1, -1 do
+		local data = self._applied_dots[i]
+
+		if data.tick_next <= t then
+			self:_do_dot_tick(data)
+
+			data.tick_next = t + data.tick_interval
+			data.ticks_left = data.ticks_left - 1
+		end
+
+		if data.ticks_left == 0 then
+			self:remove_dot(data)
+			table.remove(self._applied_dots, i)
+		end
+	end
+
+	if not next(self._applied_dots) then
+		self._unit:set_extension_update_enabled(ids_character_damage, false)
+
+		self._applied_dots = {}
+	end
+end
+
 function CopDamage:destroy(...)
 	self:_remove_debug_gui()
+
+	if self._applied_dots then
+		for _, dot_data in ipairs(self._applied_dots) do
+			self:remove_dot(dot_data)
+		end
+	end
 end

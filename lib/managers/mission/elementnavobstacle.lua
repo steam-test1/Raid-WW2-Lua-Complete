@@ -63,7 +63,7 @@ function ElementNavObstacle:on_executed(instigator)
 		if not alive(data.unit) then
 			Application:warn("[ElementNavObstacle:on_executed] dead obstacle unit. element_id:", self._id)
 		elseif not data.unit:get_object(data.obj_name) then
-			debug_pause_unit(data.unit, "[ElementNavObstacle:on_executed] object missing from unit. element_id:", self._id, "unit", data.unit, "Objec3D", data.obj_name)
+			debug_pause_unit(data.unit, "[ElementNavObstacle:on_executed] object missing from unit. element_id:", self._id, "unit:", data.unit, "Object3D:", data.obj_name)
 		elseif self._values.operation == "add" then
 			managers.navigation:add_obstacle(data.unit, data.obj_name, self._sync_id)
 		else

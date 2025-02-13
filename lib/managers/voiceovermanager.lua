@@ -170,7 +170,7 @@ function VoiceOverManager:_play_sound(source_unit, event)
 		return
 	end
 
-	if source_unit and source_unit:base()._char_tweak ~= nil and source_unit:base()._char_tweak.access == "teamAI1" then
+	if alive(source_unit) and source_unit:base()._char_tweak ~= nil and source_unit:base()._char_tweak.access == "teamAI1" then
 		return
 	end
 

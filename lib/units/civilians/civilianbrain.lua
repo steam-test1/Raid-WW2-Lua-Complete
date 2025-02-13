@@ -93,13 +93,13 @@ function CivilianBrain:on_cool_state_changed(state)
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
 		alert_types = {
-			footstep = true,
-			explosion = true,
-			aggression = true,
 			vo_distress = true,
 			vo_intimidate = true,
 			vo_cbt = true,
-			bullet = true
+			bullet = true,
+			footstep = true,
+			explosion = true,
+			aggression = true
 		}
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
@@ -128,10 +128,10 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		local stand_action_desc = {
-			clamp_to_graph = true,
 			type = "act",
 			body_part = 1,
-			variant = "stand_tied"
+			variant = "stand_tied",
+			clamp_to_graph = true
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)
 
@@ -177,10 +177,10 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		local stand_action_desc = {
-			clamp_to_graph = true,
 			type = "act",
 			body_part = 1,
-			variant = "drop"
+			variant = "drop",
+			clamp_to_graph = true
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)
 
@@ -213,8 +213,8 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		self._unit:movement():set_stance("hos", nil, true)
 
 		local stand_action_desc = {
-			body_part = 1,
 			type = "act",
+			body_part = 1,
 			variant = "panic"
 		}
 		local action = self._unit:movement():action_request(stand_action_desc)

@@ -252,8 +252,8 @@ function MountedWeapon:_tank_main_cannon_hit_explosion_on_client(position, radiu
 	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
-		sound_muffle_effect = true,
 		camera_shake_max_mul = 4,
+		sound_muffle_effect = true,
 		effect = self._effect_name,
 		sound_event = sound_event,
 		feedback_range = damage_radius * 2

@@ -69,9 +69,9 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	})
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	local background = category_panel:image({
+		alpha = 0.4,
 		name = "category_background",
 		layer = -1,
-		alpha = 0.4,
 		y = RaidGUIControlCategorizedGrid.LABEL_H - self._vertical_spacing / 2,
 		w = category_panel:w(),
 		h = category_panel:h() - RaidGUIControlCategorizedGrid.LABEL_H,
@@ -84,6 +84,10 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	})
 	local item_params = clone(self._item_params)
 	local horizontal_spacing = math.floor((category_panel:w() - self._num_horizontal_items * self._selected_marker_w) / (self._num_horizontal_items - 1))
+	local click_callback = callback(self, self, "_on_item_clicked_callback")
+	local double_click_callback = callback(self, self, "_on_item_double_clicked_callback")
+	local item_selected_callback = callback(self, self, "_on_item_selected_callback")
+	local mouse_enter_callback = callback(self, self, "_on_item_mouse_enter")
 	local i_vertical = 1
 	local i_horizontal = 1
 
@@ -97,10 +101,11 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 		item_params.selected_marker_w = self._selected_marker_w
 		item_params.selected_marker_h = self._selected_marker_h
 		item_params.show_amount = true
-		item_params.item_selected_callback = callback(self, self, "_on_item_selected_callback")
-		item_params.item_clicked_callback = callback(self, self, "_on_item_clicked_callback")
-		item_params.item_double_clicked_callback = callback(self, self, "_on_item_double_clicked_callback")
 		item_params.item_idx = i_item_data
+		item_params.item_clicked_callback = click_callback
+		item_params.item_double_clicked_callback = double_click_callback
+		item_params.item_selected_callback = item_selected_callback
+		item_params.on_mouse_enter_callback = mouse_enter_callback
 		local item = self:_create_item(category_panel, item_params, item_data, self._grid_params)
 
 		table.insert(self._grid_items, item)
@@ -115,6 +120,12 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	end
 
 	return category_panel, items
+end
+
+function RaidGUIControlCategorizedGrid:_on_item_mouse_enter(item, data)
+	if self._selected_item and self._selected_item ~= item then
+		self._selected_item:unselect()
+	end
 end
 
 function RaidGUIControlCategorizedGrid:_create_label(parent, params)

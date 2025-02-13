@@ -137,73 +137,77 @@ end
 function VehicleManager:update_vehicles_data_to_peer(peer)
 	if peer:ip_verified() then
 		for i, v in pairs(self._vehicles) do
-			local v_ext = v:vehicle_driving()
-			local v_npc_ext = v:npc_vehicle_driving()
-			local vehicle_damage_ext = v:character_damage()
-			local driver, passenger_front, passenger_back_left, passenger_back_right = nil
+			if alive(v) then
+				local v_ext = v:vehicle_driving()
+				local v_npc_ext = v:npc_vehicle_driving()
+				local vehicle_damage_ext = v:character_damage()
+				local driver, passenger_front, passenger_back_left, passenger_back_right = nil
 
-			if v_ext._seats.driver and alive(v_ext._seats.driver.occupant) then
-				driver = v_ext._seats.driver.occupant
-			end
-
-			if v_ext._seats.passenger_front and alive(v_ext._seats.passenger_front.occupant) then
-				passenger_front = v_ext._seats.passenger_front.occupant
-			end
-
-			if v_ext._seats.passenger_back_left and alive(v_ext._seats.passenger_back_left.occupant) then
-				passenger_back_left = v_ext._seats.passenger_back_left.occupant
-			end
-
-			if v_ext._seats.passenger_back_right and alive(v_ext._seats.passenger_back_right.occupant) then
-				passenger_back_right = v_ext._seats.passenger_back_right.occupant
-			end
-
-			local is_trunk_open = nil
-
-			if v_ext._has_trunk then
-				is_trunk_open = v_ext._trunk_open
-			end
-
-			local vehicle_health = nil
-
-			if vehicle_damage_ext and vehicle_damage_ext.get_real_health then
-				vehicle_health = vehicle_damage_ext:get_real_health()
-			end
-
-			peer:send_queued_sync("sync_vehicle_data", v_ext._unit, v_ext._current_state_name, driver, passenger_front, passenger_back_left, passenger_back_right, is_trunk_open, vehicle_health)
-
-			if v_npc_ext then
-				peer:send_queued_sync("sync_npc_vehicle_data", v_npc_ext._unit, v_npc_ext._current_state_name, v_npc_ext._target_unit)
-			end
-
-			local stored_loot = v_ext._loot
-			local loot_index = 1
-
-			while loot_index <= #stored_loot do
-				local loot1 = stored_loot[loot_index]
-				loot_index = loot_index + 1
-				local loot2 = {
-					multiplier = 0,
-					carry_id = nil
-				}
-
-				if loot_index <= #stored_loot then
-					loot2 = stored_loot[loot_index]
+				if v_ext._seats.driver and alive(v_ext._seats.driver.occupant) then
+					driver = v_ext._seats.driver.occupant
 				end
 
-				loot_index = loot_index + 1
-				local loot3 = {
-					multiplier = 0,
-					carry_id = nil
-				}
-
-				if loot_index <= #stored_loot then
-					loot3 = stored_loot[loot_index]
+				if v_ext._seats.passenger_front and alive(v_ext._seats.passenger_front.occupant) then
+					passenger_front = v_ext._seats.passenger_front.occupant
 				end
 
-				loot_index = loot_index + 1
+				if v_ext._seats.passenger_back_left and alive(v_ext._seats.passenger_back_left.occupant) then
+					passenger_back_left = v_ext._seats.passenger_back_left.occupant
+				end
 
-				peer:send_queued_sync("sync_vehicle_loot", v_ext._unit, loot1.carry_id, loot1.multiplier, loot2.carry_id, loot2.multiplier, loot3.carry_id, loot3.multiplier)
+				if v_ext._seats.passenger_back_right and alive(v_ext._seats.passenger_back_right.occupant) then
+					passenger_back_right = v_ext._seats.passenger_back_right.occupant
+				end
+
+				local is_trunk_open = nil
+
+				if v_ext._has_trunk then
+					is_trunk_open = v_ext._trunk_open
+				end
+
+				local vehicle_health = nil
+
+				if vehicle_damage_ext and vehicle_damage_ext.get_real_health then
+					vehicle_health = vehicle_damage_ext:get_real_health()
+				end
+
+				peer:send_queued_sync("sync_vehicle_data", v_ext._unit, v_ext._current_state_name, driver, passenger_front, passenger_back_left, passenger_back_right, is_trunk_open, vehicle_health)
+
+				if v_npc_ext then
+					peer:send_queued_sync("sync_npc_vehicle_data", v_npc_ext._unit, v_npc_ext._current_state_name, v_npc_ext._target_unit)
+				end
+
+				local stored_loot = v_ext._loot
+				local loot_index = 1
+
+				while loot_index <= #stored_loot do
+					local loot1 = stored_loot[loot_index]
+					loot_index = loot_index + 1
+					local loot2 = {
+						multiplier = 0,
+						carry_id = nil
+					}
+
+					if loot_index <= #stored_loot then
+						loot2 = stored_loot[loot_index]
+					end
+
+					loot_index = loot_index + 1
+					local loot3 = {
+						multiplier = 0,
+						carry_id = nil
+					}
+
+					if loot_index <= #stored_loot then
+						loot3 = stored_loot[loot_index]
+					end
+
+					loot_index = loot_index + 1
+
+					peer:send_queued_sync("sync_vehicle_loot", v_ext._unit, loot1.carry_id, loot1.multiplier, loot2.carry_id, loot2.multiplier, loot3.carry_id, loot3.multiplier)
+				end
+			else
+				Application:error("[VehicleManager:update_vehicles_data_to_peer] Vehicle was not alive but was included in the vehicles list, Index:", i, inspect(self._vehicles))
 			end
 		end
 	end
@@ -396,6 +400,19 @@ function VehicleManager:freeze_vehicles_on_world(world_id)
 	end
 
 	self:clean_up_dead_vehicles()
+end
+
+function VehicleManager:freeze_vehicle(vehicle)
+	Application:debug("[VehicleManager:freeze_vehicle]", vehicle)
+
+	if alive(vehicle) and vehicle:vehicle_driving().current_world_id == world_id then
+		managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
+		vehicle:vehicle_driving():_stop(true)
+
+		vehicle:vehicle_driving()._pos_reservation_id = nil
+
+		vehicle:set_extension_update_enabled(Idstring("vehicle_driving"), false)
+	end
 end
 
 function VehicleManager:delete_all_vehicles()

@@ -26,6 +26,20 @@ function LadderExtended:destroy(unit)
 	LadderExtended.super.destroy(self, unit)
 end
 
+function LadderExtended:save(data)
+	LadderExtended.super.save(self, data)
+
+	data.LadderExtended.show_props = self._ladder_graphics_spawned ~= 0
+end
+
+function LadderExtended:load(data)
+	LadderExtended.super.load(self, data)
+
+	if data.LadderExtended.show_props then
+		self:spawn_prop_units()
+	end
+end
+
 function LadderExtended:set_height(v)
 	LadderExtended.super.set_height(self, v)
 

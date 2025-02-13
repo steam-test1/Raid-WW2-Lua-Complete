@@ -78,7 +78,7 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	local range = self._range
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
-	self._unit:set_slot(0)
+	self._unit:set_enabled(false)
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
@@ -116,6 +116,16 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	self:_detonate_with_clusters()
+
+	local queue_id = "delete_grenade_" .. tostring(self._unit:key())
+
+	managers.queued_tasks:queue(queue_id, self.delete_unit, self, nil, 0.1)
+end
+
+function FragGrenade:delete_unit()
+	if Network:is_server() then
+		self._unit:set_slot(0)
+	end
 end
 
 function FragGrenade:_detonate_with_clusters()
@@ -186,6 +196,7 @@ function FragGrenade:_detonate_on_client()
 	local pos = self._unit:position() + GrenadeBase.DETONATE_UP_OFFSET
 	local range = self._range
 
+	self._unit:set_enabled(false)
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end

@@ -25,6 +25,15 @@ function CorpseCarryData:on_pickup()
 		managers.player:set_carry_temporary_data(self:carry_id(), self._dismembered_parts)
 	end
 
+	local corpse_data = managers.enemy:get_corpse_unit_data_from_key(self._unit:key())
+
+	if corpse_data then
+		local u_id = corpse_data.u_id
+
+		managers.enemy:remove_corpse_by_id(u_id)
+		managers.network:session():send_to_peers_synched("remove_corpse_by_id", u_id, true, 1)
+	end
+
 	self:_clear_spawn_gear()
 end
 

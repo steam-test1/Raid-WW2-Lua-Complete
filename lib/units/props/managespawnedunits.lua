@@ -1,4 +1,5 @@
 ManageSpawnedUnits = ManageSpawnedUnits or class()
+local _EXT_ID = "spawn_manager"
 
 function ManageSpawnedUnits:init(unit)
 	self._unit = unit
@@ -384,4 +385,12 @@ function ManageSpawnedUnits:get_spawned_units()
 	end
 
 	return t
+end
+
+function ManageSpawnedUnits:detach_from_network()
+	for _, data in pairs(self._spawned_units) do
+		if alive(data.unit) then
+			Network:detach_unit(data.unit)
+		end
+	end
 end

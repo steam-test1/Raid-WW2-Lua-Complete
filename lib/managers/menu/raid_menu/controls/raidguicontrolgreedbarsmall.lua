@@ -54,9 +54,9 @@ end
 
 function RaidGUIControlGreedBarSmall:_create_loot_title()
 	local loot_title_params = {
-		halign = "left",
 		valign = "center",
 		name = "loot_title",
+		halign = "left",
 		vertical = "center",
 		align = "center",
 		h = RaidGUIControlGreedBarSmall.LOOT_TITLE_H,

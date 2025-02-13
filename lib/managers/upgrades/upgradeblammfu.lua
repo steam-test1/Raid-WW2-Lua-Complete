@@ -35,6 +35,11 @@ local UpgradeBlammFu = {
 		local equipped_grenade = managers.blackmarket:equipped_grenade()
 		local projectile_data = tweak_data.projectiles[equipped_grenade]
 		local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
+
+		if not projectile_data.can_airburst then
+			return
+		end
+
 		local cooking_t = -1
 		local from = local_player:movement():m_head_pos()
 		local pos = from + local_player:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
@@ -52,7 +57,7 @@ local UpgradeBlammFu = {
 		local current_state = managers.player:get_current_state()
 
 		if current_state then
-			local push_vel = -projectile_data.enemy_proximity_range
+			local push_vel = -(projectile_data.enemy_proximity_range or projectile_data.range or 100)
 
 			current_state:do_action_blammfu_melee(dir * push_vel)
 		end

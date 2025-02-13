@@ -16,8 +16,6 @@ function MissionEndUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "state", {
 		"none",
-		"success",
-		"failed",
-		"leave_safehouse"
+		"rewards"
 	})
 end

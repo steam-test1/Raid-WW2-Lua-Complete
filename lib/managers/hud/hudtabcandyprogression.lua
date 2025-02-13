@@ -43,9 +43,9 @@ end
 
 function HUDTabCandyProgression:_create_panel(panel, params)
 	self._object = panel:panel({
+		valign = "bottom",
 		name = "hud_tab_candy_progress",
 		halign = "right",
-		valign = "bottom",
 		x = params.x or 0,
 		y = params.y or self.Y,
 		w = self.WIDTH,
@@ -63,10 +63,10 @@ function HUDTabCandyProgression:_create_card()
 		color = self.TITLE_COLOR
 	})
 	self._card_panel = RaidGUIPanel:new(self._object, {
-		vertical = "bottom",
-		name = "candy_progress_bar_panel",
 		is_root_panel = true,
 		layer = 3,
+		vertical = "bottom",
+		name = "candy_progress_bar_panel",
 		y = self.CARD_Y,
 		w = self.PROGRESS_BAR_W,
 		h = self.CARD_H
@@ -83,19 +83,19 @@ end
 
 function HUDTabCandyProgression:_create_progress_bar()
 	self._progress_bar_panel = RaidGUIPanel:new(self._object, {
-		vertical = "bottom",
-		name = "candy_progress_bar_panel",
 		layer = 3,
 		is_root_panel = true,
+		vertical = "bottom",
+		name = "candy_progress_bar_panel",
 		y = self.PROGRESS_BAR_Y,
 		w = self.PROGRESS_BAR_W,
 		h = self.PROGRESS_BAR_H
 	})
 
 	self._progress_bar_panel:three_cut_bitmap({
+		alpha = 0.5,
 		layer = 1,
 		name = "candy_progress_bar_background",
-		alpha = 0.5,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		left = self.PROGRESS_IMAGE_LEFT,
@@ -104,11 +104,11 @@ function HUDTabCandyProgression:_create_progress_bar()
 	})
 
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel({
+		valign = "scale",
+		w = 0,
 		layer = 2,
 		name = "candy_progress_bar_foreground_panel",
 		halign = "scale",
-		valign = "scale",
-		w = 0,
 		h = self._progress_bar_panel:h()
 	})
 	local progress_bar = self._progress_bar_foreground_panel:three_cut_bitmap({
@@ -123,10 +123,10 @@ function HUDTabCandyProgression:_create_progress_bar()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	self._progress_bar_overlay = self._progress_bar_foreground_panel:bitmap({
-		name = "candy_progress_bar_background",
-		blend_mode = "add",
 		alpha = 0.3,
 		wrap_mode = "wrap",
+		name = "candy_progress_bar_background",
+		blend_mode = "add",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -151,8 +151,8 @@ function HUDTabCandyProgression:_create_tier_info()
 		layer = self._progress_bar_panel:layer() + 5
 	})
 	self._malus_effects_panel = self._object:panel({
-		name = "malus_effects_panel",
 		h = 0,
+		name = "malus_effects_panel",
 		x = self._card_panel:right(),
 		y = self._card_panel:y(),
 		w = self.DEBUFF_W

@@ -19,10 +19,10 @@ end
 
 function HUDCarry:_create_panel(hud)
 	local panel_params = {
-		halign = "center",
-		valign = "bottom",
 		name = "carry_panel",
 		alpha = 0,
+		halign = "center",
+		valign = "bottom",
 		h = HUDCarry.H
 	}
 	self._object = hud.panel:panel(panel_params)
@@ -30,26 +30,26 @@ end
 
 function HUDCarry:_create_icon()
 	self._icon_panel = self._object:panel({
+		name = "icon_panel",
 		halign = "center",
 		valign = "top",
-		name = "icon_panel",
 		w = HUDCarry.ICON_SIZE,
 		h = HUDCarry.ICON_SIZE
 	})
 	self._icon = self._icon_panel:bitmap({
+		name = "icon",
 		valign = "center",
 		halign = "center",
-		name = "icon",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture_rect,
 		w = HUDCarry.ICON_SIZE,
 		h = HUDCarry.ICON_SIZE
 	})
 	self._icon_fill_left = self._icon_panel:bitmap({
+		name = "icon_fill_left",
+		valign = "center",
 		render_template = "VertexColorTexturedRadial",
 		halign = "left",
-		valign = "center",
-		name = "icon_fill_left",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
 		x = HUDCarry.ICON_SIZE,
@@ -60,11 +60,11 @@ function HUDCarry:_create_icon()
 		layer = self._icon:layer() + 1
 	})
 	self._icon_fill_right = self._icon_panel:bitmap({
+		name = "icon_fill_right",
+		valign = "center",
+		x = 0,
 		render_template = "VertexColorTexturedRadial",
 		halign = "right",
-		valign = "center",
-		name = "icon_fill_right",
-		x = 0,
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
 		y = HUDCarry.ICON_SIZE,
@@ -77,9 +77,9 @@ end
 
 function HUDCarry:_create_prompt()
 	local prompt_params = {
-		halign = "left",
 		valign = "top",
 		name = "prompt",
+		halign = "left",
 		text = "",
 		vertical = "top",
 		align = "center",
@@ -121,10 +121,9 @@ function HUDCarry:show_carry_item(carry_id)
 	local prompt_text_id = carry_data.prompt_text or HUDCarry.PROMPT_TEXT_ID
 	local carry_item_id = carry_data.carry_item_id or HUDCarry.GENERIC_THROW_ID
 
-	self._prompt:set_text(utf8.to_upper(managers.localization:text(prompt_text_id, {
-		BTN_USE_ITEM = managers.localization:btn_macro("use_item"),
+	self._prompt:set_text(managers.localization:to_upper_text(prompt_text_id, {
 		CARRY_ITEM = managers.localization:text(carry_item_id)
-	})))
+	}))
 	self:_size_panel()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_show_carry"))

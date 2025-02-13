@@ -5,14 +5,14 @@ function RaidGUIControlMenuBackground:init()
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._hud_panel = self._workspace:panel()
 	self._object = self._hud_panel:panel({
-		visible = false,
 		alpha = 0,
-		name = "menu_background_panel"
+		name = "menu_background_panel",
+		visible = false
 	})
 	self._background_video = self._hud_panel:video({
-		visible = false,
 		loop = true,
-		video = "movies/vanilla/raid_anim_bg"
+		video = "movies/vanilla/raid_anim_bg",
+		visible = false
 	})
 
 	managers.video:add_video(self._background_video)
@@ -26,21 +26,21 @@ end
 
 function RaidGUIControlMenuBackground:_create_backgrounds()
 	local blur = self._object:bitmap({
-		render_template = "VertexColorTexturedBlur3D",
 		texture = "ui/icons/white_df",
+		render_template = "VertexColorTexturedBlur3D",
 		valign = "scale",
 		alpha = 0.65,
-		halign = "scale",
 		name = "blur",
+		halign = "scale",
 		w = self._object:w(),
 		h = self._object:h()
 	})
 	local tint = self._object:bitmap({
-		alpha = 0.92,
 		halign = "scale",
 		valign = "scale",
 		render_template = "VertexColorTexturedGrayscale3D",
 		texture = "ui/icons/white_df",
+		alpha = 0.92,
 		name = "color_tint",
 		layer = blur:layer() - 1,
 		color = Color(0.9, 0.82, 0.6),
@@ -48,9 +48,9 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 		h = self._object:h()
 	})
 	local background = self._object:bitmap({
-		alpha = 0.75,
 		halign = "scale",
 		valign = "scale",
+		alpha = 0.75,
 		name = "fullscreen_background",
 		texture = tweak_data.gui.backgrounds.secondary_menu.texture,
 		texture_rect = tweak_data.gui.backgrounds.secondary_menu.texture_rect,
@@ -60,8 +60,8 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 	})
 	self._vignette = self._object:bitmap({
 		texture = "core/textures/vignette",
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
 		name = "vignette",
 		layer = blur:layer() + 4,
 		w = self._object:w(),
@@ -72,8 +72,8 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 	self._grain = self._object:bitmap({
 		halign = "scale",
 		valign = "scale",
-		texture = "core/textures/noise",
 		wrap_mode = "wrap",
+		texture = "core/textures/noise",
 		blend_mode = "add",
 		name = "film_grain",
 		w = noise_w,

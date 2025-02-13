@@ -116,8 +116,6 @@ end
 function AnimatedVehicleBase:anim_clbk_save_pose(unit, pose_id)
 	self._saved_poses = self._saved_poses or {}
 	self._saved_poses[pose_id] = {
-		position = nil,
-		rotation = nil,
 		position = unit:position(),
 		rotation = unit:rotation()
 	}
@@ -173,9 +171,6 @@ function AnimatedVehicleBase:spawn_module(module_unit_name, align_obj_name, modu
 	self._unit:link(Idstring(align_obj_name), module_unit, module_unit:orientation_object():name(), true)
 
 	local module_entry = {
-		destroy_clbk_key = nil,
-		align_obj_name = nil,
-		unit = nil,
 		align_obj_name = align_obj_name,
 		destroy_clbk_key = destroy_clbk_key,
 		unit = module_unit
@@ -313,8 +308,6 @@ function AnimatedVehicleBase:save(save_data)
 
 			if object then
 				save_data.anim_vehicle_base.sync_objects[name] = {
-					rot = nil,
-					pos = nil,
 					pos = object:position(),
 					rot = object:rotation()
 				}

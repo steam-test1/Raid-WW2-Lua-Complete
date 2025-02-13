@@ -5,7 +5,6 @@ RaidGUIControlButtonSkillProfiles.ICON = "arrow_down"
 RaidGUIControlButtonSkillProfiles.ICON_COLOR = tweak_data.gui.colors.raid_white
 RaidGUIControlButtonSkillProfiles.ICON_SELECTED_SCALE = 0.82
 RaidGUIControlButtonSkillProfiles.ICON_UNSELECTED_SCALE = 0.6
-RaidGUIControlButtonSkillProfiles.CONTROLLER_BUTTON = utf8.char(57347)
 RaidGUIControlButtonSkillProfiles.CONTROLLER_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 RaidGUIControlButtonSkillProfiles.CONTROLLER_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 RaidGUIControlButtonSkillProfiles.CONTROLLER_ICON_OFFSET = 8
@@ -48,27 +47,30 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 
 	self._icon:set_center(self._background:center_x(), self._background:center_y() - icon_offset)
 
+	local button = managers.localization:btn_macro("menu_controller_face_top")
 	self._controller_button = self._object:label({
-		align = "center",
-		x = 2,
 		name = "controller_switch_button",
 		vertical = "bottom",
-		text = self.CONTROLLER_BUTTON,
+		align = "center",
+		x = 2,
+		text = button,
 		font = self.CONTROLLER_FONT,
 		font_size = self.CONTROLLER_FONT_SIZE,
 		color = self.ICON_COLOR,
 		layer = self._background:layer() + 1,
-		visible = managers.controller:is_using_controller()
+		visible = managers.controller:is_controller_present()
 	})
 	self._selected_icon_size = params.w * self.ICON_SELECTED_SCALE
 	self._unselected_icon_size = params.w * self.ICON_UNSELECTED_SCALE
 end
 
 function RaidGUIControlButtonSkillProfiles:_on_controller_hotswap()
-	local on_controller = managers.controller:is_using_controller()
+	local on_controller = managers.controller:is_controller_present()
 	local icon_offset = on_controller and self.CONTROLLER_ICON_OFFSET or 0
+	local button = managers.localization:btn_macro("menu_controller_face_top")
 
-	self._controller_button:set_visible(managers.controller:is_using_controller())
+	self._controller_button:set_visible(on_controller)
+	self._controller_button:set_text(button)
 	self._icon:set_center_y(self._background:center_y() - icon_offset)
 end
 

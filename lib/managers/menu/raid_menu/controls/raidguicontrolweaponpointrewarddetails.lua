@@ -153,8 +153,8 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
-		name = "redeem_xp_button",
 		x = 0,
+		name = "redeem_xp_button",
 		y = self._left_panel:h() - RaidGUIControlWeaponPointRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 		text = self:translate("menu_loot_screen_redeem_xp", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -195,9 +195,9 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 	local item_type_params = {
+		align = "right",
 		vertical = "center",
 		name = "item_type",
-		align = "right",
 		y = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_Y,
 		w = self._right_panel:w(),
 		h = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_H,
@@ -211,10 +211,10 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_description()
 	local description_params = {
+		wrap = true,
 		vertical = "top",
 		name = "description",
 		align = "left",
-		wrap = true,
 		y = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_Y,
 		w = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_W,
 		font = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_FONT,

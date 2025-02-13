@@ -38,15 +38,7 @@ function ElementVehicleTrigger:on_executed(instigator)
 	ElementVehicleTrigger.super.on_executed(self, self._unit or instigator)
 end
 
-function ElementVehicleTrigger:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	ElementVehicleTrigger.super.on_executed(self, self._unit or instigator)
-end
-
-function MissionScriptElement:destroy()
+function ElementVehicleTrigger:destroy()
 	if Network:is_server() then
 		managers.vehicle:remove_listener(self._id)
 	end

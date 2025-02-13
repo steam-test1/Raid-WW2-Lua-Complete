@@ -13,8 +13,6 @@ function CoreParticleEditorPanel:init(editor, parent, effect)
 	self._box_help = ""
 	self._box_help_header = ""
 	self._undo_stack = CoreUndoStack:new({
-		name = nil,
-		xml = nil,
 		name = effect:name(),
 		xml = n:to_xml()
 	}, 20)
@@ -377,9 +375,6 @@ function CoreParticleEditorPanel:update(t, dt)
 			self._quality = nil
 			local gizmo = self._editor:effect_gizmo()
 			self._effect_id = World:effect_manager():spawn({
-				parent = nil,
-				custom_quality = nil,
-				effect = nil,
 				effect = Idstring("unique_test_effect_name"),
 				parent = gizmo:get_object(Idstring("rp_root_point")),
 				custom_quality = quality
@@ -479,8 +474,6 @@ function CoreParticleEditorPanel:update_view(clear, undoredo)
 
 	if not undoredo then
 		self._undo_stack:push({
-			name = nil,
-			xml = nil,
 			name = self._effect:name(),
 			xml = new_xml
 		})
@@ -815,8 +808,6 @@ function CoreParticleEditorPanel:on_save_as()
 	local new_xml = node:to_xml()
 
 	self._undo_stack:push({
-		name = nil,
-		xml = nil,
 		name = self._effect:name(),
 		xml = new_xml
 	})
@@ -842,13 +833,9 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 
 	if self._valid_effect then
 		Application:data_compile({
-			target_db_root = nil,
-			source_root = nil,
-			verbose = false,
-			platform = nil,
-			source_files = nil,
-			send_idstrings = false,
 			target_db_name = "all",
+			send_idstrings = false,
+			verbose = false,
 			preprocessor_definitions = "preprocessor_definitions",
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),

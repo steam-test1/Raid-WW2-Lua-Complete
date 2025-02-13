@@ -15,28 +15,28 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
 	self._controller_image = self._root_panel:bitmap({
+		texture = "ui/main_menu/textures/controller",
 		h = 600,
 		w = 1200,
 		y = 0,
 		x = 0,
-		name = "controller_image",
-		texture = "ui/main_menu/textures/controller"
+		name = "controller_image"
 	})
 
 	self._controller_image:set_center_x(self._root_panel:w() / 2)
 	self._controller_image:set_center_y(self._root_panel:h() / 2)
 
 	self._panel_on_foot = self._root_panel:panel({
+		x = 0,
 		visible = true,
 		name = "panel_on_foot",
-		y = 0,
-		x = 0
+		y = 0
 	})
 	self._panel_in_vehicle = self._root_panel:panel({
+		x = 0,
 		visible = false,
 		name = "panel_on_foot",
-		y = 0,
-		x = 0
+		y = 0
 	})
 
 	if IS_PS4 then
@@ -74,8 +74,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.25,
+		align = "left",
 		control = self._controller_keybind_lean
 	})
 
@@ -87,8 +87,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.402,
+		align = "left",
 		control = self._controller_keybind_comm_wheel
 	})
 
@@ -100,8 +100,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.482,
+		align = "left",
 		control = self._controller_keybind_grenade
 	})
 
@@ -113,8 +113,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.647,
+		align = "left",
 		control = self._controller_keybind_knife
 	})
 
@@ -126,8 +126,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.547,
+		align = "left",
 		control = self._controller_keybind_fire_mode
 	})
 
@@ -139,8 +139,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.85,
+		align = "left",
 		control = self._controller_keybind_move
 	})
 
@@ -165,8 +165,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.25,
+		align = "right",
 		control = self._controller_keybind_interact
 	})
 
@@ -178,8 +178,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.402,
+		align = "right",
 		control = self._controller_keybind_switch_weapons
 	})
 
@@ -191,8 +191,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.482,
+		align = "right",
 		control = self._controller_keybind_crouch
 	})
 
@@ -204,8 +204,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.568,
+		align = "right",
 		control = self._controller_keybind_jump
 	})
 
@@ -217,8 +217,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.647,
+		align = "right",
 		control = self._controller_keybind_reload
 	})
 
@@ -293,8 +293,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.25,
+		align = "left",
 		control = self._controller_keybind_change_seat
 	})
 
@@ -306,8 +306,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.402,
+		align = "left",
 		control = self._controller_keybind_na2
 	})
 
@@ -319,8 +319,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.482,
+		align = "left",
 		control = self._controller_keybind_na3
 	})
 
@@ -332,8 +332,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.647,
+		align = "left",
 		control = self._controller_keybind_na5
 	})
 
@@ -345,8 +345,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.547,
+		align = "left",
 		control = self._controller_keybind_na4
 	})
 
@@ -358,8 +358,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.85,
+		align = "left",
 		control = self._controller_keybind_steering
 	})
 
@@ -384,8 +384,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.25,
+		align = "right",
 		control = self._controller_keybind_exit_vehicle
 	})
 
@@ -397,8 +397,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.402,
+		align = "right",
 		control = self._controller_keybind_na8
 	})
 
@@ -410,8 +410,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.482,
+		align = "right",
 		control = self._controller_keybind_switch_pose
 	})
 
@@ -423,8 +423,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.568,
+		align = "right",
 		control = self._controller_keybind_handbrake
 	})
 
@@ -436,8 +436,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle_ps4()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.647,
+		align = "right",
 		control = self._controller_keybind_na10
 	})
 
@@ -512,8 +512,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.13,
+		align = "left",
 		control = self._controller_keybind_aim
 	})
 
@@ -525,8 +525,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.25,
+		align = "left",
 		control = self._controller_keybind_lean
 	})
 
@@ -538,8 +538,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.44,
+		align = "left",
 		control = self._controller_keybind_move
 	})
 
@@ -551,8 +551,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.57,
+		align = "left",
 		control = self._controller_keybind_comm_wheel
 	})
 
@@ -564,8 +564,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.635,
+		align = "left",
 		control = self._controller_keybind_grenade
 	})
 
@@ -577,8 +577,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.83,
+		align = "left",
 		control = self._controller_keybind_fire_mode
 	})
 
@@ -616,8 +616,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.13,
+		align = "right",
 		control = self._controller_keybind_fire_weapon
 	})
 
@@ -629,8 +629,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.25,
+		align = "right",
 		control = self._controller_keybind_interact
 	})
 
@@ -642,8 +642,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.36,
+		align = "right",
 		control = self._controller_keybind_switch_weapons
 	})
 
@@ -655,8 +655,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.44,
+		align = "right",
 		control = self._controller_keybind_crouch
 	})
 
@@ -668,8 +668,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.52,
+		align = "right",
 		control = self._controller_keybind_jump
 	})
 
@@ -681,8 +681,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.59,
+		align = "right",
 		control = self._controller_keybind_reload
 	})
 
@@ -745,8 +745,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.13,
+		align = "left",
 		control = self._controller_keybind_reverse
 	})
 
@@ -758,8 +758,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.25,
+		align = "left",
 		control = self._controller_keybind_change_seat
 	})
 
@@ -771,8 +771,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.44,
+		align = "left",
 		control = self._controller_keybind_steering
 	})
 
@@ -784,8 +784,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.57,
+		align = "left",
 		control = self._controller_keybind_na2
 	})
 
@@ -797,8 +797,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.635,
+		align = "left",
 		control = self._controller_keybind_na3
 	})
 
@@ -810,8 +810,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "left",
 		coord_y = 0.83,
+		align = "left",
 		control = self._controller_keybind_na4
 	})
 
@@ -849,8 +849,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.13,
+		align = "right",
 		control = self._controller_keybind_na7
 	})
 
@@ -862,8 +862,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.25,
+		align = "right",
 		control = self._controller_keybind_exit_vehicle
 	})
 
@@ -875,8 +875,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.36,
+		align = "right",
 		control = self._controller_keybind_na8
 	})
 
@@ -888,8 +888,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.44,
+		align = "right",
 		control = self._controller_keybind_switch_pose
 	})
 
@@ -901,8 +901,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.52,
+		align = "right",
 		control = self._controller_keybind_handbrake
 	})
 
@@ -914,8 +914,8 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 	})
 
 	self:_set_position_size_controller_keybind_label({
-		align = "right",
 		coord_y = 0.59,
+		align = "right",
 		control = self._controller_keybind_na10
 	})
 

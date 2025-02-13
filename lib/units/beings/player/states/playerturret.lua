@@ -100,13 +100,11 @@ end
 
 function PlayerTurret:_show_hud_prompts()
 	if self._out_of_ammo_prompt_hidden then
-		managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
+		managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
 
 		self._out_of_ammo_prompt_hidden = false
 	elseif self._can_reload_prompt_hidden then
-		managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-			BTN_RELOAD = managers.localization:btn_macro("reload")
-		})))
+		managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 
 		self._can_reload_prompt_hidden = false
 	end
@@ -127,6 +125,7 @@ function PlayerTurret:exit(state_data, new_state_name)
 	self._steelsight_wanted = false
 
 	self:_interupt_action_exit_turret()
+	self:_end_action_steelsight()
 
 	self._firing = false
 
@@ -145,8 +144,8 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
-		skip_equip = true,
 		ducking = false,
+		skip_equip = true,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
 	}
 

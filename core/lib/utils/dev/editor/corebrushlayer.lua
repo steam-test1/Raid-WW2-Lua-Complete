@@ -64,6 +64,7 @@ function BrushLayer:save(save_params)
 end
 
 function BrushLayer:_save_brushfile(path)
+	Application:info("[BrushLayer] Saving to path: " .. path)
 	MassUnitManager:save(path)
 	managers.editor:add_to_world_package({
 		category = "massunits",
@@ -143,6 +144,101 @@ function BrushLayer:reposition_all()
 			end
 		else
 			managers.editor:output(" * Couldnt test unit " .. name)
+		end
+	end
+end
+
+function BrushLayer:optimise_brushes()
+	local rules = {
+		grouped_units = false,
+		min_distance_merge = true,
+		min_distance = 25,
+		min_oobb = true,
+		must_see_sky = false
+	}
+	local filter = self._brush_names
+	local hit_list = {}
+
+	managers.editor:output("Optimising brushes:")
+
+	if not table.empty(filter) then
+		managers.editor:output("Filtering #" .. tostring(#filter))
+	end
+
+	local world_brush_units = World:find_units_quick("all", self._brush_slot_mask)
+
+	if not world_brush_units then
+		managers.editor:output("No brushes to optimise!")
+
+		return
+	end
+
+	world_brush_units = table.shuffled(world_brush_units)
+
+	local function do_clean(units)
+		local hit_list = {}
+
+		managers.editor:output("Doing cleaning on #" .. tostring(#units) .. " brushes")
+
+		for i, unit in ipairs(units) do
+			for i_b, unit_b in ipairs(units) do
+				if i ~= i_b and not hit_list[unit_b] then
+					local min_distance = rules.min_distance
+
+					if rules.min_oobb then
+						min_distance = math.max(unit:oobb():size().z, min_distance)
+					end
+
+					local distance = mvector3.distance(unit:position(), unit_b:position())
+
+					if distance < min_distance then
+						hit_list[unit] = true
+
+						if rules.min_distance_merge then
+							unit_b:set_position(math.lerp(unit:position(), unit_b:position(), 0.5))
+							unit_b:set_rotation(math.rotation_lerp(unit:rotation(), unit_b:rotation(), 0.5))
+						end
+
+						break
+					end
+				end
+			end
+		end
+
+		managers.editor:output("Final cleaning list size #" .. tostring(#hit_list) .. " brushes")
+
+		return hit_list
+	end
+
+	if rules.grouped_units then
+		local sorted_brushes = {}
+
+		for _, unit in ipairs(world_brush_units) do
+			local unit_name = unit:name():s()
+
+			if table.empty(filter) or table.contains(filter, unit_name) then
+				if not sorted_brushes[unit_name] then
+					sorted_brushes[unit_name] = {}
+				end
+
+				table.insert(sorted_brushes[unit_name], unit)
+			end
+		end
+
+		for _, units in pairs(sorted_brushes) do
+			hit_list = do_clean(units)
+		end
+	else
+		hit_list = do_clean(world_brush_units)
+	end
+
+	if not table.empty(hit_list) then
+		managers.editor:output("Clearing away #" .. tostring(#hit_list) .. " brushes")
+
+		for unit, _ in pairs(hit_list) do
+			World:delete_unit(unit)
+
+			self._amount_dirty = true
 		end
 	end
 end
@@ -531,10 +627,15 @@ function BrushLayer:build_panel(notebook)
 	self._sizer:add(ctrl_sizer, 0, 0, "EXPAND")
 
 	local btn_sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "")
-	local reposition_btn = EWS:Button(self._ews_panel, "Reposition All", "", "BU_EXACTFIT,NO_BORDER")
+	local reposition_btn = EWS:Button(self._ews_panel, "Repos. All", "", "BU_EXACTFIT,NO_BORDER")
 
 	btn_sizer:add(reposition_btn, 0, 5, "RIGHT,TOP,BOTTOM")
 	reposition_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "reposition_all"), nil)
+
+	local optimise_btn = EWS:Button(self._ews_panel, "Optimise", "", "BU_EXACTFIT,NO_BORDER")
+
+	btn_sizer:add(optimise_btn, 0, 5, "RIGHT,TOP,BOTTOM")
+	optimise_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "optimise_brushes"), nil)
 
 	local reload_btn = EWS:Button(self._ews_panel, "Reload", "", "BU_EXACTFIT,NO_BORDER")
 
@@ -722,9 +823,9 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 	slider_sizer:add(EWS:StaticText(self._ews_panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
 
 	local slider_params = {
-		floats = 0,
 		number_ctrlr_proportions = 0.1,
 		slider_ctrlr_proportions = 0.2,
+		floats = 0,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,

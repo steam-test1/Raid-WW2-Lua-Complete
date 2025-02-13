@@ -107,11 +107,11 @@ function NetworkAccountPSN:inventory_load()
 end
 
 function NetworkAccountPSN:_clbk_inventory_load(error, list)
-	local filtered_list = self:_verify_filter_cards(list)
+	local filtered_cards = self:_verify_filter_cards(list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
 		error = error,
-		list = filtered_list
+		cards = filtered_cards
 	})
 end
 

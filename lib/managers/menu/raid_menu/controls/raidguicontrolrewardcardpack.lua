@@ -108,16 +108,16 @@ end
 
 function RaidGUIControlRewardCardPack:_create_cards_control()
 	local cards_control_params = {
+		visible = false,
+		name = "cards_control",
 		h = 900,
 		w = 780,
 		y = 0,
 		x = 0,
-		visible = false,
-		name = "cards_control",
 		item_params = {
-			item_w = 256,
 			wrapper_h = 600,
-			item_h = 352
+			item_h = 352,
+			item_w = 256
 		}
 	}
 	self._cards_control = self._left_panel:create_custom_control(RaidGUIControlLootRewardCards, cards_control_params)

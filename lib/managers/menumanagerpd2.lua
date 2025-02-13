@@ -10,18 +10,6 @@ function MenuManager:update(t, dt, ...)
 	managers.menu_component:update(t, dt)
 end
 
-function MenuManager:on_view_character(user)
-	local outfit = user:rich_presence("outfit")
-
-	if outfit ~= "" then
-		if managers.menu:active_menu().logic:selected_node_name() ~= "view_character" then
-			managers.menu:active_menu().logic:select_node("view_character", true, {})
-		end
-
-		managers.menu_component:create_view_character_profile_gui(user, 0, 300)
-	end
-end
-
 function MenuManager:on_enter_lobby()
 	Application:debug("[MenuManager:on_enter_lobby]")
 
@@ -106,32 +94,32 @@ end
 function MenuInitiatorBase:create_toggle(node, params)
 	local data_node = {
 		{
-			s_y = 24,
-			s_x = 24,
-			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
 			h = 24,
+			s_x = 24,
+			s_h = 24,
+			s_w = 24,
+			s_y = 24,
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
+			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
+			_meta = "option",
 			w = 24,
 			y = 0,
 			x = 24,
-			value = "on",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
-			_meta = "option",
-			s_h = 24,
-			s_w = 24
+			value = "on"
 		},
 		{
-			s_y = 24,
-			s_x = 0,
-			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
 			h = 24,
+			s_x = 0,
+			s_h = 24,
+			s_w = 24,
+			s_y = 24,
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
+			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
+			_meta = "option",
 			w = 24,
 			y = 0,
 			x = 0,
-			value = "off",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
-			_meta = "option",
-			s_h = 24,
-			s_w = 24
+			value = "off"
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
@@ -206,12 +194,12 @@ function MenuInitiatorBase:add_back_button(node)
 	node:delete_item("back")
 
 	local params = {
-		text_id = "menu_back",
-		back = true,
 		previous_node = true,
-		last_item = true,
 		visible_callback = "is_pc_controller",
-		name = "back"
+		name = "back",
+		back = true,
+		text_id = "menu_back",
+		last_item = true
 	}
 	local new_item = node:create_item(nil, params)
 

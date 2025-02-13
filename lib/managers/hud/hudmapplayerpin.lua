@@ -1,8 +1,10 @@
 HUDMapPlayerPin = HUDMapPlayerPin or class()
-HUDMapPlayerPin.W = 128
-HUDMapPlayerPin.H = 128
+HUDMapPlayerPin.W = 64
+HUDMapPlayerPin.H = 64
 
 function HUDMapPlayerPin:init(panel, params)
+	Application:debug("[HUDMapPlayerPin] Created pin")
+
 	self._id = params.id
 	self._ai = params.ai or false
 	self._hidden = false
@@ -14,8 +16,8 @@ end
 function HUDMapPlayerPin:_create_panel(panel)
 	local panel_params = {
 		visible = false,
-		halign = "center",
 		valign = "center",
+		halign = "center",
 		name = "player_pin_" .. tostring(self._id),
 		w = HUDMapPlayerPin.W,
 		h = HUDMapPlayerPin.H
@@ -27,9 +29,11 @@ function HUDMapPlayerPin:_create_nationality_icon(params)
 	local nationality = params.nationality or "german"
 	local nationality_icon = "player_panel_nationality_" .. nationality
 	local nationality_icon_params = {
+		valign = "center",
 		halign = "center",
 		name = "nationality_icon",
-		valign = "center",
+		w = HUDMapPlayerPin.W,
+		h = HUDMapPlayerPin.H,
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
 	}
@@ -44,6 +48,14 @@ function HUDMapPlayerPin:set_nationality(nationality)
 
 	self._nationality_icon:set_image(tweak_data.gui.icons[nationality_icon].texture)
 	self._nationality_icon:set_texture_rect(unpack(tweak_data.gui.icons[nationality_icon].texture_rect))
+end
+
+function HUDMapPlayerPin:set_scale(scale)
+	self._object:set_w(HUDMapPlayerPin.W * scale)
+	self._object:set_h(HUDMapPlayerPin.H * scale)
+	self._nationality_icon:set_w(HUDMapPlayerPin.W * scale)
+	self._nationality_icon:set_h(HUDMapPlayerPin.H * scale)
+	self._nationality_icon:set_center(self._object:center())
 end
 
 function HUDMapPlayerPin:set_center_x(x)

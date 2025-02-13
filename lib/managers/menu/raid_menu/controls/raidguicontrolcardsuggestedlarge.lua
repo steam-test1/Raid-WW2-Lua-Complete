@@ -128,9 +128,9 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 		local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
 		local title_font_size = tweak_data.gui.font_sizes.medium
 		self._card_title = self._challenge_card_panel:label({
+			align = "center",
 			wrap = true,
 			vertical = "center",
-			align = "center",
 			name = "suggested_card_title_" .. self._name,
 			w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 			h = title_h,
@@ -149,8 +149,8 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	end
 
 	local params_xp_bonus = {
-		x = 0,
 		text = "",
+		x = 0,
 		name = "xp_bonus",
 		vertical = "center",
 		align = "center",
@@ -187,10 +187,10 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			texture_rect = tweak_data.gui.icons.ico_bonus.texture_rect
 		})
 		self._bonus_label = self._object:label({
+			align = "left",
 			wrap = true,
 			vertical = "top",
 			h = 64,
-			align = "left",
 			name = "suggested_card_bonus_label_" .. self._name,
 			x = self._bonus_image:x() + self._bonus_image:w() + 10,
 			y = self._bonus_image:y(),
@@ -215,10 +215,10 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
 		})
 		self._malus_label = self._object:label({
+			align = "left",
 			wrap = true,
 			vertical = "top",
 			h = 64,
-			align = "left",
 			name = "suggested_card_malus_label_" .. self._name,
 			x = self._malus_image:x() + self._malus_image:w() + 10,
 			y = self._malus_image:y(),
@@ -233,8 +233,8 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 
 	self._peer_name_label = self._object:label({
 		x = 10,
-		h = 30,
 		align = "right",
+		h = 30,
 		name = "suggested_card_malus_label_" .. self._name,
 		y = self._object:h() - 64,
 		w = self._card_image:w(),
@@ -297,9 +297,9 @@ function RaidGUIControlCardSuggestedLarge:_show_pass_card_controls()
 	else
 		local peer_name_label = self._object:label({
 			x = 0,
+			align = "center",
 			name = "peer_name",
 			h = 32,
-			align = "center",
 			y = self._object:h() - 192,
 			w = self._object:w(),
 			layer = self._challenge_card_panel:layer() + 1,
@@ -311,9 +311,9 @@ function RaidGUIControlCardSuggestedLarge:_show_pass_card_controls()
 
 		self._object:label({
 			x = 0,
+			align = "center",
 			name = "didnt_select_card_label",
 			h = 24,
-			align = "center",
 			y = peer_name_label:bottom() + 16,
 			w = self._object:w(),
 			layer = self._challenge_card_panel:layer() + 1,

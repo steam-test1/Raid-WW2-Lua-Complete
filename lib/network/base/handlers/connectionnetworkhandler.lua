@@ -273,10 +273,6 @@ function ConnectionNetworkHandler:sync_game_settings(job_index, level_id_index, 
 	tweak_data:set_difficulty(difficulty)
 	peer:verify_job(job_id)
 	managers.raid_job:on_mission_started()
-
-	if managers.menu_component then
-		managers.menu_component:on_job_updated()
-	end
 end
 
 function ConnectionNetworkHandler:sync_stage_settings(level_id_index, stage_num, alternative_stage, interupt_stage_level_id, sender)
@@ -713,8 +709,8 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -742,8 +738,8 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -763,10 +759,10 @@ function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 end
 
 ConnectionNetworkHandler._SYNC_AWARD_ACHIEVEMENT_ALLOWED = {
-	ach_kill_enemies_with_single_grenade_5 = true,
 	landmines_kill_some = true,
 	ach_decoy_kill_anyone = true,
-	ach_grenade_kill_spotter = true
+	ach_grenade_kill_spotter = true,
+	ach_kill_enemies_with_single_grenade_5 = true
 }
 
 function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
@@ -831,6 +827,22 @@ function ConnectionNetworkHandler:sync_secured_bounty(bars, sender)
 	end
 
 	managers.greed:sync_secured_bounty(bars)
+end
+
+function ConnectionNetworkHandler:call_airdrop(unit, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.airdrop:call_drop(unit)
+end
+
+function ConnectionNetworkHandler:airdrop_spawn_unit_in_pod(unit, position, yaw, pitch, roll, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.airdrop:spawn_unit_inside_pod(unit, position, yaw, pitch, roll)
 end
 
 function ConnectionNetworkHandler:spawn_loot(tweak_table, position, yaw, pitch, roll, sender)
@@ -957,9 +969,9 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 	managers.lootdrop:set_picked_up_current_leg(picked_up_current_leg)
 	managers.lootdrop:set_picked_up_total(picked_up_total)
 	managers.notification:add_notification({
+		shelf_life = 5,
 		duration = 2,
 		id = "hud_hint_grabbed_nazi_gold",
-		shelf_life = 5,
 		notification_type = HUDNotification.DOG_TAG,
 		acquired = picked_up_current_leg,
 		total = picked_up_total

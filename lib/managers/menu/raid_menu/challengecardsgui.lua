@@ -1,6 +1,6 @@
 ChallengeCardsGui = ChallengeCardsGui or class(RaidGuiBase)
 ChallengeCardsGui.PHASE = 1
-ChallengeCardsGui.SUGGESTED_CARDS_Y = 540
+ChallengeCardsGui.SUGGESTED_CARDS_Y = 572
 
 function ChallengeCardsGui:init(ws, fullscreen_ws, node, component_name)
 	ChallengeCardsGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -15,6 +15,9 @@ function ChallengeCardsGui:init(ws, fullscreen_ws, node, component_name)
 	managers.system_event_listener:add_listener("challenge_cards_gui_inventory_processed", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED
 	}, callback(self, self, "_players_inventory_processed"))
+	managers.system_event_listener:add_listener("challenge_cards_gui_steam_inventory_loaded", {
+		CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED
+	}, callback(self, self, "_players_inventory_loaded"))
 end
 
 function ChallengeCardsGui:_set_initial_data()
@@ -22,27 +25,27 @@ function ChallengeCardsGui:_set_initial_data()
 	self._challenge_cards_steam_data_source = {}
 	self._filter_rarity = nil
 	self._filter_type = nil
+	self._selected_card_data = nil
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
 function ChallengeCardsGui:_layout()
+	local common_width = 800
 	self._phase_one_panel = self._root_panel:panel({
-		x = 0,
-		name = "phase_one_panel",
-		y = 0
-	})
-	self._phase_two_panel = self._root_panel:panel({
-		x = 0,
-		name = "phase_two_panel",
-		y = 0
-	})
-	self._cards_suggest_title = self._root_panel:label({
-		visible = true,
 		y = 0,
 		x = 0,
-		name = "cards_suggest_title",
-		vertical = "top",
+		name = "phase_one_panel"
+	})
+	self._phase_two_panel = self._root_panel:panel({
+		y = 0,
+		x = 0,
+		name = "phase_two_panel"
+	})
+	self._cards_suggest_title = self._root_panel:label({
 		h = 60,
+		visible = true,
+		vertical = "top",
+		name = "cards_suggest_title",
 		w = 800,
 		text = "",
 		color = tweak_data.gui.colors.raid_red,
@@ -50,6 +53,10 @@ function ChallengeCardsGui:_layout()
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	local tabs_params = {
+		{
+			name = "tab_all",
+			text = self:translate("menu_filter_all", true)
+		},
 		{
 			name = "tab_common",
 			text = self:translate("loot_rarity_common", true),
@@ -69,39 +76,29 @@ function ChallengeCardsGui:_layout()
 			name = "tab_other",
 			text = self:translate("menu_filter_other", true),
 			callback_param = LootDropTweakData.RARITY_OTHER
-		},
-		{
-			callback_param = nil,
-			name = "tab_all",
-			text = self:translate("menu_filter_all", true)
 		}
 	}
 	self._rarity_filters_tabs = self._phase_one_panel:tabs({
-		dont_trigger_special_buttons = true,
+		tab_align = "center",
+		tab_height = 64,
 		y = 96,
 		x = 0,
 		name = "rarity_filters_tabs",
-		tab_align = "center",
-		tab_height = 64,
-		tab_width = 640 / #tabs_params,
-		initial_tab_idx = #tabs_params,
+		dont_trigger_special_buttons = true,
+		tab_width = common_width / #tabs_params,
 		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tabs_params = tabs_params
 	})
-	local challenge_cards_grid_scrollable_area_params = {
-		x = 0,
-		h = 612,
+	self._challenge_cards_grid_scrollable_area = self._phase_one_panel:scrollable_area({
 		y = 192,
-		w = 640,
-		scroll_step = 30,
-		name = "challenge_cards_grid_scrollable_area"
-	}
-	self._challenge_cards_grid_scrollable_area = self._phase_one_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
-	local challenge_cards_grid_params = {
-		x = 0,
-		y = 0,
-		w = 636,
+		h = 612,
+		scroll_step = 60,
+		name = "challenge_cards_grid_scrollable_area",
+		w = common_width
+	})
+	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid({
 		name = "challenge_cards_grid",
+		w = common_width,
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
 		grid_params = {
 			scroll_marker_w = 32,
@@ -111,38 +108,40 @@ function ChallengeCardsGui:_layout()
 			on_select_callback = callback(self, self, "_on_select_inventory_cards")
 		},
 		item_params = {
+			selected_marker_h = 256,
+			selected_marker_w = 184.888888832,
+			item_h = 230,
+			item_w = 166.11111105999998,
 			key_value_field = "key_name",
-			selected_marker_h = 250,
-			selected_marker_w = 192,
-			item_h = 216,
-			item_w = 156,
 			row_class = RaidGUIControlCardWithSelector
 		}
-	}
-	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
+	})
+
+	self._challenge_cards_grid_scrollable_area:setup_scroll_area()
+
 	local card_details_params = {
-		card_w = 272,
+		h = 544,
 		card_h = 384,
-		y = 96,
+		visible = true,
+		name = "card_deatils",
+		card_w = 272,
 		card_y = 0,
 		card_x = 0,
-		name = "card_deatils",
-		h = 544,
-		w = 892,
-		visible = true,
-		x = self._card_grid:right() + 224
+		x = self._card_grid:right() + 100,
+		y = self._rarity_filters_tabs:bottom(),
+		w = self._root_panel:w() - (self._card_grid:right() + 100)
 	}
 	self._card_details = self._phase_one_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 	local suggested_cards_grid_params = {
-		w = 856,
 		h = 265,
-		visible = true,
 		name = "suggested_cards_grid",
+		w = 856,
+		visible = true,
 		x = self._card_details:left(),
 		y = ChallengeCardsGui.SUGGESTED_CARDS_Y,
 		grid_params = {
-			lock_texture = true,
-			remove_texture = true
+			remove_texture = true,
+			lock_texture = true
 		},
 		item_params = {
 			w = 192,
@@ -150,29 +149,46 @@ function ChallengeCardsGui:_layout()
 		}
 	}
 	self._suggested_cards_grid = self._phase_one_panel:suggested_cards_grid(suggested_cards_grid_params)
+	local button_padding = 32
 	self._suggest_card_button = self._phase_one_panel:short_primary_button({
-		x = 0,
-		text = "",
+		text = ">SUGGEST<",
 		name = "suggest_card_button",
 		y = self._phase_one_panel:bottom() - 128,
 		on_click_callback = callback(self, self, "suggest_card")
 	})
 	self._clear_card_button = self._phase_one_panel:short_secondary_button({
-		x = 0,
 		name = "clear_card_button",
 		text = self:translate("menu_clear_selection", true),
-		y = self._suggest_card_button:top(),
+		y = self._suggest_card_button:y(),
 		on_click_callback = callback(self, self, "cancel_card")
 	})
 
-	self._clear_card_button:set_right(self._phase_one_panel:right())
+	self._clear_card_button:set_left(self._suggest_card_button:right() + button_padding)
 	self:_setup_single_player()
 
+	if not managers.raid_job:current_job_type() then
+		self._info_label = self._phase_one_panel:label({
+			align = "center",
+			vertical = "center",
+			h = 48,
+			y = self._phase_one_panel:bottom() - 128,
+			w = self._challenge_cards_grid_scrollable_area:w(),
+			text = self:translate("menu_challenge_cards_no_mission_selected", true),
+			layer = RaidGuiBase.FOREGROUND_LAYER,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = tweak_data.gui.font_sizes.large,
+			color = tweak_data.gui.colors.raid_red
+		})
+
+		self._suggest_card_button:hide()
+		self._clear_card_button:hide()
+	end
+
 	self._cards_title_ph2_host = self._root_panel:label({
-		visible = false,
 		y = 0,
-		x = 0,
 		name = "cards_title_ph2_host",
+		visible = false,
+		x = 0,
 		vertical = "top",
 		h = 60,
 		w = 800,
@@ -182,10 +198,10 @@ function ChallengeCardsGui:_layout()
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	self._cards_title_ph2_client = self._root_panel:label({
-		visible = false,
 		y = 0,
-		x = 0,
 		name = "cards_title_ph2_client",
+		visible = false,
+		x = 0,
 		vertical = "top",
 		h = 60,
 		w = 800,
@@ -195,20 +211,20 @@ function ChallengeCardsGui:_layout()
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	local host_activates_card_grid_params = {
-		w = 1725,
-		h = 675,
 		y = 96,
 		x = 0,
-		visible = true,
+		h = 675,
 		name = "host_activates_card_grid",
+		w = 1725,
+		visible = true,
 		grid_params = {
 			on_click_callback = callback(self, self, "on_item_host_clicks_suggested_card_grid")
 		},
 		item_params = {
+			selected_marker_h = 675,
 			selected_marker_w = 352,
 			item_h = 383,
-			item_w = 266,
-			selected_marker_h = 675
+			item_w = 266
 		}
 	}
 	self._host_activates_card_grid = self._phase_two_panel:suggested_cards_grid_large(host_activates_card_grid_params)
@@ -234,8 +250,10 @@ function ChallengeCardsGui:_layout()
 
 	if self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
+	elseif self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
 	else
-		rm_head:set_screen_name("menu_challenge_cards_suggest_raid_title")
+		rm_head:set_screen_name("menu_challenge_cards_view_title")
 	end
 
 	self:suggestions_changed()
@@ -245,10 +263,10 @@ function ChallengeCardsGui:_layout()
 	if not Network:is_server() then
 		local host_name = managers.network:session():all_peers()[1]:name()
 		self._host_ph2_message = self._phase_two_panel:label({
+			h = 36,
 			align = "center",
 			x = 0,
 			name = "client_waiting_message",
-			h = 36,
 			y = self._phase_two_activate_button:y() - 48,
 			w = self._phase_two_panel:w(),
 			text = utf8.to_upper(managers.localization:text("menu_challenge_cards_waiting_choose_card_msg", {
@@ -259,17 +277,17 @@ function ChallengeCardsGui:_layout()
 		})
 	end
 
-	if not managers.raid_menu:is_pc_controller() then
+	if managers.controller:is_controller_present() then
 		self._suggest_card_button:hide()
 		self._clear_card_button:hide()
 	end
 
 	if ChallengeCardsGui.PHASE == 2 then
 		self._timer_label = self._root_panel:label({
-			visible = true,
-			name = "timer_label",
-			vertical = "top",
 			h = 60,
+			visible = true,
+			vertical = "top",
+			name = "timer_label",
 			w = 200,
 			text = "",
 			color = tweak_data.gui.colors.raid_white,
@@ -280,11 +298,11 @@ function ChallengeCardsGui:_layout()
 		self._timer_label:set_right(self._root_panel:right())
 
 		self._timer_icon = self._root_panel:image({
-			x = 0,
 			y = 20,
-			w = 34,
+			x = 0,
 			h = 34,
 			name = "timer_icon",
+			w = 34,
 			texture = tweak_data.gui.icons.ico_time.texture,
 			texture_rect = tweak_data.gui.icons.ico_time.texture_rect
 		})
@@ -298,6 +316,7 @@ function ChallengeCardsGui:_layout()
 	self:_players_inventory_processed({
 		list = managers.challenge_cards:get_readyup_card_cache()
 	})
+	self:_auto_select_first_card_in_grid()
 end
 
 function ChallengeCardsGui:_setup_single_player()
@@ -306,9 +325,11 @@ function ChallengeCardsGui:_setup_single_player()
 	if self._is_single_player then
 		self._suggest_button_string_id = "menu_select_card_buton"
 		self._disabled_suggest_button_string_id = "menu_selected"
+		self._unable_suggest_button_string_id = "menu_unavailable"
 	else
 		self._suggest_button_string_id = "menu_suggest_card_buton"
 		self._disabled_suggest_button_string_id = "menu_suggested"
+		self._unable_suggest_button_string_id = "menu_unavailable"
 	end
 
 	self._suggest_card_button:set_text(self:translate(self._suggest_button_string_id, true))
@@ -325,9 +346,9 @@ end
 
 function ChallengeCardsGui:sync_host_selects_suggested_card(card_key_name, peer_id, steam_instance_id)
 	if card_key_name == nil and peer_id == nil and steam_instance_id == nil then
-		self._host_selected_card = nil
+		self._host_chosen_card = nil
 	else
-		self._host_selected_card = {
+		self._host_chosen_card = {
 			key_name = card_key_name,
 			peer_id = peer_id,
 			steam_instance_id = steam_instance_id
@@ -346,31 +367,29 @@ function ChallengeCardsGui:on_click_filter_rarity(rarity)
 	self:reload_filtered_data()
 end
 
-function ChallengeCardsGui:filter_cards_by_type(type)
-	self._filter_type = managers.raid_job:current_job_type()
-
-	self:reload_filtered_data()
-end
-
 function ChallengeCardsGui:reload_filtered_data()
-	if self._challenge_cards_steam_data_source and (self._filter_rarity == LootDropTweakData.RARITY_ALL or not self._filter_rarity) then
+	if self._challenge_cards_steam_data_source then
 		self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
-	elseif self._challenge_cards_steam_data_source and self._filter_rarity ~= LootDropTweakData.RARITY_ALL then
-		local result = {}
+		local owned_cards = {}
 
 		for _, card_data in ipairs(self._challenge_cards_steam_data_source) do
-			if self._filter_rarity == LootDropTweakData.RARITY_OTHER then
-				if card_data.rarity ~= LootDropTweakData.RARITY_COMMON and card_data.rarity ~= LootDropTweakData.RARITY_UNCOMMON then
-					if card_data.rarity ~= LootDropTweakData.RARITY_RARE then
-						table.insert(result, clone(card_data))
-					end
-				end
-			elseif self._filter_rarity == card_data.rarity then
-				table.insert(result, clone(card_data))
-			end
+			owned_cards[card_data.key_name] = card_data
 		end
 
-		self._challenge_cards_data_source = clone(result)
+		self._challenge_cards_data_source = {}
+
+		for key_name, card_data in pairs(tweak_data.challenge_cards.cards) do
+			if key_name ~= "empty" and self:_is_valid_rarity_filter(card_data.rarity) then
+				local card = owned_cards[key_name]
+
+				if not card then
+					card = clone(card_data)
+					card.key_name = key_name
+				end
+
+				table.insert(self._challenge_cards_data_source, card)
+			end
+		end
 	end
 
 	local result = {}
@@ -387,8 +406,26 @@ function ChallengeCardsGui:reload_filtered_data()
 
 	self._card_grid:refresh_data()
 	self._challenge_cards_grid_scrollable_area:setup_scroll_area()
-	self:_auto_select_first_card_in_grid()
+	self:_auto_select_same_card_in_grid()
 	self._card_grid:set_selected(true)
+end
+
+function ChallengeCardsGui:_is_valid_rarity_filter(rarity)
+	if not self._filter_rarity then
+		return true
+	end
+
+	if self._filter_rarity == LootDropTweakData.RARITY_OTHER then
+		if rarity == LootDropTweakData.RARITY_COMMON or rarity == LootDropTweakData.RARITY_UNCOMMON or rarity == LootDropTweakData.RARITY_RARE then
+			return false
+		else
+			return true
+		end
+	elseif self._filter_rarity == rarity then
+		return true
+	end
+
+	return false
 end
 
 function ChallengeCardsGui:data_source_inventory_cards()
@@ -397,9 +434,13 @@ function ChallengeCardsGui:data_source_inventory_cards()
 	return self._challenge_cards_data_source
 end
 
-function ChallengeCardsGui:_on_click_inventory_cards(item_data)
-	if item_data then
-		self._card_details:set_card(item_data.key_name, item_data.steam_instances[1].instance_id)
+function ChallengeCardsGui:_on_click_inventory_cards(card_data)
+	if card_data then
+		managers.menu_component:post_event("highlight")
+
+		self._selected_card_data = card_data
+
+		self._card_details:set_card_details(card_data.key_name)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 	end
@@ -407,9 +448,13 @@ function ChallengeCardsGui:_on_click_inventory_cards(item_data)
 	self:_update_suggest_card_button()
 end
 
-function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
-	if item_data then
-		self._card_details:set_card(item_data.key_name, item_data.steam_instances[1].instance_id)
+function ChallengeCardsGui:_on_select_inventory_cards(item_idx, card_data)
+	if card_data then
+		managers.menu_component:post_event("highlight")
+
+		self._selected_card_data = card_data
+
+		self._card_details:set_card_details(card_data.key_name)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 	end
@@ -418,27 +463,142 @@ function ChallengeCardsGui:_on_select_inventory_cards(item_idx, item_data)
 end
 
 function ChallengeCardsGui:suggest_card()
-	local card = self._card_details:get_card()
+	if not self._filter_type then
+		managers.menu_component:post_event("generic_fail_sound")
 
-	if card then
-		managers.challenge_cards:suggest_challenge_card(card.key_name, card.steam_instance_id)
+		return
 	end
 
-	managers.raid_menu:register_on_escape_callback(nil)
-	managers.raid_menu:on_escape()
+	local card_data = self._selected_card_data
+
+	if card_data and card_data.steam_instances then
+		managers.menu_component:post_event("gold_spending_apply")
+
+		local steam_instance_id = card_data.steam_instances[1].instance_id
+
+		managers.challenge_cards:suggest_challenge_card(card_data.key_name, steam_instance_id)
+		self:_update_suggest_card_button()
+	else
+		managers.menu_component:post_event("generic_fail_sound")
+	end
+end
+
+function ChallengeCardsGui:_ask_dismantle_card()
+	Application:debug("[ChallengeCardsGui] Dismantling Card Ask...")
+
+	local card_data = self._selected_card_data
+	local dialog_data = {
+		title = managers.localization:text("dialog_dismantling_card_title"),
+		text = managers.localization:text("dialog_dismantling_card")
+	}
+	local valid_item_recipes = managers.challenge_cards:get_valid_item_recipes_using({
+		card_data.def_id
+	})
+
+	if valid_item_recipes then
+		local valid_item_recipe = valid_item_recipes[1]
+		dialog_data.text = dialog_data.text .. "\n- " .. tostring(1) .. "x " .. managers.localization:text(valid_item_recipe.name)
+	end
+
+	local yes_button = {
+		text = managers.localization:text("dialog_yes"),
+		callback_func = callback(self, self, "_dismantle_card_yes")
+	}
+	local no_button = {
+		cancel_button = true,
+		text = managers.localization:text("dialog_no"),
+		callback_func = callback(self, self, "_dismantle_card_no"),
+		class = RaidGUIControlButtonShortSecondary
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function ChallengeCardsGui:_dismantle_card_no()
+	Application:debug("[ChallengeCardsGui] Dismantling Card Picked NO!")
+end
+
+function ChallengeCardsGui:_dismantle_card_yes()
+	Application:debug("[ChallengeCardsGui] Dismantling Card Picked YES!")
+
+	local card_data = self._selected_card_data
+
+	if card_data and card_data.steam_instances then
+		local steam_instance_id = card_data.steam_instances[1].instance_id
+
+		managers.challenge_cards:dismantle_challenge_card(card_data.key_name, steam_instance_id)
+		self:_update_suggest_card_button()
+		managers.network.account:inventory_load()
+	end
+end
+
+function ChallengeCardsGui:_ask_crafting_card()
+	Application:debug("[ChallengeCardsGui] Crafting Card Ask...", inspect(self._selected_card_data))
+
+	local card_data = self._selected_card_data
+	local dialog_data = {
+		title = managers.localization:text("dialog_crafting_card_title"),
+		text = managers.localization:text("dialog_crafting_card")
+	}
+
+	if card_data.recipes then
+		print("--- RECIPES NEEDED FOR CRAFT --- ")
+		table.print_data(card_data.recipes)
+		print("--- RECIPES NEEDED FOR CRAFT END --- ")
+
+		dialog_data.text = dialog_data.text .. "\n- " .. tostring(1) .. "x " .. managers.localization:text("")
+	end
+
+	local yes_button = {
+		text = managers.localization:text("dialog_yes"),
+		callback_func = callback(self, self, "_crafting_card_yes")
+	}
+	local no_button = {
+		cancel_button = true,
+		text = managers.localization:text("dialog_no"),
+		callback_func = callback(self, self, "_crafting_card_no"),
+		class = RaidGUIControlButtonShortSecondary
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function ChallengeCardsGui:_crafting_card_no()
+	Application:debug("[ChallengeCardsGui] Craftin Card Picked NO!")
+end
+
+function ChallengeCardsGui:_crafting_card_yes()
+	Application:debug("[ChallengeCardsGui] Craftin Card Picked YES!")
+
+	local card_data = self._selected_card_data
+
+	if card_data and card_data.steam_instances then
+		local steam_instance_id = card_data.steam_instances[1].instance_id
+
+		Application:error("[ChallengeCardsGui] Need a function for crafting cards")
+		self:_update_suggest_card_button()
+		managers.network.account:inventory_load()
+	end
 end
 
 function ChallengeCardsGui:cancel_card()
 	managers.challenge_cards:remove_suggested_challenge_card()
-	managers.raid_menu:register_on_escape_callback(nil)
-	managers.raid_menu:on_escape()
+	self:_update_suggest_card_button()
 end
 
 function ChallengeCardsGui:phase_two_activate()
 	local peer_id = nil
 
-	if self._host_selected_card then
-		peer_id = self._host_selected_card.peer_id
+	if self._host_chosen_card then
+		peer_id = self._host_chosen_card.peer_id
 	end
 
 	self:sync_phase_two_execute_action("ACTIVATE", peer_id)
@@ -458,8 +618,18 @@ function ChallengeCardsGui:phase_two_cancel()
 end
 
 function ChallengeCardsGui:sync_phase_two_execute_action(action, peer_id)
-	if action == "ACTIVATE" and self._host_selected_card then
+	if action == "ACTIVATE" and self._host_chosen_card then
 		managers.challenge_cards:select_challenge_card(peer_id)
+	end
+end
+
+function ChallengeCardsGui:_players_inventory_loaded(params)
+	if not params then
+		return
+	end
+
+	if params.cards then
+		-- Nothing
 	end
 end
 
@@ -482,6 +652,7 @@ function ChallengeCardsGui:close()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
 	managers.system_event_listener:remove_listener("challenge_cards_gui_suggestions_changed")
 	managers.system_event_listener:remove_listener("challenge_cards_gui_inventory_processed")
+	managers.system_event_listener:remove_listener("challenge_cards_gui_steam_inventory_loaded")
 
 	ChallengeCardsGui.PHASE = 1
 
@@ -509,12 +680,16 @@ function ChallengeCardsGui:_update_suggest_card_button()
 	local local_peer = managers.network:session():local_peer()
 	local suggested_card = managers.challenge_cards:get_suggested_cards()[local_peer._id]
 
+	if managers.controller:is_controller_present() then
+		return
+	end
+
 	if self._challenge_cards_data_source and #self._challenge_cards_data_source < 1 or not self._challenge_cards_data_source then
 		self._suggest_card_button:disable()
 		self._suggest_card_button:hide()
-	elseif suggested_card and self._card_details:get_card().key_name == suggested_card.key_name then
+	elseif suggested_card and self._selected_card_data and self._selected_card_data.key_name == suggested_card.key_name or self._selected_card_data and not self._selected_card_data.steam_instances or not managers.raid_job:current_job_type() then
 		self._suggest_card_button:disable()
-		self._suggest_card_button:set_text(self:translate(self._disabled_suggest_button_string_id, true))
+		self._suggest_card_button:set_text(self:translate(self._unable_suggest_button_string_id, true))
 	else
 		self._suggest_card_button:enable()
 		self._suggest_card_button:show()
@@ -523,12 +698,30 @@ function ChallengeCardsGui:_update_suggest_card_button()
 end
 
 function ChallengeCardsGui:_auto_select_first_card_in_grid()
-	local card_data = nil
+	if self._challenge_cards_data_source and #self._challenge_cards_data_source >= 1 then
+		self._selected_card_data = self._challenge_cards_data_source[1]
+
+		self._card_details:set_card_details(self._selected_card_data.key_name)
+		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
+		self._suggested_cards_grid:select_grid_item_by_item(nil)
+		self._card_details:show()
+	else
+		managers.challenge_cards:remove_suggested_challenge_card()
+		self._card_details:hide()
+	end
+
+	self:_update_suggest_card_button()
+end
+
+function ChallengeCardsGui:_auto_select_same_card_in_grid()
+	if not self._selected_card_data then
+		self:_auto_select_first_card_in_grid()
+
+		return
+	end
 
 	if self._challenge_cards_data_source and #self._challenge_cards_data_source >= 1 then
-		card_data = self._challenge_cards_data_source[1]
-
-		self._card_details:set_card(card_data.key_name, card_data.steam_instances[1].instance_id)
+		self._card_details:set_card_details(self._selected_card_data.key_name)
 		self._card_details:set_control_mode(RaidGUIControlCardDetails.MODE_SUGGESTING)
 		self._suggested_cards_grid:select_grid_item_by_item(nil)
 		self._card_details:show()
@@ -631,7 +824,7 @@ function ChallengeCardsGui:bind_controller_inputs()
 			},
 			{
 				key = Idstring("menu_controller_face_bottom"),
-				callback = callback(self, self, "suggest_card")
+				callback = callback(self, self, "confirm_pressed")
 			},
 			{
 				key = Idstring("menu_controller_face_left"),

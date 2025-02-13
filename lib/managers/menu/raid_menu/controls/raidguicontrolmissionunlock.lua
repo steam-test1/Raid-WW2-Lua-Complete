@@ -36,9 +36,9 @@ end
 
 function RaidGUIControlMissionUnlock:_create_background()
 	local background_params = {
-		visible = false,
 		name = "background",
 		layer = 1,
+		visible = false,
 		color = tweak_data.gui.colors.raid_unlock_select_background
 	}
 	self._background = self._object:rect(background_params)
@@ -126,17 +126,17 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	end
 
 	local folder_panel_params = {
-		name = "folder_panel",
 		h = 448,
-		layer = 5
+		layer = 5,
+		name = "folder_panel"
 	}
 	self._folder_panel = self._object:panel(folder_panel_params)
 
 	self._folder_panel:set_center_y(self._object:h() / 2)
 
 	local folder_image_params = {
-		layer = 50,
 		name = "folder_image",
+		layer = 50,
 		texture = tweak_data.gui.icons.folder_mission_selection.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission_selection.texture_rect
 	}
@@ -166,11 +166,11 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._mission_image:set_center_y(self._folder_image:center_y() - 20)
 
 	local mission_title_params = {
+		h = 32,
+		w = 192,
 		vertical = "center",
 		align = "center",
 		name = "folder_mission_title",
-		h = 32,
-		w = 192,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_light_red,
@@ -184,94 +184,96 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._folder_mission_title:set_center_y(self._mission_image:center_y() + 124)
 	self:_fit_mission_title()
 
-	self._mission_photos = {}
-	local mission_photos = deep_clone(mission_tweak_data.photos)
+	if mission_tweak_data.photos and #mission_tweak_data.photos > 3 then
+		self._mission_photos = {}
+		local mission_photos = deep_clone(mission_tweak_data.photos)
 
-	math.shuffle(mission_photos)
+		math.shuffle(mission_photos)
 
-	local mission_photo_data = table.remove(mission_photos)
-	local mission_photo_params = {
-		static = true,
-		alpha = 0,
-		layer = 1,
-		photo = mission_photo_data.photo
-	}
-	local mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
-	local position_x = math.random() * 0.07 + 0.72
-	local position_y = math.random() * 0.06 + 0.16
+		local mission_photo_data = table.remove(mission_photos)
+		local mission_photo_params = {
+			alpha = 0,
+			layer = 1,
+			static = true,
+			photo = mission_photo_data.photo
+		}
+		local mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
+		local position_x = math.random() * 0.07 + 0.72
+		local position_y = math.random() * 0.06 + 0.16
 
-	mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
-	mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
+		mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
+		mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
 
-	local rotation = math.random(-3, -0.7)
+		local rotation = math.random(-3, -0.7)
 
-	mission_photo:set_rotation(rotation)
-	table.insert(self._mission_photos, {
-		final_alpha = 1,
-		initial_y = 0.25,
-		initial_x = 0.5,
-		initial_alpha = 1,
-		photo = mission_photo,
-		rotation = rotation,
-		position_x = position_x,
-		position_y = position_y
-	})
+		mission_photo:set_rotation(rotation)
+		table.insert(self._mission_photos, {
+			initial_alpha = 1,
+			final_alpha = 1,
+			initial_y = 0.25,
+			initial_x = 0.5,
+			photo = mission_photo,
+			rotation = rotation,
+			position_x = position_x,
+			position_y = position_y
+		})
 
-	mission_photo_data = table.remove(mission_photos)
-	mission_photo_params = {
-		static = true,
-		alpha = 0,
-		layer = 3,
-		photo = mission_photo_data.photo
-	}
-	mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
-	position_x = math.random() * 0.07 + 0.65
-	position_y = math.random() * 0.04 + 0.47
+		mission_photo_data = table.remove(mission_photos)
+		mission_photo_params = {
+			alpha = 0,
+			layer = 3,
+			static = true,
+			photo = mission_photo_data.photo
+		}
+		mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
+		position_x = math.random() * 0.07 + 0.65
+		position_y = math.random() * 0.04 + 0.47
 
-	mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
-	mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
+		mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
+		mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
 
-	rotation = math.random(-2, -2)
+		rotation = math.random(-2, -2)
 
-	mission_photo:set_rotation(rotation)
-	table.insert(self._mission_photos, {
-		final_alpha = 1,
-		initial_x = 0.5,
-		initial_alpha = 1,
-		photo = mission_photo,
-		rotation = rotation,
-		position_x = position_x,
-		initial_y = position_y,
-		position_y = position_y
-	})
+		mission_photo:set_rotation(rotation)
+		table.insert(self._mission_photos, {
+			initial_alpha = 1,
+			final_alpha = 1,
+			initial_x = 0.5,
+			photo = mission_photo,
+			rotation = rotation,
+			position_x = position_x,
+			initial_y = position_y,
+			position_y = position_y
+		})
 
-	mission_photo_data = table.remove(mission_photos)
-	mission_photo_params = {
-		static = true,
-		alpha = 0,
-		photo = mission_photo_data.photo,
-		layer = self._folder_mission_title:layer() + 1
-	}
-	mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
-	position_x = math.random() * 0.07 + 0.31
-	position_y = math.random() * 0.03 + 0.79
+		mission_photo_data = table.remove(mission_photos)
+		mission_photo_params = {
+			alpha = 0,
+			static = true,
+			photo = mission_photo_data.photo,
+			layer = self._folder_mission_title:layer() + 1
+		}
+		mission_photo = self._folder_panel:create_custom_control(RaidGUIControlIntelImage, mission_photo_params)
+		position_x = math.random() * 0.07 + 0.31
+		position_y = math.random() * 0.03 + 0.79
 
-	mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
-	mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
+		mission_photo:set_center_x(self._folder_image:x() + self._folder_image:w() * position_x)
+		mission_photo:set_center_y(self._folder_image:y() + self._folder_image:h() * position_y)
 
-	rotation = math.random(-2, 5)
+		rotation = math.random(-2, 5)
 
-	mission_photo:set_rotation(rotation)
-	table.insert(self._mission_photos, {
-		final_alpha = 1,
-		initial_y = 0.6,
-		initial_x = 0.5,
-		initial_alpha = 0,
-		photo = mission_photo,
-		rotation = rotation,
-		position_x = position_x,
-		position_y = position_y
-	})
+		mission_photo:set_rotation(rotation)
+		table.insert(self._mission_photos, {
+			initial_alpha = 0,
+			final_alpha = 1,
+			initial_y = 0.6,
+			initial_x = 0.5,
+			photo = mission_photo,
+			rotation = rotation,
+			position_x = position_x,
+			position_y = position_y
+		})
+	end
 end
 
 function RaidGUIControlMissionUnlock:_fit_mission_title()
@@ -300,10 +302,10 @@ end
 function RaidGUIControlMissionUnlock:_create_mission_description()
 	local mission_tweak_data = tweak_data.operations:mission_data(self._mission)
 	local mission_description_panel_params = {
+		h = 192,
 		w = 384,
 		alpha = 0,
 		name = "mission_description_panel",
-		h = 192,
 		y = RaidGUIControlMissionUnlock.DESCRIPTION_Y
 	}
 	self._description_panel = self._object:panel(mission_description_panel_params)
@@ -311,10 +313,10 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 	self._description_panel:set_center_x(self._object:w() / 2)
 
 	local mission_title_params = {
+		h = 32,
 		vertical = "center",
 		name = "mission_title",
 		align = "center",
-		h = 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white,

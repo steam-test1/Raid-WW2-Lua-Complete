@@ -8,6 +8,7 @@ end
 
 function ElementLookAtTrigger:on_script_activated()
 	self:add_callback()
+	self._mission_script:add_save_state_cb(self._id)
 end
 
 function ElementLookAtTrigger:set_enabled(enabled)
@@ -64,5 +65,17 @@ function ElementLookAtTrigger:update_lookat()
 		else
 			self:on_executed(player)
 		end
+	end
+end
+
+function ElementLookAtTrigger:save(data)
+	if self._callback then
+		data.has_updater_callback = true
+	end
+end
+
+function ElementLookAtTrigger:load(data)
+	if data.has_updater_callback then
+		self:add_callback()
 	end
 end

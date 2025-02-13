@@ -6,9 +6,9 @@ ChallengeTweakData.TASK_COLLECT_CANDY = "task_collect_candy"
 
 function ChallengeTweakData:init()
 	self.tighter_spread_easy = {
+		target = 25,
 		challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 		challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-		target = 25,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			10,
@@ -35,8 +35,8 @@ function ChallengeTweakData:init()
 	}
 	self.increase_magazine_easy = {
 		challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 		target = 175,
+		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 		type = ChallengeTweakData.TASK_COLLECT_AMMO,
 		reminders = {
 			100,
@@ -57,9 +57,9 @@ function ChallengeTweakData:init()
 		250
 	}
 	self.kill_enemies_hipfire_easy = {
+		target = 100,
 		challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 		challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-		target = 100,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			40,
@@ -89,8 +89,8 @@ function ChallengeTweakData:init()
 	}
 	self.kill_enemies_basic_easy = {
 		challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-		challenge_done_text_id = "weapon_skill_generic_kill_completed",
 		target = 200,
+		challenge_done_text_id = "weapon_skill_generic_kill_completed",
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			60,
@@ -225,10 +225,10 @@ function ChallengeTweakData:init()
 	}
 	self.candy_gold_bar = {
 		challenge_briefing_id = "weapon_inventory_gold_bar_briefing",
-		target = 666,
-		challenge_icon = "weapon_gre_gold_bar_large",
 		challenge_done_text_id = "weapon_inventory_gold_bar_completed",
 		challenge_name_id = "card_trick_or_treat_name_id",
+		target = 666,
+		challenge_icon = "weapon_gre_gold_bar_large",
 		type = ChallengeTweakData.TASK_COLLECT_CANDY,
 		reminders = {
 			111,

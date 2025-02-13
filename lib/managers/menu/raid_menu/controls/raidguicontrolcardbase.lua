@@ -37,8 +37,8 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		local card_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect
 		self._card_panel = self._panel:panel({
 			halign = "center",
-			name = "card_panel",
 			valign = "center",
+			name = "card_panel",
 			x = params.x or 0,
 			y = params.y or 0,
 			h = params.item_h or self._panel:h(),
@@ -70,11 +70,11 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
 	local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * self._card_image:h() / 255)
 	self._card_title = self._card_panel:label({
-		name = "card_title",
 		align = "center",
-		blend_mode = "normal",
 		vertical = "center",
 		wrap = true,
+		name = "card_title",
+		blend_mode = "normal",
 		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 		h = title_h,
 		x = self._card_image:x() + self._card_image:w() * RaidGUIControlCardBase.TITLE_PADDING,
@@ -94,14 +94,10 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	end
 
 	local params_card_description = {
-		name = "card_description",
-		wrap = true,
-		x = 0,
-		align = "left",
 		visible = false,
-		w = 0,
-		h = 0,
-		y = 0,
+		align = "left",
+		wrap = true,
+		name = "card_description",
 		font = RaidGUIControlCardBase.TITLE_FONT,
 		font_size = math.ceil(RaidGUIControlCardBase.DESCRIPTION_TEXT_SIZE * self._card_image:h() / 255),
 		layer = self._card_image:layer() + 1,
@@ -110,9 +106,9 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	}
 	self._card_description = self._card_panel:label(params_card_description)
 	local params_xp_bonus = {
-		name = "xp_bonus",
 		align = "center",
 		vertical = "center",
+		name = "xp_bonus",
 		y = self._card_image:y() + self._card_image:h() * RaidGUIControlCardBase.XP_BONUS_Y,
 		w = self._card_image:w() * RaidGUIControlCardBase.XP_BONUS_W,
 		h = self._card_image:h() * RaidGUIControlCardBase.XP_BONUS_H,
@@ -174,8 +170,8 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	self._card_stackable_image:set_center(self._card_image:center())
 
 	self._card_amount_background = self._card_panel:image({
-		name = "card_amount_background",
 		visible = false,
+		name = "card_amount_background",
 		layer = self._card_image:layer() + 1,
 		x = self._card_image:w() * 0.145,
 		y = self._card_image:h() * 0.7,
@@ -185,10 +181,10 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture_rect = tweak_data.gui.icons.card_counter_bg_large.texture_rect
 	})
 	self._card_amount_label = self._card_panel:label({
-		name = "card_amount_label",
-		text = "99x",
 		visible = false,
+		text = "??x",
 		vertical = "center",
+		name = "card_amount_label",
 		align = "center",
 		layer = self._card_amount_background:layer() + 1,
 		w = self._card_amount_background:w() * 0.9,
@@ -197,11 +193,6 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		y = self._card_amount_background:y(),
 		font_size = self._card_amount_background:h() * 0.8
 	})
-
-	if self._params and self._params.show_amount then
-		self._card_amount_background:show()
-		self._card_amount_label:show()
-	end
 
 	self._card_panel:set_visible(false)
 end
@@ -232,7 +223,7 @@ function RaidGUIControlCardBase:get_data()
 	return self._item_data
 end
 
-function RaidGUIControlCardBase:set_card(card_data)
+function RaidGUIControlCardBase:set_card(card_data, is_inventory_item)
 	self._item_data = card_data
 
 	if self._item_data then
@@ -259,7 +250,7 @@ function RaidGUIControlCardBase:set_card(card_data)
 			self._card_title:hide()
 		end
 
-		self._card_description:set_text(self:translate(self._item_data.description))
+		self._card_description:set_text("")
 		self._card_description:hide()
 
 		local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(self._item_data.key_name)
@@ -317,32 +308,46 @@ function RaidGUIControlCardBase:set_card(card_data)
 		self:set_card_image(card_texture, card_texture_rect)
 		self._card_image:show()
 
-		if self._item_data.steam_instances then
-			local stack_amount = 0
+		if is_inventory_item then
+			if self._item_data.steam_instances then
+				local stack_amount = 0
 
-			for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
-				stack_amount = stack_amount + (steam_data.stack_amount or 1)
-			end
-
-			if stack_amount > 1 then
-				self._card_amount_label:set_text(tostring(stack_amount) .. "x")
-				self._card_amount_label:show()
-				self._card_amount_background:show()
-
-				local stacking_texture, stacking_texture_rect = managers.challenge_cards:get_cards_stacking_texture(self._item_data)
-
-				if stacking_texture and stacking_texture_rect then
-					self._card_stackable_image:set_image(stacking_texture, unpack(stacking_texture_rect))
-					self._card_stackable_image:set_visible(true)
+				for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
+					stack_amount = stack_amount + (steam_data.stack_amount or 1)
 				end
+
+				self:set_card_stack_amount(stack_amount)
 			else
-				self._card_amount_label:set_text("1x")
-				self._card_amount_label:hide()
-				self._card_amount_background:hide()
+				self:set_card_stack_amount(0)
 			end
 		end
 
 		self._card_panel:set_visible(true)
+	end
+end
+
+function RaidGUIControlCardBase:set_card_stack_amount(stack_amount)
+	if stack_amount >= 1 then
+		self._card_amount_label:set_text(tostring(stack_amount) .. "x")
+		self._card_amount_label:show()
+		self._card_amount_background:show()
+
+		local stacking_texture, stacking_texture_rect = managers.challenge_cards:get_cards_stacking_texture(self._item_data)
+
+		if stacking_texture and stacking_texture_rect then
+			self._card_stackable_image:set_image(stacking_texture, unpack(stacking_texture_rect))
+			self._card_stackable_image:set_visible(true)
+		end
+
+		self._card_image:set_color(Color.white)
+		self._object:set_alpha(1)
+	else
+		self._card_amount_label:set_text("")
+		self._card_amount_label:hide()
+		self._card_amount_background:hide()
+		self._card_stackable_image:hide()
+		self._card_image:set_color(Color(0.33, 0.33, 0.33))
+		self._object:set_alpha(0.5)
 	end
 end
 

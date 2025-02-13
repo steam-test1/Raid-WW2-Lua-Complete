@@ -1,500 +1,302 @@
+local FireSpawners = require("lib/managers/fire/FireSpawners")
 FireManager = FireManager or class()
-FireManager.MAX_FLAMETHROWER_FIRES = 3
-FireManager.FLAMETHROWER_FIRE_CHANCE = 0
-FireManager.FLAMETHROWER_FIRE_CHANCE_INC = 0.1
-local idstr_explosion_std = Idstring("explosion_std")
-local empty_idstr = Idstring("")
-local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
-local tmp_vec3 = Vector3()
 
 function FireManager:init()
-	self._flamethrower_fire_patches = {}
-	self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
-	self._doted_enemies = {}
-	self._fire_dot_grace_period = 1
-	self._fire_dot_tick_period = 1
+	self._tweak_data = tweak_data.fire
+	self._active_fires = {}
+	self._slotmask_fire = managers.slot:get_mask("molotov_raycasts")
+	self._slotmask_damage = managers.slot:get_mask("bullet_impact_targets")
+end
+
+function FireManager:on_simulation_ended()
+	self:clear()
+end
+
+function FireManager:on_tweak_data_reloaded()
+	self._tweak_data = tweak_data.fire
+end
+
+function FireManager:clear()
+	managers.queued_tasks:unqueue_all(nil, self)
+
+	for _, fire_data in ipairs(self._active_fires) do
+		self:_stop_burn_sound(fire_data)
+
+		for i, patch_data in ipairs(fire_data.fire_patches) do
+			World:effect_manager():kill(patch_data.effect_id)
+		end
+	end
+
+	self._active_fires = {}
 end
 
 function FireManager:update(t, dt)
-	for index = #self._doted_enemies, 1, -1 do
-		local dot_info = self._doted_enemies[index]
+	for i = #self._active_fires, 1, -1 do
+		local data = self._active_fires[i]
 
-		if t > dot_info.fire_damage_received_time + self._fire_dot_grace_period and dot_info.fire_dot_counter >= 0.5 then
-			self:_damage_fire_dot(dot_info)
+		if data.tick_next <= t then
+			self:_do_damage_tick(data)
 
-			dot_info.fire_dot_counter = 0
+			data.tick_next = t + data.tweak_data.tick_interval
+			data.ticks_left = data.ticks_left - 1
 		end
 
-		if t > dot_info.fire_damage_received_time + dot_info.dot_length then
-			if dot_info.fire_effects then
-				for _, fire_effect_id in ipairs(dot_info.fire_effects) do
-					World:effect_manager():fade_kill(fire_effect_id)
-				end
-			end
-
-			self:_remove_flame_effects_from_doted_unit(dot_info.enemy_unit)
-			self:_stop_burn_body_sound(dot_info.sound_source)
-			table.remove(self._doted_enemies, index)
-		else
-			dot_info.fire_dot_counter = dot_info.fire_dot_counter + dt
-		end
-	end
-
-	for i = #self._flamethrower_fire_patches, 1, -1 do
-		if self._flamethrower_fire_patches[i].expire_t < Application:time() then
-			table.remove(self._flamethrower_fire_patches, i)
+		if data.ticks_left == 0 then
+			self:extinguish_fire(data)
+			table.remove(self._active_fires, i)
 		end
 	end
 end
 
-function FireManager:leave_flamethrower_patch(player)
-	if Network:is_server() then
-		if FireManager.MAX_FLAMETHROWER_FIRES <= #self._flamethrower_fire_patches then
-			return
+function FireManager:propagate_fire(position, tweak_id, params)
+	if not position or not tweak_id then
+		Application:error("[FireManager:propagate_fire] Trying to start a fire with missing parameters")
+
+		return
+	end
+
+	local fire_tweak = self._tweak_data[tweak_id]
+
+	if not fire_tweak then
+		Application:error("[FireManager:propagate_fire] Trying to start a fire with incorrect tweak id:", tweak_id)
+
+		return
+	end
+
+	params = params or {}
+	params.position = position + math.UP * 8
+	params.normal = params.normal or math.UP
+	params.slotmask = self._slotmask_fire
+	params.source_unit = alive(params.source_unit) and params.source_unit or nil
+	params.attacker_unit = alive(params.attacker_unit) and params.attacker_unit or nil
+	params.weapon_unit = alive(params.weapon_unit) and params.weapon_unit or nil
+	local duration = fire_tweak.duration
+	local tick_interval = fire_tweak.tick_interval
+	local total_ticks = math.floor(duration / tick_interval)
+	local time = TimerManager:game():time()
+	local range = fire_tweak.range
+	params.splinter_vectors = {
+		math.X * range,
+		-math.X * range,
+		math.Y * range,
+		-math.Y * range,
+		math.UP * range,
+		-math.UP * range
+	}
+
+	if params.parent_name and params.source_unit then
+		params.parent_object = params.source_unit:get_object(params.parent_name)
+	end
+
+	local dot_type = fire_tweak.dot_type
+	local dot_data = self._tweak_data.dot_types[dot_type]
+	local action_data = {
+		attacker_unit = params.attacker_unit or params.source_unit,
+		weapon_unit = params.weapon_unit,
+		fire_dot_type = dot_type,
+		fire_dot_data = dot_data
+	}
+	local fire_data = {
+		tweak_id = tweak_id,
+		tweak_data = fire_tweak,
+		splinter_vectors = params.splinter_vectors,
+		ticks_left = total_ticks,
+		tick_next = time + tick_interval,
+		action_data = action_data,
+		source_unit = params.source_unit,
+		fire_patches = {}
+	}
+
+	self:_spawn_sound_and_effects(fire_data, params)
+	table.insert(self._active_fires, fire_data)
+
+	return fire_data
+end
+
+function FireManager:extinguish_fire(fire_data, remove)
+	self:_stop_burn_sound(fire_data)
+
+	fire_data.sound_source = nil
+
+	for i, patch_data in ipairs(fire_data.fire_patches) do
+		World:effect_manager():fade_kill(patch_data.effect_id)
+	end
+
+	if remove then
+		table.delete(self._active_fires, fire_data)
+	end
+end
+
+function FireManager:_spawn_sound_and_effects(fire_data, params)
+	local fire_tweak = fire_data.tweak_data
+	local sound_impact = fire_tweak.sound_impact
+	local sound_burning = fire_tweak.sound_burning
+	local sound_impact_duration = fire_tweak.sound_impact_duration
+	fire_data.sound_source = SoundDevice:create_source("fire_source")
+
+	fire_data.sound_source:set_position(params.position)
+
+	if params.parent_object then
+		fire_data.sound_source:link(params.parent_object)
+	end
+
+	if sound_impact then
+		fire_data.sound_source:post_event(sound_impact)
+	end
+
+	if sound_burning then
+		if sound_impact_duration then
+			managers.queued_tasks:queue("fire_start_burning", self._play_burn_sound, self, fire_data, sound_impact_duration)
+		else
+			self:_play_burn_sound(fire_data)
 		end
+	end
 
-		for _, data in ipairs(self._flamethrower_fire_patches) do
-			if self:_patches_intersect(player:position(), data.pos) then
-				return
-			end
-		end
+	params.search_host = params.source_unit and params.source_unit or World
 
-		if self._flamethrower_chance < math.random() then
-			self._flamethrower_chance = self._flamethrower_chance + FireManager.FLAMETHROWER_FIRE_CHANCE_INC
+	if mvector3.length(params.normal) < 0.1 then
+		params.normal = math.UP
+	end
 
-			return
-		end
+	local type = fire_tweak.type or "single"
+	local func = FireSpawners[type]
 
-		self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
-		local rot = player:rotation()
-		local pos = player:position() + rot:y() * -30
-		local td = tweak_data.projectiles[NPCFlamethrowerBase.EXPLOSION_TYPE]
-		local index = tweak_data.blackmarket:get_index_from_projectile_id(NPCFlamethrowerBase.EXPLOSION_TYPE)
+	if func then
+		func(fire_tweak, params, fire_data.fire_patches)
+	end
+end
 
-		ProjectileBase.throw_projectile(index, pos, rot:z() * 0.01)
-		table.insert(self._flamethrower_fire_patches, {
-			pos = nil,
-			expire_t = nil,
-			pos = pos,
-			expire_t = Application:time() + td.burn_duration
-		})
+function FireManager:_play_burn_sound(fire_data)
+	if fire_data.sound_source then
+		fire_data.sound_source:post_event(fire_data.tweak_data.sound_burning)
+	end
+end
+
+function FireManager:_stop_burn_sound(fire_data)
+	if not fire_data.sound_source then
+		return
+	end
+
+	if fire_data.tweak_data.sound_burning_stop then
+		fire_data.sound_source:post_event(fire_data.tweak_data.sound_burning_stop)
 	else
-		player:network():send_to_host("leave_flamethrower_patch")
+		fire_data.sound_source:stop()
 	end
 end
 
-function FireManager:_patches_intersect(pos1, pos2)
-	local r = 200
-	local x = math.pow(pos1.x - pos2.x, 2) + math.pow(pos1.y - pos2.y, 2)
-	local y = math.pow(r + r, 2)
-	local result = false
+function FireManager:_do_damage_tick(fire_data)
+	local fire_tweak = fire_data.tweak_data
+	local source_unit = fire_data.source_unit
+	local hit_characters = {}
+	local attacker_unit = fire_data.action_data.attacker_unit
+	local weapon_unit = fire_data.action_data.weapon_unit
 
-	if x >= 0 and x <= y then
-		result = true
+	if alive(attacker_unit) and attacker_unit:base() and attacker_unit:base().thrower_unit then
+		attacker_unit = attacker_unit:base():thrower_unit()
+		fire_data.action_data.attacker_unit = attacker_unit
 	end
 
-	return result
-end
-
-function FireManager:is_set_on_fire(unit)
-	for key, dot_info in ipairs(self._doted_enemies) do
-		if dot_info.enemy_unit == unit then
-			return true
-		end
+	if source_unit and not alive(source_unit) then
+		fire_data.source_unit = nil
+		source_unit = nil
 	end
 
-	return false
-end
+	if attacker_unit and not alive(attacker_unit) then
+		fire_data.action_data.attacker_unit = nil
+		attacker_unit = nil
+	end
 
-function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
-	local contains = false
+	if weapon_unit and not alive(weapon_unit) then
+		fire_data.action_data.weapon_unit = nil
+		weapon_unit = nil
+	end
 
-	if self._doted_enemies then
-		for _, dot_info in ipairs(self._doted_enemies) do
-			if dot_info.enemy_unit == enemy_unit then
-				dot_info.fire_damage_received_time = fire_damage_received_time
-				contains = true
+	local search_host = source_unit or World
+
+	for _, patch_data in ipairs(fire_data.fire_patches) do
+		if alive(patch_data.parent_object) then
+			local current_pos = patch_data.parent_object:position()
+			local previous_pos = patch_data.parent_pos
+
+			if mvector3.distance_sq(current_pos, previous_pos) >= 0.1 then
+				patch_data.parent_pos = mvector3.copy(current_pos)
+
+				mvector3.subtract(current_pos, previous_pos)
+
+				patch_data.current_pos = patch_data.current_pos + current_pos
+
+				FireSpawners.recalculate_splinters(patch_data, fire_data.splinter_vectors, search_host, self._slotmask_damage)
 			end
 		end
 
-		if not contains then
-			local dot_info = {
-				weapon_unit = nil,
-				fire_damage_received_time = nil,
-				enemy_unit = nil,
-				dot_damage = nil,
-				dot_length = nil,
-				fire_dot_counter = 0,
-				enemy_unit = enemy_unit,
-				fire_damage_received_time = fire_damage_received_time,
-				weapon_unit = weapon_unit,
-				dot_length = dot_length,
-				dot_damage = dot_damage
-			}
+		local hit_pos = patch_data.current_pos
 
-			table.insert(self._doted_enemies, dot_info)
-			self:_start_enemy_fire_effect(dot_info)
-			self:start_burn_body_sound(dot_info)
-		end
-	end
-end
-
-function FireManager:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
-	if enemy_unit then
-		local t = TimerManager:game():time()
-
-		self:_add_doted_enemy(enemy_unit, t, weapon_unit, dot_length, dot_damage)
-	end
-end
-
-function FireManager:add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
-	local dot_info = self:_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
-
-	managers.network:session():send_to_peers_synched("sync_add_doted_enemy", enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage)
-end
-
-function FireManager:_remove_flame_effects_from_doted_unit(enemy_unit)
-	if self._doted_enemies then
-		for _, dot_info in ipairs(self._doted_enemies) do
-			if dot_info.fire_effects then
-				for __, fire_effect_id in ipairs(dot_info.fire_effects) do
-					World:effect_manager():fade_kill(fire_effect_id)
-				end
-			end
-		end
-	end
-end
-
-function FireManager:start_burn_body_sound(dot_info, delay)
-	local sound_loop_burn_body = SoundDevice:create_source("FireBurnBody")
-
-	sound_loop_burn_body:set_position(dot_info.enemy_unit:position())
-	sound_loop_burn_body:post_event("burn_loop_body")
-
-	dot_info.sound_source = sound_loop_burn_body
-
-	if delay then
-		managers.enemy:add_delayed_clbk("FireBurnBody", callback(self, self, "_release_sound_source", {
-			sound_source = nil,
-			sound_source = sound_loop_burn_body
-		}), TimerManager:game():time() + delay)
-	end
-end
-
-function FireManager:_stop_burn_body_sound(sound_source)
-	self:_release_sound_source(sound_source)
-end
-
-function FireManager:_release_sound_source(...)
-end
-
-function FireManager:_start_enemy_fire_effect(dot_info)
-	local enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_endless")
-	local bone_spine = dot_info.enemy_unit:get_object(Idstring("Spine"))
-	local bone_left_arm = dot_info.enemy_unit:get_object(Idstring("LeftArm"))
-	local bone_right_arm = dot_info.enemy_unit:get_object(Idstring("RightArm"))
-	local bone_left_leg = dot_info.enemy_unit:get_object(Idstring("LeftLeg"))
-	local bone_right_leg = dot_info.enemy_unit:get_object(Idstring("RightLeg"))
-	local bone_spine_effect_id, bone_left_arm_effect_id, bone_right_arm_effect_id, bone_left_leg_effect_id, bone_right_leg_effect_id = nil
-
-	if bone_spine then
-		bone_spine_effect_id = World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
-			effect = enemy_effect_name,
-			parent = bone_spine
-		})
-	end
-
-	if bone_left_arm then
-		bone_left_arm_effect_id = World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
-			effect = enemy_effect_name,
-			parent = bone_left_arm
-		})
-	end
-
-	if bone_right_arm then
-		bone_right_arm_effect_id = World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
-			effect = enemy_effect_name,
-			parent = bone_right_arm
-		})
-	end
-
-	if bone_left_leg then
-		bone_left_leg_effect_id = World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
-			effect = enemy_effect_name,
-			parent = bone_left_leg
-		})
-	end
-
-	if bone_right_leg then
-		bone_right_leg_effect_id = World:effect_manager():spawn({
-			parent = nil,
-			effect = nil,
-			effect = enemy_effect_name,
-			parent = bone_right_leg
-		})
-	end
-
-	local effects_table = {
-		bone_spine_effect_id,
-		bone_left_arm_effect_id,
-		bone_right_arm_effect_id,
-		bone_left_leg_effect_id,
-		bone_right_leg_effect_id
-	}
-	dot_info.fire_effects = effects_table
-end
-
-function FireManager:_damage_fire_dot(dot_info)
-	if Network:is_server() then
-		local attacker_unit = managers.player:player_unit()
-		local col_ray = {
-			unit = nil,
-			unit = dot_info.enemy_unit
-		}
-		local damage = dot_info.dot_damage
-		local ignite_character = false
-		local variant = "fire"
-		local weapon_unit = dot_info.weapon_unit
-		local is_fire_dot_damage = true
-
-		FlameBulletBase:give_fire_damage_dot(col_ray, weapon_unit, attacker_unit, damage, is_fire_dot_damage)
-	end
-end
-
-function FireManager:give_local_player_dmg(pos, range, damage, ignite_character)
-	local player = managers.player:player_unit()
-
-	if player then
-		player:character_damage():damage_fire({
-			ignite_character = nil,
-			range = nil,
-			damage = nil,
-			position = nil,
-			variant = "fire",
-			position = pos,
-			range = range,
-			damage = damage,
-			ignite_character = ignite_character
-		})
-	end
-end
-
-function FireManager:detect_and_give_dmg(params)
-	local hit_pos = params.hit_pos
-	local slotmask = params.collision_slotmask
-	local user_unit = params.user
-	local dmg = params.damage
-	local player_dmg = params.player_damage or dmg
-	local range = params.range
-	local ignore_unit = params.ignore_unit
-	local curve_pow = params.curve_pow
-	local col_ray = params.col_ray
-	local alert_filter = params.alert_filter or managers.groupai:state():get_unit_type_filter("civilians_enemies")
-	local owner = params.owner
-	local push_units = params.push_units or false
-	local fire_dot_data = params.fire_dot_data
-	local alert_radius = params.alert_radius or 3000
-	local results = {}
-	local player = managers.player:player_unit()
-
-	if alive(player) and player_dmg ~= 0 then
-		player:character_damage():damage_fire({
-			ignite_character = nil,
-			range = nil,
-			damage = nil,
-			position = nil,
-			variant = "fire",
-			position = hit_pos,
-			range = range,
-			damage = player_dmg,
-			ignite_character = params.ignite_character
-		})
-	end
-
-	local bodies = World:find_bodies("intersect", "sphere", hit_pos, range, slotmask)
-	local alert_unit = user_unit
-
-	if alive(alert_unit) and alert_unit:base() and alert_unit:base().thrower_unit then
-		alert_unit = alert_unit:base():thrower_unit()
-	end
-
-	managers.groupai:state():propagate_alert({
-		"fire",
-		hit_pos,
-		alert_radius,
-		alert_filter,
-		alert_unit
-	})
-
-	local splinters = {
-		mvector3.copy(hit_pos)
-	}
-	local dirs = {
-		Vector3(range, 0, 0),
-		Vector3(-range, 0, 0),
-		Vector3(0, range, 0),
-		Vector3(0, -range, 0),
-		Vector3(0, 0, range),
-		Vector3(0, 0, -range)
-	}
-	local pos = Vector3()
-
-	for _, dir in ipairs(dirs) do
-		mvector3.set(pos, dir)
-		mvector3.add(pos, hit_pos)
-
-		local splinter_ray = nil
-
-		if ignore_unit then
-			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
-		else
-			splinter_ray = World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+		if fire_tweak.alert_radius then
+			managers.groupai:state():propagate_alert({
+				"fire",
+				hit_pos,
+				fire_tweak.alert_radius,
+				fire_tweak.alert_filter,
+				attacker_unit
+			})
 		end
 
-		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
-		local near_splinter = false
+		local bodies = search_host:find_bodies("intersect", "sphere", hit_pos, fire_tweak.range, self._slotmask_damage)
 
-		for _, s_pos in ipairs(splinters) do
-			if mvector3.distance_sq(pos, s_pos) < 900 then
-				near_splinter = true
+		for _, hit_body in ipairs(bodies) do
+			local hit_unit = hit_body:unit()
+			local unit_key = hit_unit:key()
+			local damage_ext = hit_unit:character_damage()
+			local character = damage_ext and damage_ext.damage_fire and not damage_ext:dead()
+			local apply_dmg = hit_body:extension() and hit_body:extension().damage
+			local dir = hit_body:center_of_mass()
+			local ray_hit = false
 
-				break
-			end
-		end
-
-		if not near_splinter then
-			table.insert(splinters, mvector3.copy(pos))
-		end
-	end
-
-	local count_cops = 0
-	local count_gangsters = 0
-	local count_civilians = 0
-	local count_cop_kills = 0
-	local count_gangster_kills = 0
-	local count_civilian_kills = 0
-	local characters_hit = {}
-	local units_to_push = {}
-	local hit_units = {}
-	local type = nil
-
-	for _, hit_body in ipairs(bodies) do
-		local character = hit_body:unit():character_damage() and hit_body:unit():character_damage().damage_fire
-		local apply_dmg = hit_body:extension() and hit_body:extension().damage
-		units_to_push[hit_body:unit():key()] = hit_body:unit()
-		local dir, len, damage, ray_hit = nil
-
-		if character and not characters_hit[hit_body:unit():key()] then
-			if params.no_raycast_check_characters then
+			if not character and (apply_dmg or hit_body:dynamic()) then
 				ray_hit = true
-				characters_hit[hit_body:unit():key()] = true
-			else
-				for i_splinter, s_pos in ipairs(splinters) do
-					ray_hit = not World:raycast("ray", s_pos, hit_body:center_of_mass(), "slot_mask", slotmask, "ignore_unit", {
-						hit_body:unit()
-					}, "report")
+			elseif character and not hit_characters[unit_key] then
+				if fire_tweak.no_raycast_check_characters then
+					ray_hit = true
+				else
+					for _, s_pos in ipairs(patch_data.splinters) do
+						ray_hit = not search_host:raycast("ray", s_pos, dir, "slot_mask", self._slotmask_damage, "ignore_unit", hit_unit, "report")
 
-					if ray_hit then
-						characters_hit[hit_body:unit():key()] = true
-
-						break
+						if ray_hit then
+							break
+						end
 					end
 				end
 			end
 
 			if ray_hit then
-				local hit_unit = hit_body:unit()
+				local is_player = hit_unit:base() and hit_unit:base().is_player
 
-				if hit_unit:base() and hit_unit:base()._tweak_table and not hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
+				if Network:is_server() or is_player then
+					if character then
+						local action_data = {
+							is_fire_dot_damage = false,
+							variant = "fire",
+							attacker_unit = attacker_unit,
+							weapon_unit = weapon_unit,
+							col_ray = {
+								position = hit_body:position(),
+								ray = dir
+							},
+							damage = is_player and fire_tweak.player_damage or fire_tweak.damage,
+							fire_dot_type = fire_data.action_data.fire_dot_type,
+							fire_dot_data = fire_data.action_data.fire_dot_data
+						}
 
-					if CopDamage.is_civilian(type) then
-						count_civilians = count_civilians + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangsters = count_gangsters + 1
-					else
-						count_cops = count_cops + 1
-					end
-				end
-			end
-		elseif apply_dmg or hit_body:dynamic() then
-			ray_hit = true
-		end
+						damage_ext:damage_fire(action_data)
 
-		if ray_hit then
-			dir = hit_body:center_of_mass()
-			len = mvector3.direction(dir, hit_pos, dir)
-			damage = dmg
-
-			if apply_dmg then
-				self:_apply_body_damage(true, hit_body, user_unit, dir, damage)
-			end
-
-			damage = math.max(damage, 1)
-			local hit_unit = hit_body:unit()
-			hit_units[hit_unit:key()] = hit_unit
-
-			if character then
-				local dead_before = hit_unit:character_damage():dead()
-				local action_data = {
-					variant = "fire",
-					damage = damage,
-					attacker_unit = user_unit,
-					weapon_unit = owner,
-					ignite_character = params.ignite_character,
-					col_ray = self._col_ray or {
-						ray = nil,
-						position = nil,
-						position = hit_body:position(),
-						ray = dir
-					},
-					is_fire_dot_damage = false,
-					fire_dot_data = fire_dot_data
-				}
-				local t = TimerManager:game():time()
-
-				hit_unit:character_damage():damage_fire(action_data)
-
-				if not dead_before and hit_unit:base() and hit_unit:base()._tweak_table and hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
-
-					if CopDamage.is_civilian(type) then
-						count_civilian_kills = count_civilian_kills + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangster_kills = count_gangster_kills + 1
-					else
-						count_cop_kills = count_cop_kills + 1
+						hit_characters[unit_key] = hit_unit
+					elseif apply_dmg then
+						self:_apply_body_damage(true, hit_body, attacker_unit, dir, fire_tweak.damage)
 					end
 				end
 			end
 		end
 	end
-
-	if push_units and push_units == true then
-		managers.explosion:units_to_push(units_to_push, hit_pos, range)
-	end
-
-	if owner then
-		results.count_cops = count_cops
-		results.count_gangsters = count_gangsters
-		results.count_civilians = count_civilians
-		results.count_cop_kills = count_cop_kills
-		results.count_gangster_kills = count_gangster_kills
-		results.count_civilian_kills = count_civilian_kills
-	end
-
-	return hit_units, splinters, results
-end
-
-function FireManager:units_to_push(units_to_push, hit_pos, range)
 end
 
 function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
@@ -503,184 +305,122 @@ function FireManager:_apply_body_damage(is_server, hit_body, user_unit, dir, dam
 	local sync_damage = is_server and hit_unit:id() ~= -1
 
 	if not local_damage and not sync_damage then
-		print("_apply_body_damage skipped")
+		return
+	end
+
+	local prop_damage = math.min(damage, self._tweak_data.PROP_DAMAGE_LIMIT)
+
+	if prop_damage < self._tweak_data.PROP_DAMAGE_PRECISION then
+		prop_damage = math.round(prop_damage, self._tweak_data.PROP_DAMAGE_PRECISION)
+	end
+
+	if prop_damage == 0 then
+		return
+	end
+
+	local network_damage = math.ceil(prop_damage * self._tweak_data.NETWORK_DAMAGE_MULTIPLIER)
+	prop_damage = network_damage / self._tweak_data.NETWORK_DAMAGE_MULTIPLIER
+	local hit_position = hit_body:position()
+	local normal = dir
+
+	if local_damage then
+		local damage_ext = hit_body:extension().damage
+
+		damage_ext:damage_fire(user_unit, normal, hit_position, dir, prop_damage)
+		damage_ext:damage_damage(user_unit, normal, hit_position, dir, prop_damage)
+	end
+
+	if sync_damage and managers.network:session() then
+		network_damage = math.min(network_damage, self._tweak_data.NETWORK_DAMAGE_LIMIT)
+
+		if alive(user_unit) then
+			managers.network:session():send_to_peers_synched("sync_body_damage_fire", hit_body, user_unit, normal, hit_position, dir, network_damage)
+		else
+			managers.network:session():send_to_peers_synched("sync_body_damage_fire_no_attacker", hit_body, normal, hit_position, dir, network_damage)
+		end
+	end
+end
+
+function FireManager:ignite_character(enemy_unit, effects_table)
+	if not alive(enemy_unit) then
+		Application:error("[FireManager:ignite_character] Trying to ignite an enemy with missing parameters")
 
 		return
 	end
 
-	local normal = dir
-	local prop_damage = math.min(damage, 200)
+	local bones = self._tweak_data.character_fire_bones
+	local effect_name = self._tweak_data.effects.character_endless
+	local effect_manager = World:effect_manager()
 
-	if prop_damage < 0.25 then
-		prop_damage = math.round(prop_damage, 0.25)
-	end
+	for _, bone_name in ipairs(bones) do
+		local bone = enemy_unit:get_object(bone_name)
 
-	if prop_damage == 0 then
-		-- Nothing
-	end
+		if bone then
+			local effect_id = effect_manager:spawn({
+				effect = effect_name,
+				parent = bone
+			})
 
-	if prop_damage > 0 then
-		local local_damage = is_server or hit_unit:id() == -1
-		local sync_damage = is_server and hit_unit:id() ~= -1
-		local network_damage = math.ceil(prop_damage * 163.84)
-		prop_damage = network_damage / 163.84
-
-		if local_damage then
-			hit_body:extension().damage:damage_fire(user_unit, normal, hit_body:position(), dir, prop_damage)
-			hit_body:extension().damage:damage_damage(user_unit, normal, hit_body:position(), dir, prop_damage)
-		end
-
-		if sync_damage and managers.network:session() then
-			if alive(user_unit) then
-				managers.network:session():send_to_peers_synched("sync_body_damage_fire", hit_body, user_unit, normal, hit_body:position(), dir, math.min(32768, network_damage))
-			else
-				managers.network:session():send_to_peers_synched("sync_body_damage_fire_no_attacker", hit_body, normal, hit_body:position(), dir, math.min(32768, network_damage))
-			end
+			table.insert(effects_table, effect_id)
 		end
 	end
 end
 
-function FireManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
-	self:play_sound_and_effects(position, normal, range, custom_params)
-	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
-end
+function FireManager:sync_save(data)
+	local state = {
+		active_fires = {}
+	}
+	local t = TimerManager:game():time()
 
-function FireManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
-	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
-	local units_to_push = {}
+	for _, fire_data in ipairs(self._active_fires) do
+		local middle_patch = fire_data.fire_patches[1]
 
-	for _, hit_body in ipairs(bodies) do
-		local hit_unit = hit_body:unit()
-		local apply_dmg = hit_body:extension() and hit_body:extension().damage and hit_unit:id() == -1
-		local dir, len, damage = nil
-
-		if apply_dmg then
-			dir = hit_body:center_of_mass()
-			len = mvector3.direction(dir, position, dir)
-			damage = dmg * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)
-
-			self:_apply_body_damage(false, hit_body, user_unit, dir, damage)
-		end
-	end
-
-	self:units_to_push(units_to_push, position, range)
-end
-
-function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
-	self:player_feedback(position, normal, range, custom_params)
-	self:spawn_sound_and_effects(position, normal, custom_params, molotov_damage_effect_table)
-end
-
-function FireManager:player_feedback(position, normal, range, custom_params)
-end
-
-local decal_ray_from = Vector3()
-local decal_ray_to = Vector3()
-
-function FireManager:spawn_sound_and_effects(position, normal, params, damage_effect_table)
-	local effect_name = params and params.effect_name or molotov_effect
-	local parent = params and params.parent
-	local sound_event = params and params.sound_event
-	local on_unit = params and params.on_unit
-	local idstr_decal = params and params.idstr_decal
-	local sound_event_burning = params and params.sound_event_burning
-	local sound_event_impact_duration = params and params.sound_event_impact_duration
-	local effect_id = nil
-
-	if damage_effect_table then
-		if effect_name ~= "none" then
-			local spawn_params = {
-				normal = nil,
-				effect = nil,
-				effect = Idstring(effect_name),
-				normal = normal
+		if middle_patch then
+			local parent_name = middle_patch.parent_object and middle_patch.parent_object:name()
+			local source_unit = alive(fire_data.source_unit) and fire_data.source_unit:id()
+			local attacker_unit = alive(fire_data.action_data.attacker_unit) and fire_data.action_data.attacker_unit:id()
+			local weapon_unit = alive(fire_data.action_data.weapon_unit) and fire_data.action_data.weapon_unit:id()
+			local tick_next = fire_data.tick_next - t
+			local save_data = {
+				position = middle_patch.current_pos,
+				tweak_id = fire_data.tweak_id,
+				ticks_left = fire_data.ticks_left,
+				tick_next = tick_next,
+				source_unit = source_unit,
+				attacker_unit = attacker_unit,
+				weapon_unit = weapon_unit,
+				parent_name = parent_name
 			}
 
-			if parent then
-				spawn_params.parent = parent
-			else
-				spawn_params.position = position
-			end
-
-			effect_id = World:effect_manager():spawn(spawn_params)
+			table.insert(state.active_fires, save_data)
 		end
-
-		table.insert(damage_effect_table, {
-			effect_parent = nil,
-			detonation_position = nil,
-			detonation_normal = nil,
-			effect_id = nil,
-			effect_id = effect_id,
-			effect_parent = parent,
-			detonation_position = position,
-			detonation_normal = normal
-		})
 	end
 
-	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
+	data.FireManager = state
+end
 
-	if on_unit then
-		mvector3.set(decal_ray_from, position)
-		mvector3.set(decal_ray_to, normal)
-		mvector3.multiply(decal_ray_to, 100)
-		mvector3.add(decal_ray_from, decal_ray_to)
-		mvector3.multiply(decal_ray_to, -2)
-		mvector3.add(decal_ray_to, decal_ray_from)
-	else
-		mvector3.set(decal_ray_from, position)
-		mvector3.set(decal_ray_to, math.UP)
-		mvector3.multiply(decal_ray_to, -100)
-		mvector3.add(decal_ray_to, decal_ray_from)
+function FireManager:sync_load(data)
+	local state = data.FireManager
+
+	if not state then
+		return
 	end
 
-	local ray = World:raycast("ray", decal_ray_from, decal_ray_to, "slot_mask", slotmask_world_geometry)
-	local sound_switch_name = nil
+	local unit_manager = World:unit_manager()
+	local t = TimerManager:game():time()
 
-	if ray then
-		local material_name, _, _ = World:pick_decal_material(ray.unit, decal_ray_from, decal_ray_to, slotmask_world_geometry)
-		sound_switch_name = material_name ~= empty_idstr and material_name
-	end
+	for _, params in ipairs(state.active_fires) do
+		local position = params.position
+		local tweak_id = params.tweak_id
+		params.source_unit = params.source_unit and unit_manager:get_unit_by_id(params.source_unit)
+		params.attacker_unit = params.attacker_unit and unit_manager:get_unit_by_id(params.attacker_unit)
+		params.weapon_unit = params.weapon_unit and unit_manager:get_unit_by_id(params.weapon_unit)
+		local new_fire = self:propagate_fire(position, tweak_id, params)
+		new_fire.ticks_left = params.ticks_left
+		new_fire.tick_next = t + params.tick_next
 
-	if (effect_name == molotov_effect and damage_effect_table and #damage_effect_table <= 1 or effect_name ~= molotov_effect) and sound_event ~= "no_sound" then
-		local sound_source = SoundDevice:create_source("MolotovImpact")
-
-		sound_source:set_position(position)
-
-		if sound_switch_name then
-			sound_source:set_switch("materials", managers.game_play_central:material_name(sound_switch_name))
+		if alive(params.source_unit) and params.source_unit:base() and params.source_unit:base().sync_fire_data then
+			params.source_unit:base():sync_fire_data(new_fire)
 		end
-
-		sound_source:post_event(sound_event)
-		managers.enemy:add_delayed_clbk("MolotovImpact", callback(FireManager, FireManager, "_dispose_of_impact_sound", {
-			sound_event_impact_duration = nil,
-			position = nil,
-			position = position,
-			sound_event_impact_duration = sound_event_impact_duration
-		}), TimerManager:game():time() + sound_event_impact_duration)
-		managers.enemy:add_delayed_clbk("MolotovImpact", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {
-			sound_source = nil,
-			sound_source = sound_source
-		}), TimerManager:game():time() + sound_event_impact_duration)
 	end
-end
-
-function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
-end
-
-function FireManager:_dispose_of_impact_sound(custom_params)
-	local sound_source_burning_loop = SoundDevice:create_source("MolotovBurning")
-
-	sound_source_burning_loop:set_position(custom_params.position)
-	sound_source_burning_loop:post_event("burn_loop_body")
-
-	local molotov_tweak = tweak_data.projectiles.molotov
-
-	managers.enemy:add_delayed_clbk("MolotovBurning", callback(GrenadeBase, GrenadeBase, "_dispose_of_sound", {
-		sound_source = nil,
-		sound_source = sound_source_burning_loop
-	}), TimerManager:game():time() + tonumber(molotov_tweak.burn_duration) - custom_params.sound_event_impact_duration)
-end
-
-function FireManager:on_simulation_ended()
-	self._flamethrower_fire_patches = {}
 end

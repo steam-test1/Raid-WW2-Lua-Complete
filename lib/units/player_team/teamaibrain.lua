@@ -68,8 +68,8 @@ function TeamAIBrain:post_init()
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("combatant")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
-		vo_intimidate = true,
-		bullet = true
+		bullet = true,
+		vo_intimidate = true
 	}, self._unit:movement():m_head_pos())
 end
 

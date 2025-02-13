@@ -18,18 +18,48 @@ function InputTweakData:init(tweak_data)
 		look_speed_steel_sight = 60,
 		look_speed_fast = 340,
 		look_speed_standard = 110,
-		look_speed_dead_zone = 0.02,
-		deprecated = {
-			look_speed_transition_to_fast = 0.5,
-			look_speed_steel_sight = 60,
-			look_speed_fast = 360,
-			look_speed_standard = 120,
-			uses_keyboard = true,
-			look_speed_dead_zone = 0.1,
-			aim_assist_use_sticky_aim = false,
-			aim_assist_snap_speed = 200,
-			look_speed_transition_occluder = 0.95,
-			look_speed_transition_zone = 0.8
+		look_speed_dead_zone = 0.02
+	}
+	self.controller_buttons = {
+		xb1 = {
+			a = utf8.char(57344),
+			b = utf8.char(57345),
+			x = utf8.char(57346),
+			y = utf8.char(57347),
+			back = utf8.char(57348),
+			start = utf8.char(57349),
+			stick_l = utf8.char(57350),
+			stick_r = utf8.char(57351),
+			left_shoulder = utf8.char(57352),
+			right_shoulder = utf8.char(57353),
+			left_trigger = utf8.char(57354),
+			right_trigger = utf8.char(57355),
+			left_thumb = utf8.char(57356),
+			right_thumb = utf8.char(57357),
+			d_down = utf8.char(57358),
+			d_up = utf8.char(57359),
+			d_left = utf8.char(57360),
+			d_right = utf8.char(57361)
+		},
+		ps4 = {
+			cross = utf8.char(57444),
+			circle = utf8.char(57445),
+			square = utf8.char(57446),
+			triangle = utf8.char(57447),
+			select = utf8.char(57448),
+			start = utf8.char(57449),
+			stick_l = utf8.char(57450),
+			stick_r = utf8.char(57451),
+			l2_trigger = utf8.char(57452),
+			r2_trigger = utf8.char(57453),
+			l1_trigger = utf8.char(57454),
+			r1_trigger = utf8.char(57455),
+			left_thumb = utf8.char(57456),
+			right_thumb = utf8.char(57457),
+			d_down = utf8.char(57458),
+			d_up = utf8.char(57459),
+			d_left = utf8.char(57460),
+			d_right = utf8.char(57461)
 		}
 	}
 

@@ -18,6 +18,7 @@ Warcry.SILVER_BULLET = "silver_bullet"
 Warcry.SENTRY = "sentry"
 Warcry.PAIN_TRAIN = "pain_train"
 Warcry.HOLD_THE_LINE = "hold_the_line"
+Warcry.SCORCHED_EARTH = "scorched_earth"
 Warcry.TYPES = {
 	[Warcry.BERSERK] = WarcryBerserk,
 	[Warcry.CLUSTERTRUCK] = WarcryClustertruck,
@@ -26,7 +27,8 @@ Warcry.TYPES = {
 	[Warcry.SILVER_BULLET] = WarcrySilverBullet,
 	[Warcry.SENTRY] = WarcrySentry,
 	[Warcry.PAIN_TRAIN] = WarcryPainTrain,
-	[Warcry.HOLD_THE_LINE] = WarcryHoldTheLine
+	[Warcry.HOLD_THE_LINE] = WarcryHoldTheLine,
+	[Warcry.SCORCHED_EARTH] = WarcryClustertruck
 }
 
 function Warcry.get_metatable(warcry_name)

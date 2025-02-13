@@ -6,7 +6,6 @@ CopLogicSniper.death_clbk = CopLogicAttack.death_clbk
 
 function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	local my_data = {
-		unit = nil,
 		unit = data.unit
 	}
 
@@ -18,7 +17,6 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 
 	local old_internal_data = data.internal_data
 	local my_data = {
-		unit = nil,
 		unit = data.unit,
 		detection = data.char_tweak.detection.recon,
 		vision = data.char_tweak.vision.combat
@@ -33,8 +31,8 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 	end
@@ -306,13 +304,13 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					body_part = 3,
-					type = "reload"
+					type = "reload",
+					body_part = 3
 				}
 			else
 				new_action = {
-					body_part = 3,
-					type = "idle"
+					type = "idle",
+					body_part = 3
 				}
 			end
 
@@ -333,8 +331,8 @@ function CopLogicSniper._request_action_shoot(data, my_data)
 	end
 
 	local shoot_action = {
-		body_part = 3,
-		type = "shoot"
+		type = "shoot",
+		body_part = 3
 	}
 
 	if data.unit:brain():action_request(shoot_action) then

@@ -156,8 +156,8 @@ function IngameWaitingForPlayersState:update(t, dt)
 
 				if btn_skip_press and not self._skip_data then
 					self._skip_data = {
-						current = 0,
-						total = 1
+						total = 1,
+						current = 0
 					}
 				elseif not btn_skip_press and self._skip_data then
 					self._skip_data = nil
@@ -403,7 +403,7 @@ function IngameWaitingForPlayersState:at_exit()
 
 	managers.platform:set_presence("Playing")
 	managers.platform:set_playing(true)
-	managers.game_play_central:start_heist_timer()
+	managers.game_play_central:start_job_timer()
 
 	if not Network:is_server() and managers.network:session() and managers.network:session():server_peer() then
 		managers.network:session():server_peer():verify_job(managers.raid_job:current_job_id())

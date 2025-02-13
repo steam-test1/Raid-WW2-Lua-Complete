@@ -58,7 +58,7 @@ function RaidMenuCallbackHandler:menu_options_on_click_default()
 		callback = function ()
 			managers.user:reset_controls_setting_map()
 			managers.controller:load_settings("settings/controller_settings")
-			managers.controller:clear_user_mod("normal", MenuCustomizeControllerCreator.CONTROLS_INFO)
+			managers.controller:clear_user_mod("normal", RaidMenuOptionsControlsKeybinds.CONTROLS_INFO)
 			managers.user:reset_video_setting_map()
 			managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
@@ -189,25 +189,33 @@ function RaidMenuCallbackHandler:show_credits()
 end
 
 function RaidMenuCallbackHandler:end_game()
-	print(" RaidMenuCallbackHandler:end_game() ")
+	self:_end_game("dialog_are_you_sure_you_want_to_quit")
+end
 
+function RaidMenuCallbackHandler:end_game_mission()
+	self:_end_game("dialog_are_you_sure_you_want_to_quit_pause_menu")
+end
+
+function RaidMenuCallbackHandler:_end_game(dialog_text_id)
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_end_game_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_end_game_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
-	dialog_data.button_list = {
-		yes_button,
-		no_button
+		text = managers.localization:text(dialog_text_id),
+		button_list = {
+			{
+				text = managers.localization:text("menu_quit_menu"),
+				class = RaidGUIControlButtonShortSecondary,
+				callback_func = callback(self, self, "_dialog_end_game_yes")
+			},
+			{
+				text = managers.localization:text("menu_quit_desktop"),
+				callback_func = callback(self, self, "_dialog_quit_yes")
+			},
+			{
+				cancel_button = true,
+				text = managers.localization:text("dialog_cancel"),
+				class = RaidGUIControlButtonShortTertiary
+			}
+		}
 	}
 
 	managers.system_menu:show(dialog_data)
@@ -581,7 +589,10 @@ function RaidMenuCallbackHandler:raid_play_offline()
 end
 
 function RaidMenuCallbackHandler:_do_play_offline()
-	MenuCallbackHandler:play_single_player()
+	Global.game_settings.single_player = true
+
+	managers.network:host_game()
+	Network:set_server()
 	MenuCallbackHandler:start_single_player_job({
 		job_id = Global.exe_argument_level,
 		difficulty = Global.exe_argument_difficulty
@@ -1010,6 +1021,10 @@ function MenuCallbackHandler:set_detail_distance_raid(detail_distance)
 	World:set_min_allowed_projected_size(maps)
 end
 
+function MenuCallbackHandler:set_corpse_limit_raid(value)
+	managers.user:set_setting("corpse_limit", value)
+end
+
 function MenuCallbackHandler:choice_choose_anti_alias_raid(value)
 	managers.user:set_setting("AA_setting", value)
 end
@@ -1086,7 +1101,7 @@ function MenuCallbackHandler:set_default_keybinds_raid(node_component)
 		text = managers.localization:text("dialog_use_default_keys_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")
-			managers.controller:clear_user_mod("normal", MenuCustomizeControllerCreator.CONTROLS_INFO)
+			managers.controller:clear_user_mod("normal", RaidMenuOptionsControlsKeybinds.CONTROLS_INFO)
 			node_component:refresh_keybinds()
 		end
 	}

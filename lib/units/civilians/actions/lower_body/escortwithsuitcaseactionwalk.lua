@@ -3,10 +3,10 @@ EscortWithSuitcaseActionWalk._walk_anim_velocities = {
 	stand = {
 		hos = {
 			walk = {
-				l = 93,
-				bwd = 70,
 				fwd = 138,
-				r = 65
+				r = 65,
+				l = 93,
+				bwd = 70
 			}
 		}
 	}
@@ -15,10 +15,10 @@ EscortWithSuitcaseActionWalk._walk_anim_lengths = {
 	stand = {
 		hos = {
 			walk = {
-				l = 45,
-				bwd = 32,
 				fwd = 28,
-				r = 39
+				r = 39,
+				l = 45,
+				bwd = 32
 			}
 		}
 	}
@@ -39,10 +39,10 @@ EscortPrisonerActionWalk._walk_anim_velocities = {
 	stand = {
 		ntl = {
 			run = {
-				l = 170,
-				bwd = 170,
 				fwd = 329,
-				r = 170
+				r = 170,
+				l = 170,
+				bwd = 170
 			}
 		}
 	}
@@ -51,10 +51,10 @@ EscortPrisonerActionWalk._walk_anim_lengths = {
 	stand = {
 		ntl = {
 			run = {
-				l = 25,
-				bwd = 19,
 				fwd = 22,
-				r = 29
+				r = 29,
+				l = 25,
+				bwd = 19
 			}
 		}
 	}

@@ -13,16 +13,17 @@ function UIAnimation.animate_text_glow(text, new_color, duration_per_letter, del
 		wait(initial_delay)
 	end
 
-	while true do
-		local number_of_letters = string.len(text:text())
-		local original_color = text:color()
-		local change_r = new_color.r - original_color.r
-		local change_g = new_color.g - original_color.g
-		local change_b = new_color.b - original_color.b
-		local t = 0
-		local duration = delay_between_letters * (number_of_letters - 1) + duration_per_letter
+	local number_of_letters = string.len(text:text())
+	local original_color = text:color()
+	local change_r = new_color.r - original_color.r
+	local change_g = new_color.g - original_color.g
+	local change_b = new_color.b - original_color.b
+	local duration = delay_between_letters * (number_of_letters - 1) + duration_per_letter
 
-		while t < duration do
+	while true do
+		local t = 0
+
+		while duration > t do
 			local dt = coroutine.yield()
 			t = t + dt
 

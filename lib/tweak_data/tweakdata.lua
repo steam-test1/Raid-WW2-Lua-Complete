@@ -48,6 +48,8 @@ require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
 require("lib/tweak_data/NetworkTweakData")
 require("lib/tweak_data/LinkPrefabsTweakData")
+require("lib/tweak_data/FireTweakData")
+require("lib/tweak_data/ExplosionTweakData")
 
 function TweakData:digest_tweak_data()
 	self.digested_tables = {
@@ -257,7 +259,8 @@ function TweakData:init_common_effects_physics()
 		body_explosion = Idstring("physic_effects/body_explosion"),
 		shotgun_push = Idstring("physic_effects/shotgun_hit"),
 		molotov_throw = Idstring("physic_effects/molotov_throw"),
-		no_gravity = Idstring("physic_effects/anti_gravitate")
+		no_gravity = Idstring("physic_effects/anti_gravitate"),
+		damp_rotation = Idstring("physic_effects/damp_rotation")
 	}
 	self.common_effects = {
 		impact = Idstring("effects/vanilla/impacts/imp_fallback_001"),
@@ -372,6 +375,8 @@ function TweakData:init()
 	self.intel = IntelTweakData:new(self)
 	self.network = NetworkTweakData:new(self)
 	self.link_prefabs = LinkPrefabsTweakData:new()
+	self.fire = FireTweakData:new(self)
+	self.explosion = ExplosionTweakData:new(self)
 	self.criminals = {
 		character_names = {
 			"russian",
@@ -406,46 +411,42 @@ function TweakData:init()
 	self.criminals.characters = {
 		{
 			name = "german",
-			static_data = nil,
 			static_data = {
-				color_id = 1,
-				ssuffix = "l",
 				ai_character_id = "ai_german",
 				mask_id = 1,
-				voice = "germ"
+				voice = "germ",
+				color_id = 1,
+				ssuffix = "l"
 			}
 		},
 		{
 			name = "russian",
-			static_data = nil,
 			static_data = {
-				color_id = 2,
-				ssuffix = "c",
 				ai_character_id = "ai_russian",
 				mask_id = 2,
-				voice = "russ"
+				voice = "russ",
+				color_id = 2,
+				ssuffix = "c"
 			}
 		},
 		{
 			name = "american",
-			static_data = nil,
 			static_data = {
-				color_id = 3,
-				ssuffix = "a",
 				ai_character_id = "ai_american",
 				mask_id = 3,
-				voice = "amer"
+				voice = "amer",
+				color_id = 3,
+				ssuffix = "a"
 			}
 		},
 		{
 			name = "british",
-			static_data = nil,
 			static_data = {
-				color_id = 4,
-				ssuffix = "b",
 				ai_character_id = "ai_british",
 				mask_id = 4,
-				voice = "brit"
+				voice = "brit",
+				color_id = 4,
+				ssuffix = "b"
 			}
 		}
 	}
@@ -613,6 +614,10 @@ function TweakData:init()
 		"on",
 		"track"
 	}
+	self.corpse_limit = {
+		min = 5,
+		max = 250
+	}
 	self.hud = {}
 
 	self:set_hud_values()
@@ -629,88 +634,72 @@ function TweakData:init()
 	self.gui.MOUSE_LAYER = 3200
 	self.overlay_effects = {
 		spectator = {
-			play_paused = true,
-			blend_mode = "normal",
-			timer = nil,
-			color = nil,
 			fade_out = 2,
 			fade_in = 3,
+			play_paused = true,
+			blend_mode = "normal",
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		level_fade_in = {
+			fade_out = 3,
+			fade_in = 0,
 			sustain = 1,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 3,
-			fade_in = 0,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:game()
 		},
 		fade_in = {
+			fade_out = 3,
+			fade_in = 0,
 			sustain = 0,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 3,
-			fade_in = 0,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		fade_out = {
+			fade_out = 0,
+			fade_in = 3,
 			sustain = 30,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 0,
-			fade_in = 3,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		fade_out_permanent = {
-			play_paused = true,
-			blend_mode = "normal",
-			timer = nil,
-			color = nil,
 			fade_out = 0,
 			fade_in = 1,
+			play_paused = true,
+			blend_mode = "normal",
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		fade_out_in = {
+			fade_out = 1,
+			fade_in = 1,
 			sustain = 1,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 1,
-			fade_in = 1,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		element_fade_in = {
+			fade_out = 3,
+			fade_in = 0,
 			sustain = 0,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 3,
-			fade_in = 0,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		},
 		element_fade_out = {
+			fade_out = 0,
+			fade_in = 3,
 			sustain = 0,
 			play_paused = true,
 			blend_mode = "normal",
-			timer = nil,
-			color = nil,
-			fade_out = 0,
-			fade_in = 3,
 			color = Color(1, 0, 0, 0),
 			timer = TimerManager:main()
 		}
@@ -719,23 +708,16 @@ function TweakData:init()
 	local d_sustain = 0.1
 	local d_fade_out = 0.9
 	self.overlay_effects.damage = {
-		sustain = nil,
-		blend_mode = "add",
-		color = nil,
-		fade_out = nil,
 		fade_in = 0,
+		blend_mode = "add",
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color
 	}
 	self.overlay_effects.damage_left = {
-		sustain = nil,
+		fade_in = 0,
 		blend_mode = "add",
 		orientation = "horizontal",
-		gradient_points = nil,
-		color = nil,
-		fade_out = nil,
-		fade_in = 0,
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -751,13 +733,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_right = {
-		sustain = nil,
+		fade_in = 0,
 		blend_mode = "add",
 		orientation = "horizontal",
-		gradient_points = nil,
-		color = nil,
-		fade_out = nil,
-		fade_in = 0,
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -773,13 +751,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_up = {
-		sustain = nil,
+		fade_in = 0,
 		blend_mode = "add",
 		orientation = "vertical",
-		gradient_points = nil,
-		color = nil,
-		fade_out = nil,
-		fade_in = 0,
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -795,13 +769,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_down = {
-		sustain = nil,
+		fade_in = 0,
 		blend_mode = "add",
 		orientation = "vertical",
-		gradient_points = nil,
-		color = nil,
-		fade_out = nil,
-		fade_in = 0,
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -817,31 +787,27 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.maingun_zoomed = {
-		sustain = 0,
-		blend_mode = "add",
-		color = nil,
 		fade_out = 0.4,
 		fade_in = 0,
+		sustain = 0,
+		blend_mode = "add",
 		color = Color(0.1, 1, 1, 1)
 	}
 	self.overlay_effects.fade_out_e3_demo = {
+		fade_out = 0,
+		fade_in = 3,
 		sustain = 20,
 		text_to_upper = true,
 		blend_mode = "normal",
-		text_color = nil,
+		play_paused = true,
+		text_blend_mode = "add",
+		font = "fonts/font_large_mf",
+		font_size = 44,
 		text = [[
 Great job, Raid gang!
 
 You've reached the end of our PAX EAST demo.
 ]],
-		text_blend_mode = "add",
-		font = "fonts/font_large_mf",
-		font_size = 44,
-		play_paused = true,
-		timer = nil,
-		color = nil,
-		fade_out = 0,
-		fade_in = 3,
 		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 		text_color = Color(255, 255, 204, 0) / 255
@@ -905,21 +871,14 @@ You've reached the end of our PAX EAST demo.
 	self.materials_effects = {
 		[Idstring(""):key()] = {},
 		[Idstring("water_deep"):key()] = {
-			land = nil,
 			land = Idstring("effects/vanilla/character/step_water_shallow")
 		},
 		[Idstring("water_puddle"):key()] = {
-			land = nil,
-			sprint = nil,
-			step = nil,
 			step = Idstring("effects/vanilla/character/step_water_shallow"),
 			sprint = Idstring("effects/vanilla/character/sprint_water_shallow"),
 			land = Idstring("effects/vanilla/character/sprint_water_shallow")
 		},
 		[Idstring("water_shallow"):key()] = {
-			land = nil,
-			sprint = nil,
-			step = nil,
 			step = Idstring("effects/vanilla/character/step_water_shallow"),
 			sprint = Idstring("effects/vanilla/character/sprint_water_shallow"),
 			land = Idstring("effects/vanilla/character/sprint_water_shallow")
@@ -997,7 +956,6 @@ You've reached the end of our PAX EAST demo.
 
 	for i = 1, #level_xp_requirements do
 		self.experience_manager.levels[i] = {
-			points = nil,
 			points = level_xp_requirements[i] * multiplier
 		}
 	end
@@ -1008,196 +966,149 @@ You've reached the end of our PAX EAST demo.
 
 	for i = 146, exp_step_end do
 		self.experience_manager.levels[i] = {
-			points = nil,
 			points = math.round(22000 * exp_step * (i - exp_step_start) - 6000) * multiplier
 		}
 	end
 
 	self.pickups = {
 		equip_safe_key_chain = {
-			unit = nil,
-			unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain")
+			unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain_dropped")
 		},
 		health_big = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_big")
 		},
 		health_medium = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_medium")
 		},
 		health_small = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_small")
 		},
 		health_small_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_small_drop")
 		},
 		health_medium_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_medium_drop")
 		},
 		health_big_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_big_drop")
 		},
 		ammo_small = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_small")
 		},
 		ammo_medium = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_medium")
 		},
 		ammo_big = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big")
 		},
 		ammo_small_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_small_drop")
 		},
 		ammo_medium_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_medium_drop")
 		},
 		ammo_big_beam = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big_drop")
 		},
 		grenade_big = {
-			unit = nil,
 			unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_big")
 		}
 	}
 	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
 	self.pickups.grenade_medium = {
-		unit = nil,
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_medium")
 	}
 	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
 	self.pickups.grenade_small = {
-		unit = nil,
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_small")
 	}
 	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
 	self.pickups.gold_bar_small = {
-		unit = nil,
 		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar")
 	}
 	self.pickups.gold_bar_medium = {
-		unit = nil,
 		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bars")
 	}
 	self.pickups.scrap = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts")
 	}
 	self.pickups.candy_simple = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/simple/pku_candy_simple")
 	}
 	self.pickups.candy_simple_drop = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/simple/pku_candy_simple_drop")
 	}
 	self.pickups.candy_unlimited_ammo = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/unlimited_ammo/pku_candy_unlimited_ammo_drop")
 	}
 	self.pickups.candy_armor_pen = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/armor_pen/pku_candy_armor_pen_drop")
 	}
 	self.pickups.candy_sprint_speed = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/sprint_speed/pku_candy_sprint_speed_drop")
 	}
 	self.pickups.candy_jump_boost = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/jump_boost/pku_candy_jump_boost_drop")
 	}
 	self.pickups.candy_atk_dmg = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/atk_dmg/pku_candy_atk_dmg_drop")
 	}
 	self.pickups.candy_crit_chance = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/crit_chance/pku_candy_crit_chance_drop")
 	}
 	self.pickups.candy_health_regen = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/health_regen/pku_candy_health_regen_drop")
 	}
 	self.pickups.candy_god_mode = {
-		unit = nil,
 		unit = Idstring("units/upd_candy/pickups/pku_candy/god_mode/pku_candy_god_mode_drop")
 	}
 	self.pickups.enigma_part_01 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01")
 	}
 	self.pickups.enigma_part_02 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_02")
 	}
 	self.pickups.enigma_part_03 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_03")
 	}
 	self.pickups.enigma_part_04 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_04")
 	}
 	self.pickups.enigma_part_05 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_05")
 	}
 	self.pickups.officer_documents_01 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_01")
 	}
 	self.pickups.officer_documents_02 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_02")
 	}
 	self.pickups.officer_documents_03 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_03")
 	}
 	self.pickups.officer_documents_04 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_04")
 	}
 	self.pickups.officer_documents_05 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_officer_documents/equip_officer_documents_05")
 	}
 	self.pickups.car_key_01 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_01")
 	}
 	self.pickups.car_key_02 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_02")
 	}
 	self.pickups.car_key_03 = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_car_keys/props_car_keys_03")
 	}
 	self.pickups.bank_door_key = {
-		unit = nil,
 		unit = Idstring("units/vanilla/props/props_bank_door_keys_01/props_bank_door_keys_01")
 	}
 	self.pickups.code_book = {
-		unit = nil,
 		unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active")
 	}
 	self.warcry_units = {
 		hold_the_line_flag = {
-			level_seq = nil,
-			unit = nil,
 			drop_to_ground = true,
 			unit = Idstring("units/upd_022/warcry/wc_flagpole/wc_flagpole"),
 			level_seq = {
@@ -1310,10 +1221,10 @@ You've reached the end of our PAX EAST demo.
 	}
 	self.dot_types = {
 		poison = {
-			hurt_animation_chance = 0.5,
-			damage_class = "PoisonBulletBase",
 			dot_damage = 2,
-			dot_length = 10
+			dot_length = 10,
+			damage_class = "PoisonBulletBase",
+			hurt_animation_chance = 0.5
 		}
 	}
 
@@ -1344,8 +1255,6 @@ function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
 	table.insert(self._reload_clbks, {
-		func = nil,
-		clbk_object = nil,
 		clbk_object = object,
 		func = func
 	})
@@ -1367,6 +1276,8 @@ function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
 		[Idstring("german"):key()] = {
+			w_interact_multiplier = 1.65,
+			sd_w_interact_multiplier = 1.55,
 			kit_desc_large = 0.9,
 			menu_logo_multiplier = 0.9,
 			objectives_text_kern = -1,
@@ -1376,34 +1287,32 @@ function TweakData:set_scale()
 			sd_small = 0.9,
 			sd_large = 0.9,
 			large = 0.9,
-			small = 1,
-			w_interact_multiplier = 1.65,
-			sd_w_interact_multiplier = 1.55
+			small = 1
 		},
 		[Idstring("french"):key()] = {
+			subtitle_multiplier = 0.85,
+			w_interact_multiplier = 1.4,
+			sd_w_interact_multiplier = 1.3,
 			kit_desc_large = 0.9,
-			victory_screen_kern = -0.5,
 			objectives_text_kern = -0.8,
 			level_up_text_kern = -1.5,
 			stats_upgrade_kern = -1,
-			subtitle_multiplier = 0.85,
 			sd_small = 0.95,
 			sd_large = 0.9,
 			large = 0.9,
-			sd_level_up_font_multiplier = 0.9,
 			small = 1,
-			w_interact_multiplier = 1.4,
-			sd_w_interact_multiplier = 1.3
+			sd_level_up_font_multiplier = 0.9,
+			victory_screen_kern = -0.5
 		},
 		[Idstring("italian"):key()] = {
-			kit_desc_large = 0.9,
 			objectives_text_kern = -0.8,
-			large = 1,
-			sd_w_interact_multiplier = 1.5,
-			small = 1,
-			w_interact_multiplier = 1.35,
 			sd_small = 1,
-			sd_large = 1
+			sd_large = 1,
+			large = 1,
+			kit_desc_large = 0.9,
+			small = 1,
+			sd_w_interact_multiplier = 1.5,
+			w_interact_multiplier = 1.35
 		},
 		[Idstring("spanish"):key()] = {
 			victory_title_multiplier = 0.9,
@@ -1411,8 +1320,8 @@ function TweakData:set_scale()
 			objectives_desc_text_kern = 0,
 			upgrade_menu_kern = -1.25,
 			large = 1,
-			sd_level_up_font_multiplier = 0.9,
 			small = 1,
+			sd_level_up_font_multiplier = 0.9,
 			w_interact_multiplier = 1.6,
 			sd_w_interact_multiplier = 1.5,
 			kit_desc_large = 0.9,
@@ -1550,33 +1459,33 @@ end
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
-			topic_font_size = 0.8,
 			upgrades_font_size = 1,
+			topic_font_size = 0.8,
 			challenges_font_size = 1,
 			mission_end_font_size = 1
 		},
 		[Idstring("french"):key()] = {
-			topic_font_size = 1,
 			upgrades_font_size = 1,
+			topic_font_size = 1,
 			challenges_font_size = 1,
 			mission_end_font_size = 1
 		},
 		[Idstring("italian"):key()] = {
-			topic_font_size = 1,
 			upgrades_font_size = 1,
+			topic_font_size = 1,
 			challenges_font_size = 1,
 			mission_end_font_size = 0.95
 		},
 		[Idstring("spanish"):key()] = {
-			topic_font_size = 0.95,
 			upgrades_font_size = 1,
+			topic_font_size = 0.95,
 			challenges_font_size = 0.95,
 			mission_end_font_size = 1
 		}
 	}
 	local lang_mods = lang_mods_def[SystemInfo:language():key()] or {
-		topic_font_size = 1,
 		upgrades_font_size = 1,
+		topic_font_size = 1,
 		challenges_font_size = 1,
 		mission_end_font_size = 1
 	}
@@ -1646,7 +1555,6 @@ function TweakData:set_menu_scale()
 	self.menu.kit_description_font_size = 14 * self.scale.kit_description_multiplier
 	self.load_level = {
 		briefing_text = {
-			h = nil,
 			h = 192 * self.scale.briefing_text_h_multiplier
 		},
 		upper_saferect_border = self.menu.upper_saferect_border,
@@ -1658,45 +1566,45 @@ end
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
-			next_player_font_size = 0.85,
 			present_mid_text_font_size = 0.8,
 			active_objective_title_font_size = 0.9,
 			stats_challenges_font_size = 0.7,
 			hint_font_size = 0.9,
-			location_font_size = 1
+			location_font_size = 1,
+			next_player_font_size = 0.85
 		},
 		[Idstring("french"):key()] = {
-			next_player_font_size = 0.85,
 			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 0.825,
-			location_font_size = 1
+			location_font_size = 1,
+			next_player_font_size = 0.85
 		},
 		[Idstring("italian"):key()] = {
-			next_player_font_size = 0.85,
 			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 1,
-			location_font_size = 1
+			location_font_size = 1,
+			next_player_font_size = 0.85
 		},
 		[Idstring("spanish"):key()] = {
-			next_player_font_size = 0.85,
 			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 1,
-			location_font_size = 0.7
+			location_font_size = 0.7,
+			next_player_font_size = 0.85
 		}
 	}
 	local lang_mods = lang_mods_def[SystemInfo:language():key()] or {
-		next_player_font_size = 1,
 		present_mid_text_font_size = 1,
 		active_objective_title_font_size = 1,
 		stats_challenges_font_size = 1,
 		hint_font_size = 1,
-		location_font_size = 1
+		location_font_size = 1,
+		next_player_font_size = 1
 	}
 	self.hud.large_font = "fonts/font_large"
 	self.hud.medium_kern = 1.7
@@ -1761,700 +1669,698 @@ function TweakData:get_controller_help_coords()
 	end
 
 	local coords = {
-		vehicle = nil,
-		normal = nil,
 		normal = {},
 		vehicle = {}
 	}
 
 	if IS_PS4 then
 		coords.normal.left_thumb = {
+			vertical = "top",
 			align = "right",
 			y = 255,
 			x = 199,
-			id = "menu_button_sprint",
-			vertical = "top"
+			id = "menu_button_sprint"
 		}
 		coords.normal.left = {
+			vertical = "top",
 			align = "right",
 			y = 280,
 			x = 199,
-			id = "menu_button_move",
-			vertical = "top"
+			id = "menu_button_move"
 		}
 		coords.normal.right_thumb = {
+			vertical = "top",
 			align = "left",
 			y = 255,
 			x = 313,
-			id = "menu_button_melee",
-			vertical = "top"
+			id = "menu_button_melee"
 		}
 		coords.normal.right = {
+			vertical = "top",
 			align = "left",
 			y = 280,
 			x = 313,
-			id = "menu_button_look",
-			vertical = "top"
+			id = "menu_button_look"
 		}
 		coords.normal.triangle = {
-			y = 104,
 			x = 511,
-			id = "menu_button_switch_weapon",
-			align = "left"
+			y = 104,
+			align = "left",
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.circle = {
-			y = 128,
 			x = 511,
-			id = "menu_button_crouch",
-			align = "left"
+			y = 128,
+			align = "left",
+			id = "menu_button_crouch"
 		}
 		coords.normal.cross = {
-			y = 153,
 			x = 511,
-			id = "menu_button_jump",
-			align = "left"
+			y = 153,
+			align = "left",
+			id = "menu_button_jump"
 		}
 		coords.normal.square = {
-			y = 181,
 			x = 511,
-			id = "menu_button_reload",
-			align = "left"
+			y = 181,
+			align = "left",
+			id = "menu_button_reload"
 		}
 		coords.normal.r1_trigger = {
-			y = 10,
 			x = 511,
-			id = "menu_button_fire_weapon",
-			align = "left"
+			y = 10,
+			align = "left",
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.r2_trigger = {
-			y = 55,
 			x = 511,
-			id = "menu_button_shout",
-			align = "left"
+			y = 55,
+			align = "left",
+			id = "menu_button_shout"
 		}
 		coords.normal.l1_trigger = {
-			y = 10,
 			x = 0,
-			id = "menu_button_aim_down_sight",
-			align = "right"
+			y = 10,
+			align = "right",
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.l2_trigger = {
-			y = 55,
 			x = 0,
-			id = "menu_button_deploy",
-			align = "right"
+			y = 55,
+			align = "right",
+			id = "menu_button_deploy"
 		}
 		coords.normal.start = {
+			vertical = "bottom",
 			align = "right",
 			y = 0,
 			x = 219,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.normal.back = {
+			vertical = "bottom",
 			align = "left",
 			y = 0,
 			x = 328,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.normal.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 128,
 			x = 0,
-			id = "menu_button_throw_grenade",
-			vertical = "center"
+			id = "menu_button_throw_grenade"
 		}
 		coords.normal.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 153,
 			x = 0,
-			id = "menu_button_weapon_gadget_bipod",
-			vertical = "center"
+			id = "menu_button_weapon_gadget_bipod"
 		}
 		coords.normal.d_right = {
+			vertical = "center",
 			align = "right",
 			y = 181,
 			x = 0,
-			id = "menu_button_weapon_firemode",
-			vertical = "center"
+			id = "menu_button_weapon_firemode"
 		}
 		coords.vehicle.left_thumb = {
+			vertical = "top",
 			align = "right",
 			y = 255,
 			x = 199,
-			id = "menu_button_unassigned",
-			vertical = "top"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left = {
+			vertical = "top",
 			align = "right",
 			y = 280,
 			x = 199,
-			id = "menu_button_steering",
-			vertical = "top"
+			id = "menu_button_steering"
 		}
 		coords.vehicle.right_thumb = {
+			vertical = "top",
 			align = "left",
 			y = 255,
 			x = 313,
-			id = "menu_button_vehicle_rear_camera",
-			vertical = "top"
+			id = "menu_button_vehicle_rear_camera"
 		}
 		coords.vehicle.right = {
+			vertical = "top",
 			align = "left",
 			y = 280,
 			x = 313,
-			id = "menu_button_unassigned",
-			vertical = "top"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.triangle = {
-			y = 104,
 			x = 511,
-			id = "menu_button_unassigned",
-			align = "left"
+			y = 104,
+			align = "left",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.circle = {
-			y = 128,
 			x = 511,
-			id = "menu_button_vehicle_shooting_stance",
-			align = "left"
+			y = 128,
+			align = "left",
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.cross = {
-			y = 153,
 			x = 511,
-			id = "menu_button_handbrake",
-			align = "left"
+			y = 153,
+			align = "left",
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.square = {
-			y = 181,
 			x = 511,
-			id = "menu_button_vehicle_change_camera",
-			align = "left"
+			y = 181,
+			align = "left",
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.r1_trigger = {
-			y = 10,
 			x = 511,
-			id = "menu_button_accelerate",
-			align = "left"
+			y = 10,
+			align = "left",
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.r2_trigger = {
-			y = 55,
 			x = 511,
-			id = "menu_button_unassigned",
-			align = "left"
+			y = 55,
+			align = "left",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.l1_trigger = {
-			y = 10,
 			x = 0,
-			id = "menu_button_brake",
-			align = "right"
+			y = 10,
+			align = "right",
+			id = "menu_button_brake"
 		}
 		coords.vehicle.l2_trigger = {
-			y = 55,
 			x = 0,
-			id = "menu_button_unassigned",
-			align = "right"
+			y = 55,
+			align = "right",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.start = {
+			vertical = "bottom",
 			align = "right",
 			y = 0,
 			x = 219,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.vehicle.back = {
+			vertical = "bottom",
 			align = "left",
 			y = 0,
 			x = 328,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.vehicle.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 128,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 153,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_right = {
+			vertical = "center",
 			align = "right",
 			y = 181,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 	elseif IS_XB1 then
 		coords.normal.left_thumb = {
+			vertical = "bottom",
 			align = "right",
 			y = 78,
 			x = 0,
-			id = "menu_button_sprint",
-			vertical = "bottom"
+			id = "menu_button_sprint"
 		}
 		coords.normal.left = {
+			vertical = "top",
 			align = "right",
 			y = 78,
 			x = 0,
-			id = "menu_button_move",
-			vertical = "top"
+			id = "menu_button_move"
 		}
 		coords.normal.right_thumb = {
+			vertical = "top",
 			align = "center",
 			y = 276,
 			x = 302,
-			id = "menu_button_melee",
-			vertical = "top"
+			id = "menu_button_melee"
 		}
 		coords.normal.right = {
+			vertical = "top",
 			align = "center",
 			y = 301,
 			x = 302,
-			id = "menu_button_look",
-			vertical = "top"
+			id = "menu_button_look"
 		}
 		coords.normal.y = {
-			y = 57,
 			x = 512,
-			id = "menu_button_switch_weapon",
-			align = "left"
+			y = 57,
+			align = "left",
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.x = {
-			y = 140,
 			x = 512,
-			id = "menu_button_reload",
-			align = "left"
+			y = 140,
+			align = "left",
+			id = "menu_button_reload"
 		}
 		coords.normal.b = {
-			y = 85,
 			x = 512,
-			id = "menu_button_crouch",
-			align = "left"
+			y = 85,
+			align = "left",
+			id = "menu_button_crouch"
 		}
 		coords.normal.a = {
-			y = 113,
 			x = 512,
-			id = "menu_button_jump",
-			align = "left"
+			y = 113,
+			align = "left",
+			id = "menu_button_jump"
 		}
 		coords.normal.right_shoulder = {
-			y = -10,
 			x = 390,
-			id = "menu_button_shout",
-			align = "center"
+			y = -10,
+			align = "center",
+			id = "menu_button_shout"
 		}
 		coords.normal.right_trigger = {
-			y = 18,
 			x = 512,
-			id = "menu_button_fire_weapon",
-			align = "left"
+			y = 18,
+			align = "left",
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.left_shoulder = {
-			y = -10,
 			x = 180,
-			id = "menu_button_deploy",
-			align = "right"
+			y = -10,
+			align = "right",
+			id = "menu_button_deploy"
 		}
 		coords.normal.left_trigger = {
-			y = 18,
 			x = 0,
-			id = "menu_button_aim_down_sight",
-			align = "right"
+			y = 18,
+			align = "right",
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.start = {
+			vertical = "bottom",
 			align = "left",
 			y = -25,
 			x = 288,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.normal.back = {
+			vertical = "bottom",
 			align = "right",
 			y = -25,
 			x = 235,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.normal.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 193,
 			x = 0,
-			id = "menu_button_weapon_gadget_bipod",
-			vertical = "center"
+			id = "menu_button_weapon_gadget_bipod"
 		}
 		coords.normal.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 158,
 			x = 0,
-			id = "menu_button_throw_grenade",
-			vertical = "center"
+			id = "menu_button_throw_grenade"
 		}
 		coords.normal.d_right = {
+			vertical = "center",
 			align = "right",
 			y = 266,
 			x = 270,
-			id = "menu_button_weapon_firemode",
-			vertical = "center"
+			id = "menu_button_weapon_firemode"
 		}
 		coords.vehicle.left_thumb = {
+			vertical = "bottom",
 			align = "right",
 			y = 78,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "bottom"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left = {
+			vertical = "top",
 			align = "right",
 			y = 78,
 			x = 0,
-			id = "menu_button_steering",
-			vertical = "top"
+			id = "menu_button_steering"
 		}
 		coords.vehicle.right_thumb = {
+			vertical = "top",
 			align = "center",
 			y = 276,
 			x = 302,
-			id = "menu_button_vehicle_rear_camera",
-			vertical = "top"
+			id = "menu_button_vehicle_rear_camera"
 		}
 		coords.vehicle.right = {
+			vertical = "top",
 			align = "center",
 			y = 301,
 			x = 302,
-			id = "menu_button_unassigned",
-			vertical = "top"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.y = {
-			y = 57,
 			x = 512,
-			id = "menu_button_unassigned",
-			align = "left"
+			y = 57,
+			align = "left",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.x = {
-			y = 140,
 			x = 512,
-			id = "menu_button_vehicle_change_camera",
-			align = "left"
+			y = 140,
+			align = "left",
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.b = {
-			y = 85,
 			x = 512,
-			id = "menu_button_vehicle_shooting_stance",
-			align = "left"
+			y = 85,
+			align = "left",
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.a = {
-			y = 113,
 			x = 512,
-			id = "menu_button_handbrake",
-			align = "left"
+			y = 113,
+			align = "left",
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.right_shoulder = {
-			y = -10,
 			x = 390,
-			id = "menu_button_unassigned",
-			align = "center"
+			y = -10,
+			align = "center",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.right_trigger = {
-			y = 18,
 			x = 512,
-			id = "menu_button_accelerate",
-			align = "left"
+			y = 18,
+			align = "left",
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.left_shoulder = {
-			y = -10,
 			x = 180,
-			id = "menu_button_unassigned",
-			align = "right"
+			y = -10,
+			align = "right",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left_trigger = {
-			y = 18,
 			x = 0,
-			id = "menu_button_brake",
-			align = "right"
+			y = 18,
+			align = "right",
+			id = "menu_button_brake"
 		}
 		coords.vehicle.start = {
+			vertical = "bottom",
 			align = "left",
 			y = -25,
 			x = 288,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.vehicle.back = {
+			vertical = "bottom",
 			align = "right",
 			y = -25,
 			x = 235,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.vehicle.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 193,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 158,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_right = {
+			vertical = "center",
 			align = "right",
 			y = 266,
 			x = 270,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 	else
 		coords.normal.left_thumb = {
+			vertical = "bottom",
 			align = "right",
 			y = 138,
 			x = 0,
-			id = "menu_button_sprint",
-			vertical = "bottom"
+			id = "menu_button_sprint"
 		}
 		coords.normal.left = {
+			vertical = "top",
 			align = "right",
 			y = 138,
 			x = 0,
-			id = "menu_button_move",
-			vertical = "top"
+			id = "menu_button_move"
 		}
 		coords.normal.right_thumb = {
+			vertical = "top",
 			align = "left",
 			y = 256,
 			x = 302,
-			id = "menu_button_melee",
-			vertical = "top"
+			id = "menu_button_melee"
 		}
 		coords.normal.right = {
+			vertical = "top",
 			align = "left",
 			y = 281,
 			x = 302,
-			id = "menu_button_look",
-			vertical = "top"
+			id = "menu_button_look"
 		}
 		coords.normal.y = {
-			y = 97,
 			x = 512,
-			id = "menu_button_switch_weapon",
-			align = "left"
+			y = 97,
+			align = "left",
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.x = {
-			y = 180,
 			x = 512,
-			id = "menu_button_reload",
-			align = "left"
+			y = 180,
+			align = "left",
+			id = "menu_button_reload"
 		}
 		coords.normal.b = {
-			y = 125,
 			x = 512,
-			id = "menu_button_crouch",
-			align = "left"
+			y = 125,
+			align = "left",
+			id = "menu_button_crouch"
 		}
 		coords.normal.a = {
-			y = 153,
 			x = 512,
-			id = "menu_button_jump",
-			align = "left"
+			y = 153,
+			align = "left",
+			id = "menu_button_jump"
 		}
 		coords.normal.right_shoulder = {
-			y = 49,
 			x = 512,
-			id = "menu_button_shout",
-			align = "left"
+			y = 49,
+			align = "left",
+			id = "menu_button_shout"
 		}
 		coords.normal.right_trigger = {
-			y = 19,
 			x = 512,
-			id = "menu_button_fire_weapon",
-			align = "left"
+			y = 19,
+			align = "left",
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.left_shoulder = {
-			y = 49,
 			x = 0,
-			id = "menu_button_deploy",
-			align = "right"
+			y = 49,
+			align = "right",
+			id = "menu_button_deploy"
 		}
 		coords.normal.left_trigger = {
-			y = 19,
 			x = 0,
-			id = "menu_button_aim_down_sight",
-			align = "right"
+			y = 19,
+			align = "right",
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.start = {
+			vertical = "bottom",
 			align = "left",
 			y = 0,
 			x = 288,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.normal.back = {
+			vertical = "bottom",
 			align = "right",
 			y = 0,
 			x = 223,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.normal.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 243,
 			x = 0,
-			id = "menu_button_weapon_gadget_bipod",
-			vertical = "center"
+			id = "menu_button_weapon_gadget_bipod"
 		}
 		coords.normal.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 208,
 			x = 0,
-			id = "menu_button_throw_grenade",
-			vertical = "center"
+			id = "menu_button_throw_grenade"
 		}
 		coords.normal.d_right = {
+			vertical = "top",
 			align = "right",
 			y = 256,
 			x = 226,
-			id = "menu_button_weapon_firemode",
-			vertical = "top"
+			id = "menu_button_weapon_firemode"
 		}
 
 		if IS_PC then
 			coords.normal.d_up = {
+				vertical = "center",
 				align = "right",
 				y = 174,
 				x = 0,
-				id = "menu_button_push_to_talk",
-				vertical = "center"
+				id = "menu_button_push_to_talk"
 			}
 		end
 
 		coords.vehicle.left_thumb = {
+			vertical = "bottom",
 			align = "right",
 			y = 138,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "bottom"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left = {
+			vertical = "top",
 			align = "right",
 			y = 138,
 			x = 0,
-			id = "menu_button_steering",
-			vertical = "top"
+			id = "menu_button_steering"
 		}
 		coords.vehicle.right_thumb = {
+			vertical = "top",
 			align = "left",
 			y = 256,
 			x = 302,
-			id = "menu_button_vehicle_rear_camera",
-			vertical = "top"
+			id = "menu_button_vehicle_rear_camera"
 		}
 		coords.vehicle.right = {
+			vertical = "top",
 			align = "left",
 			y = 281,
 			x = 302,
-			id = "menu_button_unassigned",
-			vertical = "top"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.y = {
-			y = 97,
 			x = 512,
-			id = "menu_button_unassigned",
-			align = "left"
+			y = 97,
+			align = "left",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.x = {
-			y = 180,
 			x = 512,
-			id = "menu_button_vehicle_change_camera",
-			align = "left"
+			y = 180,
+			align = "left",
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.b = {
-			y = 125,
 			x = 512,
-			id = "menu_button_vehicle_shooting_stance",
-			align = "left"
+			y = 125,
+			align = "left",
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.a = {
-			y = 153,
 			x = 512,
-			id = "menu_button_handbrake",
-			align = "left"
+			y = 153,
+			align = "left",
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.right_shoulder = {
-			y = 49,
 			x = 512,
-			id = "menu_button_unassigned",
-			align = "left"
+			y = 49,
+			align = "left",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.right_trigger = {
-			y = 19,
 			x = 512,
-			id = "menu_button_accelerate",
-			align = "left"
+			y = 19,
+			align = "left",
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.left_shoulder = {
-			y = 49,
 			x = 0,
-			id = "menu_button_unassigned",
-			align = "right"
+			y = 49,
+			align = "right",
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left_trigger = {
-			y = 19,
 			x = 0,
-			id = "menu_button_brake",
-			align = "right"
+			y = 19,
+			align = "right",
+			id = "menu_button_brake"
 		}
 		coords.vehicle.start = {
+			vertical = "bottom",
 			align = "left",
 			y = 0,
 			x = 288,
-			id = "menu_button_ingame_menu",
-			vertical = "bottom"
+			id = "menu_button_ingame_menu"
 		}
 		coords.vehicle.back = {
+			vertical = "bottom",
 			align = "right",
 			y = 0,
 			x = 223,
-			id = "menu_button_stats_screen",
-			vertical = "bottom"
+			id = "menu_button_stats_screen"
 		}
 		coords.vehicle.d_down = {
+			vertical = "center",
 			align = "right",
 			y = 243,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_left = {
+			vertical = "center",
 			align = "right",
 			y = 208,
 			x = 0,
-			id = "menu_button_unassigned",
-			vertical = "center"
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.d_right = {
+			vertical = "top",
 			align = "right",
 			y = 256,
 			x = 226,
-			id = "menu_button_unassigned",
-			vertical = "top"
+			id = "menu_button_unassigned"
 		}
 
 		if IS_PC then
 			coords.vehicle.d_up = {
+				vertical = "center",
 				align = "right",
 				y = 174,
 				x = 0,
-				id = "menu_button_unassigned",
-				vertical = "center"
+				id = "menu_button_unassigned"
 			}
 		end
 	end

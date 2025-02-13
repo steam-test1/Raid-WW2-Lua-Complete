@@ -33,8 +33,13 @@ function WarcryGhost:_find_enemies_in_view()
 	local enemies = {}
 
 	for _, enemy in ipairs(enemies_in_cone) do
-		if alive(enemy) and mvector3.distance(cone_tip, enemy:position()) < self._tweak_data.tint_distance then
-			table.insert(enemies, enemy)
+		if alive(enemy) and enemy:character_damage() then
+			local damage_ext = enemy:character_damage()
+			local distance = mvector3.distance(cone_tip, enemy:position())
+
+			if distance < self._tweak_data.tint_distance and not damage_ext:is_invulnerable() and not damage_ext:is_immortal() then
+				table.insert(enemies, enemy)
+			end
 		end
 	end
 

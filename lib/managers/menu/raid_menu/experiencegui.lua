@@ -38,8 +38,8 @@ function ExperienceGui:_layout()
 		w = center - menu_shift
 	})
 	self._menu_right_side = self._object:panel({
-		layer = 1,
 		name = "menu_right_side",
+		layer = 1,
 		w = center + menu_shift
 	})
 
@@ -98,9 +98,9 @@ function ExperienceGui:_layout_equipped_upgrades()
 	block_size = math.floor(block_size / 2 - total_icons * 0.025)
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	self._equipped_upgrades_area = self._menu_left_side:bitmap({
-		layer = 0,
-		alpha = 0.8,
 		name = "_temp_equipped_upgrades",
+		alpha = 0.8,
+		layer = 0,
 		w = self._menu_left_side:w(),
 		h = block_size + 8,
 		texture = backgrounds_chat_bg.texture,
@@ -163,8 +163,8 @@ function ExperienceGui:_layout_equipped_upgrades()
 	self:_update_equipped_upgrades()
 
 	self._skill_profiles_button = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillProfiles, {
-		y = 4,
 		name = "skill_profiles_button",
+		y = 4,
 		w = skill_profiles_w,
 		h = block_size,
 		on_click_callback = callback(self, self, "_on_toggle_skill_profiles")
@@ -262,7 +262,7 @@ function ExperienceGui:_layout_equipable_upgrades()
 		scroll_step = item_size * 0.8
 	}
 	self._equippable_upgrades_scrollable_area = self._menu_left_side:scrollable_area(equippable_upgrades_scrollable_area_params)
-	local equippable_upgrades_params = {
+	self._equippable_upgrades = self._equippable_upgrades_scrollable_area:get_panel():categorized_grid({
 		name = "equippable_upgrades_grid",
 		w = equippable_upgrades_scrollable_area_params.w,
 		h = equippable_upgrades_scrollable_area_params.h,
@@ -275,9 +275,9 @@ function ExperienceGui:_layout_equipable_upgrades()
 			data_source_callback = callback(self, self, "data_source_upgrades")
 		},
 		item_params = {
+			grid_item_icon = "grid_icon",
 			key_value_field = "key_name",
 			grid_item_tag_color = "tag_color",
-			grid_item_icon = "grid_icon",
 			item_w = item_size,
 			item_h = item_size,
 			icon_size_on = item_size * 0.85,
@@ -286,8 +286,7 @@ function ExperienceGui:_layout_equipable_upgrades()
 			selected_marker_h = item_size,
 			row_class = RaidGUIControlGridItemSkill
 		}
-	}
-	self._equippable_upgrades = self._equippable_upgrades_scrollable_area:get_panel():categorized_grid(equippable_upgrades_params)
+	})
 
 	self._equippable_upgrades_scrollable_area:setup_scroll_area()
 	self._equippable_upgrades:set_selected(true)
@@ -298,10 +297,10 @@ function ExperienceGui:_layout_skill_profile()
 	local y_padding = 8
 	local x, y, w, h = self._equipable_upgrades_background:shape()
 	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
+		name = "skill_profiles_list",
 		selection_enabled = false,
 		visible = false,
 		loop_items = true,
-		name = "skill_profiles_list",
 		x = x + x_padding,
 		y = y + y_padding,
 		w = w - x_padding * 2,
@@ -571,34 +570,34 @@ function ExperienceGui:data_source_stats()
 	local t = {}
 
 	table.insert(t, {
-		name = "health",
-		text_id = "character_stats_health_label"
+		text_id = "character_stats_health_label",
+		name = "health"
 	})
 	table.insert(t, {
-		name = "stamina",
-		text_id = "character_stats_stamina_label"
+		text_id = "character_stats_stamina_label",
+		name = "stamina"
 	})
 	table.insert(t, {
-		text_id = "character_stats_stamina_regen_label",
+		format_value = "%.2g/s",
 		name = "stamina_regen",
-		format_value = "%.2g/s"
+		text_id = "character_stats_stamina_regen_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_stamina_delay_label",
+		format_value = "%.2gs",
 		name = "stamina_delay",
-		format_value = "%.2gs"
+		text_id = "character_stats_stamina_delay_label"
 	})
 	table.insert(t, {
-		name = "speed_walk",
-		text_id = "character_stats_speed_walk_label"
+		text_id = "character_stats_speed_walk_label",
+		name = "speed_walk"
 	})
 	table.insert(t, {
-		name = "speed_run",
-		text_id = "character_stats_speed_run_label"
+		text_id = "character_stats_speed_run_label",
+		name = "speed_run"
 	})
 	table.insert(t, {
-		name = "carry_limit",
-		text_id = "character_stats_carry_limit_label"
+		text_id = "character_stats_carry_limit_label",
+		name = "carry_limit"
 	})
 
 	return t
@@ -627,8 +626,8 @@ function ExperienceGui:_layout_experience_progress()
 		texture_rect = backgrounds_chat_bg.texture_rect
 	})
 	self._progress_bar = self._menu_right_side:create_custom_control(RaidGUIControlSkilltreeProgressBar, {
-		horizontal_padding = 15,
 		name = "progress_bar",
+		horizontal_padding = 15,
 		w = self._menu_right_side:w() - 100,
 		h = h - 12
 	})

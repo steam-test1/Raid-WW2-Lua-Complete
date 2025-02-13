@@ -92,13 +92,13 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
+				word_wrap = true,
+				wrap = true,
+				layer = 3,
 				x = 0,
 				vertical = "top",
 				halign = "left",
 				align = "center",
-				word_wrap = true,
-				wrap = true,
-				layer = 3,
 				text = data.text,
 				y = ypos,
 				w = text_width,
@@ -113,8 +113,8 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			if data.src then
 				bitmap = self._credits_panel:bitmap({
-					x = 0,
 					layer = 3,
+					x = 0,
 					y = ypos,
 					texture = data.src
 				})
@@ -152,13 +152,13 @@ end
 
 function RaidMenuCreditsGui:_show_intro_video()
 	local video_panel_params = {
-		layer = 100,
-		is_root_panel = true
+		is_root_panel = true,
+		layer = 100
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		name = "video_background",
 		layer = 1,
+		name = "video_background",
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)

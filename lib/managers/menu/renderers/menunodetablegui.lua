@@ -15,14 +15,14 @@ function MenuNodeTableGui:_setup_panels(node)
 		h = 0
 	})
 	local mini_text = mini_info:text({
+		text = "",
+		halign = "top",
 		wrap = true,
 		word_wrap = true,
 		vertical = "top",
-		halign = "top",
-		align = "left",
-		text = "",
 		y = 0,
 		x = 0,
+		align = "left",
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		color = Color.white,
@@ -129,17 +129,17 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 
 		local level_id = row_item.item:parameters().level_id
 		row_item.gui_info_panel = self.safe_rect_panel:panel({
-			y = 0,
 			visible = false,
+			y = 0,
 			x = 0,
 			layer = self.layers.items,
 			w = self:_left_align(),
 			h = self._item_panel_parent:h()
 		})
 		row_item.heist_name = row_item.gui_info_panel:text({
-			align = "left",
 			vertical = "left",
 			visible = false,
+			align = "left",
 			text = utf8.to_upper(row_item.item:parameters().level_name),
 			layer = self.layers.items,
 			font = self.font,
@@ -148,14 +148,14 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		})
 		local briefing_text = level_id and managers.localization:text(tweak_data.levels[level_id].briefing_id) or ""
 		row_item.heist_briefing = row_item.gui_info_panel:text({
-			visible = true,
-			wrap = true,
-			vertical = "top",
-			word_wrap = true,
 			halign = "top",
-			align = "left",
+			wrap = true,
+			visible = true,
+			word_wrap = true,
+			vertical = "top",
 			y = 0,
 			x = 0,
+			align = "left",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = tweak_data.menu.pd2_small_font_size,
 			color = Color.white,
@@ -164,22 +164,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 		})
 		local font_size = tweak_data.menu.pd2_small_font_size
 		row_item.server_title = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "server_title",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(managers.localization:text("menu_lobby_server_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.server_text = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "server_text",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(row_item.item:parameters().host_name),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,
@@ -187,22 +187,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.server_info_title = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "server_info_title",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(managers.localization:text("menu_lobby_server_state_title")) .. " ",
 			font = self.font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.server_info_text = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "server_info_text",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(row_item.item:parameters().state_name) .. " " .. tostring(row_item.item:parameters().num_plrs) .. "/4 ",
 			font = self.font,
 			color = tweak_data.hud.prime_color,
@@ -210,22 +210,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.level_title = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "level_title",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(managers.localization:text("menu_lobby_campaign_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.level_text = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "level_text",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(row_item.item:parameters().real_level_name),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,
@@ -233,22 +233,22 @@ function MenuNodeTableGui:_create_menu_item(row_item)
 			h = font_size
 		})
 		row_item.difficulty_title = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "difficulty_title",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(managers.localization:text("menu_lobby_difficulty_title")) .. " ",
 			font = tweak_data.menu.pd2_small_font,
 			font_size = font_size,
 			h = font_size
 		})
 		row_item.difficulty_text = row_item.gui_info_panel:text({
-			vertical = "center",
-			layer = 1,
-			align = "left",
-			w = 256,
 			name = "difficulty_text",
+			layer = 1,
+			vertical = "center",
+			w = 256,
+			align = "left",
 			text = utf8.to_upper(managers.localization:text("menu_" .. row_item.item:parameters().difficulty)),
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.hud.prime_color,

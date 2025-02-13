@@ -16,9 +16,6 @@ function AkimboWeaponBase:_create_second_gun()
 
 	if self._cosmetics_id then
 		new_unit:base():set_cosmetics_data({
-			quality = nil,
-			id = nil,
-			bonus = nil,
 			id = self._cosmetics_id,
 			quality = self._cosmetics_quality,
 			bonus = self._cosmetics_bonus

@@ -239,7 +239,6 @@ function LuaProfilerGridBox:_on_select()
 	local i = self._listctrl:selected_item()
 
 	self._treeview:deselect_and_highlight({
-		fnid = nil,
 		fnid = self._item2fnid[i + 1]
 	})
 	self:_highlight(self._item2fnid[i + 1])
@@ -249,7 +248,6 @@ function LuaProfilerGridBox:_on_activate()
 	local i = self._listctrl:selected_item()
 
 	self._treeview:deselect_and_expand({
-		fnid = nil,
 		fnid = self._item2fnid[i + 1]
 	})
 end

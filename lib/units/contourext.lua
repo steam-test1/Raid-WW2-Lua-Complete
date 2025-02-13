@@ -60,9 +60,9 @@ ContourExt._types = {
 	},
 	mark_enemy_ghost = {
 		priority = 6,
+		distance = 3200,
 		persistence = 0.1,
 		fadeout = 0,
-		distance = 3200,
 		color = tweak_data.contour.character.ghost_warcry
 	},
 	mark_enemy_sharpshooter = {
@@ -73,9 +73,9 @@ ContourExt._types = {
 	},
 	mark_enemy_silver_bullet = {
 		priority = 6,
+		distance = 3000,
 		persistence = 0.1,
 		fadeout = 0,
-		distance = 3000,
 		color = tweak_data.contour.character.silver_bullet_warcry
 	},
 	highlight = {

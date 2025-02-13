@@ -209,10 +209,10 @@ end
 function CoreCutsceneOptimizer:_write_animation_blobs(full_animation, dest, part_path_pattern)
 	local animation_blob_names = {}
 	local default_settings = {
-		rotation_tolerance = 0.0025,
-		position_tolerance = 0.1,
 		pack_rotations = false,
-		pack_positions = false
+		pack_positions = false,
+		rotation_tolerance = 0.0025,
+		position_tolerance = 0.1
 	}
 	local per_bone_settings = {}
 	local duration = full_animation:length()

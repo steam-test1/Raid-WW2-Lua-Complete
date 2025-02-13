@@ -2069,8 +2069,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			func = nil,
-			counter = nil,
 			func = f,
 			counter = "find_" .. find_type
 		})
@@ -2080,8 +2078,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			func = nil,
-			counter = nil,
 			func = f,
 			counter = "find_" .. find_type .. "_physics"
 		})
@@ -2092,8 +2088,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				func = nil,
-				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect"
 			})
@@ -2103,8 +2097,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				func = nil,
-				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect_physics"
 			})
@@ -2115,8 +2107,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			func = nil,
-			counter = nil,
 			func = f,
 			counter = "find_" .. find_type
 		})
@@ -2126,8 +2116,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 		end
 
 		table.insert(list, {
-			func = nil,
-			counter = nil,
 			func = f,
 			counter = "find_" .. find_type .. "_physics"
 		})
@@ -2138,8 +2126,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				func = nil,
-				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect"
 			})
@@ -2149,8 +2135,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 			end
 
 			table.insert(list, {
-				func = nil,
-				counter = nil,
 				func = f,
 				counter = "find_" .. find_type .. "_intersect_physics"
 			})
@@ -2182,7 +2166,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	end
 
 	table.insert(list, {
-		func = nil,
 		counter = "bundlecast",
 		func = f
 	})
@@ -2192,7 +2175,6 @@ function ProfilerDebug:toggle_compare_find(slotmask, find_type, radius, length, 
 	end
 
 	table.insert(list, {
-		func = nil,
 		counter = "spherecast",
 		func = f
 	})
@@ -2460,9 +2442,6 @@ function MacroDebug:effect(effect)
 	local effect_manager = World:effect_manager()
 
 	effect_manager:spawn({
-		normal = nil,
-		position = nil,
-		effect = nil,
 		effect = effect:id(),
 		position = (cam and cam:position() or Vector3()) + (cam and cam:rotation():y() or math.Y) * 200,
 		normal = math.UP
@@ -2774,10 +2753,6 @@ function MacroDebug:set_draw_unit_enabled(unit_name, is_enabled, draw_camera_lin
 		local disabled_blue = (red or 1) * disabled_color_scale
 		local disabled_pen = Draw:pen(Color(disabled_red, disabled_green, disabled_blue), draw_on_top and "no_z" or "normal")
 		local data = {
-			disabled_pen = nil,
-			draw_camera_line = nil,
-			pen = nil,
-			draw_unit_list = nil,
 			draw_unit_list = draw_unit_list,
 			draw_camera_line = draw_camera_line,
 			pen = pen,
@@ -2871,12 +2846,6 @@ function MacroDebug:check_dangerous_network_slot(slot_list)
 					end
 
 					sub_map[unit_file] = {
-						original_slot = nil,
-						slot = nil,
-						sequence = nil,
-						object = nil,
-						unit = nil,
-						sync = nil,
 						unit = unit_file_path,
 						object = object_file_path,
 						sequence = sequence_file_path,
@@ -3079,8 +3048,6 @@ function MacroDebug:toggle_endurance_damage_hook(skip_print, line_duration)
 		self._endurance_damage_hook = nil
 	elseif not skip_print or line_duration and line_duration > 0 then
 		managers.debug.hijack:hijack_func(CoreSequenceManager.EnduranceElement, "activate", callback(self, self, "_hijacked_endurance_activate", {
-			line_duration = nil,
-			skip_print = nil,
 			skip_print = skip_print,
 			line_duration = line_duration
 		}), true)
@@ -3106,17 +3073,17 @@ end
 
 MemoryDebug = MemoryDebug or class(BaseDebug)
 MemoryDebug.CALC_TYPE_FUNC_MAP = DebugManager.CALC_TYPE_FUNC_MAP or {
-	userdata = "add_calc_userdata",
-	function = "add_calc_function",
-	table = "add_calc_table",
-	boolean = "add_calc_boolean",
+	string = "add_calc_string",
 	number = "add_calc_number",
-	string = "add_calc_string"
+	table = "add_calc_table",
+	function = "add_calc_function",
+	userdata = "add_calc_userdata",
+	boolean = "add_calc_boolean"
 }
 MemoryDebug.PRIMITIVE_VALUE_TYPE_MAP = DebugManager.PRIMITIVE_VALUE_TYPE_MAP or {
-	number = true,
+	string = true,
 	boolean = true,
-	string = true
+	number = true
 }
 
 function MemoryDebug:extensions()
@@ -3133,8 +3100,6 @@ function MemoryDebug:extensions()
 			local class_name_string = CoreDebug.class_name(extension_class, _M)
 			local data = extension_class_map[class_name_string]
 			data = data or {
-				unit_count = nil,
-				unit_list = nil,
 				count = 0,
 				unit_count = {},
 				unit_list = {}
@@ -3196,8 +3161,8 @@ function MemoryDebug:traverse_instances(func, seen_map, map)
 	seen_map = seen_map or {}
 	local populate_map = {}
 	local info_map = {
-		found_count = 0,
 		seen_count = 0,
+		found_count = 0,
 		count = 0
 	}
 
@@ -3532,9 +3497,6 @@ function ConsoleDebug:add_text(text, color)
 
 	local formatted_text = string.gsub(tostring(text), "\t", "    ")
 	local text_data = {
-		time = nil,
-		text = nil,
-		color = nil,
 		time = TimerManager:wall():time(),
 		text = formatted_text,
 		color = color
@@ -3992,7 +3954,6 @@ function MenuDebug:setup_menu()
 
 		if bg_color then
 			self._background_rect = self._panel:rect({
-				color = nil,
 				color = bg_color
 			})
 		end

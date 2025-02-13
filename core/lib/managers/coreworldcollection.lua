@@ -128,6 +128,10 @@ function CoreWorldCollection:unregister_input_element(world_id, event, input_ele
 end
 
 function CoreWorldCollection:register_output_element(world_editor_name, event, output_element)
+	if event == nil then
+		Application:warn("[CoreWorldCollection:register_output_element] Event was nil, this might mean the dropdown shows an event selected but was not selected", world_editor_name, output_element)
+	end
+
 	self._output_elements[world_editor_name] = self._output_elements[world_editor_name] or {}
 	self._output_elements[world_editor_name][event] = self._output_elements[world_editor_name][event] or {}
 
@@ -217,22 +221,20 @@ function CoreWorldCollection:get_next_navstitcher_id()
 	return self._stitcher_counter
 end
 
-function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_counter, excluded_continents)
+function CoreWorldCollection:prepare_world(world, world_id, editor_name, counted_continents, excluded_continents)
 	local start = TimerManager:now()
 	local file_type = "world"
-	local file_path = world.meta_data.file .. "/world"
-	local reverse = string.reverse(file_path)
-	local i = string.find(reverse, "/")
-	local world_dir = string.reverse(string.sub(reverse, i))
+	local world_dir = world.meta_data.file .. "/"
+	local file_path = world_dir .. file_type
 
 	if not DB:has(file_type, file_path) then
 		error(file_path .. "." .. file_type .. " is not in the database!")
 	end
 
-	Application:debug("[CoreWorldCollection:prepare_world()] world_id:", world_id, spawn_counter)
+	Application:debug("[CoreWorldCollection:prepare_world] world_id:", world_id, counted_continents)
 
 	local params = {
-		file_type = "world",
+		file_type = file_type,
 		file_path = file_path,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -243,7 +245,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	definition.is_created = false
 	definition.creation_in_progress = true
 	definition.editor_name = editor_name
-	definition.spawn_counter = spawn_counter
+	definition.counted_continents = counted_continents
 	definition.meta_data = world.meta_data
 
 	if self._drop_in_sync and self._drop_in_sync[world_id] and self._drop_in_sync[world_id].sync_units then
@@ -266,10 +268,12 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 
 	local t_end = TimerManager:now()
 
-	Application:debug("[CoreWorldCollection:prepare_world( world )] DURATION", t_end - start)
+	Application:debug("[CoreWorldCollection:prepare_world] DURATION", t_end - start)
 end
 
 function CoreWorldCollection:create(index, nav_graph_loaded)
+	Application:debug("[CoreWorldCollection:create()]", index)
+
 	local definition = self._world_definitions[index]
 
 	if not definition then
@@ -646,7 +650,7 @@ function CoreWorldCollection:check_queued_world_prepare()
 
 		self.concurrent_prepare = self.concurrent_prepare + 1
 
-		managers.worldcollection:prepare_world(data.world, data.world_id, data.editor_name, data.spawn_counter)
+		managers.worldcollection:prepare_world(data.world, data.world_id, data.editor_name, data.counted_continents)
 
 		break
 	end
@@ -1072,6 +1076,12 @@ function CoreWorldCollection:world_names()
 end
 
 function CoreWorldCollection:get_mission_elements_from_script(name, element_class)
+	if not self._all_worlds[name] then
+		Application:error("[CoreWorldCollection:get_mission_elements_from_script] Cannot get a world from", name, element_class)
+
+		return {}
+	end
+
 	local path = self._all_worlds[name].file .. "/" .. "world/world"
 	local instance_data = self:_serialize_to_script("mission", Idstring(path))
 	local mission_elements = {}
@@ -1212,10 +1222,6 @@ function CoreWorldCollection:sync_world_prepared(world_id, peer, stage)
 	p._synced_worlds[world_id] = p._synced_worlds[world_id] or {}
 	local old_stage_value = p._synced_worlds[world_id][stage]
 	p._synced_worlds[world_id][stage] = true
-
-	if Network:is_server() and stage == CoreWorldCollection.STAGE_LOAD and not old_stage_value then
-		-- Nothing
-	end
 end
 
 function CoreWorldCollection:send_loaded_packages(peer)
@@ -1310,10 +1316,9 @@ end
 
 function CoreWorldCollection:level_transition_cleanup()
 	Application:trace("[CoreWorldCollection:level_transition_cleanup()]")
+	managers.player:clear_synced_turret()
 
 	local player = managers.player:local_player()
-
-	managers.player:clear_synced_turret()
 
 	if alive(player) then
 		player:base():_unregister()
@@ -1339,6 +1344,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.game_play_central:on_level_transition()
 	managers.portal:clear()
 	managers.drop_loot:clear()
+	managers.fire:clear()
 end
 
 function CoreWorldCollection:level_transition_started()
@@ -1536,11 +1542,12 @@ function CoreWorldCollection:destroy_all_worlds()
 end
 
 function CoreWorldCollection:add_world_loaded_callback(obj)
+	Application:trace("[CoreWorldCollection:WorldCallbacks] add_world_loaded_callback", debug.traceback())
 	table.insert(self._world_loaded_callbacks, obj)
 end
 
 function CoreWorldCollection:execute_world_loaded_callbacks()
-	Application:trace("[CoreWorldCollection:execute_world_loaded_callbacks()]")
+	Application:trace("[CoreWorldCollection:WorldCallbacks] execute_world_loaded_callbacks", #self._world_loaded_callbacks)
 
 	for _, obj in ipairs(self._world_loaded_callbacks) do
 		obj:on_world_loaded()

@@ -522,7 +522,9 @@ function EnvironmentLayer:build_panel(notebook)
 		128,
 		256,
 		512,
-		1024
+		1024,
+		2048,
+		4096
 	}) do
 		resolution:append(res)
 	end
@@ -733,6 +735,8 @@ function EnvironmentLayer:generate_dome_occ()
 
 	for _, unit in ipairs(self:created_units()) do
 		if unit:name() == Idstring(self._dome_occ_shape_unit) then
+			managers.editor:output_error("First dome occ shape being used: " .. unit:name():s())
+
 			shape = unit:unit_data().occ_shape
 
 			break

@@ -72,7 +72,7 @@ function CarryTweakData:init(tweak_data)
 		},
 		hud_icon = "carry_painting",
 		throw_rotations = Rotation(0, 0, 66),
-		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
+		upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC,
 		weight = 2,
 		show_objects = {
 			g_sticker = true
@@ -98,7 +98,7 @@ function CarryTweakData:init(tweak_data)
 		AI_carry = {
 			SO_category = "enemies"
 		},
-		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
+		upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC,
 		weight = 3,
 		hud_icon = "carry_artefact"
 	}
@@ -119,7 +119,7 @@ function CarryTweakData:init(tweak_data)
 		AI_carry = {
 			SO_category = "enemies"
 		},
-		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
+		upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC,
 		weight = 2,
 		hud_icon = "carry_artefact"
 	}
@@ -210,7 +210,7 @@ function CarryTweakData:init(tweak_data)
 			SO_category = "enemies"
 		},
 		throw_rotations = Rotation(2, 40, 8),
-		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
+		upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC,
 		weight = 1
 	}
 	self.gold = {
@@ -226,9 +226,22 @@ function CarryTweakData:init(tweak_data)
 			SO_category = "enemies"
 		},
 		throw_rotations = Rotation(0, 20, 0),
-		upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC,
+		upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC,
 		weight = self.gold_bar.weight * 3
 	}
+	self.crate_explosives = {
+		name_id = "hud_carry_explosives",
+		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
+		hud_icon = "carry_explosive",
+		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
+		type = "normal",
+		skip_exit_secure = true,
+		weight = 2,
+		upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL
+	}
+	self.conspiracy_board = deep_clone(self.painting_sto)
+	self.conspiracy_board.unit = "units/upd_fb/props/wall_board_conspiracy/pku_conspiracy_board_bag"
+	self.conspiracy_board.name_id = "hud_carry_conspiracy_board"
 	self.cable_plug = {
 		type = "normal",
 		hud_icon = "carry_planks",
@@ -375,7 +388,7 @@ function CarryTweakData:_init_shared_multipliers()
 		category = "carry",
 		upgrade = "predator_corpse_weight_multiplier"
 	}
-	self.TRHROW_MULTIPLIERS_GENERIC = {
+	self.THROW_MULTIPLIERS_GENERIC = {
 		category = "carry",
 		upgrade = "strongback_throw_distance_multiplier"
 	}

@@ -17,27 +17,27 @@ end
 
 function BookBoxGui:add_page(name, box_gui, visible)
 	local panel = self._panel:panel({
+		layer = 10,
 		x = 0,
 		w = 40,
 		h = 20,
-		layer = 10,
 		name = name
 	})
 
 	panel:rect({
-		layer = 0,
 		name = "bg_rect",
+		layer = 0,
 		color = Color(1, 0.5, 0.5, 0.5)
 	})
 	panel:text({
-		hvertical = "center",
-		name = "name_text",
 		y = 0,
-		x = 0,
+		hvertical = "center",
 		vertical = "center",
 		halign = "center",
 		layer = 1,
 		align = "center",
+		x = 0,
+		name = "name_text",
 		text = string.upper(name),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size

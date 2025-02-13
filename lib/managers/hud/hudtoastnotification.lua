@@ -39,9 +39,9 @@ end
 
 function HUDToastNotification:_create_background()
 	self._background = self._object:bitmap({
-		name = "background",
-		halign = "center",
 		valign = "center",
+		halign = "center",
+		name = "background",
 		w = HUDToastNotification.W,
 		h = HUDToastNotification.H,
 		texture = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture,
@@ -52,9 +52,9 @@ end
 function HUDToastNotification:_create_title()
 	self._title = self._object:text({
 		vertical = "center",
-		name = "text",
-		text = "OBJECTIVE ACTIVATED",
 		align = "center",
+		text = "OBJECTIVE ACTIVATED",
+		name = "text",
 		valign = "center",
 		halign = "center",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
@@ -71,9 +71,9 @@ end
 function HUDToastNotification:_create_text()
 	self._text = self._object:text({
 		vertical = "center",
-		name = "text",
-		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
 		align = "center",
+		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
+		name = "text",
 		valign = "center",
 		halign = "center",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
@@ -104,8 +104,8 @@ function HUDToastNotification:_create_icon()
 		color = HUDToastNotification.ICON_COLOR
 	})
 	local blur = self._icon_panel:bitmap({
-		render_template = "VertexColorTexturedBlur3D",
 		name = "blur",
+		render_template = "VertexColorTexturedBlur3D",
 		rotation = 360,
 		layer = self._icon:layer() - 1,
 		w = HUDToastNotification.ICON_PANEL_SIZE,

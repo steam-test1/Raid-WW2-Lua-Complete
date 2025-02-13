@@ -1,7 +1,7 @@
 HuskCopBrain = HuskCopBrain or class()
 HuskCopBrain._NET_EVENTS = {
-	weapon_laser_off = 2,
-	weapon_laser_on = 1
+	weapon_laser_on = 1,
+	weapon_laser_off = 2
 }
 
 function HuskCopBrain:init(unit)
@@ -13,12 +13,12 @@ function HuskCopBrain:post_init()
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
-		footstep = true,
 		explosion = true,
 		aggression = true,
 		vo_intimidate = true,
 		vo_cbt = true,
-		bullet = true
+		bullet = true,
+		footstep = true
 	}, self._unit:movement():m_head_pos())
 
 	self._last_alert_t = 0

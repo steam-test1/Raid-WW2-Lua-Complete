@@ -10,26 +10,6 @@ function WeaponFactoryManager:init()
 	self:set_use_thq_weapon_parts(managers.user:get_setting("use_thq_weapon_parts"))
 end
 
-function WeaponFactoryManager:_setup()
-	if not Global.weapon_factory then
-		Global.weapon_factory = {}
-	end
-
-	self._global = Global.weapon_factory
-	Global.weapon_factory.loaded_packages = Global.weapon_factory.loaded_packages or {}
-	self._loaded_packages = Global.weapon_factory.loaded_packages
-
-	self:_read_factory_data()
-end
-
-function WeaponFactoryManager:set_use_thq_weapon_parts(use_thq_weapon_parts)
-	self._use_thq_weapon_parts = use_thq_weapon_parts
-end
-
-function WeaponFactoryManager:use_thq_weapon_parts()
-	return self._use_thq_weapon_parts
-end
-
 function WeaponFactoryManager:update(t, dt)
 	if self._active_task then
 		if self:_update_task(self._active_task) then
@@ -40,6 +20,30 @@ function WeaponFactoryManager:update(t, dt)
 	elseif next(self._tasks) then
 		self:_check_task()
 	end
+end
+
+function WeaponFactoryManager:_check_task()
+	if not self._active_task and #self._tasks > 0 then
+		self._active_task = table.remove(self._tasks, 1)
+
+		if not alive(self._active_task.p_unit) then
+			self._active_task = nil
+
+			self:_check_task()
+		end
+	end
+end
+
+function WeaponFactoryManager:_setup()
+	if not Global.weapon_factory then
+		Global.weapon_factory = {}
+	end
+
+	self._global = Global.weapon_factory
+	Global.weapon_factory.loaded_packages = Global.weapon_factory.loaded_packages or {}
+	self._loaded_packages = Global.weapon_factory.loaded_packages
+
+	self:_read_factory_data()
 end
 
 function WeaponFactoryManager:_read_factory_data()
@@ -74,36 +78,12 @@ function WeaponFactoryManager:_read_factory_data()
 	end
 end
 
-function WeaponFactoryManager:get_all_weapon_categories()
-	local weapon_categories = {}
-	local weapon_data = tweak_data.weapon
-	local category = nil
-
-	for factory_id, data in pairs(tweak_data.weapon.factory) do
-		if factory_id ~= "parts" and not string.match(factory_id, "_npc") and weapon_data[self:get_weapon_id_by_factory_id(factory_id)] then
-			category = weapon_data[self:get_weapon_id_by_factory_id(factory_id)].category
-			weapon_categories[category] = weapon_categories[category] or {}
-
-			table.insert(weapon_categories[category], factory_id)
-		end
-	end
-
-	return weapon_categories
+function WeaponFactoryManager:set_use_thq_weapon_parts(use_thq_weapon_parts)
+	self._use_thq_weapon_parts = use_thq_weapon_parts
 end
 
-function WeaponFactoryManager:get_all_weapon_families()
-	local weapon_families = {}
-	local weapon_data = tweak_data.weapon
-
-	for factory_id, data in pairs(tweak_data.weapon.factory) do
-		if factory_id ~= "parts" and not string.match(factory_id, "_npc") and weapon_data[self:get_weapon_id_by_factory_id(factory_id)] and data.family then
-			weapon_families[data.family] = weapon_families[data.family] or {}
-
-			table.insert(weapon_families[data.family], factory_id)
-		end
-	end
-
-	return weapon_families
+function WeaponFactoryManager:use_thq_weapon_parts()
+	return self._use_thq_weapon_parts
 end
 
 function WeaponFactoryManager:get_weapons_uses_part(part_id)
@@ -187,7 +167,7 @@ function WeaponFactoryManager:create_limited_blueprints(factory_id)
 		end
 	end
 
-	print("Limited", #all_parts_used_once)
+	Application:debug("[WeaponFactoryManager:create_limited_blueprints] Limited", #all_parts_used_once)
 
 	return all_parts_used_once
 end
@@ -214,21 +194,19 @@ function WeaponFactoryManager:create_blueprints(factory_id)
 	local result = {}
 
 	dump(1, result, {})
-	print("Combinations", #result)
+	Application:debug("[WeaponFactoryManager:create_blueprints] Combinations", #result)
 
 	return result
 end
 
 function WeaponFactoryManager:_indexed_parts(factory_id)
-	local i_table = {}
 	local all_parts = self._parts_by_weapon[factory_id]
 	local optional_types = tweak_data.weapon.factory[factory_id].optional_types or {}
+	local i_table = {}
 	local num_variations = 1
 	local tot_parts = 0
 
 	for type, parts in pairs(all_parts) do
-		print(type, parts)
-
 		if type ~= "foregrip_ext" and type ~= "stock_adapter" and type ~= "sight_special" and type ~= "extra" then
 			parts = clone(parts)
 
@@ -247,21 +225,7 @@ function WeaponFactoryManager:_indexed_parts(factory_id)
 		end
 	end
 
-	print("num_variations", num_variations, "tot_parts", tot_parts)
-
 	return i_table
-end
-
-function WeaponFactoryManager:_check_task()
-	if not self._active_task and #self._tasks > 0 then
-		self._active_task = table.remove(self._tasks, 1)
-
-		if not alive(self._active_task.p_unit) then
-			self._active_task = nil
-
-			self:_check_task()
-		end
-	end
 end
 
 function WeaponFactoryManager:preload_blueprint(factory_id, blueprint, third_person, done_cb, only_record)
@@ -415,7 +379,7 @@ function WeaponFactoryManager:_preload_part(factory_id, part_id, forbidden, over
 
 			self:load_package(parts[part_id].package)
 		else
-			print("[WeaponFactoryManager] Expected weapon part packages for", part_id)
+			Application:debug("[WeaponFactoryManager] Expected weapon part packages for", part_id)
 
 			package = nil
 		end
@@ -464,91 +428,9 @@ function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint)
 	return modified_blueprint
 end
 
-function WeaponFactoryManager:assemble_for_visual_only(factory_id, p_unit, blueprint, third_person)
-	local factory = tweak_data.weapon.factory
-	local factory_weapon = factory[factory_id]
-	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
-
-	return self:_add_parts_for_visual_only(p_unit, factory_id, factory_weapon, blueprint, forbidden, false)
-end
-
-function WeaponFactoryManager:_add_parts_for_visual_only(p_unit, factory_id, factory_weapon, blueprint, forbidden, third_person)
-	self._tasks = self._tasks or {}
-	local parts = {}
-	local need_parent = {}
-	local override = self:_get_override_parts(factory_id, blueprint)
-
-	for _, part_id in ipairs(blueprint) do
-		self:_add_part_for_visual_only(p_unit, factory_id, part_id, forbidden, override, parts, third_person, need_parent)
-	end
-
-	for _, part_id in ipairs(need_parent) do
-		self:_add_part_for_visual_only(p_unit, factory_id, part_id, forbidden, override, parts, third_person, need_parent)
-	end
-
-	return parts, blueprint
-end
-
-function WeaponFactoryManager:_add_part_for_visual_only(p_unit, factory_id, part_id, forbidden, override, parts, third_person, need_parent)
-	if forbidden[part_id] then
-		return
-	end
-
-	local factory = tweak_data.weapon.factory
-	local part = self:_part_data(part_id, factory_id, override)
-
-	if factory[factory_id].adds and factory[factory_id].adds[part_id] then
-		for _, add_id in ipairs(factory[factory_id].adds[part_id]) do
-			self:_add_part_for_visual_only(p_unit, factory_id, add_id, forbidden, override, parts, third_person, need_parent)
-		end
-	end
-
-	if part.adds_type then
-		for _, add_type in ipairs(part.adds_type) do
-			local add_id = factory[factory_id][add_type]
-
-			self:_add_part_for_visual_only(p_unit, factory_id, add_id, forbidden, override, parts, third_person, need_parent)
-		end
-	end
-
-	if part.adds then
-		for _, add_id in ipairs(part.adds) do
-			self:_add_part_for_visual_only(p_unit, factory_id, add_id, forbidden, override, parts, third_person, need_parent)
-		end
-	end
-
-	if parts[part_id] then
-		return
-	end
-
-	local link_to_unit = p_unit
-
-	if part.parent then
-		local parent_part = self:get_part_from_weapon_by_type(part.parent, parts)
-
-		if parent_part then
-			link_to_unit = parent_part.unit
-		else
-			table.insert(need_parent, part_id)
-
-			return
-		end
-	end
-
-	local unit_name = third_person and part.third_unit or part.unit
-	local ids_unit_name = Idstring(unit_name)
-
-	managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
-
-	local unit = World:spawn_unit(Idstring(part.unit), link_to_unit:get_object(Idstring(part.a_obj)):position(), link_to_unit:get_object(Idstring(part.a_obj)):rotation())
-	parts[part_id] = {
-		unit = unit
-	}
-end
-
 function WeaponFactoryManager:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
 	if not done_cb then
-		Application:error("-----------------------------")
+		Application:error("[WeaponFactoryManager] _assemble Error stack dump below...!")
 		Application:stack_dump()
 	end
 
@@ -660,7 +542,6 @@ function WeaponFactoryManager:_update_task(task)
 		return
 	end
 
-	print("WeaponFactoryManager:_update_task done")
 	task.done_cb(task.parts, task.blueprint)
 
 	return true
@@ -674,8 +555,8 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 	if self._uses_tasks and not skip_queue then
 		table.insert(self._tasks, {
-			need_parent_i = 1,
 			blueprint_i = 1,
+			need_parent_i = 1,
 			done_cb = done_cb,
 			p_unit = p_unit,
 			factory_id = factory_id,
@@ -725,7 +606,7 @@ function WeaponFactoryManager:_part_data(part_id, factory_id, override)
 	local factory = tweak_data.weapon.factory
 
 	if not factory.parts[part_id] then
-		Application:error("[WeaponFactoryManager:_part_data] Part do not exist!", part_id, "factory_id", factory_id)
+		Application:error("[WeaponFactoryManager] _part_data Part do not exist!", part_id, "factory_id", factory_id)
 
 		return
 	end
@@ -803,22 +684,22 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	local unit_name = third_person and part.third_unit or part.unit
 	local ids_unit_name = Idstring(unit_name)
-	local package = nil
+	local dyn_package = nil
 
 	if not third_person and not async_task_data then
 		local tweak_unit_name = tweak_data:get_raw_value("weapon", "factory", "parts", part_id, "unit")
 		local ids_tweak_unit_name = tweak_unit_name and Idstring(tweak_unit_name)
 
 		if ids_tweak_unit_name and ids_tweak_unit_name == ids_unit_name then
-			package = "packages/fps_weapon_parts/" .. part_id
+			dyn_package = "packages/fps_weapon_parts/" .. part_id
 
-			if DB:has(Idstring("package"), Idstring(package)) then
-				print("HAS PART AS PACKAGE")
-				self:load_package(package)
+			if DB:has(Idstring("package"), Idstring(dyn_package)) then
+				Application:debug("[WeaponFactoryManager] Has part as dynamic package:", dyn_package)
+				self:load_package(dyn_package)
 			else
-				print("[WeaponFactoryManager] Expected weapon part packages for", part_id)
+				Application:debug("[WeaponFactoryManager] Expected weapon part packages for", part_id)
 
-				package = nil
+				dyn_package = nil
 			end
 		end
 	end
@@ -835,7 +716,7 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 		managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_part_unit_loaded", async_task_data))
 	else
-		if not package then
+		if not dyn_package then
 			managers.dyn_resource:load(IDS_UNIT, ids_unit_name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 		end
 
@@ -844,7 +725,7 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 			unit = unit,
 			animations = part.animations,
 			name = ids_unit_name,
-			package = package
+			package = dyn_package
 		}
 	end
 end
@@ -946,15 +827,15 @@ function WeaponFactoryManager:_spawn_and_link_unit(u_name, a_obj, third_person, 
 
 		return unit
 	else
-		Application:error("[WeaponFactoryManager:_spawn_and_link_unit] LINK TO UNIT WAS NOT ALIVE", u_name, a_obj, third_person, link_to_unit)
+		Application:error("[WeaponFactoryManager] _spawn_and_link_unit LINK TO UNIT WAS NOT ALIVE", u_name, a_obj, third_person, link_to_unit)
 	end
 end
 
 function WeaponFactoryManager:load_package(package)
-	print("WeaponFactoryManager:_load_package", package)
+	Application:debug("[WeaponFactoryManager:load_package] Try loading", package)
 
 	if not self._loaded_packages[package] then
-		print("  Load for real", package)
+		Application:debug("[WeaponFactoryManager:load_package] Load for real", package)
 		PackageManager:load(package)
 
 		self._loaded_packages[package] = 1
@@ -964,10 +845,10 @@ function WeaponFactoryManager:load_package(package)
 end
 
 function WeaponFactoryManager:unload_package(package)
-	print("WeaponFactoryManager:_unload_package", package)
+	Application:debug("[WeaponFactoryManager:unload_package] Try loading", package)
 
 	if not self._loaded_packages[package] then
-		Application:error("Trying to unload package that wasn't loaded")
+		Application:error("[WeaponFactoryManager] Trying to unload package that wasn't loaded")
 
 		return
 	end
@@ -975,7 +856,7 @@ function WeaponFactoryManager:unload_package(package)
 	self._loaded_packages[package] = self._loaded_packages[package] - 1
 
 	if self._loaded_packages[package] <= 0 then
-		print("  Unload for real", package)
+		Application:debug("[WeaponFactoryManager:unload_package] Unload for real", package)
 		PackageManager:unload(package)
 
 		self._loaded_packages[package] = nil
@@ -1137,63 +1018,11 @@ function WeaponFactoryManager:is_part_standard_issue(factory_id, part_id)
 	return table.contains(weapon_factory_tweak_data.default_blueprint or {}, part_id)
 end
 
-function WeaponFactoryManager:is_part_standard_issue_by_weapon_id(weapon_id, part_id)
-	return self:is_part_standard_issue(self:get_factory_id_by_weapon_id(weapon_id), part_id)
-end
-
-function WeaponFactoryManager:get_part_desc_by_part_id_from_weapon(part_id, factory_id, blueprint)
-	local factory = tweak_data.weapon.factory
-	local override = self:_get_override_parts(factory_id, blueprint)
-	local part = self:_part_data(part_id, factory_id, override)
-	local desc_id = part.desc_id or tweak_data.blackmarket.weapon_mods[part_id].desc_id
-	local params = {
-		BTN_GADGET = managers.localization:btn_macro("weapon_gadget", true),
-		BTN_BIPOD = managers.localization:btn_macro("deploy_bipod", true)
-	}
-
-	if managers.menu:is_pc_controller() and managers.localization:exists(desc_id .. "_pc") then
-		return managers.localization:text(desc_id .. "_pc", params)
-	elseif managers.localization:exists(desc_id) then
-		return managers.localization:text(desc_id, params)
-	end
-
-	return Application:production_build() and "Add ##desc_id## to ##" .. part_id .. "## in tweak_data.blackmarket.weapon_mods" or ""
-end
-
 function WeaponFactoryManager:get_part_data_by_part_id_from_weapon(part_id, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local override = self:_get_override_parts(factory_id, blueprint)
 
 	return self:_part_data(part_id, factory_id, override)
-end
-
-function WeaponFactoryManager:get_part_name_by_part_id_from_weapon(part_id, factory_id, blueprint)
-	local factory = tweak_data.weapon.factory
-	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
-	local override = self:_get_override_parts(factory_id, blueprint)
-
-	if not forbidden[part_id] then
-		local part = self:_part_data(part_id, factory_id, override)
-		local name_id = part.name_id
-
-		return managers.localization:text(name_id)
-	end
-end
-
-function WeaponFactoryManager:get_part_desc_by_part_id(part_id)
-	local part_tweak_data = tweak_data.weapon.factory.parts[part_id]
-
-	if not part_tweak_data then
-		Application:error("[WeaponFactoryManager:get_part_desc_by_part_id] Found no part with part id", part_id)
-
-		return
-	end
-
-	local desc_id = tweak_data.blackmarket.weapon_mods[part_id].desc_id
-
-	return desc_id and managers.localization:text(desc_id, {
-		BTN_GADGET = managers.localization:btn_macro("weapon_gadget", true)
-	}) or Application:production_build() and "Add ##desc_id## to ##" .. part_id .. "## in tweak_data.blackmarket.weapon_mods" or ""
 end
 
 function WeaponFactoryManager:get_part_name_by_part_id(part_id)
@@ -1310,82 +1139,6 @@ function WeaponFactoryManager:change_part_blueprint_only(factory_id, part_id, bl
 	return false
 end
 
-function WeaponFactoryManager:get_replaces_parts(factory_id, part_id, blueprint, remove_part)
-	local factory = tweak_data.weapon.factory
-	local part = factory.parts[part_id]
-
-	if not part then
-		Application:error("WeaponFactoryManager:change_part Part", part_id, " doesn't exist!")
-
-		return nil
-	end
-
-	local replaces = {}
-	local type = part.type
-
-	if self._parts_by_weapon[factory_id][type] then
-		if table.contains(self._parts_by_weapon[factory_id][type], part_id) then
-			for _, rep_id in ipairs(blueprint) do
-				if factory.parts[rep_id].type == type then
-					table.insert(replaces, rep_id)
-
-					break
-				end
-			end
-		else
-			Application:error("WeaponFactoryManager:check_replaces_part Part", part_id, "not allowed for weapon", factory_id, "!")
-		end
-	else
-		Application:error("WeaponFactoryManager:check_replaces_part Part", part_id, "not allowed for weapon", factory_id, "!")
-	end
-
-	return replaces
-end
-
-function WeaponFactoryManager:get_removes_parts(factory_id, part_id, blueprint, remove_part)
-	local factory = tweak_data.weapon.factory
-	local part = factory.parts[part_id]
-
-	if not part then
-		Application:error("WeaponFactoryManager:get_removes_parts Part", part_id, " doesn't exist!")
-
-		return nil
-	end
-
-	local removes = {}
-	local new_blueprint = deep_clone(blueprint)
-
-	self:change_part_blueprint_only(factory_id, part_id, new_blueprint, remove_part)
-
-	for i, b_id in ipairs(blueprint) do
-		if not table.contains(new_blueprint, b_id) then
-			local b_part = factory.parts[b_id]
-
-			if b_part and part and b_part.type ~= part.type then
-				table.insert(removes, b_id)
-			end
-		end
-	end
-
-	return removes
-end
-
-function WeaponFactoryManager:can_add_part(factory_id, part_id, blueprint)
-	local new_blueprint = deep_clone(blueprint)
-
-	table.insert(new_blueprint, part_id)
-
-	local forbidden = self:_get_forbidden_parts(factory_id, new_blueprint)
-
-	for forbid_part_id, forbidder_part_id in pairs(forbidden) do
-		if forbid_part_id == part_id then
-			return forbidder_part_id
-		end
-	end
-
-	return nil
-end
-
 function WeaponFactoryManager:remove_part(p_unit, factory_id, part_id, parts, blueprint)
 	local factory = tweak_data.weapon.factory
 	local part = factory.parts[part_id]
@@ -1487,10 +1240,10 @@ function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second
 	local assembled_blueprint = self:get_assembled_blueprint(factory_id, blueprint)
 	local forbidden = self:_get_forbidden_parts(factory_id, assembled_blueprint)
 	local override = self:_get_override_parts(factory_id, assembled_blueprint)
-	local part = nil
 	local translation = Vector3()
 	local rotation = Rotation()
 	local lens_distortion = managers.environment_controller:get_lens_distortion_value()
+	local part = nil
 
 	for _, part_id in ipairs(assembled_blueprint) do
 		if not forbidden[part_id] then
@@ -1638,11 +1391,11 @@ function WeaponFactoryManager:disassemble(parts)
 		end
 	end
 
-	parts = {}
-
 	for _, name in pairs(names) do
 		managers.dyn_resource:unload(IDS_UNIT, name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
+
+	parts = {}
 end
 
 function WeaponFactoryManager:save(data)

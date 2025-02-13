@@ -14,7 +14,6 @@ require("lib/managers/hud/HUDInteraction")
 require("lib/managers/hud/HUDCardDetails")
 require("lib/managers/hud/HUDMapWaypoint")
 require("lib/managers/hud/HUDMapPlayerPin")
-require("lib/managers/hud/HUDMapBase")
 require("lib/managers/hud/HUDMapTab")
 require("lib/managers/hud/HUDTabGreedBar")
 require("lib/managers/hud/HUDTabCandyProgression")
@@ -68,10 +67,6 @@ HUDManager.WEAPONS_PANEL_W = 384
 HUDManager.WEAPONS_PANEL_H = 84
 HUDManager.CHAT_DISTANCE_FROM_BOTTOM = 128
 HUDManager.MINIGAMES = {
-	rewire = nil,
-	cut_fuse = nil,
-	roulette = nil,
-	pick_lock = nil,
 	pick_lock = HUDSpecialInteractionLockPick,
 	cut_fuse = HUDSpecialInteractionFuseCutting,
 	rewire = HUDSpecialInteractionRewiring,
@@ -99,8 +94,6 @@ end
 
 function HUDManager:add_weapon(data)
 	self._hud.weapons[data.inventory_index] = {
-		inventory_index = nil,
-		unit = nil,
 		inventory_index = data.inventory_index,
 		unit = data.unit
 	}
@@ -719,24 +712,22 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
+		y = 200,
+		x = 550,
 		name = "ammo_test",
 		w = 100,
-		h = 4,
-		y = 200,
-		x = 550
+		h = 4
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
 	panel:set_center_x(hud.panel:w() / 2)
 	panel:rect({
 		name = "ammo_test_bg_rect",
-		color = nil,
 		color = Color.black:with_alpha(0.5)
 	})
 	panel:rect({
-		name = "ammo_test_rect",
-		color = nil,
 		layer = 1,
+		name = "ammo_test_rect",
 		color = Color.white
 	})
 end
@@ -807,9 +798,6 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 
 				for equipment, amount in pairs(peer_equipment) do
 					self:add_teammate_special_equipment(i, {
-						amount = nil,
-						icon = nil,
-						id = nil,
 						id = equipment,
 						icon = tweak_data.equipments.specials[equipment].icon,
 						amount = amount
@@ -822,8 +810,6 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 					local icon = tweak_data.equipments[peer_deployable_equipment.deployable].icon
 
 					self:set_deployable_equipment(i, {
-						amount = nil,
-						icon = nil,
 						icon = icon,
 						amount = peer_deployable_equipment.amount
 					})
@@ -975,13 +961,11 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
-		w = nil,
-		name = "teammates_panel",
-		halign = "left",
-		h = nil,
-		valign = "grow",
 		y = 0,
+		name = "teammates_panel",
 		x = 0,
+		halign = "left",
+		valign = "grow",
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -990,7 +974,6 @@ function HUDManager:_create_teammates_panel(hud)
 	for i = 1, 3 do
 		self._hud.teammate_panels_data[i] = {
 			taken = false,
-			special_equipments = nil,
 			special_equipments = {}
 		}
 		local ai_teammate = HUDTeammateAI:new(i, teammates_panel)
@@ -1015,7 +998,6 @@ function HUDManager:_create_teammates_panel(hud)
 
 	self._hud.teammate_panels_data[HUDManager.PLAYER_PANEL] = {
 		taken = false,
-		special_equipments = nil,
 		special_equipments = {}
 	}
 end
@@ -1041,11 +1023,9 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
-		name = "weapons_panel",
-		w = nil,
-		h = nil,
-		valign = "bottom",
 		halign = "right",
+		name = "weapons_panel",
+		valign = "bottom",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1203,6 +1183,59 @@ function HUDManager:_destroy_carry_wheel()
 	end
 end
 
+function HUDManager:_create_airdrop_wheel(hud, params)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local params = tweak_data.interaction:get_interaction("airdrop_wheel")
+	local pm = managers.player
+	params.show_clbks = {
+		callback(pm, pm, "disable_view_movement")
+	}
+	params.hide_clbks = {
+		callback(pm, pm, "enable_view_movement")
+	}
+	self._hud_airdrop_wheel = HUDMultipleChoiceWheel:new(self._saferect, hud, params)
+
+	self._hud_airdrop_wheel:hide()
+end
+
+function HUDManager:show_airdrop_wheel()
+	if not self._hud_airdrop_wheel then
+		self:_create_airdrop_wheel()
+	end
+
+	self._hud_airdrop_wheel:show()
+end
+
+function HUDManager:hide_airdrop_wheel(quiet)
+	if self._hud_airdrop_wheel then
+		self._hud_airdrop_wheel:hide(quiet)
+	end
+end
+
+function HUDManager:set_airdrop_wheel_options(options)
+	if not self._hud_airdrop_wheel then
+		self:_create_airdrop_wheel()
+	end
+
+	self._hud_airdrop_wheel:set_options(options)
+end
+
+function HUDManager:is_airdrop_wheel_visible()
+	if self._hud_airdrop_wheel ~= nil then
+		return self._hud_airdrop_wheel:is_visible()
+	end
+
+	return false
+end
+
+function HUDManager:_destroy_airdrop_wheel()
+	if self._hud_airdrop_wheel then
+		self._hud_airdrop_wheel:destroy()
+
+		self._hud_airdrop_wheel = nil
+	end
+end
+
 function HUDManager:create_special_interaction(hud, params)
 	Application:debug("[HUDManager:create_special_interaction] TYPE", params.minigame_type)
 
@@ -1318,12 +1351,8 @@ function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
 		name = "progress_timer_progress_bar",
-		color = nil,
-		description = nil,
 		width = 256,
 		height = 8,
-		y = nil,
-		x = nil,
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
@@ -1401,10 +1430,9 @@ function HUDManager:on_progression_cycle_completed()
 	end
 
 	local notification_params = {
-		duration = 6,
-		priority = 4,
-		notification_type = nil,
 		id = "progression_cycle_completed",
+		priority = 4,
+		duration = 6,
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 
@@ -1417,12 +1445,8 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 	end
 
 	managers.notification:add_notification({
-		new_progress = nil,
-		notification_type = nil,
-		shelf_life = 8,
-		item = nil,
-		initial_progress = nil,
 		id = "greed_item_picked_up",
+		shelf_life = 8,
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress,
@@ -1520,6 +1544,12 @@ end
 function HUDManager:remove_tab_event_panel()
 	if self._tab_screen then
 		self._tab_screen:remove_event_panel()
+	end
+end
+
+function HUDManager:set_map_location(location_id)
+	if self._tab_screen then
+		self._tab_screen:set_map_location(location_id)
 	end
 end
 
@@ -1656,7 +1686,7 @@ end
 
 function HUDManager:reset_session_time()
 	self._tab_screen:reset_time()
-	managers.game_play_central:start_heist_timer()
+	managers.game_play_central:start_job_timer()
 end
 
 function HUDManager:set_stamina_value(value)
@@ -2173,11 +2203,6 @@ function HUDManager:_add_name_label(data)
 	end
 
 	local name_label_params = {
-		name = nil,
-		peer_id = nil,
-		movement = nil,
-		nationality = nil,
-		id = nil,
 		id = id,
 		name = data.name,
 		nationality = data.nationality,
@@ -2196,9 +2221,6 @@ function HUDManager:add_vehicle_name_label(data)
 	local last_id = self._hud.name_labels[#self._hud.name_labels] and self._hud.name_labels[#self._hud.name_labels]:id() or 0
 	local id = last_id + 1
 	local vehicle_name_label_params = {
-		vehicle_name = nil,
-		vehicle_unit = nil,
-		id = nil,
 		id = id,
 		vehicle_name = managers.localization:text(data.name),
 		vehicle_unit = data.unit

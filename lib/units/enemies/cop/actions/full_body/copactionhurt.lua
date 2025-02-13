@@ -217,16 +217,16 @@ CopActionHurt.hurt_anim_variants = {
 		}
 	},
 	expl_hurt = {
-		l = 7,
-		r = 7,
 		fwd = 8,
-		bwd = 8
+		bwd = 8,
+		l = 7,
+		r = 7
 	},
 	fire_hurt = {
-		l = 7,
-		r = 7,
 		fwd = 8,
-		bwd = 8
+		bwd = 8,
+		l = 7,
+		r = 7
 	}
 }
 CopActionHurt.running_hurt_anim_variants = {
@@ -235,16 +235,16 @@ CopActionHurt.running_hurt_anim_variants = {
 ShieldActionHurt = ShieldActionHurt or class(CopActionHurt)
 ShieldActionHurt.hurt_anim_variants = deep_clone(CopActionHurt.hurt_anim_variants)
 ShieldActionHurt.hurt_anim_variants.expl_hurt = {
-	l = 2,
-	r = 2,
 	fwd = 2,
-	bwd = 2
+	bwd = 2,
+	l = 2,
+	r = 2
 }
 ShieldActionHurt.hurt_anim_variants.fire_hurt = {
-	l = 2,
-	r = 2,
 	fwd = 2,
-	bwd = 2
+	bwd = 2,
+	l = 2,
+	r = 2
 }
 CopActionHurt.fire_death_anim_variants_length = {
 	9,
@@ -255,23 +255,22 @@ CopActionHurt.fire_death_anim_variants_length = {
 }
 
 function CopActionHurt:init(action_desc, common_data)
+	local t = TimerManager:game():time()
 	self._common_data = common_data
 	self._ext_movement = common_data.ext_movement
 	self._ext_inventory = common_data.ext_inventory
 	self._ext_anim = common_data.ext_anim
-	self._body_part = action_desc.body_part
 	self._unit = common_data.unit
 	self._machine = common_data.machine
 	self._attention = common_data.attention
 	self._action_desc = action_desc
-	local t = TimerManager:game():time()
+	self._body_part = action_desc.body_part
 	local tweak_table = self._unit:base()._tweak_table
 	local is_civilian = CopDamage.is_civilian(tweak_table)
 	local is_female = (self._machine:get_global("female") or 0) == 1
 	local crouching = self._unit:anim_data().crouch or self._unit:anim_data().hurt and self._machine:get_parameter(self._machine:segment_state(Idstring("base")), "crh") > 0
 	local redir_res = nil
 	local action_type = action_desc.hurt_type
-	local ignite_character = action_desc.ignite_character
 	local start_dot_dance_antimation = action_desc.fire_dot_data and action_desc.fire_dot_data.start_dot_dance_antimation
 
 	if action_type == "fatal" then
@@ -643,9 +642,9 @@ function CopActionHurt:init(action_desc, common_data)
 		end
 
 		local weapon_unit = self._ext_inventory:equipped_unit()
-		self._weapon_base = weapon_unit:base()
 		local weap_tweak = weapon_unit:base():weapon_tweak_data()
 		local weapon_usage_tweak = common_data.char_tweak.weapon[weap_tweak.usage]
+		self._weapon_base = weapon_unit:base()
 		self._weapon_unit = weapon_unit
 		self._weap_tweak = weap_tweak
 		self._w_usage_tweak = weapon_usage_tweak
@@ -777,71 +776,53 @@ function CopActionHurt:_start_enemy_fire_animation(action_type, t, use_animation
 end
 
 function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
-	local enemy_effect_name = ""
-	local anim_duration = 3
-
-	if death_variant == 1 then
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_9s")
-		anim_duration = 9
-	elseif death_variant == 2 then
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_5s")
-		anim_duration = 5
-	elseif death_variant == 3 then
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_5s")
-		anim_duration = 5
-	elseif death_variant == 4 then
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001_7s")
-		anim_duration = 7
-	elseif death_variant == 5 then
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001")
-	else
-		enemy_effect_name = Idstring("effects/vanilla/fire/fire_character_burning_001")
+	if self._fire_death_effects then
+		return
 	end
 
-	managers.fire:start_burn_body_sound({
-		enemy_unit = self._unit
-	}, anim_duration)
+	self._fire_death_effects = {}
+	local fire_tweak = tweak_data.fire
+	local effects_table = fire_tweak.death_effects.default
+	local fire_variant = effects_table[death_variant] or effects_table.default
+	local effect_name = fire_tweak.effects[fire_variant.effect]
+	local bones = fire_tweak.character_fire_bones
+	local effect_manager = World:effect_manager()
 
-	local bone_spine = self._unit:get_object(Idstring("Spine"))
-	local bone_left_arm = self._unit:get_object(Idstring("LeftArm"))
-	local bone_right_arm = self._unit:get_object(Idstring("RightArm"))
-	local bone_left_leg = self._unit:get_object(Idstring("LeftLeg"))
-	local bone_right_leg = self._unit:get_object(Idstring("RightLeg"))
+	for _, bone_name in ipairs(bones) do
+		local bone = self._unit:get_object(bone_name)
 
-	if bone_spine then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_spine
-		})
+		if bone then
+			local effect_id = effect_manager:spawn({
+				effect = effect_name,
+				parent = bone
+			})
+
+			table.insert(self._fire_death_effects, effect_id)
+		end
 	end
 
-	if bone_left_arm then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_left_arm
-		})
+	self._unit:sound():play("burn_loop_body")
+
+	self._fire_death_effects_key = "fire_death_" .. tostring(self._unit:key())
+
+	managers.queued_tasks:queue(self._fire_death_effects_key, self._remove_fire_death_effects, self, nil, fire_variant.duration)
+end
+
+function CopActionHurt:_remove_fire_death_effects()
+	if not self._fire_death_effects_key then
+		return
 	end
 
-	if bone_right_arm then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_right_arm
-		})
+	local effect_manager = World:effect_manager()
+
+	for _, effect_id in ipairs(self._fire_death_effects) do
+		effect_manager:fade_kill(effect_id)
 	end
 
-	if bone_left_leg then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_left_leg
-		})
-	end
+	self._unit:sound():play("burn_loop_body_stop")
 
-	if bone_right_leg then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_right_leg
-		})
-	end
+	self._fire_death_effects_key = nil
+	self._fire_death_effects = nil
 end
 
 function CopActionHurt:_get_floor_normal(at_pos, fwd, right)
@@ -1513,6 +1494,11 @@ function CopActionHurt:on_destroy()
 		if alive(self._weapon_unit) then
 			self._weapon_unit:base():stop_autofire()
 		end
+	end
+
+	if self._fire_death_effects_key then
+		managers.queued_tasks:unqueue(self._fire_death_effects_key)
+		self:_remove_fire_death_effects()
 	end
 
 	if self._delayed_shooting_hurt_clbk_id then

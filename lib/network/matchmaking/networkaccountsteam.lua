@@ -44,24 +44,6 @@ function NetworkAccountSTEAM:set_presences_peer_id(peer_id)
 	Steam:set_rich_presence("peer_id", peer_id)
 end
 
-function NetworkAccountSTEAM:get_win_ratio(difficulty, level)
-	local plays = Steam:sa_handler():get_global_stat(difficulty .. "_" .. level .. "_plays", 30)
-	local wins = Steam:sa_handler():get_global_stat(difficulty .. "_" .. level .. "_wins", 30)
-	local ratio = {}
-
-	if #plays == 0 or #wins == 0 then
-		return
-	end
-
-	for i, plays_n in pairs(plays) do
-		ratio[i] = wins[i] / (plays_n == 0 and 1 or plays_n)
-	end
-
-	table.sort(ratio)
-
-	return ratio[#ratio / 2]
-end
-
 function NetworkAccountSTEAM:_call_listeners(event, params)
 	if self._listener_holder then
 		self._listener_holder:call(event, params)
@@ -261,7 +243,7 @@ function NetworkAccountSTEAM:publish_statistics(stats, force_store)
 end
 
 function NetworkAccountSTEAM._on_disconnected(lobby_id, friend_id)
-	print("[NetworkAccountSTEAM._on_disconnected]", lobby_id, friend_id)
+	Application:info("[NetworkAccountSTEAM._on_disconnected] LobbyID", lobby_id, "FriendID", friend_id)
 
 	if Application:editor() then
 		return
@@ -281,7 +263,7 @@ function NetworkAccountSTEAM._on_disconnected(lobby_id, friend_id)
 end
 
 function NetworkAccountSTEAM._on_ipc_fail(lobby_id, friend_id)
-	print("[NetworkAccountSTEAM._on_ipc_fail]")
+	Application:warn("[NetworkAccountSTEAM._on_ipc_fail]")
 end
 
 function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
@@ -316,7 +298,7 @@ function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
 	end
 
 	if game_state_machine:current_state_name() ~= "menu_main" then
-		print("INGAME INVITE")
+		Application:trace("[NetworkAccountSTEAM._on_join_request] INGAME INVITE")
 
 		if managers.groupai then
 			managers.groupai:kill_all_AI()
@@ -330,7 +312,7 @@ function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
 		return
 	else
 		if not Global.user_manager.user_index or not Global.user_manager.active_user_state_change_quit then
-			print("BOOT UP INVITE")
+			Application:trace("[NetworkAccountSTEAM._on_join_request] BOOT UP INVITE")
 
 			Global.boot_invite = lobby_id
 
@@ -344,11 +326,11 @@ function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
 end
 
 function NetworkAccountSTEAM._on_server_request(ip, pw)
-	print("[NetworkAccountSTEAM._on_server_request]")
+	Application:trace("[NetworkAccountSTEAM._on_server_request]", ip, pw)
 end
 
 function NetworkAccountSTEAM._on_connect_fail(ip, pw)
-	print("[NetworkAccountSTEAM._on_connect_fail]")
+	Application:warn("[NetworkAccountSTEAM._on_connect_fail]", ip, pw)
 end
 
 function NetworkAccountSTEAM:signin_state()
@@ -411,7 +393,7 @@ function NetworkAccountSTEAM:is_ready_to_close()
 end
 
 function NetworkAccountSTEAM:inventory_load(callback_ref)
-	Application:trace("[NetworkAccountSTEAM:inventory_load]", "self._inventory_is_loading: ", self._inventory_is_loading)
+	Application:info("[NetworkAccountSTEAM:inventory_load] Inventory Loading: ", self._inventory_is_loading)
 
 	if self._inventory_is_loading then
 		return
@@ -437,11 +419,13 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 		Application:error("[NetworkAccountSTEAM:_clbk_inventory_load] Failed to update tradable inventory (" .. tostring(error) .. ")")
 	end
 
-	local filtered_list = self:_verify_filter_cards(list)
+	local filtered_cards = self:_verify_filter_cards(list)
+	local filtered_crafts = self:_verify_filter_crafts(list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
 		error = error,
-		list = filtered_list
+		cards = filtered_cards,
+		crafts = filtered_crafts
 	})
 end
 
@@ -480,6 +464,45 @@ function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 	return result
 end
 
+function NetworkAccountSTEAM:_verify_filter_crafts(items)
+	if not items then
+		return {}
+	end
+
+	local filtered_list = {}
+	local result = {}
+
+	for _, steamdata in pairs(items) do
+		if steamdata.category == "crafting_item" then
+			local craft_tweakdata = tweak_data.challenge_cards.crafting_items[steamdata.entry]
+
+			if craft_tweakdata then
+				local key_name = craft_tweakdata.key_name
+
+				if not filtered_list[key_name] then
+					filtered_list[key_name] = craft_tweakdata
+					filtered_list[key_name].steam_instances = {}
+				end
+
+				local instance_id = steamdata.instance_id or #filtered_list[key_name].steam_instances
+
+				table.insert(filtered_list[key_name].steam_instances, {
+					stack_amount = steamdata.amount or 1,
+					instance_id = tostring(instance_id)
+				})
+			end
+		end
+	end
+
+	if filtered_list then
+		for item_key_name, item_data in pairs(filtered_list) do
+			table.insert(result, item_data)
+		end
+	end
+
+	return result
+end
+
 function NetworkAccountSTEAM:inventory_is_loading()
 	return self._inventory_is_loading
 end
@@ -505,12 +528,11 @@ function NetworkAccountSTEAM:_clbk_inventory_reward(error, tradable_list)
 end
 
 function NetworkAccountSTEAM:inventory_remove(instance_id)
-	local return_status = Steam:inventory_remove(instance_id)
+	local status = Steam:inventory_remove(instance_id)
 
-	Application:trace("[ChallengeCardsManager:inventory_remove] instance_id ", instance_id, ", status", return_status)
-end
+	Application:trace("[NetworkAccountSTEAM:inventory_remove] instance_id ", instance_id, ", status", status)
 
-function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
+	return true
 end
 
 function NetworkAccountSTEAM:inventory_reward_dlc(def_id, reward_promo_callback)

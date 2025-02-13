@@ -122,6 +122,48 @@ function CoreWorldInstanceManager:get_safe_start_index(index_size, continent, dr
 	return 0
 end
 
+function CoreWorldInstanceManager:_safety_check_start_index()
+	local indicies_ranges = {}
+	local names_list = {}
+	local t = self._instance_data
+	local highest = -1
+
+	for _, instance_data in ipairs(t) do
+		table.insert(indicies_ranges, {
+			instance_data.start_index,
+			instance_data.start_index + instance_data.index_size
+		})
+		table.insert(names_list, instance_data.name)
+
+		if highest < instance_data.start_index + instance_data.index_size then
+			highest = instance_data.start_index + instance_data.index_size
+		end
+	end
+
+	local idx = 0
+
+	while highest > idx do
+		local counts = 0
+
+		for i, data in ipairs(indicies_ranges) do
+			if data[1] < idx and data[2] < idx then
+				counts = counts + 1
+
+				if counts > 1 then
+					Application:warn("[CoreWorldInstanceManager:_safety_check_start_index] Overlap found at index", names_list[i], data[1], data[2])
+
+					return
+				end
+			end
+		end
+
+		counts = 0
+		idx = idx + 1
+	end
+
+	Application:debug("[CoreWorldInstanceManager:_safety_check_start_index] A-OK, No overlap found")
+end
+
 function CoreWorldInstanceManager:get_used_indices(continent)
 	local start_indices = {}
 	local end_indices = {}
@@ -296,7 +338,7 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 		for _, static in ipairs(prepared_unit_data.statics) do
 			local unit = worlddefinition:_create_statics_unit(static, Vector3(), world_in_world)
 
-			if Application:editor() then
+			if Application:editor() and unit then
 				managers.editor:layer("Statics"):add_unit_to_created_units(unit)
 			end
 		end
@@ -306,7 +348,7 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 		for _, entry in ipairs(prepared_unit_data.dynamics) do
 			local unit = worlddefinition:_create_dynamics_unit(entry, Vector3(), world_in_world)
 
-			if Application:editor() then
+			if Application:editor() and unit then
 				managers.editor:layer("Dynamics"):add_unit_to_created_units(unit)
 			end
 		end
@@ -488,11 +530,6 @@ function CoreWorldInstanceManager.translate_element_values(element, position, ro
 		element.values.spawn_dir = element.values.spawn_dir:rotate_with(rotation)
 	elseif element.class == "ElementSpawnUnit" then
 		element.values.unit_spawn_dir = element.values.unit_spawn_dir:rotate_with(rotation)
-	elseif element.class == "ElementLaserTrigger" then
-		for _, point in pairs(element.values.points) do
-			point.rot = rotation * point.rot
-			point.pos = position + point.pos:rotate_with(rotation)
-		end
 	end
 end
 

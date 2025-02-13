@@ -91,7 +91,6 @@ function ElementWorldInputEvent:init(...)
 end
 
 function ElementWorldInputEvent:on_created()
-	print("ElementWorldInputEvent:on_created()")
 end
 
 function ElementWorldInputEvent:client_on_executed(...)
@@ -122,7 +121,7 @@ ElementWorldPoint = ElementWorldPoint or class(CoreMissionScriptElement.MissionS
 function ElementWorldPoint:init(...)
 	ElementWorldPoint.super.init(self, ...)
 
-	self._spawn_counter = 0
+	self._counted_continents = 0
 end
 
 function ElementWorldPoint:value(name)
@@ -142,26 +141,25 @@ ElementWorldPoint.DELAY_DESTROY_MULTI = 3
 ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
 function ElementWorldPoint:on_executed(instigator)
-	Application:debug("[ElementWorldPoint:on_executed] on_executed", self._values.world, self._values.enabled, self._world_id, self._action)
+	Application:debug("[ElementWorldPoint:on_executed] on_executed world name:", self._values.world, "enable:", self._values.enabled, "IDX:", self._world_id, "Action:", self._action)
 
 	if not self._values.enabled then
 		return
-	end
-
-	local delay_destroy, delay_create = nil
-
-	if managers.network:session():count_all_peers() > 1 then
-		delay_destroy = ElementWorldPoint.DELAY_DESTROY_MULTI
-		delay_create = ElementWorldPoint.DELAY_CREATE_MULTI
-	else
-		delay_destroy = ElementWorldPoint.DELAY_DESTROY_SINGLE
-		delay_create = ElementWorldPoint.DELAY_CREATE_SINGLE
 	end
 
 	self._action = self._action or "spawn"
 
 	if self._action == "despawn" then
 		Application:debug("[ElementWorldPoint:on_executed] on_executed queue destroy world...")
+
+		local delay_destroy = nil
+
+		if managers.network:session():count_all_peers() > 1 then
+			delay_destroy = ElementWorldPoint.DELAY_DESTROY_MULTI
+		else
+			delay_destroy = ElementWorldPoint.DELAY_DESTROY_SINGLE
+		end
+
 		managers.queued_tasks:queue(nil, self._destroy_world, self, nil, delay_destroy, nil, true)
 	elseif self._action == "enable_plant_loot" then
 		local spawn = managers.worldcollection:world_spawn(self._world_id)
@@ -176,6 +174,14 @@ function ElementWorldPoint:on_executed(instigator)
 	elseif self._action == "disable_alarm_state" then
 		self:_set_alarm_state(false)
 	elseif self._action == "spawn" or self._action == "spawn_alarmed" then
+		local delay_create = nil
+
+		if managers.network:session():count_all_peers() > 1 then
+			delay_create = ElementWorldPoint.DELAY_CREATE_MULTI
+		else
+			delay_create = ElementWorldPoint.DELAY_CREATE_SINGLE
+		end
+
 		local alarmed = self._action == "spawn_alarmed"
 
 		Application:debug("[ElementWorldPoint:_set_alarm_state()] alarmed????", alarmed, self._action)
@@ -187,6 +193,8 @@ function ElementWorldPoint:on_executed(instigator)
 
 		managers.queued_tasks:queue(nil, self._create_world, self, que_data, delay_create, nil, true)
 	end
+
+	self._action = nil
 
 	ElementWorldPoint.super.on_executed(self, instigator)
 end
@@ -222,7 +230,7 @@ function ElementWorldPoint:_create_world(data)
 	local world_id = data.world_id or nil
 	local alarmed = data.alarmed or false
 
-	Application:debug("[ElementWorldPoint:_create_world()] world_id: (nil means new) " .. tostring(data.world_id) .. ", alarmed:" .. tostring(data.alarmed), self._has_created, inspect(self._values))
+	Application:debug("[ElementWorldPoint:_create_world()] world_id:" .. tostring(data.world_id or "NEW") .. ", alarmed:" .. tostring(data.alarmed), self._has_created, inspect(self._values))
 
 	if self._has_created or not self._values.world then
 		Application:debug("[ElementWorldPoint:_create_world()] World is alreaedy created (or if nil doesnt exist), skipping!]", world_id)
@@ -231,7 +239,7 @@ function ElementWorldPoint:_create_world(data)
 	end
 
 	self._has_created = true
-	self._spawn_counter = self._spawn_counter + 1
+	self._counted_continents = self._counted_continents + 1
 	local world_meta_data = managers.worldcollection:get_world_meta_data(self._values.world)
 
 	Application:debug("[ElementWorldPoint:_create_world()]  Creating world:", world_meta_data.file, self._values.position, self._values.rotation)
@@ -260,12 +268,14 @@ function ElementWorldPoint:_create_world(data)
 
 	if not world_id then
 		self._world_id = managers.worldcollection:get_next_world_id()
+
+		Application:debug("[ElementWorldPoint:_create_world()] get_next_world_id returned" .. tostring(self._world_id))
 	else
 		self._world_id = world_id
 	end
 
 	Application:debug("[ElementWorldPoint:_create] world prepare...", self._world_id, self._editor_name)
-	managers.worldcollection:prepare_world(world, self._world_id, self._editor_name, self._spawn_counter, self._excluded_continents)
+	managers.worldcollection:prepare_world(world, self._world_id, self._editor_name, self._counted_continents, self._excluded_continents)
 	managers.worldcollection:register_world_spawn(self._world_id, self._editor_name, self._spawn_loot)
 	self:_set_alarm_state(alarmed)
 	Application:debug("[ElementWorldPoint:_create] world created")
@@ -299,10 +309,14 @@ end
 function ElementWorldPoint:stop_simulation(...)
 end
 
-function ElementWorldPoint:execute_action(action)
-	Application:debug("[ElementWorldPoint:execute_action]", action)
+function ElementWorldPoint:execute_action(action, operation_world_id)
+	Application:debug("[ElementWorldPoint:execute_action]", action, operation_world_id)
 
 	self._action = action
+
+	if action == "set_world_id" and operation_world_id ~= "" then
+		self._values.world = operation_world_id
+	end
 
 	self:on_executed(nil)
 end

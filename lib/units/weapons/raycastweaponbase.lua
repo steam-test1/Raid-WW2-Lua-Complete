@@ -40,7 +40,7 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		EFFECT_PLAYER_CAN_ONLY_USE_WEAPON_CATEGORY = nil,
+		lod_stage = nil,
 		kills = 0,
 		from = Vector3()
 	}
@@ -420,11 +420,9 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 				end
 
 				if self:get_ammo_total() - ammo_usage == 0 then
-					managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
+					managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
 				else
-					managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-						BTN_RELOAD = managers.localization:btn_macro("reload")
-					})))
+					managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 				end
 			end
 
@@ -2022,8 +2020,8 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -2132,8 +2130,6 @@ function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damag
 		if tweak_data.weapon[weapon_name_id] and tweak_data.weapon[weapon_name_id].fire_dot_data then
 			fire_dot_data = tweak_data.weapon[weapon_name_id].fire_dot_data
 		end
-
-		managers.fire:leave_flamethrower_patch(col_ray.unit)
 	end
 
 	local action_data = {

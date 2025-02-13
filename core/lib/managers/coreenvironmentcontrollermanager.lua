@@ -192,10 +192,10 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 		blurzone = blurzone or {
 			height = 0,
 			radius = 0,
-			opacity = 0,
+			check = nil,
 			mode = -1,
 			update = nil,
-			check = nil,
+			opacity = 0,
 			delete_after_fadeout = false
 		}
 

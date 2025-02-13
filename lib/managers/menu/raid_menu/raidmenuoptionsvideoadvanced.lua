@@ -48,6 +48,8 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 		vsync_value = "TRIPLE_BUFFER"
 	end
 
+	local corpse_limit = managers.user:get_setting("corpse_limit")
+	local corpse_limit_value = math.remap(corpse_limit, tweak_data.corpse_limit.min, tweak_data.corpse_limit.max, 0, 100)
 	local detail_distance = managers.user:get_setting("detail_distance")
 	local AA_setting = managers.user:get_setting("AA_setting")
 	local texture_quality_default = RenderSettings.texture_quality_default
@@ -64,6 +66,7 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
 	self._progress_bar_menu_detail_distance:set_value(detail_distance * 100, true)
+	self._progress_bar_menu_corpse_limit:set_value(corpse_limit_value, true)
 	self._stepper_menu_antialias:set_value_and_render(AA_setting, true)
 	self._stepper_menu_texture_quality:set_value_and_render(texture_quality_default, true)
 	self._stepper_menu_shadow_quality:set_value_and_render(shadow_quality_default, true)
@@ -106,8 +109,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_parallax"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_parallax")),
 		on_menu_move = {
-			up = "toggle_menu_toggle_ssao",
-			down = "toggle_menu_toggle_motion_blur"
+			down = "toggle_menu_toggle_motion_blur",
+			up = "toggle_menu_toggle_ssao"
 		}
 	}
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
@@ -119,8 +122,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_motion_blur"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_motion_blur")),
 		on_menu_move = {
-			up = "toggle_menu_toggle_parallax",
-			down = "toggle_menu_toggle_dof"
+			down = "toggle_menu_toggle_dof",
+			up = "toggle_menu_toggle_parallax"
 		}
 	}
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
@@ -132,8 +135,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_dof"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_dof")),
 		on_menu_move = {
-			up = "toggle_menu_toggle_motion_blur",
-			down = "toggle_menu_toggle_volumetric_light_scattering"
+			down = "toggle_menu_toggle_volumetric_light_scattering",
+			up = "toggle_menu_toggle_motion_blur"
 		}
 	}
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
@@ -145,8 +148,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_volumetric_light_scattering"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_volumetric_light_scattering")),
 		on_menu_move = {
-			up = "toggle_menu_toggle_motion_blur",
-			down = "progress_bar_menu_detail_distance"
+			down = "progress_bar_menu_detail_distance",
+			up = "toggle_menu_toggle_motion_blur"
 		}
 	}
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
@@ -158,11 +161,25 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		y = toggle_menu_toggle_volumetric_light_scattering_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_detail_distance"),
 		on_menu_move = {
-			up = "toggle_menu_toggle_volumetric_light_scattering",
-			down = "stepper_menu_antialias"
+			down = "progress_bar_menu_corpse_limit",
+			up = "toggle_menu_toggle_volumetric_light_scattering"
 		}
 	}
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
+	local progress_bar_menu_corpse_limit_params = {
+		name = "progress_bar_menu_corpse_limit",
+		description = managers.localization:to_upper_text("menu_corpse_limit"),
+		x = start_x,
+		y = progress_bar_menu_detail_distance_params.y + RaidGuiBase.PADDING,
+		min_display_value = tweak_data.corpse_limit.min,
+		max_display_value = tweak_data.corpse_limit.max,
+		on_value_change_callback = callback(self, self, "on_value_change_corpse_limit"),
+		on_menu_move = {
+			down = "stepper_menu_antialias",
+			up = "progress_bar_menu_detail_distance"
+		}
+	}
+	self._progress_bar_menu_corpse_limit = self._root_panel:slider(progress_bar_menu_corpse_limit_params)
 	start_x = 704
 	local stepper_menu_antialias_params = {
 		name = "stepper_menu_antialias",
@@ -173,8 +190,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_antialias"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_antialias"),
 		on_menu_move = {
-			up = "progress_bar_menu_detail_distance",
-			down = "stepper_menu_texture_quality"
+			down = "stepper_menu_texture_quality",
+			up = "progress_bar_menu_detail_distance"
 		}
 	}
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
@@ -187,8 +204,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_texture_quality"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_texture_quality"),
 		on_menu_move = {
-			up = "stepper_menu_antialias",
-			down = "stepper_menu_shadow_quality"
+			down = "stepper_menu_shadow_quality",
+			up = "stepper_menu_antialias"
 		}
 	}
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
@@ -201,8 +218,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_shadow_quality"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_shadow_quality"),
 		on_menu_move = {
-			up = "stepper_menu_texture_quality",
-			down = "stepper_menu_anisotropic"
+			down = "stepper_menu_anisotropic",
+			up = "stepper_menu_texture_quality"
 		}
 	}
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
@@ -215,8 +232,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anisotropic"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_anisotropic"),
 		on_menu_move = {
-			up = "stepper_menu_shadow_quality",
-			down = "stepper_menu_anim_lod"
+			down = "stepper_menu_anim_lod",
+			up = "stepper_menu_shadow_quality"
 		}
 	}
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
@@ -229,8 +246,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anim_lod"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_anim_lod"),
 		on_menu_move = {
-			up = "stepper_menu_anisotropic",
-			down = "stepper_menu_fps_limit"
+			down = "stepper_menu_fps_limit",
+			up = "stepper_menu_anisotropic"
 		}
 	}
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
@@ -243,8 +260,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_fps_limit"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_fps_limit"),
 		on_menu_move = {
-			up = "stepper_menu_anim_lod",
-			down = "stepper_menu_colorblind_setting"
+			down = "stepper_menu_colorblind_setting",
+			up = "stepper_menu_anim_lod"
 		}
 	}
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
@@ -257,8 +274,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_colorblind_setting"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_colorblind_setting"),
 		on_menu_move = {
-			up = "stepper_menu_fps_limit",
-			down = "label_menu_vsync"
+			down = "label_menu_vsync",
+			up = "stepper_menu_fps_limit"
 		}
 	}
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
@@ -277,8 +294,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 	local default_advanced_video_params = {
 		x = 1472,
-		name = "default_advanced_video",
 		y = 832,
+		name = "default_advanced_video",
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -326,6 +343,13 @@ function RaidMenuOptionsVideoAdvanced:on_value_change_detail_distance()
 	local detail_distance = self._progress_bar_menu_detail_distance:get_value() / 100
 
 	managers.menu:active_menu().callback_handler:set_detail_distance_raid(detail_distance)
+end
+
+function RaidMenuOptionsVideoAdvanced:on_value_change_corpse_limit()
+	local corpse_limit = self._progress_bar_menu_corpse_limit:get_value()
+	local corpse_limit_value = math.remap(corpse_limit, 0, 100, tweak_data.corpse_limit.min, tweak_data.corpse_limit.max)
+
+	managers.menu:active_menu().callback_handler:set_corpse_limit_raid(corpse_limit_value)
 end
 
 function RaidMenuOptionsVideoAdvanced:on_item_selected_vsync()
@@ -543,65 +567,65 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	local result = {}
 
 	table.insert(result, {
-		value = 24,
+		text = "24",
 		info = "24",
-		text = "24"
+		value = 24
 	})
 	table.insert(result, {
-		value = 30,
+		text = "30",
 		info = "30",
-		text = "30"
+		value = 30
 	})
 	table.insert(result, {
-		value = 45,
+		text = "45",
 		info = "45",
-		text = "45"
+		value = 45
 	})
 	table.insert(result, {
-		value = 60,
+		text = "60",
 		info = "60",
-		text = "60"
+		value = 60
 	})
 	table.insert(result, {
-		value = 75,
+		text = "75",
 		info = "75",
-		text = "75"
+		value = 75
 	})
 	table.insert(result, {
-		value = 90,
+		text = "90",
 		info = "90",
-		text = "90"
+		value = 90
 	})
 	table.insert(result, {
-		value = 105,
+		text = "105",
 		info = "105",
-		text = "105"
+		value = 105
 	})
 	table.insert(result, {
-		value = 120,
+		text = "120",
 		info = "120",
-		text = "120"
+		value = 120
 	})
 	table.insert(result, {
-		value = 135,
-		selected = true,
+		text = "135",
 		info = "135",
-		text = "135"
+		value = 135,
+		selected = true
 	})
 	table.insert(result, {
-		value = 144,
+		text = "144",
 		info = "144",
-		text = "144"
+		value = 144
 	})
 	table.insert(result, {
-		value = 165,
+		text = "165",
 		info = "165",
-		text = "165"
+		value = 165
 	})
 	table.insert(result, {
-		value = 240,
+		text = "240",
 		info = "240",
-		text = "240"
+		value = 240
 	})
 	table.insert(result, {
 		value = 600,
@@ -622,45 +646,45 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chu
 	local result = {}
 
 	table.insert(result, {
-		value = 32,
+		text = "32",
 		info = "32",
-		text = "32"
+		value = 32
 	})
 	table.insert(result, {
-		value = 64,
+		text = "64",
 		info = "64",
-		text = "64"
+		value = 64
 	})
 	table.insert(result, {
-		value = 128,
+		text = "128",
 		info = "128",
-		text = "128"
+		value = 128
 	})
 	table.insert(result, {
-		value = 256,
+		text = "256",
 		info = "256",
-		text = "256"
+		value = 256
 	})
 	table.insert(result, {
-		value = 512,
+		text = "512",
 		info = "512",
-		text = "512"
+		value = 512
 	})
 	table.insert(result, {
-		value = 1024,
+		text = "1024",
 		info = "1024",
-		text = "1024"
+		value = 1024
 	})
 	table.insert(result, {
-		value = 2048,
+		text = "2048",
 		info = "2048",
-		text = "2048"
+		value = 2048
 	})
 	table.insert(result, {
-		value = 4096,
-		selected = true,
+		text = "4096",
 		info = "4096",
-		text = "4096"
+		value = 4096,
+		selected = true
 	})
 
 	return result

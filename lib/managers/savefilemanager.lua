@@ -52,7 +52,7 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
-			is_synched_text = nil,
+			progress_wrong_user = nil,
 			meta_data_list = {}
 		}
 	end
@@ -473,8 +473,8 @@ function SavefileManager:_save(slot, cache_only, save_system)
 	else
 		local meta_data = self:_meta_data(slot)
 		local task_data = {
-			queued_in_save_manager = true,
 			date_format = "%c",
+			queued_in_save_manager = true,
 			max_queue_size = 1,
 			first_slot = slot,
 			task_type = self.SAVE_TASK_TYPE,
@@ -962,10 +962,11 @@ function SavefileManager:_meta_data(slot)
 	if not meta_data then
 		meta_data = {
 			is_synched_text = false,
-			is_cached_slot = false,
-			is_load_done = false,
-			is_corrupt = false,
 			is_synched_cache = false,
+			cache = nil,
+			is_corrupt = false,
+			is_load_done = false,
+			is_cached_slot = false,
 			slot = slot
 		}
 		Global.savefile_manager.meta_data_list[slot] = meta_data

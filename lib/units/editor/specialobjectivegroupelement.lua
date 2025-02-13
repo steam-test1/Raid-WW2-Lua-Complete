@@ -37,9 +37,9 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 					if draw then
 						self:_draw_link({
-							r = 0,
 							b = 0.75,
 							g = 0,
+							r = 0,
 							from_unit = self._unit,
 							to_unit = unit
 						})
@@ -63,9 +63,9 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 
 			if draw then
 				self:_draw_link({
-					r = 0,
 					b = 0.75,
 					g = 0,
+					r = 0,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -373,10 +373,10 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
-		name = "Mode:",
 		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		name = "Mode:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -406,13 +406,13 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
 
 	local base_chance_params = {
-		name = "Base chance:",
-		tooltip = "Used to specify chance to happen (1.0 == 100%)",
-		max = 1,
 		min = 0,
 		floats = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		tooltip = "Used to specify chance to happen (1.0 == 100%)",
+		name = "Base chance:",
+		max = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance

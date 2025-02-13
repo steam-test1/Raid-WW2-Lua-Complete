@@ -132,11 +132,11 @@ local material_textures = {
 	base_gradient = "diffuse_layer1_texture"
 }
 local material_variables = {
-	uv_scale = "uv_scale",
 	cubemap_pattern_control = "cubemap_pattern_control",
-	pattern_tweak = "pattern_tweak",
 	pattern_pos = "pattern_pos",
 	uv_offset_rot = "uv_offset_rot",
+	uv_scale = "uv_scale",
+	pattern_tweak = "pattern_tweak",
 	wear_and_tear = Application:production_build() and "wear_tear_value" or nil
 }
 

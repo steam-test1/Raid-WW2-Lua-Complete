@@ -20,8 +20,8 @@ function SmokeGrenadeElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local _, params = self:_build_value_number(panel, panel_sizer, "duration", {
-		min = 1,
-		floats = 0
+		floats = 0,
+		min = 1
 	}, "Set the duration of the smoke grenade")
 
 	params.name_ctrlr:set_label("Duration (sec):")

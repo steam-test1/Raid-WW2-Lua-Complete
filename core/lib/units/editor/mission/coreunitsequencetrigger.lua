@@ -112,8 +112,8 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -128,8 +128,8 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -142,10 +142,20 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	local sequences = managers.sequence:get_sequence_list(unit:name())
 
 	if #sequences > 0 then
+		local default_sequence = "none"
+
+		for _, seqid in ipairs(sequences) do
+			if seqid == "interact" then
+				default_sequence = seqid
+
+				break
+			end
+		end
+
 		self._sequence_units[unit:unit_data().unit_id] = unit
 		local sequence_list_data = {
-			sequence = "none",
-			unit_id = unit:unit_data().unit_id
+			unit_id = unit:unit_data().unit_id,
+			sequence = default_sequence
 		}
 
 		table.insert(self._hed.sequence_list, sequence_list_data)
@@ -270,13 +280,13 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
 	local sequence_params = {
-		sizer_proportions = 1,
-		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select a sequence from the combobox",
 		default = "none",
-		name = "Sequence:",
 		sorted = true,
+		name = "Sequence:",
+		sizer_proportions = 1,
+		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
 		options = sequences,

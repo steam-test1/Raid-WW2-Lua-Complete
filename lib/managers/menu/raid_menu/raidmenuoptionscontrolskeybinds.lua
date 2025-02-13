@@ -1,4 +1,284 @@
 RaidMenuOptionsControlsKeybinds = RaidMenuOptionsControlsKeybinds or class(RaidGuiBase)
+RaidMenuOptionsControlsKeybinds.CONTROLS = {
+	"move",
+	"primary_attack",
+	"secondary_attack",
+	"primary_choice2",
+	"primary_choice1",
+	"primary_choice3",
+	"primary_choice4",
+	"switch_weapon",
+	"reload",
+	"weapon_firemode",
+	"run",
+	"jump",
+	"duck",
+	"melee",
+	"interact",
+	"comm_wheel",
+	"comm_wheel_yes",
+	"comm_wheel_no",
+	"comm_wheel_found_it",
+	"comm_wheel_wait",
+	"comm_wheel_not_here",
+	"comm_wheel_follow_me",
+	"comm_wheel_assistance",
+	"comm_wheel_enemy",
+	"activate_warcry",
+	"use_item",
+	"toggle_chat",
+	"toggle_hud",
+	"push_to_talk",
+	"drive",
+	"hand_brake",
+	"vehicle_rear_camera",
+	"vehicle_shooting_stance",
+	"vehicle_exit",
+	"vehicle_change_seat"
+}
+RaidMenuOptionsControlsKeybinds.AXIS_ORDERED = {
+	move = {
+		"up",
+		"down",
+		"left",
+		"right"
+	},
+	drive = {
+		"accelerate",
+		"brake",
+		"turn_left",
+		"turn_right"
+	}
+}
+RaidMenuOptionsControlsKeybinds.CONTROLS_INFO = {
+	move = {
+		hidden = true,
+		type = "movement",
+		category = "normal"
+	},
+	up = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_move_forward"
+	},
+	down = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_move_back"
+	},
+	left = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_move_left"
+	},
+	right = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_move_right"
+	},
+	run = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_sprint"
+	},
+	jump = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_jump"
+	},
+	duck = {
+		category = "normal",
+		type = "movement",
+		text_id = "menu_button_crouch"
+	},
+	primary_attack = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_fire_weapon"
+	},
+	secondary_attack = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_aim_down_sight"
+	},
+	primary_choice1 = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_weapon_slot1"
+	},
+	primary_choice2 = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_weapon_slot2"
+	},
+	primary_choice3 = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_weapon_slot3"
+	},
+	primary_choice4 = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_weapon_slot4"
+	},
+	switch_weapon = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_switch_weapon"
+	},
+	reload = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_reload"
+	},
+	weapon_firemode = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_weapon_firemode"
+	},
+	melee = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_melee"
+	},
+	interact = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_shout"
+	},
+	activate_warcry = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_activate_warcry"
+	},
+	use_item = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_deploy"
+	},
+	toggle_hud = {
+		category = "normal",
+		type = "usage",
+		text_id = "menu_button_toggle_hud"
+	},
+	toggle_chat = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_chat_message"
+	},
+	push_to_talk = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_push_to_talk"
+	},
+	comm_wheel = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel"
+	},
+	comm_wheel_yes = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_yes"
+	},
+	comm_wheel_no = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_no"
+	},
+	comm_wheel_found_it = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_found_it"
+	},
+	comm_wheel_wait = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_wait"
+	},
+	comm_wheel_not_here = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_not_here"
+	},
+	comm_wheel_follow_me = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_follow_me"
+	},
+	comm_wheel_assistance = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_assistance"
+	},
+	comm_wheel_enemy = {
+		category = "normal",
+		type = "communication",
+		text_id = "menu_button_comm_wheel_enemy"
+	},
+	continue = {
+		category = "normal",
+		text_id = "menu_button_continue"
+	},
+	drive = {
+		hidden = true,
+		type = "movement",
+		category = "vehicle"
+	},
+	accelerate = {
+		category = "vehicle",
+		type = "movement",
+		text_id = "menu_button_accelerate"
+	},
+	brake = {
+		category = "vehicle",
+		type = "movement",
+		text_id = "menu_button_brake"
+	},
+	turn_left = {
+		category = "vehicle",
+		type = "movement",
+		text_id = "menu_button_turn_left"
+	},
+	turn_right = {
+		category = "vehicle",
+		type = "movement",
+		text_id = "menu_button_turn_right"
+	},
+	hand_brake = {
+		category = "vehicle",
+		type = "movement",
+		text_id = "menu_button_handbrake"
+	},
+	vehicle_change_camera = {
+		category = "vehicle",
+		type = "usage",
+		text_id = "menu_button_vehicle_change_camera"
+	},
+	vehicle_rear_camera = {
+		category = "vehicle",
+		type = "usage",
+		text_id = "menu_button_vehicle_rear_camera"
+	},
+	vehicle_shooting_stance = {
+		type = "usage",
+		category = "vehicle",
+		text_id = "menu_button_vehicle_shooting_stance",
+		block = {
+			"normal"
+		}
+	},
+	vehicle_exit = {
+		category = "vehicle",
+		type = "usage",
+		text_id = "menu_button_vehicle_exit"
+	},
+	vehicle_change_seat = {
+		category = "vehicle",
+		type = "usage",
+		text_id = "menu_button_vehicle_change_seat"
+	}
+}
 
 function RaidMenuOptionsControlsKeybinds:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuOptionsControlsKeybinds.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -16,11 +296,12 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 	RaidMenuOptionsControlsKeybinds.super._layout(self)
 
 	self._keybind_panel = self._root_panel:panel({
+		x = 0,
 		name = "keybind_panel",
-		y = 0,
-		x = 0
+		y = 0
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
+		tab_align = "center",
 		tab_height = 64,
 		tab_width = 160,
 		name = "tabs_keybind_types",
@@ -28,7 +309,6 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		x = 0,
 		dont_trigger_special_buttons = true,
 		initial_tab_idx = 1,
-		tab_align = "center",
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{
@@ -44,9 +324,9 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		}
 	})
 	local default_controls_keybinds_params = {
+		x = 1472,
 		name = "default_controls_keybinds",
 		y = 832,
-		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -152,8 +432,10 @@ end
 function RaidMenuOptionsControlsKeybinds.controls_info_by_category(category, keybind_type)
 	local t = {}
 
-	for _, name in ipairs(MenuCustomizeControllerCreator.CONTROLS) do
-		if MenuCustomizeControllerCreator.CONTROLS_INFO[name].category == category and MenuCustomizeControllerCreator.CONTROLS_INFO[name].type == keybind_type then
+	for _, name in ipairs(RaidMenuOptionsControlsKeybinds.CONTROLS) do
+		local control = RaidMenuOptionsControlsKeybinds.CONTROLS_INFO[name]
+
+		if control and control.category == category and (not keybind_type or keybind_type == control.type) then
 			table.insert(t, name)
 		end
 	end
@@ -171,7 +453,7 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 		local connection = connections[name]
 
 		if connection._btn_connections then
-			local ordered = MenuCustomizeControllerCreator.AXIS_ORDERED[name]
+			local ordered = self.AXIS_ORDERED[name]
 
 			for _, btn_name in ipairs(ordered) do
 				local btn_connection = connection._btn_connections[btn_name]
@@ -182,7 +464,7 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 						localize = "false",
 						name = btn_name,
 						connection_name = name,
-						text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[btn_name].text_id)),
+						text_id = utf8.to_upper(managers.localization:text(self.CONTROLS_INFO[btn_name].text_id)),
 						binding = btn_connection.name,
 						axis = connection._name,
 						button = btn_name
@@ -196,7 +478,7 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				localize = "false",
 				name = name_id,
 				connection_name = name,
-				text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)),
+				text_id = utf8.to_upper(managers.localization:text(self.CONTROLS_INFO[name].text_id)),
 				binding = connection:get_input_name_list()[1],
 				button = name
 			}
@@ -212,7 +494,7 @@ function RaidMenuOptionsControlsKeybinds:on_click_default_controls_keybinds()
 		message = managers.localization:text("dialog_reset_controls_keybinds_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")
-			managers.controller:clear_user_mod("all", MenuCustomizeControllerCreator.CONTROLS_INFO)
+			managers.controller:clear_user_mod("all", self.CONTROLS_INFO)
 			self:refresh_keybinds()
 		end
 	}

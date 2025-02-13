@@ -111,8 +111,6 @@ function PortalManager:unit_deactivated(tag, unit, body, activated)
 end
 
 function PortalManager:remove_unit(unit)
-	cat_print("portal", "remove_unit", unit, unit:visible())
-
 	self._all_units[unit:key()] = nil
 
 	for _, portal in ipairs(self._portal_shapes) do
@@ -206,19 +204,24 @@ function PortalManager:kill_all_effects()
 end
 
 function PortalManager:render()
+	local t = TimerManager:wall():time()
+	local dt = TimerManager:wall():delta_time()
+
 	for _, portal in ipairs(self._portal_shapes) do
-		portal:update(TimerManager:wall():time(), TimerManager:wall():delta_time())
+		portal:update(t, dt)
 	end
 
 	for _, group in pairs(self._unit_groups) do
-		group:update(TimerManager:wall():time(), TimerManager:wall():delta_time())
+		group:update(t, dt)
 	end
 
 	local unit_id, unit = next(self._hide_list)
 
 	if alive(unit) then
 		unit:set_visible(false)
+	end
 
+	if unit_id then
 		self._hide_list[unit_id] = nil
 	end
 
@@ -494,11 +497,14 @@ function PortalUnitGroup:init(name)
 	self._name = name
 	self._shapes = {}
 	self._ids = {}
-	self._r = 0.5 + math.rand(0.5)
-	self._g = 0.5 + math.rand(0.5)
-	self._b = 0.5 + math.rand(0.5)
 	self._units = {}
 	self._is_inside = false
+
+	if Application:editor() then
+		self._r = 0.5 + math.rand(0.5)
+		self._g = 0.5 + math.rand(0.5)
+		self._b = 0.5 + math.rand(0.5)
+	end
 end
 
 function PortalUnitGroup:rename(new_name)
@@ -628,6 +634,8 @@ function PortalUnitGroup:_change_visibility(unit, diff)
 		if unit:unit_data()._visibility_counter > 0 then
 			unit:set_visible(true)
 			managers.portal:remove_from_hide_list(unit)
+		elseif Application:editor() then
+			unit:set_visible(false)
 		else
 			managers.portal:add_to_hide_list(unit)
 		end

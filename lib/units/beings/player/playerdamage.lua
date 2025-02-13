@@ -1,7 +1,4 @@
 PlayerDamage = PlayerDamage or class()
-PlayerDamage._ARMOR_STEPS = tweak_data.player.damage.ARMOR_STEPS
-PlayerDamage._ARMOR_DAMAGE_REDUCTION = tweak_data.player.damage.ARMOR_DAMAGE_REDUCTION
-PlayerDamage._ARMOR_DAMAGE_REDUCTION_STEPS = tweak_data.player.damage.ARMOR_DAMAGE_REDUCTION_STEPS
 
 function PlayerDamage:init(unit)
 	self._unit = unit
@@ -123,7 +120,7 @@ function PlayerDamage:update(unit, t, dt)
 			managers.environment_controller:set_hurt_value(hurt)
 
 			if self._regenerate_timer < 0 then
-				self:_regenerate_armor()
+				self:regenerate_armor()
 			end
 		end
 	elseif self._hurt_value then
@@ -234,7 +231,7 @@ function PlayerDamage:replenish()
 	end
 
 	self:_regenerated()
-	self:_regenerate_armor()
+	self:regenerate_armor()
 	SoundDevice:set_rtpc("shield_status", 100)
 	SoundDevice:set_rtpc("downed_state_progression", 0)
 
@@ -248,7 +245,7 @@ end
 function PlayerDamage:debug_replenish()
 end
 
-function PlayerDamage:_regenerate_armor()
+function PlayerDamage:regenerate_armor()
 	self:set_armor(self:_max_armor())
 
 	self._regenerate_timer = nil
@@ -447,18 +444,10 @@ function PlayerDamage:_max_health()
 end
 
 function PlayerDamage:_max_armor()
-	local base_max_armor = self._class_tweak_data.damage.BASE_ARMOR + managers.player:body_armor_value("armor") + managers.player:body_armor_skill_addend()
-	local mul = managers.player:body_armor_skill_multiplier()
+	local max_armor = self._class_tweak_data.damage.BASE_ARMOR
+	max_armor = max_armor + managers.player:body_armor_skill_addend()
 
-	return base_max_armor * mul
-end
-
-function PlayerDamage:_armor_steps()
-	return self._ARMOR_STEPS
-end
-
-function PlayerDamage:_armor_damage_reduction()
-	return 0
+	return max_armor
 end
 
 function PlayerDamage:full_health()
@@ -485,8 +474,8 @@ function PlayerDamage:damage_tase(attack_data)
 
 		local damage_info = {
 			result = {
-				variant = "tase",
-				type = "hurt"
+				type = "hurt",
+				variant = "tase"
 			}
 		}
 
@@ -558,7 +547,7 @@ function PlayerDamage:damage_melee(attack_data)
 end
 
 function PlayerDamage:is_friendly_fire(unit)
-	if not alive(unit) then
+	if not alive(unit) or not unit:movement() then
 		return
 	end
 
@@ -590,8 +579,8 @@ end
 function PlayerDamage:damage_bullet(attack_data)
 	local damage_info = {
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -599,9 +588,8 @@ function PlayerDamage:damage_bullet(attack_data)
 	attack_data.damage = attack_data.damage * dmg_mul
 	local dodge_roll = math.rand(1)
 	local dodge_value = self._class_tweak_data.damage.DODGE_INIT or 0
-	local armor_dodge_chance = managers.player:body_armor_value("dodge")
 	local skill_dodge_chance = managers.player:skill_dodge_chance()
-	dodge_value = dodge_value + armor_dodge_chance + skill_dodge_chance
+	dodge_value = dodge_value + skill_dodge_chance
 
 	if dodge_roll < dodge_value then
 		if attack_data.damage > 0 then
@@ -766,8 +754,8 @@ end
 function PlayerDamage:damage_killzone(attack_data)
 	local damage_info = {
 		result = {
-			variant = "killzone",
-			type = "hurt"
+			type = "hurt",
+			variant = "killzone"
 		}
 	}
 
@@ -804,8 +792,8 @@ end
 function PlayerDamage:damage_fall(data)
 	local damage_info = {
 		result = {
-			variant = "fall",
-			type = "hurt"
+			type = "hurt",
+			variant = "fall"
 		}
 	}
 
@@ -925,8 +913,8 @@ end
 function PlayerDamage:damage_explosion(attack_data)
 	local damage_info = {
 		result = {
-			variant = "explosion",
-			type = "hurt"
+			type = "hurt",
+			variant = "explosion"
 		}
 	}
 
@@ -965,8 +953,8 @@ end
 function PlayerDamage:damage_fire(attack_data)
 	local damage_info = {
 		result = {
-			variant = "fire",
-			type = "hurt"
+			type = "hurt",
+			variant = "fire"
 		}
 	}
 
@@ -983,6 +971,8 @@ function PlayerDamage:damage_fire(attack_data)
 	if self._bleed_out then
 		return
 	end
+
+	self._unit:sound():play("hit_fire_1p")
 
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("fire", self._unit:movement():current_state(), self:health_ratio())
 	attack_data.damage = damage * dmg_mul
@@ -1056,12 +1046,7 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 		SoundDevice:set_rtpc("downed_state_progression", 0)
 
 		if not event_params.bleed_out_blocked then
-			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_ROULETTE) and math.random(6) > 5 then
-				self:force_set_revives(0)
-			else
-				self:_change_revives(-1)
-			end
-
+			self:_change_revives(-1)
 			self:disable_perseverance()
 			managers.environment_controller:set_last_life(self._revives <= 1)
 
@@ -1071,10 +1056,10 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
-					id = "hint_downed",
-					background = "backgrounds_detected_msg",
 					priority = true,
 					duration = 4,
+					id = "hint_downed",
+					background = "backgrounds_detected_msg",
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,
@@ -1162,9 +1147,7 @@ end
 function PlayerDamage:on_downed()
 	if managers.player:has_category_upgrade("player", "self_administered_adrenaline") then
 		managers.hud:show_interact({
-			text = managers.localization:text("skill_interaction_revive_prompt", {
-				BTN_JUMP = managers.localization:btn_macro("jump")
-			})
+			text = managers.localization:text("skill_interaction_revive_prompt")
 		})
 	end
 
@@ -1325,7 +1308,7 @@ function PlayerDamage:revive(helped_self)
 	self._revive_miss = 2
 
 	self:set_health_effects_blocked(false)
-	self:_regenerate_armor()
+	self:regenerate_armor()
 	managers.hud:stop_player_timer()
 	managers.hud:on_teammate_revived(HUDManager.PLAYER_PANEL)
 	self:_update_player_health_hud()
@@ -1597,9 +1580,7 @@ function PlayerDamage:_upd_health_regen(t, dt)
 			self:restore_health(regen_rate, false)
 		end
 
-		self._health_regen_update_timer = 1
-
-		managers.player:upgrade_value("player", "box_o_choc_health_regen_timer_multiplier", 1)
+		self._health_regen_update_timer = managers.player:upgrade_value("player", "box_o_choc_health_regen_timer_multiplier", 1)
 	end
 end
 

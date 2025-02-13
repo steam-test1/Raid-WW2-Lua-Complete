@@ -181,13 +181,13 @@ function WorldCameraLayer:build_panel(notebook)
 	edit_sizer:add(in_out_sizer, 0, 0, "EXPAND")
 
 	self._duration_params = {
-		name_proportions = 1,
-		min = 0,
-		ctrlr_proportions = 1,
 		tooltip = "Specifies the camera lenght in seconds",
 		name = "Camera Duration [sec]:",
-		value = 2.5,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		floats = 2,
+		value = 2.5,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -205,13 +205,13 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._duration_params)
 
 	self._delay_params = {
-		name_proportions = 1,
-		min = 0,
-		ctrlr_proportions = 1,
 		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
 		name = "End Delay [sec]:",
-		value = 0,
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		floats = 2,
+		value = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -229,11 +229,11 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._delay_params)
 
 	self._dof_paddding_params = {
-		name_proportions = 1,
-		min = 0,
-		ctrlr_proportions = 1,
 		tooltip = "The fade distance from max dof to no dof",
 		name = "Dof Padding [cm]:",
+		ctrlr_proportions = 1,
+		name_proportions = 1,
+		min = 0,
 		floats = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
@@ -253,13 +253,13 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._dof_paddding_params)
 
 	self._dof_clamp_params = {
+		max = 1,
+		tooltip = "A value to specify how much dof it should have",
+		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
-		ctrlr_proportions = 1,
-		tooltip = "A value to specify how much dof it should have",
 		name = "Dof Amount [0-1]:",
 		floats = 2,
-		max = 1,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_clamp(),
@@ -415,11 +415,11 @@ function WorldCameraLayer:build_panel(notebook)
 	keys_sizer:add(key_far_dof_sizer, 0, 0, "EXPAND")
 
 	local roll_params = {
+		tooltip = "An angle value specifying the roll",
+		name = "Roll:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		floats = 0,
-		tooltip = "An angle value specifying the roll",
-		name = "Roll:",
 		value = 0,
 		panel = self._ews_panel,
 		sizer = keys_sizer,

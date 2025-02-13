@@ -20,65 +20,65 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		texture_rect = tweak_data.gui.icons.intel_table_personnel_folder.texture_rect
 	})
 	self._title_name = self._object:text({
-		align = "left",
-		text = "",
-		vertical = "center",
-		h = 32,
 		w = 384,
 		y = 128,
 		x = 608,
+		vertical = "center",
+		align = "left",
+		text = "",
+		h = 32,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._real_name = self._object:text({
-		align = "left",
-		text = "",
-		vertical = "center",
-		h = 32,
 		w = 384,
 		y = 160,
 		x = 608,
+		vertical = "center",
+		align = "left",
+		text = "",
+		h = 32,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._former_rank = self._object:text({
-		align = "left",
-		text = "",
-		vertical = "top",
-		h = 40,
 		w = 384,
 		y = 196,
 		x = 608,
+		vertical = "top",
+		align = "left",
+		text = "",
+		h = 40,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._notes_title = self._object:text({
-		align = "left",
-		text = "",
-		vertical = "top",
-		x = 608,
+		wrap = true,
 		w = 384,
 		y = 256,
-		wrap = true,
+		x = 608,
+		vertical = "top",
+		align = "left",
+		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.chat_border
 	})
 	local scrollable_area_notes_params = {
-		scrollbar_width = 10,
-		scroll_step = 19,
-		name = "scrollable_area_notes",
 		h = 384,
+		scroll_step = 19,
+		scrollbar_width = 10,
+		w = 384,
 		y = 288,
 		x = 608,
-		w = 384,
+		name = "scrollable_area_notes",
 		layer = self._object:layer() + 2
 	}
 	self._scrollable_area_notes = self._object:scrollable_area(scrollable_area_notes_params)
@@ -93,21 +93,21 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 	self._scrollable_area_notes:setup_scroll_area()
 
 	self._notes = self._content_panel:text({
-		align = "left",
-		text = "",
-		vertical = "top",
-		x = 0,
+		wrap = true,
 		w = 380,
 		y = 0,
-		wrap = true,
+		x = 0,
+		vertical = "top",
+		align = "left",
+		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._profile_photo = self._object:bitmap({
-		w = 320,
 		h = 448,
+		w = 320,
 		y = 160,
 		x = 96,
 		layer = self._object:layer() + 2,

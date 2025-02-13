@@ -547,7 +547,7 @@ function CopLogicAlarm._mark_call_in_event(data, my_data, attention_obj)
 		local unit_brain = attention_obj.unit:brain()
 
 		if attention_obj.unit:in_slot(17) then
-			my_data.call_in_event = managers.enemy:get_corpse_unit_data_from_key(attention_obj.unit:id()).is_civilian and "dead_civ" or "dead_cop"
+			my_data.call_in_event = managers.enemy:get_corpse_unit_data_from_key(attention_obj.unit:key()).is_civilian and "dead_civ" or "dead_cop"
 		elseif attention_obj.unit:in_slot(managers.slot:get_mask("enemies")) then
 			my_data.call_in_event = "w_hot"
 		elseif unit_brain and unit_brain.is_hostage and unit_brain:is_hostage() then
@@ -585,17 +585,17 @@ end
 
 function CopLogicAlarm._say_call_the_police(data, my_data)
 	local blame_list = {
-		civilian = "saw_civilian",
-		w_hot = "spotted_player",
-		trip_mine = "saw_trip_mine",
-		criminal = "spotted_player",
-		dead_cop = "saw_body",
 		dead_civ = "saw_body",
+		dead_cop = "saw_body",
+		civilian = "saw_civilian",
 		body_bag = "saw_bag",
+		trip_mine = "saw_trip_mine",
 		sentry_gun = "saw_sentry_gun",
 		drill = "saw_drill",
 		hostage_cop = "saw_hostage_cop",
-		hostage_civ = "saw_hostage_civ"
+		hostage_civ = "saw_hostage_civ",
+		criminal = "spotted_player",
+		w_hot = "spotted_player"
 	}
 	local event = blame_list[my_data.call_in_event] or "spotted_player"
 

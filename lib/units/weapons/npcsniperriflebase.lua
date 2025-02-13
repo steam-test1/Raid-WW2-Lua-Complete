@@ -12,21 +12,19 @@ function NPCSniperRifleBase:init(unit)
 end
 
 function NPCSniperRifleBase:set_laser_enabled(enabled)
-	Application:trace("[NPCSniperRifleBase:show_sniper_flare] **************************", self._unit, self._unit:damage())
+	Application:trace("[NPCSniperRifleBase:show_sniper_flare] **************************", self._unit)
 
 	if not self._unit:damage() then
 		return
 	end
 
-	if enabled and self._unit:damage():has_sequence("enable_sniper_effect") then
-		self._unit:damage():run_sequence_simple("enable_sniper_effect")
-		Application:trace("[NPCSniperRifleBase:show_sniper_flare]  unit:damage():run_sequence_simple( enable_sniper_effect )")
-	elseif not enabled and self._unit:damage():has_sequence("disable_sniper_effect") then
-		self._unit:damage():run_sequence_simple("disable_sniper_effect")
-		Application:trace("[NPCSniperRifleBase:show_sniper_flare]  unit:damage():run_sequence_simple( disable_sniper_effect )")
+	if enabled then
+		self._unit:damage():has_then_run_sequence_simple("enable_sniper_effect")
+		Application:trace("[NPCSniperRifleBase:show_sniper_flare] enable_sniper_effect")
+	else
+		self._unit:damage():has_then_run_sequence_simple("disable_sniper_effect")
+		Application:trace("[NPCSniperRifleBase:show_sniper_flare] disable_sniper_effect")
 	end
-
-	NPCSniperRifleBase.unit = self._unit
 end
 
 function NPCSniperRifleBase:_spawn_trail_effect(direction, col_ray)

@@ -13,9 +13,9 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 		h = params.h
 	})
 	self._scrollable_panel = self._object:panel({
-		name = "scrollable_panel",
 		y = 0,
 		x = 0,
+		name = "scrollable_panel",
 		w = params.w,
 		h = params.h
 	})
@@ -65,8 +65,8 @@ end
 
 function RaidGUIControlBranchingProgressBar:_layout_skill_details()
 	local params_skill_details = {
-		name = "skill_details",
 		layer = 1000,
+		name = "skill_details",
 		x = ExperienceGui.SKILL_DETAILS_X,
 		y = ExperienceGui.SKILL_DETAILS_Y
 	}

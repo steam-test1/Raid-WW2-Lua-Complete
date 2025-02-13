@@ -36,15 +36,13 @@ function MenuTitlescreenState:setup()
 
 	panel:rect({
 		visible = false,
-		color = nil,
 		color = Color.black
 	})
 
 	self._background = panel:bitmap({
-		layer = 1,
-		texture = nil,
-		alpha = 0,
 		name = "title_screen_background_image",
+		layer = 1,
+		alpha = 0,
 		texture = MenuTitlescreenState.BACKGROUND_IMAGE
 	})
 	local good_size = Vector3(1920, 1080, res.z)
@@ -57,15 +55,12 @@ function MenuTitlescreenState:setup()
 	self._background:set_center_x(panel:center_x())
 
 	local gradient_params = {
-		orientation = "vertical",
-		valign = "grow",
+		h = 320,
+		name = "text_background_gradient",
 		y = 0,
 		x = 0,
-		gradient_points = nil,
-		h = 320,
-		w = nil,
-		layer = nil,
-		name = "text_background_gradient",
+		valign = "grow",
+		orientation = "vertical",
 		w = panel:w(),
 		gradient_points = {
 			0,
@@ -82,12 +77,7 @@ function MenuTitlescreenState:setup()
 	self._text_gradient:set_bottom(panel:h())
 
 	local logo_params = {
-		layer = nil,
-		h = nil,
-		w = nil,
 		alpha = 0,
-		texture_rect = nil,
-		texture = nil,
 		name = "title_screen_game_logo",
 		texture = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture_rect,
@@ -102,18 +92,12 @@ function MenuTitlescreenState:setup()
 
 	local legal_text_font_size = MenuTitlescreenState.LEGAL_TEXT_FONT_SIZE
 	local legal_text_params = {
-		font_size = nil,
-		align = "center",
-		font = nil,
-		color = nil,
-		layer = 50,
-		vertical = "bottom",
 		alpha = 0,
-		h = nil,
-		w = nil,
-		text = nil,
-		wrap = true,
 		name = "legal_text",
+		wrap = true,
+		layer = 50,
+		align = "center",
+		vertical = "bottom",
 		w = self._workspace:panel():w(),
 		h = self._workspace:panel():h(),
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.LEGAL_TEXT_FONT, legal_text_font_size),
@@ -129,18 +113,11 @@ function MenuTitlescreenState:setup()
 
 	local press_any_key_font_size = MenuTitlescreenState.PRESS_ANY_KEY_TEXT_FONT_SIZE
 	local press_any_key_prompt_params = {
-		font_size = nil,
-		align = "center",
-		font = nil,
-		color = nil,
-		layer = nil,
-		vertical = "bottom",
 		alpha = 0,
-		h = nil,
-		w = nil,
-		text = nil,
-		wrap = true,
 		name = "press_any_key_text",
+		wrap = true,
+		align = "center",
+		vertical = "bottom",
 		w = self._workspace:panel():w(),
 		h = self._workspace:panel():h(),
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
@@ -158,16 +135,10 @@ function MenuTitlescreenState:setup()
 	local text_id = (IS_PS4 or IS_XB1) and "menu_press_start" or "menu_visit_forum3"
 	local din_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_24)
 	local text = self._workspace:panel():text({
-		font_size = nil,
-		font = nil,
-		color = nil,
-		visible = false,
-		vertical = "bottom",
-		h = nil,
-		w = nil,
-		text = nil,
 		layer = 2,
 		align = "center",
+		visible = false,
+		vertical = "bottom",
 		text = managers.localization:text(text_id),
 		font = din_path,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -188,8 +159,6 @@ function MenuTitlescreenState:setup()
 
 			if controller_type == "ps4" or controller_type == "xb1" then
 				self._controller_list[index]:add_connect_changed_callback(callback(self, self, "_update_pc_controller_connection", {
-					text_id = nil,
-					text_gui = nil,
 					text_gui = text,
 					text_id = text_id
 				}))
@@ -199,8 +168,6 @@ function MenuTitlescreenState:setup()
 
 	if IS_PC then
 		self:_update_pc_controller_connection({
-			text_id = nil,
-			text_gui = nil,
 			text_gui = text,
 			text_id = text_id
 		})
@@ -299,6 +266,7 @@ function MenuTitlescreenState:update(t, dt)
 				managers.user:set_index(self._controller_index)
 			end
 
+			managers.localization:setup_macros()
 			self._press_any_key_text:set_alpha(0)
 
 			if IS_XB1 then

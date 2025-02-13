@@ -1272,10 +1272,14 @@ function CoreEditor:on_hide_unselected()
 end
 
 function CoreEditor:on_unhide_all()
-	local to_hide = clone(self._hidden_units)
+	if self._hidden_units then
+		local to_hide = clone(self._hidden_units)
 
-	for _, unit in ipairs(to_hide) do
-		self:set_unit_visible(unit, true)
+		for _, unit in ipairs(to_hide) do
+			self:set_unit_visible(unit, true)
+		end
+	else
+		Application:debug("[CoreEditor:on_unhide_all] No units to unhide")
 	end
 end
 
@@ -3190,21 +3194,21 @@ function CoreEditor:do_save(path, dir, save_continents)
 	Application:info("[editor]", "Saved to ", path)
 
 	if wrong_id_found then
-		Application:error("Units with wrong IDs found, please check and finx errors.")
+		Application:error("Units with wrong IDs found, please check and fix errors.")
 	end
 
 	return true
 end
 
 function CoreEditor:_check_unit_ids_outside_continent()
-	print("Checking for unit ids outside continent range...")
+	Application:info("Checking for unit ids outside continent range...")
 
 	local found = false
 
 	for name, continent in pairs(self._continents) do
 		local base_id = continent._values.base_id
 
-		print("Checking continent:", name, "range:", base_id .. "-" .. base_id + 100000)
+		Application:info("Checking continent:", name, "range:", base_id .. "-" .. base_id + 100000)
 
 		for id, unit in pairs(continent._unit_ids) do
 			local id_diff = id - base_id

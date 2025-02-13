@@ -26,17 +26,15 @@ function ElementDropPointGroup:get_random_drop_point()
 	for _, params in ipairs(self._values.on_executed) do
 		local element = self:get_mission_element(params.id)
 
-		if element then
+		if element and element:enabled() then
 			table.insert(eligible_points, element:values().position)
 		end
 	end
 
-	return eligible_points[math.random(#eligible_points)]
+	return table.random(eligible_points)
 end
 
 function ElementDropPointGroup:on_executed(instigator)
-	return
-
 	if not self._values.enabled then
 		return
 	end

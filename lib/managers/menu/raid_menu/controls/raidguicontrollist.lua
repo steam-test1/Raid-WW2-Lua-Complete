@@ -56,6 +56,11 @@ function RaidGUIControlList:_create_items()
 
 	local selected_item = nil
 	local y = self._params.padding_top or 0
+	local click_callback = callback(self, self, "on_item_clicked")
+	local double_click_callback = callback(self, self, "on_item_double_clicked")
+	local item_selected_callback = callback(self, self, "on_item_selected")
+	local mouse_enter_callback = callback(self, self, "on_mouse_enter")
+	local mouse_exit_callback = callback(self, self, "on_mouse_exit")
 	local counter = 1
 
 	for i, item_data in ipairs(self._list_data) do
@@ -78,9 +83,11 @@ function RaidGUIControlList:_create_items()
 			item_params.selected_color = item_data.selected_color
 			item_params.item_font = item_data.item_font or self._params.item_font
 			item_params.item_font_size = item_data.item_font_size or self._params.item_font_size
-			item_params.on_click_callback = callback(self, self, "on_item_clicked")
-			item_params.on_double_click_callback = callback(self, self, "on_item_double_clicked")
-			item_params.on_item_selected_callback = callback(self, self, "on_item_selected")
+			item_params.on_click_callback = click_callback
+			item_params.on_double_click_callback = double_click_callback
+			item_params.on_item_selected_callback = item_selected_callback
+			item_params.on_mouse_enter_callback = mouse_enter_callback
+			item_params.on_mouse_exit_callback = mouse_exit_callback
 			item_params.on_mouse_over_sound_event = self._params.on_mouse_over_sound_event
 			item_params.on_mouse_click_sound_event = self._params.on_mouse_click_sound_event
 			local item = self:_create_item(self._params.item_class or RaidGUIControlListItem, item_params, item_data)
@@ -93,9 +100,10 @@ function RaidGUIControlList:_create_items()
 			end
 
 			y = y + item:h()
+			local spacing = item_data.vertical_spacing or self._list_params and self._list_params.vertical_spacing or 0
 
-			if self._list_params and self._list_params.vertical_spacing and self._list_params.vertical_spacing > 0 then
-				y = y + self._list_params.vertical_spacing
+			if spacing > 0 then
+				y = y + spacing
 			end
 
 			counter = counter + 1
@@ -160,6 +168,41 @@ function RaidGUIControlList:highlight_on()
 end
 
 function RaidGUIControlList:highlight_off()
+end
+
+function RaidGUIControlList:show()
+	RaidGUIControlList.super.show(self)
+
+	if self._list_items then
+		local delay = 0
+		local delay_step = 0.15 / #self._list_items
+
+		for _, item in ipairs(self._list_items) do
+			if item.animate_show then
+				item:animate_show(delay)
+
+				delay = delay + delay_step
+			end
+		end
+	end
+end
+
+function RaidGUIControlList:animate_hide()
+	local delay = 0
+
+	if self._list_items then
+		local delay_step = 0.12 / #self._list_items
+
+		for i = #self._list_items, 1, -1 do
+			local item = self._list_items[i]
+
+			if item.animate_hide then
+				item:animate_hide(delay)
+
+				delay = delay + delay_step
+			end
+		end
+	end
 end
 
 function RaidGUIControlList:selected_item()
@@ -268,6 +311,12 @@ function RaidGUIControlList:select_item_by_value(item_value)
 			end
 		end
 	end
+end
+
+function RaidGUIControlList:on_mouse_enter(item, data)
+end
+
+function RaidGUIControlList:on_mouse_exit(item, data)
 end
 
 function RaidGUIControlList:on_item_clicked(button, item, data, skip_select)
@@ -478,4 +527,12 @@ function RaidGUIControlList:_next_row_idx()
 	end
 
 	return false
+end
+
+RaidGUIControlSingleSelectList = RaidGUIControlSingleSelectList or class(RaidGUIControlList)
+
+function RaidGUIControlSingleSelectList:on_mouse_enter(item, data)
+	if self._selected_item and self._selected_item ~= item then
+		self:_select_item(item, true)
+	end
 end

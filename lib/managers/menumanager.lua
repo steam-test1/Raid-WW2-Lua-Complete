@@ -38,492 +38,451 @@ function MenuManager:init(is_start_menu)
 
 	if is_start_menu then
 		local menu_main = {
+			content_file = "gamedata/raid/menus/start_menu",
+			renderer = "MenuRenderer",
 			id = "start_menu",
 			name = "menu_main",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/start_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(menu_main)
 
 		local mission_join_menu = {
+			content_file = "gamedata/raid/menus/mission_join_menu",
+			renderer = "MenuRenderer",
 			id = "mission_join_menu",
 			name = "mission_join_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/mission_join_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(mission_join_menu)
 
 		local raid_options_menu = {
+			content_file = "gamedata/raid/menus/raid_options_menu",
+			renderer = "MenuRenderer",
 			id = "raid_options_menu",
 			name = "raid_options_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_options_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_options_menu)
 
 		local raid_menu_credits = {
+			content_file = "gamedata/raid/menus/show_credits_menu",
+			renderer = "MenuRenderer",
 			id = "raid_credits_menu",
 			name = "raid_credits_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/show_credits_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_credits)
 
 		local raid_menu_options_controls = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controls",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controls",
 			name = "raid_menu_options_controls",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controls",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controls)
 
 		local raid_menu_options_controls_keybinds = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controls_keybinds",
 			name = "raid_menu_options_controls_keybinds",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controls_keybinds)
 
 		local raid_menu_options_controller_mapping = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controller_mapping",
 			name = "raid_menu_options_controller_mapping",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controller_mapping)
 
 		local raid_menu_options_video = {
+			content_file = "gamedata/raid/menus/raid_menu_options_video",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_video",
 			name = "raid_menu_options_video",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_video",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_video)
 
 		local raid_menu_options_video_advanced = {
+			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_video_advanced",
 			name = "raid_menu_options_video_advanced",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_video_advanced)
 
 		local raid_menu_options_interface = {
+			content_file = "gamedata/raid/menus/raid_menu_options_interface",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_interface",
 			name = "raid_menu_options_interface",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_interface",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_interface)
 
 		local raid_menu_options_sound = {
+			content_file = "gamedata/raid/menus/raid_menu_options_sound",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_sound",
 			name = "raid_menu_options_sound",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_sound",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_sound)
 
 		local raid_menu_options_network = {
+			content_file = "gamedata/raid/menus/raid_menu_options_network",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_network",
 			name = "raid_menu_options_network",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_network",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_network)
 	else
 		local mission_join_menu = {
+			content_file = "gamedata/raid/menus/mission_join_menu",
+			renderer = "MenuRenderer",
 			id = "mission_join_menu",
 			name = "mission_join_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/mission_join_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(mission_join_menu)
 
 		local mission_selection_menu = {
+			content_file = "gamedata/raid/menus/mission_selection_menu",
+			renderer = "MenuRenderer",
 			id = "mission_selection_menu",
 			name = "mission_selection_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/mission_selection_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(mission_selection_menu)
 
 		local mission_unlock_menu = {
+			content_file = "gamedata/raid/menus/mission_unlock_menu",
+			renderer = "MenuRenderer",
 			id = "mission_unlock_menu",
 			name = "mission_unlock_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/mission_unlock_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(mission_unlock_menu)
 
 		local profile_selection_menu = {
+			content_file = "gamedata/raid/menus/profile_selection_menu",
+			renderer = "MenuRenderer",
 			id = "profile_selection_menu",
 			name = "profile_selection_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/profile_selection_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(profile_selection_menu)
 
 		local profile_creation_menu = {
+			content_file = "gamedata/raid/menus/profile_creation_menu",
+			renderer = "MenuRenderer",
 			id = "profile_creation_menu",
 			name = "profile_creation_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/profile_creation_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(profile_creation_menu)
 
 		local character_customization_menu = {
+			content_file = "gamedata/raid/menus/character_customization_menu",
+			renderer = "MenuRenderer",
 			id = "character_customization_menu",
 			name = "character_customization_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/character_customization_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(character_customization_menu)
 
 		local raid_main_menu = {
+			content_file = "gamedata/raid/menus/raid_main_menu",
+			renderer = "MenuRenderer",
 			id = "raid_main_menu",
 			name = "raid_main_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_main_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_main_menu)
 
 		local raid_options_menu = {
+			content_file = "gamedata/raid/menus/raid_options_menu",
+			renderer = "MenuRenderer",
 			id = "raid_options_menu",
 			name = "raid_options_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_options_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_options_menu)
 
 		local challenge_cards_menu = {
+			content_file = "gamedata/raid/menus/challenge_cards_menu",
+			renderer = "MenuRenderer",
 			id = "challenge_cards_menu",
 			name = "challenge_cards_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/challenge_cards_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(challenge_cards_menu)
 
 		local ready_up_menu = {
+			content_file = "gamedata/raid/menus/ready_up_menu",
+			renderer = "MenuRenderer",
 			id = "ready_up_menu",
 			name = "ready_up_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/ready_up_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(ready_up_menu)
 
 		local challenge_cards_view_menu = {
+			content_file = "gamedata/raid/menus/challenge_cards_view_menu",
+			renderer = "MenuRenderer",
 			id = "challenge_cards_view_menu",
 			name = "challenge_cards_view_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/challenge_cards_view_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(challenge_cards_view_menu)
 
 		local raid_experience_menu = {
+			content_file = "gamedata/raid/menus/xp_menu",
+			renderer = "MenuRenderer",
 			id = "raid_menu_xp",
 			name = "raid_menu_xp",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/xp_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_experience_menu)
 
 		local raid_post_game_breakdown_menu = {
+			content_file = "gamedata/raid/menus/post_game_breakdown",
+			renderer = "MenuRenderer",
 			id = "raid_menu_post_game_breakdown",
 			name = "raid_menu_post_game_breakdown",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/post_game_breakdown",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_post_game_breakdown_menu)
 
 		local raid_special_honors_menu = {
+			content_file = "gamedata/raid/menus/special_honors",
+			renderer = "MenuRenderer",
 			id = "raid_menu_special_honors",
 			name = "raid_menu_special_honors",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/special_honors",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_special_honors_menu)
 
 		local raid_loot_screen_menu = {
+			content_file = "gamedata/raid/menus/loot_screen_menu",
+			renderer = "MenuRenderer",
 			id = "raid_menu_loot_screen",
 			name = "raid_menu_loot_screen",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/loot_screen_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_loot_screen_menu)
 
 		local raid_greed_loot_screen_menu = {
+			content_file = "gamedata/raid/menus/greed_loot_screen_menu",
+			renderer = "MenuRenderer",
 			id = "raid_menu_greed_loot_screen",
 			name = "raid_menu_greed_loot_screen",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/greed_loot_screen_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_greed_loot_screen_menu)
 
 		local raid_menu_weapon_select = {
+			content_file = "gamedata/raid/menus/weapon_select_menu",
+			renderer = "MenuRenderer",
 			id = "raid_menu_weapon_select",
 			name = "raid_menu_weapon_select",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/weapon_select_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_weapon_select)
 
 		local raid_menu_credits = {
+			content_file = "gamedata/raid/menus/show_credits_menu",
+			renderer = "MenuRenderer",
 			id = "raid_credits_menu",
 			name = "raid_credits_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/show_credits_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_credits)
 
 		local raid_menu_options_controls = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controls",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controls",
 			name = "raid_menu_options_controls",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controls",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controls)
 
 		local raid_menu_options_controller_mapping = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controller_mapping",
 			name = "raid_menu_options_controller_mapping",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controller_mapping)
 
 		local raid_menu_options_controls_keybinds = {
+			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_controls_keybinds",
 			name = "raid_menu_options_controls_keybinds",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_controls_keybinds)
 
 		local raid_menu_options_video = {
+			content_file = "gamedata/raid/menus/raid_menu_options_video",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_video",
 			name = "raid_menu_options_video",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_video",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_video)
 
 		local raid_menu_options_video_advanced = {
+			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_video_advanced",
 			name = "raid_menu_options_video_advanced",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_video_advanced)
 
 		local raid_menu_options_interface = {
+			content_file = "gamedata/raid/menus/raid_menu_options_interface",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_interface",
 			name = "raid_menu_options_interface",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_interface",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_interface)
 
 		local raid_menu_options_sound = {
+			content_file = "gamedata/raid/menus/raid_menu_options_sound",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_sound",
 			name = "raid_menu_options_sound",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_sound",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_sound)
 
 		local raid_menu_options_network = {
+			content_file = "gamedata/raid/menus/raid_menu_options_network",
+			renderer = "MenuRenderer",
 			id = "raid_menu_options_network",
 			name = "raid_menu_options_network",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/raid_menu_options_network",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(raid_menu_options_network)
 
 		local gold_asset_store_menu = {
+			content_file = "gamedata/raid/menus/gold_asset_store_menu",
+			renderer = "MenuRenderer",
 			id = "gold_asset_store_menu",
 			name = "gold_asset_store_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/gold_asset_store_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(gold_asset_store_menu)
 
 		local intel_menu = {
+			content_file = "gamedata/raid/menus/intel_menu",
+			renderer = "MenuRenderer",
 			id = "intel_menu",
 			name = "intel_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/intel_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(intel_menu)
 
 		local comic_book_menu = {
+			content_file = "gamedata/raid/menus/comic_book_menu",
+			renderer = "MenuRenderer",
 			id = "comic_book_menu",
 			name = "comic_book_menu",
 			input = "MenuInput",
-			callback_handler = nil,
-			content_file = "gamedata/raid/menus/comic_book_menu",
-			renderer = "MenuRenderer",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
@@ -1365,11 +1324,11 @@ function MenuManager:add_back_button(new_node)
 	new_node:delete_item("back")
 
 	local params = {
+		back = true,
 		previous_node = true,
-		name = "back",
 		visible_callback = "is_pc_controller",
-		text_id = "menu_back",
-		back = true
+		name = "back",
+		text_id = "menu_back"
 	}
 	local new_item = new_node:create_item(nil, params)
 
@@ -1383,13 +1342,9 @@ end
 function MenuManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
+		verbose = false,
 		target_db_name = "all",
 		send_idstrings = false,
-		target_db_root = nil,
-		platform = nil,
-		source_root = nil,
-		verbose = false,
-		source_files = nil,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",
@@ -1688,7 +1643,6 @@ function MenuManager:show_disconnect_message(requires_signin)
 	self._showing_disconnect_message = true
 
 	self:show_mp_disconnected_internet_dialog({
-		ok_func = nil,
 		ok_func = function ()
 			self._showing_disconnect_message = nil
 		end
@@ -1708,8 +1662,6 @@ function MenuManager:exit_online_menues()
 	managers.system_menu:force_close_all()
 
 	Global.controller_manager.connect_controller_dialog_visible = nil
-
-	self:_close_lobby_menu_components()
 
 	if self:active_menu() then
 		self:close_menu(self:active_menu().name)
@@ -1738,9 +1690,6 @@ function MenuManager:refresh_player_profile_gui()
 	end
 end
 
-function MenuManager:_close_lobby_menu_components()
-end
-
 function MenuManager:on_leave_lobby()
 	local skip_destroy_matchmaking = IS_PS4
 
@@ -1755,67 +1704,7 @@ function MenuManager:on_leave_lobby()
 	managers.menu:open_menu("menu_main")
 	managers.network.matchmake:leave_game()
 	managers.network.voice_chat:destroy_voice()
-	self:_close_lobby_menu_components()
 	managers.raid_job:deactivate_current_job()
-end
-
-function MenuManager:show_global_success(node)
-	local node_gui = nil
-
-	if not node then
-		local stack = managers.menu:active_menu().renderer._node_gui_stack
-		node_gui = stack[#stack]
-
-		if not node_gui.set_mini_info then
-			print("No mini info to set!")
-
-			return
-		end
-	end
-
-	if not managers.network.account.get_win_ratio then
-		if node_gui then
-			node_gui:set_mini_info("")
-		end
-
-		return
-	end
-
-	local rate = managers.network.account:get_win_ratio(Global.game_settings.difficulty, Global.game_settings.level_id)
-
-	if not rate then
-		if node_gui then
-			node_gui:set_mini_info("")
-		end
-
-		return
-	end
-
-	rate = rate * 100
-	local rate_str = nil
-
-	if rate >= 10 then
-		rate_str = string.format("%.0f", rate)
-	else
-		rate_str = string.format("%.1f", rate)
-	end
-
-	local diff_str = string.upper(managers.localization:text("menu_difficulty_" .. Global.game_settings.difficulty))
-	local heist_str = string.upper(managers.localization:text(tweak_data.levels[Global.game_settings.level_id].name_id))
-	rate_str = managers.localization:text("menu_global_success", {
-		DIFFICULTY = nil,
-		HEIST = nil,
-		COUNT = nil,
-		COUNT = rate_str,
-		HEIST = heist_str,
-		DIFFICULTY = diff_str
-	})
-
-	if node then
-		node.mini_info = rate_str
-	else
-		node_gui:set_mini_info(rate_str)
-	end
 end
 
 function MenuManager:on_storage_changed(old_user_data, user_data)
@@ -1880,2022 +1769,22 @@ function MenuManager:on_user_sign_out()
 	end
 end
 
-MenuUpgrades = MenuUpgrades or class()
-
-function MenuUpgrades:modify_node(node, up, ...)
-	local new_node = up and node or deep_clone(node)
-	local tree = new_node:parameters().tree
-	local first_locked = true
-
-	for i, upgrade_id in ipairs(tweak_data.upgrades.progress[tree]) do
-		local title = managers.upgrades:title(upgrade_id) or managers.upgrades:name(upgrade_id)
-		local subtitle = managers.upgrades:subtitle(upgrade_id)
-		local params = {
-			text_id = nil,
-			name = nil,
-			tree = nil,
-			topic_text = nil,
-			step = nil,
-			localize = "false",
-			upgrade_id = nil,
-			step = i,
-			tree = tree,
-			name = upgrade_id,
-			upgrade_id = upgrade_id,
-			text_id = string.upper(title and subtitle or title),
-			topic_text = subtitle and title and string.upper(title)
-		}
-
-		if managers.upgrades:is_locked(i) and first_locked then
-			first_locked = false
-
-			new_node:add_item(new_node:create_item({
-				type = "MenuItemUpgrade"
-			}, {
-				text_id = nil,
-				name = "upgrade_lock",
-				localize = "false",
-				upgrade_lock = true,
-				text_id = managers.localization:text("menu_upgrades_locked", {
-					LEVEL = nil,
-					LEVEL = managers.upgrades:get_level_from_step(i)
-				})
-			}))
-		end
-
-		local new_item = new_node:create_item({
-			type = "MenuItemUpgrade"
-		}, params)
-
-		new_node:add_item(new_item)
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-InviteFriendsPSN = InviteFriendsPSN or class()
-
-function InviteFriendsPSN:modify_node(node, up)
-	local new_node = up and node or deep_clone(node)
-
-	local function f2(friends)
-		managers.menu:active_menu().logic:refresh_node("invite_friends", true, friends)
-	end
-
-	managers.network.friends:register_callback("get_friends_done", f2)
-	managers.network.friends:register_callback("status_change", function ()
-	end)
-	managers.network.friends:get_friends(new_node)
-
-	return new_node
-end
-
-function InviteFriendsPSN:refresh_node(node, friends)
-	for i, friend in ipairs(friends) do
-		if i < 103 then
-			local name = tostring(friend._name)
-			local signin_status = friend._signin_status
-			local item = node:item(name)
-
-			if not item then
-				local params = {
-					name = nil,
-					signin_status = nil,
-					localize = "false",
-					friend = nil,
-					text_id = nil,
-					callback = "invite_friend",
-					name = name,
-					friend = friend._id,
-					text_id = utf8.to_upper(friend._name),
-					signin_status = signin_status
-				}
-				local new_item = node:create_item({
-					type = "MenuItemFriend"
-				}, params)
-
-				node:add_item(new_item)
-			elseif item:parameters().signin_status ~= signin_status then
-				item:parameters().signin_status = signin_status
-			end
-		end
-	end
-
-	return node
-end
-
-function InviteFriendsPSN:update_node(node)
-	if self._update_friends_t and Application:time() < self._update_friends_t then
-		return
-	end
-
-	self._update_friends_t = Application:time() + 2
-
-	managers.network.friends:get_friends()
-end
-
-InviteFriendsSTEAM = InviteFriendsSTEAM or class()
-
-function InviteFriendsSTEAM:modify_node(node, up)
-	return node
-end
-
-function InviteFriendsSTEAM:refresh_node(node, friend)
-	return node
-end
-
-function InviteFriendsSTEAM:update_node(node)
-end
-
-PauseMenu = PauseMenu or class()
-
-function PauseMenu:modify_node(node)
-	local item = node:item("restart_vote")
-
-	if item then
-		item:set_enabled(managers.vote:available())
-		item:set_parameter("help_id", managers.vote:help_text() or "")
-	end
-
-	if managers.vote:is_restarting() then
-		item = node:item("restart_level")
-
-		if item then
-			item:set_enabled(false)
-		end
-	end
-
-	return node
-end
-
-function PauseMenu:refresh_node(node)
-	return self:modify_node(node)
-end
-
-KickPlayer = KickPlayer or class()
-
-function KickPlayer:modify_node(node, up)
-	node:clean_items()
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				to_upper = false,
-				help_id = nil,
-				localize = false,
-				callback = "kick_player",
-				localize_help = false,
-				peer = nil,
-				rpc = nil,
-				name = nil,
-				text_id = nil,
-				name = peer:name(),
-				text_id = peer:name() .. " (" .. (peer:level() or "") .. ")",
-				rpc = peer:rpc(),
-				peer = peer,
-				help_id = peer:is_host() and managers.localization:text("menu_vote_kick_is_host") or managers.vote:option_vote_kick() and managers.vote:help_text() or ""
-			}
-			local new_item = node:create_item(nil, params)
-
-			if peer:is_host() or managers.vote:option_vote_kick() and not managers.vote:available() then
-				new_item:set_enabled(false)
-			end
-
-			node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(node)
-
-	return node
-end
-
-function KickPlayer:refresh_node(node)
-	return self:modify_node(node)
-end
-
-MutePlayer = MutePlayer or class()
-
-function MutePlayer:modify_node(node, up)
-	local new_node = deep_clone(node)
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				rpc = nil,
-				callback = "mute_player",
-				localize = "false",
-				text_id = nil,
-				to_upper = false,
-				peer = nil,
-				name = nil,
-				name = peer:name(),
-				text_id = peer:name() .. (peer:level() or "") .. ")",
-				rpc = peer:rpc(),
-				peer = peer
-			}
-			local data = {
-				{
-					y = 0,
-					x = 24,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 24,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "on",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				{
-					y = 0,
-					x = 0,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 0,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "off",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				type = "CoreMenuItemToggle.ItemToggle"
-			}
-			local new_item = node:create_item(data, params)
-
-			new_item:set_value(peer:is_muted() and "on" or "off")
-			new_node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MutePlayerXB1 = MutePlayerXB1 or class()
-
-function MutePlayerXB1:modify_node(node, up)
-	local new_node = deep_clone(node)
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				rpc = nil,
-				callback = "mute_xb1_player",
-				localize = "false",
-				text_id = nil,
-				to_upper = false,
-				peer = nil,
-				name = nil,
-				xuid = nil,
-				name = peer:name(),
-				text_id = peer:name(),
-				rpc = peer:rpc(),
-				peer = peer,
-				xuid = peer:xuid()
-			}
-			local data = {
-				{
-					y = 0,
-					x = 24,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 24,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "on",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				{
-					y = 0,
-					x = 0,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 0,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "off",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				type = "CoreMenuItemToggle.ItemToggle"
-			}
-			local new_item = node:create_item(data, params)
-
-			new_item:set_value(peer:is_muted() and "on" or "off")
-			new_node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MutePlayerPS4 = MutePlayerPS4 or class()
-
-function MutePlayerPS4:modify_node(node, up)
-	local new_node = deep_clone(node)
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				rpc = nil,
-				callback = "mute_ps4_player",
-				localize = "false",
-				text_id = nil,
-				to_upper = false,
-				peer = nil,
-				name = nil,
-				name = peer:name(),
-				text_id = peer:name(),
-				rpc = peer:rpc(),
-				peer = peer
-			}
-			local data = {
-				{
-					y = 0,
-					x = 24,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 24,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "on",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				{
-					y = 0,
-					x = 0,
-					s_h = 24,
-					s_w = 24,
-					s_y = 24,
-					s_x = 0,
-					s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-					h = 24,
-					w = 24,
-					value = "off",
-					icon = "ui/main_menu/textures/debug_menu_tickbox",
-					_meta = "option"
-				},
-				type = "CoreMenuItemToggle.ItemToggle"
-			}
-			local new_item = node:create_item(data, params)
-
-			new_item:set_value(peer:is_muted() and "on" or "off")
-			new_node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-ViewGamerCard = ViewGamerCard or class()
-
-function ViewGamerCard:modify_node(node, up)
-	local new_node = deep_clone(node)
-
-	if managers.network:session() then
-		for _, peer in pairs(managers.network:session():peers()) do
-			local params = {
-				name = nil,
-				callback = "view_gamer_card",
-				localize = "false",
-				text_id = nil,
-				to_upper = false,
-				xuid = nil,
-				name = peer:name(),
-				text_id = peer:name(),
-				xuid = peer:xuid()
-			}
-			local new_item = node:create_item(nil, params)
-
-			new_node:add_item(new_item)
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MenuPSNHostBrowser = MenuPSNHostBrowser or class()
-
-function MenuPSNHostBrowser:modify_node(node, up)
-	local new_node = up and node or deep_clone(node)
-
-	return new_node
-end
-
-function MenuPSNHostBrowser:update_node(node)
-	if #PSN:get_world_list() == 0 then
-		return
-	end
-
-	managers.network.matchmake:start_search_lobbys(managers.network.matchmake:searching_friends_only())
-end
-
-function MenuPSNHostBrowser:add_filter(node)
-	if node:item("difficulty_filter") then
-		return
-	end
-
-	local params = {
-		name = "difficulty_filter",
-		help_id = "menu_diff_filter_help",
-		visible_callback = "is_ps4",
-		callback = "choice_difficulty_filter_ps4",
-		text_id = "menu_diff_filter",
-		filter = true
-	}
-	local data_node = {
-		{
-			text_id = "menu_all",
-			value = 0,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_1",
-			value = 1,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_2",
-			value = 2,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_3",
-			value = 3,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_4",
-			value = 4,
-			_meta = "option"
-		},
-		type = "MenuItemMultiChoice"
-	}
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(managers.network.matchmake:difficulty_filter())
-	node:add_item(new_item)
-end
-
-function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
-	local new_node = node
-
-	if not friends_only then
-		self:add_filter(new_node)
-	end
-
-	if not info_list then
-		return new_node
-	end
-
-	local dead_list = {}
-
-	for _, item in ipairs(node:items()) do
-		if not item:parameters().filter then
-			dead_list[item:parameters().name] = true
-		end
-	end
-
-	for _, info in ipairs(info_list) do
-		local room_list = info.room_list
-		local attribute_list = info.attribute_list
-
-		for i, room in ipairs(room_list) do
-			local name_str = tostring(room.owner_id)
-			local friend_str = room.friend_id and tostring(room.friend_id)
-			local attributes_numbers = attribute_list[i].numbers
-
-			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
-				dead_list[name_str] = nil
-				local host_name = name_str
-				local level_id = attributes_numbers and tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
-				local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id or "N/A"
-				local level_name = name_id and managers.localization:text(name_id) or "LEVEL NAME ERROR"
-				local difficulty = attributes_numbers and tweak_data:index_to_difficulty(attributes_numbers[2]) or "N/A"
-				local state_string_id = attributes_numbers and tweak_data:index_to_server_state(attributes_numbers[4]) or nil
-				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "N/A"
-				local state = attributes_numbers or "N/A"
-				local item = new_node:item(name_str)
-				local num_plrs = attributes_numbers and attributes_numbers[8] or 1
-
-				if not item then
-					local params = {
-						state_name = nil,
-						difficulty = nil,
-						localize = "false",
-						level_id = nil,
-						room_id = nil,
-						level_name = nil,
-						callback = "connect_to_lobby",
-						name = nil,
-						host_name = nil,
-						real_level_name = nil,
-						columns = nil,
-						text_id = nil,
-						num_plrs = nil,
-						state = nil,
-						name = name_str,
-						text_id = name_str,
-						room_id = room.room_id,
-						columns = {
-							string.upper(friend_str or host_name),
-							string.upper(level_name),
-							string.upper(state_name),
-							tostring(num_plrs) .. "/4 "
-						},
-						level_name = level_id or "N/A",
-						real_level_name = level_name,
-						level_id = level_id,
-						state_name = state_name,
-						difficulty = difficulty,
-						host_name = host_name,
-						state = state,
-						num_plrs = num_plrs
-					}
-					local new_item = new_node:create_item({
-						type = "ItemServerColumn"
-					}, params)
-
-					new_node:add_item(new_item)
-				else
-					if item:parameters().real_level_name ~= level_name then
-						item:parameters().columns[2] = string.upper(level_name)
-						item:parameters().level_name = level_id
-						item:parameters().level_id = level_id
-						item:parameters().real_level_name = level_name
-					end
-
-					if item:parameters().state ~= state then
-						item:parameters().columns[3] = state_name
-						item:parameters().state = state
-						item:parameters().state_name = state_name
-					end
-
-					if item:parameters().difficulty ~= difficulty then
-						item:parameters().difficulty = difficulty
-					end
-
-					if item:parameters().room_id ~= room.room_id then
-						item:parameters().room_id = room.room_id
-					end
-
-					if item:parameters().num_plrs ~= num_plrs then
-						item:parameters().num_plrs = num_plrs
-						item:parameters().columns[4] = tostring(num_plrs) .. "/4 "
-					end
-				end
-			end
-		end
-	end
-
-	for name, _ in pairs(dead_list) do
-		new_node:delete_item(name)
-	end
-
-	return new_node
-end
-
-MenuSTEAMHostBrowser = MenuSTEAMHostBrowser or class()
-
-function MenuSTEAMHostBrowser:modify_node(node, up)
-	local new_node = up and node or deep_clone(node)
-
-	return new_node
-end
-
-function MenuSTEAMHostBrowser:update_node(node)
-	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
-end
-
-function MenuSTEAMHostBrowser:add_filter(node)
-	if node:item("server_filter") then
-		return
-	end
-
-	local params = {
-		name = "server_filter",
-		help_id = "menu_dist_filter_help",
-		visible_callback = "is_pc_controller",
-		callback = "choice_distance_filter",
-		text_id = "menu_dist_filter",
-		filter = true
-	}
-	local data_node = {
-		{
-			text_id = "menu_dist_filter_close",
-			value = 0,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_dist_filter_default",
-			value = 1,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_dist_filter_far",
-			value = 2,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_dist_filter_worldwide",
-			value = 3,
-			_meta = "option"
-		},
-		type = "MenuItemMultiChoice"
-	}
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(managers.network.matchmake:distance_filter())
-	node:add_item(new_item)
-
-	local params = {
-		name = "difficulty_filter",
-		help_id = "menu_diff_filter_help",
-		visible_callback = "is_pc_controller",
-		callback = "choice_difficulty_filter",
-		text_id = "menu_diff_filter",
-		filter = true
-	}
-	local data_node = {
-		{
-			text_id = "menu_all",
-			value = 0,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_easy",
-			value = 1,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_normal",
-			value = 2,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_hard",
-			value = 3,
-			_meta = "option"
-		},
-		{
-			text_id = "menu_difficulty_overkill",
-			value = 4,
-			_meta = "option"
-		},
-		type = "MenuItemMultiChoice"
-	}
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(managers.network.matchmake:difficulty_filter())
-	node:add_item(new_item)
-end
-
-function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
-	local new_node = node
-
-	if not friends_only then
-		self:add_filter(new_node)
-	end
-
-	if not info then
-		managers.menu:add_back_button(new_node)
-
-		return new_node
-	end
-
-	local room_list = info.room_list
-	local attribute_list = info.attribute_list
-	local dead_list = {}
-
-	for _, item in ipairs(node:items()) do
-		if not item:parameters().back and not item:parameters().filter and not item:parameters().pd2_corner then
-			dead_list[item:parameters().room_id] = true
-		end
-	end
-
-	for i, room in ipairs(room_list) do
-		local name_str = tostring(room.owner_name)
-		local attributes_numbers = attribute_list[i].numbers
-
-		if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
-			dead_list[room.room_id] = nil
-			local host_name = name_str
-			local level_id = tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
-			local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
-			local level_name = name_id and managers.localization:text(name_id) or "LEVEL NAME ERROR"
-			local difficulty = tweak_data:index_to_difficulty(attributes_numbers[2])
-			local state_string_id = tweak_data:index_to_server_state(attributes_numbers[4])
-			local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "blah"
-			local state = attributes_numbers[4]
-			local num_plrs = attributes_numbers[5]
-			local item = new_node:item(room.room_id)
-
-			if not item then
-				print("ADD", name_str)
-
-				local params = {
-					state_name = nil,
-					difficulty = nil,
-					localize = "false",
-					level_id = nil,
-					room_id = nil,
-					level_name = nil,
-					callback = "connect_to_lobby",
-					name = nil,
-					host_name = nil,
-					real_level_name = nil,
-					columns = nil,
-					text_id = nil,
-					num_plrs = nil,
-					state = nil,
-					name = room.room_id,
-					text_id = name_str,
-					room_id = room.room_id,
-					columns = {
-						utf8.to_upper(host_name),
-						utf8.to_upper(level_name),
-						utf8.to_upper(state_name),
-						tostring(num_plrs) .. "/4 "
-					},
-					level_name = level_id,
-					real_level_name = level_name,
-					level_id = level_id,
-					state_name = state_name,
-					difficulty = difficulty,
-					host_name = host_name,
-					state = state,
-					num_plrs = num_plrs
-				}
-				local new_item = new_node:create_item({
-					type = "ItemServerColumn"
-				}, params)
-
-				new_node:add_item(new_item)
-			else
-				if item:parameters().real_level_name ~= level_name then
-					item:parameters().columns[2] = utf8.to_upper(level_name)
-					item:parameters().level_name = level_id
-					item:parameters().level_id = level_id
-					item:parameters().real_level_name = level_name
-				end
-
-				if item:parameters().state ~= state then
-					item:parameters().columns[3] = state_name
-					item:parameters().state = state
-					item:parameters().state_name = state_name
-				end
-
-				if item:parameters().difficulty ~= difficulty then
-					item:parameters().difficulty = difficulty
-				end
-
-				if item:parameters().room_id ~= room.room_id then
-					item:parameters().room_id = room.room_id
-				end
-
-				if item:parameters().num_plrs ~= num_plrs then
-					item:parameters().num_plrs = num_plrs
-					item:parameters().columns[4] = tostring(num_plrs) .. "/4 "
-				end
-			end
-		end
-	end
-
-	for name, _ in pairs(dead_list) do
-		new_node:delete_item(name)
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MenuLANHostBrowser = MenuLANHostBrowser or class()
-
-function MenuLANHostBrowser:modify_node(node, up)
-	local new_node = up and node or deep_clone(node)
-
-	return new_node
-end
-
-function MenuLANHostBrowser:refresh_node(node)
-	local new_node = node
-	local hosts = managers.network:session():discovered_hosts()
-
-	for _, host_data in ipairs(hosts) do
-		local host_rpc = host_data.rpc
-		local name_str = host_data.host_name .. ", " .. host_rpc:to_string()
-		local level_id = tweak_data.levels:get_level_name_from_world_name(host_data.level_name)
-		local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
-		local level_name = name_id and managers.localization:text(name_id) or host_data.level_name
-		local state_name = host_data.state == 1 and managers.localization:text("menu_lobby_server_state_in_lobby") or managers.localization:text("menu_lobby_server_state_in_game")
-		local item = new_node:item(name_str)
-
-		if not item then
-			local params = {
-				state_name = nil,
-				difficulty = nil,
-				localize = "false",
-				level_id = nil,
-				host_name = nil,
-				level_name = nil,
-				callback = "connect_to_host_rpc",
-				name = nil,
-				rpc = nil,
-				real_level_name = nil,
-				columns = nil,
-				text_id = nil,
-				state = nil,
-				name = name_str,
-				text_id = name_str,
-				columns = {
-					string.upper(host_data.host_name),
-					string.upper(level_name),
-					string.upper(state_name)
-				},
-				rpc = host_rpc,
-				level_name = host_data.level_name,
-				real_level_name = level_name,
-				level_id = level_id,
-				state_name = state_name,
-				difficulty = host_data.difficulty,
-				host_name = host_data.host_name,
-				state = host_data.state
-			}
-			local new_item = new_node:create_item({
-				type = "ItemServerColumn"
-			}, params)
-
-			new_node:add_item(new_item)
-		else
-			if item:parameters().real_level_name ~= level_name then
-				item:parameters().columns[2] = string.upper(level_name)
-				item:parameters().level_name = host_data.level_name
-				item:parameters().real_level_name = level_name
-			end
-
-			if item:parameters().state ~= host_data.state then
-				item:parameters().columns[3] = state_name
-				item:parameters().state = host_data.state
-			end
-
-			if item:parameters().difficulty ~= host_data.difficulty then
-				item:parameters().difficulty = host_data.difficulty
-			end
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MenuMPHostBrowser = MenuMPHostBrowser or class()
-
-function MenuMPHostBrowser:modify_node(node, up)
-	local new_node = up and node or deep_clone(node)
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-function MenuMPHostBrowser:refresh_node(node)
-	local new_node = node
-	local hosts = managers.network:session():discovered_hosts()
-	local j = 1
-
-	for _, host_data in ipairs(hosts) do
-		local host_rpc = host_data.rpc
-		local name_str = host_data.host_name .. ", " .. host_rpc:to_string()
-		local level_id = tweak_data.levels:get_level_name_from_world_name(host_data.level_name)
-		local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
-		local level_name = name_id and managers.localization:text(name_id) or host_data.level_name
-		local state_name = host_data.state == 1 and managers.localization:text("menu_lobby_server_state_in_lobby") or managers.localization:text("menu_lobby_server_state_in_game")
-		local item = new_node:item(name_str)
-
-		if not item then
-			local params = {
-				state_name = nil,
-				difficulty = nil,
-				localize = "false",
-				level_id = nil,
-				host_name = nil,
-				level_name = nil,
-				callback = "connect_to_host_rpc",
-				name = nil,
-				rpc = nil,
-				real_level_name = nil,
-				columns = nil,
-				text_id = nil,
-				state = nil,
-				name = name_str,
-				text_id = name_str,
-				columns = {
-					string.upper(host_data.host_name),
-					string.upper(level_name),
-					string.upper(state_name)
-				},
-				rpc = host_rpc,
-				level_name = host_data.level_name,
-				real_level_name = level_name,
-				level_id = level_id,
-				state_name = state_name,
-				difficulty = host_data.difficulty,
-				host_name = host_data.host_name,
-				state = host_data.state
-			}
-			local new_item = new_node:create_item({
-				type = "ItemServerColumn"
-			}, params)
-
-			new_node:add_item(new_item)
-		else
-			if item:parameters().real_level_name ~= level_name then
-				print("Update level_name - ", level_name)
-
-				item:parameters().columns[2] = string.upper(level_name)
-				item:parameters().level_name = host_data.level_name
-				item:parameters().real_level_name = level_name
-			end
-
-			if item:parameters().state ~= host_data.state then
-				item:parameters().columns[3] = state_name
-				item:parameters().state = host_data.state
-			end
-
-			if item:parameters().difficulty ~= host_data.difficulty then
-				item:parameters().difficulty = host_data.difficulty
-			end
-		end
-
-		j = j + 1
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MenuResolutionCreator = MenuResolutionCreator or class()
-
-function MenuResolutionCreator:modify_node(node)
-	local new_node = deep_clone(node)
-
-	if IS_PC then
-		local resolutions = {}
-
-		for _, res in ipairs(RenderSettings.modes) do
-			table.insert(resolutions, res)
-		end
-
-		table.sort(resolutions)
-
-		for _, res in ipairs(resolutions) do
-			local res_string = string.format("%d x %d, %dHz", res.x, res.y, res.z)
-
-			if not new_node:item(res_string) then
-				local params = {
-					name = nil,
-					callback = "change_resolution",
-					localize = "false",
-					icon_rotation = 90,
-					text_id = nil,
-					icon = "guis/textures/scrollarrow",
-					resolution = nil,
-					icon_visible_callback = "is_current_resolution",
-					name = res_string,
-					text_id = res_string,
-					resolution = res
-				}
-				local new_item = new_node:create_item(nil, params)
-
-				new_node:add_item(new_item)
-			end
-		end
-	end
-
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
-MenuSoundCreator = MenuSoundCreator or class()
-
-function MenuSoundCreator:modify_node(node)
-	local music_item = node:item("music_volume")
-
-	if music_item then
-		music_item:set_min(_G.tweak_data.menu.MIN_MUSIC_VOLUME)
-		music_item:set_max(_G.tweak_data.menu.MAX_MUSIC_VOLUME)
-		music_item:set_step(_G.tweak_data.menu.MUSIC_CHANGE)
-		music_item:set_value(managers.user:get_setting("music_volume"))
-	end
-
-	local sfx_item = node:item("sfx_volume")
-
-	if sfx_item then
-		sfx_item:set_min(_G.tweak_data.menu.MIN_SFX_VOLUME)
-		sfx_item:set_max(_G.tweak_data.menu.MAX_SFX_VOLUME)
-		sfx_item:set_step(_G.tweak_data.menu.SFX_CHANGE)
-		sfx_item:set_value(managers.user:get_setting("sfx_volume"))
-	end
-
-	local voice_item = node:item("voice_volume")
-
-	if voice_item then
-		voice_item:set_min(_G.tweak_data.menu.MIN_VOICE_VOLUME)
-		voice_item:set_max(_G.tweak_data.menu.MAX_VOICE_VOLUME)
-		voice_item:set_step(_G.tweak_data.menu.VOICE_CHANGE)
-		voice_item:set_value(managers.user:get_setting("voice_volume"))
-	end
-
-	local option_value = "on"
-	local st_item = node:item("toggle_voicechat")
-
-	if st_item then
-		if not managers.user:get_setting("voice_chat") then
-			option_value = "off"
-		end
-
-		st_item:set_value(option_value)
-	end
-
-	option_value = "on"
-	local st_item = node:item("toggle_push_to_talk")
-
-	if st_item then
-		if not managers.user:get_setting("push_to_talk") then
-			option_value = "off"
-		end
-
-		st_item:set_value(option_value)
-	end
-
-	return node
-end
-
-function MenuSoundCreator:refresh_node(node)
-	self:modify_node(node)
-end
-
-function MenuManager.refresh_level_select(node, verify_dlc_owned)
-	if verify_dlc_owned and tweak_data.levels[Global.game_settings.level_id].dlc then
-		local dlcs = string.split(managers.dlc:dlcs_string(), " ")
-
-		if not table.contains(dlcs, tweak_data.levels[Global.game_settings.level_id].dlc) then
-			Global.game_settings.level_id = "bank"
-		end
-	end
-
-	local min_difficulty = 0
-
-	for _, item in ipairs(node:items()) do
-		local level_id = item:parameter("level_id")
-
-		if level_id then
-			if level_id == Global.game_settings.level_id then
-				min_difficulty = tonumber(item:parameter("difficulty"))
-			elseif item:visible() then
-				-- Nothing
-			end
-		end
-	end
-
-	local diff = min_difficulty < tweak_data:difficulty_to_index(Global.game_settings.difficulty) and Global.game_settings.difficulty or tweak_data:index_to_difficulty(min_difficulty)
-
-	tweak_data:set_difficulty(diff)
-
-	local item_difficulty = node:item("lobby_difficulty")
-
-	if item_difficulty then
-		for i, option in ipairs(item_difficulty:options()) do
-			option:parameters().exclude = tonumber(option:parameters().difficulty) < min_difficulty
-		end
-
-		item_difficulty:set_value(Global.game_settings.difficulty)
-	end
-
-	local lobby_mission_item = node:item("lobby_mission")
-	local mission_data = tweak_data.levels[Global.game_settings.level_id].mission_data
-
-	if lobby_mission_item then
-		print("lobby_mission_item")
-
-		local params = {
-			text_id = "menu_choose_mission",
-			name = "lobby_mission",
-			localize = "false",
-			callback = "choice_lobby_mission"
-		}
-		local data_node = {
-			type = "MenuItemMultiChoice"
-		}
-
-		if mission_data then
-			for _, data in ipairs(mission_data) do
-				table.insert(data_node, {
-					text_id = nil,
-					value = nil,
-					localize = false,
-					_meta = "option",
-					text_id = data.mission,
-					value = data.mission
-				})
-			end
-		else
-			table.insert(data_node, {
-				text_id = "none",
-				value = "none",
-				localize = false,
-				_meta = "option"
-			})
-		end
-
-		lobby_mission_item:init(data_node, params)
-		lobby_mission_item:set_callback_handler(MenuCallbackHandler:new())
-		lobby_mission_item:set_value(data_node[1].value)
-	end
-
-	Global.game_settings.mission = mission_data and mission_data[1] and mission_data[1].mission or "none"
-end
-
-MenuPSNPlayerProfileInitiator = MenuPSNPlayerProfileInitiator or class()
-
-function MenuPSNPlayerProfileInitiator:modify_node(node)
-	if IS_PS4 and not managers.network:session() then
-		PSN:set_online_callback(callback(managers.menu, managers.menu, "refresh_player_profile_gui"))
-	end
-
-	return node
-end
-
-GlobalSuccessRateInitiator = GlobalSuccessRateInitiator or class()
-
-function GlobalSuccessRateInitiator:modify_node(node)
-	managers.menu:show_global_success(node)
-
-	return node
-end
-
-LobbyOptionInitiator = LobbyOptionInitiator or class()
-
-function LobbyOptionInitiator:modify_node(node)
-	MenuManager.refresh_level_select(node, Network:is_server())
-
-	local item_permission_campaign = node:item("lobby_permission")
-
-	if item_permission_campaign then
-		item_permission_campaign:set_value(Global.game_settings.permission)
-	end
-
-	local item_lobby_toggle_drop_in = node:item("toggle_drop_in")
-
-	if item_lobby_toggle_drop_in then
-		item_lobby_toggle_drop_in:set_value(Global.game_settings.drop_in_allowed and "on" or "off")
-	end
-
-	local item_lobby_toggle_ai = node:item("toggle_ai")
-
-	if item_lobby_toggle_ai then
-		item_lobby_toggle_ai:set_value(Global.game_settings.team_ai and "on" or "off")
-	end
-
-	local character_item = node:item("choose_character")
-
-	if character_item then
-		local value = managers.network:session() and managers.network:session():local_peer():character() or "random"
-
-		character_item:set_value(value)
-	end
-
-	local reputation_permission_item = node:item("lobby_reputation_permission")
-
-	if reputation_permission_item then
-		print("reputation_permission_item", "set value", Global.game_settings.reputation_permission, type_name(Global.game_settings.reputation_permission))
-		reputation_permission_item:set_value(Global.game_settings.reputation_permission)
-	end
-
-	local item_lobby_job_plan = node:item("lobby_job_plan")
-
-	if item_lobby_job_plan then
-		item_lobby_job_plan:set_value(Global.game_settings.job_plan or -1)
-	end
-
-	local item_lobby_job_custom_text = node:item("lobby_job_custom_text")
-
-	if item_lobby_job_custom_text then
-		item_lobby_job_custom_text:set_value(Global.game_settings.custom_text or "")
-	end
-
-	return node
-end
-
-VerifyLevelOptionInitiator = VerifyLevelOptionInitiator or class()
-
-function VerifyLevelOptionInitiator:modify_node(node)
-	MenuManager.refresh_level_select(node, true)
-
-	return node
-end
-
-MenuCustomizeControllerCreator = MenuCustomizeControllerCreator or class()
-MenuCustomizeControllerCreator.CONTROLS = {
-	"move",
-	"primary_attack",
-	"secondary_attack",
-	"primary_choice2",
-	"primary_choice1",
-	"primary_choice3",
-	"primary_choice4",
-	"switch_weapon",
-	"reload",
-	"weapon_firemode",
-	"run",
-	"jump",
-	"duck",
-	"melee",
-	"interact",
-	"comm_wheel",
-	"comm_wheel_yes",
-	"comm_wheel_no",
-	"comm_wheel_found_it",
-	"comm_wheel_wait",
-	"comm_wheel_not_here",
-	"comm_wheel_follow_me",
-	"comm_wheel_assistance",
-	"comm_wheel_enemy",
-	"activate_warcry",
-	"use_item",
-	"toggle_chat",
-	"toggle_hud",
-	"push_to_talk",
-	"drive",
-	"hand_brake",
-	"vehicle_rear_camera",
-	"vehicle_shooting_stance",
-	"vehicle_exit",
-	"vehicle_change_seat"
-}
-MenuCustomizeControllerCreator.AXIS_ORDERED = {
-	drive = nil,
-	move = nil,
-	move = {
-		"up",
-		"down",
-		"left",
-		"right"
-	},
-	drive = {
-		"accelerate",
-		"brake",
-		"turn_left",
-		"turn_right"
-	}
-}
-MenuCustomizeControllerCreator.CONTROLS_INFO = {
-	move = {
-		hidden = true,
-		type = "movement",
-		category = "normal"
-	},
-	up = {
-		text_id = "menu_button_move_forward",
-		type = "movement",
-		category = "normal"
-	},
-	down = {
-		text_id = "menu_button_move_back",
-		type = "movement",
-		category = "normal"
-	},
-	left = {
-		text_id = "menu_button_move_left",
-		type = "movement",
-		category = "normal"
-	},
-	right = {
-		text_id = "menu_button_move_right",
-		type = "movement",
-		category = "normal"
-	},
-	primary_attack = {
-		text_id = "menu_button_fire_weapon",
-		type = "usage",
-		category = "normal"
-	},
-	secondary_attack = {
-		text_id = "menu_button_aim_down_sight",
-		type = "usage",
-		category = "normal"
-	},
-	primary_choice1 = {
-		text_id = "menu_button_weapon_slot1",
-		type = "usage",
-		category = "normal"
-	},
-	primary_choice2 = {
-		text_id = "menu_button_weapon_slot2",
-		type = "usage",
-		category = "normal"
-	},
-	primary_choice3 = {
-		text_id = "menu_button_weapon_slot3",
-		type = "usage",
-		category = "normal"
-	},
-	primary_choice4 = {
-		text_id = "menu_button_weapon_slot4",
-		type = "usage",
-		category = "normal"
-	},
-	switch_weapon = {
-		text_id = "menu_button_switch_weapon",
-		type = "usage",
-		category = "normal"
-	},
-	reload = {
-		text_id = "menu_button_reload",
-		type = "usage",
-		category = "normal"
-	},
-	run = {
-		text_id = "menu_button_sprint",
-		type = "movement",
-		category = "normal"
-	},
-	jump = {
-		text_id = "menu_button_jump",
-		type = "movement",
-		category = "normal"
-	},
-	duck = {
-		text_id = "menu_button_crouch",
-		type = "movement",
-		category = "normal"
-	},
-	melee = {
-		text_id = "menu_button_melee",
-		type = "usage",
-		category = "normal"
-	},
-	interact = {
-		text_id = "menu_button_shout",
-		type = "usage",
-		category = "normal"
-	},
-	use_item = {
-		text_id = "menu_button_deploy",
-		type = "usage",
-		category = "normal"
-	},
-	toggle_chat = {
-		text_id = "menu_button_chat_message",
-		type = "communication",
-		category = "normal"
-	},
-	push_to_talk = {
-		text_id = "menu_button_push_to_talk",
-		type = "communication",
-		category = "normal"
-	},
-	continue = {
-		text_id = "menu_button_continue",
-		category = "normal"
-	},
-	weapon_firemode = {
-		text_id = "menu_button_weapon_firemode",
-		type = "usage",
-		category = "normal"
-	},
-	cash_inspect = {
-		text_id = "menu_button_cash_inspect",
-		category = "normal"
-	},
-	deploy_bipod = {
-		text_id = "menu_button_deploy_bipod",
-		category = "normal"
-	},
-	comm_wheel = {
-		text_id = "menu_button_comm_wheel",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_yes = {
-		text_id = "menu_button_comm_wheel_yes",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_no = {
-		text_id = "menu_button_comm_wheel_no",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_found_it = {
-		text_id = "menu_button_comm_wheel_found_it",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_wait = {
-		text_id = "menu_button_comm_wheel_wait",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_not_here = {
-		text_id = "menu_button_comm_wheel_not_here",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_follow_me = {
-		text_id = "menu_button_comm_wheel_follow_me",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_assistance = {
-		text_id = "menu_button_comm_wheel_assistance",
-		type = "communication",
-		category = "normal"
-	},
-	comm_wheel_enemy = {
-		text_id = "menu_button_comm_wheel_enemy",
-		type = "communication",
-		category = "normal"
-	},
-	activate_warcry = {
-		text_id = "menu_button_activate_warcry",
-		type = "usage",
-		category = "normal"
-	},
-	toggle_hud = {
-		text_id = "menu_button_toggle_hud",
-		type = "usage",
-		category = "normal"
-	},
-	drive = {
-		hidden = true,
-		type = "movement",
-		category = "vehicle"
-	},
-	accelerate = {
-		text_id = "menu_button_accelerate",
-		type = "movement",
-		category = "vehicle"
-	},
-	brake = {
-		text_id = "menu_button_brake",
-		type = "movement",
-		category = "vehicle"
-	},
-	turn_left = {
-		text_id = "menu_button_turn_left",
-		type = "movement",
-		category = "vehicle"
-	},
-	turn_right = {
-		text_id = "menu_button_turn_right",
-		type = "movement",
-		category = "vehicle"
-	},
-	hand_brake = {
-		text_id = "menu_button_handbrake",
-		type = "movement",
-		category = "vehicle"
-	},
-	vehicle_rear_camera = {
-		text_id = "menu_button_vehicle_rear_camera",
-		type = "usage",
-		category = "vehicle"
-	},
-	vehicle_shooting_stance = {
-		text_id = "menu_button_vehicle_shooting_stance",
-		block = nil,
-		type = "usage",
-		category = "vehicle",
-		block = {
-			"normal"
-		}
-	},
-	vehicle_exit = {
-		text_id = "menu_button_vehicle_exit",
-		type = "usage",
-		category = "vehicle"
-	},
-	vehicle_change_seat = {
-		text_id = "menu_button_vehicle_change_seat",
-		type = "usage",
-		category = "vehicle"
-	}
-}
-
-function MenuCustomizeControllerCreator.controls_info_by_category(category)
-	local t = {}
-
-	for _, name in ipairs(MenuCustomizeControllerCreator.CONTROLS) do
-		if MenuCustomizeControllerCreator.CONTROLS_INFO[name].category == category then
-			table.insert(t, name)
-		end
-	end
-
-	return t
-end
-
-function MenuCustomizeControllerCreator:modify_node(original_node, data)
-	local node = original_node
-
-	return self:setup_node(node)
-end
-
-function MenuCustomizeControllerCreator:refresh_node(node)
-	self:setup_node(node)
-
-	return node
-end
-
-function MenuCustomizeControllerCreator:setup_node(node)
-	local new_node = node
-	local controller_category = node:parameters().controller_category or "normal"
-
-	node:clean_items()
-
-	local params = {
-		text_id = "menu_controller_type",
-		name = "controller_type",
-		callback = "choice_controller_type"
-	}
-	local data_node = {
-		type = "MenuItemMultiChoice"
-	}
-
-	table.insert(data_node, {
-		text_id = "menu_controller_normal",
-		value = "normal",
-		_meta = "option"
-	})
-	table.insert(data_node, {
-		text_id = "menu_controller_vehicle",
-		value = "vehicle",
-		_meta = "option"
-	})
-
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(controller_category)
-
-	local connections = managers.controller:get_settings(managers.controller:get_default_wrapper_type()):get_connection_map()
-
-	for _, name in ipairs(self.controls_info_by_category(controller_category)) do
-		local name_id = name
-		local connection = connections[name]
-
-		if connection._btn_connections then
-			local ordered = self.AXIS_ORDERED[name]
-
-			for _, btn_name in ipairs(ordered) do
-				local btn_connection = connection._btn_connections[btn_name]
-
-				if btn_connection then
-					local name_id = name
-					local params = {
-						binding = nil,
-						connection_name = nil,
-						localize = "false",
-						name = nil,
-						text_id = nil,
-						button = nil,
-						axis = nil,
-						name = btn_name,
-						connection_name = name,
-						text_id = utf8.to_upper(managers.localization:text(self.CONTROLS_INFO[btn_name].text_id)),
-						binding = btn_connection.name,
-						axis = connection._name,
-						button = btn_name
-					}
-					local new_item = new_node:create_item({
-						type = "MenuItemCustomizeController"
-					}, params)
-
-					new_node:add_item(new_item)
-				end
-			end
-		else
-			local params = {
-				binding = nil,
-				connection_name = nil,
-				localize = "false",
-				name = nil,
-				text_id = nil,
-				button = nil,
-				name = name_id,
-				connection_name = name,
-				text_id = utf8.to_upper(managers.localization:text(self.CONTROLS_INFO[name].text_id)),
-				binding = connection:get_input_name_list()[1],
-				button = name
-			}
-			local new_item = new_node:create_item({
-				type = "MenuItemCustomizeController"
-			}, params)
-
-			new_node:add_item(new_item)
-		end
-	end
-
-	local params = {
-		text_id = "menu_set_default_controller",
-		name = "set_default_controller",
-		callback = "set_default_controller",
-		category = nil,
-		category = controller_category
-	}
-	local new_item = new_node:create_item(nil, params)
-
-	new_node:add_item(new_item)
-	managers.menu:add_back_button(new_node)
-
-	return new_node
-end
-
 MenuOptionInitiator = MenuOptionInitiator or class()
 
 function MenuOptionInitiator:modify_node(node)
 	local node_name = node:parameters().name
 
-	if node_name == "resolution" then
-		return self:modify_resolution(node)
-	elseif node_name == "video" then
-		return self:modify_video(node)
-	elseif node_name == "adv_video" then
-		return self:modify_adv_video(node)
-	elseif node_name == "controls" then
-		return self:modify_controls(node)
-	elseif node_name == "debug" then
+	if node_name == "debug" then
 		return self:modify_debug_options(node)
 	elseif node_name == "debug_camp" then
 		return self:modify_debug_options(node)
 	elseif node_name == "debug_ingame" then
 		return self:modify_debug_options(node)
-	elseif node_name == "options" then
-		return self:modify_options(node)
-	elseif node_name == "network_options" then
-		return self:modify_network_options(node)
 	end
 end
 
 function MenuOptionInitiator:refresh_node(node)
 	self:modify_node(node)
-end
-
-function MenuOptionInitiator:modify_resolution(node)
-	if IS_PC then
-		local res_name = string.format("%d x %d, %dHz", RenderSettings.resolution.x, RenderSettings.resolution.y, RenderSettings.resolution.z)
-
-		node:set_default_item_name(res_name)
-	end
-
-	return node
-end
-
-function MenuOptionInitiator:modify_adv_video(node)
-	node:item("toggle_vsync"):set_value(RenderSettings.v_sync and "on" or "off")
-
-	if node:item("choose_streaks") then
-		node:item("choose_streaks"):set_value(managers.user:get_setting("video_streaks") and "on" or "off")
-	end
-
-	if node:item("choose_light_adaption") then
-		node:item("choose_light_adaption"):set_value(managers.user:get_setting("light_adaption") and "on" or "off")
-	end
-
-	if node:item("choose_anti_alias") then
-		node:item("choose_anti_alias"):set_value(managers.user:get_setting("video_anti_alias"))
-	end
-
-	node:item("choose_anim_lod"):set_value(managers.user:get_setting("video_animation_lod"))
-
-	if node:item("choose_color_grading") then
-		node:item("choose_color_grading"):set_value(managers.user:get_setting("video_color_grading"))
-	end
-
-	node:item("choose_texture_quality"):set_value(RenderSettings.texture_quality_default)
-	node:item("choose_shadow_quality"):set_value(RenderSettings.shadow_quality_default)
-	node:item("choose_anisotropic"):set_value(RenderSettings.max_anisotropy)
-
-	if node:item("fov_multiplier") then
-		node:item("fov_multiplier"):set_value(managers.user:get_setting("fov_multiplier"))
-	end
-
-	if node:item("detail_distance") then
-		node:item("detail_distance"):set_value(managers.user:get_setting("detail_distance"))
-	end
-
-	node:item("choose_fps_cap"):set_value(managers.user:get_setting("fps_cap"))
-	node:item("max_streaming_chunk"):set_value(managers.user:get_setting("max_streaming_chunk"))
-
-	if node:item("toggle_use_thq_weapon_parts") then
-		node:item("toggle_use_thq_weapon_parts"):set_value(managers.user:get_setting("use_thq_weapon_parts") and "on" or "off")
-	end
-
-	local option_value = "off"
-	local dof_setting_item = node:item("toggle_dof")
-
-	if dof_setting_item then
-		if managers.user:get_setting("dof_setting") ~= "none" then
-			option_value = "on"
-		end
-
-		dof_setting_item:set_value(option_value)
-	end
-
-	local ssao_setting_item = node:item("toggle_ssao")
-
-	if ssao_setting_item then
-		option_value = "off"
-
-		if managers.user:get_setting("ssao_setting") ~= "none" then
-			option_value = "on"
-		end
-
-		ssao_setting_item:set_value(option_value)
-	end
-
-	local motion_blur_setting_item = node:item("toggle_motion_blur")
-
-	if motion_blur_setting_item then
-		option_value = "off"
-
-		if managers.user:get_setting("motion_blur_setting") ~= "none" then
-			option_value = "on"
-		end
-
-		motion_blur_setting_item:set_value(option_value)
-	end
-
-	local vls_setting_item = node:item("toggle_volumetric_light_scattering")
-
-	if vls_setting_item then
-		option_value = "off"
-
-		if managers.user:get_setting("vls_setting") ~= "none" then
-			option_value = "on"
-		end
-
-		vls_setting_item:set_value(option_value)
-	end
-
-	local use_parallax_setting_item = node:item("toggle_parallax")
-
-	if use_parallax_setting_item then
-		option_value = "off"
-
-		if managers.user:get_setting("use_parallax") ~= false then
-			option_value = "on"
-		end
-
-		use_parallax_setting_item:set_value(option_value)
-	end
-
-	local AA_setting_item = node:item("choose_AA_quality")
-
-	if AA_setting_item then
-		AA_setting_item:set_value(managers.user:get_setting("AA_setting"))
-	end
-
-	return node
-end
-
-function MenuOptionInitiator:modify_video(node)
-	local option_value = "off"
-	local fs_item = node:item("toggle_fullscreen")
-
-	if fs_item then
-		if managers.viewport:is_fullscreen() then
-			option_value = "on"
-		end
-
-		fs_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local st_item = node:item("toggle_subtitle")
-
-	if st_item then
-		if managers.user:get_setting("subtitle") then
-			option_value = "on"
-		end
-
-		st_item:set_value(option_value)
-	end
-
-	local hit_indicator_item = node:item("stepper_hit_indicator")
-
-	if hit_indicator_item then
-		hit_indicator_item:set_value(managers.user:get_setting("hit_indicator"))
-	end
-
-	local motion_dot_item = node:item("stepper_motion_dot")
-
-	if motion_dot_item then
-		motion_dot_item:set_value(managers.user:get_setting("motion_dot"))
-	end
-
-	option_value = "off"
-	local hud_special_weapon_panels_item = node:item("toggle_hud_special_weapon_panels")
-
-	if hud_special_weapon_panels_item then
-		if managers.user:get_setting("hud_special_weapon_panels") then
-			option_value = "on"
-		end
-
-		hud_special_weapon_panels_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local objective_reminder_item = node:item("toggle_objective_reminder")
-
-	if objective_reminder_item then
-		if managers.user:get_setting("objective_reminder") then
-			option_value = "on"
-		end
-
-		objective_reminder_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local objective_reminder_item = node:item("use_headbob")
-
-	if objective_reminder_item then
-		if managers.user:get_setting("objective_reminder") then
-			option_value = "on"
-		end
-
-		objective_reminder_item:set_value(option_value)
-	end
-
-	local br_item = node:item("brightness")
-
-	if br_item then
-		br_item:set_min(_G.tweak_data.menu.MIN_BRIGHTNESS)
-		br_item:set_max(_G.tweak_data.menu.MAX_BRIGHTNESS)
-		br_item:set_step(_G.tweak_data.menu.BRIGHTNESS_CHANGE)
-
-		option_value = managers.user:get_setting("brightness")
-
-		br_item:set_value(option_value)
-	end
-
-	local effect_quality_item = node:item("effect_quality")
-
-	if effect_quality_item then
-		option_value = managers.user:get_setting("effect_quality")
-
-		effect_quality_item:set_value(option_value)
-	end
-
-	return node
-end
-
-function MenuOptionInitiator:modify_controls(node)
-	local option_value = "off"
-	local rumble_item = node:item("toggle_rumble")
-
-	if rumble_item then
-		if managers.user:get_setting("rumble") then
-			option_value = "on"
-		end
-
-		rumble_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local inv_cam_horizontally_item = node:item("toggle_invert_camera_horisontally")
-
-	if inv_cam_horizontally_item then
-		if managers.user:get_setting("invert_camera_x") then
-			option_value = "on"
-		end
-
-		inv_cam_horizontally_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local inv_cam_vertically_item = node:item("toggle_invert_camera_vertically")
-
-	if inv_cam_vertically_item then
-		if managers.user:get_setting("invert_camera_y") then
-			option_value = "on"
-		end
-
-		inv_cam_vertically_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local southpaw_item = node:item("toggle_southpaw")
-
-	if southpaw_item then
-		if managers.user:get_setting("southpaw") then
-			option_value = "on"
-		end
-
-		southpaw_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local hold_to_steelsight_item = node:item("toggle_hold_to_steelsight")
-
-	if hold_to_steelsight_item then
-		if managers.user:get_setting("hold_to_steelsight") then
-			option_value = "on"
-		end
-
-		hold_to_steelsight_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local hold_to_run_item = node:item("toggle_hold_to_run")
-
-	if hold_to_run_item then
-		if managers.user:get_setting("hold_to_run") then
-			option_value = "on"
-		end
-
-		hold_to_run_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local hold_to_duck_item = node:item("toggle_hold_to_duck")
-
-	if hold_to_duck_item then
-		if managers.user:get_setting("hold_to_duck") then
-			option_value = "on"
-		end
-
-		hold_to_duck_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local aim_assist_item = node:item("toggle_aim_assist")
-
-	if aim_assist_item then
-		if managers.user:get_setting("aim_assist") then
-			option_value = "on"
-		end
-
-		aim_assist_item:set_value(option_value)
-	end
-
-	option_value = "off"
-	local sticky_aim_item = node:item("toggle_sticky_aim")
-
-	if sticky_aim_item then
-		if managers.user:get_setting("sticky_aim") then
-			option_value = "on"
-		end
-
-		sticky_aim_item:set_value(option_value)
-	end
-
-	local cs_item = node:item("camera_sensitivity")
-
-	if cs_item then
-		cs_item:set_min(tweak_data.player.camera.MIN_SENSITIVITY)
-		cs_item:set_max(tweak_data.player.camera.MAX_SENSITIVITY)
-		cs_item:set_step((tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) * 0.1)
-		cs_item:set_value(managers.user:get_setting("camera_sensitivity"))
-	end
-
-	local czs_item = node:item("camera_zoom_sensitivity")
-
-	if czs_item then
-		czs_item:set_min(tweak_data.player.camera.MIN_SENSITIVITY)
-		czs_item:set_max(tweak_data.player.camera.MAX_SENSITIVITY)
-		czs_item:set_step((tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) * 0.1)
-		czs_item:set_value(managers.user:get_setting("camera_zoom_sensitivity"))
-	end
-
-	node:item("toggle_zoom_sensitivity"):set_value(managers.user:get_setting("enable_camera_zoom_sensitivity") and "on" or "off")
-
-	return node
 end
 
 function MenuOptionInitiator:modify_debug_options(node)
@@ -4001,210 +1890,11 @@ function MenuOptionInitiator:modify_options(node)
 	return node
 end
 
-function MenuOptionInitiator:modify_network_options(node)
-	local toggle_throttling_item = node:item("toggle_throttling")
-
-	if toggle_throttling_item then
-		local toggle_throttling_value = managers.user:get_setting("net_packet_throttling") and "on" or "off"
-
-		toggle_throttling_item:set_value(toggle_throttling_value)
-	end
-
-	local toggle_net_forwarding_item = node:item("toggle_net_forwarding")
-
-	if toggle_net_forwarding_item then
-		local toggle_net_forwarding_value = managers.user:get_setting("net_forwarding") and "on" or "off"
-
-		toggle_net_forwarding_item:set_value(toggle_net_forwarding_value)
-	end
-
-	local net_use_compression_item = node:item("toggle_net_use_compression")
-
-	if net_use_compression_item then
-		local net_use_compression_value = managers.user:get_setting("net_use_compression") and "on" or "off"
-
-		net_use_compression_item:set_value(net_use_compression_value)
-	end
-
-	return node
-end
-
-ModMenuCreator = ModMenuCreator or class()
-
-function ModMenuCreator:modify_node(original_node, data)
-	local node = original_node
-
-	self:create_mod_menu(node)
-
-	return node
-end
-
-function ModMenuCreator:create_mod_menu(node)
-	node:clean_items()
-
-	local sorted_mods = {}
-	local mods = {}
-	local conflicted_content = {}
-	local modded_content = {}
-
-	local function id_key(path)
-		return Idstring(path):key()
-	end
-
-	for mod_name, mod_data in pairs(DB:mods()) do
-		table.insert(sorted_mods, mod_name)
-
-		mods[mod_name] = {
-			conflicted = nil,
-			content = nil,
-			content = {},
-			conflicted = {}
-		}
-
-		for _, path in ipairs(mod_data.files or {}) do
-			table.insert(mods[mod_name].content, path)
-
-			modded_content[id_key(path)] = modded_content[id_key(path)] or {}
-
-			table.insert(modded_content[id_key(path)], mod_name)
-
-			if #modded_content[id_key(path)] == 2 then
-				conflicted_content[id_key(path)] = modded_content[id_key(path)]
-			end
-		end
-
-		table.sort(mods[mod_name].content)
-	end
-
-	for idk, conflicted_mods in pairs(conflicted_content) do
-		for _, mod_name in ipairs(conflicted_mods) do
-			mods[mod_name].conflicted[idk] = conflicted_mods
-		end
-	end
-
-	table.sort(sorted_mods)
-
-	local list_of_mods = {}
-	local mod_item = nil
-
-	for _, mod_name in ipairs(sorted_mods) do
-		local conflicts = table.size(mods[mod_name].conflicted) > 0
-		mod_item = self:create_item(node, {
-			localize = false,
-			name = nil,
-			enabled = true,
-			hightlight_color = nil,
-			text_id = nil,
-			row_item_color = nil,
-			name = mod_name,
-			text_id = mod_name,
-			hightlight_color = conflicts and tweak_data.screen_colors.important_1,
-			row_item_color = conflicts and tweak_data.screen_colors.important_2
-		})
-	end
-
-	self:add_back_button(node)
-
-	node:parameters().mods = mods
-	node:parameters().sorted_mods = sorted_mods
-	node:parameters().conflicted_content = conflicted_content
-	node:parameters().modded_content = modded_content
-end
-
-function ModMenuCreator:create_divider(node, id, text_id, size, color)
-	local params = {
-		name = nil,
-		no_text = nil,
-		color = nil,
-		size = nil,
-		text_id = nil,
-		name = "divider_" .. id,
-		no_text = not text_id,
-		text_id = text_id,
-		size = size or 8,
-		color = color
-	}
-	local data_node = {
-		type = "MenuItemDivider"
-	}
-	local new_item = node:create_item(data_node, params)
-
-	node:add_item(new_item)
-end
-
-function ModMenuCreator:create_item(node, params)
-	local data_node = {}
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_enabled(params.enabled)
-	node:add_item(new_item)
-end
-
-function ModMenuCreator:create_toggle(node, params)
-	local data_node = {
-		{
-			y = 0,
-			x = 24,
-			s_h = 24,
-			s_w = 24,
-			s_y = 24,
-			s_x = 24,
-			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-			h = 24,
-			w = 24,
-			value = "on",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
-			_meta = "option"
-		},
-		{
-			y = 0,
-			x = 0,
-			s_h = 24,
-			s_w = 24,
-			s_y = 24,
-			s_x = 0,
-			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-			h = 24,
-			w = 24,
-			value = "off",
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
-			_meta = "option"
-		},
-		type = "MenuItemToggleWithIcon"
-	}
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_enabled(params.enabled)
-	node:add_item(new_item)
-
-	return new_item
-end
-
-function ModMenuCreator:add_back_button(node)
-	node:delete_item("back")
-
-	local params = {
-		previous_node = true,
-		name = "back",
-		visible_callback = "is_pc_controller",
-		text_id = "menu_back",
-		back = true
-	}
-	local new_item = node:create_item(nil, params)
-
-	node:add_item(new_item)
-end
-
 function MenuManager:create_menu_item_background(panel, coord_x, coord_y, width, layer)
 	local menu_item_background = panel:bitmap({
-		y = nil,
 		name = "background_image",
-		texture_rect = nil,
-		x = nil,
-		texture = "ui/main_menu/textures/debug_menu_buttons",
 		visible = true,
-		h = nil,
-		layer = nil,
+		texture = "ui/main_menu/textures/debug_menu_buttons",
 		texture_rect = {
 			0,
 			14,

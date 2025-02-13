@@ -31,48 +31,48 @@ function CoreEditor:build_toolbar()
 	self._toolbar:add_radio_tool("TB WIDGET SELECT", "Select Unit (" .. self:ctrl_menu_binding("select") .. ")", icons_path .. "widget_select.bmp", "Select Unit")
 	Global.frame:connect("TB WIDGET SELECT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_widget"), {
 		move = false,
-		rotate = false,
-		select = true
+		select = true,
+		rotate = false
 	})
 	self._toolbar:add_radio_tool("TB WIDGET MOVE", "Select and Move (" .. self:ctrl_menu_binding("move") .. ")", icons_path .. "widget_move.bmp", "Select and Move")
 	Global.frame:connect("TB WIDGET MOVE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_widget"), {
 		move = true,
-		rotate = false,
-		select = false
+		select = false,
+		rotate = false
 	})
 	Global.frame:connect("TB WIDGET MOVE", "EVT_COMMAND_TOOL_RCLICKED", callback(self, self, "on_move_transform_type_in"), nil)
 	self._toolbar:add_radio_tool("TB WIDGET ROTATE", "Select and Rotate (" .. self:ctrl_menu_binding("rotate") .. ")", icons_path .. "widget_rotation.bmp", "Select and Rotate")
 	Global.frame:connect("TB WIDGET ROTATE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "set_widget"), {
 		move = false,
-		rotate = true,
-		select = false
+		select = false,
+		rotate = true
 	})
 	Global.frame:connect("TB WIDGET ROTATE", "EVT_COMMAND_TOOL_RCLICKED", callback(self, self, "on_rotate_transform_type_in"), nil)
 	self:build_ref_coordinate_system()
 	self._toolbar:add_check_tool("TB_SURFACE_MOVE", "Surface move (" .. self:ctrl_binding("surface_move_toggle") .. ")", CoreEWS.image_path("world_editor\\surface_move_16x16.png"), "Toggle surface move on and off")
 	self._toolbar:set_tool_state("TB_SURFACE_MOVE", self._use_surface_move)
 	self._toolbar:connect("TB_SURFACE_MOVE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
-		menu = "_edit_menu",
-		value = "_use_surface_move"
+		value = "_use_surface_move",
+		menu = "_edit_menu"
 	})
 
 	self._ews_triggers.surface_move_toggle = callback(self, self, "toolbar_toggle_trg", {
+		value = "_use_surface_move",
 		menu = "_edit_menu",
-		id = "TB_SURFACE_MOVE",
-		value = "_use_surface_move"
+		id = "TB_SURFACE_MOVE"
 	})
 
 	self._toolbar:add_check_tool("TB_SNAPPOINTS", "Use Snappoints (" .. self:ctrl_binding("use_snappoints_toggle") .. ")", CoreEWS.image_path("world_editor\\snappoints_16x16.png"), "Toggle use of snappoints on and off")
 	self._toolbar:set_tool_state("TB_SNAPPOINTS", self._use_snappoints)
 	self._toolbar:connect("TB_SNAPPOINTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
-		menu = "_edit_menu",
-		value = "_use_snappoints"
+		value = "_use_snappoints",
+		menu = "_edit_menu"
 	})
 
 	self._ews_triggers.use_snappoints_toggle = callback(self, self, "toolbar_toggle_trg", {
+		value = "_use_snappoints",
 		menu = "_edit_menu",
-		id = "TB_SNAPPOINTS",
-		value = "_use_snappoints"
+		id = "TB_SNAPPOINTS"
 	})
 
 	self._toolbar:add_separator()
@@ -82,8 +82,8 @@ function CoreEditor:build_toolbar()
 	})
 
 	self._ews_triggers.using_group_toggle = callback(self, self, "toolbar_toggle_trg", {
-		id = "TB_USING_GROUPS",
-		value = "_using_groups"
+		value = "_using_groups",
+		id = "TB_USING_GROUPS"
 	})
 
 	self._toolbar:add_separator()
@@ -91,8 +91,8 @@ function CoreEditor:build_toolbar()
 	self._toolbar:add_check_tool("TB_LAYER_DRAW_GRID", "Draw grid", CoreEWS.image_path("world_editor\\toggle_draw_grid_16x16.png"), "Toggle draw grid on and off")
 	self._toolbar:set_tool_state("TB_LAYER_DRAW_GRID", self._layer_draw_grid)
 	self._toolbar:connect("TB_LAYER_DRAW_GRID", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
-		toolbar = "_toolbar",
-		value = "_layer_draw_grid"
+		value = "_layer_draw_grid",
+		toolbar = "_toolbar"
 	})
 	self._toolbar:add_separator()
 	self:build_snap_rotations()
@@ -118,8 +118,8 @@ function CoreEditor:build_toolbar()
 	end
 
 	self._ews_triggers.change_snaprot_axis = callback(self, self, "change_snaprot_axis", {
-		t = "_coordinate_systems",
 		value = "_coordinate_system",
+		t = "_coordinate_systems",
 		combobox = self._ref_coordinate_system,
 		menu = self._coordinate_menu
 	})
@@ -217,8 +217,8 @@ function CoreEditor:build_ref_coordinate_system()
 	})
 
 	self._ews_triggers.toggle_coordinate_system = callback(self, self, "change_combo_box_trg", {
-		t = "_coordinate_systems",
 		value = "_coordinate_system",
+		t = "_coordinate_systems",
 		combobox = self._ref_coordinate_system,
 		menu = self._coordinate_menu
 	})
@@ -248,8 +248,8 @@ function CoreEditor:build_grid_sizes(icons_path)
 	sizes:set_size(Vector3(55, -1, 0))
 	self._toolbar:add_control(sizes)
 	sizes:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_combo_box"), {
-		prefix = "TB_GRIDSIZE",
 		value = "_grid_size",
+		prefix = "TB_GRIDSIZE",
 		combobox = sizes,
 		menu = self._grid_sizes_menu
 	})
@@ -287,8 +287,8 @@ function CoreEditor:build_snap_rotations()
 	rotations:set_size(Vector3(55, -1, 0))
 	self._toolbar:add_control(rotations)
 	rotations:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "change_combo_box"), {
-		prefix = "TB_SNAPROTATION",
 		value = "_snap_rotation",
+		prefix = "TB_SNAPROTATION",
 		combobox = rotations,
 		menu = self._snap_rotations_menu
 	})

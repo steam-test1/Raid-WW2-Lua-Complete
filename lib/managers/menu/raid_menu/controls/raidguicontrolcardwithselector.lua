@@ -10,25 +10,25 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._params.item_h = params.item_h or self._panel:h()
 	self._params.hover_selects = params.hover_selects or false
 	self._select_background_panel = self._object:panel({
-		y = 0,
 		x = 0,
-		visible = false,
 		layer = 1,
+		y = 0,
+		visible = false,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h
 	})
 	self._select_background = self._select_background_panel:rect({
-		y = 0,
 		x = 0,
 		layer = 2,
+		y = 0,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h,
 		color = tweak_data.gui.colors.raid_select_card_background
 	})
 	self._top_select_triangle = self._select_background_panel:image({
-		y = 0,
 		x = 0,
 		layer = 15,
+		y = 0,
 		w = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		h = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -49,8 +49,8 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
-function RaidGUIControlCardWithSelector:set_card(card_data)
-	RaidGUIControlCardWithSelector.super.set_card(self, card_data)
+function RaidGUIControlCardWithSelector:set_card(card_data, is_inventory_item)
+	RaidGUIControlCardWithSelector.super.set_card(self, card_data, is_inventory_item)
 
 	if self._item_data then
 		self._card_panel:set_w(self._params.selected_marker_w)

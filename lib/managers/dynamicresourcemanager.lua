@@ -4,12 +4,12 @@ DynamicResourceManager.STREAMING_PROFILE_INGAME = "ingame"
 DynamicResourceManager.STREAMING_PROFILE_LOADING = "loading"
 DynamicResourceManager.STREAMING_PROFILES = {
 	[DynamicResourceManager.STREAMING_PROFILE_INGAME] = {
-		chunk_size = 1048576,
-		sleep_time = 5
+		sleep_time = 5,
+		chunk_size = 1048576
 	},
 	[DynamicResourceManager.STREAMING_PROFILE_LOADING] = {
-		chunk_size = 5242880,
-		sleep_time = 1
+		sleep_time = 1,
+		chunk_size = 5242880
 	}
 }
 DynamicResourceManager.listener_events = {

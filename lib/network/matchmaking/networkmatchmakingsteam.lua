@@ -154,54 +154,125 @@ function NetworkMatchMakingSTEAM:leave_game()
 	print("NetworkMatchMakingSTEAM:leave_game()")
 end
 
-function NetworkMatchMakingSTEAM:get_friends_lobbies()
+function NetworkMatchMakingSTEAM:get_online_lobbies(lobby_info)
+	local function refresh_lobby()
+		if not self.browser then
+			return
+		end
+
+		local lobbies = self.browser:lobbies()
+
+		if lobbies then
+			for _, lobby in ipairs(lobbies) do
+				if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
+					table.insert(lobby_info.room_list, {
+						owner_id = lobby:key_value("owner_id"),
+						owner_name = lobby:key_value("owner_name"),
+						room_id = lobby:id(),
+						custom_text = lobby:key_value("custom_text")
+					})
+					table.insert(lobby_info.attribute_list, {
+						numbers = self:_lobby_to_numbers(lobby)
+					})
+				end
+			end
+		end
+
+		if lobby_info.search_ready then
+			self:_call_callback("search_lobby", lobby_info)
+		else
+			lobby_info.search_ready = true
+		end
+	end
+
+	self.browser = LobbyBrowser(refresh_lobby, function ()
+	end)
+	local interest_keys = {
+		"owner_id",
+		"owner_name",
+		"level",
+		"difficulty",
+		"permission",
+		"state",
+		"num_players",
+		"drop_in",
+		"min_level",
+		"kick_option",
+		"job_class_min",
+		"job_class_max"
+	}
+
+	if self._BUILD_SEARCH_INTEREST_KEY then
+		table.insert(interest_keys, self._BUILD_SEARCH_INTEREST_KEY)
+	end
+
+	self.browser:set_interest_keys(interest_keys)
+	self.browser:set_distance_filter(self._distance_filter)
+	self.browser:set_lobby_filter(self._BUILD_SEARCH_INTEREST_KEY, "true", "equal")
+
+	local user_id_to_filter_out = Steam:userid()
+
+	if managers.criminals and managers.criminals:get_num_player_criminals() > 1 and managers.network and managers.network:session() and managers.network:session():all_peers() then
+		user_id_to_filter_out = managers.network:session():all_peers()[1]:user_id()
+	end
+
+	self.browser:set_lobby_filter("owner_id", user_id_to_filter_out, "not_equal")
+
+	for _, data in pairs(self._lobby_filters) do
+		if data.value and data.value ~= -1 then
+			self.browser:set_lobby_filter(data.key, data.value, data.comparision_type)
+		end
+	end
+
+	self.browser:set_max_lobby_return_count(self._lobby_return_count)
+
+	if Global.game_settings.playing_lan then
+		self.browser:refresh_lan()
+	else
+		self.browser:refresh()
+	end
+end
+
+function NetworkMatchMakingSTEAM:get_friends_lobbies(lobby_info)
 	local lobbies = {}
 	local num_updated_lobbies = 0
 
-	local function empty()
-	end
-
-	local function f(updated_lobby)
-		updated_lobby:setup_callback(empty)
-		print("NetworkMatchMakingSTEAM:get_friends_lobbies f")
+	local function refresh_lobby(updated_lobby)
+		updated_lobby:setup_callback(function ()
+		end)
 
 		num_updated_lobbies = num_updated_lobbies + 1
 
 		if num_updated_lobbies >= #lobbies then
-			local info = {
-				room_list = nil,
-				attribute_list = nil,
-				room_list = {},
-				attribute_list = {}
-			}
-
 			for _, lobby in ipairs(lobbies) do
 				if NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY then
 					local ikey = lobby:key_value(NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY)
 
 					if ikey ~= "value_missing" and ikey ~= "value_pending" then
-						table.insert(info.room_list, {
-							room_id = nil,
-							owner_name = nil,
-							owner_id = nil,
+						table.insert(lobby_info.room_list, {
 							owner_id = lobby:key_value("owner_id"),
 							owner_name = lobby:key_value("owner_name"),
 							room_id = lobby:id()
 						})
-						table.insert(info.attribute_list, {
-							numbers = nil,
+						table.insert(lobby_info.attribute_list, {
 							numbers = self:_lobby_to_numbers(lobby)
 						})
 					end
 				end
 			end
 
-			self:_call_callback("search_lobby", info)
+			if lobby_info.search_ready then
+				self:_call_callback("search_lobby", lobby_info)
+			else
+				lobby_info.search_ready = true
+			end
 		end
 	end
 
-	if Steam:logged_on() and Steam:friends() then
-		for _, friend in ipairs(Steam:friends()) do
+	local friends = Steam:logged_on() and Steam:friends()
+
+	if friends then
+		for _, friend in ipairs(friends) do
 			local lobby = friend:lobby()
 
 			if lobby then
@@ -232,23 +303,20 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 	end
 
 	if #lobbies == 0 then
-		local info = {
-			room_list = nil,
-			attribute_list = nil,
-			room_list = {},
-			attribute_list = {}
-		}
-
-		self:_call_callback("search_lobby", info)
+		if lobby_info.search_ready then
+			self:_call_callback("search_lobby", lobby_info)
+		else
+			lobby_info.search_ready = true
+		end
 	else
 		for _, lobby in ipairs(lobbies) do
-			lobby:setup_callback(f)
+			lobby:setup_callback(refresh_lobby)
 
 			if lobby:key_value("state") == "value_pending" then
 				print("NetworkMatchMakingSTEAM:get_friends_lobbies value_pending")
 				lobby:request_data()
 			else
-				f(lobby)
+				refresh_lobby(lobby)
 			end
 		end
 	end
@@ -288,9 +356,6 @@ end
 
 function NetworkMatchMakingSTEAM:add_lobby_filter(key, value, comparision_type)
 	self._lobby_filters[key] = {
-		comparision_type = nil,
-		key = nil,
-		value = nil,
 		key = key,
 		value = value,
 		comparision_type = comparision_type
@@ -316,92 +381,16 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 		return
 	end
 
-	if friends_only then
-		self:get_friends_lobbies()
-	else
-		local function refresh_lobby()
-			if not self.browser then
-				return
-			end
+	local lobby_info = {
+		room_list = {},
+		attribute_list = {},
+		search_ready = friends_only
+	}
 
-			local info = {
-				room_list = nil,
-				attribute_list = nil,
-				room_list = {},
-				attribute_list = {}
-			}
-			local lobbies = self.browser:lobbies()
+	self:get_friends_lobbies(lobby_info)
 
-			if lobbies then
-				for _, lobby in ipairs(lobbies) do
-					if self._difficulty_filter == 0 or self._difficulty_filter == tonumber(lobby:key_value("difficulty")) then
-						table.insert(info.room_list, {
-							room_id = nil,
-							owner_name = nil,
-							owner_id = nil,
-							custom_text = nil,
-							owner_id = lobby:key_value("owner_id"),
-							owner_name = lobby:key_value("owner_name"),
-							room_id = lobby:id(),
-							custom_text = lobby:key_value("custom_text")
-						})
-						table.insert(info.attribute_list, {
-							numbers = nil,
-							numbers = self:_lobby_to_numbers(lobby)
-						})
-					end
-				end
-			end
-
-			self:_call_callback("search_lobby", info)
-		end
-
-		self.browser = LobbyBrowser(refresh_lobby, function ()
-		end)
-		local interest_keys = {
-			"owner_id",
-			"owner_name",
-			"level",
-			"difficulty",
-			"permission",
-			"state",
-			"num_players",
-			"drop_in",
-			"min_level",
-			"kick_option",
-			"job_class_min",
-			"job_class_max"
-		}
-
-		if self._BUILD_SEARCH_INTEREST_KEY then
-			table.insert(interest_keys, self._BUILD_SEARCH_INTEREST_KEY)
-		end
-
-		self.browser:set_interest_keys(interest_keys)
-		self.browser:set_distance_filter(self._distance_filter)
-		self.browser:set_lobby_filter(self._BUILD_SEARCH_INTEREST_KEY, "true", "equal")
-
-		local user_id_to_filter_out = Steam:userid()
-
-		if managers.criminals and managers.criminals:get_num_player_criminals() > 1 and managers.network and managers.network:session() and managers.network:session():all_peers() then
-			user_id_to_filter_out = managers.network:session():all_peers()[1]:user_id()
-		end
-
-		self.browser:set_lobby_filter("owner_id", user_id_to_filter_out, "not_equal")
-
-		for key, data in pairs(self._lobby_filters) do
-			if data.value and data.value ~= -1 then
-				self.browser:set_lobby_filter(data.key, data.value, data.comparision_type)
-			end
-		end
-
-		self.browser:set_max_lobby_return_count(self._lobby_return_count)
-
-		if Global.game_settings.playing_lan then
-			self.browser:refresh_lan()
-		else
-			self.browser:refresh()
-		end
+	if not friends_only then
+		self:get_online_lobbies(lobby_info)
 	end
 end
 
@@ -688,7 +677,6 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 			managers.network._restart_in_camp = managers.player and managers.player:local_player_in_camp()
 
 			managers.menu:show_waiting_for_server_response({
-				cancel_func = nil,
 				cancel_func = function ()
 					Application:debug("[ NetworkMatchMakingSTEAM:join_server:f] Pressed cancel")
 					managers.network:session():on_join_request_cancelled()
@@ -789,14 +777,10 @@ function NetworkMatchMakingSTEAM:create_lobby(settings, return_to_camp_client)
 
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
-				text = nil,
-				title = nil,
 				title = title,
 				text = managers.localization:text("dialog_err_failed_creating_lobby"),
 				button_list = {
 					{
-						callback_func = nil,
-						text = nil,
 						text = managers.localization:text("dialog_ok"),
 						callback_func = callback(setup, setup, "quit_to_main_menu")
 					}
@@ -980,29 +964,6 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 		"private"
 	}
 	local lobby_attributes = {
-		state = nil,
-		progress = nil,
-		custom_text = nil,
-		players_info_3 = nil,
-		players_info_2 = nil,
-		players_info_1 = nil,
-		region = nil,
-		job_plan = nil,
-		mission_type = nil,
-		job_id = nil,
-		challenge_card_id = nil,
-		job_class_min = nil,
-		players_info_4 = nil,
-		owner_name = nil,
-		owner_id = nil,
-		job_class_max = nil,
-		difficulty = nil,
-		kick_option = nil,
-		min_level = nil,
-		drop_in = nil,
-		num_players = nil,
-		permission = nil,
-		level = nil,
 		owner_name = managers.network.account:username_id(),
 		owner_id = managers.network.account:player_id(),
 		custom_text = Global.game_settings.custom_text or "",

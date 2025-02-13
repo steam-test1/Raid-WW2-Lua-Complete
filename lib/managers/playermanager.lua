@@ -57,20 +57,20 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
-		incapacitated = "ingame_incapacitated",
+		standard = "ingame_standard",
+		freefall = "ingame_freefall",
 		foxhole = "ingame_standard",
+		driving = "ingame_driving",
+		bipod = "ingame_standard",
+		carry_corpse = "ingame_standard",
+		carry = "ingame_standard",
+		incapacitated = "ingame_incapacitated",
 		tased = "ingame_electrified",
 		charging = "ingame_standard",
 		fatal = "ingame_fatal",
 		turret = "ingame_standard",
 		bleed_out = "ingame_bleed_out",
-		parachuting = "ingame_parachuting",
-		standard = "ingame_standard",
-		freefall = "ingame_freefall",
-		driving = "ingame_driving",
-		bipod = "ingame_standard",
-		carry_corpse = "ingame_standard",
-		carry = "ingame_standard"
+		parachuting = "ingame_parachuting"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -88,7 +88,6 @@ end
 function PlayerManager:save(data)
 	local state = {
 		kit = self._global.kit,
-		viewed_content_updates = self._global.viewed_content_updates,
 		character_profile_name = self:get_character_profile_name(),
 		is_character_profile_hardcore = self:get_is_character_profile_hardcore(),
 		character_profile_nation = self:get_character_profile_nation(),
@@ -110,7 +109,6 @@ function PlayerManager:load(data)
 
 	if state then
 		self._global.kit = state.kit or self._global.kit
-		self._global.viewed_content_updates = state.viewed_content_updates or self._global.viewed_content_updates
 
 		if not self._verify_load_callback then
 			self._verify_load_callback = callback(self, self, "_verify_loaded_data")
@@ -186,7 +184,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		position = nil,
 		selections = {},
 		specials = {}
 	}
@@ -202,7 +200,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		position = nil,
 		selections = {},
 		specials = {}
 	}
@@ -224,7 +222,6 @@ function PlayerManager:_setup()
 				equipment_slots = {},
 				special_equipment_slots = {}
 			},
-			viewed_content_updates = {},
 			character_profile_name = "",
 			character_profile_nation = "",
 			is_character_profile_hardcore = false,
@@ -534,6 +531,7 @@ function PlayerManager:_internal_load()
 	end
 
 	player:inventory():set_melee_weapon(managers.blackmarket:equipped_melee_weapon())
+	self:clear_temporary_grenade()
 
 	local peer_id = managers.network:session():local_peer():id()
 	local grenade, amount = managers.blackmarket:equipped_grenade()
@@ -973,9 +971,10 @@ function PlayerManager:on_killshot(killed_unit, variant)
 		self:activate_temporary_upgrade("temporary", "do_die_melee_speed_multiplier")
 	end
 
+	local whisper_state = managers.groupai:state():whisper_mode()
 	local panic_chance = self:upgrade_value("player", "holdbarred_melee_kill_panic_chance", 1) - 1
 
-	if panic_chance > 0 and variant == "melee" then
+	if not whisper_state and panic_chance > 0 and variant == "melee" then
 		local slotmask = managers.slot:get_mask("enemies")
 		local units = World:find_units_quick("sphere", player_unit:movement():m_pos(), tweak_data.upgrades.holdbarred_melee_kill_panic_range, slotmask)
 
@@ -1373,12 +1372,6 @@ function PlayerManager:has_category_upgrade(category, upgrade)
 	return true
 end
 
-function PlayerManager:body_armor_value(category, override_value, default)
-	local armor_data = tweak_data.blackmarket.armors[managers.blackmarket:equipped_armor(true, true)]
-
-	return self:upgrade_value_by_level("player", "body_armor", category, {})[override_value or armor_data.upgrade_level] or default or 0
-end
-
 function PlayerManager:movement_speed_multiplier(is_running, is_climbing, is_crouching, in_steelsight, health_ratio)
 	local multiplier = 1
 
@@ -1424,21 +1417,6 @@ function PlayerManager:movement_speed_multiplier(is_running, is_climbing, is_cro
 	end
 
 	return multiplier
-end
-
-function PlayerManager:body_armor_skill_multiplier(override_armor)
-	local multiplier = 1
-	multiplier = multiplier + self:upgrade_value("player", "tier_armor_multiplier", 1) - 1
-	multiplier = multiplier + self:upgrade_value("player", "passive_armor_multiplier", 1) - 1
-	multiplier = multiplier + self:upgrade_value("player", "armor_multiplier", 1) - 1
-	multiplier = multiplier + self:team_upgrade_value("armor", "multiplier", 1) - 1
-	multiplier = multiplier + self:upgrade_value("player", tostring(override_armor or managers.blackmarket:equipped_armor(true, true)) .. "_armor_multiplier", 1) - 1
-
-	return multiplier
-end
-
-function PlayerManager:body_armor_regen_multiplier(moving, health_ratio)
-	return 1
 end
 
 function PlayerManager:body_armor_skill_addend(override_armor)
@@ -3537,9 +3515,9 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
+			disabled = true,
 			icon = "comm_wheel_no",
 			text_id = "",
-			disabled = true,
 			id = "carry_" .. i
 		}
 
@@ -3617,9 +3595,9 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
+			id = "cant_throw_body",
 			duration = 2,
 			shelf_life = 5,
-			id = "cant_throw_body",
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -3705,10 +3683,6 @@ function PlayerManager:server_drop_carry(carry_id, carry_multiplier, position, r
 		Application:warn("[PlayerManager:server_drop_carry] Could not get a world for carry item")
 	end
 
-	if tweak.is_corpse then
-		managers.enemy:add_corpse_lootbag(unit)
-	end
-
 	local peer_id = peer and peer:id() or 0
 
 	managers.network:session():send_to_peers_synched("sync_carry_data", unit, carry_id, carry_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
@@ -3718,14 +3692,22 @@ function PlayerManager:server_drop_carry(carry_id, carry_multiplier, position, r
 end
 
 function PlayerManager:sync_carry_data(unit, carry_id, carry_multiplier, position, dir, throw_distance_multiplier_upgrade_level, zipline_unit, peer_id)
-	local throw_multiplier = tweak_data.carry[carry_id].upgrade_throw_multiplier
+	local carry_tweak = tweak_data.carry[carry_id]
+
+	if not carry_tweak then
+		Application:error("[PlayerManager:sync_carry_data] Attempted to sync a non-existant carry id")
+
+		return
+	end
+
+	local throw_multiplier = carry_tweak.upgrade_throw_multiplier
 	local throw_distance_multiplier = 1
 
 	if throw_multiplier then
 		throw_distance_multiplier = self:upgrade_value_by_level(throw_multiplier.category, throw_multiplier.upgrade, throw_distance_multiplier_upgrade_level, 1)
 	end
 
-	local carry_type = tweak_data.carry[carry_id].type
+	local carry_type = carry_tweak.type
 	local ratio = self:get_my_carry_weight_ratio()
 	local carry_throw_distance_multiplier = tweak_data.carry:get_type_value_weighted(carry_type, "throw_distance_multiplier", ratio)
 	throw_distance_multiplier = carry_throw_distance_multiplier * throw_distance_multiplier
@@ -3739,9 +3721,13 @@ function PlayerManager:sync_carry_data(unit, carry_id, carry_multiplier, positio
 	if alive(zipline_unit) then
 		zipline_unit:zipline():attach_bag(unit)
 	else
-		local throw_power = tweak_data.carry[carry_id].throw_power or tweak_data.carry.default_throw_power
+		local throw_power = carry_tweak.throw_power or tweak_data.carry.default_throw_power
 
 		unit:push(100, dir * throw_power * throw_distance_multiplier)
+	end
+
+	if carry_tweak.is_corpse then
+		managers.enemy:add_corpse_lootbag(unit)
 	end
 
 	unit:interaction():register_collision_callbacks()
@@ -3986,14 +3972,6 @@ function PlayerManager:report_weapon_ammo_gains()
 	end
 end
 
-function PlayerManager:set_content_update_viewed(content_update)
-	self._global.viewed_content_updates[content_update] = true
-end
-
-function PlayerManager:get_content_update_viewed(content_update)
-	return self._global.viewed_content_updates[content_update] or false
-end
-
 function PlayerManager:_verify_loaded_data()
 	local id = self._global.kit.equipment_slots[1]
 
@@ -4174,10 +4152,14 @@ function PlayerManager:get_vehicle_for_peer(peer_id)
 end
 
 function PlayerManager:exit_vehicle()
+	Application:info("[PlayerManager:exit_vehicle] Exiting vehicle.")
+
 	local peer_id = managers.network:session():local_peer():id()
 	local vehicle_data = self._global.synced_vehicle_data[peer_id]
 
 	if vehicle_data == nil then
+		Application:warn("[PlayerManager:exit_vehicle] There is no vehicle data for the player to exit from.")
+
 		return
 	end
 
@@ -4698,59 +4680,51 @@ function PlayerManager:tutorial_remove_AI()
 end
 
 function PlayerManager:tutorial_prompt_jump()
-	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_jump", {
-		BTN_JUMP = managers.localization:btn_macro("jump")
-	}))
+	local text = managers.localization:to_upper_text("hud_hint_tutorial_jump")
 
 	managers.hud:set_big_prompt({
-		duration = 3,
 		id = "prompt_hint_tutorial_jump",
+		duration = 3,
 		text = text
 	})
 end
 
 function PlayerManager:tutorial_prompt_duck()
-	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_crouch", {
-		BTN_CROUCH = managers.localization:btn_macro("duck")
-	}))
+	local text = managers.localization:to_upper_text("hud_hint_tutorial_crouch")
 
 	managers.hud:set_big_prompt({
-		duration = 3,
 		id = "prompt_hint_tutorial_crouch",
+		duration = 3,
 		text = text
 	})
 end
 
 function PlayerManager:tutorial_prompt_detection()
-	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_detection", {
-		BTN_CROUCH = managers.localization:btn_macro("duck")
-	}))
+	local text = managers.localization:to_upper_text("hud_hint_tutorial_detection")
 
 	managers.hud:set_big_prompt({
-		duration = 3,
 		id = "prompt_hint_tutorial_detection",
+		duration = 3,
 		text = text
 	})
 end
 
 function PlayerManager:tutorial_prompt_ammo()
-	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_ammo"))
+	local text = managers.localization:to_upper_text("hud_hint_tutorial_ammo")
 
 	managers.hud:set_big_prompt({
-		duration = 3,
 		id = "prompt_hint_tutorial_ammo",
+		duration = 3,
 		text = text
 	})
 end
 
 function PlayerManager:tutorial_prompt_weapons()
-	local text = utf8.to_upper(managers.localization:text("hud_hint_tutorial_switch_weapon", {
-		BTN_SWITCH_WEAPON = managers.localization:btn_macro("primary_choice2")
-	}))
+	local text = managers.localization:to_upper_text("hud_hint_tutorial_switch_weapon")
 
 	managers.hud:set_big_prompt({
-		duration = 3,
 		id = "prompt_hint_tutorial_switch_weapon",
+		duration = 3,
 		text = text
 	})
 end

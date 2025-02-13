@@ -11,6 +11,7 @@ function HuskPlayerBase:init(unit)
 	self._unit = unit
 	self._upgrades = {}
 	self._upgrade_levels = {}
+	self.is_player = true
 
 	self:_setup_suspicion_and_detection_data()
 

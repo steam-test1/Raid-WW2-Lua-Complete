@@ -42,10 +42,10 @@ end
 
 function HUDDriving:_create_panel(hud)
 	local panel_params = {
-		halign = "center",
 		visible = false,
-		valign = "bottom",
 		name = "driving_panel",
+		halign = "center",
+		valign = "bottom",
 		w = HUDDriving.W,
 		h = HUDDriving.H
 	}
@@ -57,9 +57,9 @@ end
 
 function HUDDriving:_create_slot_panel()
 	local slot_panel_params = {
+		name = "slot_panel",
 		halign = "left",
 		valign = "bottom",
-		name = "slot_panel",
 		w = HUDDriving.SLOT_PANEL_W,
 		h = HUDDriving.SLOT_PANEL_H
 	}
@@ -116,10 +116,10 @@ end
 function HUDDriving:_create_carry_info()
 	local carry_panel_x = self._slot_panel:x() + self._slot_panel:w() + HUDDriving.CARRY_PANEL_PADDING_LEFT
 	local carry_info_panel_params = {
-		halign = "right",
 		valign = "scale",
 		name = "carry_info_panel",
 		y = 0,
+		halign = "right",
 		x = carry_panel_x,
 		w = self._object:w() - carry_panel_x,
 		h = self._slot_panel:h() + 20
@@ -138,8 +138,8 @@ function HUDDriving:_create_carry_info()
 	carry_panel_background:set_bottom(carry_info_panel:h())
 
 	local carry_indicator_params = {
-		name = "carry_indicator",
 		layer = 5,
+		name = "carry_indicator",
 		texture = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_INDICATOR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDDriving.CARRY_PANEL_INDICATOR_ICON].texture_rect
 	}
@@ -151,11 +151,11 @@ function HUDDriving:_create_carry_info()
 	local carry_info_text_x = self._carry_indicator:x() + self._carry_indicator:w() + HUDDriving.CARRY_PANEL_PADDING_RIGHT
 	local carry_info_text_params = {
 		halign = "center",
-		vertical = "center",
-		valign = "left",
 		text = "",
-		name = "carry_info_text",
+		vertical = "center",
 		align = "left",
+		valign = "left",
+		name = "carry_info_text",
 		x = carry_info_text_x,
 		w = carry_info_panel:w() - carry_info_text_x,
 		font = HUDDriving.CARRY_INFO_TEXT_FONT,
@@ -168,10 +168,10 @@ end
 
 function HUDDriving:_create_button_prompts()
 	local button_prompts_panel_params = {
-		halign = "scale",
-		valign = "top",
 		alpha = 0,
 		name = "button_prompts_panel",
+		halign = "scale",
+		valign = "top",
 		w = self._object:w(),
 		h = HUDDriving.BUTTON_PROMPTS_H
 	}
@@ -239,15 +239,11 @@ function HUDDriving:refresh_button_prompts(force)
 end
 
 function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
-	if managers.controller:is_controller_present() and not managers.menu:is_pc_controller() then
-		buttons = managers.localization:get_default_macros()
-	end
-
 	local button_prompt_params = {
-		valign = "center",
+		align = "center",
 		vertical = "center",
 		halign = "center",
-		align = "center",
+		valign = "center",
 		name = "button_prompt_" .. tostring(prompt_name),
 		font = HUDDriving.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDDriving.BUTTON_PROMPT_TEXT_FONT_SIZE,
@@ -296,7 +292,7 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 	if player_seat.driving then
 		table.insert(seat_prompts, {
 			name = "look_behind",
-			prompt = HUDDriving.BUTTON_PROMPT_LOOK_BEHIND,
+			prompt = self.BUTTON_PROMPT_LOOK_BEHIND,
 			buttons = {
 				STICK_R = managers.localization:btn_macro("vehicle_rear_camera")
 			}
@@ -306,7 +302,7 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 	if player_seat.has_shooting_mode then
 		table.insert(seat_prompts, {
 			name = "switch_pose",
-			prompt = HUDDriving.BUTTON_PROMPT_SWITCH_POSE,
+			prompt = self.BUTTON_PROMPT_SWITCH_POSE,
 			buttons = {
 				BTN_B = managers.localization:btn_macro("vehicle_shooting_stance")
 			}
@@ -315,14 +311,14 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 
 	table.insert(seat_prompts, {
 		name = "exit_vehicle",
-		prompt = HUDDriving.BUTTON_PROMPT_EXIT_VEHICLE,
+		prompt = self.BUTTON_PROMPT_EXIT_VEHICLE,
 		buttons = {
 			BTN_TOP_R = managers.localization:btn_macro("vehicle_exit")
 		}
 	})
 	table.insert(seat_prompts, {
 		name = "change_seat",
-		prompt = HUDDriving.BUTTON_PROMPT_CHANGE_SEAT,
+		prompt = self.BUTTON_PROMPT_CHANGE_SEAT,
 		buttons = {
 			BTN_TOP_L = managers.localization:btn_macro("vehicle_change_seat")
 		}

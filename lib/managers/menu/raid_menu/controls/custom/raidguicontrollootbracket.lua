@@ -46,9 +46,9 @@ end
 
 function RaidGUIControlLootBracket:_create_notch()
 	local notch_params = {
-		name = "notch",
 		y = 0,
 		x = 0,
+		name = "notch",
 		texture = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture_rect,
 		color = RaidGUIControlLootBracket.NOTCH_COLOR_INACTIVE,

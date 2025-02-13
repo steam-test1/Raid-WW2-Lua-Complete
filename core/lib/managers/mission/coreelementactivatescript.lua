@@ -16,6 +16,8 @@ function ElementActivateScript:on_executed(instigator)
 		return
 	end
 
+	ElementActivateScript.super.on_executed(self, instigator)
+
 	if self._values.activate_script ~= "none" then
 		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
 
@@ -23,6 +25,4 @@ function ElementActivateScript:on_executed(instigator)
 	elseif Application:editor() then
 		managers.editor:output_error("Cant activate script named \"none\" [" .. self._editor_name .. "]")
 	end
-
-	ElementActivateScript.super.on_executed(self, instigator)
 end

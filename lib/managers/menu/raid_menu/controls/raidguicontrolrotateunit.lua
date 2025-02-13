@@ -15,7 +15,7 @@ function RaidGUIControlRotateUnit:set_unit(unit, position, initial_angle, center
 	self._unit = unit
 
 	if not unit then
-		managers.menu_component:removeFromUpdateTable(self)
+		managers.menu_component:remove_update_component(self)
 
 		return
 	end

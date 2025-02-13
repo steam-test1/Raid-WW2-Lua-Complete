@@ -78,7 +78,6 @@ local CoreModule = {
 		M._NAME = module_name
 
 		setmetatable(M, {
-			__index = nil,
 			__index = self.__pristine_G
 		})
 		setfenv(2, M)

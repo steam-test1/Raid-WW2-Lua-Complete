@@ -32,8 +32,8 @@ function SmallLootBase:take(unit)
 	})
 	managers.notification:add_notification({
 		id = "hud_hint_grabbed_nazi_gold",
-		shelf_life = 5,
 		duration = 2,
+		shelf_life = 5,
 		notification_type = HUDNotification.DOG_TAG,
 		acquired = managers.lootdrop:picked_up_current_leg(),
 		total = managers.lootdrop:loot_spawned_current_leg()
@@ -46,8 +46,8 @@ function SmallLootBase:taken(skip_sync)
 	if Network:is_server() then
 		managers.notification:add_notification({
 			id = "hud_hint_grabbed_nazi_gold",
-			shelf_life = 5,
 			duration = 2,
+			shelf_life = 5,
 			notification_type = HUDNotification.DOG_TAG,
 			acquired = managers.lootdrop:picked_up_current_leg(),
 			total = managers.lootdrop:loot_spawned_current_leg()

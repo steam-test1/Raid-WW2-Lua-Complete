@@ -27,18 +27,7 @@ function ElementDialogue:on_executed(instigator)
 end
 
 function ElementDialogue:_queue_dialog(instigator)
-	if not self._values.enabled then
-		self:operation_remove()
-
-		return
-	end
-
-	local char = nil
-
-	if self._values.use_instigator and alive(instigator) then
-		char = managers.criminals:character_name_by_unit(instigator)
-	end
-
+	local char = self._values.use_instigator and alive(instigator) and managers.criminals:character_name_by_unit(instigator)
 	local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator)
 	local queue_dialog_unit = {
 		skip_idle_check = true,
@@ -49,9 +38,7 @@ function ElementDialogue:_queue_dialog(instigator)
 
 	if self._values.dialogue ~= "none" then
 		managers.dialog:queue_dialog(self._values.dialogue, queue_dialog_unit)
-	end
-
-	if self._values.random and self._values.random ~= "none" then
+	elseif self._values.random and self._values.random ~= "none" then
 		managers.dialog:queue_random(self._values.random, queue_dialog_unit)
 	end
 end
@@ -59,10 +46,24 @@ end
 function ElementDialogue:operation_remove()
 	if self._reminder_cb then
 		self._mission_script:remove(self._reminder_cb)
+
+		self._reminder_cb = nil
+	end
+end
+
+function ElementDialogue:set_enabled(enabled)
+	ElementDialogue.super.set_enabled(self, enabled)
+
+	if not enabled then
+		self:operation_remove()
 	end
 end
 
 function ElementDialogue:_done_callback(instigator, reason)
+	if not self._values.enabled then
+		return
+	end
+
 	Application:debug("[ElementDialogue:_done_callback] reason", reason)
 
 	if reason == "done" then

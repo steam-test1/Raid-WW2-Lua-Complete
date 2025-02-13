@@ -154,8 +154,8 @@ end
 
 function RaidGUIControlTable:_create_header()
 	local header_params = {
-		x = 0,
 		y = 0,
+		x = 0,
 		h = self._table_params.header_params.header_height,
 		layer = self._table_panel:layer() + 1,
 		text_color = self._table_params.header_params.text_color,

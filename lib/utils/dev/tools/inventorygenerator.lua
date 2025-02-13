@@ -1,5 +1,6 @@
 InventoryGenerator = InventoryGenerator or class()
 InventoryGenerator.path = "aux_assets\\inventory\\"
+InventoryGenerator.web_image_base = "https://liongamelion.com/assets/challenge/"
 
 function InventoryGenerator.generate()
 	local items, error = InventoryGenerator._items()
@@ -12,488 +13,192 @@ function InventoryGenerator.generate()
 	local defid_data = {}
 
 	if items then
-		InventoryGenerator._create_steam_itemdef(json_path .. "challenge_cards.json", items, defid_data)
+		InventoryGenerator._create_steam_itemdef(json_path .. "generated_inventory.json", items, defid_data)
+		Application:trace("Generation Completed.", #items)
+	else
+		Application:error("Generation Failed No Items.")
 	end
 
-	Application:trace("Generation Completed.")
-end
-
-function InventoryGenerator.next_defid(category, defid_list)
-	local start_index = 1
-
-	if category then
-		local categories = {
-			weapon_skins = 100000,
-			drills = 70000,
-			safes = 50000,
-			bundles = 30000,
-			contents = 10000,
-			gameplay = 1
-		}
-
-		if categories[category] then
-			start_index = categories[category]
-		end
-	end
-
-	local defids_check = defid_list or InventoryGenerator._defids(InventoryGenerator._root_path() .. InventoryGenerator.path)
-
-	for count = start_index, 1000000 do
-		if not defids_check[count] then
-			return count
-		end
-	end
-
-	Application:error("[InventoryGenerator.next_defid] - Couldn't find a free spot.")
+	print("next clear defid #", InventoryGenerator._next_clear_defid(defid_data, 1))
 end
 
 function InventoryGenerator.verify()
 	local error = false
 
-	for item, data in pairs(tweak_data.economy.safes) do
-		if not tweak_data.economy.contents[data.content] then
-			Application:error("[InventoryGenerator.verify] - The item 'safes." .. item .. "' have an invalid content reference.")
-
-			error = true
-		elseif not tweak_data.economy.drills[data.drill] then
-			Application:error("[InventoryGenerator.verify] - The item 'safes." .. item .. "' have an invalid drill reference.")
-
-			error = true
-		elseif tweak_data.economy.drills[data.drill].safe ~= item then
-			Application:error("[InventoryGenerator.verify] - The item 'drills." .. data.drill .. "' have an invalid safe reference.")
-
-			error = true
-		end
-	end
-
-	for item, data in pairs(tweak_data.economy.drills) do
-		if not tweak_data.economy.safes[data.safe] then
-			Application:error("[InventoryGenerator.verify] - The item 'drills." .. item .. "' have an invalid safe reference.")
-
-			error = true
-		end
-	end
-
-	for item, data in pairs(tweak_data.economy.contents) do
-		if not data.contains and type(data.contains) ~= "table" then
-			Application:error("[InventoryGenerator.verify] - The item 'contents." .. item .. "' is missing content.")
-
-			error = true
-		else
-			for category, items in pairs(data.contains) do
-				local tweak_group = tweak_data.economy[category] or tweak_data.blackmarket[category]
-
-				if not tweak_group then
-					Application:error("[InventoryGenerator.verify] - The item 'contents." .. item .. "' have invalid content.")
-
-					error = true
-				else
-					for _, entry in pairs(items) do
-						if not tweak_group[entry] then
-							Application:error("[InventoryGenerator.verify] - The item 'contents." .. item .. "' have invalid content. Item '" .. category .. "." .. entry .. "' doesn't exist.")
-
-							error = true
-						elseif category == "contents" and not tweak_group[entry].def_id then
-							Application:error("[InventoryGenerator.verify] - The item 'contents." .. item .. "' have invalid content. Item '" .. category .. "." .. entry .. "' is not an economy item.")
-
-							error = true
-						elseif not tweak_group[entry].rarity then
-							Application:error("[InventoryGenerator.verify] - The item 'contents." .. item .. "' have invalid content. Item '" .. category .. "." .. entry .. "' is missing a rarity flag.")
-
-							error = true
-						end
-					end
-				end
-			end
-		end
-	end
-
-	for item, data in pairs(tweak_data.economy.bundles) do
-		if not data.contains and type(data.contains) ~= "table" then
+	for item, data in pairs(tweak_data.challenge_cards.cards) do
+		if not data.bundle and type(data.bundle) ~= "table" then
 			Application:error("[InventoryGenerator.verify] - The item 'bundles." .. item .. "' is missing content.")
 
 			error = true
-		elseif not data.dlc and not data.dlc_id then
-			Application:error("[InventoryGenerator.verify] - The item 'bundles." .. item .. "' is awarded without any DLC requirement.")
-
-			error = true
-		else
-			for category, items in pairs(data.contains) do
-				local tweak_group = tweak_data.economy[category] or tweak_data.blackmarket[category]
-
-				if not tweak_group then
-					Application:error("[InventoryGenerator.verify] - The item 'bundles." .. item .. "' have invalid content.")
-
-					error = true
-				else
-					for _, entry in pairs(items) do
-						if not tweak_group[entry] then
-							Application:error("[InventoryGenerator.verify] - The item 'bundles." .. item .. "' have invalid content. Item '" .. category .. "." .. entry .. "' doesn't exist.")
-
-							error = true
-						elseif category == "contents" and not tweak_group[entry].def_id then
-							Application:error("[InventoryGenerator.verify] - The item 'bundles." .. item .. "' have invalid content. Item '" .. category .. "." .. entry .. "' is not an economy item.")
-
-							error = true
-						end
-					end
-				end
-			end
 		end
 	end
 
 	return not error
 end
 
-function InventoryGenerator._items_content(safe_items, contains)
-	for category, items in pairs(contains) do
-		for _, entry in pairs(items) do
-			if category == "contents" then
-				InventoryGenerator._items_content(safe_items, tweak_data.economy.contents[entry].contains)
-			else
-				local id = nil
-				local item_data = tweak_data.blackmarket[category][entry]
-
-				if not item_data then
-					Application:error("[InventoryGenerator._items_content] - Item '" .. category .. "." .. entry .. "' is not available in blackmarket.")
-				end
-
-				if item_data.reserve_quality then
-					for quality, _ in pairs(tweak_data.economy.qualities) do
-						id = InventoryGenerator._create_id(category, entry, quality, false)
-						safe_items[id] = {
-							bonus = false,
-							category = category,
-							entry = entry,
-							quality = quality,
-							data = item_data
-						}
-					end
-
-					for quality, _ in pairs(tweak_data.economy.qualities) do
-						id = InventoryGenerator._create_id(category, entry, quality, true)
-						safe_items[id] = {
-							bonus = true,
-							category = category,
-							entry = entry,
-							quality = quality,
-							data = item_data
-						}
-					end
-				else
-					id = InventoryGenerator._create_id(category, entry)
-					safe_items[id] = {
-						category = category,
-						entry = entry,
-						data = item_data
-					}
-				end
-			end
-		end
-	end
-end
-
-function InventoryGenerator._items_add(category, entry, def_id, content_data, safe_items, unique_def_ids)
-	local id = InventoryGenerator._create_id(category, entry)
-	safe_items[id] = {
-		entry = entry,
-		category = category,
-		def_id = def_id,
-		data = content_data
-	}
-
-	if def_id then
-		if unique_def_ids[def_id] and unique_def_ids[def_id] ~= id then
-			Application:error("[InventoryGenerator._items_add] - Item '" .. category .. "." .. entry .. "' have same ID as '" .. unique_def_ids[def_id] .. "' ( " .. def_id .. " ).")
-
-			return 1
-		end
-
-		unique_def_ids[def_id] = id
-	end
-
-	return 0
-end
-
-function InventoryGenerator._items_containers(safe_items, contains, unique_def_ids)
+function InventoryGenerator._items()
+	local items = {}
 	local error = 0
+	error = error + InventoryGenerator._items_challenge_cards(items)
+	error = error + InventoryGenerator._items_card_exchange(items)
+	error = error + InventoryGenerator._items_card_bundles(items)
+	error = error + InventoryGenerator._items_card_crafts(items)
 
-	for category, items in pairs(contains) do
-		if category == "contents" then
-			for _, entry in pairs(items) do
-				local content_data = tweak_data.economy.contents[entry]
+	return items, error > 0
+end
 
-				if not content_data then
-					Application:error("[InventoryGenerator._items_containers] - The item 'contents." .. entry .. "' is missing.")
+function InventoryGenerator._items_challenge_cards(items)
+	local error = 0
+	local challenge_card_indexed_list = deep_clone(tweak_data.challenge_cards:get_all_cards_indexed())
 
-					error = 1
-				elseif not content_data.def_id then
-					Application:error("[InventoryGenerator._items_containers] - The item 'contents." .. entry .. "' is missing an item ID ('def_id').")
+	for card_idx, challenge_card_data in pairs(challenge_card_indexed_list) do
+		local card_id = tweak_data.challenge_cards.cards_index[card_idx]
 
-					error = 1
-				else
-					error = error + InventoryGenerator._items_add(category, entry, content_data.def_id, content_data, safe_items, unique_def_ids)
-				end
+		Application:info("[InventoryGenerator] Building...", card_idx, card_id)
+
+		local description = ""
+		local tags = ""
+		local rarity_color_hex = ""
+		local rarity_name = challenge_card_data.rarity and managers.localization:text(challenge_card_data.rarity) or ""
+		local collection_name = challenge_card_data.collection and managers.localization:text(challenge_card_data.collection) or ""
+
+		if challenge_card_data.rarity and rarity_name and rarity_name ~= "" and false then
+			local color = tweak_data.gui.colors[challenge_card_data.rarity]
+
+			if color then
+				rarity_color_hex = InventoryGenerator._create_hex_color(color)
+			else
+				Application:warn("[InventoryGenerator] No color tweakdata for", challenge_card_data.rarity)
+			end
+
+			description = description .. "[color=#d7d7d7]Rarity:[/color] [color=#" .. rarity_color_hex .. "]" .. rarity_name .. "[/color]\\n"
+			tags = tags .. "rarity:" .. string.lower(rarity_name) .. ";"
+		end
+
+		if challenge_card_data.bonus_xp then
+			description = description .. "[color=#d7d7d7]Awards: +" .. challenge_card_data.bonus_xp .. " Base Mission XP[/color]\\n"
+		elseif challenge_card_data.bonus_xp_multiplier then
+			description = description .. "[color=#d7d7d7]Awards: " .. challenge_card_data.bonus_xp_multiplier .. "x Base Mission XP[/color]\\n"
+		end
+
+		if challenge_card_data.loot_drop_group then
+			description = description .. "[color=#d7d7d7]Awards: Special Loot Drop Item(s)[/color]\\n"
+		end
+
+		if challenge_card_data.achievement_id and challenge_card_data.achievement_id ~= "" then
+			description = description .. "[color=#d7d7d7][i]Awards: " .. challenge_card_data.achievement_id .. " achievement[/i][/color]\\n"
+		end
+
+		local description_positive_text, description_negative_text = managers.challenge_cards:get_card_description(card_id)
+
+		if description_positive_text or description_negative_text then
+			description = description .. "\\n[color=#d7d7d7]Effects:[/color]"
+
+			if description_positive_text and description_positive_text ~= "" then
+				description = description .. "\\n[color=#70b35b]+ " .. description_positive_text .. "[/color]"
+			end
+
+			if description_negative_text and description_negative_text ~= "" then
+				description = description .. "\\n[color=#de4a3e]- " .. description_negative_text .. "[/color]"
+			end
+
+			description = description .. "\\n"
+		end
+
+		if collection_name and collection_name ~= "" then
+			description = description .. "\\n[color=#d7d7d7][i]" .. collection_name .. "[/i][/color]"
+		end
+
+		if description_negative_text ~= "" then
+			challenge_card_data.display_type = challenge_card_data.display_type or "display_type_challenge_card"
+			tags = tags .. "cards:challenge;"
+		else
+			challenge_card_data.display_type = challenge_card_data.display_type or "display_type_booster_card"
+			tags = tags .. "cards:booster;"
+		end
+
+		if challenge_card_data.effects then
+			challenge_card_data.extra_data = challenge_card_data.extra_data or {}
+
+			for i, effect in ipairs(challenge_card_data.effects) do
+				challenge_card_data.extra_data["dsl_effect_" .. i] = effect.type .. ":" .. effect.name .. ":" .. tostring(effect.value)
 			end
 		end
+
+		challenge_card_data.item_slot = "challenge_card"
+		challenge_card_data.description = description
+		challenge_card_data.tags = tags
+		challenge_card_data.name_color = rarity_color_hex
+
+		table.insert(items, challenge_card_data)
 	end
 
 	return error
 end
 
-function InventoryGenerator._items()
-	local items = {}
+function InventoryGenerator._items_card_exchange(items)
 	local error = 0
-	local unique_def_ids = {}
-	local challenge_card_indexed_list = tweak_data.challenge_cards:get_all_cards_indexed()
 
-	for _, challenge_card_data in pairs(challenge_card_indexed_list) do
-		table.insert(items, challenge_card_data)
+	for nick, data in pairs(tweak_data.challenge_cards.exchangers) do
+		Application:info("[InventoryGenerator] Building Exchanger " .. nick .. " - DefID:" .. data.def_id)
+
+		data.category = data.category or "item"
+		data.name = managers.localization:text(data.category .. "_" .. nick)
+
+		table.insert(items, data)
 	end
 
-	return items, error > 0
+	return error
 end
 
-function InventoryGenerator._probability_list(content, item_list)
-	local id = nil
-	local probability_list = {}
+function InventoryGenerator._items_card_bundles(items)
+	local error = 0
 
-	for category, items in pairs(item_list) do
-		local tweak_group = tweak_data.economy[category] or tweak_data.blackmarket[category]
+	for nick, data in pairs(tweak_data.challenge_cards.bundles) do
+		Application:info("[InventoryGenerator] Building Bundle " .. nick .. " - DefID:" .. data.def_id)
 
-		for _, entry in pairs(items) do
-			local rarity = tweak_group[entry].rarity
-			local rarity_bonus = tweak_group[entry].rarity .. "_bonus"
-			local tweak_weight = InventorySetup.setup.rarities[content] or InventorySetup.setup.rarities.default
+		data.category = data.category or "bundle"
+		data.name = managers.localization:text(data.category .. "_" .. nick)
 
-			if tweak_group[entry].reserve_quality then
-				for quality, _ in pairs(tweak_data.economy.qualities) do
-					id = InventoryGenerator._create_id(category, entry, quality, false)
+		table.insert(items, data)
+	end
 
-					table.insert(probability_list, {
-						bonus = false,
-						id = id,
-						category = category,
-						entry = entry,
-						quality = quality,
-						weight = tweak_weight[rarity]
-					})
-				end
+	return error
+end
 
-				for quality, _ in pairs(tweak_data.economy.qualities) do
-					id = InventoryGenerator._create_id(category, entry, quality, true)
+function InventoryGenerator._items_card_crafts(items)
+	local error = 0
 
-					table.insert(probability_list, {
-						bonus = true,
-						id = id,
-						category = category,
-						entry = entry,
-						quality = quality,
-						weight = tweak_weight[rarity_bonus]
-					})
-				end
-			else
-				id = InventoryGenerator._create_id(category, entry)
+	for nick, data in pairs(tweak_data.challenge_cards.crafting_items) do
+		Application:info("[InventoryGenerator] Building Crafting Item " .. nick .. " - DefID:" .. data.def_id)
 
-				table.insert(probability_list, {
-					id = id,
-					category = category,
-					entry = entry,
-					weight = tweak_weight[rarity] + tweak_weight[rarity_bonus]
-				})
+		data.item_slot = "crafting_item"
+		data.category = data.category or "item"
+		local description = ""
+
+		if data.tags_list and data.tags_list.card_scrap then
+			local tag_loc = managers.localization:text(data.tags_list.card_scrap)
+			description = description .. "[color=#d7d7d7][i]Torn up " .. tag_loc .. " card scraps.\\nCan be used for crafting or upgrading " .. tag_loc .. " cards.[/i][/color]\\n"
+		end
+
+		data.description = description
+		data.tags = ""
+
+		if data.tags_list then
+			for tag, tagtype in pairs(data.tags_list) do
+				data.tags = data.tags .. tag .. ":" .. tagtype .. ";"
 			end
 		end
+
+		table.insert(items, data)
 	end
 
-	return probability_list
-end
-
-function InventoryGenerator._create_steam_itemdef_gameplay(json, tweak, defid_data)
-	json:puts("\t\"type\": \"playtimegenerator\",")
-
-	local bundle_string = ""
-
-	for category, items in pairs(tweak.contains) do
-		for _, entry in pairs(items) do
-			local drop_rate = 0
-
-			if not InventorySetup.setup.gameplay[category] or not InventorySetup.setup.gameplay[category][entry] then
-				Application:error("[InventoryGenerator._create_steam_itemdef_gameplay] - Drop rate is missing on item " .. category .. "." .. entry .. ".")
-			else
-				drop_rate = InventorySetup.setup.gameplay[category][entry]
-			end
-
-			local id = InventoryGenerator._create_id(category, entry)
-			bundle_string = bundle_string .. defid_data[id].def_id .. "x" .. drop_rate .. ";"
-		end
-	end
-
-	json:puts("\t\"bundle\": \"" .. bundle_string .. "\",")
-end
-
-function InventoryGenerator._create_steam_itemdef_bundle(json, tweak, defid_data)
-	json:puts("\t\"type\": \"bundle\",")
-
-	local bundle_string = ""
-
-	for category, items in pairs(tweak.contains) do
-		for _, entry in pairs(items) do
-			local id = InventoryGenerator._create_id(category, entry, tweak.quality, tweak.bonus)
-			bundle_string = bundle_string .. defid_data[id].def_id .. "x1;"
-		end
-	end
-
-	json:puts("\t\"bundle\": \"" .. bundle_string .. "\",")
-end
-
-function InventoryGenerator._create_steam_itemdef_content(json, tweak, entry, defid_data)
-	json:puts("\t\"type\": \"generator\",")
-
-	local proability_list = InventoryGenerator._probability_list(tweak.type or entry, tweak.contains)
-
-	for _, data in pairs(proability_list) do
-		data.def_id = defid_data[data.id].def_id
-	end
-
-	table.sort(proability_list, function (a, b)
-		return a.weight == b.weight and a.def_id < b.def_id or b.weight < a.weight
-	end)
-
-	local bundle_string = ""
-
-	for _, data in ipairs(proability_list) do
-		if not data.def_id then
-			Application:error("[InventoryGenerator._create_steam_itemdef_content] - Invalid definition ID on item " .. data.category .. "." .. data.entry .. ".")
-		end
-
-		if data.weight < 1 then
-			Application:error("[InventoryGenerator._create_steam_itemdef_content] - Too low drop chance on item " .. data.category .. "." .. data.entry .. ".")
-		end
-
-		bundle_string = bundle_string .. data.def_id .. "x" .. data.weight .. ";"
-	end
-
-	json:puts("\t\"bundle\": \"" .. bundle_string .. "\",")
-
-	local exchange_string = ""
-
-	for safe_entry, safe_data in pairs(tweak_data.economy.safes) do
-		if safe_data.content == entry then
-			if safe_data.free then
-				local safe_id = InventoryGenerator._create_id("safes", safe_entry)
-				exchange_string = exchange_string .. defid_data[safe_id].def_id .. "x1;"
-			elseif tweak_data.economy.drills[safe_data.drill] then
-				local safe_id = InventoryGenerator._create_id("safes", safe_entry)
-				local drill_id = InventoryGenerator._create_id("drills", safe_data.drill)
-				exchange_string = exchange_string .. defid_data[safe_id].def_id .. "x1," .. defid_data[drill_id].def_id .. "x1;"
-			end
-		end
-	end
-
-	if exchange_string ~= "" then
-		json:puts("\t\"exchange\": \"" .. exchange_string .. "\",")
-	end
-end
-
-function InventoryGenerator._create_hex_color(color)
-	local r, g, b = color:unpack()
-
-	return string.format("%02X", r * 255) .. string.format("%02X", g * 255) .. string.format("%02X", b * 255)
-end
-
-function InventoryGenerator.create_description_safe(safe_entry)
-	local safe_td = tweak_data.economy.safes[safe_entry]
-
-	if not safe_td then
-		return "", {}
-	end
-
-	local content_td = tweak_data.economy.contents[safe_td.content]
-
-	if not content_td then
-		return "", {}
-	end
-
-	local text = ""
-	local items_list = {}
-
-	for category, items in pairs(content_td.contains) do
-		for _, item in ipairs(items) do
-			items_list[#items_list + 1] = {
-				category = category,
-				entry = item
-			}
-		end
-	end
-
-	local x_td, y_td, xr_td, yr_td = nil
-
-	local function sort_func(x, y)
-		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
-		y_td = (tweak_data.economy[y.category] or tweak_data.blackmarket[y.category])[y.entry]
-		xr_td = tweak_data.economy.rarities[x_td.rarity or "common"]
-		yr_td = tweak_data.economy.rarities[y_td.rarity or "common"]
-
-		if xr_td.index ~= yr_td.index then
-			return xr_td.index < yr_td.index
-		end
-
-		return x.entry < y.entry
-	end
-
-	table.sort(items_list, sort_func)
-
-	local td = nil
-
-	for _, item in ipairs(items_list) do
-		td = (tweak_data.economy[item.category] or tweak_data.blackmarket[item.category])[item.entry]
-		text = text .. "[color=#" .. InventoryGenerator._create_hex_color(tweak_data.economy.rarities[td.rarity or "common"].color) .. "]"
-
-		if item.category == "contents" and td.rarity == "legendary" then
-			text = text .. managers.localization:text("bm_menu_rarity_legendary_item_long") .. "[/color]"
-		else
-			text = text .. (td.weapon_id and utf8.to_upper(managers.weapon_factory:get_weapon_name_by_weapon_id(td.weapon_id)) .. " | " or "") .. managers.localization:text(td.name_id)
-		end
-
-		if _ ~= #items_list then
-			text = text .. "[/color]\\n"
-		end
-	end
-
-	return text
-end
-
-function InventoryGenerator._find_item_in_content(entry, category, content)
-	if category == "drills" or category == "safes" or category == "contents" then
-		return false
-	end
-
-	local content_data = tweak_data.economy.contents[content]
-
-	if content_data then
-		for search_category, search_content in pairs(content_data.contains) do
-			if search_category == "contents" then
-				for _, search_entry in pairs(search_content) do
-					if InventoryGenerator._find_item_in_content(entry, category, search_entry) then
-						return true
-					end
-				end
-			end
-
-			if search_category == category then
-				for _, search_entry in pairs(search_content) do
-					if search_entry == entry then
-						return true
-					end
-				end
-			end
-		end
-	end
-
-	return false
+	return error
 end
 
 function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
+	Application:trace("[InventoryGenerator._create_steam_itemdef] Items#", #items)
+
 	local json = SystemFS:open(json_path, "w")
 
 	json:puts("{")
@@ -501,43 +206,88 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 	json:puts("\t\"items\": [")
 
 	for count, item in ipairs(items) do
+		InventoryGenerator._add_defid(item.def_id, item, defid_data)
 		json:puts("\t{")
-		json:puts("\t\"itemdefid\": \"" .. item.def_id .. "\",")
-		json:puts("\t\"item_name\": \"" .. item.key_name .. "\",")
-		json:puts("\t\"item_slot\": \"" .. "challenge_card" .. "\",")
+
+		if item.key_name and item.key_name ~= "" then
+			json:puts("\t\"item_name\": \"" .. item.key_name .. "\",")
+
+			local icon_name = item.texture or "cc_" .. item.key_name .. "_hud"
+
+			json:puts("\t\"icon_url\": \"" .. InventoryGenerator.web_image_base .. icon_name .. ".png\",")
+
+			if item.name and item.name ~= "" then
+				json:puts("\t\"name\": \"" .. managers.localization:text(item.name) .. "\",")
+			end
+		elseif item.name and item.name ~= "" then
+			json:puts("\t\"name\": \"" .. item.name .. "\",")
+		end
 
 		if item.category == "gameplay" then
-			InventoryGenerator._create_steam_itemdef_gameplay(json, tweak, defid_data)
+			InventoryGenerator._create_steam_itemdef_gameplay(json, item, defid_data)
 		elseif item.category == "bundles" then
-			InventoryGenerator._create_steam_itemdef_bundle(json, tweak, defid_data)
+			InventoryGenerator._create_steam_itemdef_bundle(json, item, defid_data)
 		elseif item.category == "contents" then
-			InventoryGenerator._create_steam_itemdef_content(json, tweak, item.entry, defid_data)
+			InventoryGenerator._create_steam_itemdef_content(json, item, defid_data)
 		else
 			json:puts("\t\"type\": \"item\",")
 		end
 
-		json:puts("\t\"name\": \"" .. managers.localization:text(item.name) .. "\",")
-		json:puts("\t\"store_tags\": \"" .. "challenge card" .. "\",")
+		if item.recipes then
+			local exchange_string = InventoryGenerator._make_bundle_string(item.recipes)
 
-		local description_positive_text, description_negative_text = managers.challenge_cards:get_card_description(item.key_name)
-
-		if description_positive_text ~= "" and description_negative_text ~= "" then
-			json:puts("\t\"description\": \"" .. description_positive_text .. "; " .. description_negative_text .. "\",")
-		elseif description_positive_text ~= "" and description_negative_text == "" then
-			json:puts("\t\"description\": \"" .. description_positive_text .. "\",")
-		elseif description_positive_text == "" and description_negative_text ~= "" then
-			json:puts("\t\"description\": \"" .. description_negative_text .. "\",")
+			if exchange_string ~= "" then
+				json:puts("\t\"exchange\": \"" .. exchange_string .. "\",")
+			end
 		end
 
-		json:puts("\t\"icon_url\": \"https://s3-us-west-2.amazonaws.com/media.raidww2.com/steam_icons_challenge_cards/" .. item.key_name .. "_small.png\",")
-		json:puts("\t\"icon_url_large\": \"https://s3-us-west-2.amazonaws.com/media.raidww2.com/steam_icons_challenge_cards/" .. item.key_name .. "_large.png\",")
-		json:puts("\t\"name_color\": \"" .. "2360D8" .. "\",")
+		if item.item_slot and item.item_slot ~= "" then
+			json:puts("\t\"item_slot\": \"" .. item.item_slot .. "\",")
+		end
 
-		local tradable = "true"
-		local marketable = "false"
+		if item.display_type and item.display_type ~= "" then
+			json:puts("\t\"display_type\": \"" .. managers.localization:text(item.display_type) .. "\",")
+		end
 
-		json:puts("\t\"tradable\": " .. tradable .. ",")
-		json:puts("\t\"marketable\": " .. marketable)
+		if item.tags and item.tags ~= "" then
+			json:puts("\t\"tags\": \"" .. item.tags .. "\",")
+		end
+
+		if item.store_tags and item.store_tags ~= "" then
+			json:puts("\t\"store_tags\": \"" .. item.store_tags .. "\",")
+		end
+
+		if item.description and item.description ~= "" then
+			json:puts("\t\"description\": \"" .. item.description .. "\",")
+		end
+
+		if item.name_color and item.name_color ~= "" then
+			json:puts("\t\"name_color\": \"" .. item.name_color .. "\",")
+		end
+
+		if item.tradable and item.tradable == true then
+			json:puts("\t\"tradable\": true,")
+		end
+
+		if item.marketable and item.marketable == true then
+			json:puts("\t\"marketable\": true,")
+		end
+
+		if item.hidden and item.hidden == true then
+			json:puts("\t\"hidden\": true,")
+		end
+
+		if item.auto_stack and item.auto_stack == true then
+			json:puts("\t\"auto_stack\": true,")
+		end
+
+		if item.extra_data then
+			for k, v in pairs(item.extra_data) do
+				json:puts("\t\"" .. k .. "\": \"" .. v .. "\",")
+			end
+		end
+
+		json:puts("\t\"itemdefid\": \"" .. item.def_id .. "\"")
 
 		if count == #items then
 			json:puts("\t}")
@@ -547,36 +297,78 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 	end
 
 	json:puts("\t]")
-	json:puts("}")
 	SystemFS:close(json)
 end
 
-function InventoryGenerator._create_steam_itemdef_clear(json_path, items, defid_data)
-	local json = SystemFS:open(json_path, "w")
+function InventoryGenerator._create_steam_itemdef_gameplay(json, item, defid_data)
+	json:puts("\t\"type\": \"playtimegenerator\",")
 
-	json:puts("{")
-	json:puts("\t\"appid\": 412890,")
-	json:puts("\t\"items\": [")
+	if item.drop_window and item.drop_window > 0 then
+		json:puts("\t\"drop_window\": \"" .. item.drop_window .. "\",")
+	end
 
-	local keys_sorted = table.map_keys(items)
+	if item.drop_max_per_window and item.drop_max_per_window > 0 then
+		json:puts("\t\"drop_max_per_window\": \"" .. item.drop_max_per_window .. "\",")
+	end
 
-	for count, index in ipairs(keys_sorted) do
-		local item = items[index]
-		local tweak = item.data
+	if item.drop_interval and item.drop_interval > 0 then
+		json:puts("\t\"drop_interval\": \"" .. item.drop_interval .. "\",")
+	end
 
-		json:puts("\t{")
-		json:puts("\t\"itemdefid\": " .. item.def_id)
+	if item.bundle then
+		local bs = InventoryGenerator._make_bundle_string(item.bundle)
 
-		if count == #keys_sorted then
-			json:puts("\t}")
-		else
-			json:puts("\t},")
+		json:puts("\t\"bundle\": \"" .. bs .. "\",")
+	else
+		Application:warn("[InventoryGenerator._create_steam_itemdef_gameplay] item lacks bundle data", item, item.def_id)
+	end
+end
+
+function InventoryGenerator._create_steam_itemdef_bundle(json, item, defid_data)
+	json:puts("\t\"type\": \"bundle\",")
+
+	local bs = InventoryGenerator._make_bundle_string(item.bundle)
+
+	json:puts("\t\"bundle\": \"" .. bs .. "\",")
+end
+
+function InventoryGenerator._make_bundle_string(data)
+	if not data then
+		Application:error("[InventoryGenerator._make_bundle_string] item lacks bundle data", data and inspect(data))
+
+		return "ERROR"
+	end
+
+	Application:info("[InventoryGenerator._make_bundle_string]", inspect(data))
+
+	local bundle_string = ""
+
+	for _, group in ipairs(data) do
+		for _, item in ipairs(group) do
+			local xorstar = "x"
+
+			if type(item[1]) == "string" then
+				xorstar = "*"
+			end
+
+			bundle_string = bundle_string .. item[1] .. xorstar .. (item[2] or 1) .. ";"
 		end
 	end
 
-	json:puts("\t]")
-	json:puts("}")
-	SystemFS:close(json)
+	return bundle_string
+end
+
+function InventoryGenerator._create_steam_itemdef_content(json, item, defid_data)
+	Application:info("[InventoryGenerator._create_steam_itemdef_content] START ", json, inspect(item), defid_data)
+	json:puts("\t\"type\": \"generator\",")
+
+	if item.bundle then
+		local bs = InventoryGenerator._make_bundle_string(item.bundle)
+
+		json:puts("\t\"bundle\": \"" .. bs .. "\",")
+	else
+		Application:warn("[InventoryGenerator._create_steam_itemdef_content] item lacks bundle data", item, item.def_id)
+	end
 end
 
 function InventoryGenerator._defids(json_path)
@@ -598,86 +390,32 @@ function InventoryGenerator._defids(json_path)
 	return defid_list
 end
 
-function InventoryGenerator._create_id(category, entry, quality, bonus)
+function InventoryGenerator._create_id(category, entry)
 	if not category or not entry then
 		return
 	end
 
 	local id = category .. "_" .. entry
 
-	if quality then
-		id = id .. (bonus and "_b_" or "_n_") .. quality
-	end
-
 	return id
 end
 
-function InventoryGenerator._fill_defids(list, json_path)
-	local defid_list = {}
-	local defid_data = {}
-
-	for safe, safe_items in pairs(list) do
-		local json_data = InventoryGenerator.json_load(json_path .. "safe_" .. safe .. ".json")
-
-		if json_data and json_data.items and type(json_data.items) == "table" then
-			for _, item in pairs(json_data.items) do
-				local id = InventoryGenerator._create_id(item.item_slot, item.item_name, item.dsl_quality, item.dsl_bonus == "true", item.promo)
-				local def_id = tonumber(item.itemdefid)
-
-				if safe_items[id] then
-					if not safe_items[id].def_id then
-						safe_items[id].def_id = def_id
-					elseif safe_items[id].def_id ~= def_id then
-						Application:error("[InventoryGenerator._fill_defids] - The item '" .. item.item_slot .. "." .. item.item_name .. " have different ID since last time ( New: " .. tostring(safe_items[id].def_id) .. ", Old: " .. tostring(def_id) .. ").")
-					end
-				end
-
-				defid_list[def_id] = true
-				defid_data[id] = {
-					category = item.item_slot,
-					entry = item.item_name,
-					quality = item.dsl_quality,
-					bonus = item.dsl_bonus,
-					def_id = def_id
-				}
-			end
-		end
+function InventoryGenerator._add_defid(def_id, item, defid_data)
+	if defid_data[def_id] then
+		Application:error("[InventoryGenerator._add_defid] Definition IDX already occupied!", def_id, defid_data[def_id])
+	else
+		defid_data[def_id] = item
 	end
-
-	return defid_list, defid_data
 end
 
-function InventoryGenerator._fill_defids_OLD(list, json_path)
-	local defid_list = {}
-	local defid_data = {}
-	local json_data = InventoryGenerator.json_load(json_path .. "inventory.json")
+function InventoryGenerator._next_clear_defid(defid_data, from)
+	local safe = from or 1
 
-	if json_data and json_data.items and type(json_data.items) == "table" then
-		for _, item in pairs(json_data.items) do
-			local id = InventoryGenerator._create_id(item.item_slot, item.item_name, item.dsl_quality, item.dsl_bonus == "true")
-
-			if id then
-				local def_id = tonumber(item.itemdefid)
-
-				for safe, safe_items in pairs(list) do
-					if safe_items[id] and not safe_items[id].def_id then
-						safe_items[id].def_id = def_id
-					end
-				end
-
-				defid_list[def_id] = true
-				defid_data[id] = {
-					category = item.item_slot,
-					entry = item.item_name,
-					quality = item.dsl_quality,
-					bonus = item.dsl_bonus,
-					def_id = def_id
-				}
-			end
-		end
+	while defid_data[safe] do
+		safe = safe + 1
 	end
 
-	return defid_list, defid_data
+	return safe
 end
 
 function InventoryGenerator.json_load(path)
@@ -691,7 +429,6 @@ function InventoryGenerator.json_load(path)
 	SystemFS:close(json)
 
 	local start = json_data:find("{")
-	local stop = json_data:find("}[^}]*$")
 
 	return InventoryGenerator._json_entry(not start and json_data or json_data:sub(start + 1, stop and stop - 1))
 end
@@ -849,4 +586,10 @@ function InventoryGenerator._root_path()
 	end
 
 	return f(path)
+end
+
+function InventoryGenerator._create_hex_color(color)
+	local r, g, b = color:unpack()
+
+	return string.format("%X%X%X", r * 255, g * 255, b * 255)
 end

@@ -301,13 +301,6 @@ function MenuCallbackHandler:toggle_ready(item)
 	managers.network:session():on_set_member_ready(managers.network:session():local_peer():id(), ready, true, false)
 end
 
-function MenuCallbackHandler:change_nr_players(item)
-	local nr_players = item:value()
-	Global.nr_players = nr_players
-
-	managers.player:set_nr_players(nr_players)
-end
-
 function MenuCallbackHandler:invert_camera_horisontally(item)
 	local invert = item:value() == "on"
 
@@ -318,215 +311,6 @@ function MenuCallbackHandler:invert_camera_vertically(item)
 	local invert = item:value() == "on"
 
 	managers.user:set_setting("invert_camera_y", invert)
-end
-
-function MenuCallbackHandler:toggle_dof_setting(item)
-	local dof_setting = item:value() == "on"
-
-	managers.user:set_setting("dof_setting", dof_setting and "standard" or "none")
-end
-
-function MenuCallbackHandler:toggle_ssao_setting(item)
-	local ssao_setting = item:value() == "on"
-
-	managers.user:set_setting("ssao_setting", ssao_setting and "standard" or "none")
-end
-
-function MenuCallbackHandler:toggle_motion_blur_setting(item)
-	local motion_blur_setting = item:value() == "on"
-
-	managers.user:set_setting("motion_blur_setting", motion_blur_setting and "standard" or "none")
-end
-
-function MenuCallbackHandler:toggle_volumetric_light_scattering_setting(item)
-	local vls_setting = item:value() == "on"
-
-	managers.user:set_setting("vls_setting", vls_setting and "standard" or "none")
-end
-
-function MenuCallbackHandler:choice_choose_AA_quality(item)
-	local AA_setting = item:value()
-
-	managers.user:set_setting("AA_setting", AA_setting)
-end
-
-function MenuCallbackHandler:choice_choose_cb_mode(item)
-	local cb_setting = item:value()
-
-	managers.user:set_setting("colorblind_setting", cb_setting)
-end
-
-function MenuCallbackHandler:hold_to_steelsight(item)
-	local hold = item:value() == "on"
-
-	managers.user:set_setting("hold_to_steelsight", hold)
-end
-
-function MenuCallbackHandler:hold_to_run(item)
-	local hold = item:value() == "on"
-
-	managers.user:set_setting("hold_to_run", hold)
-end
-
-function MenuCallbackHandler:hold_to_duck(item)
-	local hold = item:value() == "on"
-
-	managers.user:set_setting("hold_to_duck", hold)
-end
-
-function MenuCallbackHandler:toggle_fullscreen(item)
-	local fullscreen = item:value() == "on"
-
-	if managers.viewport:is_fullscreen() == fullscreen then
-		return
-	end
-
-	managers.viewport:set_fullscreen(fullscreen)
-	managers.menu:show_accept_gfx_settings_dialog(function ()
-		managers.viewport:set_fullscreen(not fullscreen)
-		item:set_value(not fullscreen and "on" or "off")
-		self:refresh_node()
-	end)
-	self:refresh_node()
-end
-
-function MenuCallbackHandler:toggle_subtitle(item)
-	local subtitle = item:value() == "on"
-
-	managers.user:set_setting("subtitle", subtitle)
-end
-
-function MenuCallbackHandler:choose_hit_indicator(item)
-	local value = item:value()
-
-	managers.user:set_setting("hit_indicator", value)
-end
-
-function MenuCallbackHandler:toggle_motion_dot(item)
-	local on = item:value() == "on"
-
-	managers.user:set_setting("motion_dot", on)
-end
-
-function MenuCallbackHandler:toggle_objective_reminder(item)
-	local on = item:value() == "on"
-
-	managers.user:set_setting("objective_reminder", on)
-end
-
-function MenuCallbackHandler:toggle_voicechat(item)
-	local vchat = item:value() == "on"
-
-	managers.user:set_setting("voice_chat", vchat)
-end
-
-function MenuCallbackHandler:toggle_push_to_talk(item)
-	local vchat = item:value() == "on"
-
-	managers.user:set_setting("push_to_talk", vchat)
-end
-
-function MenuCallbackHandler:toggle_team_AI(item)
-	Global.game_settings.team_ai = item:value() == "on"
-
-	managers.groupai:state():on_criminal_team_AI_enabled_state_changed()
-end
-
-function MenuCallbackHandler:toggle_coordinates(item)
-	Global.debug_show_coords = item:value() == "on"
-
-	if Global.debug_show_coords then
-		managers.hud:debug_show_coordinates()
-	else
-		managers.hud:debug_hide_coordinates()
-	end
-end
-
-function MenuCallbackHandler:toggle_net_throttling(item)
-	local state = item:value() == "on"
-
-	managers.user:set_setting("net_packet_throttling", state, nil)
-end
-
-function MenuCallbackHandler:toggle_net_forwarding(item)
-	local state = item:value() == "on"
-
-	managers.user:set_setting("net_forwarding", state, nil)
-end
-
-function MenuCallbackHandler:toggle_net_use_compression(item)
-	local state = item:value() == "on"
-
-	print("[MenuCallbackHandler:toggle_net_use_compression]", state)
-	managers.user:set_setting("net_use_compression", state, nil)
-end
-
-function MenuCallbackHandler:change_resolution(item)
-	local old_resolution = RenderSettings.resolution
-
-	if item:parameters().resolution == old_resolution then
-		return
-	end
-
-	managers.viewport:set_resolution(item:parameters().resolution)
-	managers.viewport:set_aspect_ratio(item:parameters().resolution.x / item:parameters().resolution.y)
-	managers.menu:show_accept_gfx_settings_dialog(function ()
-		managers.viewport:set_resolution(old_resolution)
-		managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
-	end)
-	self:_refresh_brightness()
-end
-
-function MenuCallbackHandler:choice_controller_type(item)
-	if not managers.menu:active_menu() then
-		return false
-	end
-
-	if not managers.menu:active_menu().logic then
-		return false
-	end
-
-	if not managers.menu:active_menu().logic:selected_node() then
-		return false
-	end
-
-	managers.menu:active_menu().logic:selected_node():parameters().controller_category = item:value()
-	local logic = managers.menu:active_menu().logic
-
-	if logic then
-		logic:refresh_node()
-	end
-end
-
-function MenuCallbackHandler:choice_max_lobbies_filter(item)
-	local max_server_jobs_filter = item:value()
-
-	managers.network.matchmake:set_lobby_return_count(max_server_jobs_filter)
-	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
-end
-
-function MenuCallbackHandler:choice_distance_filter(item)
-	local dist_filter = item:value()
-
-	if managers.network.matchmake:distance_filter() == dist_filter then
-		return
-	end
-
-	managers.network.matchmake:set_distance_filter(dist_filter)
-	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
-end
-
-function MenuCallbackHandler:choice_difficulty_filter(item)
-	local diff_filter = item:value()
-
-	print("diff_filter", diff_filter)
-
-	if managers.network.matchmake:get_lobby_filter("difficulty") == diff_filter then
-		return
-	end
-
-	managers.network.matchmake:add_lobby_filter("difficulty", diff_filter, "equal")
-	managers.network.matchmake:search_lobby(managers.network.matchmake:search_friends_only())
 end
 
 function MenuCallbackHandler:choice_job_id_filter(item)
@@ -588,45 +372,6 @@ function MenuCallbackHandler:refresh_node(item)
 	end
 end
 
-function MenuCallbackHandler:lobby_create_campaign(item)
-	MenuCallbackHandler:choice_lobby_campaign(item)
-
-	local job_id = Global.game_settings.level_id
-
-	Application:debug("[MenuCallbackHandler:lobby_create_campaign]", job_id)
-
-	Global.exe_argument_level = job_id
-	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
-
-	MenuCallbackHandler:start_job({
-		job_id = job_id,
-		difficulty = Global.DEFAULT_DIFFICULTY
-	})
-end
-
-function MenuCallbackHandler:choice_lobby_campaign(item)
-	Application:debug("[MenuCallbackHandler:choice_lobby_campaign]")
-
-	if not item:enabled() then
-		return
-	end
-
-	Global.game_settings.level_id = item:parameter("level_id")
-
-	MenuManager.refresh_level_select(managers.menu:active_menu().logic:selected_node(), true)
-
-	if managers.menu:active_menu().renderer.update_level_id then
-		managers.menu:active_menu().renderer:update_level_id(Global.game_settings.level_id)
-	end
-
-	if managers.menu:active_menu().renderer.update_difficulty then
-		managers.menu:active_menu().renderer:update_difficulty()
-	end
-
-	managers.menu:show_global_success()
-	managers.network:update_matchmake_attributes()
-end
-
 function MenuCallbackHandler:set_lan_game()
 	Global.game_settings.playing_lan = true
 end
@@ -644,12 +389,6 @@ function MenuCallbackHandler:play_single_player()
 
 	managers.network:host_game()
 	Network:set_server()
-end
-
-function MenuCallbackHandler:play_online_game()
-	Application:debug("[MenuCallbackHandler:play_online_game]")
-
-	Global.game_settings.single_player = false
 end
 
 function MenuCallbackHandler:apply_and_save_render_settings()
@@ -682,53 +421,6 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 	end
 
 	func()
-end
-
-function MenuCallbackHandler:choice_choose_texture_quality(item)
-	RenderSettings.texture_quality_default = item:value()
-
-	if IS_PC then
-		MenuCallbackHandler:apply_and_save_render_settings()
-		self:_refresh_brightness()
-	end
-end
-
-function MenuCallbackHandler:choice_choose_shadow_quality(item)
-	RenderSettings.shadow_quality_default = item:value()
-
-	if IS_PC then
-		MenuCallbackHandler:apply_and_save_render_settings()
-		self:_refresh_brightness()
-	end
-end
-
-function MenuCallbackHandler:choice_choose_anisotropic(item)
-	RenderSettings.max_anisotropy = item:value()
-
-	MenuCallbackHandler:apply_and_save_render_settings()
-	self:_refresh_brightness()
-end
-
-function MenuCallbackHandler:choice_fps_cap(item)
-	setup:set_fps_cap(item:value())
-	managers.user:set_setting("fps_cap", item:value())
-end
-
-function MenuCallbackHandler:choice_choose_color_grading(item)
-	managers.user:set_setting("video_color_grading", item:value())
-end
-
-function MenuCallbackHandler:choice_choose_anti_alias(item)
-	managers.user:set_setting("video_anti_alias", item:value())
-end
-
-function MenuCallbackHandler:choice_choose_anim_lod(item)
-	managers.user:set_setting("video_animation_lod", item:value())
-end
-
-function MenuCallbackHandler:toggle_vsync(item)
-	managers.viewport:set_vsync(item:value() == "on")
-	self:_refresh_brightness()
 end
 
 function MenuCallbackHandler:toggle_use_thq_weapon_parts(item)
@@ -1264,6 +956,10 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.worldcollection:on_simulation_ended()
 	managers.challenge_cards:clear_suggested_cards()
 
+	if managers.airdrop then
+		managers.airdrop:cleanup()
+	end
+
 	if Network:multiplayer() then
 		Network:set_multiplayer(false)
 		managers.network:session():send_to_peers("set_peer_left")
@@ -1385,9 +1081,6 @@ function MenuCallbackHandler:resume_game()
 	managers.menu:close_menu("menu_pause")
 end
 
-function MenuCallbackHandler:change_upgrade(menu_item)
-end
-
 function MenuCallbackHandler:delayed_open_savefile_menu(item)
 	if not self._delayed_open_savefile_menu_callback then
 		if managers.savefile:is_active() then
@@ -1433,7 +1126,7 @@ function MenuCallbackHandler:set_default_controller(item)
 		text = managers.localization:text("dialog_use_default_keys_message"),
 		callback = function ()
 			managers.controller:load_settings("settings/controller_settings")
-			managers.controller:clear_user_mod(item:parameters().category, MenuCustomizeControllerCreator.CONTROLS_INFO)
+			managers.controller:clear_user_mod(item:parameters().category, RaidMenuOptionsControlsKeybinds.CONTROLS_INFO)
 
 			local logic = managers.menu:active_menu().logic
 
@@ -1444,12 +1137,6 @@ function MenuCallbackHandler:set_default_controller(item)
 	}
 
 	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:choice_button_layout_category(item)
-	local node_gui = managers.menu:active_menu().renderer:active_node_gui()
-
-	node_gui:set_current_category(item:value())
 end
 
 function MenuCallbackHandler:debug_goto_custody()
@@ -1496,7 +1183,6 @@ function MenuCallbackHandler:start_job(job_data)
 
 		managers.network:session():send_to_peers("sync_game_settings", job_id_index, level_id_index, difficulty_index)
 		managers.network.matchmake:set_server_attributes(matchmake_attributes)
-		managers.menu_component:on_job_updated()
 
 		local active_menu = managers.menu:active_menu()
 
@@ -1520,21 +1206,6 @@ function MenuCallbackHandler:start_job(job_data)
 	end
 
 	managers.raid_job:on_mission_started()
-end
-
-function MenuCallbackHandler:play_single_player_job(item)
-	self:play_single_player()
-	self:start_single_player_job({
-		job_id = item:parameter("job_id"),
-		difficulty = Global.DEFAULT_DIFFICULTY
-	})
-end
-
-function MenuCallbackHandler:play_quick_start_job(item)
-	self:start_job({
-		job_id = item:parameter("job_id"),
-		difficulty = Global.DEFAULT_DIFFICULTY
-	})
 end
 
 function MenuCallbackHandler:start_single_player_job(job_data)

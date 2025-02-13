@@ -101,6 +101,12 @@ function Layer:post_load()
 end
 
 function Layer:add_unit_to_created_units(unit, skip_register)
+	if not unit then
+		Application:warn("[Layer:add_unit_to_created_units] (unit, skip_register)", unit, skip_register)
+
+		return
+	end
+
 	if not skip_register and not self._owner:register_unit_id(unit) then
 		self._post_register_units = self._post_register_units or {}
 

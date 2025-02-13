@@ -46,10 +46,10 @@ end
 
 function HUDPlayerVoiceChatStatus:_create_player_name()
 	local player_name_params = {
+		layer = 30,
 		x = 0,
 		name = "player_name",
 		text = "",
-		layer = 30,
 		w = self._object:w() - HUDPlayerVoiceChatStatus.CHAT_PANEL_W,
 		h = HUDPlayerVoiceChatStatus.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDPlayerVoiceChatStatus.PLAYER_NAME_FONT],

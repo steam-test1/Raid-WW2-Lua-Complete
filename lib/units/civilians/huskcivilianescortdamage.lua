@@ -30,4 +30,8 @@ function HuskCivilianEscortDamage:die()
 		self._unit:escort():remove_waypoint()
 		self._unit:escort():remove_health_bar()
 	end
+
+	if self._unit:contour() then
+		self._unit:contour():remove("highlight_character")
+	end
 end

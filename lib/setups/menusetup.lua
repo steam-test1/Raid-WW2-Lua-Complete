@@ -85,15 +85,15 @@ function MenuSetup:_load_pkg_with_init(pkg)
 	local init_pkg = pkg .. "_init"
 
 	if not PackageManager:loaded(init_pkg) then
-		Application:debug("[MenuSetup:_load_camp_pkg_with_init] Loading...", init_pkg)
+		Application:debug("[MenuSetup:_load_pkg_with_init] Loading...", init_pkg)
 		PackageManager:load(init_pkg, function ()
-			Application:debug("[MenuSetup:_load_camp_pkg_with_init] Loading...", pkg)
+			Application:debug("[MenuSetup:_load_pkg_with_init] Loading...", pkg)
 		end)
 	end
 
 	if not PackageManager:loaded(pkg) then
 		PackageManager:load(pkg, function ()
-			Application:debug("[MenuSetup:_load_camp_pkg_with_init] DONE", pkg)
+			Application:debug("[MenuSetup:_load_pkg_with_init] DONE", pkg)
 		end)
 	end
 end
@@ -113,24 +113,6 @@ function MenuSetup:load_stream_level_packages()
 
 	self:_load_pkg_with_init("levels/vanilla/streaming_level/world")
 	self:_load_pkg_with_init("levels/vanilla/streaming_level/world/world")
-end
-
-function MenuSetup:load_camp_packages()
-	Application:debug("[MenuSetup:load_camp_packages]")
-
-	local function _empty_func()
-		Application:debug("[MenuSetup:load_camp_packages] DONE")
-	end
-
-	if not PackageManager:loaded("levels/vanilla/camp/world_sounds") then
-		PackageManager:load("levels/vanilla/camp/world_sounds", _empty_func)
-	end
-
-	self:_load_pkg_with_init("levels/vanilla/camp/world")
-	self:_load_pkg_with_init("levels/vanilla/camp/caracter_menu/caracter_menu")
-	self:_load_pkg_with_init("levels/vanilla/camp/level_art/level_art")
-	self:_load_pkg_with_init("levels/vanilla/camp/lights/lights")
-	self:_load_pkg_with_init("levels/vanilla/camp/world/world")
 end
 
 function MenuSetup:gather_packages_to_unload()

@@ -145,15 +145,15 @@ function PlayerCarry:_check_action_run(t, input)
 	local ratio = managers.player:get_my_carry_weight_ratio()
 	local can_run_value = tweak_data.carry.types[self._tweak_data_name].can_run
 	local can_run = nil
-	can_run = type(can_run_value) == "boolean" and can_run_value or ratio <= tweak_data.carry.types[self._tweak_data_name].can_run
+	can_run = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) and true or type(can_run_value) == "boolean" and can_run_value or ratio <= tweak_data.carry.types[self._tweak_data_name].can_run
 
-	if can_run or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+	if can_run then
 		PlayerCarry.super._check_action_run(self, t, input)
 	elseif input.btn_run_press then
 		managers.notification:add_notification({
-			duration = 2,
 			shelf_life = 5,
 			id = "hint_cant_run",
+			duration = 2,
 			text = managers.localization:text("hint_cant_run")
 		})
 	end

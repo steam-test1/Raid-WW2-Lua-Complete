@@ -91,11 +91,11 @@ function TextGui:_create_text_gui(row)
 	local font_size = text_data.font_size or self.FONT_SIZE
 	local font = text_data.font or self.FONT
 	local gui = self._panel:text({
-		visible = true,
-		vertical = "center",
 		align = "center",
 		y = 0,
 		layer = 0,
+		visible = true,
+		vertical = "center",
 		text = text_data.text,
 		font = font,
 		font_size = font_size,
@@ -255,71 +255,9 @@ function TextGui:clear_row(row)
 end
 
 function TextGui:_test()
-	for i = 1, self.ROWS do
-		self:clear_row_and_guis(i)
-	end
-
-	local companies = {
-		"Big bank",
-		"Starbeeze",
-		"Overkill",
-		"GenSEC",
-		"505",
-		"Google",
-		"Apple",
-		"Microsoft",
-		"Ilija CORP",
-		"New York RNGRS",
-		"Nissan",
-		"Nintendo",
-		"WPC",
-		"Murky Water",
-		"Beer Company",
-		"Ivan food sollution systems",
-		"Catfight",
-		"LOL"
-	}
-
-	for i, company in ipairs(companies) do
-		local j = 10 - math.rand(20)
-		local row = math.mod(i, self.ROWS) + 1
-
-		self:add_text(row, company, "white")
-		self:add_text(row, "" .. (j < 0 and "" or "+") .. string.format("%.2f", j) .. "%", j < 0 and "light_red" or "light_green", self.FONT_SIZE / 1.5, "bottom", nil)
-		self:add_text(row, "  ", "white")
-	end
 end
 
 function TextGui:_test2()
-	for i = 1, self.ROWS do
-		self:clear_row_and_guis(i)
-	end
-
-	local texts = {
-		"Welcome to Big Bank"
-	}
-	local texts2 = {
-		"Loan",
-		"Invest",
-		"Market",
-		"Stock",
-		"Currencies",
-		"Global Markets",
-		"Sell",
-		"Buy",
-		"Portfolio",
-		"Funds",
-		"MONEY!"
-	}
-
-	for i, text in ipairs(texts) do
-		self:add_text(1, text, "green")
-	end
-
-	for i, text in ipairs(texts2) do
-		self:add_text(2, text, "light_green")
-		self:add_text(2, " - ", "light_green")
-	end
 end
 
 function TextGui:_sequence_trigger(sequence_name)

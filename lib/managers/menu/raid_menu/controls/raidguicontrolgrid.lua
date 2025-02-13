@@ -115,7 +115,7 @@ function RaidGUIControlGrid:_create_item(item_params, item_data, grid_params)
 	local item = self._grid_panel:create_custom_control(item_params.row_class or RaidGUIControlCardBase, item_params, item_data, grid_params)
 
 	if item.set_card then
-		item:set_card(item_data)
+		item:set_card(item_data, true)
 	end
 
 	return item

@@ -77,6 +77,10 @@ function RaidGUIControlLabel:set_color(color)
 	self._object:set_color(color)
 end
 
+function RaidGUIControlLabel:set_range_color(color)
+	self._object:set_range_color(color)
+end
+
 function RaidGUIControlLabel:set_alpha(alpha)
 	self._object:set_alpha(alpha)
 end

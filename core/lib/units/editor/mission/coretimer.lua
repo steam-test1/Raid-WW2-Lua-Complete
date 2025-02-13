@@ -3,8 +3,8 @@ CoreTimerUnitElement.SAVE_UNIT_POSITION = false
 CoreTimerUnitElement.SAVE_UNIT_ROTATION = false
 CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "number",
-		value = "timer"
+		value = "timer",
+		type = "number"
 	}
 }
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
@@ -241,8 +241,8 @@ end
 
 function CoreTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("core/units/mission_elements/logic_timer/logic_timer") or ray.unit:name() == Idstring("core/units/mission_elements/logic_timer_hud/logic_timer_hud")) then
@@ -342,8 +342,8 @@ end
 
 function CoreTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("core/units/mission_elements/logic_timer/logic_timer") or ray.unit:name() == Idstring("core/units/mission_elements/logic_timer_hud/logic_timer_hud")) then
@@ -375,7 +375,8 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local names = {
-		"logic_timer/logic_timer"
+		"logic_timer/logic_timer",
+		"logic_timer_hud/logic_timer_hud"
 	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)

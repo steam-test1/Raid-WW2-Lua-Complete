@@ -28,8 +28,8 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 1,
 				g = 0,
+				b = 1,
 				r = 0,
 				from_unit = self._unit,
 				to_unit = unit
@@ -45,8 +45,8 @@ end
 
 function CoreRopeOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -156,8 +156,8 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0.25,
 				g = 0.85,
+				b = 0.25,
 				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
@@ -173,8 +173,8 @@ end
 
 function CoreRopeTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 

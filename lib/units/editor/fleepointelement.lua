@@ -1,5 +1,4 @@
 FleePointElement = FleePointElement or class(MissionElement)
-FleePointElement.SAVE_UNIT_ROTATION = false
 
 function FleePointElement:init(unit)
 	FleePointElement.super.init(self, unit)

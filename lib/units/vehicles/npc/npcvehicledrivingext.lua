@@ -33,19 +33,19 @@ function NpcVehicleDrivingExt:init(unit)
 	self._last_checkpoint_reached = false
 	self._drive_controls = {
 		accelerate = {
-			acceleration = 1,
 			handbrake = 0,
-			brake = 0
+			brake = 0,
+			acceleration = 1
 		},
 		brake = {
-			acceleration = 0,
 			handbrake = 0,
-			brake = 1
+			brake = 1,
+			acceleration = 0
 		},
 		handbrake = {
-			acceleration = 0,
 			handbrake = 1,
-			brake = 1
+			brake = 1,
+			acceleration = 0
 		}
 	}
 	self._current_drive_controls = "accelerate"
@@ -72,7 +72,7 @@ function NpcVehicleDrivingExt:init(unit)
 end
 
 function NpcVehicleDrivingExt:activate()
-	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN then
+	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		self:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
 		self:start()
 	end
@@ -95,7 +95,7 @@ function NpcVehicleDrivingExt:is_chasing()
 end
 
 function NpcVehicleDrivingExt:on_vehicle_death()
-	if self._current_state:name() == NpcVehicleDrivingExt.STATE_BROKEN then
+	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		return
 	end
 
@@ -132,36 +132,36 @@ function NpcVehicleDrivingExt:_start()
 
 			self._drive_controls = {
 				accelerate = {
-					acceleration = 1,
 					handbrake = 0,
-					brake = 0
+					brake = 0,
+					acceleration = 1
 				},
 				brake = {
-					acceleration = 0,
 					handbrake = 0,
-					brake = 1
+					brake = 1,
+					acceleration = 0
 				},
 				handbrake = {
-					acceleration = 0,
 					handbrake = 1,
-					brake = 1
+					brake = 1,
+					acceleration = 0
 				}
 			}
 			self._current_drive_controls = "accelerate"
 			self._next_checkpoint_distance = {
 				{
-					distance = 1200,
 					v_max = 40,
 					v_min = 30,
 					relative_angle_max = 60,
-					relative_angle_min = 30
+					relative_angle_min = 30,
+					distance = 1200
 				},
 				{
-					distance = 1500,
 					v_max = 60,
 					v_min = 40,
 					relative_angle_max = 90,
-					relative_angle_min = 30
+					relative_angle_min = 30,
+					distance = 1500
 				}
 			}
 			self._last_checkpoint_reached = false
@@ -200,7 +200,7 @@ function NpcVehicleDrivingExt:update(unit, t, dt)
 		self._debug.info:set_text("")
 	end
 
-	if self._current_state and self._current_state:name() ~= NpcBaseVehicleState.STATE_BROKEN then
+	if self._current_state and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		self._current_state:change_state(self)
 		self._current_state:handle_stuck_vehicle(self, t, dt)
 		self._current_state:update(self, t, dt)
@@ -614,9 +614,9 @@ function NpcVehicleDrivingExt:_debug_show()
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
 		x = 14,
+		name = "debug_info",
 		font_size = 14,
 		text = "",
-		name = "debug_info",
 		layer = 2000,
 		y = 100 + debug_output_offset,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
@@ -636,8 +636,8 @@ function NpcVehicleDrivingExt:_display_debug_info()
 			astar_found = false,
 			distance_to_player = 0,
 			ai_cost = {
-				fps = 0,
-				cost = 0
+				cost = 0,
+				fps = 0
 			}
 		}
 
@@ -649,8 +649,8 @@ function NpcVehicleDrivingExt:_display_debug_info()
 			nav_paths.astar_found = self._debug.nav_paths.astar_found or false
 			nav_paths.distance_to_player = self._debug.nav_paths.distance_to_player or 0
 			nav_paths.ai_cost = self._debug.nav_paths.ai_cost or {
-				fps = 0,
-				cost = 0
+				cost = 0,
+				fps = 0
 			}
 		end
 

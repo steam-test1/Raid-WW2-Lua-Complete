@@ -163,6 +163,13 @@ end
 function CoreEditorGroups:load_group_file(path)
 	local name = self:group_name()
 	local node = SystemFS:parse_xml(path)
+
+	if not node then
+		Application:error("[CoreEditorGroups:load_group_file] No node parsed from XML", path)
+
+		return
+	end
+
 	local layer_name = "Statics"
 
 	if node:has_parameter("layer") then

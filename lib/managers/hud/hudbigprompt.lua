@@ -2,6 +2,7 @@ HUDBigPrompt = HUDBigPrompt or class()
 HUDBigPrompt.W = 450
 HUDBigPrompt.H = 148
 HUDBigPrompt.TEXT_FONT = tweak_data.gui.fonts.din_compressed
+HUDBigPrompt.TEXT_FONT_DISPLAY_SIZE = tweak_data.gui.font_sizes.size_32
 HUDBigPrompt.TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDBigPrompt.DESCRIPTION_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
 HUDBigPrompt.DESCRIPTION_FONT_SIZE = tweak_data.gui.font_sizes.extra_small
@@ -25,23 +26,24 @@ end
 
 function HUDBigPrompt:_create_panel(hud)
 	self._object = hud.panel:panel({
-		valign = "center",
-		alpha = 0,
 		name = "big_prompt_panel",
 		halign = "center",
+		valign = "center",
+		alpha = 0,
 		w = HUDBigPrompt.W,
 		h = HUDBigPrompt.H
 	})
 end
 
 function HUDBigPrompt:_create_background()
+	local gui_data = tweak_data.gui:get_full_gui_data(self.DEFAULT_BACKGROUND)
 	self._background = self._object:bitmap({
-		layer = 1,
 		name = "big_prompt_background",
-		w = HUDBigPrompt.W,
-		h = HUDBigPrompt.BACKGROUND_H,
-		texture = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture,
-		texture_rect = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture_rect
+		layer = 1,
+		w = self.W,
+		h = self.BACKGROUND_H,
+		texture = gui_data.texture,
+		texture_rect = gui_data.texture_rect
 	})
 
 	self._background:set_center_x(self._object:w() / 2)
@@ -51,49 +53,48 @@ end
 function HUDBigPrompt:_create_title()
 	self._title = self._object:text({
 		valign = "scale",
-		name = "big_prompt_text",
-		vertical = "center",
-		align = "center",
 		text = "TITLE",
+		vertical = "center",
 		halign = "scale",
-		layer = self._background:layer() + 1,
-		h = HUDBigPrompt.BACKGROUND_H,
-		font = tweak_data.gui:get_font_path(HUDBigPrompt.TEXT_FONT, HUDBigPrompt.TEXT_FONT_SIZE),
-		font_size = HUDBigPrompt.TEXT_FONT_SIZE
+		align = "center",
+		name = "big_prompt_text",
+		y = self._background:y(),
+		h = self.BACKGROUND_H,
+		font = tweak_data.gui:get_font_path(self.TEXT_FONT, self.TEXT_FONT_DISPLAY_SIZE),
+		font_size = self.TEXT_FONT_SIZE,
+		layer = self._background:layer() + 1
 	})
-
-	self._title:set_y(70)
 end
 
 function HUDBigPrompt:_create_description()
 	self._description = self._object:text({
-		valign = "scale",
-		name = "big_prompt_description",
-		vertical = "bottom",
 		align = "center",
-		text = "DESCRIPTION",
+		vertical = "bottom",
 		halign = "scale",
-		layer = self._background:layer() + 1,
+		valign = "scale",
+		text = "DESCRIPTION",
+		name = "big_prompt_description",
 		w = self._object:w(),
 		h = self._object:h(),
-		color = HUDBigPrompt.DEFAULT_TEXT_COLOR,
-		font = HUDBigPrompt.DESCRIPTION_FONT,
-		font_size = HUDBigPrompt.DESCRIPTION_FONT_SIZE
+		font = self.DESCRIPTION_FONT,
+		font_size = self.DESCRIPTION_FONT_SIZE,
+		color = self.DEFAULT_TEXT_COLOR,
+		layer = self._background:layer() + 1
 	})
 end
 
 function HUDBigPrompt:_create_icon()
 	self._icon = self._object:bitmap({
-		valign = "scale",
 		name = "big_prompt_icon",
 		halign = "scale",
+		valign = "scale",
 		layer = self._background:layer(),
-		w = HUDBigPrompt.ICON_SIZE,
-		h = HUDBigPrompt.ICON_SIZE
+		w = self.ICON_SIZE,
+		h = self.ICON_SIZE
 	})
 
 	self._icon:set_center_x(self._object:w() / 2)
-	self._icon:set_bottom(self._background:y() - HUDBigPrompt.ICON_OFFSET)
+	self._icon:set_bottom(self._background:y() - self.ICON_OFFSET)
 end
 
 function HUDBigPrompt:_create_flares(color)
@@ -108,10 +109,10 @@ function HUDBigPrompt:_create_flares(color)
 	self._flare_panel:set_center(self._icon:center())
 
 	self._lens_glint = self._flare_panel:bitmap({
-		blend_mode = "add",
 		alpha = 0.65,
 		name = "big_prompt_glint",
 		rotation = 360,
+		blend_mode = "add",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -119,9 +120,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	})
 	self._lens_orbs = self._flare_panel:bitmap({
+		name = "loot_screen_orbs",
 		rotation = 360,
 		blend_mode = "add",
-		name = "loot_screen_orbs",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -129,9 +130,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	})
 	self._lens_shimmer = self._flare_panel:bitmap({
+		name = "big_prompt_iris",
 		rotation = 360,
 		blend_mode = "add",
-		name = "big_prompt_iris",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -139,9 +140,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	})
 	self._lens_spike_ball = self._flare_panel:bitmap({
+		name = "big_prompt_spike_ball",
 		rotation = 360,
 		blend_mode = "add",
-		name = "big_prompt_spike_ball",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -283,29 +284,25 @@ function HUDBigPrompt:_layout_prompt(params)
 		self._title:set_color(params.text_color)
 		self._icon:set_color(params.text_color)
 	else
-		self._title:set_color(HUDBigPrompt.DEFAULT_TEXT_COLOR)
-		self._icon:set_color(HUDBigPrompt.DEFAULT_TEXT_COLOR)
+		self._title:set_color(self.DEFAULT_TEXT_COLOR)
+		self._icon:set_color(self.DEFAULT_TEXT_COLOR)
 	end
 
-	if params.background then
-		self._background:set_image(tweak_data.gui.icons[params.background].texture)
-		self._background:set_texture_rect(unpack(tweak_data.gui.icons[params.background].texture_rect))
-	else
-		self._background:set_image(tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture)
-		self._background:set_texture_rect(unpack(tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture_rect))
-	end
+	local background_data = tweak_data.gui:get_full_gui_data(params.background, self.DEFAULT_BACKGROUND)
 
+	self._background:set_image(background_data.texture)
+	self._background:set_texture_rect(unpack(background_data.texture_rect))
 	self._background:set_center_x(self._object:w() / 2)
 	self._background:set_y(70)
 
 	if params.icon then
-		local full_gui = tweak_data.gui:get_full_gui_data(params.icon)
+		local icon_gui = tweak_data.gui:get_full_gui_data(params.icon)
 
-		self._icon:set_image(full_gui.texture)
-		self._icon:set_texture_rect(unpack(full_gui.texture_rect))
+		self._icon:set_image(icon_gui.texture)
+		self._icon:set_texture_rect(unpack(icon_gui.texture_rect))
 		self._icon:set_w(tweak_data.gui:icon_w(params.icon))
 		self._icon:set_h(tweak_data.gui:icon_h(params.icon))
-		self._icon:set_color(full_gui.color or params.text_color or HUDBigPrompt.DEFAULT_TEXT_COLOR)
+		self._icon:set_color(icon_gui.color or params.text_color or HUDBigPrompt.DEFAULT_TEXT_COLOR)
 
 		if params.flares then
 			self._icon:set_center_x(self._object:w() / 2)

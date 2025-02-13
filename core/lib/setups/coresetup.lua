@@ -387,10 +387,6 @@ function CoreSetup:__end_frame(t, dt)
 
 		World:unload_all_units()
 
-		if managers.blackmarket then
-			managers.blackmarket:release_preloaded_blueprints()
-		end
-
 		if managers.dyn_resource and not managers.dyn_resource:is_ready_to_close() then
 			Application:cleanup_thread_garbage()
 			managers.dyn_resource:update()

@@ -13,8 +13,6 @@ RaidGUIControlCardDetails.DESCRIPTION_RIGHT_TEXT_SIZE = 18
 RaidGUIControlCardDetails.TITLE_RIGHT_PADDING_DOWN = 5
 RaidGUIControlCardDetails.MODE_VIEW_ONLY = "mode_view_only"
 RaidGUIControlCardDetails.MODE_SUGGESTING = "mode_suggesting"
-RaidGUIControlCardDetails.BONUS_EFFECT_Y = 224
-RaidGUIControlCardDetails.MALUS_EFFECT_Y = 320
 RaidGUIControlCardDetails.EFFECT_DISTANCE = 16
 RaidGUIControlCardDetails.FONT = tweak_data.gui.fonts.din_compressed
 
@@ -28,6 +26,7 @@ function RaidGUIControlCardDetails:init(parent, params)
 	end
 
 	self._pointer_type = "arrow"
+	self._effects_list = {}
 
 	self:highlight_off()
 	self:_create_object()
@@ -57,27 +56,11 @@ function RaidGUIControlCardDetails:_create_card_details()
 		item_h = self._params.card_h or 671
 	}
 	self._card_control = self._object:create_custom_control(RaidGUIControlCardBase, card_params)
-	local x_spacing = self._card_control:w() + 48
-	local params_card_name_right = {
-		text = "",
-		name = "card_name_label_right",
-		y = 16,
-		h = 64,
-		w = 640,
-		vertical = "bottom",
-		align = "left",
-		wrap = true,
-		x = x_spacing,
-		color = tweak_data.gui.colors.white,
-		layer = self._object:layer() + 1,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_38
-	}
-	self._card_name_label_right = self._object:label(params_card_name_right)
+	local x_spacing = self._card_control:w() + 32
 	local params_card_description_right = {
 		name = "card_description_label_right",
-		text = "",
 		wrap = true,
+		text = "",
 		visible = false,
 		color = Color.white,
 		layer = self._object:layer() + 1,
@@ -85,15 +68,15 @@ function RaidGUIControlCardDetails:_create_card_details()
 		font_size = RaidGUIControlLootCardDetails.DESCRIPTION_RIGHT_TEXT_SIZE
 	}
 	self._card_description_label_right = self._object:label(params_card_description_right)
-	local label_y = 160
-	local icon_y = 96
+	local icon_y = 8
+	local label_y = icon_y + 64
 	self._experience_bonus_count = self._object:label({
-		text = "",
 		visible = false,
 		name = "experience_bonus_count",
 		h = 64,
 		w = 160,
 		align = "right",
+		text = "",
 		x = x_spacing + 224,
 		y = icon_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -115,19 +98,19 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local type_def_icon = tweak_data.challenge_cards.type_definition.card_type_raid.texture_gui
 	self._type_icon = self._object:image({
-		visible = false,
 		name = "type_icon",
+		visible = false,
 		x = x_spacing,
 		y = icon_y,
 		texture = type_def_icon.texture,
 		texture_rect = type_def_icon.texture_rect
 	})
 	self._type_label = self._object:label({
-		text = "",
 		name = "type_label",
 		h = 32,
 		w = 96,
 		align = "center",
+		text = "",
 		x = x_spacing,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -136,76 +119,28 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local rarity_def_icon = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_gui
 	self._rarity_icon = self._object:image({
-		visible = false,
 		name = "rarity_icon",
+		visible = false,
 		x = x_spacing + 128,
 		y = icon_y,
 		texture = rarity_def_icon.texture,
 		texture_rect = rarity_def_icon.texture_rect
 	})
 	self._rarity_label = self._object:label({
-		text = "",
 		name = "rarity_label",
 		h = 32,
 		w = 128,
 		align = "center",
+		text = "",
 		x = x_spacing + 96,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.medium,
 		color = tweak_data.gui.colors.raid_grey
 	})
-	self._bonus_effect_icon = self._object:image({
-		h = 64,
-		w = 64,
-		visible = false,
-		name = "bonus_effect_icon",
-		x = x_spacing,
-		y = RaidGUIControlCardDetails.BONUS_EFFECT_Y,
-		texture = tweak_data.gui.icons.ico_bonus.texture,
-		texture_rect = tweak_data.gui.icons.ico_bonus.texture_rect
-	})
-	self._malus_effect_icon = self._object:image({
-		h = 64,
-		w = 64,
-		visible = false,
-		name = "malus_effect_icon",
-		x = x_spacing,
-		y = RaidGUIControlCardDetails.MALUS_EFFECT_Y,
-		texture = tweak_data.gui.icons.ico_malus.texture,
-		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
-	})
-	self._bonus_effect_label = self._object:label({
-		text = "",
-		name = "bonus_effect_label",
-		h = 64,
-		w = 288,
-		vertical = "center",
-		align = "left",
-		wrap = true,
-		x = x_spacing + 80,
-		y = RaidGUIControlCardDetails.BONUS_EFFECT_Y,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		color = tweak_data.gui.colors.raid_grey
-	})
-	self._malus_effect_label = self._object:label({
-		text = "",
-		name = "malus_effect_label",
-		h = 150,
-		w = 288,
-		vertical = "center",
-		align = "left",
-		wrap = true,
-		x = x_spacing + 80,
-		y = RaidGUIControlCardDetails.MALUS_EFFECT_Y,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		color = tweak_data.gui.colors.raid_grey
-	})
 end
 
-function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
+function RaidGUIControlCardDetails:set_card_details(card_key_name)
 	self._card = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
 
 	if self._card then
@@ -233,21 +168,8 @@ function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 			Application:error("[RaidGUIControlCardDetails:set_card]", card_key_name, "is missing type icons!")
 		end
 
-		self._card.steam_instance_id = steam_instance_id
-
-		self._card_control:set_card(self._card)
+		self._card_control:set_card(self._card, false)
 		self._card_control:set_visible(true)
-
-		local card_name = self._card.name
-		local card_description = self._card.description
-
-		self._card_name_label_right:set_text(self:translate(card_name, true))
-
-		local _, _, w, h = self._card_name_label_right:text_rect()
-
-		self._card_name_label_right:set_height(h)
-		self._card_description_label_right:set_text(self:translate(card_description))
-		self._card_description_label_right:set_y(self._card_name_label_right:y() + h)
 
 		local xp_label_value = managers.challenge_cards:get_card_xp_label(card_key_name, true)
 
@@ -263,48 +185,112 @@ function RaidGUIControlCardDetails:set_card(card_key_name, steam_instance_id)
 
 		self._type_label:set_text(self:translate(self._card.card_type, true))
 		self._rarity_label:set_text(self:translate(self._card.rarity, true))
-
-		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card_key_name)
-
-		if bonus_description and bonus_description ~= "" then
-			self._bonus_effect_icon:show()
-			self._bonus_effect_label:set_text(bonus_description)
-
-			local _, _, _, h = self._bonus_effect_label:text_rect()
-
-			self._bonus_effect_label:set_h(h)
-		else
-			self._bonus_effect_label:set_text("")
-			self._bonus_effect_icon:hide()
-		end
-
-		if malus_description and malus_description ~= "" then
-			self._malus_effect_icon:show()
-			self._malus_effect_label:set_text(malus_description)
-
-			local _, _, _, h = self._malus_effect_label:text_rect()
-
-			self._malus_effect_label:set_h(h)
-
-			local malus_effect_y = self._bonus_effect_icon:y()
-
-			if self._bonus_effect_icon:visible() then
-				malus_effect_y = math.max(self._bonus_effect_icon:bottom(), self._bonus_effect_label:bottom()) + RaidGUIControlCardDetails.EFFECT_DISTANCE
-			end
-
-			self._malus_effect_label:set_y(malus_effect_y)
-			self._malus_effect_icon:set_y(malus_effect_y)
-		else
-			self._malus_effect_label:set_text("")
-			self._malus_effect_icon:hide()
-		end
 	else
 		self._card_control:set_visible(false)
-		self._card_name_label_right:set_text("")
 		self._card_description_label_right:set_text("")
 		self._experience_bonus_count:set_visible(false)
 		self._experience_bonus_label:set_visible(false)
 	end
+
+	self:_recreate_card_effects()
+end
+
+function RaidGUIControlCardDetails:_recreate_card_effects()
+	for _, data in ipairs(self._effects_list) do
+		for _, obj in pairs(data) do
+			obj:hide()
+		end
+	end
+
+	if not self._card then
+		Application:warn("[RaidGUIControlCardDetails] No card data in details", self._card)
+
+		return
+	end
+
+	local list_start_y = 128
+	local x_spacing = self._card_control:w() + 32
+	local TEMP_DATA = {}
+
+	if self._card.positive_description then
+		table.insert(TEMP_DATA, {
+			type = "positive_effect",
+			name = self._card.positive_description.desc_id,
+			value = self._card.positive_description.desc_params
+		})
+	end
+
+	if self._card.negative_description then
+		table.insert(TEMP_DATA, {
+			type = "negative_effect",
+			name = self._card.negative_description.desc_id,
+			value = self._card.negative_description.desc_params
+		})
+	end
+
+	for i, data in ipairs(TEMP_DATA) do
+		local line_data = self._effects_list[i]
+
+		if not line_data then
+			local gui = tweak_data.gui:get_full_gui_data("ico_condition")
+			local effect_icon = self._object:image({
+				h = 64,
+				w = 64,
+				name = "effect_icon_" .. tostring(i),
+				x = x_spacing,
+				y = list_start_y,
+				texture = gui.texture,
+				texture_rect = gui.texture_rect
+			})
+			local effect_label = self._object:label({
+				wrap = true,
+				h = 64,
+				w = 340,
+				vertical = "center",
+				align = "left",
+				text = "ABC",
+				name = "effect_label_" .. tostring(i),
+				x = x_spacing + effect_icon:w() + 8,
+				y = list_start_y,
+				font = tweak_data.gui.fonts.lato,
+				font_size = tweak_data.gui.font_sizes.size_20,
+				color = tweak_data.gui.colors.raid_grey
+			})
+			line_data = {
+				effect_icon = effect_icon,
+				effect_label = effect_label
+			}
+
+			table.insert(self._effects_list, line_data)
+		end
+
+		for _, obj in pairs(line_data) do
+			obj:show()
+		end
+
+		local gui = tweak_data.gui:get_full_gui_data(data.type == "positive_effect" and "ico_bonus" or "ico_malus")
+
+		line_data.effect_icon:set_image(gui.texture, unpack(gui.texture_rect))
+		line_data.effect_icon:set_texture_rect(gui.texture_rect)
+
+		local loc_text = "ERROR"
+
+		if data.value then
+			loc_text = managers.localization:text(data.name, data.value)
+		else
+			loc_text = managers.localization:text(data.name)
+		end
+
+		line_data.effect_label:set_text(loc_text)
+
+		local x, y, w, h = line_data.effect_label:text_rect()
+
+		line_data.effect_label:set_h(math.max(h, 64))
+
+		list_start_y = list_start_y + line_data.effect_label:h() + 8
+	end
+
+	Application:debug("[RaidGUIControlCardDetails] Done remade card details!")
 end
 
 function RaidGUIControlCardDetails:set_mode_layout()

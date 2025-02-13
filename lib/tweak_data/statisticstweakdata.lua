@@ -5,37 +5,37 @@ function StatisticsTweakData:init()
 	self.killed = {
 		civilian = {
 			total = {
-				type = "normal",
-				count = 0
+				count = 0,
+				type = "normal"
 			},
 			head_shots = {
-				type = "normal",
-				count = 0
+				count = 0,
+				type = "normal"
 			},
 			session = {
-				type = "session",
-				count = 0
+				count = 0,
+				type = "session"
 			}
 		},
 		civilian = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		security = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		cop = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		swat = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		},
 		total = {
-			head_shots = 0,
-			count = 0
+			count = 0,
+			head_shots = 0
 		}
 	}
 
@@ -243,7 +243,8 @@ function StatisticsTweakData:statistics_table()
 		"decoy_coin",
 		"betty",
 		"gold_bar",
-		"anti_tank"
+		"anti_tank",
+		"thermite"
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

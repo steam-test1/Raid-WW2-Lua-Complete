@@ -202,21 +202,21 @@ function CopLogicIntimidated.on_intimidated(data, amount, aggressor_unit)
 		if anim_data.hands_up then
 			anim = "hands_back"
 			blocks = {
+				action = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				light_hurt = -1,
-				action = -1
+				light_hurt = -1
 			}
 		elseif anim_data.hands_back then
 			anim = "tied"
 			blocks = {
+				action = -1,
+				walk = -1,
 				hurt_sick = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				light_hurt = -1,
-				action = -1,
-				walk = -1
+				light_hurt = -1
 			}
 		else
 			if managers.groupai:state():whisper_mode() then
@@ -226,18 +226,18 @@ function CopLogicIntimidated.on_intimidated(data, amount, aggressor_unit)
 			end
 
 			blocks = {
+				action = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				light_hurt = -1,
-				action = -1
+				light_hurt = -1
 			}
 		end
 
 		local action_data = {
-			type = "act",
 			clamp_to_graph = true,
 			body_part = 1,
+			type = "act",
 			variant = anim,
 			blocks = blocks
 		}
@@ -276,8 +276,8 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 	local so_descriptor = {
 		AI_group = "friendlies",
 		usage_amount = 1,
-		interval = 10,
 		search_dis_sq = 2250000,
+		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
 		objective = objective,
@@ -302,11 +302,11 @@ function CopLogicIntimidated.on_harassment_SO_action_start(ignore_this, data, re
 		type = "act",
 		body_part = 1,
 		blocks = {
+			action = -1,
 			walk = -1,
 			heavy_hurt = -1,
 			hurt = -1,
-			light_hurt = -1,
-			action = -1
+			light_hurt = -1
 		}
 	}
 	my_data.being_harassed = data.unit:movement():action_request(action)
@@ -466,9 +466,9 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 	local my_tracker = data.unit:movement():nav_tracker()
 	local objective_pos = my_tracker:field_position()
 	local followup_objective = {
+		scan = true,
 		stance = "hos",
 		type = "act",
-		scan = true,
 		action = {
 			variant = "idle",
 			type = "act",
@@ -481,12 +481,12 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local objective = {
+		destroy_clbk_key = false,
 		stance = "hos",
 		interrupt_health = 0.85,
 		interrupt_dis = 700,
 		scan = true,
 		type = "act",
-		destroy_clbk_key = false,
 		follow_unit = data.unit,
 		pos = mvector3.copy(objective_pos),
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -507,8 +507,8 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 	local so_descriptor = {
 		AI_group = "enemies",
 		usage_amount = 1,
-		interval = 10,
 		search_dis_sq = 1000000,
+		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
 		objective = objective,
@@ -608,9 +608,9 @@ function CopLogicIntimidated._start_action_hands_up(data)
 	local my_data = data.internal_data
 	local anim_name = managers.groupai:state():whisper_mode() and "tied_all_in_one" or "hands_up"
 	local action_data = {
-		type = "act",
 		clamp_to_graph = true,
 		body_part = 1,
+		type = "act",
 		variant = anim_name,
 		blocks = {
 			walk = -1,

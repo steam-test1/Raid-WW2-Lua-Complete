@@ -87,9 +87,9 @@ function CoreDebugUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0.75,
 				b = 0.75,
 				g = 0.25,
-				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
 			})

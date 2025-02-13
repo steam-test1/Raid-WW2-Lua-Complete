@@ -34,7 +34,7 @@ function UpgradeBigGame.update()
 		local play_callout = false
 
 		for _, unit in ipairs(sensed_targets) do
-			if alive(unit) and (unit:base():is_special() or unit:unit_data().turret_weapon) then
+			if alive(unit) and (unit:base():is_special() and unit:character_damage() and not unit:character_damage():is_invulnerable() and not unit:character_damage():is_immortal() or unit:unit_data().turret_weapon) then
 				local marked = managers.game_play_central:auto_highlight_enemy(unit, true)
 				play_callout = play_callout or marked and UpgradeBigGame._play_callout(unit)
 			end

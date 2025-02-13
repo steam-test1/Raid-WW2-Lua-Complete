@@ -74,17 +74,17 @@ end
 
 function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 	self.special_events.trick_or_treat = {
+		camp_continent = "event_halloween",
 		name_id = "hud_trick_or_treat_title",
+		package = "packages/halloween_candy",
 		challenge_id = "candy_gold_bar",
 		card_id = "ra_trick_or_treat",
-		camp_continent = "event_halloween",
-		accent_color = "progress_orange",
 		login_rewards = "halloween",
-		package = "packages/halloween_candy",
+		accent_color = "progress_orange",
 		game_logo = tweak_data.gui.icons.raid_hw_logo_small,
 		date = {
 			start = 1023,
-			finish = 1109
+			finish = 1110
 		},
 		upgrades = {
 			"temporary_candy_health_regen",
@@ -104,10 +104,10 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 		},
 		bonus_effects = {
 			undead = "hud_trick_or_treat_buff_undead",
-			refill_warcry = "hud_trick_or_treat_buff_warcry",
-			refill_down = "hud_trick_or_treat_buff_down",
 			refill_health = "hud_trick_or_treat_buff_health",
-			refill_ammo = "hud_trick_or_treat_buff_ammo"
+			refill_ammo = "hud_trick_or_treat_buff_ammo",
+			refill_warcry = "hud_trick_or_treat_buff_warcry",
+			refill_down = "hud_trick_or_treat_buff_down"
 		},
 		malus_effects = {
 			{
@@ -143,9 +143,9 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				}
 			},
 			{
+				value = 1.15,
 				stage = 3,
 				desc_id = "effect_enemies_deal_increased_damage",
-				value = 1.15,
 				name = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE,
 				desc_params = {
 					EFFECT_VALUE_1 = "15%"
@@ -153,9 +153,9 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				blocked_by = BuffEffectManager.EFFECT_ENEMY_HEALTH
 			},
 			{
+				value = 1.2,
 				stage = 3,
 				desc_id = "effect_enemies_health_increased",
-				value = 1.2,
 				name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
 				desc_params = {
 					EFFECT_VALUE_1 = "20%"
@@ -163,25 +163,25 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				blocked_by = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE
 			},
 			{
+				value = true,
 				stage = 4,
 				desc_id = "effect_warcries_disabled",
 				chance = 50,
-				value = true,
 				name = BuffEffectManager.EFFECT_WARCRIES_DISABLED
 			},
 			{
+				value = true,
 				stage = 4,
 				desc_id = "effect_enemies_vulnerable_only_to_headshots",
 				chance = 30,
-				value = true,
 				name = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT,
 				blocked_by = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE
 			},
 			{
+				value = true,
 				stage = 4,
 				desc_id = "effect_headshot_doesnt_do_damage",
 				chance = 30,
-				value = true,
 				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE,
 				blocked_by = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT
 			},
@@ -192,10 +192,10 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 				name = BuffEffectManager.EFFECT_SHOOTING_PRIMARY_WEAPON_CONSUMES_BOTH_AMMOS
 			},
 			{
+				value = true,
 				stage = 5,
 				desc_id = "effect_player_can_only_walk_backwards_or_sideways",
 				chance = 5,
-				value = true,
 				name = BuffEffectManager.EFFECT_PLAYER_CAN_MOVE_ONLY_BACK_AND_SIDE
 			}
 		}

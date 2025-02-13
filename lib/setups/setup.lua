@@ -123,6 +123,10 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlNineCutBitmap")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlImageButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlNavigationButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlAnimatedBitmap")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItem")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlList")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListActive")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListSeparated")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterSelect")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterSelectButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterCreateClass")
@@ -140,10 +144,6 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemWeapons")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillProfiles")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemSkillProfile")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemContextButton")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItem")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlList")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListActive")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListSeparated")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepper")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepperSimple")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlSlider")
@@ -324,15 +324,15 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
-		is_playing = false,
-		search_appropriate_jobs = true,
-		job_plan = -1,
-		kick_option = 1,
 		drop_in_allowed = true,
 		reputation_permission = 0,
 		team_ai = true,
 		selected_team_ai = true,
 		permission = "public",
+		is_playing = false,
+		search_appropriate_jobs = true,
+		job_plan = -1,
+		kick_option = 1,
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
@@ -542,10 +542,10 @@ function Setup:_setup_loading_environment()
 				slice3 = Vector3(5100, 17500, 0)
 			},
 			apply_ambient = {
-				effect_light_scale = 1,
 				ambient_falloff_scale = 0,
 				ambient_scale = 1,
 				ambient_color_scale = 0.31999999284744,
+				effect_light_scale = 1,
 				ambient_color = Vector3(1, 1, 1),
 				sky_top_color = Vector3(0, 0, 0),
 				sky_bottom_color = Vector3(0, 0, 0)
@@ -590,6 +590,7 @@ function Setup:init_finalize()
 	managers.achievment:init_finalize()
 	managers.system_menu:init_finalize()
 	managers.controller:init_finalize()
+	managers.localization:init_finalize()
 
 	if Application:editor() then
 		managers.user:init_finalize()
@@ -677,6 +678,7 @@ end
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 	managers.voice_over:on_tweak_data_reloaded()
+	managers.fire:on_tweak_data_reloaded()
 end
 
 function Setup:destroy()
@@ -961,14 +963,6 @@ function Setup:_upd_unload_packages()
 
 		if Global.unload_all_level_packages then
 			Global.unload_all_level_packages = false
-		end
-	end
-
-	if self._unload_async_camp then
-		self._unload_async_camp = false
-
-		if Global.STREAM_ALL_PACKAGES then
-			self:unload_camp_packages()
 		end
 	end
 end

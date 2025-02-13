@@ -73,9 +73,9 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 	}
 	local part_panel = self._inner_panel:panel(panel_params)
 	local header_params = {
-		name = "header",
 		y = 0,
 		x = 0,
+		name = "header",
 		font = RaidGUIControlOperationProgress.HEADING_FONT,
 		font_size = RaidGUIControlOperationProgress.HEADING_FONT_SIZE,
 		color = RaidGUIControlOperationProgress.HEADING_COLOR,

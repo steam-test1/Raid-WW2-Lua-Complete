@@ -49,10 +49,10 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 	})
 	self._slider_line = self._slider_line_panel:three_cut_bitmap({
 		y = 0,
-		x = 0,
-		right = "slider_line_right_base",
 		center = "slider_line_center_base",
+		x = 0,
 		left = "slider_line_left_base",
+		right = "slider_line_right_base",
 		name = self._name .. "_slider_line",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR,
@@ -60,10 +60,10 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 	})
 	self._slider_line_active = self._slider_line_panel:three_cut_bitmap({
 		y = 0,
-		x = 0,
-		right = "slider_line_right_base",
 		center = "slider_line_center_base",
+		x = 0,
 		left = "slider_line_left_base",
+		right = "slider_line_right_base",
 		name = self._name .. "_slider_line_active",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_COLOR,

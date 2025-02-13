@@ -5,7 +5,8 @@ WorldOperatorUnitElement.ACTIONS = {
 	"despawn",
 	"enable_plant_loot",
 	"enable_alarm_state",
-	"disable_alarm_state"
+	"disable_alarm_state",
+	"set_world_id"
 }
 
 function WorldOperatorUnitElement:init(unit)
@@ -17,6 +18,7 @@ function WorldOperatorUnitElement:init(unit)
 
 	table.insert(self._save_values, "use_instigator")
 	table.insert(self._save_values, "operation")
+	table.insert(self._save_values, "operation_world_id")
 	table.insert(self._save_values, "elements")
 
 	self._actions = WorldOperatorUnitElement.ACTIONS
@@ -24,8 +26,8 @@ end
 
 function WorldOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -45,8 +47,8 @@ end
 
 function WorldOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -149,6 +151,12 @@ function WorldOperatorUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_combobox(panel, panel_sizer, "operation", self._actions, "Select an operation for the selected elements")
+
+	local worlds = managers.worldcollection:get_all_worlds()
+
+	table.insert(worlds, "")
+	table.sort(worlds)
+	self:_build_value_combobox(panel, panel_sizer, "operation_world_id", worlds, "Select a world ID for the selected elements to change to")
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 

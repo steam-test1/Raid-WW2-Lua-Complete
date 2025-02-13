@@ -45,22 +45,14 @@ end
 
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
-		suspicion = nil,
-		set_look_dir = nil,
-		criminal_hurt = nil,
 		set_look_dir = {
-			clbk = nil,
 			clbk = NetworkManager.clbk_msg_overwrite
 		},
 		criminal_hurt = {
-			indexes = nil,
-			clbk = nil,
 			clbk = PlayerDamage.clbk_msg_overwrite_criminal_hurt,
 			indexes = {}
 		},
 		suspicion = {
-			indexes = nil,
-			clbk = nil,
 			clbk = PlayerMovement.clbk_msg_overwrite_suspicion,
 			indexes = {}
 		}
@@ -504,9 +496,6 @@ function NetworkManager:register_spawn_point(id, data, spawner)
 	Application:debug("[NetworkManager:register_spawn_point]")
 
 	local runtime_data = {
-		spawner = nil,
-		pos_rot = nil,
-		id = nil,
 		pos_rot = {
 			data.position,
 			data.rotation
@@ -569,7 +558,6 @@ function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
 	local search_params = {
-		numbers = nil,
 		numbers = {
 			1,
 			3
@@ -628,7 +616,6 @@ function NetworkManager:on_peer_added(peer, peer_id)
 
 	if managers.chat then
 		managers.chat:feed_system_message(ChatManager.GAME, managers.localization:text("menu_chat_peer_added", {
-			name = nil,
 			name = peer:name()
 		}))
 	end
@@ -656,7 +643,6 @@ function NetworkManager:get_matchmake_attributes()
 	end
 
 	local attributes = {
-		numbers = nil,
 		numbers = {
 			level_id,
 			difficulty_id,

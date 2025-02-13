@@ -33,11 +33,11 @@ end
 function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
+		sorted = false,
+		name = "Blackscreen variant:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		name = "Blackscreen variant:",
 		tooltip = "Select variant, from level_tweak_data.level.intro_event",
-		sorted = false,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -87,11 +87,11 @@ end
 function EndscreenVariantElement:_get_params(panel, panel_sizer)
 	local bscreen_params = {
 		default = "0",
+		sorted = false,
+		name = "Endscreen variant:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		name = "Endscreen variant:",
 		tooltip = "Select variant, from level_tweak_data.level.outro_event",
-		sorted = false,
 		panel = panel,
 		sizer = panel_sizer,
 		options = {

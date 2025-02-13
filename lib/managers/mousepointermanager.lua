@@ -25,22 +25,22 @@ function MousePointerManager:_setup()
 	local x = 640
 	local y = 360
 	self._mouse = self._ws:panel():panel({
+		name_s = "mouse",
 		h = 23,
 		w = 19,
 		name = "mouse",
-		name_s = "mouse",
 		x = x,
 		y = y,
 		layer = tweak_data.gui.MOUSE_LAYER
 	})
 
 	self._mouse:bitmap({
-		x = -7,
 		h = 23,
 		w = 19,
 		name = "pointer",
 		rotation = 360,
 		y = -2,
+		x = -7,
 		texture = "guis/textures/mouse_pointer",
 		texture_rect = {
 			0,

@@ -5,13 +5,13 @@ HUDSpecialInteractionRewiring.PADDING_Y = 64
 HUDSpecialInteractionRewiring.PADDING_X = 64
 HUDSpecialInteractionRewiring._DEFAULT_NODE_COUNT = 3
 HUDSpecialInteractionRewiring._GUI_REFS = {
-	trap = "interact_rewire_node_trap",
-	b_u_l = "interact_rewire_node_bend_up_left",
 	dead = "interact_rewire_node_dead",
-	b_d_r = "interact_rewire_node_bend_down_right",
+	b_u_l = "interact_rewire_node_bend_up_left",
 	line = "interact_rewire_node_line",
+	b_d_r = "interact_rewire_node_bend_down_right",
+	b_u_r = "interact_rewire_node_bend_up_right",
 	b_d_l = "interact_rewire_node_bend_down_left",
-	b_u_r = "interact_rewire_node_bend_up_right"
+	trap = "interact_rewire_node_trap"
 }
 HUDSpecialInteractionRewiring._DEBUGGERY = false
 
@@ -81,13 +81,13 @@ function HUDSpecialInteractionRewiring:_setup_slot_queue()
 
 	if HUDSpecialInteractionRewiring._DEBUGGERY then
 		self._debuggery_queue = self._object:text({
-			y = 100,
-			x = 160,
+			name = "_debuggery_queue",
 			w = 2000,
 			layer = 99,
+			y = 100,
+			x = 160,
 			h = 75,
 			text = "WABBUBUBU 1",
-			name = "_debuggery_queue",
 			color = Color(0.937, 0.4, 0.1),
 			font = HUDSpecialInteraction.LEGEND_FONT,
 			font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE
@@ -135,8 +135,8 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 			row_nodes = {}
 		}
 		local node_panel = self._interact_rewire_inside_panel:panel({
-			x = 0,
 			visible = true,
+			x = 0,
 			name = "_interact_node_panel_" .. tostring(y),
 			y = (y - 1) * size_y,
 			w = (node_count_x + 1) * size_x,
@@ -147,9 +147,9 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 		if HUDSpecialInteractionRewiring._DEBUGGERY then
 			local node_panel_debuggery = self._object:text({
-				x = 100,
 				w = 600,
 				layer = 99,
+				x = 100,
 				h = 80,
 				text = "WABBUBUBU",
 				name = "_debuggery_" .. tostring(y),
@@ -202,9 +202,9 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 			table.insert(self._interact_node_row_data[y].row_nodes, next_slot_queue)
 
 			local txt = HUDSpecialInteractionRewiring._DEBUGGERY and node_panel:text({
-				y = 4,
 				w = 80,
 				layer = 99,
+				y = 4,
 				h = 80,
 				name = "_debuggery_txtid_" .. tostring(y),
 				text = "X" .. tostring(x) .. "\nY" .. tostring(y),

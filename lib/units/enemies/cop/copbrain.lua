@@ -134,6 +134,12 @@ logic_variants.phalanx_vip = clone(logic_variants.shield)
 logic_variants.phalanx_vip.phalanx = CopLogicPhalanxVip
 logic_variants.tank.attack = TankCopLogicAttack
 logic_variants.tank_hw = logic_variants.tank
+logic_variants.fb_german_commander_boss = security_variant
+logic_variants.fb_german_commander_boss.intimidated = nil
+logic_variants.fb_german_commander_boss.flee = nil
+logic_variants.fb_german_commander = security_variant
+logic_variants.fb_german_commander.intimidated = nil
+logic_variants.fb_german_commander.flee = nil
 security_variant = nil
 CopBrain._logic_variants = logic_variants
 logic_varaints = nil
@@ -882,14 +888,14 @@ function CopBrain:on_cool_state_changed(state)
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
 		alert_types = {
-			fire = true,
 			explosion = true,
 			aggression = true,
 			vo_distress = true,
 			vo_intimidate = true,
 			vo_cbt = true,
 			bullet = true,
-			footstep = true
+			footstep = true,
+			fire = true
 		}
 
 		if self._logic_data and self._logic_data.internal_data.vision_cool then
@@ -900,10 +906,10 @@ function CopBrain:on_cool_state_changed(state)
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 		alert_types = {
-			fire = true,
 			explosion = true,
+			bullet = true,
 			aggression = true,
-			bullet = true
+			fire = true
 		}
 
 		if self._logic_data then
@@ -926,7 +932,7 @@ function CopBrain:on_suppressed(state)
 	if self._current_logic.on_suppressed_state then
 		self._current_logic.on_suppressed_state(self._logic_data)
 
-		if state and self._logic_data.char_tweak.chatter.suppress then
+		if state and self._logic_data.char_tweak.chatter.suppress and not self._unit:sound():speaking() then
 			self._unit:sound():say("help", true)
 		end
 	end
@@ -1037,15 +1043,15 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 	self._unit:movement():set_stance("hos")
 
 	local action_data = {
-		body_part = 1,
-		clamp_to_graph = true,
-		type = "act",
 		variant = "attached_collar_enter",
+		body_part = 1,
+		type = "act",
+		clamp_to_graph = true,
 		blocks = {
+			walk = -1,
 			heavy_hurt = -1,
 			light_hurt = -1,
 			hurt = -1,
-			walk = -1,
 			action = -1
 		}
 	}

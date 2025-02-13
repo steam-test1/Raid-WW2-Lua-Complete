@@ -151,9 +151,9 @@ function HUDStatusEffects:_make_status_box(status_data)
 		color = tweak_data.gui.colors.raid_black
 	})
 	local icon = status_effect_panel:bitmap({
+		halign = "center",
 		valign = "center",
 		name = "icon",
-		halign = "center",
 		layer = 3,
 		w = self.ICON_SIZE,
 		h = self.ICON_SIZE,

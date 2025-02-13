@@ -18,6 +18,7 @@ function PlayerBase:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 
 	self._stats_screen_visible = false
+	self.is_player = true
 
 	managers.game_play_central:restart_portal_effects()
 	managers.occlusion:remove_occlusion(self._unit)
@@ -34,9 +35,6 @@ function PlayerBase:post_init()
 	end
 
 	self._unit:character_damage():post_init()
-
-	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():local_peer())
-
 	self:set_suspicion_multiplier("equipment", 1)
 	self:set_detection_multiplier("equipment", 1)
 end

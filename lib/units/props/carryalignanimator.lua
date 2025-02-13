@@ -174,6 +174,30 @@ function CarryAlignAnimator:client_store_carry(carry_unit, carry_id)
 	Application:debug("[CarryAlignAnimator:client_store_carry] Animation setup success for '" .. carry_id .. "'!")
 end
 
+function CarryAlignAnimator:hide_all_loot()
+	Application:info("[CarryAlignAnimator:hide_all_loot] Hiding all loot objects!")
+
+	for id, units in pairs(self._loot_props) do
+		for i, unit in ipairs(units) do
+			unit:set_visible(false)
+			unit:set_enabled(false)
+			Application:info("[CarryAlignAnimator:hide_all_loot] Hiding", i, unit)
+		end
+	end
+end
+
+function CarryAlignAnimator:show_all_loot()
+	Application:info("[CarryAlignAnimator:show_all_loot] Showing all loot objects!")
+
+	for id, units in pairs(self._loot_props) do
+		for i, unit in ipairs(units) do
+			unit:set_visible(true)
+			unit:set_enabled(true)
+			Application:info("[CarryAlignAnimator:show_all_loot] Showing", i, unit)
+		end
+	end
+end
+
 function CarryAlignAnimator._get_carry_unit_static(carry_id)
 	return carry_id and tweak_data.carry[carry_id].unit_static
 end

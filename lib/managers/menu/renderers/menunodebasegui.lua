@@ -120,8 +120,9 @@ function MenuNodeBaseGui:create_text_button(params)
 	end
 
 	table.insert(self._text_buttons, {
-		legend_text = nil,
+		image = nil,
 		highlighted = false,
+		legend_text = nil,
 		panel = button_panel,
 		text = gui_text,
 		blur = gui_blur,

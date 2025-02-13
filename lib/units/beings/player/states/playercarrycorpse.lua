@@ -71,6 +71,17 @@ function PlayerCarryCorpse:_check_action_mantle(...)
 	return false
 end
 
+function PlayerCarryCorpse:_check_action_run(t, input)
+	if input.btn_run_press then
+		managers.notification:add_notification({
+			shelf_life = 5,
+			id = "hint_cant_run",
+			duration = 2,
+			text = managers.localization:text("hint_cant_run")
+		})
+	end
+end
+
 function PlayerCarryCorpse:_check_action_interact(t, input)
 	local new_action, timer, interact_object = nil
 

@@ -22,9 +22,9 @@ end
 function HUDSpecialInteractionLockPick:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionLockPick.BACKGROUND_PLATE_IMAGE)
 	self._bg_plate = self._object:bitmap({
-		valign = "center",
 		name = "special_interaction_bg_plate",
 		halign = "center",
+		valign = "center",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect
 	})
@@ -71,8 +71,8 @@ function HUDSpecialInteractionLockPick:_create_circles()
 		circle:set_current(circle_diff)
 
 		self._circles[i] = {
-			completed = false,
 			valid = true,
+			completed = false,
 			circle = circle
 		}
 	end

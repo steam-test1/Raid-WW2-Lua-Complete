@@ -50,9 +50,9 @@ end
 
 function RaidGUIControlXPSkillSet:_create_text()
 	local title_text_params = {
+		align = "center",
 		name = "skill_set_unlock_title_text",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.TITLE_FONT_SIZE,
@@ -69,9 +69,9 @@ function RaidGUIControlXPSkillSet:_create_text()
 	title:set_center_x(self._content_panel:w() / 2)
 
 	local flavor_text_params = {
+		align = "center",
 		name = "skill_set_unlock_flavor_text",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.FLAVOR_TEXT_FONT_SIZE,
@@ -235,10 +235,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	local weapon_panel_params = {
-		name = "weapon_panel",
-		alpha = 0,
 		halign = "scale",
 		valign = "scale",
+		name = "weapon_panel",
+		alpha = 0,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2
@@ -251,10 +251,10 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	}
 	self._weapon_icon_panel = self._weapon_panel:panel(weapon_icon_panel_params)
 	local weapon_name_params = {
+		align = "center",
 		name = "weapon_name",
 		text = "",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -268,10 +268,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	local skill_panel_params = {
-		name = "skill_panel",
-		alpha = 0,
 		halign = "scale",
 		valign = "scale",
+		name = "skill_panel",
+		alpha = 0,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		x = self._object:w() / 2,
@@ -285,10 +285,10 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	}
 	self._skill_icon_panel = self._skill_panel:panel(skill_icon_panel_params)
 	local skill_set_title_params = {
+		align = "center",
 		name = "skill_set_title",
 		text = "",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -302,9 +302,9 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	local title_text_params = {
+		align = "center",
 		name = "skill_set_unlock_title_text",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.TITLE_FONT_SIZE,
@@ -319,9 +319,9 @@ function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	title:set_center_x(self._object:w() / 2)
 
 	local flavor_text_params = {
+		align = "center",
 		name = "skill_set_unlock_flavor_text",
 		vertical = "center",
-		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.FLAVOR_TEXT_FONT_SIZE,

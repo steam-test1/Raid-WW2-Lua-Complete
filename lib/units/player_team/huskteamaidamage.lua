@@ -410,10 +410,6 @@ function HuskTeamAIDamage:load(data)
 		return
 	end
 
-	if data.char_dmg.arrested then
-		self._unit:movement():sync_arrested()
-	end
-
 	if data.char_dmg.bleedout then
 		self._queued_teammate_panel_update = "bleedout"
 	end

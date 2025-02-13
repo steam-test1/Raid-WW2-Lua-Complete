@@ -1,10 +1,5 @@
 ImpactHurt = ImpactHurt or class(ProjectileBase)
 ImpactHurt._impact_units = {}
-ImpactHurt.DEFUALT_SOUNDS = {
-	impact = "arrow_impact_gen",
-	flyby = "arrow_flyby",
-	flyby_stop = "arrow_flyby_stop"
-}
 local ids_pickup = Idstring("pickup")
 local mvec1 = Vector3()
 local mrot1 = Rotation()
@@ -20,7 +15,7 @@ function ImpactHurt:_setup_from_tweak_data()
 	end
 
 	self._range = self._tweak_data.range
-	self._damage_class_string = tweak_data.projectiles[self.name_id].bullet_class or "InstantBulletBase"
+	self._damage_class_string = self._tweak_data.bullet_class or "InstantBulletBase"
 	self._damage_class = CoreSerialize.string_to_classtable(self._damage_class_string)
 	self._damage = self._tweak_data.damage or 1
 	self._mass_look_up_modifier = self._tweak_data.mass_look_up_modifier
@@ -184,6 +179,8 @@ function ImpactHurt:add_damage_result(unit, attacker, is_dead, damage_percent)
 
 		self._recorded_hit = true
 	end
+
+	self:_tweak_data_play_sound("impact")
 end
 
 function ImpactHurt:update(unit, t, dt)
@@ -292,10 +289,6 @@ function ImpactHurt:_check_stop_flyby_sound(skip_impact)
 		self._requires_stop_flyby_sound = nil
 
 		self:_tweak_data_play_sound("flyby_stop")
-	end
-
-	if not skip_impact then
-		self:_tweak_data_play_sound("impact")
 	end
 end
 
@@ -598,14 +591,12 @@ function ImpactHurt:clbk_hit_unit_destroyed()
 end
 
 function ImpactHurt:_tweak_data_play_sound(entry)
-	Application:warn("[ImpactHurt:_tweak_data_play_sound] DISABLED")
+	local sounds = self._tweak_data.sounds
+	local event = sounds and sounds[entry]
 
-	return
-
-	local sounds = tweak_data.projectiles[self.name_id].sounds
-	local event = sounds and sounds[entry] or ImpactHurt.DEFUALT_SOUNDS[entry]
-
-	self._unit:sound_source(Idstring("snd")):post_event(event)
+	if event then
+		self._unit:sound_source():post_event(event)
+	end
 end
 
 function ImpactHurt:outside_worlds_bounding_box()
@@ -758,6 +749,8 @@ function ImpactHurt:destroy(unit)
 	if self._death_listener_id and alive(self._col_ray.unit) then
 		self._col_ray.unit:character_damage():remove_listener(self._death_listener_id)
 	end
+
+	managers.queued_tasks:unqueue_all(nil, self)
 
 	self._death_listener_id = nil
 

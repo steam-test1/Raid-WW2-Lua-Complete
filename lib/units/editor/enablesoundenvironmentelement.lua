@@ -63,8 +63,8 @@ end
 
 function EnableSoundEnvironmentElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "core/units/sound_environment/sound_environment", 1, true) then
@@ -101,8 +101,8 @@ function EnableSoundEnvironmentElement:add_unit_list_btn()
 
 	local dialog = SelectUnitByNameModal:new("Add Trigger Unit", f)
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	for _, unit in ipairs(dialog:selected_units()) do

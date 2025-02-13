@@ -210,11 +210,11 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
-				height_offset = 0,
-				thick = true,
 				b = 1,
 				g = 1,
 				r = 1,
+				height_offset = 0,
+				thick = true,
 				from_unit = point.unit,
 				to_unit = to_unit,
 				circle_multiplier = selected_path and 0.5 or 0.25
@@ -324,11 +324,11 @@ function AiLayer:build_panel(notebook)
 
 	self._ray_length_params = {
 		value = 150,
+		name = "Ray length [cm]:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
-		name = "Ray length [cm]:",
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		floats = 0,
 		panel = self._ews_panel,
@@ -375,12 +375,12 @@ end
 function AiLayer:_build_ai_settings()
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local group_state = {
+		sorted = true,
+		name = "Group state:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
-		name = "Group state:",
 		tooltip = "Select a group state from the combo box",
-		sorted = true,
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
 		options = managers.groupai:state_names(),
@@ -401,11 +401,11 @@ function AiLayer:_build_ai_unit_settings()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Unit settings")
 	local suspicion_multiplier = {
 		value = 1,
+		name = "Suspicion Multiplier:",
 		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
-		name = "Suspicion Multiplier:",
 		tooltip = "multiplier applied to suspicion buildup rate",
 		floats = 1,
 		panel = self._ews_panel,
@@ -418,11 +418,11 @@ function AiLayer:_build_ai_unit_settings()
 
 	local detection_multiplier = {
 		value = 1,
+		name = "Detection Multiplier:",
 		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 0.01,
-		name = "Detection Multiplier:",
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		floats = 2,
 		panel = self._ews_panel,
@@ -432,6 +432,17 @@ function AiLayer:_build_ai_unit_settings()
 
 	detection_multiplier_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_detection_mul"), nil)
 	detection_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_detection_mul"), nil)
+
+	local location_sizer = EWS:BoxSizer("HORIZONTAL")
+
+	location_sizer:add(EWS:StaticText(self._ews_panel, "Map Location:", 0, ""), 1, 0, "ALIGN_CENTER_VERTICAL")
+
+	local location_id = EWS:TextCtrl(self._ews_panel, "")
+
+	location_id:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_location"))
+	location_id:connect("EVT_KILL_FOCUS", callback(self, self, "_set_location"))
+	location_sizer:add(location_id, 4, 0, "EXPAND")
+	sizer:add(location_sizer, 1, 0, "EXPAND")
 
 	local tag_sizer = EWS:BoxSizer("HORIZONTAL")
 	local barrage_allowed = EWS:CheckBox(self._ews_panel, "Barrage Allowed", "", "ALIGN_LEFT")
@@ -445,6 +456,7 @@ function AiLayer:_build_ai_unit_settings()
 		text = text,
 		suspicion_multiplier = suspicion_multiplier,
 		detection_multiplier = detection_multiplier,
+		location_id = location_id,
 		barrage_allowed = barrage_allowed
 	}
 
@@ -509,11 +521,11 @@ function AiLayer:_build_motion_path_section()
 	end
 
 	local mop_type = {
+		sorted = false,
+		name = "Selected path type:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
-		name = "Selected path type:",
 		tooltip = "Path is used for either ground or airborne units.",
-		sorted = false,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
 		options = mop_path_types,
@@ -525,10 +537,10 @@ function AiLayer:_build_motion_path_section()
 
 	local speed_limit = {
 		value = 50,
+		name = "Default Speed Limit [km/h]:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		min = -1,
-		name = "Default Speed Limit [km/h]:",
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
 		floats = 1,
 		panel = self._ews_panel,
@@ -859,6 +871,7 @@ function AiLayer:set_select_unit(unit)
 
 			self:_set_selection_patrol_paths_listbox(name)
 		elseif unit:name() == self._nav_surface_unit then
+			self._ai_unit_settings_guis.location_id:set_value(unit:ai_editor_data().location_id or "")
 			CoreEws.change_entered_number(self._ai_unit_settings_guis.suspicion_multiplier, unit:ai_editor_data().suspicion_mul)
 			CoreEws.change_entered_number(self._ai_unit_settings_guis.detection_multiplier, unit:ai_editor_data().detection_mul)
 			self._ai_unit_settings_guis.barrage_allowed:set_value(unit:ai_editor_data().barrage_allowed)
@@ -1142,4 +1155,15 @@ function AiLayer:_set_barrage_allowed()
 	self._selected_unit:ai_editor_data().barrage_allowed = self._ai_unit_settings_guis.barrage_allowed:get_value()
 
 	managers.navigation:set_barrage_allowed(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.barrage_allowed:get_value())
+end
+
+function AiLayer:_set_location()
+	if not self._selected_unit or not self._selected_unit:ai_editor_data() then
+		return
+	end
+
+	local location_id = self._ai_unit_settings_guis.location_id:get_value()
+	self._selected_unit:ai_editor_data().location_id = location_id
+
+	managers.navigation:set_location_ID(self._selected_unit:unit_data().unit_id, location_id)
 end

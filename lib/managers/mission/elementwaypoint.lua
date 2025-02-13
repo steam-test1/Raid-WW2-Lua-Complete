@@ -31,32 +31,30 @@ function ElementWaypoint:on_executed(instigator)
 		return
 	end
 
-	local only_civ_player_is_civ = self._values.only_in_civilian and managers.player:current_state() == "civilian"
+	Application:debug("[ElementWaypoint] self._values.icon", inspect(self._values))
 
-	if not only_civ_player_is_civ then
-		local text = managers.localization:text(self._values.text_id)
-		local wp_data = tweak_data.gui.icons[self._values.icon]
-		wp_data = wp_data or tweak_data.gui.icons.wp_standard
-		local wp_color = wp_data and wp_data.color or Color(1, 1, 1)
+	local text = managers.localization:text(self._values.text_id)
+	local map_icon = self._values.map_display == "icon" and self._values.icon or nil
+	local wp_data = tweak_data.gui.icons[self._values.icon] or tweak_data.gui.icons.wp_standard
+	local wp_color = wp_data and wp_data.color or Color(1, 1, 1)
 
-		managers.hud:add_waypoint(self:_get_unique_id(), {
-			waypoint_type = "objective",
-			show_on_screen = true,
-			state = "sneak_present",
-			distance = true,
-			text = text,
-			icon = self._values.icon,
-			waypoint_display = self._values.map_display,
-			waypoint_color = wp_color,
-			waypoint_width = self._values.width,
-			waypoint_depth = self._values.depth,
-			waypoint_radius = self._values.radius,
-			position = self._values.position
-		})
-	elseif managers.hud:get_waypoint_data(self:_get_unique_id()) then
-		managers.hud:remove_waypoint(self:_get_unique_id())
-	end
-
+	managers.hud:add_waypoint(self:_get_unique_id(), {
+		state = "sneak_present",
+		show_on_screen = true,
+		waypoint_type = "objective",
+		distance = true,
+		text = text,
+		icon = self._values.icon,
+		waypoint_display = self._values.map_display,
+		waypoint_color = wp_color,
+		waypoint_width = self._values.width,
+		waypoint_depth = self._values.depth,
+		waypoint_radius = self._values.radius,
+		range_max = self._values.range_max,
+		range_min = self._values.range_min,
+		map_icon = map_icon,
+		position = self._values.position
+	})
 	ElementWaypoint.super.on_executed(self, instigator)
 end
 

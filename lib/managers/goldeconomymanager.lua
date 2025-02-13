@@ -25,25 +25,6 @@ function GoldEconomyManager:_setup()
 	self._automatic_camp_units = {}
 end
 
-function GoldEconomyManager:spend_gold(amount)
-	if amount <= 0 then
-		return
-	end
-
-	self:_set_current(self:current() - amount)
-	managers.raid_menu:refresh_footer_gold_amount()
-end
-
-function GoldEconomyManager:add_gold(amount)
-	if amount <= 0 then
-		return
-	end
-
-	self:_set_current(self:current() + amount)
-	self:_set_total(self:total() + amount)
-	managers.raid_menu:refresh_footer_gold_amount()
-end
-
 function GoldEconomyManager:total()
 	return Application:digest_value(self._global.total, false)
 end
@@ -66,24 +47,6 @@ function GoldEconomyManager:_set_current(value)
 	if IS_PC then
 		managers.statistics:publish_gold_to_steam()
 	end
-end
-
-function GoldEconomyManager:gold_string(amount)
-	local total = tostring(math.round(math.abs(amount)))
-	local reverse = string.reverse(total)
-	local s = ""
-
-	for i = 1, string.len(reverse) do
-		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and GoldEconomyManager.THOUSAND_SEPARATOR or "")
-	end
-
-	s = string.reverse(s)
-
-	if amount < 0 then
-		s = "-" .. s
-	end
-
-	return s
 end
 
 function GoldEconomyManager:save(data)
@@ -151,20 +114,6 @@ function GoldEconomyManager:_refund_upgrade(upgrade, level)
 	self:add_gold(amount)
 end
 
-function GoldEconomyManager:get_gold_awards()
-	local eligible_awards = tweak_data.dlc:get_eligible_gold_awards()
-
-	for _, award in pairs(eligible_awards) do
-		if not self._global.gold_awards[award.item] then
-			self._global.gold_awards[award.item] = true
-
-			self:add_gold(award.amount)
-			managers.savefile:set_resave_required()
-			Application:debug("[GoldEconomyManager:get_gold_awards] - Awarded gold", award.amount)
-		end
-	end
-end
-
 function GoldEconomyManager:append_camp_upgrades()
 	local applyable_upgrades = tweak_data.camp_customization:get_applyable_upgrades()
 
@@ -206,113 +155,9 @@ function GoldEconomyManager:filter_camp_upgrades()
 	return needs_layout
 end
 
-function GoldEconomyManager:upgrade_player_camp()
-	for _, data in ipairs(tweak_data.camp_customization.default_camp) do
-		local found = false
-
-		for __, camp in ipairs(self._global.applied_upgrades) do
-			if camp.upgrade == data.upgrade then
-				found = true
-
-				break
-			end
-		end
-
-		if not found then
-			Application:debug("[GoldEconomyManager:upgrade_player_camp()] Adding new camp asset", data.upgrade)
-			table.insert(self._global.applied_upgrades, {
-				level = data.level,
-				upgrade = data.upgrade
-			})
-		end
-	end
-end
-
-function GoldEconomyManager:layout_camp()
-	if not managers.player:local_player_in_camp() then
-		return
-	end
-
-	self:get_gold_awards()
-
-	for upgrade_name, unit in pairs(self._automatic_camp_units) do
-		local gold_spread = tweak_data.camp_customization.camp_upgrades_automatic[upgrade_name].gold
-		local gold_level = self:_calculate_gold_pile_level(gold_spread)
-
-		unit:gold_asset():apply_upgrade_level(gold_level)
-	end
-
-	for _, data in ipairs(self._global.applied_upgrades) do
-		local levels = self._camp_units[data.upgrade]
-		local asset_level = nil
-		asset_level = data.level
-
-		if levels then
-			for level, units in pairs(levels) do
-				for _, unit in pairs(units) do
-					if level == asset_level then
-						unit:gold_asset():apply_upgrade_level(asset_level)
-					else
-						unit:gold_asset():apply_upgrade_level(0)
-					end
-				end
-			end
-		end
-	end
-end
-
-function GoldEconomyManager:_calculate_gold_pile_level(gold_spread)
-	if self:current() == 0 then
-		return 0
-	end
-
-	local index = #gold_spread + 1
-
-	for i, value in ipairs(gold_spread) do
-		if self:current() < value then
-			index = i - 1
-
-			break
-		end
-	end
-
-	return index
-end
-
-function GoldEconomyManager:reset()
-	Global.gold_economy_manager = nil
-
-	self:_setup()
-end
-
-function GoldEconomyManager:get_difficulty_multiplier(difficulty)
-	local multiplier = tweak_data:get_value("experience_manager", "difficulty_multiplier", difficulty)
-
-	return multiplier or 0
-end
-
-function GoldEconomyManager:register_camp_upgrade_unit(name, unit, level)
-	self._camp_units[name] = self._camp_units[name] or {}
-
-	if not self._camp_units[name][level] then
-		self._camp_units[name][level] = {}
-	end
-
-	table.insert(self._camp_units[name][level], unit)
-end
-
-function GoldEconomyManager:register_automatic_camp_upgrade_unit(name, unit)
-	self._automatic_camp_units[name] = self._automatic_camp_units[name] or {}
-
-	if not self._automatic_camp_units[name] then
-		self._automatic_camp_units[name] = {}
-	end
-
-	self._automatic_camp_units[name] = unit
-end
-
 function GoldEconomyManager:reset_camp_units()
 	self._camp_units = {}
+	self._automatic_camp_units = {}
 end
 
 function GoldEconomyManager:get_store_items_data()
@@ -397,6 +242,163 @@ function GoldEconomyManager:update_camp_upgrade(upgrade_slot_name, upgrade_level
 			level = upgrade_level
 		})
 	end
+end
+
+function GoldEconomyManager:layout_camp()
+	if not managers.player:local_player_in_camp() then
+		return
+	end
+
+	self:get_gold_awards()
+
+	for upgrade_name, unit in pairs(self._automatic_camp_units) do
+		local gold_spread = tweak_data.camp_customization.camp_upgrades_automatic[upgrade_name].gold
+		local gold_level = self:_calculate_gold_pile_level(gold_spread)
+
+		unit:gold_asset():apply_upgrade_level(gold_level)
+	end
+
+	for _, data in ipairs(self._global.applied_upgrades) do
+		local levels = self._camp_units[data.upgrade]
+		local asset_level = nil
+		asset_level = data.level
+
+		if levels then
+			for level, units in pairs(levels) do
+				for _, unit in pairs(units) do
+					if level == asset_level then
+						unit:gold_asset():apply_upgrade_level(asset_level)
+					else
+						unit:gold_asset():apply_upgrade_level(0)
+					end
+				end
+			end
+		end
+	end
+end
+
+function GoldEconomyManager:upgrade_player_camp()
+	for _, data in ipairs(tweak_data.camp_customization.default_camp) do
+		local found = false
+
+		for __, camp in ipairs(self._global.applied_upgrades) do
+			if camp.upgrade == data.upgrade then
+				found = true
+
+				break
+			end
+		end
+
+		if not found then
+			Application:debug("[GoldEconomyManager:upgrade_player_camp()] Adding new camp asset", data.upgrade)
+			table.insert(self._global.applied_upgrades, {
+				level = data.level,
+				upgrade = data.upgrade
+			})
+		end
+	end
+end
+
+function GoldEconomyManager:spend_gold(amount)
+	if amount <= 0 then
+		return
+	end
+
+	self:_set_current(self:current() - amount)
+	managers.raid_menu:refresh_footer_gold_amount()
+end
+
+function GoldEconomyManager:add_gold(amount)
+	if amount <= 0 then
+		return
+	end
+
+	self:_set_current(self:current() + amount)
+	self:_set_total(self:total() + amount)
+	managers.raid_menu:refresh_footer_gold_amount()
+end
+
+function GoldEconomyManager:gold_string(amount)
+	local total = tostring(math.round(math.abs(amount)))
+	local reverse = string.reverse(total)
+	local s = ""
+
+	for i = 1, string.len(reverse) do
+		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and GoldEconomyManager.THOUSAND_SEPARATOR or "")
+	end
+
+	s = string.reverse(s)
+
+	if amount < 0 then
+		s = "-" .. s
+	end
+
+	return s
+end
+
+function GoldEconomyManager:get_gold_awards()
+	local eligible_awards = tweak_data.dlc:get_eligible_gold_awards()
+
+	for _, award in pairs(eligible_awards) do
+		if not self._global.gold_awards[award.item] then
+			Application:debug("[GoldEconomyManager:get_gold_awards] - Awarding gold", award.amount)
+
+			self._global.gold_awards[award.item] = true
+
+			self:add_gold(award.amount)
+			managers.savefile:set_resave_required()
+		end
+	end
+end
+
+function GoldEconomyManager:_calculate_gold_pile_level(gold_spread)
+	if self:current() == 0 then
+		return 0
+	end
+
+	local index = #gold_spread + 1
+
+	for i, value in ipairs(gold_spread) do
+		if self:current() < value then
+			index = i - 1
+
+			break
+		end
+	end
+
+	return index
+end
+
+function GoldEconomyManager:reset()
+	Global.gold_economy_manager = nil
+
+	self:_setup()
+end
+
+function GoldEconomyManager:get_difficulty_multiplier(difficulty)
+	local multiplier = tweak_data:get_value("experience_manager", "difficulty_multiplier", difficulty)
+
+	return multiplier or 0
+end
+
+function GoldEconomyManager:register_camp_upgrade_unit(name, unit, level)
+	self._camp_units[name] = self._camp_units[name] or {}
+
+	if not self._camp_units[name][level] then
+		self._camp_units[name][level] = {}
+	end
+
+	table.insert(self._camp_units[name][level], unit)
+end
+
+function GoldEconomyManager:register_automatic_camp_upgrade_unit(name, unit)
+	self._automatic_camp_units[name] = self._automatic_camp_units[name] or {}
+
+	if not self._automatic_camp_units[name] then
+		self._automatic_camp_units[name] = {}
+	end
+
+	self._automatic_camp_units[name] = unit
 end
 
 function GoldEconomyManager:add_loyalty_reward(category, amount)

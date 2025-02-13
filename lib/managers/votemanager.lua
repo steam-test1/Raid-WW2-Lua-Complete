@@ -1,8 +1,5 @@
 VoteManager = VoteManager or class()
 VoteManager.VOTE_EVENT = {
-	instant_restart_mission = 12,
-	process_restart_mission = 11,
-	request_restart_mission = 10,
 	instant_restart = 9,
 	process_restart = 8,
 	request_restart = 7,
@@ -12,25 +9,28 @@ VoteManager.VOTE_EVENT = {
 	stopped = 3,
 	respond = 2,
 	reports = 1,
-	server_kick_option = 13
+	server_kick_option = 13,
+	instant_restart_mission = 12,
+	process_restart_mission = 11,
+	request_restart_mission = 10
 }
 VoteManager.VOTES = {
+	cancel = 3,
 	no = 2,
 	yes = 1,
-	none = -1,
-	cancel = 3
+	none = -1
 }
 VoteManager.REASON = {
-	invalid_weapon = 9,
-	invalid_mask = 8,
-	invalid_job = 7,
 	wrong_equipment = 6,
 	many_equipments = 5,
 	many_grenades = 4,
 	many_bags = 3,
 	many_bags_pickup = 2,
 	many_assets = 1,
-	invalid_character = 10
+	invalid_character = 10,
+	invalid_weapon = 9,
+	invalid_mask = 8,
+	invalid_job = 7
 }
 
 function VoteManager:init()

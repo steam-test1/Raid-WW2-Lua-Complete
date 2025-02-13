@@ -156,8 +156,6 @@ function catprint_save()
 		if Global.original_category_print[name] ~= allow_print then
 			table.insert(data, {
 				_meta = "category",
-				name = nil,
-				print = nil,
 				name = name,
 				print = allow_print
 			})
@@ -218,11 +216,8 @@ function compile_and_reload()
 	assert(IS_WIN32, "You can only compile on win32 platforms!")
 	Application:data_compile({
 		target_db_name = "all",
-		target_db_root = nil,
-		source_root = nil,
 		preprocessor_definitions = "preprocessor_definitions",
 		verbose = false,
-		platform = nil,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = root_path() .. "//assets",
 		target_db_root = Application:base_path() .. "assets"
