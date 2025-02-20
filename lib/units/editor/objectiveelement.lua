@@ -144,9 +144,9 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(self._sub_objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
 	self:_build_value_number(panel, panel_sizer, "amount", {
+		max = 100,
 		min = 0,
-		floats = 0,
-		max = 100
+		floats = 0
 	}, "Overrides objective amount counter with this value.")
 
 	local help = {

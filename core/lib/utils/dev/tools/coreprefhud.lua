@@ -29,8 +29,8 @@ end
 
 function PrefHud:add_counter(name, sort, min, mid, max, precision, inv, inv_colors, call_str)
 	self._counters[name] = {
-		_raw_value = 0,
 		_current_value = 0,
+		_raw_value = 0,
 		_sort = sort or table.size(self._counters) + 1,
 		_min = min or 0,
 		_mid = mid or 0.5,

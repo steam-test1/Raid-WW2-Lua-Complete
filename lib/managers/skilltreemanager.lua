@@ -49,13 +49,13 @@ end
 function SkillTreeManager:_required_save_data(real_save_data)
 	local save_data_skilltree = deep_clone(real_save_data)
 	local t_filter = {
+		exp_requirements = true,
+		exp_progression = true,
+		exp_tier = true,
 		active = true,
 		warcry_id = true,
 		upgrades_type = true,
-		gold_requirements = true,
-		exp_requirements = true,
-		exp_progression = true,
-		exp_tier = true
+		gold_requirements = true
 	}
 
 	for type_idx, type_group_data in pairs(save_data_skilltree) do

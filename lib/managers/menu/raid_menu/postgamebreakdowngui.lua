@@ -155,12 +155,12 @@ function PostGameBreakdownGui:_layout()
 	end
 
 	local total_xp_params = {
-		layer = 1,
-		value_align = "center",
-		align = "center",
-		value = "0",
 		x = 0,
 		name = "total_xp",
+		align = "center",
+		layer = 1,
+		value_align = "center",
+		value = "0",
 		y = PostGameBreakdownGui.TOTAL_XP_Y,
 		w = self._root_panel:w(),
 		h = PostGameBreakdownGui.TOTAL_XP_H,
@@ -252,9 +252,9 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	title:set_center_x(self._generic_win_panel:w() / 2)
 
 	local flavor_text = self._generic_win_panel:text({
-		name = "generic_win_flavor_text",
 		align = "center",
 		vertical = "center",
+		name = "generic_win_flavor_text",
 		text = self:translate("menu_keep_it_up", true),
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,

@@ -135,8 +135,8 @@ end
 
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -152,8 +152,8 @@ end
 
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if not ray or not ray.unit then
@@ -407,10 +407,10 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 
 	local base_chance_params = {
 		min = 0,
+		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		floats = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		name = "Base chance:",
 		max = 1,
 		panel = panel,

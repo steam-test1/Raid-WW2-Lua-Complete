@@ -58,10 +58,10 @@ function RaidGUIControlCardDetails:_create_card_details()
 	self._card_control = self._object:create_custom_control(RaidGUIControlCardBase, card_params)
 	local x_spacing = self._card_control:w() + 32
 	local params_card_description_right = {
-		name = "card_description_label_right",
-		wrap = true,
 		text = "",
+		wrap = true,
 		visible = false,
+		name = "card_description_label_right",
 		color = Color.white,
 		layer = self._object:layer() + 1,
 		font = tweak_data.gui.fonts.lato,
@@ -71,11 +71,11 @@ function RaidGUIControlCardDetails:_create_card_details()
 	local icon_y = 8
 	local label_y = icon_y + 64
 	self._experience_bonus_count = self._object:label({
+		w = 160,
+		align = "right",
 		visible = false,
 		name = "experience_bonus_count",
 		h = 64,
-		w = 160,
-		align = "right",
 		text = "",
 		x = x_spacing + 224,
 		y = icon_y,
@@ -84,11 +84,11 @@ function RaidGUIControlCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._experience_bonus_label = self._object:label({
+		w = 160,
+		align = "right",
 		visible = false,
 		name = "experience_bonus_label",
 		h = 32,
-		w = 160,
-		align = "right",
 		x = x_spacing + 224,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -98,18 +98,18 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local type_def_icon = tweak_data.challenge_cards.type_definition.card_type_raid.texture_gui
 	self._type_icon = self._object:image({
-		name = "type_icon",
 		visible = false,
+		name = "type_icon",
 		x = x_spacing,
 		y = icon_y,
 		texture = type_def_icon.texture,
 		texture_rect = type_def_icon.texture_rect
 	})
 	self._type_label = self._object:label({
-		name = "type_label",
-		h = 32,
 		w = 96,
 		align = "center",
+		name = "type_label",
+		h = 32,
 		text = "",
 		x = x_spacing,
 		y = label_y,
@@ -119,18 +119,18 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local rarity_def_icon = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_gui
 	self._rarity_icon = self._object:image({
-		name = "rarity_icon",
 		visible = false,
+		name = "rarity_icon",
 		x = x_spacing + 128,
 		y = icon_y,
 		texture = rarity_def_icon.texture,
 		texture_rect = rarity_def_icon.texture_rect
 	})
 	self._rarity_label = self._object:label({
-		name = "rarity_label",
-		h = 32,
 		w = 128,
 		align = "center",
+		name = "rarity_label",
+		h = 32,
 		text = "",
 		x = x_spacing + 96,
 		y = label_y,
@@ -243,10 +243,10 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 				texture_rect = gui.texture_rect
 			})
 			local effect_label = self._object:label({
-				wrap = true,
-				h = 64,
-				w = 340,
 				vertical = "center",
+				w = 340,
+				h = 64,
+				wrap = true,
 				align = "left",
 				text = "ABC",
 				name = "effect_label_" .. tostring(i),

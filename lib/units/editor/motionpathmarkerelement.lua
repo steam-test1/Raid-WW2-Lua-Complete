@@ -233,9 +233,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw and unit then
 			self:_draw_link({
-				b = 0.01,
 				g = 0.849,
 				r = 0.514,
+				b = 0.01,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -249,9 +249,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 			if draw and alive(unit) and alive(self._unit) then
 				self:_draw_link({
-					b = 0.01,
 					g = 0.449,
 					r = 0.8,
+					b = 0.01,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -266,9 +266,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 			if alive(marker_from) and alive(marker_to) then
 				self:_draw_link({
-					b = 0.01,
 					g = 1,
 					r = 1,
+					b = 0.01,
 					from_unit = marker_from,
 					to_unit = marker_to
 				})
@@ -279,8 +279,8 @@ end
 
 function MotionpathMarkerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -295,14 +295,14 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local cp_length_params = {
+		name = "Control Point Length:",
+		number_ctrlr_proportions = 1,
 		slider_ctrlr_proportions = 3,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		max = 10000,
 		min = 1,
 		floats = 3,
-		name = "Control Point Length:",
-		number_ctrlr_proportions = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.cp_length
@@ -331,13 +331,13 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 	}, "Units on this marker will either wait or move through it.")
 
 	local speed_params = {
+		name = "Speed [km/h]:",
+		tooltip = "Set the target unit speed at this marker in km/h. Set to -1 to ignore.",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		max = 1000,
 		min = -1,
 		floats = 1,
-		name = "Speed [km/h]:",
-		tooltip = "Set the target unit speed at this marker in km/h. Set to -1 to ignore.",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.marker_target_speed

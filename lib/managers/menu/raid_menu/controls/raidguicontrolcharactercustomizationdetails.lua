@@ -259,10 +259,10 @@ end
 
 function RaidGUIControlCharacterCustomizationDetails:_create_customization_info()
 	local rarity_info_params = {
+		top_offset_y = 15,
 		text = "",
 		alpha = 0,
 		name = "rarity_info",
-		top_offset_y = 15,
 		w = RaidGUIControlCharacterCustomizationDetails.RARITY_W,
 		h = RaidGUIControlCharacterCustomizationDetails.RARITY_H,
 		icon = LootDropTweakData.RARITY_RARE,
@@ -275,11 +275,11 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 	self._rarity_info:set_x(self._description:x())
 
 	local nationality_info_params = {
-		icon = "ico_flag_american",
+		top_offset_y = 6,
 		text = "",
 		alpha = 0,
 		name = "nationality_info",
-		top_offset_y = 6,
+		icon = "ico_flag_american",
 		w = RaidGUIControlCharacterCustomizationDetails.NATIONALITY_W,
 		h = RaidGUIControlCharacterCustomizationDetails.NATIONALITY_H,
 		icon_color = Color.white,

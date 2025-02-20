@@ -950,9 +950,9 @@ function VehicleDrivingExt:enable_map_waypoint()
 	end
 
 	self._map_waypoint_data = {
-		waypoint_origin = "waypoint_extension",
-		waypoint_type = "unit_waypoint",
 		show_on_screen = false,
+		waypoint_type = "unit_waypoint",
+		waypoint_origin = "waypoint_extension",
 		icon = self._waypoint_hud_icon,
 		map_icon = self._waypoint_map_icon,
 		unit = self._unit,
@@ -1169,8 +1169,8 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			skip_idle_check = true,
-			new_state = nil
+			position = nil,
+			skip_idle_check = true
 		})
 	end
 
@@ -2284,8 +2284,8 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		destroy_clbk_key = false,
 		pose = "stand",
+		destroy_clbk_key = false,
 		type = "act",
 		haste = haste,
 		nav_seg = align_nav_seg,
@@ -2294,17 +2294,17 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
+			needs_full_blend = true,
+			align_sync = false,
 			body_part = 1,
 			type = "act",
-			align_sync = false,
-			needs_full_blend = true,
 			variant = team_ai_animation,
 			blocks = {
+				act = 1,
 				heavy_hurt = -1,
-				walk = -1,
-				hurt = -1,
 				action = -1,
-				act = 1
+				walk = -1,
+				hurt = -1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING

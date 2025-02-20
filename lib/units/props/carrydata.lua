@@ -157,11 +157,11 @@ function CarryData:bullet_hit()
 end
 
 CarryData.EXPLOSION_SETTINGS = {
+	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
+	curve_pow = 3,
 	damage = 40,
 	player_damage = 20,
-	range = 1000,
-	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
-	curve_pow = 3
+	range = 1000
 }
 CarryData.EXPLOSION_CUSTOM_PARAMS = {
 	camera_shake_mul = 4,
@@ -410,11 +410,11 @@ function CarryData:_chk_register_steal_SO()
 	end
 
 	local drop_objective = {
-		action_duration = 2,
 		interrupt_health = 0.9,
 		interrupt_dis = 700,
 		haste = "walk",
 		pose = "crouch",
+		action_duration = 2,
 		type = "act",
 		nav_seg = drop_nav_seg,
 		pos = drop_pos,
@@ -450,10 +450,10 @@ function CarryData:_chk_register_steal_SO()
 		followup_objective = drop_objective
 	}
 	local so_descriptor = {
-		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
 		usage_amount = 1,
+		interval = 0,
 		objective = pickup_objective,
 		search_pos = pickup_objective.pos,
 		verification_clbk = callback(self, self, "clbk_pickup_SO_verification"),
@@ -462,8 +462,8 @@ function CarryData:_chk_register_steal_SO()
 	}
 	local so_id = "carrysteal" .. tostring(self._unit:key())
 	self._steal_SO_data = {
-		SO_registered = true,
 		picked_up = false,
+		SO_registered = true,
 		SO_id = so_id,
 		pickup_area = pickup_area,
 		pickup_objective = pickup_objective

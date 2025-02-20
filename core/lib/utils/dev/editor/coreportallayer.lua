@@ -665,8 +665,8 @@ function PortalLayer:new_portal(portals)
 	local g = 0.25 + math.rand(0.75)
 	local b = 0.25 + math.rand(0.75)
 	self._portal_shapes[name] = {
-		bottom = 0,
 		top = 0,
+		bottom = 0,
 		draw_base = 0,
 		portal = {},
 		r = r,

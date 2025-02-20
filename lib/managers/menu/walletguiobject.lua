@@ -24,8 +24,8 @@ function WalletGuiObject.set_wallet(panel, layer)
 		name = "wallet_skillpoint_icon"
 	})
 	local money_text = Global.wallet_panel:text({
-		name = "wallet_money_text",
 		text = "",
+		name = "wallet_money_text",
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text
@@ -63,12 +63,12 @@ function WalletGuiObject.set_wallet(panel, layer)
 
 	local max_w = skillpoint_text:right()
 	local bg_blur = Global.wallet_panel:bitmap({
-		w = 0,
+		h = 0,
 		render_template = "VertexColorTexturedBlur3D",
 		layer = -1,
-		name = "bg_blur",
-		h = 0,
-		texture = "guis/textures/test_blur_df"
+		texture = "guis/textures/test_blur_df",
+		w = 0,
+		name = "bg_blur"
 	})
 
 	bg_blur:set_leftbottom(0, Global.wallet_panel:h())

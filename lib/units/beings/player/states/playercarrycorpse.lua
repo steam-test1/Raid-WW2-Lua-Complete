@@ -74,9 +74,9 @@ end
 function PlayerCarryCorpse:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.notification:add_notification({
+			duration = 2,
 			shelf_life = 5,
 			id = "hint_cant_run",
-			duration = 2,
 			text = managers.localization:text("hint_cant_run")
 		})
 	end
@@ -88,9 +88,9 @@ function PlayerCarryCorpse:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if managers.interaction:active_unit() then
 			managers.notification:add_notification({
+				duration = 2,
 				shelf_life = 5,
 				id = "hud_hint_carry_corpse_block_interact",
-				duration = 2,
 				text = managers.localization:text("hud_hint_carry_corpse_block_interact")
 			})
 

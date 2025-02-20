@@ -233,19 +233,19 @@ function OperationsTweakData:_init_raids()
 	}
 	self.dogtag_types = {
 		small = {
-			max = 18,
 			min = 14,
-			diff_bonus = 1
+			diff_bonus = 1,
+			max = 18
 		},
 		medium = {
-			max = 20,
 			min = 15,
-			diff_bonus = 2
+			diff_bonus = 2,
+			max = 20
 		},
 		large = {
-			max = 22,
 			min = 16,
-			diff_bonus = 3
+			diff_bonus = 3,
+			max = 22
 		}
 	}
 	self.missions.streaming_level = {
@@ -299,23 +299,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "forest_mission_photo_1_description",
 				photo = "intel_forest_01",
+				description_id = "forest_mission_photo_1_description",
 				title_id = "forest_mission_photo_1_title"
 			},
 			{
-				description_id = "forest_mission_photo_2_description",
 				photo = "intel_forest_02",
+				description_id = "forest_mission_photo_2_description",
 				title_id = "forest_mission_photo_2_title"
 			},
 			{
-				description_id = "forest_mission_photo_3_description",
 				photo = "intel_forest_03",
+				description_id = "forest_mission_photo_3_description",
 				title_id = "forest_mission_photo_3_title"
 			},
 			{
-				description_id = "forest_mission_photo_4_description",
 				photo = "intel_forest_04",
+				description_id = "forest_mission_photo_4_description",
 				title_id = "forest_mission_photo_4_title"
 			}
 		}
@@ -333,12 +333,12 @@ function OperationsTweakData:_init_raids()
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		dogtags = self.dogtag_types.medium,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower",
-			position = "snap_01"
+			position = "snap_01",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower"
 		},
 		greed_items = {
-			max = 1500,
-			min = 1200
+			min = 1200,
+			max = 1500
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_flakturm",
@@ -362,33 +362,33 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "flak_mission_photo_1_description",
 				photo = "intel_flak_01",
+				description_id = "flak_mission_photo_1_description",
 				title_id = "flak_mission_photo_1_title"
 			},
 			{
-				description_id = "flak_mission_photo_2_description",
 				photo = "intel_flak_02",
+				description_id = "flak_mission_photo_2_description",
 				title_id = "flak_mission_photo_2_title"
 			},
 			{
-				description_id = "flak_mission_photo_3_description",
 				photo = "intel_flak_03",
+				description_id = "flak_mission_photo_3_description",
 				title_id = "flak_mission_photo_3_title"
 			},
 			{
-				description_id = "flak_mission_photo_4_description",
 				photo = "intel_flak_04",
+				description_id = "flak_mission_photo_4_description",
 				title_id = "flak_mission_photo_4_title"
 			},
 			{
-				description_id = "flak_mission_photo_5_description",
 				photo = "intel_flak_05",
+				description_id = "flak_mission_photo_5_description",
 				title_id = "flak_mission_photo_5_title"
 			},
 			{
-				description_id = "flak_mission_photo_6_description",
 				photo = "intel_flak_06",
+				description_id = "flak_mission_photo_6_description",
 				title_id = "flak_mission_photo_6_title"
 			}
 		}
@@ -406,12 +406,12 @@ function OperationsTweakData:_init_raids()
 		xp = 4000,
 		dogtags = self.dogtag_types.small,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank",
-			position = "snap_02"
+			position = "snap_02",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank"
 		},
 		greed_items = {
-			max = 500,
-			min = 300
+			min = 300,
+			max = 500
 		},
 		sub_worlds_spawned = 1,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -435,23 +435,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "treasury_mission_photo_1_description",
 				photo = "intel_bank_01",
+				description_id = "treasury_mission_photo_1_description",
 				title_id = "treasury_mission_photo_1_title"
 			},
 			{
-				description_id = "treasury_mission_photo_2_description",
 				photo = "intel_bank_02",
+				description_id = "treasury_mission_photo_2_description",
 				title_id = "treasury_mission_photo_2_title"
 			},
 			{
-				description_id = "treasury_mission_photo_3_description",
 				photo = "intel_bank_03",
+				description_id = "treasury_mission_photo_3_description",
 				title_id = "treasury_mission_photo_3_title"
 			},
 			{
-				description_id = "treasury_mission_photo_4_description",
 				photo = "intel_bank_04",
+				description_id = "treasury_mission_photo_4_description",
 				title_id = "treasury_mission_photo_4_title"
 			}
 		}
@@ -469,12 +469,12 @@ function OperationsTweakData:_init_raids()
 		xp = 5000,
 		dogtags = self.dogtag_types.large,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard",
-			position = "snap_03"
+			position = "snap_03",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard"
 		},
 		greed_items = {
-			max = 1600,
-			min = 1000
+			min = 1000,
+			max = 1600
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_train_yard",
@@ -497,23 +497,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "rail_yard_mission_photo_1_description",
 				photo = "intel_train_01",
+				description_id = "rail_yard_mission_photo_1_description",
 				title_id = "rail_yard_mission_photo_1_title"
 			},
 			{
-				description_id = "rail_yard_mission_photo_2_description",
 				photo = "intel_train_02",
+				description_id = "rail_yard_mission_photo_2_description",
 				title_id = "rail_yard_mission_photo_2_title"
 			},
 			{
-				description_id = "rail_yard_mission_photo_4_description",
 				photo = "intel_train_04",
+				description_id = "rail_yard_mission_photo_4_description",
 				title_id = "rail_yard_mission_photo_4_title"
 			},
 			{
-				description_id = "rail_yard_mission_photo_5_description",
 				photo = "intel_train_05",
+				description_id = "rail_yard_mission_photo_5_description",
 				title_id = "rail_yard_mission_photo_5_title"
 			}
 		}
@@ -531,12 +531,12 @@ function OperationsTweakData:_init_raids()
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		dogtags = self.dogtag_types.medium,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio",
-			position = "snap_24"
+			position = "snap_24",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio"
 		},
 		greed_items = {
-			max = 1800,
-			min = 1200
+			min = 1200,
+			max = 1800
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_radio_defense",
@@ -556,28 +556,28 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "radio_base_mission_photo_1_description",
 				photo = "intel_radio_01",
+				description_id = "radio_base_mission_photo_1_description",
 				title_id = "radio_base_mission_photo_1_title"
 			},
 			{
-				description_id = "radio_base_mission_photo_2_description",
 				photo = "intel_radio_02",
+				description_id = "radio_base_mission_photo_2_description",
 				title_id = "radio_base_mission_photo_2_title"
 			},
 			{
-				description_id = "radio_base_mission_photo_3_description",
 				photo = "intel_radio_03",
+				description_id = "radio_base_mission_photo_3_description",
 				title_id = "radio_base_mission_photo_3_title"
 			},
 			{
-				description_id = "radio_base_mission_photo_4_description",
 				photo = "intel_radio_04",
+				description_id = "radio_base_mission_photo_4_description",
 				title_id = "radio_base_mission_photo_4_title"
 			},
 			{
-				description_id = "radio_base_mission_photo_5_description",
 				photo = "intel_radio_05",
+				description_id = "radio_base_mission_photo_5_description",
 				title_id = "radio_base_mission_photo_5_title"
 			}
 		}
@@ -601,13 +601,13 @@ function OperationsTweakData:_init_raids()
 		xp = 3600,
 		dogtags = self.dogtag_types.small,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge",
-			position = "snap_23"
+			position = "snap_23",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge"
 		},
 		icon_menu_big = "xp_events_missions_raid_bridge",
 		greed_items = {
-			max = 800,
-			min = 600
+			min = 600,
+			max = 800
 		},
 		icon_menu = "missions_raid_bridge_menu",
 		icon_hud = "missions_raid_bridge",
@@ -623,28 +623,28 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "bridge_mission_photo_1_description",
 				photo = "intel_bridge_01",
+				description_id = "bridge_mission_photo_1_description",
 				title_id = "bridge_mission_photo_1_title"
 			},
 			{
-				description_id = "bridge_mission_photo_2_description",
 				photo = "intel_bridge_02",
+				description_id = "bridge_mission_photo_2_description",
 				title_id = "bridge_mission_photo_2_title"
 			},
 			{
-				description_id = "bridge_mission_photo_3_description",
 				photo = "intel_bridge_03",
+				description_id = "bridge_mission_photo_3_description",
 				title_id = "bridge_mission_photo_3_title"
 			},
 			{
-				description_id = "bridge_mission_photo_4_description",
 				photo = "intel_bridge_04",
+				description_id = "bridge_mission_photo_4_description",
 				title_id = "bridge_mission_photo_4_title"
 			},
 			{
-				description_id = "bridge_mission_photo_5_description",
 				photo = "intel_bridge_05",
+				description_id = "bridge_mission_photo_5_description",
 				title_id = "bridge_mission_photo_5_title"
 			}
 		}
@@ -661,12 +661,12 @@ function OperationsTweakData:_init_raids()
 		xp = 5000,
 		dogtags = self.dogtag_types.large,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle",
-			position = "snap_22"
+			position = "snap_22",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle"
 		},
 		greed_items = {
-			max = 1800,
-			min = 1200
+			min = 1200,
+			max = 1800
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_castle",
@@ -690,28 +690,28 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "castle_mission_photo_1_description",
 				photo = "intel_castle_01",
+				description_id = "castle_mission_photo_1_description",
 				title_id = "castle_mission_photo_1_title"
 			},
 			{
-				description_id = "castle_mission_photo_2_description",
 				photo = "intel_castle_02",
+				description_id = "castle_mission_photo_2_description",
 				title_id = "castle_mission_photo_2_title"
 			},
 			{
-				description_id = "castle_mission_photo_3_description",
 				photo = "intel_castle_03",
+				description_id = "castle_mission_photo_3_description",
 				title_id = "castle_mission_photo_3_title"
 			},
 			{
-				description_id = "castle_mission_photo_4_description",
 				photo = "intel_castle_05",
+				description_id = "castle_mission_photo_4_description",
 				title_id = "castle_mission_photo_4_title"
 			},
 			{
-				description_id = "castle_mission_photo_5_description",
 				photo = "intel_castle_04",
+				description_id = "castle_mission_photo_5_description",
 				title_id = "castle_mission_photo_5_title"
 			}
 		}
@@ -740,23 +740,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "forest_mission_photo_1_description",
 				photo = "intel_forest_01",
+				description_id = "forest_mission_photo_1_description",
 				title_id = "forest_mission_photo_1_title"
 			},
 			{
-				description_id = "forest_mission_photo_2_description",
 				photo = "intel_forest_02",
+				description_id = "forest_mission_photo_2_description",
 				title_id = "forest_mission_photo_2_title"
 			},
 			{
-				description_id = "forest_mission_photo_3_description",
 				photo = "intel_forest_03",
+				description_id = "forest_mission_photo_3_description",
 				title_id = "forest_mission_photo_3_title"
 			},
 			{
-				description_id = "forest_mission_photo_4_description",
 				photo = "intel_forest_04",
+				description_id = "forest_mission_photo_4_description",
 				title_id = "forest_mission_photo_4_title"
 			}
 		}
@@ -773,12 +773,12 @@ function OperationsTweakData:_init_raids()
 		xp = 3000,
 		dogtags = self.dogtag_types.small,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker",
-			position = "snap_08"
+			position = "snap_08",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker"
 		},
 		greed_items = {
-			max = 900,
-			min = 600
+			min = 600,
+			max = 900
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_bunker_test",
@@ -803,23 +803,23 @@ function OperationsTweakData:_init_raids()
 		stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE,
 		photos = {
 			{
-				description_id = "bunker_mission_photo_1_description",
 				photo = "intel_bunkers_05",
+				description_id = "bunker_mission_photo_1_description",
 				title_id = "bunker_mission_photo_1_title"
 			},
 			{
-				description_id = "bunker_mission_photo_2_description",
 				photo = "intel_bunkers_04",
+				description_id = "bunker_mission_photo_2_description",
 				title_id = "bunker_mission_photo_2_title"
 			},
 			{
-				description_id = "bunker_mission_photo_3_description",
 				photo = "intel_bunkers_01",
+				description_id = "bunker_mission_photo_3_description",
 				title_id = "bunker_mission_photo_3_title"
 			},
 			{
-				description_id = "bunker_mission_photo_4_description",
 				photo = "intel_bunkers_02",
+				description_id = "bunker_mission_photo_4_description",
 				title_id = "bunker_mission_photo_4_title"
 			}
 		}
@@ -836,12 +836,12 @@ function OperationsTweakData:_init_raids()
 		xp = 2500,
 		dogtags = self.dogtag_types.small,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank",
-			position = "snap_13"
+			position = "snap_13",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank"
 		},
 		greed_items = {
-			max = 900,
-			min = 600
+			min = 600,
+			max = 900
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_tnd",
@@ -864,23 +864,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "tank_depot_mission_photo_1_description",
 				photo = "intel_tank_depot_05",
+				description_id = "tank_depot_mission_photo_1_description",
 				title_id = "tank_depot_mission_photo_1_title"
 			},
 			{
-				description_id = "tank_depot_mission_photo_2_description",
 				photo = "intel_tank_depot_01",
+				description_id = "tank_depot_mission_photo_2_description",
 				title_id = "tank_depot_mission_photo_2_title"
 			},
 			{
-				description_id = "tank_depot_mission_photo_3_description",
 				photo = "intel_tank_depot_03",
+				description_id = "tank_depot_mission_photo_3_description",
 				title_id = "tank_depot_mission_photo_3_title"
 			},
 			{
-				description_id = "tank_depot_mission_photo_4_description",
 				photo = "intel_tank_depot_02",
+				description_id = "tank_depot_mission_photo_4_description",
 				title_id = "tank_depot_mission_photo_4_title"
 			}
 		}
@@ -897,12 +897,12 @@ function OperationsTweakData:_init_raids()
 		xp = 2500,
 		dogtags = self.dogtag_types.medium,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters",
-			position = "snap_06"
+			position = "snap_06",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters"
 		},
 		greed_items = {
-			max = 2400,
-			min = 1700
+			min = 1700,
+			max = 2400
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_hunters",
@@ -926,18 +926,18 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		photos = {
 			{
-				description_id = "hunters_mission_photo_1_description",
 				photo = "intel_hunters_01",
+				description_id = "hunters_mission_photo_1_description",
 				title_id = "hunters_mission_photo_1_title"
 			},
 			{
-				description_id = "hunters_mission_photo_2_description",
 				photo = "intel_hunters_02",
+				description_id = "hunters_mission_photo_2_description",
 				title_id = "hunters_mission_photo_2_title"
 			},
 			{
-				description_id = "hunters_mission_photo_4_description",
 				photo = "intel_hunters_04",
+				description_id = "hunters_mission_photo_4_description",
 				title_id = "hunters_mission_photo_4_title"
 			}
 		}
@@ -954,12 +954,12 @@ function OperationsTweakData:_init_raids()
 		xp = 2500,
 		dogtags = self.dogtag_types.small,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy",
-			position = "snap_09"
+			position = "snap_09",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy"
 		},
 		greed_items = {
-			max = 400,
-			min = 300
+			min = 300,
+			max = 400
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_convoy",
@@ -979,23 +979,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "convoy_mission_photo_1_description",
 				photo = "intel_convoy_01",
+				description_id = "convoy_mission_photo_1_description",
 				title_id = "convoy_mission_photo_1_title"
 			},
 			{
-				description_id = "convoy_mission_photo_2_description",
 				photo = "intel_convoy_03",
+				description_id = "convoy_mission_photo_2_description",
 				title_id = "convoy_mission_photo_2_title"
 			},
 			{
-				description_id = "convoy_mission_photo_3_description",
 				photo = "intel_convoy_02",
+				description_id = "convoy_mission_photo_3_description",
 				title_id = "convoy_mission_photo_3_title"
 			},
 			{
-				description_id = "convoy_mission_photo_4_description",
 				photo = "intel_convoy_04",
+				description_id = "convoy_mission_photo_4_description",
 				title_id = "convoy_mission_photo_4_title"
 			}
 		}
@@ -1013,12 +1013,12 @@ function OperationsTweakData:_init_raids()
 		xp = 3000,
 		dogtags = self.dogtag_types.medium,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies",
-			position = "snap_19"
+			position = "snap_19",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies"
 		},
 		greed_items = {
-			max = 950,
-			min = 750
+			min = 750,
+			max = 950
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_spies_test",
@@ -1039,23 +1039,23 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		photos = {
 			{
-				description_id = "spies_mission_photo_1_description",
 				photo = "intel_spies_05",
+				description_id = "spies_mission_photo_1_description",
 				title_id = "spies_mission_photo_1_title"
 			},
 			{
-				description_id = "spies_mission_photo_2_description",
 				photo = "intel_spies_02",
+				description_id = "spies_mission_photo_2_description",
 				title_id = "spies_mission_photo_2_title"
 			},
 			{
-				description_id = "spies_mission_photo_3_description",
 				photo = "intel_spies_03",
+				description_id = "spies_mission_photo_3_description",
 				title_id = "spies_mission_photo_3_title"
 			},
 			{
-				description_id = "spies_mission_photo_4_description",
 				photo = "intel_spies_04",
+				description_id = "spies_mission_photo_4_description",
 				title_id = "spies_mission_photo_4_title"
 			}
 		}
@@ -1085,23 +1085,23 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		photos = {
 			{
-				description_id = "art_storage_mission_photo_1_description",
 				photo = "intel_art_storage_01",
+				description_id = "art_storage_mission_photo_1_description",
 				title_id = "art_storage_mission_photo_1_title"
 			},
 			{
-				description_id = "art_storage_mission_photo_2_description",
 				photo = "intel_art_storage_02",
+				description_id = "art_storage_mission_photo_2_description",
 				title_id = "art_storage_mission_photo_2_title"
 			},
 			{
-				description_id = "art_storage_mission_photo_3_description",
 				photo = "intel_art_storage_03",
+				description_id = "art_storage_mission_photo_3_description",
 				title_id = "art_storage_mission_photo_3_title"
 			},
 			{
-				description_id = "art_storage_mission_photo_4_description",
 				photo = "intel_art_storage_05",
+				description_id = "art_storage_mission_photo_4_description",
 				title_id = "art_storage_mission_photo_4_title"
 			}
 		}
@@ -1118,8 +1118,8 @@ function OperationsTweakData:_init_raids()
 		stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE,
 		dogtags = self.dogtag_types.medium,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo",
-			position = "snap_17"
+			position = "snap_17",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo"
 		},
 		xp = 5500,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
@@ -1141,28 +1141,28 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "silo_mission_photo_1_description",
 				photo = "intel_silo_01",
+				description_id = "silo_mission_photo_1_description",
 				title_id = "silo_mission_photo_1_title"
 			},
 			{
-				description_id = "silo_mission_photo_2_description",
 				photo = "intel_silo_02",
+				description_id = "silo_mission_photo_2_description",
 				title_id = "silo_mission_photo_2_title"
 			},
 			{
-				description_id = "silo_mission_photo_3_description",
 				photo = "intel_silo_03",
+				description_id = "silo_mission_photo_3_description",
 				title_id = "silo_mission_photo_3_title"
 			},
 			{
-				description_id = "silo_mission_photo_4_description",
 				photo = "intel_silo_04",
+				description_id = "silo_mission_photo_4_description",
 				title_id = "silo_mission_photo_4_title"
 			},
 			{
-				description_id = "silo_mission_photo_5_description",
 				photo = "intel_silo_05",
+				description_id = "silo_mission_photo_5_description",
 				title_id = "silo_mission_photo_5_title"
 			}
 		}
@@ -1179,8 +1179,8 @@ function OperationsTweakData:_init_raids()
 		dogtags = self.dogtag_types.medium,
 		xp = 3200,
 		greed_items = {
-			max = 400,
-			min = 200
+			min = 200,
+			max = 400
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_kelly",
@@ -1202,23 +1202,23 @@ function OperationsTweakData:_init_raids()
 		},
 		photos = {
 			{
-				description_id = "kelly_mission_photo_1_description",
 				photo = "intel_kelly_01",
+				description_id = "kelly_mission_photo_1_description",
 				title_id = "kelly_mission_photo_1_title"
 			},
 			{
-				description_id = "kelly_mission_photo_2_description",
 				photo = "intel_kelly_02",
+				description_id = "kelly_mission_photo_2_description",
 				title_id = "kelly_mission_photo_2_title"
 			},
 			{
-				description_id = "kelly_mission_photo_3_description",
 				photo = "intel_kelly_03",
+				description_id = "kelly_mission_photo_3_description",
 				title_id = "kelly_mission_photo_3_title"
 			},
 			{
-				description_id = "kelly_mission_photo_4_description",
 				photo = "intel_kelly_04",
+				description_id = "kelly_mission_photo_4_description",
 				title_id = "kelly_mission_photo_4_title"
 			}
 		}
@@ -1247,23 +1247,23 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		photos = {
 			{
-				description_id = "fury_railway_mission_photo_1_description",
 				photo = "intel_fury_railway_01",
+				description_id = "fury_railway_mission_photo_1_description",
 				title_id = "fury_railway_mission_photo_1_title"
 			},
 			{
-				description_id = "fury_railway_mission_photo_2_description",
 				photo = "intel_fury_railway_02",
+				description_id = "fury_railway_mission_photo_2_description",
 				title_id = "fury_railway_mission_photo_2_title"
 			},
 			{
-				description_id = "fury_railway_mission_photo_3_description",
 				photo = "intel_fury_railway_03",
+				description_id = "fury_railway_mission_photo_3_description",
 				title_id = "fury_railway_mission_photo_3_title"
 			},
 			{
-				description_id = "fury_railway_mission_photo_4_description",
 				photo = "intel_fury_railway_04",
+				description_id = "fury_railway_mission_photo_4_description",
 				title_id = "fury_railway_mission_photo_4_title"
 			}
 		}
@@ -1279,8 +1279,8 @@ function OperationsTweakData:_init_raids()
 		xp = 4400,
 		dogtags = self.dogtag_types.medium,
 		greed_items = {
-			max = 1500,
-			min = 1200
+			min = 1200,
+			max = 1500
 		},
 		progression_groups = {
 			self.PROGRESSION_GROUP_STANDARD
@@ -1299,23 +1299,23 @@ function OperationsTweakData:_init_raids()
 		stealth_description = self.RAID_STARTS_STEALTHABLE,
 		photos = {
 			{
-				description_id = "forest_bunker_mission_photo_1_description",
 				photo = "intel_forest_bunker_01",
+				description_id = "forest_bunker_mission_photo_1_description",
 				title_id = "forest_bunker_mission_photo_1_title"
 			},
 			{
-				description_id = "forest_bunker_mission_photo_2_description",
 				photo = "intel_forest_bunker_02",
+				description_id = "forest_bunker_mission_photo_2_description",
 				title_id = "forest_bunker_mission_photo_2_title"
 			},
 			{
-				description_id = "forest_bunker_mission_photo_3_description",
 				photo = "intel_forest_bunker_03",
+				description_id = "forest_bunker_mission_photo_3_description",
 				title_id = "forest_bunker_mission_photo_3_title"
 			},
 			{
-				description_id = "forest_bunker_mission_photo_4_description",
 				photo = "intel_forest_bunker_04",
+				description_id = "forest_bunker_mission_photo_4_description",
 				title_id = "forest_bunker_mission_photo_4_title"
 			}
 		}
@@ -1336,8 +1336,8 @@ function OperationsTweakData:_init_operations()
 		region = "germany",
 		xp = 11000,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky",
-			position = "snap_05"
+			position = "snap_05",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
 		icon_menu = "missions_operation_clear_skies_menu",
@@ -1349,33 +1349,33 @@ function OperationsTweakData:_init_operations()
 		},
 		photos = {
 			{
-				description_id = "clear_skies_mission_photo_1_description",
 				photo = "intel_clear_skies_01",
+				description_id = "clear_skies_mission_photo_1_description",
 				title_id = "clear_skies_mission_photo_1_title"
 			},
 			{
-				description_id = "clear_skies_mission_photo_2_description",
 				photo = "intel_clear_skies_02",
+				description_id = "clear_skies_mission_photo_2_description",
 				title_id = "clear_skies_mission_photo_2_title"
 			},
 			{
-				description_id = "clear_skies_mission_photo_3_description",
 				photo = "intel_clear_skies_03",
+				description_id = "clear_skies_mission_photo_3_description",
 				title_id = "clear_skies_mission_photo_3_title"
 			},
 			{
-				description_id = "clear_skies_mission_photo_4_description",
 				photo = "intel_clear_skies_04",
+				description_id = "clear_skies_mission_photo_4_description",
 				title_id = "clear_skies_mission_photo_4_title"
 			},
 			{
-				description_id = "clear_skies_mission_photo_5_description",
 				photo = "intel_clear_skies_05",
+				description_id = "clear_skies_mission_photo_5_description",
 				title_id = "clear_skies_mission_photo_5_title"
 			},
 			{
-				description_id = "clear_skies_mission_photo_6_description",
 				photo = "intel_clear_skies_06",
+				description_id = "clear_skies_mission_photo_6_description",
 				title_id = "clear_skies_mission_photo_6_title"
 			}
 		}
@@ -1682,8 +1682,8 @@ function OperationsTweakData:_init_operations()
 		region = "germany",
 		xp = 10000,
 		trophy = {
-			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold",
-			position = "snap_18"
+			position = "snap_18",
+			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
 		icon_menu = "missions_operation_rhinegold_menu",
@@ -1695,28 +1695,28 @@ function OperationsTweakData:_init_operations()
 		},
 		photos = {
 			{
-				description_id = "rhinegold_mission_photo_1_description",
 				photo = "intel_rhinegold_01",
+				description_id = "rhinegold_mission_photo_1_description",
 				title_id = "rhinegold_mission_photo_1_title"
 			},
 			{
-				description_id = "rhinegold_mission_photo_2_description",
 				photo = "intel_rhinegold_02",
+				description_id = "rhinegold_mission_photo_2_description",
 				title_id = "rhinegold_mission_photo_2_title"
 			},
 			{
-				description_id = "rhinegold_mission_photo_3_description",
 				photo = "intel_rhinegold_03",
+				description_id = "rhinegold_mission_photo_3_description",
 				title_id = "rhinegold_mission_photo_3_title"
 			},
 			{
-				description_id = "rhinegold_mission_photo_4_description",
 				photo = "intel_rhinegold_04",
+				description_id = "rhinegold_mission_photo_4_description",
 				title_id = "rhinegold_mission_photo_4_title"
 			},
 			{
-				description_id = "rhinegold_mission_photo_5_description",
 				photo = "intel_rhinegold_05",
+				description_id = "rhinegold_mission_photo_5_description",
 				title_id = "rhinegold_mission_photo_5_title"
 			}
 		}
@@ -1848,9 +1848,9 @@ function OperationsTweakData:_init_operations()
 		xp = 2400
 	}
 	self.missions.oper_flamable.events.dogtags = {
-		max = 8,
 		min = 5,
-		diff_bonus = 3
+		diff_bonus = 3,
+		max = 8
 	}
 	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.oper_flamable.events.bridge.checkpoint = true

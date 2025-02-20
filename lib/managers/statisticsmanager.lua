@@ -478,20 +478,20 @@ function StatisticsManager:_setup(reset)
 		},
 		shots_by_weapon = {},
 		sessions = {
-			count = 0,
-			time = 0
+			time = 0,
+			count = 0
 		}
 	}
 	self._defaults.sessions.levels = {}
 
 	for _, lvl in ipairs(tweak_data.statistics:statistics_table()) do
 		self._defaults.sessions.levels[lvl] = {
+			time = 0,
+			from_beginning = 0,
 			drop_in = 0,
 			quited = 0,
 			completed = 0,
-			started = 0,
-			time = 0,
-			from_beginning = 0
+			started = 0
 		}
 	end
 
@@ -504,8 +504,8 @@ function StatisticsManager:_setup(reset)
 		count = 0
 	}
 	self._defaults.shots_fired = {
-		hits = 0,
-		total = 0
+		total = 0,
+		hits = 0
 	}
 	self._defaults.downed = {
 		incapacitated = 0,
@@ -526,6 +526,10 @@ function StatisticsManager:_setup(reset)
 	}
 	self._defaults.camp = {}
 	self._defaults.challenge_cards = {
+		complete_operation_uncommon_count = 0,
+		complete_operation_common_count = 0,
+		start_operation_halloween_count = 0,
+		start_operation_rare_count = 0,
 		start_operation_uncommon_count = 0,
 		start_operation_common_count = 0,
 		complete_raid_halloween_count = 0,
@@ -539,13 +543,13 @@ function StatisticsManager:_setup(reset)
 		complete_mission_rare_total = 0,
 		complete_mission_grand_total = 0,
 		complete_operation_halloween_count = 0,
-		complete_operation_rare_count = 0,
-		complete_operation_uncommon_count = 0,
-		complete_operation_common_count = 0,
-		start_operation_halloween_count = 0,
-		start_operation_rare_count = 0
+		complete_operation_rare_count = 0
 	}
 	self._defaults.booster_cards = {
+		complete_operation_uncommon_count = 0,
+		complete_operation_common_count = 0,
+		start_operation_halloween_count = 0,
+		start_operation_rare_count = 0,
 		start_operation_uncommon_count = 0,
 		start_operation_common_count = 0,
 		complete_raid_halloween_count = 0,
@@ -559,11 +563,7 @@ function StatisticsManager:_setup(reset)
 		complete_mission_rare_total = 0,
 		complete_mission_grand_total = 0,
 		complete_operation_halloween_count = 0,
-		complete_operation_rare_count = 0,
-		complete_operation_uncommon_count = 0,
-		complete_operation_common_count = 0,
-		start_operation_halloween_count = 0,
-		start_operation_rare_count = 0
+		complete_operation_rare_count = 0
 	}
 	self._defaults.tier_4_weapon_skill_bought = {}
 
@@ -1095,10 +1095,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 				stats["weapon_shots_" .. weapon_name] = {
 					type = "int",
 					value = weapon_data.total
-				}
-				stats["weapon_hits_" .. weapon_name] = {
-					type = "int",
-					value = weapon_data.hits
 				}
 			end
 		end
@@ -1932,16 +1928,16 @@ function StatisticsManager:_add_to_killed_by_weapon(name_id, data)
 
 	if self._session_started then
 		self._global.session.killed_by_weapon[name_id] = self._global.session.killed_by_weapon[name_id] or {
-			count = 0,
-			headshots = 0
+			headshots = 0,
+			count = 0
 		}
 		self._global.session.killed_by_weapon[name_id].count = self._global.session.killed_by_weapon[name_id].count + 1
 		self._global.session.killed_by_weapon[name_id].headshots = self._global.session.killed_by_weapon[name_id].headshots + (data.head_shot and 1 or 0)
 	end
 
 	self._global.killed_by_weapon[name_id] = self._global.killed_by_weapon[name_id] or {
-		count = 0,
-		headshots = 0
+		headshots = 0,
+		count = 0
 	}
 	self._global.killed_by_weapon[name_id].count = self._global.killed_by_weapon[name_id].count + 1
 	self._global.killed_by_weapon[name_id].headshots = (self._global.killed_by_weapon[name_id].headshots or 0) + (data.head_shot and 1 or 0)
@@ -2569,9 +2565,9 @@ function StatisticsManager:calculate_top_stats(all_peers)
 
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 		stats[stat_id] = {
+			weight = 0,
 			score = 0,
 			score_difference = 0,
-			weight = 0,
 			id = stat_id
 		}
 	end
@@ -2639,8 +2635,8 @@ function StatisticsManager:calculate_bottom_stats(all_peers)
 
 	for index, bottom_stat in pairs(tweak_data.statistics.bottom_stats_calculated) do
 		stats[bottom_stat] = {
-			score_difference = 0,
 			weight = 0,
+			score_difference = 0,
 			id = bottom_stat
 		}
 	end

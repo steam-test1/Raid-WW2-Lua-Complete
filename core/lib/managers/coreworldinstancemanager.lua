@@ -339,7 +339,7 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 			local unit = worlddefinition:_create_statics_unit(static, Vector3(), world_in_world)
 
 			if Application:editor() and unit then
-				managers.editor:layer("Statics"):add_unit_to_created_units(unit)
+				managers.editor:layer("Statics"):add_unit_to_created_units(unit, true)
 			end
 		end
 	end
@@ -349,7 +349,7 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 			local unit = worlddefinition:_create_dynamics_unit(entry, Vector3(), world_in_world)
 
 			if Application:editor() and unit then
-				managers.editor:layer("Dynamics"):add_unit_to_created_units(unit)
+				managers.editor:layer("Dynamics"):add_unit_to_created_units(unit, true)
 			end
 		end
 	end

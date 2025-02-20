@@ -450,66 +450,6 @@ function ChallengeCardsManager:suggest_challenge_card(challenge_card_key, steam_
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 
-function ChallengeCardsManager:dismantle_challenge_card(challenge_card_key, steam_instance_id)
-	Application:trace("[ChallengeCardsManager:dismantle_challenge_card] challenge_card_key steam_instance_id ", challenge_card_key, steam_instance_id)
-
-	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
-	local card_def = card.def_id
-
-	if card_def then
-		local valid_item_recipes = self:get_valid_item_recipes({
-			card_def
-		})
-
-		if #valid_item_recipes > 0 then
-			Steam:inventory_reward_unlock(steam_instance_id, nil, valid_item_recipes[1].def_id, function (...)
-				print("Eco Status:", ...)
-
-				for i, v in pairs({
-					...
-				}) do
-					table.print_data(v)
-				end
-			end)
-
-			local local_peer = managers.network:session():local_peer()
-
-			if self._suggested_cards[local_peer._id] and self._suggested_cards[local_peer._id].steam_instance_id and self._suggested_cards[local_peer._id].steam_instance_id == steam_instance_id then
-				self:remove_suggested_challenge_card()
-			end
-		else
-			Application:warn("[ChallengeCardsManager:dismantle_challenge_card] No valid item recipies with this card", challenge_card_key, steam_instance_id)
-		end
-	end
-end
-
-function ChallengeCardsManager:get_valid_item_recipes_using(using_item_defs)
-	local found_recipes = {}
-
-	for craft_id, craft_data in pairs(tweak_data.challenge_cards.crafting_items) do
-		for _, recipe_data in ipairs(craft_data.recipes) do
-			if using_item_defs[1] == recipe_data[1][1] then
-				table.insert(found_recipes, craft_data)
-
-				break
-			end
-		end
-	end
-
-	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] found_recipes", inspect(found_recipes))
-
-	return found_recipes
-end
-
-function ChallengeCardsManager:get_required_items_list(recipe_data)
-	local items_needed = {}
-
-	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] recipe_data", inspect(recipe_data))
-	Application:info("[ChallengeCardsManager:get_valid_item_recipes_using] items_needed", inspect(items_needed))
-
-	return items_needed
-end
-
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
 	Application:trace("[ChallengeCardsManager:sync_suggested_card_from_peer] challenge_card_key, peer_id, steam_instance_id ", challenge_card_key, peer_id, steam_instance_id)
 

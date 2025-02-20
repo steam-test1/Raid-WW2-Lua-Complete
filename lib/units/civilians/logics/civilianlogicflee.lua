@@ -742,12 +742,12 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	end
 
 	local objective = {
-		scan = true,
 		stance = "hos",
+		scan = true,
+		type = "act",
 		interrupt_health = 0.75,
 		interrupt_dis = 700,
 		destroy_clbk_key = false,
-		type = "act",
 		follow_unit = data.unit,
 		pos = so_pos,
 		rot = so_rot,
@@ -759,20 +759,20 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 			type = "act",
 			variant = "untie",
 			blocks = {
-				action = -1,
-				walk = -1
+				walk = -1,
+				action = -1
 			}
 		},
 		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local receiver_areas = managers.groupai:state():get_areas_from_nav_seg_id(objective.nav_seg)
 	local so_descriptor = {
+		AI_group = "enemies",
+		usage_amount = 1,
 		search_dis_sq = 25000000,
 		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
-		AI_group = "enemies",
-		usage_amount = 1,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_administered", data),
@@ -873,8 +873,8 @@ function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 			end
 
 			data.unit:brain():set_objective({
-				is_default = true,
 				was_rescued = true,
+				is_default = true,
 				type = "free"
 			})
 		elseif not CivilianLogicFlee._get_coarse_flee_path(data) then

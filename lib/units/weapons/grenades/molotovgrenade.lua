@@ -24,8 +24,8 @@ function MolotovGrenade:detonate(normal)
 	local position = self._unit:position()
 
 	managers.explosion:detect_and_give_dmg({
-		ignite_character = true,
 		push_units = false,
+		ignite_character = true,
 		hit_pos = position,
 		collision_slotmask = managers.slot:get_mask("explosion_targets"),
 		range = self._range,

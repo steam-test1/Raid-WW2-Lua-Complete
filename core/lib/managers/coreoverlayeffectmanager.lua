@@ -19,10 +19,10 @@ function OverlayEffectManager:init()
 	self._presets = {}
 
 	self:add_preset("custom", {
+		blend_mode = "normal",
 		fade_out = 0,
 		fade_in = 0,
 		sustain = 0,
-		blend_mode = "normal",
 		color = Color(1, 0, 0, 0)
 	})
 	self:set_default_layer(1999)
@@ -180,9 +180,9 @@ function OverlayEffectManager:play_effect(data)
 
 		local text = self._ws:panel():text({
 			align = "center",
-			halign = "center",
 			vertical = "center",
 			valign = "center",
+			halign = "center",
 			text = data.text or "",
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,

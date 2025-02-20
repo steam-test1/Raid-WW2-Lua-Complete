@@ -325,11 +325,11 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		type = "act",
 		scan = true,
+		type = "act",
 		action = {
-			body_part = 1,
 			variant = "crouch",
+			body_part = 1,
 			type = "act",
 			blocks = {
 				action = -1,
@@ -341,12 +341,12 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		}
 	}
 	local objective = {
+		destroy_clbk_key = false,
 		called = true,
-		scan = true,
 		pose = "stand",
 		type = "revive",
 		haste = "run",
-		destroy_clbk_key = false,
+		scan = true,
 		follow_unit = revive_SO_data.unit,
 		nav_seg = revive_SO_data.unit:movement():nav_tracker():nav_segment(),
 		action_duration = tweak_data.interaction[variant].timer,
@@ -355,26 +355,26 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			body_part = 1,
 			variant = "revive",
-			align_sync = true,
 			type = "act",
+			align_sync = true,
+			body_part = 1,
 			blocks = {
 				action = -1,
 				aim = -1,
-				heavy_hurt = -1,
+				light_hurt = -1,
 				hurt = -1,
 				walk = -1,
-				light_hurt = -1
+				heavy_hurt = -1
 			}
 		}
 	}
 	local so_descriptor = {
+		interval = 0,
 		AI_group = "friendlies",
 		usage_amount = 1,
 		chance_inc = 0,
 		base_chance = 1,
-		interval = 0,
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),
 		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),

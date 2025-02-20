@@ -109,8 +109,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_parallax"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_parallax")),
 		on_menu_move = {
-			down = "toggle_menu_toggle_motion_blur",
-			up = "toggle_menu_toggle_ssao"
+			up = "toggle_menu_toggle_ssao",
+			down = "toggle_menu_toggle_motion_blur"
 		}
 	}
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
@@ -122,8 +122,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_motion_blur"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_motion_blur")),
 		on_menu_move = {
-			down = "toggle_menu_toggle_dof",
-			up = "toggle_menu_toggle_parallax"
+			up = "toggle_menu_toggle_parallax",
+			down = "toggle_menu_toggle_dof"
 		}
 	}
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
@@ -135,8 +135,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_dof"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_dof")),
 		on_menu_move = {
-			down = "toggle_menu_toggle_volumetric_light_scattering",
-			up = "toggle_menu_toggle_motion_blur"
+			up = "toggle_menu_toggle_motion_blur",
+			down = "toggle_menu_toggle_volumetric_light_scattering"
 		}
 	}
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
@@ -148,21 +148,21 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_volumetric_light_scattering"),
 		description = utf8.to_upper(managers.localization:text("menu_toggle_volumetric_light_scattering")),
 		on_menu_move = {
-			down = "progress_bar_menu_detail_distance",
-			up = "toggle_menu_toggle_motion_blur"
+			up = "toggle_menu_toggle_motion_blur",
+			down = "progress_bar_menu_detail_distance"
 		}
 	}
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
 	local progress_bar_menu_detail_distance_params = {
-		name = "progress_bar_menu_detail_distance",
 		value_format = "%02d%%",
+		name = "progress_bar_menu_detail_distance",
 		description = utf8.to_upper(managers.localization:text("menu_detail_distance")),
 		x = start_x,
 		y = toggle_menu_toggle_volumetric_light_scattering_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_detail_distance"),
 		on_menu_move = {
-			down = "progress_bar_menu_corpse_limit",
-			up = "toggle_menu_toggle_volumetric_light_scattering"
+			up = "toggle_menu_toggle_volumetric_light_scattering",
+			down = "progress_bar_menu_corpse_limit"
 		}
 	}
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
@@ -175,8 +175,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		max_display_value = tweak_data.corpse_limit.max,
 		on_value_change_callback = callback(self, self, "on_value_change_corpse_limit"),
 		on_menu_move = {
-			down = "stepper_menu_antialias",
-			up = "progress_bar_menu_detail_distance"
+			up = "progress_bar_menu_detail_distance",
+			down = "stepper_menu_antialias"
 		}
 	}
 	self._progress_bar_menu_corpse_limit = self._root_panel:slider(progress_bar_menu_corpse_limit_params)
@@ -190,8 +190,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_antialias"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_antialias"),
 		on_menu_move = {
-			down = "stepper_menu_texture_quality",
-			up = "progress_bar_menu_detail_distance"
+			up = "progress_bar_menu_detail_distance",
+			down = "stepper_menu_texture_quality"
 		}
 	}
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
@@ -204,8 +204,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_texture_quality"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_texture_quality"),
 		on_menu_move = {
-			down = "stepper_menu_shadow_quality",
-			up = "stepper_menu_antialias"
+			up = "stepper_menu_antialias",
+			down = "stepper_menu_shadow_quality"
 		}
 	}
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
@@ -218,8 +218,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_shadow_quality"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_shadow_quality"),
 		on_menu_move = {
-			down = "stepper_menu_anisotropic",
-			up = "stepper_menu_texture_quality"
+			up = "stepper_menu_texture_quality",
+			down = "stepper_menu_anisotropic"
 		}
 	}
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
@@ -232,8 +232,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anisotropic"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_anisotropic"),
 		on_menu_move = {
-			down = "stepper_menu_anim_lod",
-			up = "stepper_menu_shadow_quality"
+			up = "stepper_menu_shadow_quality",
+			down = "stepper_menu_anim_lod"
 		}
 	}
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
@@ -246,8 +246,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anim_lod"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_anim_lod"),
 		on_menu_move = {
-			down = "stepper_menu_fps_limit",
-			up = "stepper_menu_anisotropic"
+			up = "stepper_menu_anisotropic",
+			down = "stepper_menu_fps_limit"
 		}
 	}
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
@@ -260,8 +260,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_fps_limit"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_fps_limit"),
 		on_menu_move = {
-			down = "stepper_menu_colorblind_setting",
-			up = "stepper_menu_anim_lod"
+			up = "stepper_menu_anim_lod",
+			down = "stepper_menu_colorblind_setting"
 		}
 	}
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
@@ -274,8 +274,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		data_source_callback = callback(self, self, "data_source_stepper_menu_colorblind_setting"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_colorblind_setting"),
 		on_menu_move = {
-			down = "label_menu_vsync",
-			up = "stepper_menu_fps_limit"
+			up = "stepper_menu_fps_limit",
+			down = "label_menu_vsync"
 		}
 	}
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
@@ -294,8 +294,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 	local default_advanced_video_params = {
 		x = 1472,
-		y = 832,
 		name = "default_advanced_video",
+		y = 832,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -378,8 +378,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_db"))
 	})
 	table.insert(result, {
-		value = "TRIPLE_BUFFER",
 		selected = true,
+		value = "TRIPLE_BUFFER",
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb")),
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb"))
 	})
@@ -407,8 +407,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa"))
 	})
 	table.insert(result, {
-		value = "SMAA",
 		selected = true,
+		value = "SMAA",
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa")),
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa"))
 	})
@@ -441,8 +441,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium"))
 	})
 	table.insert(result, {
-		value = "high",
 		selected = true,
+		value = "high",
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
@@ -480,8 +480,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
 	table.insert(result, {
-		value = "very high",
 		selected = true,
+		value = "very high",
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high"))
 	})
@@ -519,8 +519,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_8"))
 	})
 	table.insert(result, {
-		value = 16,
 		selected = true,
+		value = 16,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_16")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_16"))
 	})
@@ -548,8 +548,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_2"))
 	})
 	table.insert(result, {
-		value = 3,
 		selected = true,
+		value = 3,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_3")),
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_3"))
 	})
@@ -567,65 +567,65 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	local result = {}
 
 	table.insert(result, {
-		text = "24",
 		info = "24",
-		value = 24
+		value = 24,
+		text = "24"
 	})
 	table.insert(result, {
-		text = "30",
 		info = "30",
-		value = 30
+		value = 30,
+		text = "30"
 	})
 	table.insert(result, {
-		text = "45",
 		info = "45",
-		value = 45
+		value = 45,
+		text = "45"
 	})
 	table.insert(result, {
-		text = "60",
 		info = "60",
-		value = 60
+		value = 60,
+		text = "60"
 	})
 	table.insert(result, {
-		text = "75",
 		info = "75",
-		value = 75
+		value = 75,
+		text = "75"
 	})
 	table.insert(result, {
-		text = "90",
 		info = "90",
-		value = 90
+		value = 90,
+		text = "90"
 	})
 	table.insert(result, {
-		text = "105",
 		info = "105",
-		value = 105
+		value = 105,
+		text = "105"
 	})
 	table.insert(result, {
-		text = "120",
 		info = "120",
-		value = 120
+		value = 120,
+		text = "120"
 	})
 	table.insert(result, {
-		text = "135",
+		selected = true,
 		info = "135",
 		value = 135,
-		selected = true
+		text = "135"
 	})
 	table.insert(result, {
-		text = "144",
 		info = "144",
-		value = 144
+		value = 144,
+		text = "144"
 	})
 	table.insert(result, {
-		text = "165",
 		info = "165",
-		value = 165
+		value = 165,
+		text = "165"
 	})
 	table.insert(result, {
-		text = "240",
 		info = "240",
-		value = 240
+		value = 240,
+		text = "240"
 	})
 	table.insert(result, {
 		value = 600,
@@ -646,45 +646,45 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chu
 	local result = {}
 
 	table.insert(result, {
-		text = "32",
 		info = "32",
-		value = 32
+		value = 32,
+		text = "32"
 	})
 	table.insert(result, {
-		text = "64",
 		info = "64",
-		value = 64
+		value = 64,
+		text = "64"
 	})
 	table.insert(result, {
-		text = "128",
 		info = "128",
-		value = 128
+		value = 128,
+		text = "128"
 	})
 	table.insert(result, {
-		text = "256",
 		info = "256",
-		value = 256
+		value = 256,
+		text = "256"
 	})
 	table.insert(result, {
-		text = "512",
 		info = "512",
-		value = 512
+		value = 512,
+		text = "512"
 	})
 	table.insert(result, {
-		text = "1024",
 		info = "1024",
-		value = 1024
+		value = 1024,
+		text = "1024"
 	})
 	table.insert(result, {
-		text = "2048",
 		info = "2048",
-		value = 2048
+		value = 2048,
+		text = "2048"
 	})
 	table.insert(result, {
-		text = "4096",
+		selected = true,
 		info = "4096",
 		value = 4096,
-		selected = true
+		text = "4096"
 	})
 
 	return result

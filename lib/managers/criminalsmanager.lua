@@ -26,8 +26,8 @@ function CriminalsManager:_create_characters()
 	for _, character in ipairs(tweak_data.criminals.characters) do
 		local static_data = deep_clone(character.static_data)
 		local character_data = {
-			peer_id = 0,
 			taken = false,
+			peer_id = 0,
 			name = character.name,
 			static_data = static_data,
 			data = {}

@@ -38,8 +38,8 @@ end
 
 function RaidGUIControlLootProgressBar:_create_progress_bar()
 	local progress_bar_params = {
-		name = "progress_bar",
 		y = 0,
+		name = "progress_bar",
 		x = RaidGUIControlLootBracket.DEFAULT_W / 2,
 		w = self._object:w() - RaidGUIControlLootBracket.DEFAULT_W,
 		h = RaidGUIControlLootProgressBar.PROGRESS_BAR_H,

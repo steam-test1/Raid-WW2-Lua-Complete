@@ -301,14 +301,14 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		y = 0
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
+		x = 0,
+		dont_trigger_special_buttons = true,
+		initial_tab_idx = 1,
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 160,
 		name = "tabs_keybind_types",
 		y = 96,
-		x = 0,
-		dont_trigger_special_buttons = true,
-		initial_tab_idx = 1,
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{

@@ -1,8 +1,8 @@
 SpecialObjectiveUnitElement = SpecialObjectiveUnitElement or class(MissionElement)
 SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "so_action",
-		type = "special_objective_action"
+		type = "special_objective_action",
+		value = "so_action"
 	}
 }
 SpecialObjectiveUnitElement._AI_SO_types = {
@@ -327,8 +327,8 @@ end
 
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -344,8 +344,8 @@ end
 
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if not ray or not ray.unit then
@@ -365,8 +365,8 @@ end
 
 function SpecialObjectiveUnitElement:_turret_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 1,
-		ray_type = "body"
+		ray_type = "body",
+		mask = 1
 	})
 
 	if not ray or not ray.unit then
@@ -550,11 +550,11 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
+		tooltip = "Select a preset.",
 		name = "Preset:",
 		sorted = true,
 		name_proportions = 1,
 		ctrlr_proportions = 2,
-		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -613,8 +613,8 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "allow_followup_self", "Allow self-followup", "Allow self-followup")
 	self:_build_value_checkbox(panel, panel_sizer, "is_alert_point", "Alert point", "Alert point")
 	self:_build_value_number(panel, panel_sizer, "search_distance", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Used to specify the distance to use when searching for an AI")
 
 	local options = table.list_add({
@@ -632,24 +632,24 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interrupt_dis", {
-		floats = 1,
-		min = -1
+		min = -1,
+		floats = 1
 	}, "Interrupt if a threat is detected closer than this distance (meters). -1 means at any distance. For non-visible threats this value is multiplied with 0.7.", "Interrupt Distance:")
 	self:_build_value_number(panel, panel_sizer, "interrupt_dmg", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Interrupt if total damage received as a ratio of total health exceeds this ratio. value: 0-1.", "Interrupt Damage:")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = -1
+		min = -1,
+		floats = 2
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 	self:_build_value_number(panel, panel_sizer, "action_duration_min", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "How long the character stays in his specified action.")
 	self:_build_value_number(panel, panel_sizer, "action_duration_max", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "How long the character stays in his specified action. Zero means indefinitely.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

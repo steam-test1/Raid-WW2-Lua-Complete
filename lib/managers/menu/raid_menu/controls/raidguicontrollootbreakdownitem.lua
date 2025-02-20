@@ -115,9 +115,9 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
+		name = "counter",
 		text = "",
 		vertical = "center",
-		name = "counter",
 		align = "center",
 		halign = "scale",
 		valign = "top",
@@ -143,8 +143,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
-		vertical = "center",
 		name = "counter",
+		vertical = "center",
 		align = "center",
 		halign = "scale",
 		valign = "top",

@@ -22,9 +22,9 @@ end
 
 function HUDObjectiveMain:_create_panel(objectives_panel)
 	local panel_params = {
-		valign = "top",
 		name = "main_objective",
 		halign = "scale",
+		valign = "top",
 		w = objectives_panel:w(),
 		h = HUDObjectiveMain.H
 	}
@@ -33,9 +33,9 @@ end
 
 function HUDObjectiveMain:_create_timer()
 	local timer_panel_params = {
-		valign = "center",
 		name = "timer_panel",
 		halign = "right",
+		valign = "center",
 		w = self._object:h(),
 		h = self._object:h()
 	}
@@ -54,8 +54,8 @@ function HUDObjectiveMain:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_static_fill_params = {
-		alpha = 0,
 		name = "timer_static_fill",
+		alpha = 0,
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture_rect,
 		layer = timer_background:layer() + 1
@@ -67,8 +67,8 @@ function HUDObjectiveMain:_create_timer()
 
 	local timer_fill_params = {
 		name = "timer_fill",
-		render_template = "VertexColorTexturedRadial",
 		visible = false,
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDObjectiveMain.TIMER_FILL_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDObjectiveMain.TIMER_FILL_ICON),
@@ -86,13 +86,13 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_fill:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_minutes_text_params = {
-		halign = "center",
-		visible = false,
 		text = "00:00",
+		valign = "center",
+		halign = "center",
 		vertical = "center",
 		align = "center",
-		valign = "center",
 		name = "minute_text",
+		visible = false,
 		font = HUDObjectiveMain.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveMain.AMOUNT_TEXT_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1
@@ -106,13 +106,13 @@ function HUDObjectiveMain:_create_timer()
 	self._timer_text_minutes:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_seconds_text_params = {
-		halign = "center",
-		visible = false,
+		valign = "center",
 		text = "00",
+		halign = "center",
 		vertical = "center",
 		align = "center",
-		valign = "center",
 		name = "seconds_text",
+		visible = false,
 		font = HUDObjectiveMain.TIMER_SECONDS_FONT,
 		font_size = HUDObjectiveMain.TIMER_SECONDS_FONT_SIZE,
 		layer = self._timer_fill:layer() + 1

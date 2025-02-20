@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			add_lobby_filter = nil
+			comparision_type = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -1273,8 +1273,8 @@ function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatc
 
 			self._smartmatch_search_inexact = true
 			local smartmatch_params = {
-				become_host = false,
 				hopper_name = "hopper_match_game_any_v1",
+				become_host = false,
 				timeout = self.SMARTMATCH_CLIENT_TIMEOUT_T2
 			}
 			local progress_callback = callback(self, self, "clbk_smartmatch_client", {

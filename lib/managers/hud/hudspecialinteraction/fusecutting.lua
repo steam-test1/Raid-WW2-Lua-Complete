@@ -30,10 +30,10 @@ end
 function HUDSpecialInteractionFuseCutting:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionFuseCutting.BACKGROUND_PLATE_IMAGE)
 	self._bg_plate = self._object:bitmap({
-		name = "special_interaction_bg_plate",
 		halign = "center",
 		valign = "center",
 		layer = 1,
+		name = "special_interaction_bg_plate",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		w = HUDSpecialInteractionFuseCutting.SIZE + 118,
@@ -60,11 +60,11 @@ end
 function HUDSpecialInteractionFuseCutting:_create_fuse_timer()
 	self._interact_text = self._object:text({
 		align = "center",
+		text = "--:--",
 		valign = "center",
 		h = 60,
 		w = 240,
 		name = "_interact_text",
-		text = "--:--",
 		layer = self._bg_plate:layer() + 2,
 		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
 		font_size = HUDSpecialInteractionFuseCutting.TIMER_FONT_SIZE
@@ -91,8 +91,8 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 
 	for i = 1, max_cuts do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			blend_mode = "add",
 			position_z = 0,
+			blend_mode = "add",
 			image = tweak_data.gui.icons.interact_fuse_thread.texture,
 			color = HUDSpecialInteractionFuseCutting.STATE_DEFAULT_COLOR,
 			rotation = HUDSpecialInteractionFuseCutting.ENDING_ANGLE,

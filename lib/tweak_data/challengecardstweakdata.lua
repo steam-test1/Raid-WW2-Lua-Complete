@@ -19,8 +19,8 @@ ChallengeCardsTweakData.CARD_SELECTION_TIMER = 60
 ChallengeCardsTweakData.PACK_TYPE_REGULAR = 1
 ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN = 2
 ChallengeCardsTweakData.STACKABLE_AREA = {
-	height = 680,
-	width = 500
+	width = 500,
+	height = 680
 }
 
 function ChallengeCardsTweakData:init(tweak_data)
@@ -732,9 +732,9 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		tradable = true,
 		effects = {
 			{
-				value = true,
+				value = 3,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
-				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL
+				name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE
 			},
 			{
 				value = 0.5,
@@ -743,7 +743,10 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 			}
 		},
 		positive_description = {
-			desc_id = "effect_headshots_are_instakills"
+			desc_id = "effect_headshots_damage_increased",
+			desc_params = {
+				EFFECT_VALUE_1 = "300%"
+			}
 		},
 		negative_description = {
 			desc_id = "effect_player_health_reduced",
@@ -892,7 +895,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		positive_description = {
 			desc_id = "effect_headshots_damage_increased",
 			desc_params = {
-				EFFECT_VALUE_1 = "100%"
+				EFFECT_VALUE_1 = "300%"
 			}
 		},
 		negative_description = {

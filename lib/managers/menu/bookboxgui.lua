@@ -30,14 +30,14 @@ function BookBoxGui:add_page(name, box_gui, visible)
 		color = Color(1, 0.5, 0.5, 0.5)
 	})
 	panel:text({
-		y = 0,
-		hvertical = "center",
-		vertical = "center",
 		halign = "center",
 		layer = 1,
 		align = "center",
 		x = 0,
+		y = 0,
 		name = "name_text",
+		hvertical = "center",
+		vertical = "center",
 		text = string.upper(name),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size

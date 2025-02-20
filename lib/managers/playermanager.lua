@@ -27,27 +27,27 @@ function PlayerManager:init()
 	}
 	self._viewport_configs[1][1] = {
 		dimensions = {
-			x = 0,
-			h = 1,
 			w = 1,
-			y = 0
+			y = 0,
+			x = 0,
+			h = 1
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = {
-				x = 0,
-				h = 0.5,
 				w = 1,
-				y = 0
+				y = 0,
+				x = 0,
+				h = 0.5
 			}
 		},
 		{
 			dimensions = {
-				x = 0,
-				h = 0.5,
 				w = 1,
-				y = 0.5
+				y = 0.5,
+				x = 0,
+				h = 0.5
 			}
 		}
 	}
@@ -57,8 +57,6 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
-		standard = "ingame_standard",
-		freefall = "ingame_freefall",
 		foxhole = "ingame_standard",
 		driving = "ingame_driving",
 		bipod = "ingame_standard",
@@ -70,7 +68,9 @@ function PlayerManager:init()
 		fatal = "ingame_fatal",
 		turret = "ingame_standard",
 		bleed_out = "ingame_bleed_out",
-		parachuting = "ingame_parachuting"
+		parachuting = "ingame_parachuting",
+		standard = "ingame_standard",
+		freefall = "ingame_freefall"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -184,7 +184,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		position = nil,
+		add_coroutine = nil,
 		selections = {},
 		specials = {}
 	}
@@ -200,7 +200,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		position = nil,
+		add_coroutine = nil,
 		selections = {},
 		specials = {}
 	}
@@ -1331,21 +1331,11 @@ function PlayerManager:equiptment_upgrade_value(category, upgrade, default)
 end
 
 function PlayerManager:upgrade_level(category, upgrade, default)
-	if not self._global.upgrades[category] then
-		return default or 0
-	end
-
-	if not self._global.upgrades[category][upgrade] then
-		return default or 0
-	end
-
-	local level = self._global.upgrades[category][upgrade]
-
-	return level
+	return self._global.upgrades[category] and self._global.upgrades[category][upgrade] or default or 0
 end
 
 function PlayerManager:upgrade_value_by_level(category, upgrade, level, default)
-	return tweak_data.upgrades.values[category][upgrade][level] or default or 0
+	return tweak_data.upgrades.values[category] and tweak_data.upgrades.values[category][upgrade] and tweak_data.upgrades.values[category][upgrade][level] or default or 0
 end
 
 function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
@@ -3515,9 +3505,9 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
-			disabled = true,
 			icon = "comm_wheel_no",
 			text_id = "",
+			disabled = true,
 			id = "carry_" .. i
 		}
 
@@ -3596,8 +3586,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
 			id = "cant_throw_body",
-			duration = 2,
 			shelf_life = 5,
+			duration = 2,
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -4291,9 +4281,13 @@ function PlayerManager:_move_to_next_seat(vehicle, peer_id, player, seat, previo
 end
 
 function PlayerManager:disable_view_movement()
-	self:player_unit():camera():camera_unit():base():set_limits(0.01, 0.01)
+	local player_unit = self:player_unit()
 
-	self._view_disabled = true
+	if player_unit and alive(player_unit) then
+		player_unit:camera():camera_unit():base():set_limits(0.01, 0.01)
+
+		self._view_disabled = true
+	end
 end
 
 function PlayerManager:enable_view_movement()

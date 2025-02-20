@@ -56,12 +56,12 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_progress_bar()
 	local progress_bar_params = {
-		center = "slider_large_center",
-		name = "progress_bar",
-		left = "slider_large_left",
 		y = 0,
 		x = 0,
+		name = "progress_bar",
+		center = "slider_large_center",
 		right = "slider_large_right",
+		left = "slider_large_left",
 		w = self._bar_w + self._horizontal_padding * 2,
 		h = self._params.progress_bar_h or RaidGUIControlSkilltreeProgressBar.PROGRESS_BAR_H
 	}
@@ -75,8 +75,8 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local background_panel_params = {
-		name = "background_panel",
 		y = 0,
+		name = "background_panel",
 		x = self._progress_bar:x(),
 		w = self._progress_bar:w(),
 		h = self._object:h() - self._progress_bar:h(),
@@ -87,9 +87,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local texture_left = "skl_level_bg_left"
 	local texture_right = "skl_level_bg_right"
 	local background_params = {
-		name = "background",
 		y = 0,
 		x = 0,
+		name = "background",
 		w = self._background_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
@@ -119,8 +119,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_slider_pimples()
 	local icon_w = tweak_data.gui:icon_w(icon)
 	local icon_h = tweak_data.gui:icon_h(icon)
 	self._slider_pimples_panel = self._object:panel({
-		name = "slider_pimples_panel",
 		x = 0,
+		name = "slider_pimples_panel",
 		y = RaidGUIControlSkilltreeProgressBar.SLIDER_PIN_Y,
 		w = self._object:w(),
 		h = icon_h,
@@ -144,9 +144,9 @@ end
 
 function RaidGUIControlSkilltreeProgressBar:_create_level_marks_on_progress_bar()
 	self._level_marks_panel = self._object:panel({
-		name = "level_marks_panel",
 		y = 0,
 		x = 0,
+		name = "level_marks_panel",
 		w = self._object:w(),
 		h = self._progress_bar:h()
 	})
@@ -195,8 +195,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 	})
 	self._experience_label = self._level_labels_panel:text({
 		text = "100 XP UNTIL NEXT LEVEL",
-		align = "center",
 		name = "level_label_xp",
+		align = "center",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,

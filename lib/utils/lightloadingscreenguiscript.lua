@@ -25,11 +25,11 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 	}
 	local text = string.upper(managers.localization:text("debug_loading_level"))
 	self._title_text = self._saferect_panel:text({
-		visible = false,
 		align = "left",
 		font_size = 32,
-		font = "ui/fonts/pf_din_text_comp_pro_medium_32",
 		y = 0,
+		font = "ui/fonts/pf_din_text_comp_pro_medium_32",
+		visible = false,
 		h = 24,
 		vertical = "bottom",
 		halign = "left",
@@ -64,10 +64,10 @@ end
 
 function LightLoadingScreenGuiScript:layout_saferect()
 	local scaled_size = {
-		width = 1198,
 		y = 0,
 		x = 0,
-		height = 674
+		height = 674,
+		width = 1198
 	}
 	local w = scaled_size.width
 	local h = scaled_size.height

@@ -274,8 +274,8 @@ function FireManager:_do_damage_tick(fire_data)
 				if Network:is_server() or is_player then
 					if character then
 						local action_data = {
-							is_fire_dot_damage = false,
 							variant = "fire",
+							is_fire_dot_damage = false,
 							attacker_unit = attacker_unit,
 							weapon_unit = weapon_unit,
 							col_ray = {

@@ -43,9 +43,9 @@ end
 
 function HUDTabCandyProgression:_create_panel(panel, params)
 	self._object = panel:panel({
+		halign = "right",
 		valign = "bottom",
 		name = "hud_tab_candy_progress",
-		halign = "right",
 		x = params.x or 0,
 		y = params.y or self.Y,
 		w = self.WIDTH,
@@ -104,11 +104,11 @@ function HUDTabCandyProgression:_create_progress_bar()
 	})
 
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel({
+		halign = "scale",
 		valign = "scale",
 		w = 0,
 		layer = 2,
 		name = "candy_progress_bar_foreground_panel",
-		halign = "scale",
 		h = self._progress_bar_panel:h()
 	})
 	local progress_bar = self._progress_bar_foreground_panel:three_cut_bitmap({
@@ -123,10 +123,10 @@ function HUDTabCandyProgression:_create_progress_bar()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	self._progress_bar_overlay = self._progress_bar_foreground_panel:bitmap({
+		blend_mode = "add",
 		alpha = 0.3,
 		wrap_mode = "wrap",
 		name = "candy_progress_bar_background",
-		blend_mode = "add",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -140,9 +140,9 @@ function HUDTabCandyProgression:_create_tier_info()
 	local font = tweak_data.gui:get_font_path(self.TIER_TITLE_FONT, self.TIER_TITLE_FONT_SIZE)
 	local tier = 1
 	self._tier_title = self._object:text({
-		name = "tier_title",
 		text = "TIER",
 		align = "center",
+		name = "tier_title",
 		y = self.TIER_TITLE_Y,
 		w = self.PROGRESS_BAR_W,
 		font = font,

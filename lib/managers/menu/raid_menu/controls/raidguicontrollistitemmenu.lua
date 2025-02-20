@@ -59,9 +59,9 @@ end
 function RaidGUIControlListItemMenu:_layout(params, data)
 	local fg_color = params.color or self.FOREGROUND_COLOR
 	self._selection_panel = self._object:panel({
-		name = "selection_panel",
+		alpha = 0,
 		visible = false,
-		alpha = 0
+		name = "selection_panel"
 	})
 	local background_data = tweak_data.gui:get_full_gui_data(self.BACKGROUND_ICON)
 	self._background = self._selection_panel:bitmap({

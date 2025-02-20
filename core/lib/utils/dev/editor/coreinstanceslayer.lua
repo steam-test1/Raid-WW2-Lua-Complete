@@ -231,8 +231,8 @@ end
 function InstancesLayer:position_as()
 	if self._selected_instance and not self:condition() then
 		local data = {
-			ray_type = "body editor",
 			sample = true,
+			ray_type = "body editor",
 			mask = self._position_as_slot_mask
 		}
 		local ray = managers.editor:unit_by_raycast(data)
@@ -1141,9 +1141,9 @@ function InstancesLayer:_create_overlay_gui()
 	end
 
 	self._gui_panel = self._workspace:panel():panel({
+		valign = "scale",
 		halign = "scale",
 		h = 16,
-		valign = "scale",
 		y = self._workspace:panel():h() - 16
 	})
 end
@@ -1151,8 +1151,8 @@ end
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
 		color = Color.black
 	})
 

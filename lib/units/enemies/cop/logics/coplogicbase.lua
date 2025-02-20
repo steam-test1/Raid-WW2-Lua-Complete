@@ -12,18 +12,18 @@ CopLogicBase = class()
 CopLogicBase.SAW_SOMETHING_THRESHOLD = 0.2
 CopLogicBase.INVESTIGATE_THRESHOLD = 0.4
 CopLogicBase._AGGRESSIVE_ALERT_TYPES = {
+	explosion = true,
 	aggression = true,
 	vo_distress = true,
 	vo_intimidate = true,
-	footstep = true,
-	bullet = true,
 	vo_cbt = true,
-	explosion = true
+	bullet = true,
+	footstep = true
 }
 CopLogicBase._DANGEROUS_ALERT_TYPES = {
-	aggression = true,
 	bullet = true,
-	explosion = true
+	explosion = true,
+	aggression = true
 }
 CopLogicBase._SUSPICIOUS_SO_ANIMS = {
 	rifle = {
@@ -1227,10 +1227,10 @@ function CopLogicBase._create_return_from_search_SO(cop, old_objective)
 
 	local objective = {
 		type = "free",
-		path_style = "coarse_complete",
 		stance = "ntl",
 		interrupt_dis = -1,
 		haste = "walk",
+		path_style = "coarse_complete",
 		attitude = "engage",
 		scan = true,
 		followup_objective = old_objective,
@@ -1272,9 +1272,9 @@ function CopLogicBase.register_search_SO(cop, attention_info, position, search_d
 
 	local so_investigate = {
 		type = "act",
-		haste = "walk",
-		interrupt_dis = -1,
 		stance = "ntl",
+		interrupt_dis = -1,
+		haste = "walk",
 		attitude = "engage",
 		pos = pos,
 		nav_seg = nav_seg,
@@ -1295,17 +1295,17 @@ function CopLogicBase.register_search_SO(cop, attention_info, position, search_d
 		}),
 		action = {
 			type = "act",
-			needs_full_blend = true,
 			align_sync = true,
+			needs_full_blend = true,
 			body_part = 1,
 			variant = table.random(CopLogicBase._INVESTIGATE_SO_ANIMS),
 			blocks = {
 				walk = -1,
 				hurt = -1,
 				heavy_hurt = -1,
-				aim = -1,
+				light_hurt = -1,
 				action = -1,
-				light_hurt = -1
+				aim = -1
 			}
 		}
 	}
@@ -1494,8 +1494,8 @@ function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_ke
 	local dis = mvector3.distance(my_unit:movement():m_head_pos(), m_head_pos)
 	local new_entry = {
 		notice_progress = 0,
-		verified_t = false,
 		verified = false,
+		verified_t = false,
 		settings = settings,
 		unit = attention_info.unit,
 		u_key = u_key,
@@ -2182,17 +2182,17 @@ end
 
 function CopLogicBase._say_call_the_police(data, my_data)
 	local blame_list = {
+		hostage_civ = "saw_hostage_civ",
+		hostage_cop = "saw_hostage_cop",
+		criminal = "spotted_player",
+		civilian = "saw_civilian",
+		w_hot = "spotted_player",
 		drill = "saw_drill",
 		trip_mine = "saw_trip_mine",
 		sentry_gun = "saw_sentry_gun",
 		body_bag = "saw_bag",
 		dead_cop = "saw_body",
-		dead_civ = "saw_body",
-		hostage_cop = "saw_hostage_cop",
-		hostage_civ = "saw_hostage_civ",
-		criminal = "spotted_player",
-		civilian = "saw_civilian",
-		w_hot = "spotted_player"
+		dead_civ = "saw_body"
 	}
 	local event = blame_list[my_data.call_in_event] or "spotted_player"
 
@@ -2898,13 +2898,13 @@ function CopLogicBase._start_idle_action_from_act(data)
 		variant = "idle",
 		body_part = 1,
 		blocks = {
-			hurt = -1,
+			light_hurt = -1,
 			walk = -1,
 			heavy_hurt = -1,
 			idle = -1,
 			action = -1,
-			light_hurt = -1,
 			expl_hurt = -1,
+			hurt = -1,
 			fire_hurt = -1
 		}
 	})

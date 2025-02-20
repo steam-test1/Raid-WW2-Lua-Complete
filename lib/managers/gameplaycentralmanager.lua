@@ -51,8 +51,8 @@ function GamePlayCentralManager:init()
 	self._mission_disabled_units = {}
 	self._mission_destroyed_units = {}
 	self._job_timer = {
-		running = false,
-		start_time = 0
+		start_time = 0,
+		running = false
 	}
 end
 

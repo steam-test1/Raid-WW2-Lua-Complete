@@ -33,8 +33,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_subtitle"),
 		on_menu_move = {
-			down = "objective_reminder",
-			up = "default_interface"
+			up = "default_interface",
+			down = "objective_reminder"
 		}
 	}
 	self._toggle_menu_subtitle = self._root_panel:toggle_button(previous_panel)
@@ -151,9 +151,9 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
+		x = 1472,
 		name = "default_interface",
 		y = 832,
-		x = 1472,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_interface"),
 		layer = RaidGuiBase.FOREGROUND_LAYER,

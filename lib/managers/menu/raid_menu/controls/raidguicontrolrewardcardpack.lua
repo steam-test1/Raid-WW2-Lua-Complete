@@ -67,10 +67,10 @@ end
 
 function RaidGUIControlRewardCardPack:_create_title()
 	local title_description_params = {
-		alpha = 0,
-		name = "title_description",
 		vertical = "center",
 		align = "left",
+		alpha = 0,
+		name = "title_description",
 		y = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlRewardCardPack.FONT,
@@ -87,10 +87,10 @@ function RaidGUIControlRewardCardPack:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		alpha = 0,
-		name = "pack_title",
 		vertical = "top",
 		align = "center",
+		alpha = 0,
+		name = "pack_title",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlRewardCardPack.TITLE_PADDING_TOP,
 		font = RaidGUIControlRewardCardPack.FONT,
 		font_size = RaidGUIControlRewardCardPack.TITLE_FONT_SIZE,
@@ -108,12 +108,12 @@ end
 
 function RaidGUIControlRewardCardPack:_create_cards_control()
 	local cards_control_params = {
-		visible = false,
-		name = "cards_control",
-		h = 900,
 		w = 780,
 		y = 0,
 		x = 0,
+		visible = false,
+		name = "cards_control",
+		h = 900,
 		item_params = {
 			wrapper_h = 600,
 			item_h = 352,
@@ -139,11 +139,11 @@ end
 
 function RaidGUIControlRewardCardPack:_create_description()
 	local description_params = {
-		alpha = 0,
-		name = "description",
 		wrap = true,
 		vertical = "top",
 		align = "left",
+		alpha = 0,
+		name = "description",
 		y = RaidGUIControlRewardCardPack.DESCRIPTION_Y,
 		w = RaidGUIControlRewardCardPack.DESCRIPTION_W,
 		font = RaidGUIControlRewardCardPack.DESCRIPTION_FONT,
@@ -158,10 +158,10 @@ end
 
 function RaidGUIControlRewardCardPack:_create_item_description_name()
 	local item_type_params = {
-		alpha = 0,
-		name = "item_type",
 		vertical = "center",
 		align = "left",
+		alpha = 0,
+		name = "item_type",
 		x = self._description:x(),
 		y = RaidGUIControlRewardCardPack.ITEM_TYPE_Y,
 		w = self._right_panel:w(),

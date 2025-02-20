@@ -369,8 +369,8 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
-			duration = 2,
 			shelf_life = 5,
+			duration = 2,
 			id = hint_id,
 			text = managers.localization:text(hint_id)
 		})
@@ -1456,8 +1456,8 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 		local hint = "hint_teammate_downed"
 
 		managers.notification:add_notification({
-			duration = 3,
 			shelf_life = 5,
+			duration = 3,
 			id = hint,
 			text = managers.localization:text(hint, {
 				TEAMMATE = self._unit:base():nick_name(),
@@ -2898,11 +2898,11 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
-		doc_text = "hud_hint_consumable_mission_secured",
+		priority = 3,
 		id = "hud_hint_consumable_mission",
+		doc_text = "hud_hint_consumable_mission_secured",
 		doc_icon = "notification_consumable",
 		duration = 4,
-		priority = 3,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 

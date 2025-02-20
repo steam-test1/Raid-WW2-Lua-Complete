@@ -20,10 +20,10 @@ function MenuRenderer:show_node(node)
 	end
 
 	local parameters = {
-		marker_alpha = 1,
 		row_item_blend_mode = "normal",
 		to_upper = true,
 		align = "left",
+		marker_alpha = 1,
 		font = tweak_data.menu.pd2_medium_font,
 		row_item_color = tweak_data.menu.default_font_row_item_color,
 		row_item_hightlight_color = tweak_data.menu.default_hightlight_row_item_color,

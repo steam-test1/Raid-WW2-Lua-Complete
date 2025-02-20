@@ -38,10 +38,10 @@ function BootupState:setup()
 
 	if not is_win32 then
 		table.insert(self._play_data_list, {
+			can_skip = false,
 			height = 200,
 			width = 600,
 			duration = 6,
-			can_skip = false,
 			gui = Idstring("guis/autosave_warning"),
 			layer = item_layer,
 			fade_in = fade_time,
@@ -61,8 +61,8 @@ function BootupState:setup()
 		fade_out = fade_time
 	})
 	table.insert(self._play_data_list, {
-		auto_skip = true,
 		duration = 4.5,
+		auto_skip = true,
 		can_skip = has_full_game,
 		texture = tweak_data.gui.icons.bootup_logo_lgl.texture,
 		texture_rect = tweak_data.gui.icons.bootup_logo_lgl.texture_rect,
@@ -73,8 +73,8 @@ function BootupState:setup()
 		fade_out = fade_time
 	})
 	table.insert(self._play_data_list, {
-		auto_skip = true,
 		duration = 5,
+		auto_skip = true,
 		can_skip = has_full_game,
 		texture = tweak_data.gui.icons.bootup_logo_third_parties.texture,
 		texture_rect = tweak_data.gui.icons.bootup_logo_third_parties.texture_rect,
@@ -90,18 +90,18 @@ function BootupState:setup()
 	self._panel = self._workspace:panel()
 
 	self._full_panel:rect({
-		visible = false,
 		layer = 0,
+		visible = false,
 		color = Color.red
 	})
 
 	local press_any_key_font_size = tweak_data.gui.font_sizes.medium
 	local press_any_key_prompt_params = {
+		layer = 3,
 		wrap = true,
+		alpha = 0,
 		vertical = "bottom",
 		align = "center",
-		layer = 3,
-		alpha = 0,
 		name = "press_any_key_text",
 		w = self._full_panel:w(),
 		h = press_any_key_font_size,

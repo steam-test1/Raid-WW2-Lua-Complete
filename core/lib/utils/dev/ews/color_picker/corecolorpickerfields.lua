@@ -159,8 +159,8 @@ function ColorPickerFields:_create_hsv_fields(parent_frame)
 	local fields = {
 		"Hue",
 		{
-			max = 359,
-			wrap = true
+			wrap = true,
+			max = 359
 		},
 		"Sat",
 		{
@@ -220,9 +220,9 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 		"Blue"
 	}, edited_field_label) then
 		local rgb_values = self:_parse_values({
-			Red = 255,
-			Blue = 255,
 			Green = 255,
+			Blue = 255,
+			Red = 255,
 			Alpha = 255
 		})
 
@@ -235,10 +235,10 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 		"Value"
 	}, edited_field_label) then
 		local hsv_values = self:_parse_values({
-			Hue = 1,
-			Value = 100,
+			Alpha = 255,
 			Sat = 100,
-			Alpha = 255
+			Value = 100,
+			Hue = 1
 		})
 
 		if hsv_values then

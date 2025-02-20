@@ -29,9 +29,9 @@ function SimpleAnimatorExt:animate_object(obj_id, duration, to_pos, to_rot, from
 	to_rot = to_rot or object:local_rotation()
 	from_rot = from_rot or object:local_rotation()
 	self._animations[obj_id] = {
+		_t = 0,
 		paused = false,
 		looping = false,
-		_t = 0,
 		obj_id = obj_id,
 		object = object,
 		duration = duration,

@@ -7,15 +7,15 @@ end
 
 function RaidMenuHeader:_layout()
 	self._screen_name_label = self._root_panel:label_title({
+		text = "",
 		name = "screen_name_label",
 		y = 0,
-		x = 0,
-		text = ""
+		x = 0
 	})
 	self._screen_subtitle_label = self._root_panel:label_subtitle({
+		text = "",
 		name = "screen_subtitle_label",
 		x = 0,
-		text = "",
 		y = self._screen_name_label:h() + RaidGuiBase.PADDING + 22
 	})
 end

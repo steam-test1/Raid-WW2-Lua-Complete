@@ -310,8 +310,8 @@ function PlayerDamage:_regenerated(downs_regen)
 	if downs_regen and downs_regen > 0 then
 		if self:_change_revives(downs_regen) then
 			managers.hud:set_big_prompt({
-				id = "hint_downs_remaining",
 				duration = 3,
+				id = "hint_downs_remaining",
 				title = managers.localization:to_upper_text("hud_hint_down_restored_title"),
 				description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 					DOWNS = self._revives - 1,
@@ -474,8 +474,8 @@ function PlayerDamage:damage_tase(attack_data)
 
 		local damage_info = {
 			result = {
-				type = "hurt",
-				variant = "tase"
+				variant = "tase",
+				type = "hurt"
 			}
 		}
 
@@ -579,8 +579,8 @@ end
 function PlayerDamage:damage_bullet(attack_data)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -754,8 +754,8 @@ end
 function PlayerDamage:damage_killzone(attack_data)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "killzone"
+			variant = "killzone",
+			type = "hurt"
 		}
 	}
 
@@ -792,8 +792,8 @@ end
 function PlayerDamage:damage_fall(data)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "fall"
+			variant = "fall",
+			type = "hurt"
 		}
 	}
 
@@ -913,8 +913,8 @@ end
 function PlayerDamage:damage_explosion(attack_data)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "explosion"
+			variant = "explosion",
+			type = "hurt"
 		}
 	}
 
@@ -953,8 +953,8 @@ end
 function PlayerDamage:damage_fire(attack_data)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "fire"
+			variant = "fire",
+			type = "hurt"
 		}
 	}
 
@@ -1056,10 +1056,10 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
+					background = "backgrounds_detected_msg",
 					priority = true,
 					duration = 4,
 					id = "hint_downed",
-					background = "backgrounds_detected_msg",
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,

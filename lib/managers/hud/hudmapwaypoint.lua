@@ -174,9 +174,9 @@ end
 
 function HUDMapWaypointPoint:_create_panel(panel)
 	local panel_params = {
+		valign = "center",
 		halign = "center",
 		visible = false,
-		valign = "center",
 		name = "map_waypoint_point_" .. tostring(self._id),
 		w = HUDMapWaypointPoint.W,
 		h = HUDMapWaypointPoint.H
@@ -213,10 +213,10 @@ end
 
 function HUDMapWaypointPoint:_create_distance()
 	local distance_text_params = {
-		name = "distance_text",
-		text = "",
 		vertical = "center",
 		align = "center",
+		name = "distance_text",
+		text = "",
 		w = self._object:w(),
 		h = HUDMapWaypointPoint.DISTANCE_H,
 		font = HUDMapWaypointPoint.DISTANCE_FONT,
@@ -302,8 +302,8 @@ end
 function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 	local icon = waypoint_data.map_icon
 	local panel_params = {
-		halign = "center",
 		valign = "center",
+		halign = "center",
 		name = "map_waypoint_icon_" .. tostring(self._id),
 		w = HUDMapWaypointIcon.W,
 		h = HUDMapWaypointIcon.H

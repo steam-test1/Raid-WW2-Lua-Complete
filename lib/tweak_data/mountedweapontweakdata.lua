@@ -17,14 +17,14 @@ function MountedWeaponTweakData:_init_data_sherman()
 			main_cannon_fire = "effects/vanilla/explosions/vehicle_explosion"
 		},
 		turret = {
-			armor_piercing = true,
-			player_damage = 15,
-			locator = "anim_turret",
-			traverse_time = 10,
-			damage = 25,
 			range = 20000,
+			damage_radius = 750,
+			damage = 25,
+			player_damage = 15,
 			gun_locator = "anim_gun",
-			damage_radius = 750
+			armor_piercing = true,
+			locator = "anim_turret",
+			traverse_time = 10
 		},
 		main_cannon_shell_speed = 60000,
 		main_cannon_reload_speed = 10
@@ -42,14 +42,14 @@ function MountedWeaponTweakData:_init_data_tiger()
 			main_cannon_fire = "effects/vanilla/explosions/vehicle_explosion"
 		},
 		turret = {
-			armor_piercing = true,
-			player_damage = 15,
-			locator = "anim_turret",
-			traverse_time = 10,
-			damage = 75,
 			range = 20000,
+			damage_radius = 750,
+			damage = 75,
+			player_damage = 15,
 			gun_locator = "anim_gun",
-			damage_radius = 750
+			armor_piercing = true,
+			locator = "anim_turret",
+			traverse_time = 10
 		},
 		main_cannon_shell_speed = 60000,
 		main_cannon_reload_speed = 10
@@ -67,14 +67,14 @@ function MountedWeaponTweakData:_init_data_luchs()
 			main_cannon_fire = "effects/vanilla/explosions/vehicle_explosion"
 		},
 		turret = {
-			armor_piercing = true,
-			player_damage = 15,
-			locator = "anim_turret_heading",
-			traverse_time = 10,
-			damage = 35,
 			range = 20000,
+			damage_radius = 750,
+			damage = 35,
+			player_damage = 15,
 			gun_locator = "anim_turret_pitch",
-			damage_radius = 750
+			armor_piercing = true,
+			locator = "anim_turret_heading",
+			traverse_time = 10
 		},
 		main_cannon_shell_speed = 60000,
 		main_cannon_reload_speed = 8

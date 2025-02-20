@@ -824,8 +824,8 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 
 	local slider_params = {
 		number_ctrlr_proportions = 0.1,
-		slider_ctrlr_proportions = 0.2,
 		floats = 0,
+		slider_ctrlr_proportions = 0.2,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
 		value = default_value or s_value,
@@ -896,8 +896,8 @@ function BrushLayer:get_brush_stats(filter)
 	local skip_filtering = not filter or not next(filter)
 	local brush_stats = {}
 	local total = {
-		unique = 0,
-		amount = 0
+		amount = 0,
+		unique = 0
 	}
 
 	for _, unit_name in ipairs(MassUnitManager:list()) do

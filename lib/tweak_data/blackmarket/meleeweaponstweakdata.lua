@@ -1,28 +1,28 @@
 function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 	self.melee_sounds = {
 		generic = {
-			hit_body = "melee_hit_body",
-			hit_gen = "melee_hit_gen"
+			hit_gen = "melee_hit_gen",
+			hit_body = "melee_hit_body"
 		},
 		fist = {
-			hit_gen = "melee_hit_gen",
 			equip = "fist_equip",
 			hit_body = "punch_gunstock_1p",
-			hit_air = "knife_hit_air"
+			hit_air = "knife_hit_air",
+			hit_gen = "melee_hit_gen"
 		},
 		knife = {
-			killing_blow = "knife_killing_blow",
 			equip = "knife_equip",
 			hit_gen = "knife_hit_gen",
 			hit_body = "knife_hit_body",
-			hit_air = "knife_hit_air"
+			hit_air = "knife_hit_air",
+			killing_blow = "knife_killing_blow"
 		},
 		machete = {
-			killing_blow = "machete_killing_blow",
 			equip = "knife_equip",
 			hit_gen = "knife_hit_gen",
 			hit_body = "machete_hit_body",
-			hit_air = "knife_hit_air"
+			hit_air = "knife_hit_air",
+			killing_blow = "machete_killing_blow"
 		}
 	}
 	local MELEE_SPEED_INSTANT = 0
@@ -49,10 +49,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			}
 		},
 		fists = {
-			expire_t = 1,
 			melee_charge_shaker = "player_melee_charge_fist",
 			melee_damage_delay = 0.2,
 			anim_global_param = "melee_fist",
+			expire_t = 1,
 			repeat_expire_t = 0.55,
 			free = true,
 			animations = nil,
@@ -78,23 +78,23 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			}
 		},
 		m3_knife = {
-			repeat_expire_t = 0.6,
-			usage_anim = "c45",
-			unit = "units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife",
-			hold = "melee",
-			weapon_hold = "m3",
-			stance = "m3",
-			expire_t = 0.75,
-			third_unit = "units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife",
-			desc_id = "bm_melee_m3_knife_desc",
-			name_id = "bm_melee_m3_knife",
-			type = "knife",
 			melee_charge_shaker = "player_melee_charge",
 			melee_damage_delay = 0.223,
+			third_unit = "units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife",
+			desc_id = "bm_melee_m3_knife_desc",
 			transition_duration = 0,
 			exit_run_speed_multiplier = 1,
 			weapon_movement_penalty = 1,
 			decal_effect = "knife",
+			usage_anim = "c45",
+			hold = "melee",
+			weapon_hold = "m3",
+			stance = "m3",
+			expire_t = 0.75,
+			repeat_expire_t = 0.6,
+			unit = "units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife",
+			name_id = "bm_melee_m3_knife",
+			type = "knife",
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -115,10 +115,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -130,21 +130,28 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -100,
 				rotation_offset = -2,
 				display_offset = 10,
 				height_offset = -8,
+				distance_offset = -100,
 				initial_rotation = {
-					yaw = 90,
 					roll = 160,
-					pitch = 20
+					pitch = 20,
+					yaw = 90
 				}
 			}
 		},
 		robbins_dudley_trench_push_dagger = {
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
 			unit = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger",
-			usage_anim = "c45",
 			third_unit = "units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
+			reward_image = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/robbins_dudley_trench_push_dagger_hud",
+			decal_effect = "knife",
+			usage_anim = "c45",
 			hold = "melee",
 			weapon_hold = "robbins_dudley_trench_push_dagger",
 			stance = "robbins_dudley_trench_push_dagger",
@@ -153,13 +160,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			desc_id = "bm_melee_robbins_dudley_trench_push_dagger_desc",
 			name_id = "bm_melee_robbins_dudley_trench_push_dagger",
 			type = "knife",
-			reward_image = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/robbins_dudley_trench_push_dagger_hud",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
-			decal_effect = "knife",
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -180,10 +180,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -195,21 +195,27 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -100,
 				rotation_offset = 4,
 				display_offset = 12,
 				height_offset = -12,
+				distance_offset = -100,
 				initial_rotation = {
-					yaw = -90,
 					roll = 0,
-					pitch = 0
+					pitch = 0,
+					yaw = -90
 				}
 			}
 		},
 		german_brass_knuckles = {
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
 			unit = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles",
-			usage_anim = "c45",
 			third_unit = "units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
+			reward_image = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/german_brass_knuckles_hud",
+			usage_anim = "c45",
 			hold = "melee",
 			weapon_hold = "brass_knuckles",
 			stance = "brass_knuckles",
@@ -218,12 +224,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			desc_id = "bm_melee_german_brass_knuckles_desc",
 			name_id = "bm_melee_german_brass_knuckles",
 			type = "knife",
-			reward_image = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/german_brass_knuckles_hud",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -244,10 +244,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -259,21 +259,27 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -130,
 				rotation_offset = 4,
 				display_offset = 14,
 				height_offset = -9,
+				distance_offset = -130,
 				initial_rotation = {
-					yaw = -90,
 					roll = 0,
-					pitch = 0
+					pitch = 0,
+					yaw = -90
 				}
 			}
 		},
 		lockwood_brothers_push_dagger = {
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
 			unit = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger",
-			usage_anim = "c45",
 			third_unit = "units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
+			reward_image = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/lockwood_brothers_push_dagger_hud",
+			usage_anim = "c45",
 			hold = "melee",
 			weapon_hold = "lockwood_brothers_push_dagger",
 			stance = "lockwood_brothers_push_dagger",
@@ -282,12 +288,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			desc_id = "bm_melee_lockwood_brothers_push_dagger_desc",
 			name_id = "bm_melee_lockwood_brothers_push_dagger",
 			type = "knife",
-			reward_image = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/lockwood_brothers_push_dagger_hud",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -299,8 +299,8 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				max_damage = 150,
 				min_damage = 80,
 				remove_weapon_movement_penalty = true,
-				effect = "knife",
 				concealment = 30,
+				effect = "knife",
 				weapon_type = "sharp",
 				range = 185,
 				charge_time = MELEE_SPEED_NORMAL
@@ -309,10 +309,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -324,21 +324,28 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -120,
 				rotation_offset = 1,
 				display_offset = 13,
 				height_offset = -11,
+				distance_offset = -120,
 				initial_rotation = {
-					yaw = -90,
 					roll = 0,
-					pitch = 0
+					pitch = 0,
+					yaw = -90
 				}
 			}
 		},
 		bc41_knuckle_knife = {
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
 			unit = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife",
-			usage_anim = "c45",
 			third_unit = "units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
+			reward_image = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/bc41_knuckle_knife_hud",
+			decal_effect = "knife",
+			usage_anim = "c45",
 			hold = "melee",
 			weapon_hold = "bc41_knuckle_knife",
 			stance = "bc41_knuckle_knife",
@@ -347,13 +354,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			desc_id = "bm_melee_bc41_knuckle_knife_desc",
 			name_id = "bm_melee_bc41_knuckle_knife",
 			type = "knife",
-			reward_image = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/bc41_knuckle_knife_hud",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
-			decal_effect = "knife",
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -374,10 +374,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -389,34 +389,34 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -120,
 				rotation_offset = 2,
 				display_offset = 13,
 				height_offset = -9,
+				distance_offset = -120,
 				initial_rotation = {
-					yaw = -90,
 					roll = 0,
-					pitch = 0
+					pitch = 0,
+					yaw = -90
 				}
 			}
 		},
 		km_dagger = {
-			repeat_expire_t = 0.6,
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
+			third_unit = "units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger",
+			unit = "units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
 			usage_anim = "c45",
 			hold = "melee",
 			weapon_hold = "km_dagger",
 			stance = "km_dagger",
 			expire_t = 0.75,
-			third_unit = "units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger",
-			unit = "units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger",
+			repeat_expire_t = 0.6,
 			desc_id = "bm_melee_km_dagger_desc",
 			name_id = "bm_melee_km_dagger",
 			type = "knife",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -438,10 +438,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -453,35 +453,35 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -75,
 				rotation_offset = -12,
 				display_offset = 9,
 				height_offset = -8,
+				distance_offset = -75,
 				initial_rotation = {
-					yaw = -90,
 					roll = 15,
-					pitch = -165
+					pitch = -165,
+					yaw = -90
 				}
 			}
 		},
 		marching_mace = {
-			repeat_expire_t = 0.6,
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
+			third_unit = "units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace",
+			desc_id = "bm_melee_marching_mace_desc",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
+			decal_effect = "knife",
 			usage_anim = "c45",
 			hold = "marching_mace",
 			weapon_hold = "marching_mace",
 			stance = "marching_mace",
 			expire_t = 0.75,
-			third_unit = "units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace",
+			repeat_expire_t = 0.6,
 			unit = "units/vanilla/weapons/wpn_fps_mel_marching_mace/wpn_fps_mel_marching_mace",
-			desc_id = "bm_melee_marching_mace_desc",
 			name_id = "bm_melee_marching_mace",
 			type = "knife",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
-			decal_effect = "knife",
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -503,10 +503,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -518,21 +518,29 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = 60,
 				rotation_offset = -30,
 				display_offset = -6,
 				height_offset = -10,
+				distance_offset = 60,
 				initial_rotation = {
-					yaw = -90,
 					roll = 0,
-					pitch = 30
+					pitch = 30,
+					yaw = -90
 				}
 			}
 		},
 		lc14b = {
+			melee_charge_shaker = "player_melee_charge",
+			melee_damage_delay = 0.1,
+			dismember_chance = 0.5,
 			unit = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b",
-			usage_anim = "c45",
+			transition_duration = 0,
+			exit_run_speed_multiplier = 1,
+			weapon_movement_penalty = 1,
 			third_unit = "units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b",
+			reward_image = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b_hud",
+			decal_effect = "knife",
+			usage_anim = "c45",
 			hold = "machete",
 			weapon_hold = "machete",
 			stance = "machete",
@@ -541,14 +549,6 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 			desc_id = "bm_melee_lc14b_desc",
 			name_id = "bm_melee_lc14b",
 			type = "knife",
-			melee_charge_shaker = "player_melee_charge",
-			melee_damage_delay = 0.1,
-			reward_image = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b_hud",
-			dismember_chance = 0.5,
-			transition_duration = 0,
-			exit_run_speed_multiplier = 1,
-			weapon_movement_penalty = 1,
-			decal_effect = "knife",
 			align_objects = {
 				"a_weapon_right"
 			},
@@ -569,10 +569,10 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				equip_id = "equip_welrod"
 			},
 			timers = {
-				equip = 0.25,
 				unequip = 0.5,
 				reload_empty = 1.65,
-				reload_not_empty = 1.25
+				reload_not_empty = 1.25,
+				equip = 0.25
 			},
 			use_data = {
 				selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
@@ -584,14 +584,14 @@ function BlackMarketTweakData:_init_melee_weapons(tweak_data)
 				}
 			},
 			gui = {
-				distance_offset = -80,
 				rotation_offset = -10,
 				display_offset = 8,
 				height_offset = -4,
+				distance_offset = -80,
 				initial_rotation = {
-					yaw = 100,
 					roll = 160,
-					pitch = 10
+					pitch = 10,
+					yaw = 100
 				}
 			}
 		}

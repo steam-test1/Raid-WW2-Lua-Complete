@@ -31,56 +31,56 @@ HuskPlayerMovement._walk_anim_velocities = {
 	stand = {
 		ntl = {
 			walk = {
-				bwd = 156.4,
 				fwd = 183.48,
 				r = 152.15,
-				l = 150.36
+				l = 150.36,
+				bwd = 156.4
 			},
 			run = {
-				bwd = 402.62,
 				fwd = 381.35,
 				r = 405.06,
-				l = 405.06
+				l = 405.06,
+				bwd = 402.62
 			}
 		},
 		cbt = {
 			walk = {
-				bwd = 208.27,
 				fwd = 208.27,
 				r = 192.75,
-				l = 192.75
+				l = 192.75,
+				bwd = 208.27
 			},
 			run = {
-				bwd = 416.77,
 				fwd = 414.73,
 				r = 411.9,
-				l = 416.35
+				l = 416.35,
+				bwd = 416.77
 			},
 			sprint = {
 				79,
 				35,
 				14,
 				9,
-				bwd = 547,
 				fwd = 672,
 				r = 547,
-				l = 488
+				l = 488,
+				bwd = 547
 			}
 		}
 	},
 	crouch = {
 		cbt = {
 			walk = {
-				bwd = 163.74,
 				fwd = 174.45,
 				r = 162.85,
-				l = 152.14
+				l = 152.14,
+				bwd = 163.74
 			},
 			run = {
-				bwd = 268.68,
 				fwd = 312.25,
 				r = 282.93,
-				l = 282.93
+				l = 282.93,
+				bwd = 268.68
 			}
 		}
 	}
@@ -91,112 +91,112 @@ HuskPlayerMovement._walk_anim_lengths = {
 	stand = {
 		ntl = {
 			walk = {
-				bwd = 31,
 				fwd = 31,
 				r = 31,
-				l = 29
+				l = 29,
+				bwd = 31
 			},
 			run = {
-				bwd = 17,
 				fwd = 26,
 				r = 20,
-				l = 20
+				l = 20,
+				bwd = 17
 			}
 		},
 		cbt = {
 			walk = {
-				bwd = 26,
 				fwd = 26,
 				r = 26,
-				l = 26
+				l = 26,
+				bwd = 26
 			},
 			run = {
-				bwd = 18,
 				fwd = 19,
 				r = 20,
-				l = 18
+				l = 18,
+				bwd = 18
 			},
 			sprint = {
-				bwd = 16,
 				fwd = 16,
 				r = 19,
-				l = 16
+				l = 16,
+				bwd = 16
 			},
 			run_start = {
-				bwd = 25,
 				fwd = 29,
 				r = 24,
-				l = 27
+				l = 27,
+				bwd = 25
 			},
 			run_start_turn = {
-				bwd = 26,
 				r = 26,
-				l = 37
+				l = 37,
+				bwd = 26
 			},
 			run_stop = {
-				bwd = 23,
 				fwd = 29,
 				r = 31,
-				l = 28
+				l = 28,
+				bwd = 23
 			}
 		}
 	},
 	crouch = {
 		cbt = {
 			walk = {
-				bwd = 31,
 				fwd = 31,
 				r = 28,
-				l = 27
+				l = 27,
+				bwd = 31
 			},
 			run = {
-				bwd = 20,
 				fwd = 21,
 				r = 19,
-				l = 19
+				l = 19,
+				bwd = 20
 			},
 			run_start = {
-				bwd = 16,
 				fwd = 31,
 				r = 22,
-				l = 30
+				l = 30,
+				bwd = 16
 			},
 			run_start_turn = {
-				bwd = 28,
 				r = 21,
-				l = 21
+				l = 21,
+				bwd = 28
 			},
 			run_stop = {
-				bwd = 25,
 				fwd = 27,
 				r = 26,
-				l = 28
+				l = 28,
+				bwd = 25
 			}
 		}
 	},
 	wounded = {
 		cbt = {
 			walk = {
-				bwd = 29,
 				fwd = 28,
 				r = 29,
-				l = 29
+				l = 29,
+				bwd = 29
 			},
 			run = {
-				bwd = 18,
 				fwd = 19,
 				r = 19,
-				l = 19
+				l = 19,
+				bwd = 18
 			}
 		}
 	},
 	panic = {
 		ntl = {
 			run = {
-				bwd = 15,
 				fwd = 15,
 				r = 16,
-				l = 15
+				l = 15,
+				bwd = 15
 			}
 		}
 	}
@@ -229,16 +229,16 @@ HuskPlayerMovement._matching_walk_anims = {
 	}
 }
 HuskPlayerMovement._char_name_to_index = {
-	russian = 1,
 	british = 4,
 	american = 3,
-	german = 2
+	german = 2,
+	russian = 1
 }
 HuskPlayerMovement._char_model_names = {
-	russian = "g_russian",
 	british = "g_spaniard",
 	american = "g_american",
-	german = "g_body"
+	german = "g_body",
+	russian = "g_russian"
 }
 HuskPlayerMovement._stance_names = {
 	"ntl",
@@ -774,28 +774,28 @@ end
 
 function HuskPlayerMovement:_register_revive_SO()
 	local followup_objective = {
-		type = "act",
 		scan = true,
+		type = "act",
 		action = {
+			body_part = 1,
 			variant = "crouch",
 			type = "act",
-			body_part = 1,
 			blocks = {
-				aim = -1,
-				heavy_hurt = -1,
 				hurt = -1,
+				action = -1,
 				walk = -1,
-				action = -1
+				aim = -1,
+				heavy_hurt = -1
 			}
 		}
 	}
 	local objective = {
-		type = "revive",
-		pose = "stand",
 		destroy_clbk_key = false,
 		called = true,
 		haste = "run",
+		pose = "stand",
 		scan = true,
+		type = "revive",
 		follow_unit = self._unit,
 		nav_seg = self._unit:movement():nav_tracker():nav_segment(),
 		action_duration = tweak_data.interaction.revive.timer,
@@ -803,26 +803,26 @@ function HuskPlayerMovement:_register_revive_SO()
 		complete_clbk = callback(self, self, "on_revive_SO_completed"),
 		followup_objective = followup_objective,
 		action = {
-			align_sync = true,
 			type = "act",
 			variant = "revive",
 			body_part = 1,
+			align_sync = true,
 			blocks = {
-				light_hurt = -1,
-				heavy_hurt = -1,
 				hurt = -1,
-				walk = -1,
 				aim = -1,
-				action = -1
+				action = -1,
+				walk = -1,
+				light_hurt = -1,
+				heavy_hurt = -1
 			}
 		}
 	}
 	local so_descriptor = {
-		AI_group = "friendlies",
 		usage_amount = 1,
 		interval = 1,
 		chance_inc = 0,
 		base_chance = 1,
+		AI_group = "friendlies",
 		objective = objective,
 		search_pos = self._unit:position(),
 		admin_clbk = callback(self, self, "on_revive_SO_administered"),
@@ -874,20 +874,20 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 	if Network:is_server() then
 		if need_assistance and not self._assist_SO_id then
 			local objective = {
-				type = "follow",
 				destroy_clbk_key = false,
 				called = true,
 				scan = true,
+				type = "follow",
 				follow_unit = self._unit,
 				nav_seg = self._unit:movement():nav_tracker():nav_segment()
 			}
 			local so_descriptor = {
-				search_dis_sq = 25000000,
-				AI_group = "friendlies",
 				usage_amount = 1,
 				interval = 6,
 				chance_inc = 0,
 				base_chance = 1,
+				search_dis_sq = 25000000,
+				AI_group = "friendlies",
 				objective = objective,
 				search_pos = self._unit:position()
 			}
@@ -3216,8 +3216,8 @@ function HuskPlayerMovement:sync_action_jump(pos, jump_vec)
 	end
 
 	local event_desc = {
-		type = "jump",
 		is_no_move_slowdown = true,
+		type = "jump",
 		jump_vec = jump_vec,
 		pos = pos,
 		steer_velocity = Vector3()

@@ -41,8 +41,8 @@ end
 
 function VehicleOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body",
 		sample = true,
+		ray_type = "body",
 		mask = managers.slot:get_mask("vehicles")
 	})
 
@@ -63,8 +63,8 @@ end
 
 function VehicleOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body",
 		sample = true,
+		ray_type = "body",
 		mask = managers.slot:get_mask("vehicles")
 	})
 

@@ -37,8 +37,8 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		local card_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect
 		self._card_panel = self._panel:panel({
 			halign = "center",
-			valign = "center",
 			name = "card_panel",
+			valign = "center",
 			x = params.x or 0,
 			y = params.y or 0,
 			h = params.item_h or self._panel:h(),
@@ -70,10 +70,10 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 	local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
 	local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * self._card_image:h() / 255)
 	self._card_title = self._card_panel:label({
-		align = "center",
 		vertical = "center",
 		wrap = true,
 		name = "card_title",
+		align = "center",
 		blend_mode = "normal",
 		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 		h = title_h,

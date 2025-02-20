@@ -224,9 +224,9 @@ end
 
 function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text = self._object:label({
-		text = "???",
-		align = "center",
 		name = "progress_text",
+		align = "center",
+		text = "???",
 		w = self._object:w(),
 		font = self.FONT,
 		font_size = self.FONT_SIZE,
@@ -239,11 +239,11 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text:set_h(h)
 
 	self._progress_desc = self._object:label({
-		align = "center",
-		name = "progress_desc",
-		word_wrap = true,
 		wrap = true,
+		name = "progress_desc",
+		align = "center",
 		text = "UNTIL NEXT TIER",
+		word_wrap = true,
 		w = self._object:w(),
 		h = h * 2,
 		font = self.FONT,

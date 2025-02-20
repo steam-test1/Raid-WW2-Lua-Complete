@@ -58,10 +58,10 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	self._ip_verified = false
 	self._is_drop_in = false
 	self._dlcs = {
+		dlc2 = false,
 		dlc1 = false,
 		dlc4 = false,
-		dlc3 = false,
-		dlc2 = false
+		dlc3 = false
 	}
 
 	self:chk_enable_queue()
@@ -83,8 +83,8 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	end
 
 	self._profile = {
-		outfit_string = "",
-		editor = nil
+		key = nil,
+		outfit_string = ""
 	}
 	self._handshakes = {}
 	self._streaming_status = 0

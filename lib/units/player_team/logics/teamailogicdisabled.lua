@@ -172,13 +172,13 @@ function TeamAILogicDisabled._upd_aim(data, my_data)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					type = "reload",
-					body_part = 3
+					body_part = 3,
+					type = "reload"
 				}
 			else
 				new_action = {
-					type = "idle",
-					body_part = 3
+					body_part = 3,
+					type = "idle"
 				}
 			end
 
@@ -226,11 +226,11 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 			type = "act",
 			variant = "crouch",
 			blocks = {
-				walk = -1,
 				aim = -1,
 				action = -1,
 				heavy_hurt = -1,
-				hurt = -1
+				hurt = -1,
+				walk = -1
 			}
 		}
 	}
@@ -243,17 +243,17 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		action = {
-			body_part = 1,
 			type = "act",
+			body_part = 1,
 			align_sync = true,
 			variant = rescue_type,
 			blocks = {
-				walk = -1,
-				action = -1,
 				aim = -1,
 				light_hurt = -1,
+				action = -1,
 				heavy_hurt = -1,
-				hurt = -1
+				hurt = -1,
+				walk = -1
 			}
 		},
 		action_duration = tweak_data.interaction:get_interaction(data.name == "surrender" and "free" or "revive").timer,

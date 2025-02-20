@@ -13,7 +13,7 @@ end
 
 function AirdropManager:register_drop_point_group(drop_point_group)
 	table.insert(self._drop_point_groups, drop_point_group)
-	Application:info("[AirdropManager:register_drop_point_group] #Groups:", #self._drop_point_groups)
+	Application:info("[AirdropManager] #Groups:", #self._drop_point_groups)
 end
 
 function AirdropManager:call_drop(unit)
@@ -26,7 +26,7 @@ end
 
 function AirdropManager:_call_drop(unit)
 	if self._in_cooldown == true then
-		Application:trace("[AirdropManager:_call_drop] AIRDROP IN COOLDOWN. Please wait " .. tostring(math.ceil(managers.queued_tasks:when("airdrop_cooldown"))) .. " second(s).")
+		Application:trace("[AirdropManager] AIRDROP IN COOLDOWN. Please wait " .. tostring(math.ceil(managers.queued_tasks:when("airdrop_cooldown"))) .. " second(s).")
 
 		return
 	end
@@ -34,7 +34,7 @@ function AirdropManager:_call_drop(unit)
 	local drop_position = nil
 	local player_position = managers.player:player_unit():position()
 
-	print("player_position:", player_position)
+	Application:info("[AirdropManager] player_position:", player_position)
 
 	if #self._drop_point_groups > 0 then
 		local closest_drop_group_distance = mvector3.distance_sq(player_position, self._drop_point_groups[1]._values.position)
@@ -43,7 +43,7 @@ function AirdropManager:_call_drop(unit)
 		for i = 1, #self._drop_point_groups do
 			local current_group_distance = mvector3.distance_sq(player_position, self._drop_point_groups[i]._values.position)
 
-			print("DIST:", current_group_distance)
+			Application:info("[AirdropManager] DIST:", current_group_distance)
 
 			if current_group_distance < closest_drop_group_distance then
 				closest_drop_group_distance = current_group_distance
@@ -123,6 +123,8 @@ function AirdropManager:exit_cooldown()
 	Application:debug("[AirdropManager] Finished cooldown!")
 
 	self._in_cooldown = false
+
+	self:clear_latest_plane()
 end
 
 function AirdropManager:register_pod(pod)
@@ -132,6 +134,18 @@ end
 
 function AirdropManager:on_simulation_ended()
 	self:cleanup()
+end
+
+function AirdropManager:clear_latest_plane()
+	if self._planes then
+		local plane_unit = table.remove(self._planes)
+
+		if plane_unit:alive() then
+			plane_unit:set_slot(0)
+		end
+	end
+
+	Application:info("[AirdropManager] #Planes", #self._planes, inspect(self._planes))
 end
 
 function AirdropManager:cleanup()

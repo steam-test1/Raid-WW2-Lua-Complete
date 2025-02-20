@@ -27,14 +27,14 @@ end
 
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
-		selection_enabled = true,
-		vertical_spacing = 2,
+		loop_items = true,
 		h = 640,
 		w = 480,
 		y = 144,
 		x = 0,
 		name = "list_menu_options",
-		loop_items = true,
+		selection_enabled = true,
+		vertical_spacing = 2,
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
 		item_class = RaidGUIControlListItemMenu
@@ -72,30 +72,30 @@ end
 function RaidMenuLeftOptions:_list_menu_options_data_source()
 	local list_items = {
 		{
-			icon = "menu_item_controls",
 			callback = "menu_options_on_click_controls",
+			icon = "menu_item_controls",
 			text = managers.localization:to_upper_text("menu_controls")
 		},
 		{
-			icon = "menu_item_video",
 			callback = "menu_options_on_click_video",
+			icon = "menu_item_video",
 			text = managers.localization:to_upper_text("menu_video")
 		},
 		{
-			icon = "menu_item_interface",
 			callback = "menu_options_on_click_interface",
+			icon = "menu_item_interface",
 			text = managers.localization:to_upper_text("menu_interface")
 		},
 		{
-			icon = "menu_item_sound",
 			callback = "menu_options_on_click_sound",
+			icon = "menu_item_sound",
 			text = managers.localization:to_upper_text("menu_sound")
 		}
 	}
 
 	table.insert(list_items, {
-		icon = "menu_item_network",
 		callback = "menu_options_on_click_network",
+		icon = "menu_item_network",
 		text = managers.localization:to_upper_text("menu_network")
 	})
 

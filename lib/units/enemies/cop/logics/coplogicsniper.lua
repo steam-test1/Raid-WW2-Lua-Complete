@@ -31,8 +31,8 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				type = "idle",
-				body_part = 3
+				body_part = 3,
+				type = "idle"
 			})
 		end
 	end
@@ -304,13 +304,13 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					type = "reload",
-					body_part = 3
+					body_part = 3,
+					type = "reload"
 				}
 			else
 				new_action = {
-					type = "idle",
-					body_part = 3
+					body_part = 3,
+					type = "idle"
 				}
 			end
 
@@ -331,8 +331,8 @@ function CopLogicSniper._request_action_shoot(data, my_data)
 	end
 
 	local shoot_action = {
-		type = "shoot",
-		body_part = 3
+		body_part = 3,
+		type = "shoot"
 	}
 
 	if data.unit:brain():action_request(shoot_action) then

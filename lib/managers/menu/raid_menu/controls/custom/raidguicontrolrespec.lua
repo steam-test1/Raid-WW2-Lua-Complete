@@ -37,12 +37,12 @@ end
 
 function RaidGUIControlRespec:_create_respec_title()
 	local skill_title_params = {
-		vertical = "center",
 		align = "left",
 		wrap = false,
 		y = 0,
 		x = 0,
 		name = "respec_title",
+		vertical = "center",
 		text = utf8.to_upper(managers.localization:text("menu_character_skills_retrain_title")),
 		w = self._object:w(),
 		h = RaidGUIControlRespec.TITLE_H,

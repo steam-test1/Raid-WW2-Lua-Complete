@@ -164,8 +164,8 @@ end
 
 function GreedManager:pickup_greed_item(value, unit)
 	local notification_item = {
-		icon = "carry_gold",
 		name_id = "menu_greed_loot_title",
+		icon = "carry_gold",
 		value = value
 	}
 
@@ -210,7 +210,7 @@ function GreedManager:on_loot_pickpocketed()
 	local tweak_table_name, tweak = tweak_data.greed:get_random_item_weighted(weights)
 
 	if tweak then
-		local value = tweak.value
+		local value = tweak.value * managers.player:upgrade_value("player", "greed_loot_bonus", 1)
 		local notification_item = {
 			name_id = tweak.name_id,
 			icon = tweak.hud_icon,

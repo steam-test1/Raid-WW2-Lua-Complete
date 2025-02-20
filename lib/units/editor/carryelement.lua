@@ -93,9 +93,9 @@ function CarryUnitElement:update_selected(t, dt, selected_unit, all_units)
 			self._units[id] = nil
 		else
 			self:_draw_link({
+				g = 0.5,
 				r = 0,
 				b = 0,
-				g = 0.5,
 				from_unit = self._unit,
 				to_unit = unit
 			})

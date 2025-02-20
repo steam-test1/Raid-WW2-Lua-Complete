@@ -712,11 +712,11 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
+		h = 4,
 		y = 200,
 		x = 550,
 		name = "ammo_test",
-		w = 100,
-		h = 4
+		w = 100
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
@@ -962,10 +962,10 @@ function HUDManager:_create_teammates_panel(hud)
 
 	local teammates_panel_params = {
 		y = 0,
-		name = "teammates_panel",
 		x = 0,
-		halign = "left",
+		name = "teammates_panel",
 		valign = "grow",
+		halign = "left",
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -1023,9 +1023,9 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
-		halign = "right",
 		name = "weapons_panel",
 		valign = "bottom",
+		halign = "right",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1085,7 +1085,7 @@ function HUDManager:trigger_comm_wheel_option(option_id)
 end
 
 function HUDManager:hide_comm_wheel(quiet)
-	if self._hud_comm_wheel then
+	if self._hud_comm_wheel and self._hud_comm_wheel:is_visible() then
 		self._hud_comm_wheel:hide(quiet)
 	end
 end
@@ -1430,9 +1430,9 @@ function HUDManager:on_progression_cycle_completed()
 	end
 
 	local notification_params = {
+		duration = 6,
 		id = "progression_cycle_completed",
 		priority = 4,
-		duration = 6,
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 
@@ -1445,8 +1445,8 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 	end
 
 	managers.notification:add_notification({
-		id = "greed_item_picked_up",
 		shelf_life = 8,
+		id = "greed_item_picked_up",
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress,
@@ -1550,6 +1550,12 @@ end
 function HUDManager:set_map_location(location_id)
 	if self._tab_screen then
 		self._tab_screen:set_map_location(location_id)
+	end
+end
+
+function HUDManager:clear_map()
+	if self._tab_screen then
+		self._tab_screen:clear_map()
 	end
 end
 

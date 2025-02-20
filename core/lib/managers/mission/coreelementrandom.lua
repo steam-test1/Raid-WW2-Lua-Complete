@@ -42,7 +42,7 @@ function ElementRandom:on_executed(instigator)
 end
 
 function ElementRandom:_calc_amount()
-	local amount = self._values.amount or 1
+	local amount = self._values.amount
 
 	if self._values.amount_random and self._values.amount_random > 0 then
 		amount = amount + math.random(self._values.amount_random + 1) - 1

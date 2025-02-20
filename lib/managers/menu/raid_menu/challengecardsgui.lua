@@ -32,22 +32,22 @@ end
 function ChallengeCardsGui:_layout()
 	local common_width = 800
 	self._phase_one_panel = self._root_panel:panel({
+		name = "phase_one_panel",
 		y = 0,
-		x = 0,
-		name = "phase_one_panel"
+		x = 0
 	})
 	self._phase_two_panel = self._root_panel:panel({
+		name = "phase_two_panel",
 		y = 0,
-		x = 0,
-		name = "phase_two_panel"
+		x = 0
 	})
 	self._cards_suggest_title = self._root_panel:label({
-		h = 60,
-		visible = true,
 		vertical = "top",
-		name = "cards_suggest_title",
+		h = 60,
 		w = 800,
 		text = "",
+		visible = true,
+		name = "cards_suggest_title",
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
@@ -79,12 +79,12 @@ function ChallengeCardsGui:_layout()
 		}
 	}
 	self._rarity_filters_tabs = self._phase_one_panel:tabs({
-		tab_align = "center",
-		tab_height = 64,
 		y = 96,
-		x = 0,
-		name = "rarity_filters_tabs",
+		tab_height = 64,
 		dont_trigger_special_buttons = true,
+		x = 0,
+		tab_align = "center",
+		name = "rarity_filters_tabs",
 		tab_width = common_width / #tabs_params,
 		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tabs_params = tabs_params
@@ -121,27 +121,27 @@ function ChallengeCardsGui:_layout()
 
 	local card_details_params = {
 		h = 544,
-		card_h = 384,
 		visible = true,
-		name = "card_deatils",
+		card_h = 384,
 		card_w = 272,
 		card_y = 0,
 		card_x = 0,
+		name = "card_deatils",
 		x = self._card_grid:right() + 100,
 		y = self._rarity_filters_tabs:bottom(),
 		w = self._root_panel:w() - (self._card_grid:right() + 100)
 	}
 	self._card_details = self._phase_one_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 	local suggested_cards_grid_params = {
-		h = 265,
-		name = "suggested_cards_grid",
 		w = 856,
 		visible = true,
+		name = "suggested_cards_grid",
+		h = 265,
 		x = self._card_details:left(),
 		y = ChallengeCardsGui.SUGGESTED_CARDS_Y,
 		grid_params = {
-			remove_texture = true,
-			lock_texture = true
+			lock_texture = true,
+			remove_texture = true
 		},
 		item_params = {
 			w = 192,
@@ -151,8 +151,8 @@ function ChallengeCardsGui:_layout()
 	self._suggested_cards_grid = self._phase_one_panel:suggested_cards_grid(suggested_cards_grid_params)
 	local button_padding = 32
 	self._suggest_card_button = self._phase_one_panel:short_primary_button({
-		text = ">SUGGEST<",
 		name = "suggest_card_button",
+		text = ">SUGGEST<",
 		y = self._phase_one_panel:bottom() - 128,
 		on_click_callback = callback(self, self, "suggest_card")
 	})
@@ -168,9 +168,9 @@ function ChallengeCardsGui:_layout()
 
 	if not managers.raid_job:current_job_type() then
 		self._info_label = self._phase_one_panel:label({
-			align = "center",
 			vertical = "center",
 			h = 48,
+			align = "center",
 			y = self._phase_one_panel:bottom() - 128,
 			w = self._challenge_cards_grid_scrollable_area:w(),
 			text = self:translate("menu_challenge_cards_no_mission_selected", true),
@@ -185,46 +185,46 @@ function ChallengeCardsGui:_layout()
 	end
 
 	self._cards_title_ph2_host = self._root_panel:label({
-		y = 0,
-		name = "cards_title_ph2_host",
-		visible = false,
-		x = 0,
 		vertical = "top",
 		h = 60,
 		w = 800,
+		visible = false,
+		y = 0,
+		x = 0,
+		name = "cards_title_ph2_host",
 		text = self:translate("menu_challenge_cards_title_ph2_host", true),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	self._cards_title_ph2_client = self._root_panel:label({
-		y = 0,
-		name = "cards_title_ph2_client",
-		visible = false,
-		x = 0,
 		vertical = "top",
 		h = 60,
 		w = 800,
+		visible = false,
+		y = 0,
+		x = 0,
+		name = "cards_title_ph2_client",
 		text = self:translate("menu_challenge_cards_title_ph2_client", true),
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title
 	})
 	local host_activates_card_grid_params = {
+		w = 1725,
 		y = 96,
 		x = 0,
-		h = 675,
-		name = "host_activates_card_grid",
-		w = 1725,
 		visible = true,
+		name = "host_activates_card_grid",
+		h = 675,
 		grid_params = {
 			on_click_callback = callback(self, self, "on_item_host_clicks_suggested_card_grid")
 		},
 		item_params = {
+			item_w = 266,
 			selected_marker_h = 675,
 			selected_marker_w = 352,
-			item_h = 383,
-			item_w = 266
+			item_h = 383
 		}
 	}
 	self._host_activates_card_grid = self._phase_two_panel:suggested_cards_grid_large(host_activates_card_grid_params)
@@ -284,12 +284,12 @@ function ChallengeCardsGui:_layout()
 
 	if ChallengeCardsGui.PHASE == 2 then
 		self._timer_label = self._root_panel:label({
-			h = 60,
-			visible = true,
 			vertical = "top",
-			name = "timer_label",
+			h = 60,
 			w = 200,
 			text = "",
+			visible = true,
+			name = "timer_label",
 			color = tweak_data.gui.colors.raid_white,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.title
@@ -298,11 +298,11 @@ function ChallengeCardsGui:_layout()
 		self._timer_label:set_right(self._root_panel:right())
 
 		self._timer_icon = self._root_panel:image({
-			y = 20,
 			x = 0,
-			h = 34,
-			name = "timer_icon",
+			y = 20,
 			w = 34,
+			name = "timer_icon",
+			h = 34,
 			texture = tweak_data.gui.icons.ico_time.texture,
 			texture_rect = tweak_data.gui.icons.ico_time.texture_rect
 		})

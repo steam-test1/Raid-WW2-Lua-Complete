@@ -162,8 +162,8 @@ function NetworkAccountXBL:inventory_reward(key_name_id, callback_ref)
 				local new_card = {
 					amount = 1,
 					quality = "",
-					bonus = false,
 					category = "challenge_card",
+					bonus = false,
 					def_id = card.def_id,
 					entry = card.key_name
 				}

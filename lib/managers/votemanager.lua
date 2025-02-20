@@ -1,7 +1,5 @@
 VoteManager = VoteManager or class()
 VoteManager.VOTE_EVENT = {
-	instant_restart = 9,
-	process_restart = 8,
 	request_restart = 7,
 	instant_kick = 6,
 	process_kick = 5,
@@ -12,17 +10,17 @@ VoteManager.VOTE_EVENT = {
 	server_kick_option = 13,
 	instant_restart_mission = 12,
 	process_restart_mission = 11,
-	request_restart_mission = 10
+	request_restart_mission = 10,
+	instant_restart = 9,
+	process_restart = 8
 }
 VoteManager.VOTES = {
-	cancel = 3,
-	no = 2,
 	yes = 1,
-	none = -1
+	none = -1,
+	cancel = 3,
+	no = 2
 }
 VoteManager.REASON = {
-	wrong_equipment = 6,
-	many_equipments = 5,
 	many_grenades = 4,
 	many_bags = 3,
 	many_bags_pickup = 2,
@@ -30,7 +28,9 @@ VoteManager.REASON = {
 	invalid_character = 10,
 	invalid_weapon = 9,
 	invalid_mask = 8,
-	invalid_job = 7
+	invalid_job = 7,
+	wrong_equipment = 6,
+	many_equipments = 5
 }
 
 function VoteManager:init()
@@ -531,9 +531,9 @@ function VoteManager:update(t, dt)
 					self._next_hint_t = t + 6
 
 					managers.notification:add_notification({
-						id = "waiting_for_player_dropin",
 						shelf_life = 5,
 						duration = 2,
+						id = "waiting_for_player_dropin",
 						text = managers.localization:text("hud_waiting_for_player_dropin")
 					})
 				end

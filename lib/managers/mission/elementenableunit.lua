@@ -9,6 +9,12 @@ function ElementEnableUnit:init(...)
 end
 
 function ElementEnableUnit:on_script_activated()
+	if not self._has_fetched_units then
+		self:_fetch_units()
+	end
+end
+
+function ElementEnableUnit:_fetch_units()
 	for _, id in ipairs(self._values.unit_ids) do
 		local unit = managers.worldcollection:get_unit_with_id(id, callback(self, self, "_load_unit"), self._mission_script:sync_id())
 
@@ -29,6 +35,11 @@ end
 function ElementEnableUnit:on_executed(instigator)
 	if not self._values.enabled then
 		return
+	end
+
+	if not self._has_fetched_units then
+		self:_fetch_units()
+		Application:stack_dump_error("[ElementDisableUnit:on_executed] Was called before we fetched units, fetching now.")
 	end
 
 	for _, unit in ipairs(self._units) do

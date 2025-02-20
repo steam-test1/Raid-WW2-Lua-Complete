@@ -77,10 +77,10 @@ function EditZipLine:init(editor)
 
 	self._type_params = {
 		tooltip = "Select a type from the combobox",
-		name = "Type:",
-		name_proportions = 1,
 		ctrlr_proportions = 1,
 		sorted = true,
+		name = "Type:",
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
 		options = ZipLine.TYPES

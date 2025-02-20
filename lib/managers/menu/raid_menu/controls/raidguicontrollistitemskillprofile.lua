@@ -110,9 +110,9 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	})
 	local purchase_cost = item_data.purchase_cost and tostring(item_data.purchase_cost)
 	self._gold_value_label = self._context_info_panel:label({
-		fit_text = true,
-		name = "profile_name_label",
 		vertical = "center",
+		name = "profile_name_label",
+		fit_text = true,
 		font = self.PURCHASE_VALUE_FONT,
 		font_size = self.PURCHASE_VALUE_FONT_SIZE,
 		text = purchase_cost,

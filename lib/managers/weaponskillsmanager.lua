@@ -112,8 +112,8 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 					if not managers.challenge:challenge_exists(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_id) then
 						local challenge_tasks = skill.challenge_tasks
 						local challenge_callback = {
-							method = "on_weapon_challenge_completed",
 							target = "managers.weapon_skills",
+							method = "on_weapon_challenge_completed",
 							params = {
 								weapon_id,
 								tier_index,
@@ -971,8 +971,8 @@ function WeaponSkillsManager:load(data, version)
 							local challenge_id = weapon_id .. "_" .. skill[1].skill_name .. "_" .. tostring(tier_index)
 							local challenge_tasks = skill[1].challenge_tasks
 							local challenge_callback = {
-								method = "on_weapon_challenge_completed",
 								target = "managers.weapon_skills",
+								method = "on_weapon_challenge_completed",
 								params = {
 									weapon_id,
 									tier_index,

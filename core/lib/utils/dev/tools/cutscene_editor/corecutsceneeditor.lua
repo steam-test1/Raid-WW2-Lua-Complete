@@ -33,51 +33,51 @@ end
 local commands = CoreCommandRegistry:new()
 
 commands:add({
-	key = "Ctrl+N",
 	label = "&New Project",
-	help = "Closes the currently open cutscene project so you can start with a blank slate",
-	id = "NEW_PROJECT"
+	key = "Ctrl+N",
+	id = "NEW_PROJECT",
+	help = "Closes the currently open cutscene project so you can start with a blank slate"
 })
 commands:add({
-	key = "Ctrl+O",
 	label = "&Open Project...",
-	help = "Opens an existing cutscene project from the database",
-	id = "OPEN_PROJECT"
+	key = "Ctrl+O",
+	id = "OPEN_PROJECT",
+	help = "Opens an existing cutscene project from the database"
 })
 commands:add({
-	key = "Ctrl+S",
 	label = "&Save Project",
-	help = "Saves the current project to the database",
-	id = "SAVE_PROJECT"
+	key = "Ctrl+S",
+	id = "SAVE_PROJECT",
+	help = "Saves the current project to the database"
 })
 commands:add({
-	help = "Saves the current project to the database under a new name",
 	label = "Save Project &As...",
+	help = "Saves the current project to the database under a new name",
 	id = "SAVE_PROJECT_AS"
 })
 commands:add({
-	help = "Displays the Project Settings dialog",
 	label = "&Project Settings...",
+	help = "Displays the Project Settings dialog",
 	id = "SHOW_PROJECT_SETTINGS"
 })
 commands:add({
-	help = "Exports an optimized version of the cutscene that can be used within the game",
 	label = "&Export Cutscene to Game...",
+	help = "Exports an optimized version of the cutscene that can be used within the game",
 	id = "EXPORT_TO_GAME"
 })
 commands:add({
-	help = "Exports edited animations for all actors, cameras and locators as a Maya scene",
 	label = "Export Cutscene to &Maya...",
+	help = "Exports edited animations for all actors, cameras and locators as a Maya scene",
 	id = "EXPORT_TO_MAYA"
 })
 commands:add({
-	help = "Exports a low-quality render of each frame in the cutscene as an image file for use as a reference",
 	label = "Export &Playblast...",
+	help = "Exports a low-quality render of each frame in the cutscene as an image file for use as a reference",
 	id = "EXPORT_PLAYBLAST"
 })
 commands:add({
-	help = "Displays the Batch Export dialog",
 	label = "&Batch Export to Game...",
+	help = "Displays the Batch Export dialog",
 	id = "SHOW_BATCH_OPTIMIZER"
 })
 commands:add({
@@ -86,177 +86,177 @@ commands:add({
 	help = "Closes the " .. CoreCutsceneEditor.EDITOR_TITLE .. " window"
 })
 commands:add({
-	key = "Ctrl+X",
 	label = "Cut",
-	help = "Place selected clips on the clipboard. When pasted, the clips will be moved",
-	id = "CUT"
+	key = "Ctrl+X",
+	id = "CUT",
+	help = "Place selected clips on the clipboard. When pasted, the clips will be moved"
 })
 commands:add({
-	key = "Ctrl+C",
 	label = "Copy",
-	help = "Place selected clips on the clipboard. When pasted, the clips will be duplicated",
-	id = "COPY"
+	key = "Ctrl+C",
+	id = "COPY",
+	help = "Place selected clips on the clipboard. When pasted, the clips will be duplicated"
 })
 commands:add({
-	key = "Ctrl+V",
 	label = "Paste",
-	help = "Paste clipboard contents into the current film track at the playhead position",
-	id = "PASTE"
+	key = "Ctrl+V",
+	id = "PASTE",
+	help = "Paste clipboard contents into the current film track at the playhead position"
 })
 commands:add({
-	key = "Del",
 	label = "Delete",
-	help = "Removes selected clips from the sequencer timeline",
-	id = "DELETE"
+	key = "Del",
+	id = "DELETE",
+	help = "Removes selected clips from the sequencer timeline"
 })
 commands:add({
-	key = "Ctrl+A",
 	label = "Select &All",
-	help = "Select all clips and all keys in the sequencer timeline",
-	id = "SELECT_ALL"
+	key = "Ctrl+A",
+	id = "SELECT_ALL",
+	help = "Select all clips and all keys in the sequencer timeline"
 })
 commands:add({
-	key = "Ctrl+Shift+A",
 	label = "Select All on Current &Track",
-	help = "Select all clips on the current film track",
-	id = "SELECT_ALL_ON_CURRENT_TRACK"
+	key = "Ctrl+Shift+A",
+	id = "SELECT_ALL_ON_CURRENT_TRACK",
+	help = "Select all clips on the current film track"
 })
 commands:add({
-	key = "Ctrl+D",
 	label = "&Deselect",
-	help = "Deselect all clips and all keys in the sequencer timeline",
-	id = "DESELECT"
+	key = "Ctrl+D",
+	id = "DESELECT",
+	help = "Deselect all clips and all keys in the sequencer timeline"
 })
 commands:add({
-	help = "Remove all Camera Zoom keys that have no effect from the script track",
 	label = "Cleanup &Zoom Keys",
+	help = "Remove all Camera Zoom keys that have no effect from the script track",
 	id = "CLEANUP_ZOOM_KEYS"
 })
 commands:add({
-	help = "Check to view the scene though the directed cutscene camera",
 	label = "Use &Cutscene Camera",
+	help = "Check to view the scene though the directed cutscene camera",
 	id = "CUTSCENE_CAMERA_TOGGLE"
 })
 commands:add({
-	key = "Ctrl+R",
 	label = "&Widescreen Aspect Ratio",
-	help = "Check to use 16:9 letterbox format for the directed cutscene camera",
-	id = "WIDESCREEN_TOGGLE"
+	key = "Ctrl+R",
+	id = "WIDESCREEN_TOGGLE",
+	help = "Check to use 16:9 letterbox format for the directed cutscene camera"
 })
 commands:add({
-	help = "Visualize cast member positions using debug lines",
 	label = "Cast &Finder",
+	help = "Visualize cast member positions using debug lines",
 	id = "CAST_FINDER_TOGGLE"
 })
 commands:add({
-	help = "Visualize cameras using debug lines",
 	label = "&Cameras",
+	help = "Visualize cameras using debug lines",
 	id = "CAMERAS_TOGGLE"
 })
 commands:add({
-	key = "Ctrl+F",
 	label = "&Focus Planes",
-	help = "Visualize depth of field effects with focus planes",
-	id = "FOCUS_PLANE_TOGGLE"
+	key = "Ctrl+F",
+	id = "FOCUS_PLANE_TOGGLE",
+	help = "Visualize depth of field effects with focus planes"
 })
 commands:add({
-	help = "Visualize bone hierarchies using debug lines",
 	label = "&Hierarchies",
+	help = "Visualize bone hierarchies using debug lines",
 	id = "HIERARCHIES_TOGGLE"
 })
 commands:add({
-	help = "Check to advance the playhead by exactly one frame instead of the elapsed time since the last update during playback",
 	label = "Play &Every Frame",
+	help = "Check to advance the playhead by exactly one frame instead of the elapsed time since the last update during playback",
 	id = "PLAY_EVERY_FRAME_TOGGLE"
 })
 commands:add({
-	help = "Inserts clips from the selected footage track at the current playhead position",
 	label = "Clips from &Selected Footage",
+	help = "Inserts clips from the selected footage track at the current playhead position",
 	id = "INSERT_CLIPS_FROM_SELECTED_FOOTAGE"
 })
 commands:add({
-	help = "Browse for an audio file to insert into the voice-over track at the current playhead position",
 	label = "&Audio File...",
+	help = "Browse for an audio file to insert into the voice-over track at the current playhead position",
 	id = "INSERT_AUDIO_FILE"
 })
 commands:add({
-	image = "sequencer\\loop_16x16.png",
 	help = "Toggle playback looping",
+	image = "sequencer\\loop_16x16.png",
 	key = "Ctrl+L",
 	label = "&Loop Playback",
 	id = "LOOP_TOGGLE"
 })
 commands:add({
-	image = "sequencer\\play_16x16.png",
 	help = "Start or pause playback from the current playhead position",
+	image = "sequencer\\play_16x16.png",
 	key = "Ctrl+Space",
 	label = "&Play / Pause",
 	id = "PLAY_TOGGLE"
 })
 commands:add({
-	image = "sequencer\\play_from_start_16x16.png",
 	help = "Start playback from the start of the selected region or cutscene",
+	image = "sequencer\\play_from_start_16x16.png",
 	key = "Ctrl+Shift+Space",
 	label = "Play from Start",
 	id = "PLAY_FROM_START"
 })
 commands:add({
-	image = "sequencer\\play_16x16.png",
 	help = "Start playback from the current playhead position",
+	image = "sequencer\\play_16x16.png",
 	key = "Ctrl+Space",
 	label = "Play",
 	id = "PLAY"
 })
 commands:add({
-	image = "sequencer\\pause_16x16.png",
 	help = "Pause playback at the current playhead position",
+	image = "sequencer\\pause_16x16.png",
 	key = "Ctrl+Space",
 	label = "Pause",
 	id = "PAUSE"
 })
 commands:add({
-	image = "sequencer\\stop_16x16.png",
 	help = "Stop playback and return to the start of the selected region or cutscene",
+	image = "sequencer\\stop_16x16.png",
 	key = "Escape",
 	label = "&Stop",
 	id = "STOP"
 })
 commands:add({
-	image = "sequencer\\go_to_start_16x16.png",
 	help = "Go to the start of the selection or cutscene",
+	image = "sequencer\\go_to_start_16x16.png",
 	key = "Ctrl+Up",
 	label = "Go to &Start",
 	id = "GO_TO_START"
 })
 commands:add({
-	image = "sequencer\\go_to_end_16x16.png",
 	help = "Go to the end of the selection or cutscene",
+	image = "sequencer\\go_to_end_16x16.png",
 	key = "Ctrl+Down",
 	label = "Go to &End",
 	id = "GO_TO_END"
 })
 commands:add({
-	key = "Ctrl+Right",
 	label = "Go to &Next Frame",
-	help = "Go to the previous frame",
-	id = "GO_TO_NEXT_FRAME"
+	key = "Ctrl+Right",
+	id = "GO_TO_NEXT_FRAME",
+	help = "Go to the previous frame"
 })
 commands:add({
-	key = "Ctrl+Left",
 	label = "Go to &Previous Frame",
-	help = "Go to the next frame",
-	id = "GO_TO_PREVIOUS_FRAME"
+	key = "Ctrl+Left",
+	id = "GO_TO_PREVIOUS_FRAME",
+	help = "Go to the next frame"
 })
 commands:add({
-	image = "sequencer\\zoom_in_16x16.png",
 	help = "Increase sequencer track zoom level",
+	image = "sequencer\\zoom_in_16x16.png",
 	key = "Ctrl++",
 	label = "Zoom &In",
 	id = "ZOOM_IN"
 })
 commands:add({
-	image = "sequencer\\zoom_out_16x16.png",
 	help = "Decrease sequencer track zoom level",
+	image = "sequencer\\zoom_out_16x16.png",
 	key = "Ctrl+-",
 	label = "Zoom &Out",
 	id = "ZOOM_OUT"

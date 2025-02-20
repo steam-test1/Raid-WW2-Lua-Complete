@@ -26,10 +26,10 @@ end
 
 function HUDBigPrompt:_create_panel(hud)
 	self._object = hud.panel:panel({
-		name = "big_prompt_panel",
 		halign = "center",
 		valign = "center",
 		alpha = 0,
+		name = "big_prompt_panel",
 		w = HUDBigPrompt.W,
 		h = HUDBigPrompt.H
 	})
@@ -38,8 +38,8 @@ end
 function HUDBigPrompt:_create_background()
 	local gui_data = tweak_data.gui:get_full_gui_data(self.DEFAULT_BACKGROUND)
 	self._background = self._object:bitmap({
-		name = "big_prompt_background",
 		layer = 1,
+		name = "big_prompt_background",
 		w = self.W,
 		h = self.BACKGROUND_H,
 		texture = gui_data.texture,
@@ -52,12 +52,12 @@ end
 
 function HUDBigPrompt:_create_title()
 	self._title = self._object:text({
+		halign = "scale",
 		valign = "scale",
 		text = "TITLE",
-		vertical = "center",
-		halign = "scale",
 		align = "center",
 		name = "big_prompt_text",
+		vertical = "center",
 		y = self._background:y(),
 		h = self.BACKGROUND_H,
 		font = tweak_data.gui:get_font_path(self.TEXT_FONT, self.TEXT_FONT_DISPLAY_SIZE),
@@ -68,12 +68,12 @@ end
 
 function HUDBigPrompt:_create_description()
 	self._description = self._object:text({
-		align = "center",
-		vertical = "bottom",
 		halign = "scale",
-		valign = "scale",
 		text = "DESCRIPTION",
+		valign = "scale",
+		align = "center",
 		name = "big_prompt_description",
+		vertical = "bottom",
 		w = self._object:w(),
 		h = self._object:h(),
 		font = self.DESCRIPTION_FONT,
@@ -85,9 +85,9 @@ end
 
 function HUDBigPrompt:_create_icon()
 	self._icon = self._object:bitmap({
-		name = "big_prompt_icon",
 		halign = "scale",
 		valign = "scale",
+		name = "big_prompt_icon",
 		layer = self._background:layer(),
 		w = self.ICON_SIZE,
 		h = self.ICON_SIZE
@@ -109,10 +109,10 @@ function HUDBigPrompt:_create_flares(color)
 	self._flare_panel:set_center(self._icon:center())
 
 	self._lens_glint = self._flare_panel:bitmap({
-		alpha = 0.65,
-		name = "big_prompt_glint",
-		rotation = 360,
 		blend_mode = "add",
+		name = "big_prompt_glint",
+		alpha = 0.65,
+		rotation = 360,
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -120,9 +120,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	})
 	self._lens_orbs = self._flare_panel:bitmap({
-		name = "loot_screen_orbs",
 		rotation = 360,
 		blend_mode = "add",
+		name = "loot_screen_orbs",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -130,9 +130,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	})
 	self._lens_shimmer = self._flare_panel:bitmap({
-		name = "big_prompt_iris",
 		rotation = 360,
 		blend_mode = "add",
+		name = "big_prompt_iris",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),
@@ -140,9 +140,9 @@ function HUDBigPrompt:_create_flares(color)
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	})
 	self._lens_spike_ball = self._flare_panel:bitmap({
-		name = "big_prompt_spike_ball",
 		rotation = 360,
 		blend_mode = "add",
+		name = "big_prompt_spike_ball",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),

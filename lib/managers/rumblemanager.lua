@@ -33,10 +33,10 @@ function RumbleManager:setup_preset_rumbles()
 		peak = 1
 	})
 	self:add_preset_rumbles("electrified", {
-		cumulative = false,
 		engine = "both",
 		release = 0.05,
-		peak = 0.5
+		peak = 0.5,
+		cumulative = false
 	})
 	self:add_preset_rumbles("electric_shock", {
 		engine = "both",

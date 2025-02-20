@@ -51,8 +51,8 @@ end
 
 function RaidGUIControlWeaponSkills:_create_tier_labels()
 	local tier_panel_params = {
-		h = 30,
-		name = "tier_label_panel"
+		name = "tier_label_panel",
+		h = 30
 	}
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}
@@ -146,6 +146,8 @@ function RaidGUIControlWeaponSkills:apply_selected_skills()
 		end
 	end
 
+	self:_consume_breadcrumb(self._selected_button_idx, self._selected_row_idx)
+	managers.menu_component:post_event(WeaponSelectionGui.WEAPON_EQUIP_SOUND)
 	managers.weapon_skills:set_available_weapon_skill_points(self:get_available_points())
 	managers.weapon_skills:update_weapon_skills(self._weapon_category_id, self._weapon_id, "activate")
 	managers.player:_internal_load()

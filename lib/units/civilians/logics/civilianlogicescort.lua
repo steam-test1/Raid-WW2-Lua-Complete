@@ -392,10 +392,10 @@ function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 		body_part = 1,
 		type = "act",
 		blocks = {
-			hurt = -1,
-			action = -1,
 			walk = -1,
-			heavy_hurt = -1
+			heavy_hurt = -1,
+			hurt = -1,
+			action = -1
 		}
 	}
 	my_data.getting_up = data.unit:movement():action_request(action)

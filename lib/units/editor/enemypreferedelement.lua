@@ -25,9 +25,9 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 
 			if draw then
 				self:_draw_link({
-					b = 0.75,
 					g = 0,
 					r = 0,
+					b = 0.75,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -221,9 +221,9 @@ function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_uni
 
 		if draw then
 			self:_draw_link({
-				b = 0,
 				g = 0,
 				r = 0.75,
+				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})

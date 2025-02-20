@@ -21,16 +21,16 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
+		valign = "grow",
 		halign = "grow",
-		name = "custody_panel",
-		valign = "grow"
+		name = "custody_panel"
 	})
 	local timer_message_params = {
+		align = "center",
 		text = "custodddddy in",
 		h = 40,
 		w = 400,
 		vertical = "center",
-		align = "center",
 		name = "timer_msg",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
@@ -46,10 +46,10 @@ function HUDPlayerCustody:init(hud)
 	timer_msg:set_y(28)
 
 	local timer_params = {
+		align = "center",
 		text = "00:00",
 		h = 32,
 		vertical = "bottom",
-		align = "center",
 		name = "timer",
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
@@ -103,24 +103,24 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect
 	})
 	self._spectator_text = self._spectator_panel:text({
+		vertical = "center",
+		align = "center",
 		text = "SPECTATING",
 		valign = "center",
 		halign = "center",
 		name = "spectator_text",
-		vertical = "center",
-		align = "center",
 		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
 		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		layer = spectator_background:layer() + 1
 	})
 	self._button_prompt = self._spectator_panel:text({
-		text = "",
-		name = "prompt_previous",
-		valign = "center",
-		halign = "center",
 		vertical = "bottom",
 		align = "center",
+		text = "",
+		valign = "center",
+		halign = "center",
+		name = "prompt_previous",
 		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR

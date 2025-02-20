@@ -34,8 +34,8 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 		color = params.color or tweak_data.gui.colors.raid_white
 	})
 	self._item_label = self._object:label({
-		vertical = "center",
 		y = 0,
+		vertical = "center",
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemIcon.ICON_PADDING,
 		w = params.w,
@@ -46,19 +46,19 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 		color = params.color or tweak_data.gui.colors.raid_white
 	})
 	self._item_background = self._object:rect({
+		visible = false,
 		y = 1,
 		x = 0,
-		visible = false,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = params.h - 2,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._item_highlight_marker = self._object:rect({
+		visible = false,
 		w = 3,
 		y = 1,
 		x = 0,
-		visible = false,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = self._selected_color

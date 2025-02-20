@@ -22,69 +22,69 @@ function EnvironmentLayer:init(owner)
 	self._wind_speeds = {}
 
 	table.insert(self._wind_speeds, {
+		beaufort = 0,
 		speed = 0,
-		description = "Calm",
-		beaufort = 0
+		description = "Calm"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 1,
 		speed = 0.3,
-		description = "Light air",
-		beaufort = 1
+		description = "Light air"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 2,
 		speed = 1.6,
-		description = "Light breeze",
-		beaufort = 2
+		description = "Light breeze"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 3,
 		speed = 3.4,
-		description = "Gentle breeze",
-		beaufort = 3
+		description = "Gentle breeze"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 4,
 		speed = 5.5,
-		description = "Moderate breeze",
-		beaufort = 4
+		description = "Moderate breeze"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 5,
 		speed = 8,
-		description = "Fresh breeze",
-		beaufort = 5
+		description = "Fresh breeze"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 6,
 		speed = 10.8,
-		description = "Strong breeze",
-		beaufort = 6
+		description = "Strong breeze"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 7,
 		speed = 13.9,
-		description = "Near Gale",
-		beaufort = 7
+		description = "Near Gale"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 8,
 		speed = 17.2,
-		description = "Fresh Gale",
-		beaufort = 8
+		description = "Fresh Gale"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 9,
 		speed = 20.8,
-		description = "Strong Gale",
-		beaufort = 9
+		description = "Strong Gale"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 10,
 		speed = 24.5,
-		description = "Whole storm",
-		beaufort = 10
+		description = "Whole storm"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 11,
 		speed = 28.5,
-		description = "Violent storm",
-		beaufort = 11
+		description = "Violent storm"
 	})
 	table.insert(self._wind_speeds, {
+		beaufort = 12,
 		speed = 32.7,
-		description = "Hurricane",
-		beaufort = 12
+		description = "Hurricane"
 	})
 
 	self._draw_wind = false

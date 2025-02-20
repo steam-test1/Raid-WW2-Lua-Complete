@@ -102,8 +102,8 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_description()
 	local description_params = {
-		vertical = "center",
 		wrap = true,
+		vertical = "center",
 		name = "list_item_description_" .. tostring(self._name),
 		x = self._title:x(),
 		y = self._title:y() + self._title:h() + RaidGUIControlListItemIconDescription.TITLE_PADDING_DOWN,

@@ -32,9 +32,9 @@ function GreedTweakData:_init_item_values()
 	self.item_value = {
 		complete_gold_bar = 1000,
 		rare_commodity = 700,
-		high_end = 350,
-		mid_end = 150,
-		low_end = 50,
+		high_end = 400,
+		mid_end = 250,
+		low_end = 100,
 		carry_painting = 1000,
 		carry_painting_cheap = 350,
 		carry_gold = 1500,
@@ -170,11 +170,11 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
-			dialog_success = "player_gen_lock_picked",
 			dialog_enter = "player_gen_picking_lock",
 			failed = "lock_fail",
 			success = "success",
 			dialog_fail = "player_gen_lockpick_fail",
+			dialog_success = "player_gen_lock_picked",
 			circles = {
 				{
 					lock = "lock_a",
@@ -212,8 +212,8 @@ function GreedTweakData:_init_value_weights()
 		pickpocket = {
 			{
 				{
-					value = 0,
-					chance = 55
+					chance = 55,
+					value = 0
 				},
 				{
 					chance = 45,
@@ -222,8 +222,8 @@ function GreedTweakData:_init_value_weights()
 			},
 			{
 				{
-					value = 0,
-					chance = 60
+					chance = 60,
+					value = 0
 				},
 				{
 					chance = 43,
@@ -232,8 +232,8 @@ function GreedTweakData:_init_value_weights()
 			},
 			{
 				{
-					value = 0,
-					chance = 55
+					chance = 55,
+					value = 0
 				},
 				{
 					chance = 35,
@@ -246,8 +246,8 @@ function GreedTweakData:_init_value_weights()
 			},
 			{
 				{
-					value = 0,
-					chance = 50
+					chance = 50,
+					value = 0
 				},
 				{
 					chance = 32,

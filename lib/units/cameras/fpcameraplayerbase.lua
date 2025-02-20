@@ -36,8 +36,8 @@ function FPCameraPlayerBase:init(unit)
 	self._obj_eye = self._unit:orientation_object()
 	self._weap_align = self._unit:get_object(Idstring("right_weapon_align"))
 	self._camera_properties = {
-		pitch = 0.5,
-		spin = 0
+		spin = 0,
+		pitch = 0.5
 	}
 	self._output_data = {
 		position = unit:position(),
@@ -1022,18 +1022,6 @@ function FPCameraPlayerBase:_steampad_look_function(stick_input, stick_input_mul
 	end
 
 	return 0, 0
-end
-
-local function get_look_setting(a, b, c, t)
-	if t < 0.5 then
-		return math.lerp(a, b, t / 0.5)
-	end
-
-	return math.lerp(b, c, (t - 0.5) / 0.5)
-end
-
-local function get_look_setting_x_y(a, b, c, x, y)
-	return get_look_setting(a, b, c, x), get_look_setting(a, b, c, y)
 end
 
 function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier, dt)

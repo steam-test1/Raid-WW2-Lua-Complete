@@ -40,11 +40,11 @@ end
 
 function ProgressBarGuiObject:_create_description(description)
 	local description_params = {
-		h = 32,
 		name = "progress_bar_description",
-		w = 256,
 		valign = "bottom",
 		align = "center",
+		h = 32,
+		w = 256,
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_white,

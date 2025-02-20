@@ -984,14 +984,14 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 			range = true
 		},
 		{
-			range = true,
+			multiple_of = "damage",
 			name = "damage_effect",
-			multiple_of = "damage"
+			range = true
 		},
 		{
 			inverse = true,
-			num_decimals = 1,
 			name = "charge_time",
+			num_decimals = 1,
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
@@ -1016,18 +1016,18 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
-			value = 0,
 			min_value = 0,
+			value = 0,
 			max_value = 0
 		}
 		mods_stats[stat.name] = {
-			value = 0,
 			min_value = 0,
+			value = 0,
 			max_value = 0
 		}
 		skill_stats[stat.name] = {
-			value = 0,
 			min_value = 0,
+			value = 0,
 			max_value = 0
 		}
 

@@ -24,6 +24,17 @@ function FlamerTank:detonate(in_pos, attacker_unit)
 	self._detonated = true
 	local rot = self._unit:rotation()
 	local pos = in_pos + rot:y() * -25
+	local player_unit = managers.player:player_unit()
+	local player_attacker = attacker_unit and attacker_unit:base() and attacker_unit:base().is_player
+
+	if player_attacker then
+		self._custom_params.attacker_unit = attacker_unit
+	end
+
+	if player_attacker and alive(player_unit) and attacker_unit == player_unit or not player_attacker and Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_detonate_molotov_grenade", self._unit, "base", self.DETONATE_EVENT_ID, pos)
+		self:_detonate_on_client(pos)
+	end
 
 	if Network:is_server() and self._kill_parent and alive(self._unit:parent()) and self._unit:parent():character_damage() then
 		local attack_data = {
@@ -36,18 +47,6 @@ function FlamerTank:detonate(in_pos, attacker_unit)
 		end
 
 		self._unit:parent():character_damage():damage_mission(attack_data)
-	end
-
-	local player_unit = managers.player:player_unit()
-	local player_attacker = attacker_unit and attacker_unit:base() and attacker_unit:base().is_player
-
-	if player_attacker then
-		self._custom_params.attacker_unit = attacker_unit
-	end
-
-	if player_attacker and alive(player_unit) and attacker_unit == player_unit or not player_attacker and Network:is_server() then
-		self:_detonate_on_client(pos)
-		managers.network:session():send_to_peers_synched("sync_detonate_molotov_grenade", self._unit, "base", self.DETONATE_EVENT_ID, pos)
 	end
 end
 

@@ -196,9 +196,9 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
-		layer = 2,
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
+		layer = 2,
 		y = 0,
 		x = 0,
 		name = self._params.name .. "_progress_bar_foreground_panel",

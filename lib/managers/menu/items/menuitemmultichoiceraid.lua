@@ -39,9 +39,9 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 	local base = 20
 	local height = 15
 	row_item.arrow_left = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
 		x = 0,
 		y = 0,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			0,
 			0,
@@ -54,9 +54,9 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 		blend_mode = node.row_item_blend_mode
 	})
 	row_item.arrow_right = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
 		x = 0,
 		y = 0,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			24,
 			0,

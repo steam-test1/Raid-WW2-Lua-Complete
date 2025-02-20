@@ -52,9 +52,9 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link({
+				r = 0.75,
 				b = 0,
 				g = 0,
-				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -68,9 +68,9 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(unit) then
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
+						r = 0,
 						b = 0.75,
 						g = 0.5,
-						r = 0,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -561,9 +561,9 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0.75,
 				b = 0.25,
 				g = 0.75,
-				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -614,9 +614,9 @@ function CoreAreaOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 	CoreAreaTriggerUnitElement.create_values_ctrlrs(self, panel, panel_sizer, {
+		amount = true,
 		trigger_type = true,
-		instigator = true,
-		amount = true
+		instigator = true
 	})
 	panel_sizer:add(EWS:StaticLine(panel, "", "LI_HORIZONTAL"), 0, 5, "EXPAND,TOP,BOTTOM")
 	self:_build_value_combobox(panel, panel_sizer, "operation", {

@@ -257,34 +257,34 @@ end
 function WeaponTweakData:_init_data_weapon_skins()
 	self.weapon_skins = {
 		garand_special_edition = {
-			weapon_id = "garand",
 			name_id = "bm_w_garand_se",
+			weapon_id = "garand",
 			dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
 			replaces_parts = {
-				wpn_fps_ass_garand_extra_swiwel = "wpn_fps_ass_garand_golden_extra_swiwel",
-				wpn_fps_ass_garand_ns_conical = "wpn_fps_ass_garand_golden_ns_conical",
-				wpn_fps_ass_garand_dh_standard = "wpn_fps_ass_garand_golden_dh_standard",
-				wpn_fps_ass_garand_strip_standard = "wpn_fps_ass_garand_golden_strip_standard",
-				wpn_fps_ass_garand_bolt_standard = "wpn_fps_ass_garand_golden_bolt_standard",
-				wpn_fps_ass_garand_s_standard = "wpn_fps_ass_garand_golden_s_standard",
-				wpn_fps_ass_garand_b_standard = "wpn_fps_ass_garand_golden_b_standard",
 				wpn_fps_ass_garand_extra1_swiwel = "wpn_fps_ass_garand_golden_extra1_swiwel",
-				wpn_fps_ass_garand_body_standard = "wpn_fps_ass_garand_golden_body_standard",
-				wpn_fps_ass_garand_m_bar_extended = "wpn_fps_ass_garand_golden_m_bar_extended",
-				wpn_fps_ass_garand_m_bar_standard = "wpn_fps_ass_garand_golden_m_bar_standard",
+				wpn_fps_ass_garand_ns_conical = "wpn_fps_ass_garand_golden_ns_conical",
+				wpn_fps_ass_garand_extra_swiwel = "wpn_fps_ass_garand_golden_extra_swiwel",
+				wpn_fps_ass_garand_b_tanker = "wpn_fps_ass_garand_golden_b_tanker",
+				wpn_fps_ass_garand_dh_standard = "wpn_fps_ass_garand_golden_dh_standard",
 				wpn_fps_ass_garand_s_folding = "wpn_fps_ass_garand_golden_s_folding",
-				wpn_fps_ass_garand_b_tanker = "wpn_fps_ass_garand_golden_b_tanker"
+				wpn_fps_ass_garand_bolt_standard = "wpn_fps_ass_garand_golden_bolt_standard",
+				wpn_fps_ass_garand_m_bar_standard = "wpn_fps_ass_garand_golden_m_bar_standard",
+				wpn_fps_ass_garand_b_standard = "wpn_fps_ass_garand_golden_b_standard",
+				wpn_fps_ass_garand_m_bar_extended = "wpn_fps_ass_garand_golden_m_bar_extended",
+				wpn_fps_ass_garand_body_standard = "wpn_fps_ass_garand_golden_body_standard",
+				wpn_fps_ass_garand_strip_standard = "wpn_fps_ass_garand_golden_strip_standard",
+				wpn_fps_ass_garand_s_standard = "wpn_fps_ass_garand_golden_s_standard"
 			}
 		},
 		lead_bar_gold = {
-			weapon_id = "gold_bar",
-			challenge = "candy_gold_bar",
 			name_id = "bm_lead_bar_gold",
+			challenge = "candy_gold_bar",
+			weapon_id = "gold_bar",
 			replaces_units = {
+				unit_local = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_local",
 				unit_hand = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_hand",
 				unit = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar",
-				unit_dummy = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_husk",
-				unit_local = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_local"
+				unit_dummy = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_husk"
 			}
 		}
 	}
@@ -860,27 +860,27 @@ end
 
 function WeaponTweakData:_init_data_gold_bar(tweak_data)
 	self.gold_bar = {
-		name_id = "bm_lead_bar",
-		throw_shout = false,
-		stat_group = "brick",
-		hold = "grenade",
 		suppression = 1,
 		alert_size = 0,
+		usage = "c45",
+		hold = "grenade",
+		name_id = "bm_lead_bar",
 		damage_melee_effect_mul = 1,
-		damage_melee = 86,
-		sound_event = "new_grenade_explode",
+		throw_shout = false,
+		stat_group = "brick",
 		weapon_hold = "mills",
 		stance = "mills",
 		transition_duration = 0,
 		exit_run_speed_multiplier = 1,
 		weapon_movement_penalty = 1,
 		usage_anim = "c45",
-		usage = "c45",
+		damage_melee = 86,
+		sound_event = "new_grenade_explode",
 		sounds = {
+			prefix = "",
 			autofire_start = nil,
 			autofire_stop = nil,
-			single = "new_grenade_explode",
-			prefix = ""
+			single = "new_grenade_explode"
 		},
 		use_data = {
 			equip = {
@@ -895,10 +895,10 @@ function WeaponTweakData:_init_data_gold_bar(tweak_data)
 			fire_rate = 0.4
 		},
 		timers = {
+			reload_not_empty = 1.25,
 			equip = 0.3,
 			unequip = 0.25,
-			reload_empty = 1.65,
-			reload_not_empty = 1.25
+			reload_empty = 1.65
 		},
 		crosshair = self._crosshairs.grenade,
 		hud = {
@@ -913,26 +913,26 @@ end
 
 function WeaponTweakData:_init_data_anti_tank(tweak_data)
 	self.anti_tank = {
-		name_id = "bm_grenade_anti_tank",
-		stat_group = "anti_tank",
-		hold = "grenade",
 		suppression = 1,
 		alert_size = 0,
-		damage_melee_effect_mul = 1,
-		damage_melee = 86,
+		hold = "grenade",
+		name_id = "bm_grenade_anti_tank",
 		sound_event = "new_grenade_explode",
+		damage_melee_effect_mul = 1,
+		stat_group = "anti_tank",
 		weapon_hold = "m24",
 		stance = "m24",
 		transition_duration = 0,
 		exit_run_speed_multiplier = 1,
 		weapon_movement_penalty = 1,
 		usage_anim = "c45",
+		damage_melee = 86,
 		usage = "c45",
 		sounds = {
+			prefix = "",
 			autofire_start = nil,
 			autofire_stop = nil,
-			single = "new_grenade_explode",
-			prefix = ""
+			single = "new_grenade_explode"
 		},
 		use_data = {
 			equip = {
@@ -948,10 +948,10 @@ function WeaponTweakData:_init_data_anti_tank(tweak_data)
 			fire_rate = 0.4
 		},
 		timers = {
+			reload_not_empty = 1.25,
 			equip = 0.3,
 			unequip = 0.25,
-			reload_empty = 1.65,
-			reload_not_empty = 1.25
+			reload_empty = 1.65
 		},
 		crosshair = self._crosshairs.grenade,
 		hud = {
@@ -966,26 +966,26 @@ end
 
 function WeaponTweakData:_init_data_thermite(tweak_data)
 	self.thermite = {
-		name_id = "bm_grenade_thermite",
-		stat_group = "thermite",
-		hold = "grenade",
 		suppression = 1,
 		alert_size = 0,
-		damage_melee_effect_mul = 1,
-		damage_melee = 86,
+		hold = "grenade",
+		name_id = "bm_grenade_thermite",
 		sound_event = "new_grenade_explode",
+		damage_melee_effect_mul = 1,
+		stat_group = "thermite",
 		weapon_hold = "d343",
 		stance = "d343",
 		transition_duration = 0,
 		exit_run_speed_multiplier = 1,
 		weapon_movement_penalty = 1,
 		usage_anim = "c45",
+		damage_melee = 86,
 		usage = "c45",
 		sounds = {
+			prefix = "",
 			autofire_start = nil,
 			autofire_stop = nil,
-			single = "new_grenade_explode",
-			prefix = ""
+			single = "new_grenade_explode"
 		},
 		use_data = {
 			equip = {
@@ -1001,10 +1001,10 @@ function WeaponTweakData:_init_data_thermite(tweak_data)
 			fire_rate = 0.4
 		},
 		timers = {
+			reload_not_empty = 1.25,
 			equip = 0.3,
 			unequip = 0.25,
-			reload_empty = 1.65,
-			reload_not_empty = 1.25
+			reload_empty = 1.65
 		},
 		crosshair = self._crosshairs.grenade,
 		hud = {
@@ -1654,21 +1654,21 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_fire = "tiger_npc_canon"
 	}
 	self.tiger_main_gun_module.effect = {
-		offset = nil,
+		DEFAULT_OFFSET = nil,
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
-		style = nil,
+		hidden = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire"
 	}
 	self.tiger_main_gun_module.turret = {
-		locator = "anim_turret",
-		time_before_taking_shot = 1.25,
 		player_damage = 25,
 		range = 20000,
 		damage_radius = 750,
 		gun_locator = "anim_gun",
-		armor_piercing = true,
+		damage = 60,
+		locator = "anim_turret",
 		traverse_time = 10,
-		damage = 60
+		armor_piercing = true,
+		time_before_taking_shot = 1.25
 	}
 	self.tiger_main_gun_module.main_cannon_shell_speed = 10000
 	self.tiger_main_gun_module.fire_anim_sequence = "fire"
@@ -2453,22 +2453,22 @@ function WeaponTweakData:_init_data_crosshairs()
 		pistol = {
 			style = "pistol",
 			standing = {
-				moving_offset = 0.1,
 				offset = 0.05,
 				hidden = false,
-				kick_offset = 1
+				kick_offset = 1,
+				moving_offset = 0.1
 			},
 			crouching = {
-				moving_offset = 0.1,
 				offset = 0.05,
 				hidden = false,
-				kick_offset = 1
+				kick_offset = 1,
+				moving_offset = 0.1
 			},
 			steelsight = {
-				moving_offset = 0.1,
 				offset = 0.05,
 				hidden = true,
-				kick_offset = 1
+				kick_offset = 1,
+				moving_offset = 0.1
 			}
 		}
 	}
@@ -2477,22 +2477,22 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.shotgun = {
 		style = "shotgun",
 		standing = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		crouching = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		steelsight = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = true,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		}
 	}
 	self._crosshairs.shotgun_db = deep_clone(self._crosshairs.shotgun)
@@ -2500,22 +2500,22 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.lmg = {
 		style = "lmg",
 		standing = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		crouching = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		steelsight = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = true,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		}
 	}
 	self._crosshairs.lmg_mg42 = deep_clone(self._crosshairs.lmg)
@@ -2525,22 +2525,22 @@ function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs.assault_rifle = {
 		style = "assault_rifle",
 		standing = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		crouching = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = false,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		},
 		steelsight = {
-			moving_offset = 0.1,
 			offset = 0.05,
 			hidden = true,
-			kick_offset = 1
+			kick_offset = 1,
+			moving_offset = 0.1
 		}
 	}
 	self._crosshairs.sniper = deep_clone(self._crosshairs.lmg)
@@ -2618,17 +2618,17 @@ function WeaponTweakData:_init_data_turrets()
 		shoot_ai_weight = 0.33,
 		aim_fov = 45,
 		stats = {
+			zoom = 3,
+			suppression = 10,
 			alert_size = 7,
-			damage = 32,
 			total_ammo_mod = 21,
+			damage = 32,
 			extra_ammo = 6,
 			concealment = 30,
 			value = 1,
 			recoil = 7,
 			spread_moving = 7,
-			spread = 2,
-			zoom = 3,
-			suppression = 10
+			spread = 2
 		},
 		WAIT_FOR_TARGET = 2,
 		DAMAGE = 2,
@@ -2744,17 +2744,17 @@ function WeaponTweakData:_init_data_turrets()
 	self.turret_flak_88.hud.reticle = "weapons_reticles_snp_m1903"
 	self.turret_flak_88.hud.static_reticle = "weapons_reticles_static_dot"
 	self.turret_flak_88.stats = {
+		zoom = 3,
+		suppression = 10,
 		alert_size = 7,
-		damage = 15,
 		total_ammo_mod = 21,
+		damage = 15,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 7,
 		spread_moving = 7,
-		spread = 3,
-		zoom = 3,
-		suppression = 10
+		spread = 3
 	}
 	self.turret_flak_88.WAIT_FOR_TARGET = 2
 	self.turret_flak_88.DAMAGE = 180
@@ -2918,17 +2918,17 @@ function WeaponTweakData:_init_data_turrets()
 		static_reticle = "weapons_reticles_static_cross"
 	}
 	self.turret_flakvierling.stats = {
+		zoom = 3,
+		suppression = 10,
 		alert_size = 7,
-		damage = 15,
 		total_ammo_mod = 21,
+		damage = 15,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 7,
 		spread_moving = 7,
-		spread = 7,
-		zoom = 3,
-		suppression = 10
+		spread = 7
 	}
 	self.turret_flak_20mm = {
 		category = WeaponTweakData.WEAPON_CATEGORY_MOUNTED_AAGUN,
@@ -3017,17 +3017,17 @@ function WeaponTweakData:_init_data_turrets()
 	self.turret_flak_20mm.MAX_PITCH_ANGLE = 70
 	self.turret_flak_20mm.MIN_PITCH_ANGLE = 0
 	self.turret_flak_20mm.stats = {
+		zoom = 3,
+		suppression = 10,
 		alert_size = 7,
-		damage = 15,
 		total_ammo_mod = 21,
+		damage = 15,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 7,
 		spread_moving = 7,
-		spread = 7,
-		zoom = 3,
-		suppression = 10
+		spread = 7
 	}
 end
 
@@ -3037,8 +3037,8 @@ function WeaponTweakData:_init_new_weapons(weapon_data, tweak_data)
 	self.default_values = {
 		damage_profile = {
 			{
-				damage = 10,
-				range = 1000
+				range = 1000,
+				damage = 10
 			}
 		},
 		headshot_multiplier = 2,
@@ -3191,17 +3191,17 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data, tweak_data)
 		tick_period = 0.5
 	}
 	self.flamethrower_mk2.stats = {
+		zoom = 3,
+		suppression = 2,
 		alert_size = 1,
-		damage = 5,
 		total_ammo_mod = 21,
+		damage = 5,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 0,
 		spread_moving = 6,
-		spread = 1,
-		zoom = 3,
-		suppression = 2
+		spread = 1
 	}
 end
 
@@ -3233,12 +3233,12 @@ function WeaponTweakData:_init_c96(weapon_data, tweak_data)
 	}
 	self.c96.damage_profile = {
 		{
-			damage = 43,
-			range = 1000
+			range = 1000,
+			damage = 43
 		},
 		{
-			damage = 38,
-			range = 2400
+			range = 2400,
+			damage = 38
 		}
 	}
 	self.c96.headshot_multiplier = 2.5
@@ -3340,17 +3340,17 @@ function WeaponTweakData:_init_c96(weapon_data, tweak_data)
 		panel_clip_icon_spent_thin = "9mm_spent_thin"
 	}
 	self.c96.stats = {
+		zoom = 3,
+		suppression = 14,
 		alert_size = 7,
-		damage = 15,
 		total_ammo_mod = 21,
+		damage = 15,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 5,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 3,
-		suppression = 14
+		spread = 6
 	}
 end
 
@@ -3390,12 +3390,12 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 	}
 	self.tt33.damage_profile = {
 		{
-			damage = 45,
-			range = 1000
+			range = 1000,
+			damage = 45
 		},
 		{
-			damage = 38,
-			range = 2400
+			range = 2400,
+			damage = 38
 		}
 	}
 	self.tt33.headshot_multiplier = 2.5
@@ -3490,6 +3490,8 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 		panel_clip_icon_spent = "9mm_spent"
 	}
 	self.tt33.stats = {
+		zoom = 3,
+		suppression = 14,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -3497,9 +3499,7 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 3,
-		suppression = 14
+		spread = 6
 	}
 end
 
@@ -3536,12 +3536,12 @@ function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 	}
 	self.webley.damage_profile = {
 		{
-			damage = 75,
-			range = 1000
+			range = 1000,
+			damage = 75
 		},
 		{
-			damage = 55,
-			range = 3000
+			range = 3000,
+			damage = 55
 		}
 	}
 	self.webley.headshot_multiplier = 3
@@ -3638,17 +3638,17 @@ function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 		panel_class = "revolver"
 	}
 	self.webley.stats = {
+		zoom = 3,
+		suppression = 14,
 		alert_size = 7,
-		damage = 33,
 		total_ammo_mod = 21,
+		damage = 33,
 		extra_ammo = 6,
 		concealment = 30,
 		value = 1,
 		recoil = 2,
 		spread_moving = 5,
-		spread = 7,
-		zoom = 3,
-		suppression = 14
+		spread = 7
 	}
 end
 
@@ -3688,12 +3688,12 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 	}
 	self.m1911.damage_profile = {
 		{
-			damage = 40,
-			range = 1000
+			range = 1000,
+			damage = 40
 		},
 		{
-			damage = 35,
-			range = 2400
+			range = 2400,
+			damage = 35
 		}
 	}
 	self.m1911.headshot_multiplier = 2.5
@@ -3788,6 +3788,8 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 		panel_clip_icon_spent = "9mm_spent"
 	}
 	self.m1911.stats = {
+		zoom = 3,
+		suppression = 14,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -3795,9 +3797,7 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 3,
-		suppression = 14
+		spread = 6
 	}
 end
 
@@ -3832,12 +3832,12 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 	}
 	self.m1912.damage_profile = {
 		{
-			damage = 32,
-			range = 1000
+			range = 1000,
+			damage = 32
 		},
 		{
-			damage = 15,
-			range = 2000
+			range = 2000,
+			damage = 15
 		}
 	}
 	self.m1912.headshot_multiplier = 1.5
@@ -3931,6 +3931,8 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 2
 	}
 	self.m1912.stats = {
+		zoom = 3,
+		suppression = 6,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -3938,9 +3940,7 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 		value = 1,
 		recoil = 3,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 3,
-		suppression = 6
+		spread = 4
 	}
 end
 
@@ -3975,12 +3975,12 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 	}
 	self.ithaca.damage_profile = {
 		{
-			damage = 32,
-			range = 1000
+			range = 1000,
+			damage = 32
 		},
 		{
-			damage = 15,
-			range = 2000
+			range = 2000,
+			damage = 15
 		}
 	}
 	self.ithaca.headshot_multiplier = 1.5
@@ -4071,6 +4071,8 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 		panel_clip_icon_stack_min = 1
 	}
 	self.ithaca.stats = {
+		zoom = 3,
+		suppression = 6,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4078,9 +4080,7 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 3,
-		suppression = 6
+		spread = 4
 	}
 end
 
@@ -4115,12 +4115,12 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 	}
 	self.browning.damage_profile = {
 		{
-			damage = 30,
-			range = 1000
+			range = 1000,
+			damage = 30
 		},
 		{
-			damage = 12,
-			range = 2000
+			range = 2000,
+			damage = 12
 		}
 	}
 	self.browning.headshot_multiplier = 1.5
@@ -4211,6 +4211,8 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 		panel_clip_icon_stack_min = 1
 	}
 	self.browning.stats = {
+		zoom = 3,
+		suppression = 6,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4218,9 +4220,7 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 3,
-		suppression = 6
+		spread = 4
 	}
 end
 
@@ -4260,12 +4260,12 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 	}
 	self.welrod.damage_profile = {
 		{
-			damage = 90,
-			range = 1000
+			range = 1000,
+			damage = 90
 		},
 		{
-			damage = 45,
-			range = 2000
+			range = 2000,
+			damage = 45
 		}
 	}
 	self.welrod.headshot_multiplier = 4
@@ -4362,6 +4362,8 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.welrod.stats = {
+		zoom = 3,
+		suppression = 14,
 		alert_size = 14,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4369,9 +4371,7 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 3,
-		suppression = 14
+		spread = 6
 	}
 end
 
@@ -4408,12 +4408,12 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 	}
 	self.shotty.damage_profile = {
 		{
-			damage = 30,
-			range = 1000
+			range = 1000,
+			damage = 30
 		},
 		{
-			damage = 15,
-			range = 1800
+			range = 1800,
+			damage = 15
 		}
 	}
 	self.shotty.headshot_multiplier = 1.5
@@ -4506,6 +4506,8 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 2
 	}
 	self.shotty.stats = {
+		zoom = 3,
+		suppression = 6,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4513,9 +4515,7 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 		value = 1,
 		recoil = 7,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 3,
-		suppression = 6
+		spread = 4
 	}
 end
 
@@ -4552,12 +4552,12 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 	}
 	self.geco.damage_profile = {
 		{
-			damage = 36,
-			range = 1200
+			range = 1200,
+			damage = 36
 		},
 		{
-			damage = 15,
-			range = 2400
+			range = 2400,
+			damage = 15
 		}
 	}
 	self.geco.headshot_multiplier = 1.5
@@ -4650,6 +4650,8 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 2
 	}
 	self.geco.stats = {
+		zoom = 3,
+		suppression = 6,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4657,9 +4659,7 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 		value = 1,
 		recoil = 8,
 		spread_moving = 5,
-		spread = 5,
-		zoom = 3,
-		suppression = 6
+		spread = 5
 	}
 end
 
@@ -4692,12 +4692,12 @@ function WeaponTweakData:_init_sten_mk2(weapon_data, tweak_data)
 	self.sten.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
 	self.sten.damage_profile = {
 		{
-			damage = 42,
-			range = 1000
+			range = 1000,
+			damage = 42
 		},
 		{
-			damage = 28,
-			range = 2400
+			range = 2400,
+			damage = 28
 		}
 	}
 	self.sten.headshot_multiplier = 2.5
@@ -4822,6 +4822,8 @@ function WeaponTweakData:_init_sten_mk2(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.sten.stats = {
+		zoom = 4,
+		suppression = 10,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4829,9 +4831,7 @@ function WeaponTweakData:_init_sten_mk2(weapon_data, tweak_data)
 		value = 1,
 		recoil = 6,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 4,
-		suppression = 10
+		spread = 6
 	}
 end
 
@@ -4864,12 +4864,12 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 	self.thompson.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
 	self.thompson.damage_profile = {
 		{
-			damage = 37,
-			range = 1000
+			range = 1000,
+			damage = 37
 		},
 		{
-			damage = 23,
-			range = 2400
+			range = 2400,
+			damage = 23
 		}
 	}
 	self.thompson.headshot_multiplier = 2.5
@@ -4992,6 +4992,8 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.thompson.stats = {
+		zoom = 4,
+		suppression = 10,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -4999,9 +5001,7 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 		value = 1,
 		recoil = 4,
 		spread_moving = 2,
-		spread = 3,
-		zoom = 4,
-		suppression = 10
+		spread = 3
 	}
 end
 
@@ -5034,12 +5034,12 @@ function WeaponTweakData:_init_mp38(weapon_data, tweak_data)
 	self.mp38.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
 	self.mp38.damage_profile = {
 		{
-			damage = 48,
-			range = 1000
+			range = 1000,
+			damage = 48
 		},
 		{
-			damage = 35,
-			range = 3000
+			range = 3000,
+			damage = 35
 		}
 	}
 	self.mp38.headshot_multiplier = 2.5
@@ -5143,6 +5143,8 @@ function WeaponTweakData:_init_mp38(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.mp38.stats = {
+		zoom = 4,
+		suppression = 10,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5150,9 +5152,7 @@ function WeaponTweakData:_init_mp38(weapon_data, tweak_data)
 		value = 1,
 		recoil = 10,
 		spread_moving = 5,
-		spread = 7,
-		zoom = 4,
-		suppression = 10
+		spread = 7
 	}
 end
 
@@ -5184,12 +5184,12 @@ function WeaponTweakData:_init_sterling(weapon_data, tweak_data)
 	self.sterling.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
 	self.sterling.damage_profile = {
 		{
-			damage = 45,
-			range = 1000
+			range = 1000,
+			damage = 45
 		},
 		{
-			damage = 30,
-			range = 2400
+			range = 2400,
+			damage = 30
 		}
 	}
 	self.sterling.headshot_multiplier = 2.5
@@ -5296,6 +5296,8 @@ function WeaponTweakData:_init_sterling(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.sterling.stats = {
+		zoom = 1,
+		suppression = 12,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5303,9 +5305,7 @@ function WeaponTweakData:_init_sterling(weapon_data, tweak_data)
 		value = 7,
 		recoil = 5,
 		spread_moving = 4,
-		spread = 6,
-		zoom = 1,
-		suppression = 12
+		spread = 6
 	}
 end
 
@@ -5336,12 +5336,12 @@ function WeaponTweakData:_init_m1_carbine(weapon_data, tweak_data)
 	}
 	self.carbine.damage_profile = {
 		{
-			damage = 52,
-			range = 2400
+			range = 2400,
+			damage = 52
 		},
 		{
-			damage = 33,
-			range = 4000
+			range = 4000,
+			damage = 33
 		}
 	}
 	self.carbine.headshot_multiplier = 3
@@ -5463,6 +5463,8 @@ function WeaponTweakData:_init_m1_carbine(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 16
 	}
 	self.carbine.stats = {
+		zoom = 4,
+		suppression = 10,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5470,9 +5472,7 @@ function WeaponTweakData:_init_m1_carbine(weapon_data, tweak_data)
 		value = 1,
 		recoil = 9,
 		spread_moving = 5,
-		spread = 6,
-		zoom = 4,
-		suppression = 10
+		spread = 6
 	}
 end
 
@@ -5503,12 +5503,12 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	}
 	self.garand.damage_profile = {
 		{
-			damage = 75,
-			range = 800
+			range = 800,
+			damage = 75
 		},
 		{
-			damage = 44,
-			range = 4000
+			range = 4000,
+			damage = 44
 		}
 	}
 	self.garand.headshot_multiplier = 3
@@ -5631,6 +5631,8 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.garand.stats = {
+		zoom = 4,
+		suppression = 8,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5638,9 +5640,7 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 		value = 1,
 		recoil = 7,
 		spread_moving = 5,
-		spread = 6,
-		zoom = 4,
-		suppression = 8
+		spread = 6
 	}
 end
 
@@ -5673,12 +5673,12 @@ function WeaponTweakData:_init_mp44(weapon_data, tweak_data)
 	}
 	self.mp44.damage_profile = {
 		{
-			damage = 58,
-			range = 2400
+			range = 2400,
+			damage = 58
 		},
 		{
-			damage = 38,
-			range = 4000
+			range = 4000,
+			damage = 38
 		}
 	}
 	self.mp44.headshot_multiplier = 3
@@ -5800,6 +5800,8 @@ function WeaponTweakData:_init_mp44(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.mp44.stats = {
+		zoom = 3,
+		suppression = 10,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5807,9 +5809,7 @@ function WeaponTweakData:_init_mp44(weapon_data, tweak_data)
 		value = 1,
 		recoil = 5,
 		spread_moving = 4,
-		spread = 5,
-		zoom = 3,
-		suppression = 10
+		spread = 5
 	}
 end
 
@@ -5841,12 +5841,12 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 	}
 	self.m1918.damage_profile = {
 		{
-			damage = 58,
-			range = 3000
+			range = 3000,
+			damage = 58
 		},
 		{
-			damage = 40,
-			range = 4800
+			range = 4800,
+			damage = 40
 		}
 	}
 	self.m1918.headshot_multiplier = 3
@@ -5972,6 +5972,8 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.m1918.stats = {
+		zoom = 2,
+		suppression = 6,
 		alert_size = 8,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -5979,9 +5981,7 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 		value = 9,
 		recoil = 4,
 		spread_moving = 5,
-		spread = 5,
-		zoom = 2,
-		suppression = 6
+		spread = 5
 	}
 end
 
@@ -6013,12 +6013,12 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 	}
 	self.dp28.damage_profile = {
 		{
-			damage = 54,
-			range = 2400
+			range = 2400,
+			damage = 54
 		},
 		{
-			damage = 40,
-			range = 4000
+			range = 4000,
+			damage = 40
 		}
 	}
 	self.dp28.headshot_multiplier = 3
@@ -6137,6 +6137,8 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 		feed_flip_x = false
 	}
 	self.dp28.stats = {
+		zoom = 2,
+		suppression = 6,
 		alert_size = 8,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6144,9 +6146,7 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 		value = 9,
 		recoil = 5,
 		spread_moving = 4,
-		spread = 5,
-		zoom = 2,
-		suppression = 6
+		spread = 5
 	}
 end
 
@@ -6178,12 +6178,12 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 	}
 	self.bren.damage_profile = {
 		{
-			damage = 63,
-			range = 2400
+			range = 2400,
+			damage = 63
 		},
 		{
-			damage = 46,
-			range = 4000
+			range = 4000,
+			damage = 46
 		}
 	}
 	self.bren.headshot_multiplier = 3
@@ -6291,6 +6291,8 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 		panel_clip_icon_thin_min = 20
 	}
 	self.bren.stats = {
+		zoom = 2,
+		suppression = 6,
 		alert_size = 8,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6298,9 +6300,7 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 		value = 9,
 		recoil = 5,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 2,
-		suppression = 6
+		spread = 4
 	}
 end
 
@@ -6336,12 +6336,12 @@ function WeaponTweakData:_init_mg42(weapon_data, tweak_data)
 	}
 	self.mg42.damage_profile = {
 		{
-			damage = 34,
-			range = 1000
+			range = 1000,
+			damage = 34
 		},
 		{
-			damage = 28,
-			range = 2400
+			range = 2400,
+			damage = 28
 		}
 	}
 	self.mg42.headshot_multiplier = 2.5
@@ -6437,6 +6437,8 @@ function WeaponTweakData:_init_mg42(weapon_data, tweak_data)
 		drums = 1
 	}
 	self.mg42.stats = {
+		zoom = 1,
+		suppression = 4,
 		alert_size = 8,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6444,9 +6446,7 @@ function WeaponTweakData:_init_mg42(weapon_data, tweak_data)
 		value = 9,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 5,
-		zoom = 1,
-		suppression = 4
+		spread = 5
 	}
 end
 
@@ -6481,8 +6481,8 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 	}
 	self.m1903.damage_profile = {
 		{
-			damage = 180,
-			range = 1
+			range = 1,
+			damage = 180
 		}
 	}
 	self.m1903.headshot_multiplier = 3
@@ -6607,6 +6607,8 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 		panel_clip_icon_spent_thin = "9mm_spent_thin"
 	}
 	self.m1903.stats = {
+		zoom = 6,
+		suppression = 8,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6614,9 +6616,7 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 		value = 1,
 		recoil = 2,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 6,
-		suppression = 8
+		spread = 4
 	}
 end
 
@@ -6652,8 +6652,8 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 	}
 	self.kar_98k.damage_profile = {
 		{
-			damage = 160,
-			range = 1
+			range = 1,
+			damage = 160
 		}
 	}
 	self.kar_98k.headshot_multiplier = 3
@@ -6778,6 +6778,8 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 		panel_clip_icon_spent_thin = "9mm_spent_thin"
 	}
 	self.kar_98k.stats = {
+		zoom = 6,
+		suppression = 8,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6785,9 +6787,7 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 		value = 1,
 		recoil = 3,
 		spread_moving = 3,
-		spread = 3,
-		zoom = 6,
-		suppression = 8
+		spread = 3
 	}
 end
 
@@ -6824,8 +6824,8 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 	}
 	self.lee_enfield.damage_profile = {
 		{
-			damage = 160,
-			range = 1
+			range = 1,
+			damage = 160
 		}
 	}
 	self.lee_enfield.headshot_multiplier = 3
@@ -6950,6 +6950,8 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 		panel_clip_icon_spent_thin = "9mm_spent_thin"
 	}
 	self.lee_enfield.stats = {
+		zoom = 6,
+		suppression = 8,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -6957,9 +6959,7 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 		value = 1,
 		recoil = 6,
 		spread_moving = 3,
-		spread = 3,
-		zoom = 6,
-		suppression = 8
+		spread = 3
 	}
 end
 
@@ -6992,8 +6992,8 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 	}
 	self.mosin.damage_profile = {
 		{
-			damage = 180,
-			range = 1
+			range = 1,
+			damage = 180
 		}
 	}
 	self.mosin.headshot_multiplier = 3
@@ -7118,6 +7118,8 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 		panel_clip_icon_spent_thin = "9mm_spent_thin"
 	}
 	self.mosin.stats = {
+		zoom = 6,
+		suppression = 5,
 		alert_size = 7,
 		total_ammo_mod = 21,
 		extra_ammo = 6,
@@ -7125,8 +7127,6 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 		value = 9,
 		recoil = 4,
 		spread_moving = 4,
-		spread = 4,
-		zoom = 6,
-		suppression = 5
+		spread = 4
 	}
 end

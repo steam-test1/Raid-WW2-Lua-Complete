@@ -130,9 +130,9 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 	}
 	self._malus_image = self._details_panel:bitmap(malus_image_params)
 	local bonus_label_params = {
+		wrap = true,
 		h = 64,
 		w = 390,
-		wrap = true,
 		text = "",
 		vertical = "center",
 		align = "left",
@@ -145,9 +145,9 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 	}
 	self._bonus_label = self._details_panel:label(bonus_label_params)
 	local malus_label_params = {
+		wrap = true,
 		h = 64,
 		w = 390,
-		wrap = true,
 		text = "",
 		vertical = "center",
 		align = "left",

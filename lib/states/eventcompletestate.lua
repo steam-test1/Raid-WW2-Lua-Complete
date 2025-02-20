@@ -10,106 +10,106 @@ EventCompleteState.SCREEN_ACTIVE_EXPERIENCE = 6
 EventCompleteState.LOOT_DATA_READY_KEY = "loot_data_ready"
 EventCompleteState.SUCCESS_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007"
+		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007"
+		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_03_salutes_v006"
+		path = "movies/vanilla/debrief_success/s_03_salutes_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008"
+		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006"
+		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006"
+		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007"
+		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_08_chess_v008"
+		path = "movies/vanilla/debrief_success/s_08_chess_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007"
+		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009"
+		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_11_swears_v005"
+		path = "movies/vanilla/debrief_success/s_11_swears_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005"
+		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007"
+		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_14_moustache_v006"
+		path = "movies/vanilla/debrief_success/s_14_moustache_v006",
+		chance = 1
 	}
 }
 EventCompleteState.FAILURE_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007"
+		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007"
+		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_03_toasts_v008"
+		path = "movies/vanilla/debrief_failure/f_03_toasts_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008"
+		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008"
+		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008"
+		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008"
+		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008"
+		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008"
+		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_10_executes_v008"
+		path = "movies/vanilla/debrief_failure/f_10_executes_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_11_sings_v007"
+		path = "movies/vanilla/debrief_failure/f_11_sings_v007",
+		chance = 1
 	}
 }
 
@@ -192,8 +192,8 @@ function EventCompleteState:at_enter(old_state, params)
 	self:_set_memory()
 	self:set_statistics_values()
 	managers.statistics:stop_session({
-		type = "victory",
 		quit = false,
+		type = "victory",
 		success = self._success
 	})
 	managers.statistics:send_statistics()
@@ -545,9 +545,16 @@ function EventCompleteState:job_data()
 end
 
 function EventCompleteState:on_server_left(message)
+	local loc = managers.localization
 	local dialog_data = {
-		title = managers.localization:text("dialog_returning_to_main_menu"),
-		text = managers.localization:text("dialog_server_left")
+		title = loc:text("dialog_returning_to_main_menu"),
+		text = loc:text("dialog_server_left"),
+		button_list = {
+			{
+				text = loc:text("dialog_ok"),
+				callback_func = MenuCallbackHandler._dialog_end_game_yes
+			}
+		}
 	}
 
 	if not self._awarded_rewards.loot and managers.raid_job:is_at_last_event() and self:is_success() then
@@ -562,33 +569,41 @@ function EventCompleteState:on_server_left(message)
 		end
 
 		if dropped_loot.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_outfit", {
-				OUTFIT = tostring(managers.localization:text(dropped_loot.character_customization.name))
+			local outfit = loc:text(dropped_loot.character_customization.name)
+			dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_outfit", {
+				OUTFIT = outfit
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_gold", {
-				GOLD = tostring(dropped_loot.awarded_gold_bars)
+			local gold = managers.gold_economy:gold_string(dropped_loot.awarded_gold_bars)
+			dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_gold", {
+				GOLD = gold
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_melee", {
-				MELEE = tostring(managers.localization:text(tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id].name_id))
-			})
+			local melee_tweak = tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id]
+
+			if melee_tweak then
+				local melee = loc:text(melee_tweak.name_id)
+				dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_melee", {
+					MELEE = melee
+				})
+			end
 		end
 	end
 
 	if not self._awarded_rewards.xp then
 		local base_xp = self:calculate_xp()
+		local xp = managers.experience:experience_string(self._awarded_xp)
+		dialog_data.text = dialog_data.text .. "\n" .. loc:text("menu_server_left_loot_xp", {
+			XP = xp
+		})
 
 		self:award_xp(base_xp)
-
-		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_xp", {
-			XP = tostring(self._awarded_xp)
-		})
 	end
 
 	if not self._awarded_rewards.greed_gold and managers.greed:acquired_gold_in_mission() and self:is_success() then
-		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_greed_gold", {
-			GOLD = tostring(managers.greed._gold_awarded_in_mission)
+		local gold = managers.gold_economy:gold_string(managers.greed._gold_awarded_in_mission)
+		dialog_data.text = dialog_data.text .. "\n" .. loc:text("menu_server_left_loot_greed_gold", {
+			GOLD = gold
 		})
 
 		managers.greed:award_gold_picked_up_in_mission()
@@ -599,14 +614,6 @@ function EventCompleteState:on_server_left(message)
 	if managers.game_play_central then
 		managers.game_play_central:stop_the_game()
 	end
-
-	local ok_button = {
-		text = managers.localization:text("dialog_ok"),
-		callback_func = MenuCallbackHandler._dialog_end_game_yes
-	}
-	dialog_data.button_list = {
-		ok_button
-	}
 
 	managers.system_menu:show(dialog_data)
 

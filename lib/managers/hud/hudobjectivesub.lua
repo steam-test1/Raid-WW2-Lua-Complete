@@ -47,13 +47,13 @@ end
 
 function HUDObjectiveSub:_create_objective_text()
 	local objective_text_params = {
+		align = "right",
+		y = 0,
+		x = 0,
 		name = "objective_text",
 		halign = "right",
 		valign = "center",
 		vertical = "center",
-		align = "right",
-		y = 0,
-		x = 0,
 		font = HUDObjectiveSub.OBJECTIVE_TEXT_FONT,
 		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
 		text = utf8.to_upper(self._objective.text)

@@ -1,7 +1,7 @@
 ThermiteGrenade = ThermiteGrenade or class(GrenadeBase)
 ThermiteGrenade.EVENT_IDS = {
-	burn = 1,
-	detonate = 2
+	detonate = 2,
+	burn = 1
 }
 
 function ThermiteGrenade:destroy()

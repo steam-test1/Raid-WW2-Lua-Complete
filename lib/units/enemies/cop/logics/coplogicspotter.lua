@@ -71,12 +71,12 @@ function CopLogicSpotter.throw_flare_so(data)
 		variant = "spotter_cbt_sup_throw_flare",
 		type = "act",
 		blocks = {
+			hurt = -1,
+			light_hurt = -1,
 			walk = -1,
 			action = -1,
 			aim = -1,
-			heavy_hurt = -1,
-			hurt = -1,
-			light_hurt = -1
+			heavy_hurt = -1
 		}
 	}
 

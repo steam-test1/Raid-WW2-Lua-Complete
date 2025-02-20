@@ -63,29 +63,29 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 			if managers.enemy:all_civilians()[unit:key()] then
 				if not unit:brain():is_tied() then
 					action_data = {
+						type = "act",
 						clamp_to_graph = true,
 						variant = "tied",
 						body_part = 1,
-						type = "act",
 						blocks = {
-							light_hurt = -1,
 							walk = -1,
 							heavy_hurt = -1,
-							hurt = -1
+							hurt = -1,
+							light_hurt = -1
 						}
 					}
 				end
 			else
 				action_data = {
+					type = "act",
 					clamp_to_graph = true,
 					variant = "tied_all_in_one",
 					body_part = 1,
-					type = "act",
 					blocks = {
-						light_hurt = -1,
 						walk = -1,
 						heavy_hurt = -1,
-						hurt = -1
+						hurt = -1,
+						light_hurt = -1
 					}
 				}
 			end

@@ -363,10 +363,10 @@ function WarcryManager:_on_meter_full(skip_notification)
 			end
 
 			managers.hud:set_big_prompt({
+				id = "warcry_ready",
 				flares = true,
 				background = "backgrounds_warcry_msg",
 				priority = true,
-				id = "warcry_ready",
 				title = prompt_title,
 				description = prompt_desc,
 				icon = icon,

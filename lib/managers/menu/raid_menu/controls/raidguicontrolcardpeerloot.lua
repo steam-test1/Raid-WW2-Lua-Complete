@@ -39,10 +39,10 @@ end
 
 function RaidGUIControlCardPeerLoot:_create_card_details()
 	local params_card_image = {
-		x = 0,
 		texture = "ui/main_menu/textures/cards_atlas",
 		y = 0,
 		name = "card_image",
+		x = 0,
 		w = self._control_panel:w(),
 		h = self._control_panel:w() * 1.45,
 		texture_rect = {
@@ -54,11 +54,11 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 	}
 	self._card_image = self._control_panel:bitmap(params_card_image)
 	local params_player_name = {
-		x = 0,
 		align = "center",
 		layer = 1,
 		text = "PLAYER 1",
 		name = "peer_player_name_label",
+		x = 0,
 		y = self._card_image:y() + self._card_image:h() + RaidGUIControlCardPeerLoot.IMAGE_PADDING_DOWN,
 		w = self._control_panel:w(),
 		h = RaidGUIControlCardPeerLoot.TEXT_H,

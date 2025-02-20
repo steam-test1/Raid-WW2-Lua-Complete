@@ -58,8 +58,8 @@ end
 
 function RaidGUIControlScrollGrid:_create_scroll_marker()
 	self._panel_scroll_marker = self._object:panel({
-		w = 8,
 		y = 0,
+		w = 8,
 		x = self._grid_control_width + 24,
 		h = self._wrapper_panel:h()
 	})

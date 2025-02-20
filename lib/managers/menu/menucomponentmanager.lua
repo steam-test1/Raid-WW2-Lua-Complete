@@ -615,12 +615,12 @@ function MenuComponentManager:add_minimized(config)
 
 	if config.text then
 		text = panel:text({
-			halign = "left",
 			layer = 2,
 			align = "center",
 			font_size = 22,
 			hvertical = "center",
 			vertical = "center",
+			halign = "left",
 			text = config.text,
 			font = tweak_data.menu.default_font
 		})
@@ -649,17 +649,17 @@ function MenuComponentManager:add_minimized(config)
 	help_text:set_shape(help_text:text_rect())
 
 	local unselected = panel:bitmap({
-		texture = "guis/textures/menu_unselected",
-		layer = 0
+		layer = 0,
+		texture = "guis/textures/menu_unselected"
 	})
 
 	unselected:set_h(64 * panel:h() / 32)
 	unselected:set_center_y(panel:center_y())
 
 	local selected = panel:bitmap({
-		layer = 1,
 		visible = false,
-		texture = "guis/textures/menu_selected"
+		texture = "guis/textures/menu_selected",
+		layer = 1
 	})
 
 	selected:set_h(64 * panel:h() / 32)
@@ -667,9 +667,9 @@ function MenuComponentManager:add_minimized(config)
 	panel:set_bottom(self._main_panel:h() - CoreMenuRenderer.Renderer.border_height)
 
 	local top_line = panel:parent():bitmap({
-		layer = 1,
 		visible = false,
 		texture = "guis/textures/headershadow",
+		layer = 1,
 		w = panel:w()
 	})
 

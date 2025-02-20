@@ -52,7 +52,7 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
-			progress_wrong_user = nil,
+			_compare_sort_list = nil,
 			meta_data_list = {}
 		}
 	end
@@ -961,12 +961,12 @@ function SavefileManager:_meta_data(slot)
 
 	if not meta_data then
 		meta_data = {
-			is_synched_text = false,
 			is_synched_cache = false,
-			cache = nil,
-			is_corrupt = false,
-			is_load_done = false,
+			is_synched_text = false,
 			is_cached_slot = false,
+			cache = nil,
+			is_load_done = false,
+			is_corrupt = false,
 			slot = slot
 		}
 		Global.savefile_manager.meta_data_list[slot] = meta_data

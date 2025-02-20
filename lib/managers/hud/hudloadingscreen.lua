@@ -111,10 +111,10 @@ function HUDLoadingScreen:setup(data)
 	end
 
 	self._bg = self._panel:bitmap({
-		alpha = 0,
 		y = 0,
 		x = 0,
 		name = "loading_Screen_background",
+		alpha = 0,
 		texture = "ui/loading_screens/" .. data.background,
 		layer = self._black:layer() + 1
 	})
@@ -190,9 +190,9 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	raid_icon:set_center_y(raid_title_panel:h() / 2)
 
 	local raid_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "raid_title",
-		vertical = "center",
 		x = raid_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = raid_title_panel:h(),
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.INFO_TITLE_FONT, HUDLoadingScreen.INFO_TITLE_FONT_SIZE),
@@ -220,10 +220,10 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	difficulty_indicator:set_active_difficulty(current_difficulty)
 
 	local raid_description_params = {
-		align = "center",
 		wrap = true,
-		name = "raid_description",
 		vertical = "center",
+		align = "center",
+		name = "raid_description",
 		y = HUDLoadingScreen.RAID_INFO_TEXT_Y,
 		h = self._info_panel:h() - HUDLoadingScreen.RAID_INFO_TEXT_Y,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.RAID_INFO_TEXT_FONT, HUDLoadingScreen.RAID_INFO_TEXT_FONT_SIZE),
@@ -264,9 +264,9 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	raid_icon:set_center_y(raid_title_panel:h() / 2)
 
 	local raid_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "raid_title",
-		vertical = "center",
 		x = raid_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = raid_title_panel:h(),
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.INFO_TITLE_FONT, HUDLoadingScreen.INFO_TITLE_FONT_SIZE),
@@ -304,9 +304,9 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 
 	local mission_status_params = {
 		align = "center",
+		wrap = true,
 		name = "mission_status",
 		vertical = "top",
-		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -345,9 +345,9 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	operation_icon:set_center_y(operation_title_panel:h() / 2)
 
 	local operation_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "operation_title",
-		vertical = "center",
 		x = operation_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = operation_title_panel:h(),
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.INFO_TITLE_FONT, HUDLoadingScreen.INFO_TITLE_FONT_SIZE),
@@ -363,9 +363,9 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	operation_title_panel:set_center_x(self._info_panel:w() / 2)
 
 	local event_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "current_event_title",
-		vertical = "center",
 		y = HUDLoadingScreen.OPERATION_EVENT_TITLE_Y,
 		h = HUDLoadingScreen.OPERATION_EVENT_TITLE_H,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT, HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT_SIZE),
@@ -392,10 +392,10 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	difficulty_indicator:set_active_difficulty(current_difficulty)
 
 	local event_description_params = {
-		align = "center",
 		wrap = true,
-		name = "raid_description",
 		vertical = "top",
+		align = "center",
+		name = "raid_description",
 		y = HUDLoadingScreen.OPERATION_INFO_TEXT_Y,
 		h = self._info_panel:h() - HUDLoadingScreen.OPERATION_INFO_TEXT_Y,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.OPERATION_INFO_TEXT_FONT, HUDLoadingScreen.OPERATION_INFO_TEXT_FONT_SIZE),
@@ -439,9 +439,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	operation_icon:set_center_y(operation_title_panel:h() / 2)
 
 	local operation_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "operation_title",
-		vertical = "center",
 		x = operation_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = operation_title_panel:h(),
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.INFO_TITLE_FONT, HUDLoadingScreen.INFO_TITLE_FONT_SIZE),
@@ -457,9 +457,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	operation_title_panel:set_center_x(self._info_panel:w() / 2)
 
 	local event_title_params = {
+		vertical = "center",
 		align = "center",
 		name = "current_event_title",
-		vertical = "center",
 		y = HUDLoadingScreen.OPERATION_EVENT_TITLE_Y,
 		h = HUDLoadingScreen.OPERATION_EVENT_TITLE_H,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT, HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT_SIZE),
@@ -496,9 +496,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 
 	local mission_status_params = {
 		align = "center",
+		wrap = true,
 		name = "mission_status",
 		vertical = "top",
-		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -538,9 +538,9 @@ function HUDLoadingScreen:_layout_camp()
 	icon:set_center_y(title_panel:h() / 2)
 
 	local title_params = {
+		vertical = "center",
 		align = "center",
 		name = "title",
-		vertical = "center",
 		x = icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = title_panel:h(),
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.INFO_TITLE_FONT, HUDLoadingScreen.INFO_TITLE_FONT_SIZE),
@@ -566,9 +566,9 @@ function HUDLoadingScreen:_layout_camp()
 
 	local tip_params = {
 		align = "center",
+		wrap = true,
 		name = "tip",
 		vertical = "top",
-		wrap = true,
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.TIP_TEXT_FONT, HUDLoadingScreen.TIP_TEXT_FONT_SIZE),
 		font_size = HUDLoadingScreen.TIP_TEXT_FONT_SIZE,
 		color = HUDLoadingScreen.TIP_TEXT_COLOR,

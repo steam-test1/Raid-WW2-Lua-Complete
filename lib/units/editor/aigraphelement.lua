@@ -32,9 +32,9 @@ function AIGraphUnitElement:update_selected(t, dt)
 		for _, id in ipairs(self._hed.graph_ids) do
 			if unit:unit_data().unit_id == id then
 				self:_draw_link({
-					r = 0,
 					b = 0,
 					g = 0.75,
+					r = 0,
 					from_unit = self._unit,
 					to_unit = unit
 				})

@@ -29,11 +29,11 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local instigator_params = {
-		name = "Instigator:",
 		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select an instigator type for the area",
+		name = "Instigator:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = managers.mission:area_instigator_categories(),
@@ -69,8 +69,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 
 	if instigator == "player" then
 		local states_params = {
-			name = "Player states:",
 			tooltip = "Select player state rules",
+			name = "Player states:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = managers.player:player_states(),
@@ -79,8 +79,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(states_params)
 		local carry_ids_params = {
-			name = "Carry ids:",
 			tooltip = "Select player carry ids rules",
+			name = "Carry ids:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = tweak_data.carry:get_carry_ids(),
@@ -95,8 +95,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		end
 
 		local mission_equipment_params = {
-			name = "Mission equipment:",
 			tooltip = "Select player mission equipment rules",
+			name = "Mission equipment:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = options,
@@ -106,8 +106,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local states = CoreEws.list_selector(mission_equipment_params)
 	elseif instigator == "enemies" then
 		local carry_ids_params = {
-			name = "Enemy name:",
 			tooltip = "Select enemy names rules",
+			name = "Enemy name:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = managers.enemy:enemy_units(),
@@ -116,8 +116,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(carry_ids_params)
 		local pickups_params = {
-			name = "Pickup:",
 			tooltip = "Select a pickup rule",
+			name = "Pickup:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = PickupUnitElement.get_options(),
@@ -127,8 +127,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "civilians" then
 		local civilian_names_params = {
-			name = "Civilian name:",
 			tooltip = "Select civilian names rules",
+			name = "Civilian name:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = SpawnCivilianUnitElement._options,
@@ -137,8 +137,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		}
 		local states = CoreEws.list_selector(civilian_names_params)
 		local pickups_params = {
-			name = "Pickup:",
 			tooltip = "Select a pickup rule",
+			name = "Pickup:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = PickupUnitElement.get_options(),
@@ -148,8 +148,8 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 		local pickup = CoreEws.list_selector(pickups_params)
 	elseif instigator == "loot" then
 		local params = {
-			name = "Carry ids:",
 			tooltip = "Select a loot carry id rule",
+			name = "Carry ids:",
 			panel = panel,
 			sizer = panel_sizer,
 			options = tweak_data.carry:get_carry_ids(),

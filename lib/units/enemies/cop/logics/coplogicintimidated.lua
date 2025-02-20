@@ -253,11 +253,11 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 	local objective_pos = data.unit:position() - data.unit:rotation():y() * 100
 	local objective_rot = data.unit:rotation()
 	local objective = {
+		scan = true,
+		type = "act",
 		stance = "hos",
 		interrupt_health = 0.85,
 		interrupt_dis = 700,
-		scan = true,
-		type = "act",
 		pos = objective_pos,
 		rot = objective_rot,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -274,12 +274,12 @@ function CopLogicIntimidated._register_harassment_SO(data, my_data)
 		}
 	}
 	local so_descriptor = {
-		AI_group = "friendlies",
-		usage_amount = 1,
 		search_dis_sq = 2250000,
 		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
+		AI_group = "friendlies",
+		usage_amount = 1,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_harassment_SO_administered", data)
@@ -481,12 +481,12 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		action_duration = tweak_data.interaction:get_interaction("free").timer
 	}
 	local objective = {
+		scan = true,
+		type = "act",
 		destroy_clbk_key = false,
 		stance = "hos",
 		interrupt_health = 0.85,
 		interrupt_dis = 700,
-		scan = true,
-		type = "act",
 		follow_unit = data.unit,
 		pos = mvector3.copy(objective_pos),
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -505,12 +505,12 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 		followup_objective = followup_objective
 	}
 	local so_descriptor = {
-		AI_group = "enemies",
-		usage_amount = 1,
 		search_dis_sq = 1000000,
 		interval = 10,
 		chance_inc = 0,
 		base_chance = 1,
+		AI_group = "enemies",
+		usage_amount = 1,
 		objective = objective,
 		search_pos = mvector3.copy(data.m_pos),
 		admin_clbk = callback(CopLogicIntimidated, CopLogicIntimidated, "on_rescue_SO_administered", data),

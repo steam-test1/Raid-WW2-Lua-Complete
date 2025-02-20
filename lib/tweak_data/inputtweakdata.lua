@@ -2,6 +2,14 @@ InputTweakData = InputTweakData or class()
 
 function InputTweakData:init(tweak_data)
 	self.gamepad = {
+		aim_assist_snap_speed = 200,
+		look_speed_transition_occluder = 0.95,
+		look_speed_transition_zone = 0.95,
+		look_speed_transition_to_fast = 0.55,
+		look_speed_steel_sight = 60,
+		look_speed_fast = 340,
+		look_speed_standard = 110,
+		look_speed_dead_zone = 0.02,
 		uses_keyboard = true,
 		aim_assist_gradient_max_distance = 3000,
 		aim_assist_gradient_max = 0.8,
@@ -10,15 +18,7 @@ function InputTweakData:init(tweak_data)
 		aim_assist_move_th_min = 0.1,
 		aim_assist_move_speed = 10,
 		aim_assist_look_speed = 20,
-		aim_assist_use_sticky_aim = true,
-		aim_assist_snap_speed = 200,
-		look_speed_transition_occluder = 0.95,
-		look_speed_transition_zone = 0.95,
-		look_speed_transition_to_fast = 0.55,
-		look_speed_steel_sight = 60,
-		look_speed_fast = 340,
-		look_speed_standard = 110,
-		look_speed_dead_zone = 0.02
+		aim_assist_use_sticky_aim = true
 	}
 	self.controller_buttons = {
 		xb1 = {

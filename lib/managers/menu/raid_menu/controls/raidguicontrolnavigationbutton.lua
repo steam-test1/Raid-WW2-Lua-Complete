@@ -54,8 +54,8 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	})
 	self._text = self._object:label({
 		align = "left",
-		vertical = "center",
 		y = 0,
+		vertical = "center",
 		name = "navigation_button_text_" .. self._name,
 		x = text_coord_x,
 		h = RaidGUIControlNavigationButton.ICON_SIZE,

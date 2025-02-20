@@ -29,16 +29,16 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local points_present = math.min(content_data.points_present, available_points)
 	local conversion_rate_number = math.round(xp_present / points_present)
 	local small_text = {
-		text = "",
 		layer = 1,
 		blend_mode = "add",
+		text = "",
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size
 	}
 	local medium_text = {
-		text = "",
 		layer = 1,
 		blend_mode = "add",
+		text = "",
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	}

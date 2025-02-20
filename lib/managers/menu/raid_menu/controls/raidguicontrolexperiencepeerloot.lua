@@ -40,8 +40,8 @@ end
 
 function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 	local params_xp_image = {
-		x = 0,
 		name = "xp_image",
+		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture_rect
 	}

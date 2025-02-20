@@ -1,8 +1,8 @@
 RaidGUIControlListItemCharacterSelect = RaidGUIControlListItemCharacterSelect or class(RaidGUIControl)
 RaidGUIControlListItemCharacterSelect.SLOTS = {
 	{
-		y = 0,
-		x = 416
+		x = 416,
+		y = 0
 	},
 	{
 		y = 0,

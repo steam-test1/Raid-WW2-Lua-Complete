@@ -64,11 +64,11 @@ end
 
 function HUDSaveIcon:_create_text()
 	local text_params = {
+		name = "save_icon_text",
 		text = "",
 		vertical = "center",
 		y = 0,
 		x = 0,
-		name = "save_icon_text",
 		h = self._panel:h(),
 		font = HUDSaveIcon.FONT,
 		font_size = HUDSaveIcon.FONT_SIZE,

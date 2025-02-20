@@ -328,6 +328,7 @@ end
 function HUDManager:on_loading_screen_faded_to_black()
 	self:hide_comm_wheel(true)
 	self:hide_stats_screen()
+	self:clear_map()
 	self:reset_player_panel_states()
 	self._hud_chat:clear()
 	self._hud_chat:hide()
@@ -361,8 +362,8 @@ end
 function HUDManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		send_idstrings = false,
 		verbose = false,
+		send_idstrings = false,
 		target_db_name = "all",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
@@ -682,8 +683,8 @@ function HUDManager:update(t, dt)
 					dogTagData[#allDogTags].textlabel = panel:text({
 						layer = 1,
 						name = "dogtagdebug",
-						text = "0.0",
 						font_size = 14,
+						text = "0.0",
 						font = tweak_data.gui.fonts.din_compressed_outlined_20,
 						color = Color(1, 1, 0)
 					})
@@ -992,8 +993,8 @@ function HUDManager:add_waypoint(id, data)
 	if show_on_screen == true then
 		local waypoint_panel = hud.panel
 		local bitmap = waypoint_panel:bitmap({
-			layer = 0,
 			rotation = 360,
+			layer = 0,
 			name = "bitmap" .. id,
 			texture = icon,
 			texture_rect = texture_rect,
@@ -1006,10 +1007,10 @@ function HUDManager:add_waypoint(id, data)
 
 		if rect_over then
 			bitmap_over = waypoint_panel:bitmap({
-				w = 32,
 				h = 0,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "bitmap_over" .. id,
 				texture = icon,
@@ -1018,20 +1019,20 @@ function HUDManager:add_waypoint(id, data)
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
 			searching = waypoint_panel:bitmap({
-				w = 32,
 				h = 16,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "searching" .. id,
 				texture = searching_icon,
 				texture_rect = searching_rect
 			})
 			aiming = waypoint_panel:bitmap({
-				w = 32,
 				h = 16,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "aiming" .. id,
 				texture = aiming_icon,
@@ -1043,8 +1044,8 @@ function HUDManager:add_waypoint(id, data)
 		local arrow_texture_rect = tweak_data.gui.icons.map_waypoint_pov_out.texture_rect
 		local arrow = waypoint_panel:bitmap({
 			visible = false,
-			layer = 0,
 			rotation = 360,
+			layer = 0,
 			name = "arrow" .. id,
 			texture = arrow_icon,
 			texture_rect = arrow_texture_rect,
@@ -1057,13 +1058,13 @@ function HUDManager:add_waypoint(id, data)
 
 		if data.distance then
 			distance = waypoint_panel:text({
-				w = 128,
-				vertical = "center",
-				align = "center",
 				text = "",
-				layer = 0,
 				rotation = 360,
 				h = 26,
+				layer = 0,
+				align = "center",
+				vertical = "center",
+				w = 128,
 				name = "distance" .. id,
 				color = data.color or Color.white,
 				font = tweak_data.gui.fonts.din_compressed_outlined_24,
@@ -1075,13 +1076,13 @@ function HUDManager:add_waypoint(id, data)
 		end
 
 		local timer = data.timer and waypoint_panel:text({
-			w = 32,
-			vertical = "center",
 			align = "center",
-			layer = 0,
 			rotation = 360,
+			layer = 0,
 			font_size = 32,
+			vertical = "center",
 			h = 32,
+			w = 32,
 			name = "timer" .. id,
 			text = (math.round(data.timer) < 10 and "0" or "") .. math.round(data.timer),
 			font = tweak_data.gui.fonts.din_compressed_outlined_32
@@ -1613,10 +1614,10 @@ function HUDManager:change_waypoint_icon(id, icon)
 				rect_over[4]
 			}
 			wp_data.bitmap_over = waypoint_panel:bitmap({
-				w = 32,
 				h = 0,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "bitmap_over" .. id,
 				texture = texture,
@@ -1625,20 +1626,20 @@ function HUDManager:change_waypoint_icon(id, icon)
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
 			wp_data.searching = waypoint_panel:bitmap({
-				w = 32,
 				h = 16,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "searching" .. id,
 				texture = searching_icon,
 				texture_rect = searching_rect
 			})
 			wp_data.aiming = waypoint_panel:bitmap({
-				w = 32,
 				h = 16,
-				rotation = 360,
 				layer = 0,
+				rotation = 360,
+				w = 32,
 				blend_mode = "normal",
 				name = "aiming" .. id,
 				texture = aiming_icon,
@@ -2061,46 +2062,46 @@ function HUDManager:setup_anticipation(total_t)
 
 	if not exists and total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 1,
-			time = 45
+			time = 45,
+			dialog = 1
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 2,
-			time = 30
+			time = 30,
+			dialog = 2
 		})
 	elseif exists and total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 6,
-			time = 30
+			time = 30,
+			dialog = 6
 		})
 	end
 
 	if total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 3,
-			time = 20
+			time = 20,
+			dialog = 3
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 4,
-			time = 10
+			time = 10,
+			dialog = 4
 		})
 	end
 
 	if total_t == 35 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 7,
-			time = 20
+			time = 20,
+			dialog = 7
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 4,
-			time = 10
+			time = 10,
+			dialog = 4
 		})
 	end
 
 	if total_t == 25 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 8,
-			time = 10
+			time = 10,
+			dialog = 8
 		})
 	end
 end
@@ -2555,22 +2556,22 @@ function HUDManager:debug_show_coordinates()
 	}
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.coord = self._debug.panel:text({
-		y = 14,
-		x = 14,
 		layer = 2000,
 		name = "debug_coord",
-		text = "",
 		font_size = 14,
+		y = 14,
+		x = 14,
+		text = "",
 		font = tweak_data.gui.fonts.din_compressed_outlined_18,
 		color = Color.white
 	})
 	self._debug.dogtagCoord = self._debug.panel:text({
-		y = 32,
-		x = 14,
 		layer = 2000,
 		name = "debug_dogtag",
-		text = "",
 		font_size = 18,
+		y = 32,
+		x = 14,
+		text = "",
 		font = tweak_data.gui.fonts.din_compressed_outlined_20,
 		color = Color.white
 	})

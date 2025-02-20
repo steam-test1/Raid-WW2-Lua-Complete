@@ -142,9 +142,9 @@ function AiLayer:_draw(t, dt)
 					for _, to_unit in ipairs(self._created_units) do
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
+								r = 1,
 								b = 0,
 								g = 0,
-								r = 1,
 								from_unit = unit,
 								to_unit = to_unit
 							})
@@ -156,9 +156,9 @@ function AiLayer:_draw(t, dt)
 					for _, to_unit in ipairs(self._created_units) do
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
+								r = 0,
 								b = 0,
 								g = 1,
-								r = 0,
 								from_unit = unit,
 								to_unit = to_unit
 							})
@@ -210,11 +210,11 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
-				b = 1,
-				g = 1,
 				r = 1,
-				height_offset = 0,
+				b = 1,
 				thick = true,
+				height_offset = 0,
+				g = 1,
 				from_unit = point.unit,
 				to_unit = to_unit,
 				circle_multiplier = selected_path and 0.5 or 0.25
@@ -375,8 +375,8 @@ end
 function AiLayer:_build_ai_settings()
 	local graphs_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local group_state = {
-		sorted = true,
 		name = "Group state:",
+		sorted = true,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
@@ -521,8 +521,8 @@ function AiLayer:_build_motion_path_section()
 	end
 
 	local mop_type = {
-		sorted = false,
 		name = "Selected path type:",
+		sorted = false,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		tooltip = "Path is used for either ground or airborne units.",

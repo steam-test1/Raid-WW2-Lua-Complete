@@ -17,10 +17,10 @@ function RaidGUIControlTabFilter:init(parent, params)
 		layer = parent:layer() + 1
 	})
 	self._tab_label = self._object:label({
-		align = "center",
 		vertical = "center",
 		y = 0,
 		x = 0,
+		align = "center",
 		name = "tab_control_label_" .. self._name,
 		w = params.w,
 		h = params.h,

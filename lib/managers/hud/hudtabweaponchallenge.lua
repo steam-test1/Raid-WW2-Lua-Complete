@@ -64,8 +64,8 @@ end
 
 function HUDTabWeaponChallenge:_create_title()
 	local title_params = {
-		name = "weapon_challenge_title",
 		text = "INCREASE ACCURACY",
+		name = "weapon_challenge_title",
 		vertical = "center",
 		align = "left",
 		y = HUDTabWeaponChallenge.TITLE_Y,
@@ -81,8 +81,8 @@ end
 
 function HUDTabWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
-		name = "weapon_challenge_tier",
 		text = "TI",
+		name = "weapon_challenge_tier",
 		vertical = "center",
 		align = "left",
 		y = HUDTabWeaponChallenge.TITLE_Y,
@@ -107,8 +107,8 @@ end
 
 function HUDTabWeaponChallenge:_create_description()
 	local description_params = {
-		name = "weapon_challenge_description",
 		text = "Bla bla bla bla",
+		name = "weapon_challenge_description",
 		wrap = true,
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDTabWeaponChallenge.TITLE_Y + HUDTabWeaponChallenge.TITLE_H,
@@ -127,8 +127,8 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local progress_bar_panel_params = {
 		x = 0,
 		name = "weapon_challenge_progress_bar_panel",
-		is_root_panel = true,
 		vertical = "bottom",
+		is_root_panel = true,
 		w = self._inner_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center)
 	}
@@ -148,9 +148,9 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
-		x = 0,
-		name = "weapon_challenge_progress_bar_foreground_panel",
 		y = 0,
+		name = "weapon_challenge_progress_bar_foreground_panel",
+		x = 0,
 		halign = "scale",
 		layer = 2,
 		valign = "scale",
@@ -169,11 +169,11 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
-		x = 0,
-		name = "weapon_challenge_progress_bar_text",
 		text = "123/456",
+		name = "weapon_challenge_progress_bar_text",
 		vertical = "center",
 		align = "center",
+		x = 0,
 		y = -2,
 		layer = 5,
 		w = self._progress_bar_panel:w(),

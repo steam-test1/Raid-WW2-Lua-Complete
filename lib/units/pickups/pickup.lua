@@ -13,7 +13,9 @@ function Pickup:init(unit)
 	end
 
 	if self._beaming then
-		self._unit:damage():run_sequence_simple("show_beam")
+		self._unit:damage():has_then_run_sequence_simple("show_dropped")
+	else
+		self._unit:damage():has_then_run_sequence_simple("show_static")
 	end
 end
 

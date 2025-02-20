@@ -28,10 +28,10 @@ end
 
 function RaidGUIControlIntelImageDetails:_create_details()
 	local intel_image_panel_params = {
-		y = 0,
-		x = 0,
 		name = "intel_image_panel",
 		h = 309,
+		y = 0,
+		x = 0,
 		w = self._object:w(),
 		layer = self._object:layer() + 1
 	}
@@ -71,10 +71,10 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_title_params = {
-		x = 20,
-		text = "",
 		name = "intel_title",
 		wrap = true,
+		text = "",
+		x = 20,
 		y = self._image_panel:y() + self._image_panel:h() + 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
@@ -87,9 +87,9 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_title:set_h(h)
 
 	local intel_subtitle_params = {
-		text = "",
 		name = "intel_subtitle",
 		wrap = true,
+		text = "",
 		x = self._intel_title:x(),
 		y = self._intel_title:y() + self._intel_title:h() + 12,
 		font = tweak_data.gui.fonts.lato,

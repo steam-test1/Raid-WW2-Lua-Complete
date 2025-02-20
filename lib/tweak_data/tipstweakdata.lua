@@ -35,92 +35,92 @@ function TipsTweakData:init()
 		string_id = "tip_weapon_spread"
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_melee_attack"
+		string_id = "tip_melee_attack",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_tactical_reload"
+		string_id = "tip_tactical_reload",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_weapon_effecienty"
+		string_id = "tip_weapon_effecienty",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_switch_to_sidearm"
+		string_id = "tip_switch_to_sidearm",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_head_shot"
+		string_id = "tip_head_shot",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_steelsight"
+		string_id = "tip_steelsight",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_crowbar"
+		string_id = "tip_crowbar",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_grenade_using"
+		string_id = "tip_grenade_using",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_bag_sprinting"
+		string_id = "tip_bag_sprinting",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_flamers"
+		string_id = "tip_flamers",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 8,
-		string_id = "tip_commanders"
+		string_id = "tip_commanders",
+		unlock_lvl = 8
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_new_objective_bonuses"
+		string_id = "tip_new_objective_bonuses",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_new_grenade_throw_hold"
+		string_id = "tip_new_grenade_throw_hold",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_new_grenade_throw_alt"
+		string_id = "tip_new_grenade_throw_alt",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_new_weapon_parts"
+		string_id = "tip_new_weapon_parts",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_new_consumable_missions"
+		string_id = "tip_new_consumable_missions",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_outlaw_rewards"
+		string_id = "tip_outlaw_rewards",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_challenge_cards_1"
+		string_id = "tip_challenge_cards_1",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_challenge_cards_2"
+		string_id = "tip_challenge_cards_2",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 16,
-		string_id = "tip_silent_headshots"
+		string_id = "tip_silent_headshots",
+		unlock_lvl = 16
 	})
 	table.insert(self, {
-		unlock_lvl = 30,
-		string_id = "tip_new_honk_honk"
+		string_id = "tip_new_honk_honk",
+		unlock_lvl = 30
 	})
 	table.insert(self, {
-		unlock_lvl = 40,
-		string_id = "tip_new_level_fourty"
+		string_id = "tip_new_level_fourty",
+		unlock_lvl = 40
 	})
 end
 

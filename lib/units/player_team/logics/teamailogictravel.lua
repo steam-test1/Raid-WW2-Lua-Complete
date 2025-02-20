@@ -80,8 +80,8 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)

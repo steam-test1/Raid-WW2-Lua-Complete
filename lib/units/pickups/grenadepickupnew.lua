@@ -6,6 +6,8 @@ function GrenadePickupNew:init(unit)
 	self._stack_size_max = self.stack_size_max or 1
 	self._mul_chance = math.max(0, self.mul_chance or 0.5)
 	self._graphics_name = self._graphics_name or "g_grenade_"
+	self._beaming = self.beaming or false
+	self._automatic_pickup = self.automatic_pickup or false
 
 	if Network:is_server() then
 		self:_randomize_stack_size()
@@ -15,6 +17,12 @@ function GrenadePickupNew:init(unit)
 
 	if material then
 		Pickup.randomize_glow_effect(material)
+	end
+
+	if self._beaming then
+		self._unit:damage():has_then_run_sequence_simple("show_dropped")
+	else
+		self._unit:damage():has_then_run_sequence_simple("show_static")
 	end
 end
 
@@ -197,6 +205,10 @@ function GrenadePickupNew:set_stack_size(stack_size)
 			end
 		end
 	end
+end
+
+function GrenadePickupNew:get_automatic_pickup()
+	return self._automatic_pickup
 end
 
 function GrenadePickupNew:get_pickup_type()

@@ -58,13 +58,13 @@ function MenuItemInput:setup_gui(node, row_item)
 	row_item.gui_text:set_text("")
 
 	row_item.caret = row_item.gui_panel:rect({
-		x = 0,
 		blend_mode = "add",
 		h = 0,
 		y = 0,
-		w = 0,
+		x = 0,
 		rotation = 360,
 		name = "caret",
+		w = 0,
 		color = Color(0.1, 1, 1, 1),
 		layer = node.layers.items + 2
 	})

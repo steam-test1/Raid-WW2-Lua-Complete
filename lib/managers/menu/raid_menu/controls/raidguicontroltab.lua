@@ -24,8 +24,8 @@ function RaidGUIControlTab:init(parent, params)
 
 	if params.icon then
 		self._tab_icon = self._object:image({
-			y = 0,
 			vertical = "center",
+			y = 0,
 			name = "tab_control_icon_" .. self._name,
 			x = RaidGUIControlTab.PADDING,
 			w = params.icon.texture_rect[3],
@@ -40,8 +40,8 @@ function RaidGUIControlTab:init(parent, params)
 	end
 
 	self._tab_label = self._object:label({
-		y = 0,
 		vertical = "center",
+		y = 0,
 		name = "tab_control_label_" .. self._name,
 		x = label_coord_x,
 		w = label_width,

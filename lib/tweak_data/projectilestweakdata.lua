@@ -456,7 +456,6 @@ function ProjectilesTweakData:_init_thermite(tweak_data)
 		no_cheat_count = true,
 		expire_t = 1.48,
 		throw_allowed_expire_t = 0.662,
-		launch_speed = 300,
 		alert_radius = 980,
 		pickup_filter = "nopickup",
 		max_amount = 1,
@@ -470,6 +469,7 @@ function ProjectilesTweakData:_init_thermite(tweak_data)
 		unit_hand = "units/upd_blaze/weapons/gre_thermite/wpn_fps_gre_thermite",
 		repeat_expire_t = 1.5,
 		unit = "units/upd_blaze/weapons/gre_thermite/wpn_prj_gre_thermite",
+		launch_speed = 300,
 		name_id = "bm_grenade_thermite",
 		fire_tweak_id = "thermite_grenade",
 		init_timer = 1,
@@ -571,8 +571,8 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 	}
 	self.gold_bar.animations.equip_id = "equip_welrod"
 	self.gold_bar.sounds = {
-		flyby = "grenade_handle_fly",
-		impact = "gold_bar_hit"
+		impact = "gold_bar_hit",
+		flyby = "grenade_handle_fly"
 	}
 	self.gold_bar.gui = {
 		height_offset = -14,

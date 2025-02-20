@@ -71,11 +71,11 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	self._name_label:set_h(h)
 
 	local params_customization_description = {
-		wrap = true,
 		align = "left",
 		text = "",
 		layer = 1,
 		name = "customization_description_label",
+		wrap = true,
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlCharacterCustomizationPeerLoot.NAME_PADDING_DOWN,
 		w = self._name_label:w(),

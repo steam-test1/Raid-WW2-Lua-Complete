@@ -71,16 +71,16 @@ function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "on_instigator", "Play at the instigators position")
 	self:_build_value_combobox(panel, panel_sizer, "effect", self:_effect_options(), "Select and effect from the combobox")
 	self:_build_value_number(panel, panel_sizer, "base_time", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "This is the minimum time to wait before spawning next effect")
 	self:_build_value_number(panel, panel_sizer, "random_time", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "Random time is added to minimum time to give the time between effect spawns")
 	self:_build_value_number(panel, panel_sizer, "max_amount", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Maximum amount of spawns when repeating effects (0 = unlimited)")
 
 	local help = {
@@ -153,8 +153,8 @@ end
 
 function CoreStopEffectUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "env_effect_play", 1, true) then

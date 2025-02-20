@@ -39,20 +39,20 @@ HUDTeammatePlayer.HOST_ICON = "player_panel_host_indicator"
 HUDTeammatePlayer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePlayer.STATES = {
 	{
-		id = "downed",
 		control = "timer_panel",
+		id = "downed",
 		hidden = {
 			"stamina_panel",
 			"warcry_panel"
 		}
 	},
 	{
-		id = "warcry",
-		control = "warcry_icon"
+		control = "warcry_icon",
+		id = "warcry"
 	},
 	{
-		id = "normal",
-		control = "nationality_icon"
+		control = "nationality_icon",
+		id = "normal"
 	}
 }
 HUDTeammatePlayer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
@@ -64,8 +64,8 @@ function HUDTeammatePlayer:init(i, teammates_panel)
 	self._max_stamina = 1
 	self._equipment = {}
 	self._health_data = {
-		current = 0,
-		total = 0
+		total = 0,
+		current = 0
 	}
 	self._states = HUDTeammatePlayer.STATES
 	self._displayed_state = self._states[#self._states]
@@ -234,9 +234,9 @@ end
 
 function HUDTeammatePlayer:_create_timer()
 	local timer_panel_params = {
-		alpha = 0,
+		name = "timer_panel",
 		layer = 5,
-		name = "timer_panel"
+		alpha = 0
 	}
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
 	local timer_background_params = {
@@ -297,8 +297,8 @@ function HUDTeammatePlayer:_create_host_indicator()
 	local warcry_background = self._warcry_panel:child("warcry_background")
 	local host_indicator_params = {
 		layer = 30,
-		alpha = 0,
 		name = "host_indicator",
+		alpha = 0,
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.HOST_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.HOST_ICON].texture_rect
 	}
@@ -367,8 +367,8 @@ function HUDTeammatePlayer:_create_down_indicator()
 	local guis = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. downs)
 	local down_indicator_params = {
 		layer = 30,
-		name = "down_indicator",
 		alpha = 1,
+		name = "down_indicator",
 		texture = guis.texture,
 		texture_rect = guis.texture_rect,
 		color = guis.color
@@ -447,8 +447,8 @@ function HUDTeammatePlayer:_create_player_health()
 	health_background:set_center(health_panel:w() / 2, health_panel:h() / 2)
 
 	self._special_health_bar = health_panel:rect({
-		name = "special_health_bar",
 		visible = false,
+		name = "special_health_bar",
 		w = health_background:w() - 2,
 		h = health_background:h() - 2,
 		color = HUDTeammatePlayer.PLAYER_HEALTH_SPECIAL_COLOR,

@@ -28,12 +28,12 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		texture_rect = class_icon.texture_rect
 	})
 	self._player_name = self._object:label({
-		align = "left",
-		h = 26,
-		w = 256,
 		name = "player_name",
 		text = "PLAYER NAME 1",
 		vertical = "center",
+		align = "left",
+		h = 26,
+		w = 256,
 		x = self._class_icon:right() + 8,
 		y = self._class_icon:top(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -41,11 +41,11 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
 	self._status_label = self._object:label({
+		name = "player_status",
+		vertical = "center",
 		align = "left",
 		h = 22,
 		w = 256,
-		name = "player_status",
-		vertical = "center",
 		x = self._player_name:left(),
 		y = self._player_name:bottom() + 6,
 		text = self:translate("menu_not_ready", true),
@@ -61,12 +61,12 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 		texture_rect = tweak_data.gui.icons.ready_up_card_not_selected.texture_rect
 	})
 	self._player_level = self._object:label({
-		align = "left",
-		h = 24,
-		w = 64,
 		name = "player_level",
 		text = "00",
 		vertical = "center",
+		align = "left",
+		h = 24,
+		w = 64,
 		x = self._selected_card_icon:right() + 16,
 		y = self._player_name:top(),
 		font = tweak_data.gui.fonts.din_compressed,

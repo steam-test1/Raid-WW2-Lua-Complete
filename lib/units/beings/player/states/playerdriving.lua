@@ -787,13 +787,13 @@ function PlayerDriving:_update_input(dt)
 end
 
 function PlayerDriving:inventory_clbk_listener(unit, event)
-	if event == "equip" and self._equipped_unit:base().remove_ignore_unit then
+	if event == "equip" and alive(self._equipped_unit) and self._equipped_unit:base().remove_ignore_unit then
 		self._equipped_unit:base():remove_ignore_unit(self._vehicle_unit)
 	end
 
 	PlayerDriving.super.inventory_clbk_listener(self, unit, event)
 
-	if event == "equip" and self._equipped_unit:base().add_ignore_unit then
+	if event == "equip" and alive(self._equipped_unit) and self._equipped_unit:base().add_ignore_unit then
 		self._equipped_unit:base():add_ignore_unit(self._vehicle_unit)
 	end
 end

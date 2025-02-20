@@ -65,6 +65,7 @@ function CharacterSelectionGui:_layout()
 	})
 
 	self._characters_list = self._root_panel:list_active({
+		loop_items = true,
 		vertical_spacing = 2,
 		item_h = 94,
 		selection_enabled = true,
@@ -108,7 +109,8 @@ function CharacterSelectionGui:_layout()
 		x = 1308,
 		name = "right_side_info_panel"
 	}, {
-		class = nil
+		class = nil,
+		World = nil
 	})
 
 	self._right_side_info:set_right(self._root_panel:right())

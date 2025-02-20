@@ -15,83 +15,83 @@ local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
 CopActionHurt = CopActionHurt or class()
 CopActionHurt.running_death_anim_variants = {
-	female = 5,
-	male = 26
+	male = 26,
+	female = 5
 }
 CopActionHurt.death_anim_variants = {
 	normal = {
 		crouching = {
 			fwd = {
-				low = 5,
-				high = 14
+				high = 14,
+				low = 5
 			},
 			bwd = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 5,
-				high = 14
+				high = 14,
+				low = 5
 			},
 			bwd = {
-				low = 2,
-				high = 3
+				high = 3,
+				low = 2
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		}
 	},
 	heavy = {
 		crouching = {
 			fwd = {
-				low = 2,
-				high = 7
+				high = 7,
+				low = 2
 			},
 			bwd = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 2,
-				high = 6
+				high = 6,
+				low = 2
 			},
 			bwd = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			}
 		}
 	}
@@ -100,76 +100,76 @@ CopActionHurt.death_anim_fe_variants = {
 	normal = {
 		crouching = {
 			fwd = {
-				low = 2,
-				high = 5
+				high = 5,
+				low = 2
 			},
 			bwd = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 2,
-				high = 6
+				high = 6,
+				low = 2
 			},
 			bwd = {
-				low = 0,
-				high = 3
+				high = 3,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			}
 		}
 	},
 	heavy = {
 		crouching = {
 			fwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			bwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			bwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			}
 		}
 	}
@@ -179,54 +179,54 @@ CopActionHurt.hurt_anim_variants = {
 	hurt = {
 		not_crouching = {
 			fwd = {
-				low = 5,
-				high = 13
+				high = 13,
+				low = 5
 			},
 			bwd = {
-				low = 1,
-				high = 2
+				high = 2,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		}
 	},
 	heavy_hurt = {
 		not_crouching = {
 			fwd = {
-				low = 7,
-				high = 18
+				high = 18,
+				low = 7
 			},
 			bwd = {
-				low = 2,
-				high = 3
+				high = 3,
+				low = 2
 			},
 			l = {
-				low = 2,
-				high = 4
+				high = 4,
+				low = 2
 			},
 			r = {
-				low = 2,
-				high = 4
+				high = 4,
+				low = 2
 			}
 		}
 	},
 	expl_hurt = {
-		fwd = 8,
 		bwd = 8,
 		l = 7,
-		r = 7
+		r = 7,
+		fwd = 8
 	},
 	fire_hurt = {
-		fwd = 8,
 		bwd = 8,
 		l = 7,
-		r = 7
+		r = 7,
+		fwd = 8
 	}
 }
 CopActionHurt.running_hurt_anim_variants = {
@@ -235,16 +235,16 @@ CopActionHurt.running_hurt_anim_variants = {
 ShieldActionHurt = ShieldActionHurt or class(CopActionHurt)
 ShieldActionHurt.hurt_anim_variants = deep_clone(CopActionHurt.hurt_anim_variants)
 ShieldActionHurt.hurt_anim_variants.expl_hurt = {
-	fwd = 2,
 	bwd = 2,
 	l = 2,
-	r = 2
+	r = 2,
+	fwd = 2
 }
 ShieldActionHurt.hurt_anim_variants.fire_hurt = {
-	fwd = 2,
 	bwd = 2,
 	l = 2,
-	r = 2
+	r = 2,
+	fwd = 2
 }
 CopActionHurt.fire_death_anim_variants_length = {
 	9,

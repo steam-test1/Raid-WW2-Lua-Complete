@@ -134,43 +134,43 @@ end
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {
 		tiny_raid = {
-			gold_bars_max = 1,
 			gold_bars_min = 1,
+			gold_bars_max = 1,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_raid = {
-			gold_bars_max = 4,
 			gold_bars_min = 2,
+			gold_bars_max = 4,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_raid = {
-			gold_bars_max = 10,
 			gold_bars_min = 5,
+			gold_bars_max = 10,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_raid = {
-			gold_bars_max = 15,
 			gold_bars_min = 11,
+			gold_bars_max = 15,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		tiny_operation = {
-			gold_bars_max = 35,
 			gold_bars_min = 25,
+			gold_bars_max = 35,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		small_operation = {
-			gold_bars_max = 50,
 			gold_bars_min = 35,
+			gold_bars_max = 50,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		medium_operation = {
-			gold_bars_max = 100,
 			gold_bars_min = 50,
+			gold_bars_max = 100,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		},
 		large_operation = {
-			gold_bars_max = 200,
 			gold_bars_min = 100,
+			gold_bars_max = 200,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		}
 	}

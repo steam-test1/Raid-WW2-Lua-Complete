@@ -33,9 +33,9 @@ function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0.85,
 				b = 0.25,
 				g = 0.85,
+				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -45,8 +45,8 @@ end
 
 function CoreRandomUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
@@ -100,7 +100,7 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_counter_id")
 	})
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 1,
+		min = 0,
 		floats = 0
 	}, "Specifies the amount of elements to be executed")
 	self:_build_value_number(panel, panel_sizer, "amount_random", {

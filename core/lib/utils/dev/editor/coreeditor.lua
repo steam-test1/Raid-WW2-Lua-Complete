@@ -202,8 +202,8 @@ end
 function CoreEditor:_init_mute()
 	self._mute_source = SoundDevice:create_source("editor_mute")
 	self._mute_states = {
-		wanted = true,
-		current = false
+		current = false,
+		wanted = true
 	}
 end
 
@@ -215,10 +215,10 @@ function CoreEditor:_init_gui()
 	self._gui = self._workspace:panel():gui(Idstring("core/guis/core_editor"))
 
 	self._gui:child("camera"):text({
-		font_size = 20,
 		name = "select_units_amount",
 		text = "",
-		font = "core/fonts/nice_editor_font"
+		font = "core/fonts/nice_editor_font",
+		font_size = 20
 	})
 	self:_align_gui()
 end
@@ -783,8 +783,7 @@ function CoreEditor:pickup_tool()
 		Global.application_window:connect("EVT_SIZE", callback(self, self, "appwin_size_event"))
 
 		self._resizing_appwin = true
-		self._move_transform_type_in = MoveTransformTypeIn:new()
-		self._rotate_transform_type_in = RotateTransformTypeIn:new()
+		self._unit_transform = UnitTransformDialog:new()
 		self._camera_transform_type_in = CameraTransformTypeIn:new()
 
 		self:load_layout()
@@ -1436,12 +1435,8 @@ function CoreEditor:on_selected_unit(unit)
 end
 
 function CoreEditor:on_reference_unit(unit)
-	if self._move_transform_type_in then
-		self._move_transform_type_in:set_unit(unit)
-	end
-
-	if self._rotate_transform_type_in then
-		self._rotate_transform_type_in:set_unit(unit)
+	if self._unit_transform then
+		self._unit_transform:set_unit(unit)
 	end
 end
 
@@ -1892,10 +1887,10 @@ function CoreEditor:reload_units(unit_names, small_compile, skip_replace_units)
 		end
 
 		Application:data_compile({
+			send_idstrings = false,
 			target_db_name = "all",
 			verbose = false,
 			preprocessor_definitions = "preprocessor_definitions",
-			send_idstrings = false,
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "assets",
@@ -2629,8 +2624,7 @@ function CoreEditor:update(time, rel_time)
 				Application:draw_cylinder(from, to, 50, 1, 1, 1)
 			end
 
-			self._move_transform_type_in:update(time, rel_time)
-			self._rotate_transform_type_in:update(time, rel_time)
+			self._unit_transform:update(time, rel_time)
 			self._camera_transform_type_in:update(time, rel_time)
 
 			if self._mission_graph then
@@ -3158,8 +3152,8 @@ function CoreEditor:do_save(path, dir, save_continents)
 
 	for continent, values in pairs(self._values) do
 		local t = {
-			single_data_block = true,
 			entry = "values",
+			single_data_block = true,
 			continent = continent,
 			data = values
 		}
@@ -3270,10 +3264,10 @@ end
 function CoreEditor:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
+		send_idstrings = false,
 		target_db_name = "all",
 		verbose = false,
 		preprocessor_definitions = "preprocessor_definitions",
-		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",

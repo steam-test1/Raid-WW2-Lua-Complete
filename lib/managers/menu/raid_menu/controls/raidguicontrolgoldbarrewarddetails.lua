@@ -75,8 +75,8 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	local title_description_params = {
-		alpha = 0,
 		align = "left",
+		alpha = 0,
 		vertical = "center",
 		name = "title_description",
 		y = RaidGUIControlGoldBarRewardDetails.TITLE_DESCRIPTION_Y,
@@ -92,8 +92,8 @@ function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		text = "",
 		vertical = "top",
 		name = "gold_bars_name",
@@ -149,9 +149,9 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_description()
 	local description_params = {
+		align = "left",
 		alpha = 0,
 		wrap = true,
-		align = "left",
 		vertical = "top",
 		name = "description",
 		y = RaidGUIControlGoldBarRewardDetails.DESCRIPTION_Y,
@@ -168,10 +168,10 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	local item_type_params = {
+		name = "item_type",
 		alpha = 0,
 		vertical = "center",
 		align = "left",
-		name = "item_type",
 		x = self._description:x(),
 		y = RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_Y,
 		w = self._right_panel:w(),

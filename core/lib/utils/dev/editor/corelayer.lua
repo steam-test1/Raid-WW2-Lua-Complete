@@ -88,13 +88,20 @@ function Layer:post_load()
 	end
 
 	for _, unit in ipairs(self._post_register_units) do
-		local previous_id = unit:unit_data().unit_id
-		unit:unit_data().unit_id = self._owner:get_unit_id(unit)
-		local msg = "A unit, " .. unit:name():s() .. " in layer " .. self._save_name .. ", had duplicate unit id. The unit id was changed from " .. previous_id .. " to " .. unit:unit_data().unit_id .. ".\n\nPlease verify that no references to the unit is broken."
+		if alive(unit) then
+			local previous_id = unit:unit_data().unit_id
+			unit:unit_data().unit_id = self._owner:get_unit_id(unit)
+			local msg = "A unit, " .. unit:name():s() .. " in layer " .. self._save_name .. ", had duplicate unit id. The unit id was changed from " .. previous_id .. " to " .. unit:unit_data().unit_id .. ".\n\nPlease verify that no references to the unit is broken."
 
-		EWS:message_box(Global.frame_panel, msg, self._save_name, "OK,ICON_ERROR", Vector3(-1, -1, 0))
-		managers.editor:output(msg)
-		self:add_unit_to_created_units(unit, true)
+			EWS:message_box(Global.frame_panel, msg, self._save_name, "OK,ICON_ERROR", Vector3(-1, -1, 0))
+			managers.editor:output(msg)
+			self:add_unit_to_created_units(unit, true)
+		else
+			local msg = "A unit in layer " .. self._save_name .. ", had a null unit and was skipped."
+
+			managers.editor:output(msg)
+			Application:error("[Layer:post_load]", msg)
+		end
 	end
 
 	self._post_register_units = nil
@@ -1000,8 +1007,8 @@ end
 function Layer:unit_sampler()
 	if not self._grab and not self:condition() then
 		local data = {
-			ray_type = "body editor",
 			sample = true,
+			ray_type = "body editor",
 			mask = managers.slot:get_mask("editor_all")
 		}
 		local ray = managers.editor:unit_by_raycast(data)

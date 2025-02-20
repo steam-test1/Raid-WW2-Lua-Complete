@@ -210,12 +210,12 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self._radius_params = radius_params
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "radius",
-		value = "radius"
+		value = "radius",
+		property = "radius"
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "radius",
-		value = "radius"
+		value = "radius",
+		property = "radius"
 	})
 	self:scale_slider(panel, panel_sizer, radius_params, "radius", "Radius scale:")
 

@@ -1064,7 +1064,7 @@ end
 function CoreWorldCollection:world_name_ids()
 	local names = {}
 
-	for key, value in pairs(self._editor_world_names) do
+	for key, _ in pairs(self:world_names()) do
 		table.insert(names, key)
 	end
 

@@ -280,13 +280,13 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
 	local sequence_params = {
+		sorted = true,
+		sizer_proportions = 1,
+		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select a sequence from the combobox",
 		default = "none",
-		sorted = true,
 		name = "Sequence:",
-		sizer_proportions = 1,
-		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
 		options = sequences,

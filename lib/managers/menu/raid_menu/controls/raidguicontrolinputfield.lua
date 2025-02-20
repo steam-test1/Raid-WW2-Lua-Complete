@@ -26,9 +26,9 @@ function RaidGUIControlInputField:init(parent, params)
 	self._panel = RaidGUIPanel:new(parent, panel_params)
 	self._object = self._panel
 	local background_params = {
-		name = "background_bar",
 		y = 0,
 		x = 0,
+		name = "background_bar",
 		w = self._params.w,
 		h = self._params.h,
 		left = RaidGUIControlInputField.ICON_LEFT,
@@ -55,11 +55,11 @@ function RaidGUIControlInputField:init(parent, params)
 	self._capitalize = params.capitalize == nil and true or params.capitalize
 	self._skip_first = false
 	self._input_panel = self._panel:panel({
-		name = "input_panel",
 		layer = 10,
 		y = 0,
 		x = 0,
 		alpha = 0,
+		name = "input_panel",
 		w = self._params.w,
 		h = self._params.h
 	})
@@ -70,9 +70,9 @@ function RaidGUIControlInputField:init(parent, params)
 	end
 
 	self._input_text = self._input_panel:text({
-		name = "input_text",
 		y = 0,
 		x = 30,
+		name = "input_text",
 		wrap = true,
 		hvertical = "center",
 		vertical = "center",
@@ -88,10 +88,10 @@ function RaidGUIControlInputField:init(parent, params)
 		layer = self._character_name_frame:layer() + 10
 	})
 	local caret = self._input_panel:rect({
-		name = "caret",
 		vertical = "center",
 		w = 0,
 		x = 0,
+		name = "caret",
 		y = RaidGUIControlInputField.CARET_Y,
 		h = self._input_text:h(),
 		color = Color(0.05, 1, 0.5, 1),

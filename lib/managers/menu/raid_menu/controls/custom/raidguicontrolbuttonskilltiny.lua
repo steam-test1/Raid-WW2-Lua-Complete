@@ -73,8 +73,8 @@ function RaidGUIControlButtonSkillTiny:update_skill_data(skill_data, skill_id)
 		if not self._grid_item_icon_update then
 			local col = tweak_data.gui.colors.raid_dirty_white
 			self._grid_item_icon_update = self._object:gradient({
-				name = "grid_item_icon_update",
 				orientation = "vertical",
+				name = "grid_item_icon_update",
 				y = self._object:h(),
 				w = self._object:w(),
 				h = self._object:h(),
@@ -130,9 +130,9 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 
 	local text = tostring(params.level_lock or 99)
 	self._item_status_lock_text = self._item_status_lock_panel:text({
-		name = "grid_item_lock_text",
 		h = 16,
 		align = "center",
+		name = "grid_item_lock_text",
 		w = params.w,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_16,

@@ -26,8 +26,8 @@ end
 
 function WorldOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -47,8 +47,8 @@ end
 
 function WorldOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -68,9 +68,9 @@ function WorldOperatorUnitElement:draw_links_unselected(...)
 
 		if alive(unit) then
 			local params = {
+				r = 0,
 				b = 0.5,
 				g = 0,
-				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -89,9 +89,9 @@ function WorldOperatorUnitElement:draw_links_selected(...)
 
 		if alive(unit) then
 			local params = {
+				r = 0,
 				b = 0.5,
 				g = 0,
-				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			}

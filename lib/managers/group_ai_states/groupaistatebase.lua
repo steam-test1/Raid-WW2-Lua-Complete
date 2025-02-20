@@ -239,7 +239,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
-		is_safe = nil,
+		stand = nil,
 		minions = {}
 	}
 end
@@ -644,8 +644,8 @@ function GroupAIStateBase:_clbk_switch_enemies_to_not_cool()
 			if unit_data.unit:brain():is_available_for_assignment() then
 				local new_objective = {
 					stance = "hos",
-					attitude = "engage",
 					is_default = true,
+					attitude = "engage",
 					type = "free"
 				}
 
@@ -674,8 +674,8 @@ function GroupAIStateBase:_clbk_switch_enemies_to_cool()
 			if unit_data.unit:brain():is_available_for_assignment() then
 				local new_objective = {
 					stance = "ntl",
-					attitude = "engage",
 					is_default = true,
+					attitude = "engage",
 					type = "free"
 				}
 
@@ -2515,8 +2515,8 @@ function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit,
 			if not tracker:lost() then
 				local search_pos = player_pos - spawn_fwd * 200
 				local ray_params = {
-					trace = true,
 					allow_entry = false,
+					trace = true,
 					tracker_from = tracker,
 					pos_to = search_pos
 				}
@@ -2878,8 +2878,8 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 
 					return {
 						stance = "hos",
-						scan = true,
 						interrupt_dis = 300,
+						scan = true,
 						type = "free",
 						nav_seg = hostage.tracker:nav_segment()
 					}
@@ -3139,9 +3139,9 @@ end
 
 function GroupAIStateBase:on_AI_criminal_death(criminal_name, unit)
 	managers.notification:add_notification({
+		id = "hint_teammate_dead",
 		duration = 3,
 		shelf_life = 5,
-		id = "hint_teammate_dead",
 		text = managers.localization:text("hint_teammate_dead", {
 			TEAMMATE = unit:base():nick_name()
 		})
@@ -3169,9 +3169,9 @@ function GroupAIStateBase:on_player_criminal_death(peer_id)
 
 	if my_peer_id ~= peer_id then
 		managers.notification:add_notification({
+			id = "hint_teammate_dead",
 			duration = 3,
 			shelf_life = 5,
-			id = "hint_teammate_dead",
 			text = managers.localization:text("hint_teammate_dead", {
 				TEAMMATE = unit:base():nick_name()
 			})
@@ -3600,7 +3600,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
 		skip_idle_check = true,
-		[""] = nil
+		done_cbk = nil
 	})
 end
 
@@ -3952,8 +3952,8 @@ function GroupAIStateBase:_create_group(group_desc)
 	local id = self:_get_new_group_id(group_desc.type)
 	local new_group = {
 		size = 0,
-		casualties = 0,
 		has_spawned = false,
+		casualties = 0,
 		id = id,
 		type = group_desc.type,
 		initial_size = group_desc.size,
@@ -4827,27 +4827,27 @@ function GroupAIStateBase:sync_event(event_id, blame_id)
 end
 
 GroupAIStateBase.blame_triggers = {
-	civilian = "civ",
-	german_light = "cop",
-	german_grunt_heavy = "cop",
 	escort = "civ",
+	sniper = "cop",
+	german_gebirgsjager_light = "cop",
+	civilian = "civ",
+	german_grunt_heavy = "cop",
+	german_grunt_mid = "cop",
 	german_grunt_light = "cop",
 	german_officer = "cop",
 	german_og_commander = "cop",
 	german_commander = "cop",
 	patrol = "cop",
 	civilian_female = "civ",
-	german_grunt_mid = "cop",
-	german_flamer = "cop",
-	german_spotter = "cop",
-	sniper = "cop",
-	german_gebirgsjager_light = "cop",
 	german_fallschirmjager_heavy = "cop",
 	german_fallschirmjager_light = "cop",
 	german_gasmask_commander_backup_shotgun = "cop",
 	german_gasmask_commander_backup = "cop",
 	german_gasmask = "cop",
-	german_heavy = "cop"
+	german_heavy = "cop",
+	german_light = "cop",
+	german_flamer = "cop",
+	german_spotter = "cop"
 }
 
 function GroupAIStateBase:fetch_highest_giveaway(...)
@@ -5232,13 +5232,13 @@ function GroupAIStateBase._create_hud_spotter_icon(obs_key, u_observer, u_suspec
 	end
 
 	local icon = managers.hud:add_waypoint(icon_id, {
-		waypoint_type = "spotter",
+		distance = false,
+		radius = 146,
 		state = "sneak_present",
 		blend_mode = "add",
-		radius = 146,
-		distance = false,
 		present_timer = 0,
 		no_sync = true,
+		waypoint_type = "spotter",
 		icon = icon_name,
 		unit = u_observer,
 		suspect = suspect,

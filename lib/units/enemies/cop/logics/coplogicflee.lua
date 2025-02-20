@@ -65,8 +65,8 @@ function CopLogicFlee.update(data)
 	if my_data.wants_stop_old_walk_action then
 		if not data.unit:movement():chk_action_forbidden("walk") then
 			data.unit:movement():action_request({
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			})
 
 			my_data.wants_stop_old_walk_action = nil
@@ -88,9 +88,9 @@ function CopLogicFlee.update(data)
 				CopLogicAttack._adjust_path_start_pos(data, my_data.cover_path)
 
 				local new_action_data = {
+					type = "walk",
 					body_part = 2,
 					variant = "run",
-					type = "walk",
 					nav_path = my_data.cover_path
 				}
 				my_data.cover_path = nil
@@ -125,10 +125,10 @@ function CopLogicFlee.update(data)
 		elseif my_data.flee_path then
 			if my_data.path_blocked == false and not unit:movement():chk_action_forbidden("walk") then
 				local new_action_data = {
-					variant = "run",
 					body_part = 2,
 					path_simplified = true,
 					type = "walk",
+					variant = "run",
 					nav_path = my_data.flee_path
 				}
 				my_data.flee_path = nil
@@ -243,8 +243,8 @@ function CopLogicFlee._update_enemy_detection(data)
 
 		if my_data.shooting then
 			local new_action = {
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			}
 
 			data.unit:brain():action_request(new_action)
@@ -272,8 +272,8 @@ function CopLogicFlee._upd_shoot(data, my_data)
 	if not action_taken then
 		if my_data.advance_blocked and data.unit:anim_data().move then
 			local new_action = {
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			}
 
 			data.unit:brain():action_request(new_action)
