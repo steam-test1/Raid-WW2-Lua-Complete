@@ -1,84 +1,84 @@
 DialogManager = DialogManager or class()
 DialogManager.MAX_CASE_PLAYER_NUM = 4
 DialogManager.MRS_WHITE = {
-	sound_switch = "mrs_white",
 	char = "MRS_WHITE",
-	unit = nil
+	unit = nil,
+	sound_switch = "mrs_white"
 }
 DialogManager.NIGHT_WITCH = {
-	sound_switch = "night_whitch",
 	char = "NIGHT_WITCH",
-	unit = nil
+	unit = nil,
+	sound_switch = "night_whitch"
 }
 DialogManager.FRANZ = {
-	sound_switch = "franz",
 	char = "FRANZ",
-	unit = nil
+	unit = nil,
+	sound_switch = "franz"
 }
 DialogManager.BOAT_DRIVER_BRIDGE = {
-	sound_switch = "boat_driver_bridge",
 	char = "BOAT_DRIVER_BRIDGE",
-	unit = nil
+	unit = nil,
+	sound_switch = "boat_driver_bridge"
 }
 DialogManager.TRUCK_DRIVER_BRIDGE = {
-	sound_switch = "truck_driver_bridge",
 	char = "TRUCK_DRIVER_BRIDGE",
-	unit = nil
+	unit = nil,
+	sound_switch = "truck_driver_bridge"
 }
 DialogManager.RESIST_PILOT_BANK = {
-	sound_switch = "resist_pilot_bank",
 	char = "RESIST_PILOT_BANK",
-	unit = nil
+	unit = nil,
+	sound_switch = "resist_pilot_bank"
 }
 DialogManager.TRAIN_ENGINEER = {
-	sound_switch = "train_engineer",
 	char = "TRAIN_ENGINEER",
-	unit = nil
+	unit = nil,
+	sound_switch = "train_engineer"
 }
 DialogManager.CASTLE_TRUCK_DRIVER = {
-	sound_switch = "castle_truck_driver",
 	char = "CASTLE_TRUCK_DRIVER",
-	unit = nil
+	unit = nil,
+	sound_switch = "castle_truck_driver"
 }
 DialogManager.MINIRAID2_TRUCK_DRIVER = {
-	sound_switch = "miniraid2_truck_driver",
 	char = "MINIRAID2_TRUCK_DRIVER",
-	unit = nil
+	unit = nil,
+	sound_switch = "miniraid2_truck_driver"
 }
 DialogManager.BANK_TRUCK_DRIVER = {
-	sound_switch = "bank_truck_driver",
 	char = "BANK_TRUCK_DRIVER",
-	unit = nil
+	unit = nil,
+	sound_switch = "bank_truck_driver"
 }
 DialogManager.DR_REINHARDT = {
-	sound_switch = "dr_reinhardt",
 	char = "DR_REINHARDT",
-	unit = nil
+	unit = nil,
+	sound_switch = "dr_reinhardt"
 }
 DialogManager.TANK_GENERAL = {
-	sound_switch = "tank_general",
 	char = "TANK_GENERAL",
-	unit = nil
+	unit = nil,
+	sound_switch = "tank_general"
 }
 DialogManager.RUSSIAN_GENERAL = {
-	sound_switch = "russian_general",
 	char = "RUSSIAN_GENERAL",
-	unit = nil
+	unit = nil,
+	sound_switch = "russian_general"
 }
 DialogManager.RUSSIAN_GENERAL2 = {
-	sound_switch = "russian_general2",
 	char = "RUSSIAN_GENERAL2",
-	unit = nil
+	unit = nil,
+	sound_switch = "russian_general2"
 }
 DialogManager.MALE_SPY = {
-	sound_switch = "male_spy",
 	char = "MALE_SPY",
-	unit = nil
+	unit = nil,
+	sound_switch = "male_spy"
 }
 DialogManager.FEMALE_SPY = {
-	sound_switch = "female_spy",
 	char = "FEMALE_SPY",
-	unit = nil
+	unit = nil,
+	sound_switch = "female_spy"
 }
 DialogManager.CHARS = {
 	DialogManager.MRS_WHITE,

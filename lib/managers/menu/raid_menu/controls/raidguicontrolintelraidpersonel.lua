@@ -20,52 +20,52 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		texture_rect = tweak_data.gui.icons.intel_table_personnel_folder.texture_rect
 	})
 	self._title_name = self._object:text({
-		align = "left",
-		text = "",
-		h = 32,
 		w = 384,
 		y = 128,
 		x = 608,
 		vertical = "center",
+		align = "left",
+		text = "",
+		h = 32,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._real_name = self._object:text({
-		align = "left",
-		text = "",
-		h = 32,
 		w = 384,
 		y = 160,
 		x = 608,
 		vertical = "center",
+		align = "left",
+		text = "",
+		h = 32,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._former_rank = self._object:text({
-		align = "left",
-		text = "",
-		h = 40,
 		w = 384,
 		y = 196,
 		x = 608,
 		vertical = "top",
+		align = "left",
+		text = "",
+		h = 40,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._notes_title = self._object:text({
-		align = "left",
-		text = "",
 		vertical = "top",
 		w = 384,
 		y = 256,
 		x = 608,
 		wrap = true,
+		align = "left",
+		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
@@ -93,13 +93,13 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 	self._scrollable_area_notes:setup_scroll_area()
 
 	self._notes = self._content_panel:text({
-		align = "left",
-		text = "",
 		vertical = "top",
 		w = 380,
 		y = 0,
 		x = 0,
 		wrap = true,
+		align = "left",
+		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,

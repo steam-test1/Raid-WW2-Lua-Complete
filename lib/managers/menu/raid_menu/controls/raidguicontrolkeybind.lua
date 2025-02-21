@@ -29,11 +29,11 @@ function RaidGuiControlKeyBind:init(parent, params)
 	self:_create_keybind_layout()
 
 	self._active_line = self._object:rect({
-		w = 3,
 		y = 0,
 		x = 0,
 		visible = false,
 		h = 32,
+		w = 3,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 	self._params.layer = self._params.layer - 1
@@ -290,9 +290,9 @@ end
 function RaidGuiControlKeyBind:_create_keybind_layout()
 	local translated_keybind = managers.localization:check_keybind_translation(self._keybind_params.binding)
 	self._keybind = self._object:text({
-		align = "center",
 		y = 0,
 		vertical = "center",
+		align = "center",
 		x = RaidGuiControlKeyBind.PADDING,
 		h = RaidGuiControlKeyBind.HEIGHT,
 		text = translated_keybind,
@@ -304,8 +304,8 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	self._keybind:set_text(utf8.to_upper(translated_keybind))
 
 	self._description = self._object:text({
-		align = "right",
 		y = 0,
+		align = "right",
 		x = self._params.keybind_w,
 		w = self._params.w - self._params.keybind_w,
 		h = RaidGuiControlKeyBind.HEIGHT,
@@ -383,11 +383,11 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	self._keybind:set_w(keybind_width)
 
 	self._active_line = self._object:rect({
-		w = 3,
 		y = 0,
 		x = 0,
 		visible = false,
 		h = 32,
+		w = 3,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 

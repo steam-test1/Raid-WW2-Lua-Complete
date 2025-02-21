@@ -39,9 +39,9 @@ end
 
 function HUDToastNotification:_create_background()
 	self._background = self._object:bitmap({
-		name = "background",
 		valign = "center",
 		halign = "center",
+		name = "background",
 		w = HUDToastNotification.W,
 		h = HUDToastNotification.H,
 		texture = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture,
@@ -51,11 +51,11 @@ end
 
 function HUDToastNotification:_create_title()
 	self._title = self._object:text({
-		align = "center",
+		name = "text",
 		valign = "center",
 		halign = "center",
 		vertical = "center",
-		name = "text",
+		align = "center",
 		text = "OBJECTIVE ACTIVATED",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
 		font_size = HUDToastNotification.TITLE_FONT_SIZE,
@@ -70,11 +70,11 @@ end
 
 function HUDToastNotification:_create_text()
 	self._text = self._object:text({
-		align = "center",
+		name = "text",
 		valign = "center",
 		halign = "center",
 		vertical = "center",
-		name = "text",
+		align = "center",
 		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
 		font_size = HUDToastNotification.TEXT_FONT_SIZE,
@@ -99,13 +99,13 @@ function HUDToastNotification:_create_icon()
 	self._icon_panel:set_center(self._object:w() / 2, self._object:h() / 2)
 
 	self._icon = self._icon_panel:bitmap({
-		rotation = 360,
 		name = "icon",
+		rotation = 360,
 		color = HUDToastNotification.ICON_COLOR
 	})
 	local blur = self._icon_panel:bitmap({
-		render_template = "VertexColorTexturedBlur3D",
 		name = "blur",
+		render_template = "VertexColorTexturedBlur3D",
 		rotation = 360,
 		layer = self._icon:layer() - 1,
 		w = HUDToastNotification.ICON_PANEL_SIZE,
@@ -114,8 +114,8 @@ function HUDToastNotification:_create_icon()
 		texture_rect = tweak_data.gui.icons.presenter_blur.texture_rect
 	})
 	local icon_bg = self._icon_panel:bitmap({
-		rotation = 360,
 		name = "icon_bg",
+		rotation = 360,
 		layer = self._icon:layer() - 2,
 		w = HUDToastNotification.ICON_PANEL_SIZE,
 		h = HUDToastNotification.ICON_PANEL_SIZE,

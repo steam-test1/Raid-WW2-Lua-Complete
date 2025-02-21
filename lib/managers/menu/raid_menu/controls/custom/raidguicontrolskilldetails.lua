@@ -58,10 +58,10 @@ end
 
 function RaidGUIControlSkillDetails:_create_control_panel_bg()
 	self._background = self._object:nine_cut_bitmap({
-		alpha = 0.8,
 		corner_size = 64,
-		name = "background",
 		icon = "dialog_rect",
+		alpha = 0.8,
+		name = "background",
 		w = self._object:w(),
 		h = self._object:h(),
 		layer = self._object:layer() - 1
@@ -70,10 +70,10 @@ end
 
 function RaidGUIControlSkillDetails:_create_skill_title()
 	self._title = self._main:label({
+		y = 4,
 		align = "center",
 		text = "DEFAULT DABBLER",
 		name = "skill_title",
-		y = 4,
 		w = self._main:w(),
 		h = RaidGUIControlSkillDetails.TITLE_H,
 		font = RaidGUIControlSkillDetails.TITLE_FONT,
@@ -83,9 +83,9 @@ function RaidGUIControlSkillDetails:_create_skill_title()
 	})
 	self._seperator_title = self._main:gradient({
 		orientation = "horizontal",
-		name = "seperator_title",
 		layer = 2,
 		h = 4,
+		name = "seperator_title",
 		y = self._title:top() - 4,
 		w = self._main:w()
 	})
@@ -105,8 +105,8 @@ end
 
 function RaidGUIControlSkillDetails:_create_skill_progression()
 	self._skill_progression = self._main:create_custom_control(RaidGUIControlSkillProgression, {
-		name = "skill_progression",
 		layer = 1,
+		name = "skill_progression",
 		x = RaidGUIControlSkillDetails.PROGRESSION_PADDING_X
 	})
 
@@ -128,13 +128,13 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local info_icon_size = 32
 	local text = "Sunburn can occur in less than 15 minutes, and in seconds when exposed to non-shielded welding arcs or other sources of intense ultraviolet light."
 	local template = {
-		word_wrap = true,
-		wrap = true,
+		h = 68,
+		y = 0,
+		vertical = "center",
 		align = "left",
 		rotation = 360,
-		h = 68,
-		vertical = "center",
-		y = 0,
+		word_wrap = true,
+		wrap = true,
 		x = tier_icon_size + padding,
 		w = self._description_panel:w() - tier_icon_size - padding,
 		font = RaidGUIControlSkillDetails.DESCRIPTION_FONT,
@@ -186,9 +186,9 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 	local text = "Cuba is the largest island in the Caribbean, it is the second-most populous after Hispaniola!"
 	local h = RaidGUIControlSkillDetails.FLAVOR_FONT_SIZE * 2
 	self._flavor = self._main:label({
+		vertical = "center",
 		align = "center",
 		name = "skill_flavor",
-		vertical = "center",
 		text = text,
 		y = self._main:h() - h,
 		w = self._main:w(),
@@ -200,10 +200,10 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 	})
 	local padding = 50
 	self._seperator_flavor = self._main:gradient({
-		name = "seperator_flavor",
 		orientation = "horizontal",
 		layer = 2,
 		h = 2,
+		name = "seperator_flavor",
 		x = padding,
 		y = self._flavor:top() - 4,
 		w = self._main:w() - padding * 2

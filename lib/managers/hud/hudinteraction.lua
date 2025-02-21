@@ -33,25 +33,25 @@ function HUDInteraction:init(hud, child_name)
 	end
 
 	local interact_text = self._hud_panel:text({
-		h = 64,
-		visible = false,
-		layer = 1,
 		align = "center",
 		valign = "center",
 		text = "HELLO",
+		h = 64,
+		visible = false,
+		layer = 1,
 		name = self._child_name_text,
 		font = HUDInteraction.FONT,
 		font_size = HUDInteraction.FONT_SIZE
 	})
 	local invalid_text = self._hud_panel:text({
+		align = "center",
 		font_size = 24,
+		valign = "center",
+		text = "HELLO",
 		h = 64,
 		blend_mode = "normal",
 		visible = false,
 		layer = 3,
-		align = "center",
-		valign = "center",
-		text = "HELLO",
 		name = self._child_ivalid_name_text,
 		color = Color(1, 0.3, 0.3),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24
@@ -130,8 +130,8 @@ function HUDInteraction:show_interaction_bar(current, total)
 		h = 0,
 		blend_mode = "normal",
 		w = 0,
-		layer = 3,
 		alpha = 1,
+		layer = 3,
 		x = self._progress_bar_x,
 		y = self._progress_bar_y,
 		color = tweak_data.gui.colors.interaction_bar
@@ -164,8 +164,8 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 		local progress_full = self._hud_panel:rect({
 			name = "interaction_progress_bar_hide",
 			blend_mode = "normal",
-			layer = 3,
 			alpha = 1,
+			layer = 3,
 			x = self._progress_bar_x,
 			y = self._progress_bar_y,
 			w = self._progress_bar_width,
@@ -180,8 +180,8 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 		local progress_cancel = self._hud_panel:rect({
 			name = "interaction_progress_bar_cancel",
 			blend_mode = "normal",
-			layer = 3,
 			alpha = 1,
+			layer = 3,
 			x = self._progress_bar_x,
 			y = self._progress_bar_y,
 			w = self._progress_bar:w(),
@@ -256,8 +256,8 @@ function HUDInteraction:_show_details(params)
 		texture_rect = icon_gui.texture_rect
 	})
 	local detail_text = self._details_panel:text({
-		name = "detail_text",
 		vertical = "center",
+		name = "detail_text",
 		text = tostring(params.text),
 		font = HUDInteraction.FONT,
 		font_size = HUDInteraction.FONT_SIZE,

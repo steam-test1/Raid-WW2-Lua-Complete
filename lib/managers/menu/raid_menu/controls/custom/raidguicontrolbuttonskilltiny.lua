@@ -130,9 +130,9 @@ function RaidGUIControlButtonSkillTiny:_layout_locks(params)
 
 	local text = tostring(params.level_lock or 99)
 	self._item_status_lock_text = self._item_status_lock_panel:text({
+		name = "grid_item_lock_text",
 		h = 16,
 		align = "center",
-		name = "grid_item_lock_text",
 		w = params.w,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_16,

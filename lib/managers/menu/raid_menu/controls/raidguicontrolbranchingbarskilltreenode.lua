@@ -57,24 +57,24 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	}
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_background_params = {
-		halign = "scale",
 		y = 0,
 		x = 0,
 		name = "selector_background",
 		alpha = 1,
 		valign = "scale",
+		halign = "scale",
 		w = self._selector_panel:w(),
 		h = self._selector_panel:h(),
 		color = tweak_data.gui.colors.raid_select_card_background
 	}
 	self._selector_rect = self._selector_panel:rect(selector_background_params)
 	local selector_triangle_up_params = {
-		halign = "left",
 		y = 0,
 		x = 0,
 		alpha = 1,
 		name = "selector_triangle_up",
 		valign = "top",
+		halign = "left",
 		w = RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W,
 		h = RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -82,10 +82,10 @@ function RaidGUIControlBranchingBarSkilltreeNode:_create_selector()
 	}
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
 	local selector_triangle_down_params = {
-		halign = "right",
 		alpha = 1,
 		name = "selector_triangle_down",
 		valign = "bottom",
+		halign = "right",
 		x = self._selector_panel:w() - RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W,
 		y = self._selector_panel:h() - RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_H,
 		w = RaidGUIControlBranchingBarSkilltreeNode.SELECTOR_TRIANGLE_W,
@@ -99,11 +99,11 @@ end
 function RaidGUIControlBranchingBarSkilltreeNode:_create_icon()
 	local icon = tweak_data.skilltree.skills[self._data.skill].icon or "skill_placeholder"
 	local icon_params = {
-		halign = "scale",
 		y = 0,
 		x = 0,
 		name = "skill_icon",
 		valign = "scale",
+		halign = "scale",
 		w = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_W,
 		h = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H,
 		texture = tweak_data.gui.icons[icon].texture,

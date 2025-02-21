@@ -22,10 +22,10 @@ function MenuItemMultiChoiceRaid:setup_gui(node, row_item)
 		w = node.item_panel:w()
 	})
 	row_item.choice_text = row_item.choice_panel:text({
-		align = "center",
 		vertical = "center",
 		y = 0,
 		x = 0,
+		align = "center",
 		font_size = row_item.font_size,
 		font = row_item.font,
 		color = node.row_item_hightlight_color,

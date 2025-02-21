@@ -103,11 +103,11 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 	}
 	self._arrow_right = self._object:image_button(right_arrow_params)
 	local label_params = {
+		text = "VALUE",
+		y = 0,
 		name = "stepper_simple_value",
 		vertical = "center",
 		align = "center",
-		text = "VALUE",
-		y = 0,
 		x = self._arrow_left:w(),
 		w = self._object:w() - self._arrow_left:w() - self._arrow_right:w(),
 		h = self._object:h(),

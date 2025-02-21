@@ -392,9 +392,9 @@ function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 		body_part = 1,
 		type = "act",
 		blocks = {
-			walk = -1,
 			heavy_hurt = -1,
 			hurt = -1,
+			walk = -1,
 			action = -1
 		}
 	}

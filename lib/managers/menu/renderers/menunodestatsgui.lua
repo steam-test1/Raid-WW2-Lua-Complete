@@ -147,9 +147,9 @@ function MenuNodeStatsGui:_add_stats(params)
 
 	if params.type == "progress" then
 		local bg = panel:rect({
-			h = 22,
 			vertical = "center",
 			halign = "center",
+			h = 22,
 			align = "center",
 			w = 256,
 			x = self:_right_align(),

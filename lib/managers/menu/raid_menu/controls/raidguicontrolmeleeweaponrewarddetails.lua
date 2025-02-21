@@ -72,9 +72,9 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	local title_description_params = {
-		alpha = 0,
-		layer = 10,
 		align = "left",
+		layer = 10,
+		alpha = 0,
 		vertical = "center",
 		name = "title_description",
 		y = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_Y,
@@ -90,10 +90,10 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		alpha = 0,
-		layer = 10,
 		align = "left",
+		layer = 10,
 		wrap = true,
+		alpha = 0,
 		vertical = "top",
 		name = "customization_name",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlMeleeWeaponRewardDetails.TITLE_PADDING_TOP,
@@ -200,12 +200,12 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_description()
 	local description_params = {
-		alpha = 0,
 		align = "left",
-		text = "",
 		layer = 10,
-		vertical = "top",
 		wrap = true,
+		alpha = 0,
+		text = "",
+		vertical = "top",
 		name = "description",
 		y = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_Y,
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,
@@ -220,13 +220,13 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_item_title()
 	local item_type_params = {
+		align = "left",
 		alpha = 0,
+		layer = 10,
+		wrap = true,
 		text = "",
 		vertical = "center",
-		layer = 10,
 		name = "item_type",
-		align = "left",
-		wrap = true,
 		x = self._description:x(),
 		y = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_Y,
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,

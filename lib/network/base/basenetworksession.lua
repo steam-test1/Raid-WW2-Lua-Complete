@@ -1688,22 +1688,22 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	local total_specials_kills = 0
 	local total_head_shots = 0
 	local best_killer = {
-		score = 0,
-		peer_id = nil
+		peer_id = nil,
+		score = 0
 	}
 	local best_special_killer = {
-		score = 0,
-		peer_id = nil
+		peer_id = nil,
+		score = 0
 	}
 	local best_accuracy = {
-		score = 0,
-		peer_id = nil
+		peer_id = nil,
+		score = 0
 	}
 	local group_accuracy = 0
 	local group_downs = 0
 	local most_downs = {
-		score = 0,
-		peer_id = nil
+		peer_id = nil,
+		score = 0
 	}
 
 	for _, peer in pairs(self._peers_all) do

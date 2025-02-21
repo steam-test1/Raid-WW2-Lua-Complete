@@ -501,10 +501,10 @@ end
 function PlayerStandard:_create_on_controller_disabled_input()
 	local release_interact = Global.game_settings.single_player or not managers.menu:get_controller():get_input_bool("interact")
 	local input = {
+		btn_use_item_release = true,
+		btn_steelsight_release = true,
 		is_customized = true,
 		btn_melee_release = true,
-		btn_steelsight_release = true,
-		btn_use_item_release = true,
 		btn_interact_release = release_interact
 	}
 
@@ -1572,8 +1572,8 @@ end
 function PlayerStandard:_end_action_ducking(t, skip_can_stand_check)
 	if not skip_can_stand_check and not self:_can_stand() then
 		managers.notification:add_notification({
-			duration = 2,
 			id = "hint_cant_stand_up",
+			duration = 2,
 			shelf_life = 5,
 			text = managers.localization:text("hint_cant_stand_up")
 		})
@@ -2891,7 +2891,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		idx = nil,
+		["unit "] = nil,
 		text = text
 	})
 

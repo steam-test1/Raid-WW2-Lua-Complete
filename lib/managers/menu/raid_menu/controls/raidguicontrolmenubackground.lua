@@ -26,22 +26,22 @@ end
 
 function RaidGUIControlMenuBackground:_create_backgrounds()
 	local blur = self._object:bitmap({
+		valign = "scale",
+		alpha = 0.65,
 		render_template = "VertexColorTexturedBlur3D",
 		name = "blur",
 		texture = "ui/icons/white_df",
-		valign = "scale",
-		alpha = 0.65,
 		halign = "scale",
 		w = self._object:w(),
 		h = self._object:h()
 	})
 	local tint = self._object:bitmap({
-		render_template = "VertexColorTexturedGrayscale3D",
 		alpha = 0.92,
-		texture = "ui/icons/white_df",
 		name = "color_tint",
 		halign = "scale",
 		valign = "scale",
+		render_template = "VertexColorTexturedGrayscale3D",
+		texture = "ui/icons/white_df",
 		layer = blur:layer() - 1,
 		color = Color(0.9, 0.82, 0.6),
 		w = self._object:w(),
@@ -59,10 +59,10 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 		h = self._object:h()
 	})
 	self._vignette = self._object:bitmap({
-		name = "vignette",
-		texture = "core/textures/vignette",
-		halign = "scale",
 		valign = "scale",
+		name = "vignette",
+		halign = "scale",
+		texture = "core/textures/vignette",
 		layer = blur:layer() + 4,
 		w = self._object:w(),
 		h = self._object:h()
@@ -70,12 +70,12 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 	local noise_w = self._object:w() + RaidGUIControlMenuBackground.NOISE_PADDING
 	local noise_h = self._object:h() + RaidGUIControlMenuBackground.NOISE_PADDING
 	self._grain = self._object:bitmap({
-		texture = "core/textures/noise",
 		wrap_mode = "wrap",
 		blend_mode = "add",
 		name = "film_grain",
 		halign = "scale",
 		valign = "scale",
+		texture = "core/textures/noise",
 		w = noise_w,
 		h = noise_h,
 		texture_rect = {

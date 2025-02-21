@@ -43,12 +43,12 @@ end
 
 function HUDMultipleChoiceWheel:_create_panel(hud)
 	local panel_params = {
+		halign = "center",
 		visible = false,
 		valign = "top",
 		alpha = 0,
 		name = "multiple_choice_wheel_panel",
 		layer = 1200,
-		halign = "center",
 		w = HUDMultipleChoiceWheel.W,
 		h = HUDMultipleChoiceWheel.H
 	}
@@ -313,9 +313,9 @@ end
 
 function HUDMultipleChoiceWheel:_create_option(index, angle, range)
 	local panel = self._object:panel({
+		halign = "center",
 		valign = "top",
 		alpha = 0,
-		halign = "center",
 		name = "panel_params_" .. tostring(index),
 		layer = self._selection_arc:layer() + 1
 	})
@@ -360,10 +360,10 @@ end
 
 function HUDMultipleChoiceWheel:_create_option_text(index, parent)
 	local option_text_params = {
-		halign = "left",
+		align = "center",
 		layer = 5,
 		vertical = "center",
-		align = "center",
+		halign = "left",
 		valign = "top",
 		name = "text_" .. tostring(self._option_data[index].id),
 		font = HUDMultipleChoiceWheel.TEXT_FONT,
@@ -555,8 +555,8 @@ end
 
 function HUDMultipleChoiceWheel:_activate_pointer(controller_activated)
 	self._last_mouse_pos = {
-		y = 0,
-		x = 0
+		x = 0,
+		y = 0
 	}
 	self._last_mouse_dist = 0
 
@@ -597,8 +597,8 @@ function HUDMultipleChoiceWheel:_get_pointer_angle(x, y)
 		y = y
 	}
 	local vec2 = {
-		y = -3,
-		x = 0
+		x = 0,
+		y = -3
 	}
 	local angle = math.atan2(vec1.y, vec1.x) - math.atan2(vec2.y, vec2.x)
 	angle = angle + self._angle_offset

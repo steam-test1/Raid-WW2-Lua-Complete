@@ -44,11 +44,11 @@ function RaidGUIControlInfoIcon:init(parent, params)
 		self._top_h = self._top:h()
 	else
 		local title_params = {
+			y = 0,
+			x = 0,
 			align = "center",
 			vertical = "center",
 			wrap = false,
-			y = 0,
-			x = 0,
 			layer = self._object:layer() + 1,
 			font = RaidGUIControlInfoIcon.TEXT_FONT,
 			font_size = params.title_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
@@ -67,11 +67,11 @@ function RaidGUIControlInfoIcon:init(parent, params)
 	end
 
 	local text_params = {
+		y = 0,
+		x = 0,
 		vertical = "center",
 		align = "center",
 		wrap = false,
-		y = 0,
-		x = 0,
 		h = params.text_h or 0,
 		font = RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
@@ -176,11 +176,11 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	end
 
 	local title_params = {
+		y = 0,
+		x = 0,
 		align = "center",
 		vertical = "center",
 		wrap = false,
-		y = 0,
-		x = 0,
 		layer = self._object:layer() + 1,
 		font = params and params.font or RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.font_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
@@ -224,11 +224,11 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 	end
 
 	local text_params = {
+		y = 0,
+		x = 0,
 		vertical = "center",
 		align = "center",
 		wrap = false,
-		y = 0,
-		x = 0,
 		font = RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
 		text = params and params.no_translate and text or self:translate(text, true),

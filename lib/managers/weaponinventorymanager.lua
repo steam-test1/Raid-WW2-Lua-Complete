@@ -592,42 +592,42 @@ function WeaponInventoryManager:_get_base_stats(name)
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
 	self._stats_shown = {
 		{
-			round_value = true,
 			stat_name = "extra_ammo",
-			name = "magazine"
+			name = "magazine",
+			round_value = true
+		},
+		{
+			stat_name = "total_ammo_mod",
+			name = "totalammo",
+			round_value = true
 		},
 		{
 			round_value = true,
-			stat_name = "total_ammo_mod",
-			name = "totalammo"
-		},
-		{
-			name = "fire_rate",
-			round_value = true
+			name = "fire_rate"
 		},
 		{
 			name = "damage"
 		},
 		{
-			revert = true,
 			name = "spread",
 			visual_multiplier = 0.5,
 			percent = true,
-			one_minus = true
+			one_minus = true,
+			revert = true
 		},
 		{
-			revert = true,
 			percent = true,
 			name = "recoil",
-			offset = true
+			offset = true,
+			revert = true
 		},
 		{
-			name = "concealment",
-			index = true
+			index = true,
+			name = "concealment"
 		},
 		{
-			name = "suppression",
-			offset = true
+			offset = true,
+			name = "suppression"
 		}
 	}
 
@@ -980,8 +980,8 @@ end
 function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	self._mweapon_stats_shown = {
 		{
-			name = "damage",
-			range = true
+			range = true,
+			name = "damage"
 		},
 		{
 			multiple_of = "damage",
@@ -989,18 +989,18 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 			range = true
 		},
 		{
-			inverse = true,
 			name = "charge_time",
+			inverse = true,
 			num_decimals = 1,
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
-			name = "range",
-			range = true
+			range = true,
+			name = "range"
 		},
 		{
-			name = "concealment",
-			index = true
+			index = true,
+			name = "concealment"
 		}
 	}
 	local base_stats = {}
@@ -1016,19 +1016,19 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
+			max_value = 0,
 			min_value = 0,
-			value = 0,
-			max_value = 0
+			value = 0
 		}
 		mods_stats[stat.name] = {
+			max_value = 0,
 			min_value = 0,
-			value = 0,
-			max_value = 0
+			value = 0
 		}
 		skill_stats[stat.name] = {
+			max_value = 0,
 			min_value = 0,
-			value = 0,
-			max_value = 0
+			value = 0
 		}
 
 		if stat.name == "damage" then

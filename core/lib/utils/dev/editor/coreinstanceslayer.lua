@@ -231,8 +231,8 @@ end
 function InstancesLayer:position_as()
 	if self._selected_instance and not self:condition() then
 		local data = {
-			sample = true,
 			ray_type = "body editor",
+			sample = true,
 			mask = self._position_as_slot_mask
 		}
 		local ray = managers.editor:unit_by_raycast(data)
@@ -1079,10 +1079,10 @@ end
 
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
-		verbose = false,
 		target_db_name = "all",
-		send_idstrings = false,
 		preprocessor_definitions = "preprocessor_definitions",
+		verbose = false,
+		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -1141,9 +1141,9 @@ function InstancesLayer:_create_overlay_gui()
 	end
 
 	self._gui_panel = self._workspace:panel():panel({
+		h = 16,
 		valign = "scale",
 		halign = "scale",
-		h = 16,
 		y = self._workspace:panel():h() - 16
 	})
 end
@@ -1151,8 +1151,8 @@ end
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		color = Color.black
 	})
 

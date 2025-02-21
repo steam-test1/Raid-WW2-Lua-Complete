@@ -125,8 +125,8 @@ function RaidGUIControlGoldBarRewardDetails:_create_reward_image()
 	}
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
 	local reward_image_params = {
-		alpha = 0,
 		name = "reward_image",
+		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE].texture_rect
 	}
@@ -168,10 +168,10 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_item_type()
 	local item_type_params = {
-		name = "item_type",
+		align = "left",
 		alpha = 0,
 		vertical = "center",
-		align = "left",
+		name = "item_type",
 		x = self._description:x(),
 		y = RaidGUIControlGoldBarRewardDetails.ITEM_TYPE_Y,
 		w = self._right_panel:w(),

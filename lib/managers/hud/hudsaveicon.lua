@@ -64,11 +64,11 @@ end
 
 function HUDSaveIcon:_create_text()
 	local text_params = {
-		name = "save_icon_text",
-		text = "",
 		vertical = "center",
 		y = 0,
 		x = 0,
+		name = "save_icon_text",
+		text = "",
 		h = self._panel:h(),
 		font = HUDSaveIcon.FONT,
 		font_size = HUDSaveIcon.FONT_SIZE,
@@ -79,12 +79,12 @@ end
 
 function HUDSaveIcon:_create_bullets()
 	local bullet_panel_params = {
-		w = 32,
-		name = "bullet_panel",
-		halign = "left",
 		valign = "center",
 		y = 0,
 		x = 0,
+		w = 32,
+		name = "bullet_panel",
+		halign = "left",
 		h = self._panel:h()
 	}
 	self._bullet_panel = self._panel:panel(bullet_panel_params)

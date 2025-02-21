@@ -3,197 +3,197 @@ WeaponInventoryTweakData = WeaponInventoryTweakData or class()
 function WeaponInventoryTweakData:init()
 	self.weapon_primaries_index = {
 		{
-			slot = 1,
-			weapon_id = "thompson"
+			weapon_id = "thompson",
+			slot = 1
 		},
 		{
-			slot = 2,
-			weapon_id = "mp38"
+			weapon_id = "mp38",
+			slot = 2
 		},
 		{
-			slot = 3,
-			weapon_id = "sterling"
+			weapon_id = "sterling",
+			slot = 3
 		},
 		{
-			slot = 4,
-			weapon_id = "garand"
+			weapon_id = "garand",
+			slot = 4
 		},
 		{
-			slot = 5,
-			weapon_id = "mp44"
+			weapon_id = "mp44",
+			slot = 5
 		},
 		{
-			slot = 6,
-			weapon_id = "m1918"
+			weapon_id = "m1918",
+			slot = 6
 		},
 		{
-			slot = 7,
-			weapon_id = "mg42"
+			weapon_id = "mg42",
+			slot = 7
 		},
 		{
-			slot = 8,
-			weapon_id = "m1903"
+			weapon_id = "m1903",
+			slot = 8
 		},
 		{
-			slot = 9,
-			weapon_id = "mosin"
+			weapon_id = "mosin",
+			slot = 9
 		},
 		{
-			slot = 10,
-			weapon_id = "m1912"
+			weapon_id = "m1912",
+			slot = 10
 		},
 		{
-			slot = 11,
-			weapon_id = "sten"
+			weapon_id = "sten",
+			slot = 11
 		},
 		{
-			slot = 12,
-			weapon_id = "carbine"
+			weapon_id = "carbine",
+			slot = 12
 		},
 		{
-			slot = 13,
-			weapon_id = "geco"
+			weapon_id = "geco",
+			slot = 13
 		},
 		{
-			slot = 14,
-			weapon_id = "dp28"
+			weapon_id = "dp28",
+			slot = 14
 		},
 		{
-			slot = 15,
-			weapon_id = "kar_98k"
+			weapon_id = "kar_98k",
+			slot = 15
 		},
 		{
-			slot = 16,
-			weapon_id = "bren"
+			weapon_id = "bren",
+			slot = 16
 		},
 		{
-			slot = 17,
-			weapon_id = "lee_enfield"
+			weapon_id = "lee_enfield",
+			slot = 17
 		},
 		{
-			slot = 18,
-			weapon_id = "ithaca"
+			weapon_id = "ithaca",
+			slot = 18
 		},
 		{
-			slot = 19,
-			weapon_id = "browning"
+			weapon_id = "browning",
+			slot = 19
 		}
 	}
 	self.weapon_secondaries_index = {
 		{
-			slot = 1,
-			weapon_id = "m1911"
+			weapon_id = "m1911",
+			slot = 1
 		},
 		{
-			slot = 2,
-			weapon_id = "c96"
+			weapon_id = "c96",
+			slot = 2
 		},
 		{
-			slot = 3,
-			weapon_id = "webley"
+			weapon_id = "webley",
+			slot = 3
 		},
 		{
-			slot = 4,
-			weapon_id = "tt33"
+			weapon_id = "tt33",
+			slot = 4
 		},
 		{
-			slot = 5,
-			weapon_id = "shotty"
+			weapon_id = "shotty",
+			slot = 5
 		},
 		{
-			slot = 6,
-			weapon_id = "welrod"
+			weapon_id = "welrod",
+			slot = 6
 		}
 	}
 	self.weapon_grenades_index = {
 		{
+			weapon_id = "m24",
 			default = true,
-			slot = 1,
-			weapon_id = "m24"
+			slot = 1
 		},
 		{
-			slot = 2,
-			weapon_id = "concrete"
+			weapon_id = "concrete",
+			slot = 2
 		},
 		{
-			slot = 3,
-			weapon_id = "d343"
+			weapon_id = "d343",
+			slot = 3
 		},
 		{
-			slot = 4,
-			weapon_id = "mills"
+			weapon_id = "mills",
+			slot = 4
 		},
 		{
-			slot = 5,
-			weapon_id = "decoy_coin"
+			weapon_id = "decoy_coin",
+			slot = 5
 		},
 		{
-			slot = 6,
-			weapon_id = "betty"
+			weapon_id = "betty",
+			slot = 6
 		},
 		{
-			slot = 7,
-			weapon_id = "gold_bar"
+			weapon_id = "gold_bar",
+			slot = 7
 		}
 	}
 	self.weapon_melee_index = {
 		{
 			redeemed_xp = 0,
-			slot = 1,
-			redeemed_gold = 5,
-			weapon_id = "m3_knife",
 			droppable = false,
-			default = true
+			default = true,
+			weapon_id = "m3_knife",
+			slot = 1,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 20,
-			slot = 2,
-			redeemed_gold = 5,
+			droppable = true,
 			weapon_id = "robbins_dudley_trench_push_dagger",
-			droppable = true
+			slot = 2,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 30,
-			slot = 3,
-			redeemed_gold = 5,
+			droppable = true,
 			weapon_id = "german_brass_knuckles",
-			droppable = true
+			slot = 3,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 40,
-			slot = 4,
-			redeemed_gold = 5,
+			droppable = true,
 			weapon_id = "lockwood_brothers_push_dagger",
-			droppable = true
+			slot = 4,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 50,
-			slot = 5,
-			redeemed_gold = 5,
+			droppable = true,
 			weapon_id = "bc41_knuckle_knife",
-			droppable = true
+			slot = 5,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 60,
-			slot = 6,
-			redeemed_gold = 5,
+			droppable = false,
 			weapon_id = "km_dagger",
-			droppable = false
+			slot = 6,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 70,
-			slot = 7,
-			redeemed_gold = 5,
+			droppable = false,
 			weapon_id = "marching_mace",
-			droppable = false
+			slot = 7,
+			redeemed_gold = 5
 		},
 		{
 			redeemed_xp = 80,
-			slot = 8,
-			redeemed_gold = 5,
-			weapon_id = "lc14b",
 			droppable = true,
-			is_challenge_reward = true
+			weapon_id = "lc14b",
+			is_challenge_reward = true,
+			slot = 8,
+			redeemed_gold = 5
 		}
 	}
 end

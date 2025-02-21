@@ -160,12 +160,12 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	self:_build_value_checkbox(panel, sizer, "enabled")
 	self:_build_value_checkbox(panel, sizer, "execute_on_startup")
 	self:_build_value_number(panel, sizer, "execute_on_startup_priority", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specifies priority if this element is executed on startup (lower number means faster execution)")
 	self:_build_value_number(panel, sizer, "trigger_times", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specifies how many time this element can be executed (0 mean unlimited times)")
 
 	local base_delay_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -173,18 +173,18 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	sizer:add(base_delay_sizer, 0, 0, "EXPAND,LEFT")
 
 	local base_delay_ctrlr = self:_build_value_number(panel, base_delay_sizer, "base_delay", {
-		min = 0,
 		floats = 2,
 		sizer_proportions = 2,
 		ctrlr_proportions = 1,
-		name_proportions = 1
+		name_proportions = 1,
+		min = 0
 	}, "Specifies a base delay that is added to each on executed delay")
 	local base_delay_rand_ctrlr = self:_build_value_number(panel, base_delay_sizer, "base_delay_rand", {
-		min = 0,
 		floats = 2,
 		sizer_proportions = 1,
 		ctrlr_proportions = 1,
-		name_proportions = 0
+		name_proportions = 0,
+		min = 0
 	}, "Specifies an additional random time to be added to base delay (delay + rand)", "  random")
 	local on_executed_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "On Executed")
 	local element_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -192,9 +192,9 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	on_executed_sizer:add(element_sizer, 0, 1, "EXPAND,LEFT")
 
 	self._elements_params = {
-		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		sorted = true,
+		sizer_proportions = 1,
 		tooltip = "Select an element from the combobox",
 		name_proportions = 1,
 		name = "Element:",
@@ -226,10 +226,10 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 
 	if self.ON_EXECUTED_ALTERNATIVES then
 		local on_executed_alternatives_params = {
-			ctrlr_proportions = 2,
+			tooltip = "Select an alternative on executed from the combobox",
 			name_proportions = 1,
 			sorted = false,
-			tooltip = "Select an alternative on executed from the combobox",
+			ctrlr_proportions = 2,
 			name = "Alternative:",
 			panel = panel,
 			sizer = on_executed_sizer,
@@ -248,7 +248,6 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	on_executed_sizer:add(delay_sizer, 0, 0, "EXPAND,LEFT")
 
 	self._element_delay_params = {
-		min = 0,
 		floats = 2,
 		name_proportions = 1,
 		ctrlr_proportions = 1,
@@ -256,6 +255,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		value = 0,
 		sizer_proportions = 2,
 		name = "Delay:",
+		min = 0,
 		panel = panel,
 		sizer = delay_sizer
 	}
@@ -265,7 +265,6 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	element_delay:connect("EVT_KILL_FOCUS", callback(self, self, "on_executed_element_delay"), nil)
 
 	self._element_delay_rand_params = {
-		min = 0,
 		floats = 2,
 		name_proportions = 0,
 		ctrlr_proportions = 1,
@@ -273,6 +272,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		value = 0,
 		sizer_proportions = 1,
 		name = "  Random:",
+		min = 0,
 		panel = panel,
 		sizer = delay_sizer
 	}
@@ -406,12 +406,12 @@ function CoreMissionElement:_build_instance_var_names(panel)
 
 	for _, data in ipairs(self.INSTANCE_VAR_NAMES) do
 		local params = {
-			name_proportions = 1,
-			ctrlr_proportions = 2,
 			sorted = true,
 			tooltip = "Select a value",
-			default = "not_used",
+			name_proportions = 1,
 			sizer_proportions = 1,
+			ctrlr_proportions = 2,
+			default = "not_used",
 			name = string.pretty(data.value, true) .. ":",
 			panel = panel,
 			sizer = sizer,
@@ -1226,9 +1226,9 @@ function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, opti
 	sizer:add(horizontal_sizer, params and params.horizontal_sizer_proportions or 0, 1, "EXPAND,LEFT")
 
 	local combobox_params = {
-		ctrlr_proportions = 2,
 		name_proportions = 1,
 		sorted = false,
+		ctrlr_proportions = 2,
 		sizer_proportions = 1,
 		name = string.pretty(custom_name or value_name, true) .. ":",
 		panel = panel,

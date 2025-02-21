@@ -37,10 +37,10 @@ end
 
 function HUDTurret:_create_panel(hud)
 	local panel_params = {
+		alpha = 0,
 		valign = "center",
 		name = "turret_panel",
-		halign = "center",
-		alpha = 0
+		halign = "center"
 	}
 	self._object = hud.panel:panel(panel_params)
 end
@@ -65,9 +65,9 @@ function HUDTurret:_create_heat_indicator()
 	}
 	self._heat_indicator_background = self._heat_indicator_panel:bitmap(heat_indicator_background_params)
 	local heat_indicator_foreground_panel_params = {
+		name = "heat_indicator_foreground_panel",
 		x = 0,
 		y = 0,
-		name = "heat_indicator_foreground_panel",
 		valign = "scale",
 		halign = "scale",
 		w = self._heat_indicator_panel:w(),
@@ -97,12 +97,12 @@ function HUDTurret:_create_dismount_prompt()
 	self._dismount_prompt_panel:set_y(self._heat_indicator_panel:y() - 200)
 
 	local dismount_prompt_text_params = {
+		layer = 5,
 		vertical = "center",
 		align = "center",
 		halign = "center",
 		valign = "center",
 		name = "text",
-		layer = 5,
 		font = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT,
 		font_size = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT_SIZE,
 		text = utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT))

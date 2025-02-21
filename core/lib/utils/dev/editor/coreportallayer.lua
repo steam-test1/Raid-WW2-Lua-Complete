@@ -540,9 +540,9 @@ end
 function PortalLayer:click_select_unit()
 	if self._ctrl:down(Idstring("add_to_portal_unit_group")) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
-			ray_type = "body editor",
 			mask = 1,
-			sample = true
+			sample = true,
+			ray_type = "body editor"
 		})
 
 		if ray and ray.unit then
@@ -558,9 +558,9 @@ end
 function PortalLayer:hover_highlight()
 	if self._ctrl:down(Idstring("add_to_portal_unit_group")) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
-			ray_type = "body editor",
 			mask = 1,
-			sample = true
+			sample = true,
+			ray_type = "body editor"
 		})
 
 		if ray and ray.unit then
@@ -665,9 +665,9 @@ function PortalLayer:new_portal(portals)
 	local g = 0.25 + math.rand(0.75)
 	local b = 0.25 + math.rand(0.75)
 	self._portal_shapes[name] = {
+		draw_base = 0,
 		top = 0,
 		bottom = 0,
-		draw_base = 0,
 		portal = {},
 		r = r,
 		g = g,

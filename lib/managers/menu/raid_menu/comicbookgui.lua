@@ -67,8 +67,8 @@ function ComicBookGui:_layout_comic_pages()
 		h = self.PAGE_HEIGHT
 	})
 	self._page_left = self._pages_panel:bitmap({
-		texture = "ui/comic_book/raid_comic_01",
 		rotation = 0,
+		texture = "ui/comic_book/raid_comic_01",
 		w = self.PAGE_WIDTH,
 		h = self.PAGE_HEIGHT,
 		texture_rect = self._texture_rect.left
@@ -77,8 +77,8 @@ function ComicBookGui:_layout_comic_pages()
 	self._page_left:set_right(self._pages_panel:w() / 2)
 
 	self._page_right = self._pages_panel:bitmap({
-		texture = "ui/comic_book/raid_comic_01",
 		rotation = 0,
+		texture = "ui/comic_book/raid_comic_01",
 		w = self.PAGE_WIDTH,
 		h = self.PAGE_HEIGHT,
 		texture_rect = self._texture_rect.right

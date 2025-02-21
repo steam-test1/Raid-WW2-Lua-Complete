@@ -1,8 +1,8 @@
 NavLinkUnitElement = NavLinkUnitElement or class(MissionElement)
 NavLinkUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "so_action",
-		type = "special_objective_action"
+		type = "special_objective_action",
+		value = "so_action"
 	}
 }
 NavLinkUnitElement._AI_SO_types = {
@@ -435,11 +435,11 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
+		name_proportions = 1,
+		tooltip = "Select a preset.",
+		ctrlr_proportions = 2,
 		sorted = true,
 		name = "Preset:",
-		name_proportions = 1,
-		ctrlr_proportions = 2,
-		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
 		options = {

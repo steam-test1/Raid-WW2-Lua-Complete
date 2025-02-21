@@ -1324,11 +1324,11 @@ function MenuManager:add_back_button(new_node)
 	new_node:delete_item("back")
 
 	local params = {
-		back = true,
+		text_id = "menu_back",
 		previous_node = true,
 		visible_callback = "is_pc_controller",
-		name = "back",
-		text_id = "menu_back"
+		back = true,
+		name = "back"
 	}
 	local new_item = new_node:create_item(nil, params)
 
@@ -1342,9 +1342,9 @@ end
 function MenuManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		send_idstrings = false,
 		verbose = false,
 		target_db_name = "all",
+		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",
@@ -1892,9 +1892,9 @@ end
 
 function MenuManager:create_menu_item_background(panel, coord_x, coord_y, width, layer)
 	local menu_item_background = panel:bitmap({
-		name = "background_image",
 		texture = "ui/main_menu/textures/debug_menu_buttons",
 		visible = true,
+		name = "background_image",
 		texture_rect = {
 			0,
 			14,

@@ -249,8 +249,8 @@ function CopMovement:post_init()
 	self._machine:set_callback_object(self)
 
 	self._stance = {
-		name = "ntl",
 		code = 1,
+		name = "ntl",
 		values = {
 			1,
 			0,
@@ -465,21 +465,21 @@ function CopMovement:_upd_actions(t)
 
 	if has_no_action and (not self._queued_actions or not next(self._queued_actions)) then
 		self:action_request({
-			type = "idle",
-			body_part = 1
+			body_part = 1,
+			type = "idle"
 		})
 	end
 
 	if not a_actions[1] and not a_actions[2] and (not self._queued_actions or not next(self._queued_actions)) and not self:chk_action_forbidden("action") then
 		if a_actions[3] then
 			self:action_request({
-				type = "idle",
-				body_part = 2
+				body_part = 2,
+				type = "idle"
 			})
 		else
 			self:action_request({
-				type = "idle",
-				body_part = 1
+				body_part = 1,
+				type = "idle"
 			})
 		end
 	end
@@ -1318,9 +1318,9 @@ function CopMovement:on_suppressed(state)
 	if Network:is_server() and state and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.stand) and not self:chk_action_forbidden("walk") then
 		if state == "panic" and not self:chk_action_forbidden("act") then
 			local action_desc = {
+				body_part = 1,
 				type = "act",
 				clamp_to_graph = true,
-				body_part = 1,
 				variant = self._ext_anim.run and self._ext_anim.move_fwd and "e_so_sup_fumble_run_fwd" or "e_so_sup_fumble_inplace",
 				blocks = {
 					walk = -1,
@@ -1331,10 +1331,10 @@ function CopMovement:on_suppressed(state)
 			self:action_request(action_desc)
 		elseif self._ext_anim.idle and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 			local action_desc = {
+				body_part = 1,
 				variant = "suppressed_reaction",
 				type = "act",
 				clamp_to_graph = true,
-				body_part = 1,
 				blocks = {
 					walk = -1
 				}
@@ -1343,8 +1343,8 @@ function CopMovement:on_suppressed(state)
 			self:action_request(action_desc)
 		elseif not self._ext_anim.crouch and self._tweak_data.crouch_move and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) then
 			local action_desc = {
-				type = "crouch",
-				body_part = 4
+				body_part = 4,
+				type = "crouch"
 			}
 
 			self:action_request(action_desc)
@@ -1416,10 +1416,10 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 
 	if not lgt_hurt then
 		blocks = {
-			tase = -1,
 			walk = -1,
-			action = -1,
+			tase = -1,
 			act = -1,
+			action = -1,
 			aim = -1
 		}
 
@@ -2221,14 +2221,14 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 
 	local redir_name = self._actions.act:_get_act_name_from_index(index)
 	local action_data = {
-		type = "act",
 		body_part = 1,
+		type = "act",
 		variant = redir_name,
 		blocks = {
-			act = -1,
-			idle = -1,
 			walk = -1,
-			action = -1
+			action = -1,
+			act = -1,
+			idle = -1
 		},
 		start_rot = start_rot,
 		start_pos = start_pos,
@@ -2312,18 +2312,18 @@ function CopMovement:sync_action_hurt_end()
 
 		if hurt_type == "bleedout" or hurt_type == "fatal" then
 			local action_data = {
+				body_part = 1,
 				variant = "stand",
 				type = "act",
 				client_interrupt = true,
-				body_part = 1,
 				blocks = {
-					heavy_hurt = -1,
-					stand = -1,
 					walk = -1,
 					action = -1,
+					heavy_hurt = -1,
 					light_hurt = -1,
-					aim = -1,
 					hurt = -1,
+					stand = -1,
+					aim = -1,
 					crouch = -1
 				}
 			}

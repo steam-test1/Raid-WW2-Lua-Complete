@@ -34,12 +34,12 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._script_params = {
+		sorted = true,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select a script from the combobox",
 		default = "none",
 		name = "Script:",
-		sorted = true,
 		panel = panel,
 		sizer = panel_sizer,
 		options = self:_scripts(),

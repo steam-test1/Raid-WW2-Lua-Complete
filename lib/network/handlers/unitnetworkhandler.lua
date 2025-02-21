@@ -151,10 +151,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	end
 
 	local action_desc = {
+		type = "walk",
 		persistent = true,
 		path_simplified = true,
 		body_part = 2,
-		type = "walk",
 		variant = haste_code == 1 and "walk" or "run",
 		end_rot = end_rot,
 		nav_path = nav_path,
@@ -162,10 +162,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		no_strafe = no_strafe,
 		end_pose = end_pose,
 		blocks = {
+			turn = -1,
 			act = -1,
 			walk = -1,
-			idle = -1,
-			turn = -1
+			idle = -1
 		}
 	}
 
@@ -837,9 +837,9 @@ function UnitNetworkHandler:action_aim_state(cop, state)
 
 	if state then
 		local shoot_action = {
-			block_type = "action",
 			body_part = 3,
-			type = "shoot"
+			type = "shoot",
+			block_type = "action"
 		}
 
 		cop:movement():action_request(shoot_action)
@@ -1105,8 +1105,8 @@ function UnitNetworkHandler:action_tase_event(taser_unit, event_id, sender)
 		end
 
 		local tase_action = {
-			body_part = 3,
-			type = "tase"
+			type = "tase",
+			body_part = 3
 		}
 
 		taser_unit:movement():action_request(tase_action)
@@ -1905,44 +1905,44 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 	if local_peer:unit() and unit:key() == local_peer:unit():key() then
 		local valid_transitions = {
 			standard = {
+				carry = true,
 				incapacitated = true,
 				tased = true,
-				bleed_out = true,
-				carry = true
+				bleed_out = true
 			},
 			carry = {
+				standard = true,
 				incapacitated = true,
 				tased = true,
-				bleed_out = true,
-				standard = true
+				bleed_out = true
 			},
 			mask_off = {
-				carry = true,
-				standard = true
+				standard = true,
+				carry = true
 			},
 			bleed_out = {
+				standard = true,
 				carry = true,
-				fatal = true,
-				standard = true
+				fatal = true
 			},
 			fatal = {
-				carry = true,
-				standard = true
+				standard = true,
+				carry = true
 			},
 			tased = {
-				incapacitated = true,
 				carry = true,
+				incapacitated = true,
 				standard = true
 			},
 			incapacitated = {
-				carry = true,
-				standard = true
+				standard = true,
+				carry = true
 			},
 			clean = {
+				civilian = true,
 				standard = true,
 				carry = true,
-				mask_off = true,
-				civilian = true
+				mask_off = true
 			}
 		}
 
@@ -2303,8 +2303,8 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 	if id == PlayerDamage.HUD_NET_EVENTS.health then
 		if character_data and character_data.panel_id then
 			managers.hud:set_teammate_health(character_data.panel_id, {
-				max = 1,
 				total = 1,
+				max = 1,
 				current = percent / 100
 			})
 			character_data.unit:character_damage():set_health_ratio(percent / 100)
@@ -2318,8 +2318,8 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 	elseif id == PlayerDamage.HUD_NET_EVENTS.armor then
 		if character_data and character_data.panel_id then
 			managers.hud:set_teammate_armor(character_data.panel_id, {
-				max = 1,
 				total = 1,
+				max = 1,
 				current = percent / 100
 			})
 		else
@@ -2351,8 +2351,8 @@ function UnitNetworkHandler:set_armor(unit, percent, sender)
 
 	if character_data and character_data.panel_id then
 		managers.hud:set_teammate_armor(character_data.panel_id, {
-			max = 1,
 			total = 1,
+			max = 1,
 			current = percent / 100
 		})
 	else
@@ -2372,8 +2372,8 @@ function UnitNetworkHandler:set_health(unit, percent, sender)
 
 	if character_data and character_data.panel_id then
 		managers.hud:set_teammate_health(character_data.panel_id, {
-			max = 1,
 			total = 1,
+			max = 1,
 			current = health_ratio
 		})
 	else
@@ -3620,11 +3620,11 @@ end
 local function warcry_dmg_func(peer_name, data)
 	local percent = Utl.mul_to_string_percent(data)
 	local notification_data = {
-		priority = 1,
-		id = "skill_ammo_warcry_from",
-		icon = "test_icon",
-		duration = 5,
 		force = true,
+		priority = 1,
+		duration = 5,
+		icon = "test_icon",
+		id = "skill_ammo_warcry_from",
 		notification_type = HUDNotification.ICON,
 		text = managers.localization:text("skill_ammo_warcry_from", {
 			NAME = peer_name,

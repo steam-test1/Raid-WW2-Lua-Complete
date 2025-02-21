@@ -110,8 +110,8 @@ end
 
 function CoreCounterUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -122,8 +122,8 @@ end
 
 function CoreCounterUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -179,8 +179,8 @@ function CoreCounterUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_unit")
 	})
 	self:_build_value_number(panel, panel_sizer, "counter_target", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Specifies how many times the counter should be executed before running its on executed")
 	self:_add_help_text("Units with number gui extension can have their value updated from a counter.")
 end
@@ -249,8 +249,8 @@ end
 
 function CoreCounterOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
@@ -294,8 +294,8 @@ function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"set"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Amount to add, subtract or set to the counters.")
 	self:_add_help_text("This element can modify logic_counter element. Select counters to modify using insert and clicking on the elements.")
 end
@@ -350,8 +350,8 @@ end
 
 function CoreCounterTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
@@ -453,8 +453,8 @@ end
 
 function CoreCounterFilterUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then

@@ -366,8 +366,8 @@ function CopActionTase:clbk_malfunction()
 	})
 
 	local action_data = {
-		variant = "melee",
 		damage = 0,
+		variant = "melee",
 		damage_effect = self._unit:character_damage()._HEALTH_INIT * 10,
 		attacker_unit = managers.player:player_unit() or self._unit,
 		attack_dir = -self._common_data.fwd,

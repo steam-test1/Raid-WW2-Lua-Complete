@@ -26,10 +26,10 @@ end
 
 function RaidGUIControlSaveInfo:_create_info_icons()
 	local info_icons_panel_params = {
+		h = 96,
 		y = 18,
 		x = 0,
 		name = "info_icons_panel",
-		h = 96,
 		w = self._object:w() * 0.78
 	}
 	self._info_icons_panel = self._object:panel(info_icons_panel_params)
@@ -38,11 +38,11 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 
 	local h = self._info_icons_panel:h()
 	local dog_tag_panel_params = {
+		h = 64,
+		w = 180,
 		y = 23,
 		x = 0,
-		name = "dog_tag_panel",
-		h = 64,
-		w = 180
+		name = "dog_tag_panel"
 	}
 	self._dog_tag_panel = self._info_icons_panel:panel(dog_tag_panel_params)
 	local dog_tag_icon_params = {
@@ -56,12 +56,12 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	dog_tag_icon:set_center_y(self._dog_tag_panel:h() / 2)
 
 	local dog_tag_count_params = {
+		h = 32,
+		align = "center",
 		y = 0,
 		text = "120 / 140",
 		name = "dog_tag_count",
 		vertical = "center",
-		h = 32,
-		align = "center",
 		x = RaidGUIControlSaveInfo.DOG_TAG_LABEL_X,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -69,11 +69,11 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	}
 	self._dog_tag_count = self._dog_tag_panel:text(dog_tag_count_params)
 	local dog_tag_label_params = {
+		h = 32,
+		align = "center",
 		y = 32,
 		name = "dog_tag_label",
 		vertical = "center",
-		h = 32,
-		align = "center",
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_black,
@@ -88,11 +88,11 @@ end
 
 function RaidGUIControlSaveInfo:_create_separator()
 	local separator_params = {
+		h = 2,
+		w = 446,
 		y = 123,
 		x = 34,
 		name = "separator",
-		h = 2,
-		w = 446,
 		color = tweak_data.gui.colors.raid_black
 	}
 	self._separator = self._object:rect(separator_params)
@@ -100,11 +100,11 @@ end
 
 function RaidGUIControlSaveInfo:_create_peer_details_title()
 	local peer_details_title_params = {
+		h = 32,
 		y = 137,
 		align = "left",
 		name = "peer_details_title",
 		vertical = "center",
-		h = 32,
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w(),
 		font = RaidGUIControlPeerDetails.FONT,
@@ -117,9 +117,9 @@ end
 
 function RaidGUIControlSaveInfo:_create_peer_details()
 	local peer_info_panel_params = {
+		h = 512,
 		y = 202,
 		name = "peer_info_panel",
-		h = 512,
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w()
 	}

@@ -143,8 +143,8 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 	if self._total_pages >= 1 then
 		self._current_page = 1
 		self._paging_controls_panel_params = {
-			visible = true,
 			x = 0,
+			visible = true,
 			name = self._params.name .. "_paging_controls_panel",
 			y = self._grid_panel:h(),
 			w = self._params.w,
@@ -152,8 +152,8 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
-			h = 25,
 			y = 0,
+			h = 25,
 			name = self._params.name .. "_page_stepper_stepper",
 			x = self._params.w / 2 + 25,
 			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
@@ -168,8 +168,8 @@ end
 function RaidGUIControlPagedGrid:_create_filter_controls()
 	if not self._paging_controls_panel then
 		self._paging_controls_panel_params = {
-			visible = true,
 			x = 0,
+			visible = true,
 			name = self._params.name .. "_paging_controls_panel",
 			y = self._grid_panel:h(),
 			w = self._params.w,
@@ -180,9 +180,9 @@ function RaidGUIControlPagedGrid:_create_filter_controls()
 
 	if self._paging_controls_panel then
 		self._filter_stepper_params = {
-			h = 25,
 			y = 0,
 			x = 0,
+			h = 25,
 			name = self._params.name .. "_filter_stepper_stepper",
 			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
 			w = self._paging_controls_panel:w() / 2 - 50,

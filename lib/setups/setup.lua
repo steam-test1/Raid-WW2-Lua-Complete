@@ -324,15 +324,15 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		search_appropriate_jobs = true,
+		job_plan = -1,
+		kick_option = 1,
+		drop_in_allowed = true,
 		reputation_permission = 0,
 		team_ai = true,
 		selected_team_ai = true,
 		permission = "public",
 		is_playing = false,
-		search_appropriate_jobs = true,
-		job_plan = -1,
-		kick_option = 1,
-		drop_in_allowed = true,
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}

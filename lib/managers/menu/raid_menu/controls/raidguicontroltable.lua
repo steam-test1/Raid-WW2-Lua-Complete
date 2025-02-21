@@ -225,8 +225,8 @@ end
 
 function RaidGUIControlTable:_create_row_separator(y)
 	local divider_line = self._table_panel:rect({
-		h = 1,
 		x = 0,
+		h = 1,
 		y = y + 0.6,
 		w = self._table_panel:w(),
 		color = tweak_data.gui.colors.raid_white:with_alpha(0.25)

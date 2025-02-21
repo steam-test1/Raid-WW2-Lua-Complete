@@ -125,10 +125,10 @@ function CopLogicFlee.update(data)
 		elseif my_data.flee_path then
 			if my_data.path_blocked == false and not unit:movement():chk_action_forbidden("walk") then
 				local new_action_data = {
-					body_part = 2,
-					path_simplified = true,
 					type = "walk",
 					variant = "run",
+					body_part = 2,
+					path_simplified = true,
 					nav_path = my_data.flee_path
 				}
 				my_data.flee_path = nil

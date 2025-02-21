@@ -33,9 +33,9 @@ function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0.25,
 				g = 0.85,
 				r = 0.85,
+				b = 0.25,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -100,12 +100,12 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_counter_id")
 	})
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specifies the amount of elements to be executed")
 	self:_build_value_number(panel, panel_sizer, "amount_random", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Add a random amount to amount")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled")
 	self:_add_help_text("Use 'Amount' only to specify an exact amount of elements to execute. Use 'Amount Random' to add a random amount to 'Amount' ('Amount' + random('Amount Random').")

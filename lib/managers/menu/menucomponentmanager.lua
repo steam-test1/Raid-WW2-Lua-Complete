@@ -615,12 +615,12 @@ function MenuComponentManager:add_minimized(config)
 
 	if config.text then
 		text = panel:text({
-			layer = 2,
-			align = "center",
-			font_size = 22,
 			hvertical = "center",
 			vertical = "center",
 			halign = "left",
+			align = "center",
+			layer = 2,
+			font_size = 22,
 			text = config.text,
 			font = tweak_data.menu.default_font
 		})
@@ -2414,8 +2414,8 @@ end
 
 function MenuComponentManager:_create_voice_chat_status_info()
 	local widget_panel_params = {
-		x = 0,
 		name = "voice_chat_panel",
+		x = 0,
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4
 	}

@@ -63,12 +63,12 @@ function RaidGUIControlClassDescription:_layout()
 		texture_rect = text_rect
 	})
 	self._class_label = self._object:label({
-		text = "CLASSNAME",
 		align = "center",
 		name = "class_label",
 		h = 42,
 		w = 224,
 		x = 0,
+		text = "CLASSNAME",
 		y = self._class_icon:bottom() - 8,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.menu_list,
@@ -79,11 +79,11 @@ function RaidGUIControlClassDescription:_layout()
 	self._class_label:set_w(self._object:w() - self._class_label:x())
 
 	self._description_label = self._object:label({
-		wrap = true,
-		vertical = "center",
 		align = "center",
 		name = "description_label",
 		h = 256,
+		wrap = true,
+		vertical = "center",
 		x = padding,
 		w = padded_width,
 		y = self._class_label:bottom() + 32,
@@ -97,13 +97,13 @@ function RaidGUIControlClassDescription:_layout()
 	local y_stats_label = y_stats + 64
 	local x_stats_step = self._object:w() / 5
 	self._health_amount_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "health_amount_label",
 		h = 64,
 		w = 100,
 		x = 0,
+		text = "",
+		vertical = "center",
 		y = y_stats,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_52,
@@ -111,13 +111,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._health_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "health_label",
 		h = 64,
 		w = 100,
 		x = 0,
+		text = "",
+		vertical = "center",
 		y = y_stats_label,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -125,13 +125,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._speed_amount_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "speed_amount_label",
 		h = 64,
 		w = 100,
 		x = 160,
+		text = "",
+		vertical = "center",
 		y = y_stats,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_52,
@@ -139,13 +139,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._speed_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "speed_label",
 		h = 64,
 		w = 100,
 		x = 160,
+		text = "",
+		vertical = "center",
 		y = y_stats_label,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -153,13 +153,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._stamina_amount_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "stamina_amount_label",
 		h = 64,
 		w = 100,
 		x = 320,
+		text = "",
+		vertical = "center",
 		y = y_stats,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_52,
@@ -167,13 +167,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._stamina_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "stamina_label",
 		h = 64,
 		w = 100,
 		x = 320,
+		text = "",
+		vertical = "center",
 		y = y_stats_label,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -181,13 +181,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._carry_weight_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "carry_weight_label",
 		h = 64,
 		w = 100,
 		x = 320,
+		text = "",
+		vertical = "center",
 		y = y_stats,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -195,13 +195,13 @@ function RaidGUIControlClassDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._carry_label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		name = "carry_label",
 		h = 64,
 		w = 100,
 		x = 320,
+		text = "",
+		vertical = "center",
 		y = y_stats_label,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,

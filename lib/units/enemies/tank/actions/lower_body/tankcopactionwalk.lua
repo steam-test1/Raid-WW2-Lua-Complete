@@ -3,16 +3,16 @@ TankCopActionWalk._walk_anim_velocities = {
 	stand = {
 		cbt = {
 			walk = {
-				r = 122.48,
-				l = 118.53,
 				bwd = 112.85,
-				fwd = 144
+				fwd = 144,
+				r = 122.48,
+				l = 118.53
 			},
 			run = {
-				r = 318.33,
-				l = 287.43,
 				bwd = 357.23,
-				fwd = 361.5
+				fwd = 361.5,
+				r = 318.33,
+				l = 287.43
 			}
 		}
 	}
@@ -25,16 +25,16 @@ TankCopActionWalk._walk_anim_lengths = {
 	stand = {
 		cbt = {
 			walk = {
-				r = 38,
-				l = 40,
 				bwd = 40,
-				fwd = 34
+				fwd = 34,
+				r = 38,
+				l = 40
 			},
 			run = {
-				r = 21,
-				l = 20,
 				bwd = 21,
-				fwd = 20
+				fwd = 20,
+				r = 21,
+				l = 20
 			}
 		}
 	}

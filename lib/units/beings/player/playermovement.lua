@@ -59,9 +59,9 @@ function PlayerMovement:init(unit)
 	self._m_com = math.lerp(self._m_pos, self._m_stand_pos, 0.5)
 	self._kill_overlay_t = managers.player:player_timer():time() + 5
 	self._state_data = {
+		ducking = false,
 		m_stand_pos = nil,
-		in_air = false,
-		ducking = false
+		in_air = false
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false
@@ -73,11 +73,11 @@ function PlayerMovement:init(unit)
 	managers.hud:reset_player_state()
 
 	self._underdog_skill_data = {
+		max_dis_sq = 3240000,
+		nr_enemies = 2,
 		chk_t = 6,
 		chk_interval_inactive = 1,
 		chk_interval_active = 6,
-		max_dis_sq = 3240000,
-		nr_enemies = 2,
 		has_dmg_dampener = managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered") or managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered_strong"),
 		has_dmg_mul = managers.player:has_category_upgrade("temporary", "dmg_multiplier_outnumbered")
 	}

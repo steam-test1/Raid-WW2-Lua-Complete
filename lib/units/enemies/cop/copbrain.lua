@@ -888,14 +888,14 @@ function CopBrain:on_cool_state_changed(state)
 	if state then
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminals_enemies_civilians")
 		alert_types = {
-			fire = true,
 			explosion = true,
 			aggression = true,
 			vo_distress = true,
 			vo_intimidate = true,
 			vo_cbt = true,
 			bullet = true,
-			footstep = true
+			footstep = true,
+			fire = true
 		}
 
 		if self._logic_data and self._logic_data.internal_data.vision_cool then
@@ -906,10 +906,10 @@ function CopBrain:on_cool_state_changed(state)
 	else
 		alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 		alert_types = {
-			fire = true,
 			explosion = true,
+			bullet = true,
 			aggression = true,
-			bullet = true
+			fire = true
 		}
 
 		if self._logic_data then
@@ -1044,12 +1044,12 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 
 	local action_data = {
 		clamp_to_graph = true,
-		variant = "attached_collar_enter",
 		body_part = 1,
 		type = "act",
+		variant = "attached_collar_enter",
 		blocks = {
-			action = -1,
 			walk = -1,
+			action = -1,
 			heavy_hurt = -1,
 			light_hurt = -1,
 			hurt = -1

@@ -10,10 +10,10 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._params.item_h = params.item_h or self._panel:h()
 	self._params.hover_selects = params.hover_selects or false
 	self._select_background_panel = self._object:panel({
-		visible = false,
 		layer = 1,
 		y = 0,
 		x = 0,
+		visible = false,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h
 	})

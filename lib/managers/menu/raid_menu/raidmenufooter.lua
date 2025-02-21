@@ -7,9 +7,9 @@ end
 
 function RaidMenuFooter:_layout()
 	self._object = self._root_panel:panel({
-		name = "footer_object_panel",
 		y = 0,
 		x = 0,
+		name = "footer_object_panel",
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})
@@ -35,9 +35,9 @@ end
 
 function RaidMenuFooter:_create_name_and_gold_panel()
 	local string_width_measure_text_field = self._object:child("string_width") or self._object:text({
-		name = "string_width",
 		wrap = true,
 		visible = false,
+		name = "string_width",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24
 	})
@@ -48,12 +48,12 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	local _, _, w1, _ = string_width_measure_text_field:text_rect()
 	w1 = w1 + 64
 	local params_profile_gold_label = {
-		type = "label",
-		vertical = "bottom",
-		name = "gold_label",
-		h = 32,
 		y = 0,
 		x = 0,
+		h = 32,
+		vertical = "bottom",
+		name = "gold_label",
+		type = "label",
 		text = username,
 		w = w1,
 		color = tweak_data.gui.colors.raid_grey,
@@ -62,9 +62,9 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	}
 	local gold_icon = tweak_data.gui.icons.gold_amount_footer
 	local gold_icon_params = {
+		halign = "scale",
 		y = 0,
 		valign = "scale",
-		halign = "scale",
 		texture = gold_icon.texture,
 		texture_rect = gold_icon.texture_rect,
 		x = w1,
@@ -80,10 +80,10 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 
 	local _, _, w3, _ = string_width_measure_text_field:text_rect()
 	local params_profile_name_label = {
-		type = "label",
+		h = 32,
 		vertical = "bottom",
 		name = "profile_name_label",
-		h = 32,
+		type = "label",
 		x = w1 + w2,
 		w = w3,
 		text = gold,
@@ -93,19 +93,19 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	}
 	local total_width = w1 + w2 + w3
 	local separator_params = {
+		y = 14,
+		vertical = "bottom",
 		name = "separator",
 		h = 14,
 		w = 2,
-		y = 14,
-		vertical = "bottom",
 		x = w1 - 32,
 		color = tweak_data.gui.colors.raid_grey,
 		layer = self._object:layer()
 	}
 	self._name_and_gold_panel = self._object:panel({
-		name = "name_and_gold_panel",
 		y = 0,
 		align = "right",
+		name = "name_and_gold_panel",
 		x = self._object:w() - total_width,
 		w = total_width,
 		h = self._object:h()

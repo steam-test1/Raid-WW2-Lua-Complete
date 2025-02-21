@@ -224,9 +224,9 @@ function ChallengeTweakData:init()
 		60
 	}
 	self.candy_gold_bar = {
+		target = 666,
 		challenge_name_id = "card_trick_or_treat_name_id",
 		challenge_briefing_id = "weapon_inventory_gold_bar_briefing",
-		target = 666,
 		challenge_icon = "weapon_gre_gold_bar_large",
 		challenge_done_text_id = "weapon_inventory_gold_bar_completed",
 		type = ChallengeTweakData.TASK_COLLECT_CANDY,

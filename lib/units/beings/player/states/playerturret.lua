@@ -144,8 +144,8 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
-		skip_equip = true,
 		ducking = false,
+		skip_equip = true,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
 	}
 

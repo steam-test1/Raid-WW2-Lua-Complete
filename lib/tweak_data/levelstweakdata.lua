@@ -123,24 +123,24 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					y = -2850,
 					x = -200
 				},
 				world_borders = {
-					left = -29736,
-					down = -28846,
 					up = 23122,
-					right = 34700
+					right = 34700,
+					left = -29736,
+					down = -28846
 				},
 				panel_shape = {
-					y = 220,
-					x = 105,
 					h = 710,
-					w = 885
+					w = 885,
+					y = 220,
+					x = 105
 				}
 			}
 		}
@@ -159,24 +159,24 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					y = -2850,
 					x = -200
 				},
 				world_borders = {
-					left = -29736,
-					down = -28846,
 					up = 23122,
-					right = 34700
+					right = 34700,
+					left = -29736,
+					down = -28846
 				},
 				panel_shape = {
-					y = 220,
-					x = 105,
 					h = 710,
-					w = 885
+					w = 885,
+					y = 220,
+					x = 105
 				}
 			}
 		}
@@ -195,24 +195,24 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					y = -2850,
 					x = -200
 				},
 				world_borders = {
-					left = -29736,
-					down = -28846,
 					up = 23122,
-					right = 34700
+					right = 34700,
+					left = -29736,
+					down = -28846
 				},
 				panel_shape = {
-					y = 220,
-					x = 105,
 					h = 710,
-					w = 885
+					w = 885,
+					y = 220,
+					x = 105
 				}
 			}
 		}
@@ -231,24 +231,24 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					y = -2850,
 					x = -200
 				},
 				world_borders = {
-					left = -29736,
-					down = -28846,
 					up = 23122,
-					right = 34700
+					right = 34700,
+					left = -29736,
+					down = -28846
 				},
 				panel_shape = {
-					y = 220,
-					x = 105,
 					h = 710,
-					w = 885
+					w = 885,
+					y = 220,
+					x = 105
 				}
 			}
 		}
@@ -267,24 +267,24 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					y = -2850,
 					x = -200
 				},
 				world_borders = {
-					left = -29736,
-					down = -28846,
 					up = 23122,
-					right = 34700
+					right = 34700,
+					left = -29736,
+					down = -28846
 				},
 				panel_shape = {
-					y = 220,
-					x = 105,
 					h = 710,
-					w = 885
+					w = 885,
+					y = 220,
+					x = 105
 				}
 			}
 		}
@@ -393,40 +393,40 @@ function LevelsTweakData:init()
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_forest_bunker",
 				base_icon = "map_ico_bunker",
-				pin_scale = 0.5,
 				base_location = {
 					y = 2500,
 					x = -3600
 				},
 				world_borders = {
-					left = -16000,
-					down = -11900,
 					up = 14400,
-					right = 16900
+					right = 16900,
+					left = -16000,
+					down = -11900
 				},
 				panel_shape = {
-					y = 240,
-					x = 135,
 					h = 635,
-					w = 790
+					w = 790,
+					y = 240,
+					x = 135
 				}
 			},
 			bunker = {
-				texture = "map_forest_bunker_int",
 				pin_scale = 0.8,
+				texture = "map_forest_bunker_int",
 				world_borders = {
-					left = -6000,
-					down = 900,
 					up = 4030,
-					right = -1400
+					right = -1400,
+					left = -6000,
+					down = 900
 				},
 				panel_shape = {
-					y = 312,
-					x = 140,
 					h = 472,
-					w = 750
+					w = 750,
+					y = 312,
+					x = 140
 				}
 			}
 		}
@@ -560,16 +560,16 @@ function LevelsTweakData:get_team_setup()
 			},
 			law1 = {
 				foes = {
-					mobster1 = true,
 					criminal1 = true,
-					converted_enemy = true
+					converted_enemy = true,
+					mobster1 = true
 				}
 			},
 			mobster1 = {
 				foes = {
-					law1 = true,
 					criminal1 = true,
-					converted_enemy = true
+					converted_enemy = true,
+					law1 = true
 				}
 			},
 			converted_enemy = {

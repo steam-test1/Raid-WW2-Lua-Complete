@@ -79,9 +79,9 @@ function MenuNodeBaseGui:create_text_button(params)
 		visible = not hide_blur
 	})
 	local gui_text = button_panel:text({
+		name = "button_text",
 		layer = 0,
 		blend_mode = "add",
-		name = "button_text",
 		text = text,
 		font = font,
 		font_size = font_size,
@@ -120,9 +120,8 @@ function MenuNodeBaseGui:create_text_button(params)
 	end
 
 	table.insert(self._text_buttons, {
-		image = nil,
-		highlighted = false,
 		legend_text = nil,
+		highlighted = false,
 		panel = button_panel,
 		text = gui_text,
 		blur = gui_blur,

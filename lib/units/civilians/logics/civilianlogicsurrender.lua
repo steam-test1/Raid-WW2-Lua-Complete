@@ -141,9 +141,9 @@ function CivilianLogicSurrender.queued_update(rubbish, data)
 	if my_data.submission_meter == 0 and not data.is_tied and (not data.unit:anim_data().react_enter or not not data.unit:anim_data().idle) then
 		if data.unit:anim_data().drop then
 			local new_action = {
+				variant = "stand",
 				body_part = 1,
-				type = "act",
-				variant = "stand"
+				type = "act"
 			}
 
 			data.unit:brain():action_request(new_action)
@@ -152,8 +152,8 @@ function CivilianLogicSurrender.queued_update(rubbish, data)
 		my_data.surrender_clbk_registered = false
 
 		data.unit:brain():set_objective({
-			is_default = true,
-			type = "free"
+			type = "free",
+			is_default = true
 		})
 
 		return
@@ -193,15 +193,15 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied)
 		data.unit:character_damage():set_pickup(nil)
 	else
 		local action_data = {
-			body_part = 1,
-			type = "act",
 			variant = "tied",
+			type = "act",
+			body_part = 1,
 			blocks = {
+				hurt = -1,
+				light_hurt = -1,
 				walk = -1,
 				hurt_sick = -1,
-				heavy_hurt = -1,
-				hurt = -1,
-				light_hurt = -1
+				heavy_hurt = -1
 			}
 		}
 		local action_res = data.unit:brain():action_request(action_data)
@@ -255,8 +255,8 @@ function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, in
 	local adj_scare = amount * data.char_tweak.scare_intimidate
 	my_data.scare_meter = math.max(0, my_data.scare_meter + adj_scare)
 	local action_data = {
-		body_part = 1,
 		type = "act",
+		body_part = 1,
 		clamp_to_graph = true,
 		variant = initial_act
 	}
@@ -332,9 +332,9 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 			-- Nothing
 		elseif anim_data.react or anim_data.panic or anim_data.halt then
 			local action_data = {
+				clamp_to_graph = true,
 				body_part = 1,
 				type = "act",
-				clamp_to_graph = true,
 				variant = anim_data.move and "halt" or "drop"
 			}
 			local action_res = data.unit:brain():action_request(action_data)
@@ -348,10 +348,10 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 			end
 		else
 			local action_data = {
-				body_part = 1,
+				variant = "panic",
 				type = "act",
-				clamp_to_graph = true,
-				variant = "panic"
+				body_part = 1,
+				clamp_to_graph = true
 			}
 
 			data.unit:brain():action_request(action_data)
@@ -420,8 +420,8 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 				end
 			else
 				data.unit:brain():set_objective({
-					is_default = true,
 					type = "free",
+					is_default = true,
 					alert_data = clone(alert_data)
 				})
 			end

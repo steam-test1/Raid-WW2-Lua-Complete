@@ -135,8 +135,8 @@ end
 
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -152,8 +152,8 @@ end
 
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -373,10 +373,10 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
 	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
 	local mode_params = {
+		name = "Mode:",
 		sorted = false,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		name = "Mode:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = {
@@ -406,13 +406,13 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
 
 	local base_chance_params = {
+		name = "Base chance:",
+		max = 1,
 		min = 0,
 		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		floats = 2,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		name = "Base chance:",
-		max = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance

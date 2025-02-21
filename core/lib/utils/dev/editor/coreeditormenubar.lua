@@ -105,16 +105,16 @@ function CoreEditor:build_menubar()
 	self._edit_menu:append_check_item("TB_SURFACE_MOVE", "Surface Move\t(" .. self:ctrl_binding("surface_move_toggle") .. ")", "Toggle surface move on and off")
 	self._edit_menu:set_checked("TB_SURFACE_MOVE", self._use_surface_move)
 	Global.frame:connect("TB_SURFACE_MOVE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		value = "_use_surface_move",
 		toolbar = "_toolbar",
-		menu = "_edit_menu"
+		menu = "_edit_menu",
+		value = "_use_surface_move"
 	})
 	self._edit_menu:append_check_item("TB_SNAPPOINTS", "Use Snappoints\t(" .. self:ctrl_binding("use_snappoints_toggle") .. ")", "Toggle use of snappoints on and off")
 	self._edit_menu:set_checked("TB_SNAPPOINTS", self._use_snappoints)
 	Global.frame:connect("TB_SNAPPOINTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		value = "_use_snappoints",
 		toolbar = "_toolbar",
-		menu = "_edit_menu"
+		menu = "_edit_menu",
+		value = "_use_snappoints"
 	})
 	self._edit_menu:append_separator()
 
@@ -349,8 +349,8 @@ function CoreEditor:build_menubar()
 		vis = true
 	})
 	Global.frame:connect("HIDE HELPERS EXCEPT LIGHTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_hide_helper_units"), {
-		skip_lights = true,
-		vis = false
+		vis = false,
+		skip_lights = true
 	})
 	Global.frame:connect("RENDER_EFFECTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_render_effects"), {
 		hide_menu,
@@ -414,9 +414,9 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("CHECK DUALITY", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_check_duality"), "")
 	Global.frame:connect("TB_MAKE_SCREENSHOT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_make_screenshot"), "")
 	Global.frame:connect("TB_DRAW_OCCLUDERS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		value = "_draw_occluders",
 		toolbar = "_left_upper_toolbar",
-		menu = "_debug_menu"
+		menu = "_debug_menu",
+		value = "_draw_occluders"
 	})
 	menu_bar:append(self._debug_menu, "Debug")
 

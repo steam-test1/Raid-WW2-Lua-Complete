@@ -199,9 +199,9 @@ function RaidMenuOptionsVideo:_layout_video()
 	}
 	self._progress_bar_menu_fov_adjustment = self._root_panel:slider(previous_panel)
 	local default_video_settings_button = {
-		name = "default_video",
 		y = 832,
 		x = 1472,
+		name = "default_video",
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_video"),
@@ -254,8 +254,8 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 		info = managers.localization:to_upper_text("menu_windowed")
 	})
 	table.insert(result, {
-		value = "WINDOWED_FULLSCREEN",
 		selected = true,
+		value = "WINDOWED_FULLSCREEN",
 		text = managers.localization:to_upper_text("menu_windowed_fullscreen"),
 		info = managers.localization:to_upper_text("menu_windowed_fullscreen")
 	})

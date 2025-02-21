@@ -21,25 +21,25 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
-	fire = "fire_hurt",
-	explode = "expl_hurt",
-	heavy = "heavy_hurt",
 	moderate = "hurt",
 	light = "light_hurt",
 	none = false,
-	poison = "poison_hurt"
+	poison = "poison_hurt",
+	fire = "fire_hurt",
+	explode = "expl_hurt",
+	heavy = "heavy_hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
-	sniper = false,
-	shield = false,
-	taser = false,
 	tank = false,
 	german_spotter = "enemy_spotter_comment_death",
 	german_og_commander = "enemy_officer_comment_death",
 	german_commander = "enemy_officer_comment_death",
 	german_officer = "enemy_officer_comment_death",
 	german_flamer = "enemy_flamer_comment_death",
-	german_sniper = "enemy_sniper_comment_death"
+	german_sniper = "enemy_sniper_comment_death",
+	sniper = false,
+	shield = false,
+	taser = false
 }
 CopDamage._impact_bones = {}
 local impact_bones_tmp = {
@@ -282,8 +282,8 @@ function CopDamage:_dismember_part(dismember_part, decal_data, variant)
 		local check_to = self._unit:movement() and self._unit:movement():m_head_pos() or self._unit:position()
 
 		if managers.player:is_player_looking_at(check_to, {
-			distance = 4000,
-			raycheck = true
+			raycheck = true,
+			distance = 4000
 		}) then
 			managers.dialog:queue_dialog("player_gen_grenade_aftermath", {
 				skip_idle_check = true
@@ -1939,8 +1939,8 @@ function CopDamage:sync_damage_knockdown(attacker_unit, damage_percent, i_body, 
 
 	attack_data.attack_dir = attack_dir
 	local result = {
-		variant = "expl_hurt",
-		type = "expl_hurt"
+		type = "expl_hurt",
+		variant = "expl_hurt"
 	}
 	attack_data.variant = "expl_hurt"
 	attack_data.attacker_unit = attacker_unit
@@ -2837,42 +2837,42 @@ function CopDamage:_create_debug_ws()
 
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
-		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		render_template = "OverlayVertexColorTextured",
-		align = "left",
-		font = "fonts/font_medium_shadow_mf",
-		y = 0,
 		name = "health",
+		layer = 1,
+		align = "left",
+		y = 0,
+		font = "fonts/font_medium_shadow_mf",
+		render_template = "OverlayVertexColorTextured",
 		visible = true,
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
-		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		render_template = "OverlayVertexColorTextured",
-		align = "left",
-		font = "fonts/font_medium_shadow_mf",
-		text = "",
-		y = 30,
 		name = "ld",
+		layer = 1,
+		align = "left",
+		y = 30,
+		font = "fonts/font_medium_shadow_mf",
+		render_template = "OverlayVertexColorTextured",
 		visible = true,
+		text = "",
 		color = Color.white
 	})
 	self._ws:panel():text({
-		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		render_template = "OverlayVertexColorTextured",
-		align = "left",
-		font = "fonts/font_medium_shadow_mf",
-		text = "",
-		y = 60,
 		name = "variant",
+		layer = 1,
+		align = "left",
+		y = 60,
+		font = "fonts/font_medium_shadow_mf",
+		render_template = "OverlayVertexColorTextured",
 		visible = true,
+		text = "",
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -2915,16 +2915,16 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		if damage_info and damage_info.damage > 0 then
 			local text = self._ws:panel():text({
-				h = 40,
 				font_size = 20,
-				layer = 1,
+				h = 40,
 				vertical = "center",
-				visible = true,
+				layer = 1,
 				align = "center",
-				render_template = "OverlayVertexColorTextured",
-				font = "fonts/font_medium_shadow_mf",
-				rotation = 360,
 				y = -20,
+				font = "fonts/font_medium_shadow_mf",
+				visible = true,
+				rotation = 360,
+				render_template = "OverlayVertexColorTextured",
 				w = 40,
 				text = string.format("%.2f", damage_info.damage),
 				color = Color.white

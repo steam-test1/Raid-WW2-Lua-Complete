@@ -2898,11 +2898,11 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
-		priority = 3,
-		id = "hud_hint_consumable_mission",
 		doc_text = "hud_hint_consumable_mission_secured",
 		doc_icon = "notification_consumable",
 		duration = 4,
+		id = "hud_hint_consumable_mission",
+		priority = 3,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 

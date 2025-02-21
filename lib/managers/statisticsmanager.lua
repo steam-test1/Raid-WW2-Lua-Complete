@@ -11,460 +11,460 @@ function StatisticsManager:_setup(reset)
 	self._defaults = {
 		killed = {
 			german_grunt_light = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_light_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_light_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_light_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_mid = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_mid_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_mid_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_mid_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_heavy = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_heavy_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_heavy_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_grunt_heavy_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_light = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_light_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_light_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_light_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gebirgsjager_heavy_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gasmask = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gasmask_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light_commander_backup = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light_commander_backup_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_light_commander_backup_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy_commander_backup = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy_commander_backup_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_heavy_commander_backup_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gasmask_commander_backup = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_gasmask_commander_backup_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_light = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_light_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_light_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_light_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_mp38 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_fallschirmjager_heavy_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_waffen_ss = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_waffen_ss_kar98 = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_waffen_ss_shotgun = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_commander = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_og_commander = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_officer = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_flamer = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_sniper = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			german_spotter = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			soviet_nkvd_int_security_captain = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			soviet_nkvd_int_security_captain_b = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			other = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			},
 			total = {
+				count = 0,
 				dismembered = 0,
 				tied = 0,
 				explosion = 0,
 				melee = 0,
-				head_shots = 0,
-				count = 0
+				head_shots = 0
 			}
 		},
 		killed_by_melee = {},
@@ -478,20 +478,20 @@ function StatisticsManager:_setup(reset)
 		},
 		shots_by_weapon = {},
 		sessions = {
-			time = 0,
-			count = 0
+			count = 0,
+			time = 0
 		}
 	}
 	self._defaults.sessions.levels = {}
 
 	for _, lvl in ipairs(tweak_data.statistics:statistics_table()) do
 		self._defaults.sessions.levels[lvl] = {
+			completed = 0,
+			started = 0,
 			time = 0,
 			from_beginning = 0,
 			drop_in = 0,
-			quited = 0,
-			completed = 0,
-			started = 0
+			quited = 0
 		}
 	end
 
@@ -504,14 +504,14 @@ function StatisticsManager:_setup(reset)
 		count = 0
 	}
 	self._defaults.shots_fired = {
-		total = 0,
-		hits = 0
+		hits = 0,
+		total = 0
 	}
 	self._defaults.downed = {
-		incapacitated = 0,
-		fatal = 0,
 		bleed_out = 0,
-		death = 0
+		death = 0,
+		incapacitated = 0,
+		fatal = 0
 	}
 	self._defaults.reloads = {
 		count = 0
@@ -526,6 +526,10 @@ function StatisticsManager:_setup(reset)
 	}
 	self._defaults.camp = {}
 	self._defaults.challenge_cards = {
+		complete_mission_rare_total = 0,
+		complete_mission_grand_total = 0,
+		complete_operation_halloween_count = 0,
+		complete_operation_rare_count = 0,
 		complete_operation_uncommon_count = 0,
 		complete_operation_common_count = 0,
 		start_operation_halloween_count = 0,
@@ -539,13 +543,13 @@ function StatisticsManager:_setup(reset)
 		start_raid_halloween_count = 0,
 		start_raid_rare_count = 0,
 		start_raid_uncommon_count = 0,
-		start_raid_common_count = 0,
-		complete_mission_rare_total = 0,
-		complete_mission_grand_total = 0,
-		complete_operation_halloween_count = 0,
-		complete_operation_rare_count = 0
+		start_raid_common_count = 0
 	}
 	self._defaults.booster_cards = {
+		complete_mission_rare_total = 0,
+		complete_mission_grand_total = 0,
+		complete_operation_halloween_count = 0,
+		complete_operation_rare_count = 0,
 		complete_operation_uncommon_count = 0,
 		complete_operation_common_count = 0,
 		start_operation_halloween_count = 0,
@@ -559,11 +563,7 @@ function StatisticsManager:_setup(reset)
 		start_raid_halloween_count = 0,
 		start_raid_rare_count = 0,
 		start_raid_uncommon_count = 0,
-		start_raid_common_count = 0,
-		complete_mission_rare_total = 0,
-		complete_mission_grand_total = 0,
-		complete_operation_halloween_count = 0,
-		complete_operation_rare_count = 0
+		start_raid_common_count = 0
 	}
 	self._defaults.tier_4_weapon_skill_bought = {}
 
@@ -1928,16 +1928,16 @@ function StatisticsManager:_add_to_killed_by_weapon(name_id, data)
 
 	if self._session_started then
 		self._global.session.killed_by_weapon[name_id] = self._global.session.killed_by_weapon[name_id] or {
-			headshots = 0,
-			count = 0
+			count = 0,
+			headshots = 0
 		}
 		self._global.session.killed_by_weapon[name_id].count = self._global.session.killed_by_weapon[name_id].count + 1
 		self._global.session.killed_by_weapon[name_id].headshots = self._global.session.killed_by_weapon[name_id].headshots + (data.head_shot and 1 or 0)
 	end
 
 	self._global.killed_by_weapon[name_id] = self._global.killed_by_weapon[name_id] or {
-		headshots = 0,
-		count = 0
+		count = 0,
+		headshots = 0
 	}
 	self._global.killed_by_weapon[name_id].count = self._global.killed_by_weapon[name_id].count + 1
 	self._global.killed_by_weapon[name_id].headshots = (self._global.killed_by_weapon[name_id].headshots or 0) + (data.head_shot and 1 or 0)
@@ -2566,8 +2566,8 @@ function StatisticsManager:calculate_top_stats(all_peers)
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 		stats[stat_id] = {
 			weight = 0,
-			score = 0,
 			score_difference = 0,
+			score = 0,
 			id = stat_id
 		}
 	end

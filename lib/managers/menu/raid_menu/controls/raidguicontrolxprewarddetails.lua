@@ -72,10 +72,10 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_title()
 	local title_description_params = {
-		vertical = "center",
 		align = "left",
-		name = "title_description",
 		alpha = 0,
+		vertical = "center",
+		name = "title_description",
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_Y,
 		h = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_H,
 		font = RaidGUIControlXPRewardDetails.FONT,
@@ -89,10 +89,10 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		vertical = "top",
 		align = "center",
-		name = "customization_name",
 		alpha = 0,
+		vertical = "top",
+		name = "customization_name",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlXPRewardDetails.TITLE_PADDING_TOP,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.TITLE_FONT_SIZE,
@@ -135,9 +135,9 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_xp_value()
 	local xp_value_params = {
+		text = "456 XP",
 		alpha = 0,
 		name = "xp_value",
-		text = "456 XP",
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.XP_VALUE_FONT_SIZE,
 		color = RaidGUIControlXPRewardDetails.XP_VALUE_COLOR
@@ -279,11 +279,11 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
-		vertical = "top",
 		align = "left",
-		name = "description",
 		alpha = 0,
 		wrap = true,
+		vertical = "top",
+		name = "description",
 		y = RaidGUIControlXPRewardDetails.DESCRIPTION_Y,
 		w = RaidGUIControlXPRewardDetails.DESCRIPTION_W,
 		font = RaidGUIControlXPRewardDetails.DESCRIPTION_FONT,
@@ -296,11 +296,11 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 
 	local title_description_right_params = {
-		vertical = "center",
 		align = "left",
-		name = "title_description_right",
 		alpha = 0,
 		wrap = true,
+		vertical = "center",
+		name = "title_description_right",
 		x = self._description:x(),
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_Y,
 		w = RaidGUIControlXPRewardDetails.DESCRIPTION_W,

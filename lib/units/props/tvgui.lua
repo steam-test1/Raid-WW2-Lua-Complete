@@ -21,9 +21,9 @@ end
 
 function TvGui:setup()
 	self._video_panel = self._ws:panel():video({
+		loop = true,
 		visible = true,
 		layer = 10,
-		loop = true,
 		video = self._video
 	})
 

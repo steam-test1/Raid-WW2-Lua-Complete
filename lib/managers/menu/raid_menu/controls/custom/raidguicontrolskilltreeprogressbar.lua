@@ -178,25 +178,25 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 		h = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_PANEL_H
 	})
 	self._current_level_label = self._level_labels_panel:text({
-		text = "1",
 		name = "level_label_curent",
+		text = "1",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._next_level_label = self._level_labels_panel:text({
-		text = "2",
 		name = "level_label_next",
+		text = "2",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._experience_label = self._level_labels_panel:text({
-		text = "100 XP UNTIL NEXT LEVEL",
-		name = "level_label_xp",
 		align = "center",
+		name = "level_label_xp",
+		text = "100 XP UNTIL NEXT LEVEL",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,
 		font_size = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT_SIZE,

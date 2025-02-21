@@ -57,8 +57,8 @@ function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
 		layer = self._background:layer() + 1
 	})
 	self._context_info_panel = self._object:panel({
-		visible = false,
 		name = "context_info_panel",
+		visible = false,
 		layer = self._background:layer() + 1
 	})
 
@@ -72,8 +72,8 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_equipable(item_data)
 	item_data.separator_highlight_color = nil
 	self._profile_name_label = self._name_panel:label({
-		vertical = "center",
 		name = "profile_name_label",
+		vertical = "center",
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
 		text = item_data.value,
@@ -100,8 +100,8 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	item_data.separator_highlight_color = self.PURCHASE_COLOR
 	self._profile_name_label = self._name_panel:label({
-		vertical = "center",
 		name = "profile_name_label",
+		vertical = "center",
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
 		text = item_data.value,
@@ -110,8 +110,8 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	})
 	local purchase_cost = item_data.purchase_cost and tostring(item_data.purchase_cost)
 	self._gold_value_label = self._context_info_panel:label({
-		vertical = "center",
 		name = "profile_name_label",
+		vertical = "center",
 		fit_text = true,
 		font = self.PURCHASE_VALUE_FONT,
 		font_size = self.PURCHASE_VALUE_FONT_SIZE,

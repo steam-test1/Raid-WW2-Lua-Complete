@@ -71,10 +71,10 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_title_params = {
+		x = 20,
 		name = "intel_title",
 		wrap = true,
 		text = "",
-		x = 20,
 		y = self._image_panel:y() + self._image_panel:h() + 32,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,

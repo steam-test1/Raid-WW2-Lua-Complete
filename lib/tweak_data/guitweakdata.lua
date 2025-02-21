@@ -2,9 +2,9 @@ GuiTweakData = GuiTweakData or class()
 
 function GuiTweakData:init()
 	self.base_resolution = {
-		y = 1080,
 		x = 1920,
-		z = 60
+		z = 60,
+		y = 1080
 	}
 
 	self:_setup_layers()
@@ -371,16 +371,16 @@ end
 function GuiTweakData:_setup_crosshairs()
 	self.crosshairs = {
 		pistol = {
-			base_rotation = 0,
 			edge_pips_icon = "weapons_reticles_flatline",
-			edge_pips = 4,
-			degree_field = 360
+			degree_field = 360,
+			base_rotation = 0,
+			edge_pips = 4
 		},
 		smg = {
-			base_rotation = 0,
 			edge_pips_icon = "weapons_reticles_flatline",
-			edge_pips = 3,
-			degree_field = 270
+			degree_field = 270,
+			base_rotation = 0,
+			edge_pips = 3
 		},
 		lmg = {
 			core_dot = "weapons_reticles_static_diamond",
@@ -406,34 +406,34 @@ function GuiTweakData:_setup_crosshairs()
 		"weapons_reticles_bowbend"
 	}
 	self.crosshairs.assault_rifle = {
-		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4
+		edge_pips = 4,
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.sniper = {
-		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_tri_small",
 		degree_field = 270,
 		base_rotation = 0,
-		edge_pips = 3
+		edge_pips = 3,
+		edge_pips_icon = "weapons_reticles_flatline"
 	}
 	self.crosshairs.shotgun = {
-		edge_pips_icon = "weapons_reticles_bowbend",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4
+		edge_pips = 4,
+		edge_pips_icon = "weapons_reticles_bowbend"
 	}
 	self.crosshairs.shotgun_db = deep_clone(self.crosshairs.shotgun)
 	self.crosshairs.shotgun_db.edge_pips = 2
 	self.crosshairs.grenade = {
-		edge_pips_icon = nil,
 		core_dot = "weapons_reticles_static_diamond",
 		degree_field = 0,
 		base_rotation = 0,
-		edge_pips = 0
+		edge_pips = 0,
+		edge_pips_icon = nil
 	}
 end
 

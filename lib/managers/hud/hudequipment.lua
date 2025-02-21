@@ -42,13 +42,13 @@ end
 
 function HUDEquipment:_create_amount_text()
 	local amount_text_params = {
+		layer = 3,
+		text = "",
+		vertical = "top",
 		align = "right",
 		y = 0,
 		x = 0,
 		name = "amount_text",
-		layer = 3,
-		text = "",
-		vertical = "top",
 		font = HUDEquipment.FONT,
 		font_size = HUDEquipment.FONT_SIZE
 	}

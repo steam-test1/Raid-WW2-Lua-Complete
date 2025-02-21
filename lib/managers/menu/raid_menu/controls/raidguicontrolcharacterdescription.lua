@@ -64,14 +64,14 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._class_icon:set_center_x(step_quad)
 
 	self._class_label = self._object:label({
+		vertical = "center",
+		align = "center",
+		text = "",
 		name = "class_label",
 		h = 32,
 		w = 134,
 		y = 96,
 		x = 0,
-		vertical = "center",
-		align = "center",
-		text = "",
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -95,14 +95,14 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._nation_flag_icon:set_center_x(step_quad * 2)
 
 	self._nation_flag_label = self._object:label({
+		vertical = "center",
+		align = "center",
+		text = "",
 		name = "nation_flag_label",
 		h = 32,
 		w = 104,
 		y = 96,
 		x = 144,
-		vertical = "center",
-		align = "center",
-		text = "",
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -112,14 +112,14 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._nation_flag_label:set_center_x(step_quad * 2)
 
 	self._level_amount_level = self._object:label({
+		vertical = "center",
+		align = "center",
+		text = "",
 		name = "level_amount_level",
 		h = 64,
 		w = 64,
 		y = 32,
 		x = 280,
-		vertical = "center",
-		align = "center",
-		text = "",
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_52,
@@ -129,14 +129,14 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._level_amount_level:set_center_x(step_quad * 3)
 
 	self._level_label = self._object:label({
+		vertical = "center",
+		align = "center",
+		text = "",
 		name = "level_label",
 		h = 32,
 		w = 72,
 		y = 96,
 		x = 280,
-		vertical = "center",
-		align = "center",
-		text = "",
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -146,12 +146,12 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._level_label:set_center_x(step_quad * 3)
 
 	self._profile_name_label = self._object:label({
+		align = "center",
+		text = "PROFILE NAME",
 		name = "profile_name_label",
 		h = 41,
 		w = 356,
 		x = 1376,
-		align = "center",
-		text = "PROFILE NAME",
 		y = self._level_label:bottom() + 2,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -162,12 +162,12 @@ function RaidGUIControlCharacterDescription:_layout()
 	self._profile_name_label:set_center_x(self._object:w() / 2)
 
 	self._character_name_label = self._object:label({
+		align = "center",
+		text = "RAIDER",
 		name = "character_name_label",
 		h = 32,
 		w = 356,
 		x = 1376,
-		align = "center",
-		text = "RAIDER",
 		y = self._profile_name_label:bottom() - 4,
 		alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -179,11 +179,11 @@ function RaidGUIControlCharacterDescription:_layout()
 
 	if self._mode == RaidGUIControlCharacterDescription.MODE_SELECTION then
 		self._description_label = self._object:label({
-			name = "description_label",
-			h = 268,
 			vertical = "top",
 			wrap = true,
 			align = "center",
+			name = "description_label",
+			h = 268,
 			x = padding,
 			w = padded_width,
 			y = self._character_name_label:bottom() + 8,
@@ -194,9 +194,9 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._skills_label = self._object:label({
+			align = "center",
 			name = "profile_name_label",
 			h = 32,
-			align = "center",
 			y = self._description_label:bottom() + 2,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			text = self:translate("menu_skills", true),
@@ -217,13 +217,13 @@ function RaidGUIControlCharacterDescription:_layout()
 		local y_stats_label = y_stats + 48
 		local x_stats_step = self._object:w() / 5
 		self._health_amount_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "health_amount_label",
 			h = 64,
 			w = 100,
 			x = 0,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -231,13 +231,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._health_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "health_label",
 			h = 64,
 			w = 100,
 			x = 0,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats_label,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -245,13 +245,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._speed_amount_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "speed_amount_label",
 			h = 64,
 			w = 100,
 			x = 160,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -259,13 +259,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._speed_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "speed_label",
 			h = 64,
 			w = 100,
 			x = 160,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats_label,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -273,13 +273,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._stamina_amount_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "stamina_amount_label",
 			h = 64,
 			w = 100,
 			x = 320,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -287,13 +287,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._stamina_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "stamina_label",
 			h = 64,
 			w = 100,
 			x = 320,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats_label,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -301,13 +301,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._carry_weight_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "carry_weight_label",
 			h = 64,
 			w = 100,
 			x = 320,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,
@@ -315,13 +315,13 @@ function RaidGUIControlCharacterDescription:_layout()
 			color = tweak_data.gui.colors.raid_black
 		})
 		self._carry_label = self._object:label({
+			vertical = "center",
+			align = "center",
+			text = "",
 			name = "carry_label",
 			h = 64,
 			w = 100,
 			x = 320,
-			vertical = "center",
-			align = "center",
-			text = "",
 			y = y_stats_label,
 			alpha = RaidGUIControlCharacterDescription.COMMON_ALPHA,
 			font = tweak_data.gui.fonts.din_compressed,

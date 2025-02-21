@@ -62,26 +62,27 @@ end
 function FireTweakData:_init_dot_types()
 	self.dot_types = {
 		default = {
+			variant = "fire",
 			duration = 2,
 			trigger_chance = 35,
 			trigger_max_distance = 3000,
 			tick_interval = 0.5,
-			damage = 10,
-			variant = "fire"
+			damage = 10
 		},
 		thermite = {
+			variant = "fire",
 			duration = 13,
 			trigger_chance = 68,
 			trigger_max_distance = 3000,
 			tick_interval = 0.5,
-			damage = 10,
-			variant = "fire"
+			damage = 10
 		}
 	}
 end
 
 function FireTweakData:_init_fires()
 	self.explosive_barrel = {
+		player_damage = 5,
 		sound_impact = "grenade_explode",
 		sound_burning_stop = "burn_loop_body_stop",
 		sound_impact_duration = 0.6,
@@ -93,7 +94,6 @@ function FireTweakData:_init_fires()
 		dot_type = "default",
 		iterations = 4,
 		range = 65,
-		player_damage = 5,
 		type = self.FIRE_TYPE_HEX,
 		effect_name = self.effects.molotov
 	}
@@ -104,6 +104,7 @@ function FireTweakData:_init_fires()
 	self.flamer_tank.sound_impact = nil
 	self.flamer_tank.sound_impact_duration = 0.3
 	self.thermite_grenade = {
+		player_damage = 3,
 		sound_burning_stop = "cvy_thermite_finish",
 		tick_interval = 0.875,
 		damage = 10,
@@ -112,18 +113,17 @@ function FireTweakData:_init_fires()
 		alert_radius = 750,
 		dot_type = "thermite",
 		range = 380,
-		player_damage = 3,
 		type = self.FIRE_TYPE_PARENTED,
 		effect_name = self.effects.thermite
 	}
 	self.thermite_detonate = {
+		player_damage = 5,
 		tick_interval = 0.3333,
 		damage = 30,
 		duration = 1,
 		alert_radius = 1400,
 		dot_type = "thermite",
 		range = 500,
-		player_damage = 5,
 		type = self.FIRE_TYPE_SINGLE,
 		effect_name = self.effects.thermite_detonate
 	}

@@ -1007,8 +1007,8 @@ end
 function Layer:unit_sampler()
 	if not self._grab and not self:condition() then
 		local data = {
-			sample = true,
 			ray_type = "body editor",
+			sample = true,
 			mask = managers.slot:get_mask("editor_all")
 		}
 		local ray = managers.editor:unit_by_raycast(data)

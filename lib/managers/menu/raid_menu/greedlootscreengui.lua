@@ -82,8 +82,8 @@ function GreedLootScreenGui:_create_flares()
 	local flare_center_y = self._flare_panel:h() / 2
 	local lens_glint_params = {
 		alpha = 0,
-		blend_mode = "add",
 		name = "loot_screen_glint",
+		blend_mode = "add",
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect
 	}
@@ -93,8 +93,8 @@ function GreedLootScreenGui:_create_flares()
 
 	local lens_iris_params = {
 		alpha = 0,
-		blend_mode = "add",
 		name = "loot_screen_iris",
+		blend_mode = "add",
 		texture = tweak_data.gui.icons.lens_iris.texture,
 		texture_rect = tweak_data.gui.icons.lens_iris.texture_rect
 	}
@@ -104,8 +104,8 @@ function GreedLootScreenGui:_create_flares()
 
 	local lens_orbs_params = {
 		alpha = 0,
-		blend_mode = "add",
 		name = "loot_screen_orbs",
+		blend_mode = "add",
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect
 	}
@@ -115,8 +115,8 @@ function GreedLootScreenGui:_create_flares()
 
 	local lens_shimmer_params = {
 		alpha = 0,
-		blend_mode = "add",
 		name = "loot_screen_shimmer",
+		blend_mode = "add",
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect
 	}
@@ -126,8 +126,8 @@ function GreedLootScreenGui:_create_flares()
 
 	local lens_spike_ball_params = {
 		alpha = 0,
-		blend_mode = "add",
 		name = "loot_screen_spike_ball",
+		blend_mode = "add",
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect
 	}
@@ -151,12 +151,12 @@ end
 
 function GreedLootScreenGui:_create_greed_bar()
 	local greed_bar_panel_params = {
+		y = 32,
+		name = "greed_bar_panel",
 		h = 160,
 		valign = "top",
 		w = 642,
-		halign = "center",
-		y = 32,
-		name = "greed_bar_panel"
+		halign = "center"
 	}
 	self._greed_bar_panel = self._root_panel:panel(greed_bar_panel_params)
 
@@ -195,12 +195,12 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._gold_icon:set_center_y(self._greed_bar_panel:h() / 2)
 
 	local loot_title_params = {
-		halign = "left",
 		vertical = "center",
 		align = "center",
-		h = 64,
-		valign = "center",
 		name = "loot_title",
+		valign = "center",
+		halign = "left",
+		h = 64,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_56,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -212,9 +212,9 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._title:set_center_y(self._greed_bar_panel:h() / 2 - 16)
 
 	local progress_bar_background_params = {
-		w = 160,
 		layer = 1,
 		name = "greed_loot_menu_progress_bar_background",
+		w = 160,
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
@@ -237,8 +237,8 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._progress_bar_progress_panel:set_center_y(self._progress_bar_background:center_y())
 
 	local progress_bar_foreground_params = {
-		alpha = 0,
 		name = "loot_bar_foreground",
+		alpha = 0,
 		w = self._progress_bar_background:w(),
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
@@ -247,10 +247,10 @@ function GreedLootScreenGui:_create_greed_bar()
 	}
 	self._loot_bar_foreground = self._progress_bar_progress_panel:three_cut_bitmap(progress_bar_foreground_params)
 	local counter_params = {
-		text = "0",
 		vertical = "center",
 		align = "left",
 		name = "greed_bar_counter",
+		text = "0",
 		x = self._progress_bar_progress_panel:right() + 10,
 		h = GreedLootScreenGui.COUNTER_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
@@ -283,9 +283,9 @@ function GreedLootScreenGui:_create_gold_bar_image()
 
 	local title_description_params = {
 		vertical = "center",
-		alpha = 0,
 		align = "left",
 		name = "title_description",
+		alpha = 0,
 		y = GreedLootScreenGui.TITLE_DESCRIPTION_Y,
 		h = GreedLootScreenGui.TITLE_DESCRIPTION_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
@@ -300,10 +300,10 @@ function GreedLootScreenGui:_create_gold_bar_image()
 
 	local title_params = {
 		vertical = "top",
-		alpha = 0,
-		text = "GOLD BAR",
 		align = "center",
 		name = "gold_bars_name",
+		alpha = 0,
+		text = "GOLD BAR",
 		y = self._title_description:y() + self._title_description:h() + GreedLootScreenGui.TITLE_PADDING_TOP,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.TITLE_FONT_SIZE,
@@ -316,11 +316,11 @@ end
 
 function GreedLootScreenGui:_create_description_panel()
 	local description_panel_params = {
+		alpha = 0,
+		name = "description_panel",
 		valign = "scale",
 		w = 416,
-		alpha = 0,
 		halign = "right",
-		name = "description_panel",
 		h = self._second_panel:h()
 	}
 	self._description_panel = self._second_panel:panel(description_panel_params)
@@ -328,11 +328,11 @@ function GreedLootScreenGui:_create_description_panel()
 	self._description_panel:set_right(self._second_panel:w())
 
 	local item_type_params = {
-		halign = "left",
 		vertical = "center",
 		align = "left",
-		valign = "center",
 		name = "item_type",
+		valign = "center",
+		halign = "left",
 		h = GreedLootScreenGui.ITEM_TYPE_H,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.ITEM_TYPE_FONT_SIZE,
@@ -341,12 +341,12 @@ function GreedLootScreenGui:_create_description_panel()
 	}
 	local item_type = self._description_panel:text(item_type_params)
 	local item_type_description_params = {
-		halign = "left",
 		vertical = "top",
 		align = "left",
+		name = "item_type_description",
 		wrap = true,
 		valign = "center",
-		name = "item_type_description",
+		halign = "left",
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,
@@ -364,12 +364,12 @@ function GreedLootScreenGui:_create_description_panel()
 	}
 	self._second_panel_greed_bar = HUDTabGreedBar:new(self._description_panel, greed_bar_params)
 	local greed_description_params = {
-		halign = "left",
 		vertical = "top",
 		align = "left",
+		name = "greed_description_params",
 		wrap = true,
 		valign = "center",
-		name = "greed_description_params",
+		halign = "left",
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,

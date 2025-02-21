@@ -253,10 +253,10 @@ CopActionWalk._walk_side_rot = {
 }
 CopActionWalk._anim_movement = {
 	stand = {
-		run_stop_fwd = 154,
 		run_stop_r = 106,
 		run_stop_l = 87,
 		run_stop_bwd = 91,
+		run_stop_fwd = 154,
 		run_start_turn_bwd = {
 			ds = Vector3(19, -173, 0)
 		},
@@ -268,10 +268,10 @@ CopActionWalk._anim_movement = {
 		}
 	},
 	crouch = {
-		run_stop_fwd = 83,
 		run_stop_r = 65,
 		run_stop_l = 75,
 		run_stop_bwd = 62,
+		run_stop_fwd = 83,
 		run_start_turn_bwd = {
 			ds = Vector3(0, -123, 0)
 		},
@@ -285,6 +285,10 @@ CopActionWalk._anim_movement = {
 }
 CopActionWalk._anim_block_presets = {
 	block_all = {
+		hurt = -1,
+		light_hurt = -1,
+		turn = -1,
+		shoot = -1,
 		dodge = -1,
 		action = -1,
 		idle = -1,
@@ -292,23 +296,19 @@ CopActionWalk._anim_block_presets = {
 		walk = -1,
 		stand = -1,
 		act = -1,
-		heavy_hurt = -1,
+		heavy_hurt = -1
+	},
+	block_lower = {
 		hurt = -1,
 		light_hurt = -1,
 		turn = -1,
-		shoot = -1
-	},
-	block_lower = {
+		crouch = -1,
 		dodge = -1,
 		idle = -1,
 		walk = -1,
 		stand = -1,
 		act = -1,
-		heavy_hurt = -1,
-		hurt = -1,
-		light_hurt = -1,
-		turn = -1,
-		crouch = -1
+		heavy_hurt = -1
 	},
 	block_upper = {
 		crouch = -1,
@@ -1382,8 +1382,8 @@ function CopActionWalk:get_husk_interrupt_desc()
 	local old_action_desc = {
 		type = "walk",
 		body_part = 2,
-		interrupted = true,
 		path_simplified = true,
+		interrupted = true,
 		end_rot = self._end_rot,
 		variant = self._haste,
 		nav_path = self._simplified_path,

@@ -75,8 +75,8 @@ end
 
 function HUDChat:_create_input()
 	local input_panel_params = {
-		alpha = 0.3,
 		name = "input_panel",
+		alpha = 0.3,
 		halign = "scale",
 		valign = "bottom",
 		w = self._object:w(),
@@ -112,13 +112,13 @@ function HUDChat:_create_input()
 	background:set_center_y(self._input_text_panel:h() / 2)
 
 	local input_text_params = {
+		name = "input_text",
 		halign = "scale",
+		valign = "center",
+		layer = 5,
 		text = "",
 		vertical = "center",
 		align = "left",
-		name = "input_text",
-		valign = "center",
-		layer = 5,
 		x = HUDChat.INPUT_TEXT_X,
 		w = self._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT,
 		font = HUDChat.MESSAGE_FONT,
@@ -207,8 +207,8 @@ end
 
 function HUDChat:_create_input_panel()
 	self._input_panel = self._panel:panel({
-		name = "input_panel",
 		alpha = 0,
+		name = "input_panel",
 		layer = 1,
 		x = 0,
 		h = 24,
@@ -216,22 +216,22 @@ function HUDChat:_create_input_panel()
 	})
 
 	self._input_panel:rect({
-		visible = false,
 		name = "focus_indicator",
+		visible = false,
 		layer = 0,
 		color = Color.white:with_alpha(0.2)
 	})
 
 	local say = self._input_panel:text({
-		x = 0,
+		name = "say",
+		y = 0,
 		hvertical = "center",
+		blend_mode = "normal",
+		layer = 1,
+		x = 0,
 		halign = "left",
 		vertical = "center",
 		align = "left",
-		name = "say",
-		y = 0,
-		blend_mode = "normal",
-		layer = 1,
 		text = utf8.to_upper(managers.localization:text("menu_chat_say")),
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
@@ -242,29 +242,29 @@ function HUDChat:_create_input_panel()
 	say:set_size(w, self._input_panel:h())
 
 	local input_text = self._input_panel:text({
-		x = 0,
+		name = "input_text",
+		y = 0,
 		hvertical = "center",
+		word_wrap = false,
+		layer = 1,
+		x = 0,
+		wrap = true,
+		blend_mode = "normal",
 		halign = "left",
 		text = "",
 		vertical = "center",
 		align = "left",
-		name = "input_text",
-		y = 0,
-		blend_mode = "normal",
-		wrap = true,
-		word_wrap = false,
-		layer = 1,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		color = Color.white
 	})
 	local caret = self._input_panel:rect({
+		w = 0,
 		h = 0,
 		name = "caret",
 		y = 0,
 		x = 0,
 		layer = 2,
-		w = 0,
 		color = Color(0.05, 1, 1, 1)
 	})
 

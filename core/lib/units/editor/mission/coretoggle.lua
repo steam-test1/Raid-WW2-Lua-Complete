@@ -89,7 +89,7 @@ function CoreToggleUnitElement:_build_panel(panel, panel_sizer)
 		"toggle"
 	}, "Select how you want to toggle an element")
 	self:_build_value_number(panel, panel_sizer, "set_trigger_times", {
-		min = -1,
-		floats = 0
+		floats = 0,
+		min = -1
 	}, "Sets the elements trigger times when toggle on (-1 means do not use)")
 end

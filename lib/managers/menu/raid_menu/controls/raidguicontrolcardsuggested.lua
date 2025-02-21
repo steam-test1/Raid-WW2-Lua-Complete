@@ -77,10 +77,10 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_cardback()
 	self._card_image:set_texture_rect(unpack(empty_slot_texture.texture_rect))
 
 	self._card_not_selected_label = self._card_panel:label({
+		wrap = true,
 		name = "card_not_selected_label",
 		h = 128,
 		align = "center",
-		wrap = true,
 		x = self._card_image:x() + 5,
 		y = self._card_image:top() + 90,
 		w = self._card_image:w() - 10,
@@ -120,10 +120,10 @@ function RaidGUIControlCardSuggested:_show_controls_for_empty_suggestion()
 	self._card_image:set_texture_rect(unpack(empty_slot_texture.texture_rect))
 
 	self._card_not_selected_label = self._card_panel:label({
+		wrap = true,
 		name = "card_not_selected_label",
 		h = 128,
 		align = "center",
-		wrap = true,
 		x = self._card_image:x() + 5,
 		y = self._card_image:top() + 90,
 		w = self._card_image:w() - 10,

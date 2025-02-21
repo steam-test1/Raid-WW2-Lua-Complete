@@ -179,10 +179,10 @@ function OverlayEffectManager:play_effect(data)
 		end
 
 		local text = self._ws:panel():text({
-			align = "center",
 			vertical = "center",
 			valign = "center",
 			halign = "center",
+			align = "center",
 			text = data.text or "",
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,

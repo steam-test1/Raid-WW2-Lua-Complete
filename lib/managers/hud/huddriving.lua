@@ -42,10 +42,10 @@ end
 
 function HUDDriving:_create_panel(hud)
 	local panel_params = {
-		halign = "center",
 		visible = false,
-		valign = "bottom",
 		name = "driving_panel",
+		halign = "center",
+		valign = "bottom",
 		w = HUDDriving.W,
 		h = HUDDriving.H
 	}
@@ -57,9 +57,9 @@ end
 
 function HUDDriving:_create_slot_panel()
 	local slot_panel_params = {
+		name = "slot_panel",
 		halign = "left",
 		valign = "bottom",
-		name = "slot_panel",
 		w = HUDDriving.SLOT_PANEL_W,
 		h = HUDDriving.SLOT_PANEL_H
 	}
@@ -116,10 +116,10 @@ end
 function HUDDriving:_create_carry_info()
 	local carry_panel_x = self._slot_panel:x() + self._slot_panel:w() + HUDDriving.CARRY_PANEL_PADDING_LEFT
 	local carry_info_panel_params = {
-		halign = "right",
-		y = 0,
 		valign = "scale",
 		name = "carry_info_panel",
+		y = 0,
+		halign = "right",
 		x = carry_panel_x,
 		w = self._object:w() - carry_panel_x,
 		h = self._slot_panel:h() + 20
@@ -151,11 +151,11 @@ function HUDDriving:_create_carry_info()
 	local carry_info_text_x = self._carry_indicator:x() + self._carry_indicator:w() + HUDDriving.CARRY_PANEL_PADDING_RIGHT
 	local carry_info_text_params = {
 		vertical = "center",
-		align = "left",
 		halign = "center",
 		valign = "left",
-		name = "carry_info_text",
 		text = "",
+		name = "carry_info_text",
+		align = "left",
 		x = carry_info_text_x,
 		w = carry_info_panel:w() - carry_info_text_x,
 		font = HUDDriving.CARRY_INFO_TEXT_FONT,
@@ -168,10 +168,10 @@ end
 
 function HUDDriving:_create_button_prompts()
 	local button_prompts_panel_params = {
-		halign = "scale",
-		valign = "top",
 		alpha = 0,
 		name = "button_prompts_panel",
+		halign = "scale",
+		valign = "top",
 		w = self._object:w(),
 		h = HUDDriving.BUTTON_PROMPTS_H
 	}

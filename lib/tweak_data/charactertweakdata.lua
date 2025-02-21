@@ -5,8 +5,8 @@ CharacterTweakData.ENEMY_TYPE_ELITE = "elite"
 CharacterTweakData.ENEMY_TYPE_OFFICER = "officer"
 CharacterTweakData.ENEMY_TYPE_FLAMER = "flamer"
 CharacterTweakData.SPECIAL_UNIT_TYPES = {
-	flamer = true,
-	commander = true
+	commander = true,
+	flamer = true
 }
 CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER = "flamer"
 CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER = "commander"
@@ -86,9 +86,9 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.weapon_voice = "1"
 	self.russian.access = "teamAI2"
 	self.russian.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.russian.vision = presets.vision.easy
 end
@@ -113,9 +113,9 @@ function CharacterTweakData:_init_german(presets)
 	self.german.weapon_voice = "2"
 	self.german.access = "teamAI3"
 	self.german.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.german.vision = presets.vision.easy
 end
@@ -140,9 +140,9 @@ function CharacterTweakData:_init_british(presets)
 	self.british.weapon_voice = "3"
 	self.british.access = "teamAI1"
 	self.british.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.british.vision = presets.vision.easy
 end
@@ -167,9 +167,9 @@ function CharacterTweakData:_init_american(presets)
 	self.american.weapon_voice = "3"
 	self.american.access = "teamAI4"
 	self.american.arrest = {
-		aggression_timeout = 6,
 		timeout = 2400,
-		arrest_timeout = 2400
+		arrest_timeout = 2400,
+		aggression_timeout = 6
 	}
 	self.american.vision = presets.vision.easy
 end
@@ -434,8 +434,8 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.ecm_vulnerability = 1
 	self.german_grunt_light.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_light.weapon_voice = "1"
@@ -480,8 +480,8 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.ecm_vulnerability = 1
 	self.german_grunt_mid.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_mid.weapon_voice = "1"
@@ -528,8 +528,8 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.ecm_vulnerability = 1
 	self.german_grunt_heavy.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_grunt_heavy.weapon_voice = "1"
@@ -574,8 +574,8 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.ecm_vulnerability = 1
 	self.german_gebirgsjager_light.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gebirgsjager_light.weapon_voice = "1"
@@ -622,8 +622,8 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.ecm_vulnerability = 1
 	self.german_gebirgsjager_heavy.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gebirgsjager_heavy.weapon_voice = "1"
@@ -668,8 +668,8 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.ecm_vulnerability = 1
 	self.german_light.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_light.weapon_voice = "1"
@@ -714,8 +714,8 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.ecm_vulnerability = 1
 	self.german_heavy.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_heavy.weapon_voice = "1"
@@ -760,8 +760,8 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.ecm_vulnerability = 1
 	self.german_fallschirmjager_light.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_fallschirmjager_light.weapon_voice = "1"
@@ -808,8 +808,8 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.ecm_vulnerability = 1
 	self.german_fallschirmjager_heavy.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_fallschirmjager_heavy.weapon_voice = "1"
@@ -856,8 +856,8 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.ecm_vulnerability = 1
 	self.german_gasmask.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_gasmask.weapon_voice = "1"
@@ -935,8 +935,8 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.ecm_vulnerability = 1
 	self.german_waffen_ss.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_waffen_ss.weapon_voice = "1"
@@ -978,8 +978,8 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.ecm_vulnerability = 1
 	self.german_commander.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_commander.weapon_voice = "1"
@@ -1031,8 +1031,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.ecm_vulnerability = 1
 	self.german_og_commander.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_og_commander.weapon_voice = "1"
@@ -1085,8 +1085,8 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.ecm_vulnerability = 1
 	self.german_officer.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_officer.weapon_voice = "1"
@@ -1126,8 +1126,8 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.ecm_vulnerability = 1
 	self.soviet_nkvd_int_security_captain.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.soviet_nkvd_int_security_captain.weapon_voice = "1"
@@ -1183,8 +1183,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.ecm_vulnerability = 0
 	self.german_flamer.ecm_hurts = {
 		ears = {
-			min_duration = 7,
-			max_duration = 9
+			max_duration = 9,
+			min_duration = 7
 		}
 	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
@@ -1200,13 +1200,13 @@ function CharacterTweakData:_init_german_flamer(presets)
 		health_reference = "current",
 		zones = {
 			{
-				none = 1,
-				health_limit = 0.1
+				health_limit = 0.1,
+				none = 1
 			},
 			{
+				explode = 0.5,
 				none = 0.5,
-				health_limit = 0.5,
-				explode = 0.5
+				health_limit = 0.5
 			},
 			{
 				explode = 1
@@ -1236,13 +1236,13 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		max_range = max_range,
 		additional_weapon_stats = {
-			shooting_duration = 2.5,
-			cooldown_duration = 0.76
+			cooldown_duration = 0.76,
+			shooting_duration = 2.5
 		},
 		range = {
+			far = 500,
 			optimal = 400,
-			close = 300,
-			far = 500
+			close = 300
 		},
 		autofire_rounds = {
 			25,
@@ -1309,8 +1309,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self:_process_weapon_usage_table(self.german_flamer.weapon)
 
 	self.german_flamer.throwable = {
-		throw_chance = 0.18,
-		projectile_id = "flamer_incendiary"
+		projectile_id = "flamer_incendiary",
+		throw_chance = 0.18
 	}
 	self.german_flamer.weapon_voice = "3"
 	self.german_flamer.speech_prefix_p1 = "ger"
@@ -1346,8 +1346,8 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.ecm_vulnerability = 0
 	self.german_sniper.ecm_hurts = {
 		ears = {
-			min_duration = 7,
-			max_duration = 9
+			max_duration = 9,
+			min_duration = 7
 		}
 	}
 	self.german_sniper.priority_shout = "shout_loud_sniper"
@@ -1388,35 +1388,35 @@ function CharacterTweakData:_init_german_sniper(presets)
 		health_reference = "current",
 		zones = {
 			{
-				none = 1,
-				health_limit = 0.01
+				health_limit = 0.01,
+				none = 1
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.3,
-				moderate = 0
+				health_limit = 0.3
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.6,
-				moderate = 0
+				health_limit = 0.6
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.9,
-				moderate = 0
+				health_limit = 0.9
 			},
 			{
-				light = 0,
+				moderate = 0,
 				none = 1,
-				heavy = 0,
-				moderate = 0
+				light = 0,
+				heavy = 0
 			}
 		}
 	}
@@ -1444,8 +1444,8 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.ecm_vulnerability = 1
 	self.german_spotter.ecm_hurts = {
 		ears = {
-			min_duration = 8,
-			max_duration = 10
+			max_duration = 10,
+			min_duration = 8
 		}
 	}
 	self.german_spotter.weapon_voice = "1"
@@ -1467,35 +1467,35 @@ function CharacterTweakData:_init_german_spotter(presets)
 		health_reference = "current",
 		zones = {
 			{
-				none = 1,
-				health_limit = 0.01
+				health_limit = 0.01,
+				none = 1
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.3,
-				moderate = 0
+				health_limit = 0.3
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.6,
-				moderate = 0
+				health_limit = 0.6
 			},
 			{
+				moderate = 0,
 				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.9,
-				moderate = 0
+				health_limit = 0.9
 			},
 			{
-				light = 0,
+				moderate = 0,
 				none = 1,
-				heavy = 0,
-				moderate = 0
+				light = 0,
+				heavy = 0
 			}
 		}
 	}
@@ -1545,17 +1545,17 @@ function CharacterTweakData:_init_upd_fb(presets)
 		health_reference = "current",
 		zones = {
 			{
-				none = 1,
-				health_limit = 0.3
+				health_limit = 0.3,
+				none = 1
 			},
 			{
+				explode = 0.1,
 				none = 0.7,
-				health_limit = 0.7,
-				explode = 0.1
+				health_limit = 0.7
 			},
 			{
-				none = 0.5,
-				explode = 0.5
+				explode = 0.5,
+				none = 0.5
 			}
 		}
 	}
@@ -1624,32 +1624,32 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
+					health_limit = 0.01,
+					none = 1
 				},
 				{
+					moderate = 0.05,
 					light = 0.7,
 					heavy = 0.05,
 					none = 0.2,
-					health_limit = 0.3,
-					moderate = 0.05
+					health_limit = 0.3
 				},
 				{
+					moderate = 0.4,
 					light = 0.4,
 					health_limit = 0.6,
-					heavy = 0.2,
-					moderate = 0.4
+					heavy = 0.2
 				},
 				{
+					moderate = 0.2,
 					light = 0.2,
 					health_limit = 0.9,
-					heavy = 0.6,
-					moderate = 0.2
+					heavy = 0.6
 				},
 				{
+					moderate = 0,
 					light = 0,
-					heavy = 1,
-					moderate = 0
+					heavy = 1
 				}
 			}
 		},
@@ -1657,22 +1657,22 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
+					health_limit = 0.01,
+					none = 1
 				},
 				{
+					heavy = 0.4,
 					none = 0.6,
-					health_limit = 0.2,
-					heavy = 0.4
+					health_limit = 0.2
 				},
 				{
+					explode = 0.4,
 					heavy = 0.6,
-					health_limit = 0.5,
-					explode = 0.4
+					health_limit = 0.5
 				},
 				{
-					heavy = 0.2,
-					explode = 0.8
+					explode = 0.8,
+					heavy = 0.2
 				}
 			}
 		},
@@ -1680,32 +1680,32 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
+					health_limit = 0.01,
+					none = 1
 				},
 				{
+					moderate = 0,
 					light = 0.7,
 					heavy = 0,
 					none = 0.3,
-					health_limit = 0.3,
-					moderate = 0
+					health_limit = 0.3
 				},
 				{
+					moderate = 0,
 					light = 1,
 					health_limit = 0.8,
-					heavy = 0,
-					moderate = 0
+					heavy = 0
 				},
 				{
+					moderate = 0.2,
 					light = 0.6,
 					health_limit = 0.9,
-					heavy = 0.2,
-					moderate = 0.2
+					heavy = 0.2
 				},
 				{
+					moderate = 0,
 					light = 0,
-					heavy = 9,
-					moderate = 0
+					heavy = 9
 				}
 			}
 		},
@@ -1713,8 +1713,8 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
+					health_limit = 0.01,
+					none = 1
 				},
 				{
 					fire = 1
@@ -1725,12 +1725,12 @@ function CharacterTweakData:_presets(tweak_data)
 			health_reference = "current",
 			zones = {
 				{
-					none = 1,
-					health_limit = 0.01
+					health_limit = 0.01,
+					none = 1
 				},
 				{
-					none = 0,
-					poison = 1
+					poison = 1,
+					none = 0
 				}
 			}
 		}
@@ -1739,8 +1739,8 @@ function CharacterTweakData:_presets(tweak_data)
 		HEALTH_INIT = 2.5,
 		headshot_dmg_mul = 1,
 		SPEED_WALK = {
-			cbt = 160,
 			pnc = 160,
+			cbt = 160,
 			hos = 180,
 			ntl = 120
 		},
@@ -1798,22 +1798,22 @@ function CharacterTweakData:_presets(tweak_data)
 		health_reference = "current",
 		zones = {
 			{
+				moderate = 0.1,
 				none = 0.3,
 				health_limit = 0.4,
-				light = 0.6,
-				moderate = 0.1
+				light = 0.6
 			},
 			{
+				moderate = 0.2,
 				none = 0.1,
 				health_limit = 0.7,
-				light = 0.7,
-				moderate = 0.2
+				light = 0.7
 			},
 			{
-				light = 0.5,
+				moderate = 0.3,
 				none = 0.1,
-				heavy = 0.1,
-				moderate = 0.3
+				light = 0.5,
+				heavy = 0.1
 			}
 		}
 	}
@@ -1861,9 +1861,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.usa_garand_npc.range = {
+		far = 5000,
 		optimal = 3500,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.normal.usa_garand_npc.autofire_rounds = {
 		3,
@@ -1974,9 +1974,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.usa_m1911_npc.range = {
+		far = 5000,
 		optimal = 3500,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.normal.usa_m1911_npc.FALLOFF = {
 		{
@@ -2083,9 +2083,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.usa_thomspon_npc.range = {
+		far = 5000,
 		optimal = 3500,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.normal.usa_thomspon_npc.autofire_rounds = {
 		3,
@@ -2196,9 +2196,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.ger_kar98_npc.range = {
+		far = 6000,
 		optimal = 3500,
-		close = 2400,
-		far = 6000
+		close = 2400
 	}
 	presets.weapon.normal.ger_kar98_npc.FALLOFF = {
 		{
@@ -2287,9 +2287,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.ger_luger_npc.range = {
+		far = 2200,
 		optimal = 1200,
-		close = 600,
-		far = 2200
+		close = 600
 	}
 	presets.weapon.normal.ger_luger_npc.FALLOFF = {
 		{
@@ -2378,9 +2378,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.ger_mp38_npc.range = {
+		far = 2400,
 		optimal = 2200,
-		close = 1000,
-		far = 2400
+		close = 1000
 	}
 	presets.weapon.normal.ger_mp38_npc.autofire_rounds = {
 		3,
@@ -2473,9 +2473,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.ger_stg44_npc.range = {
+		far = 2600,
 		optimal = 2400,
-		close = 1200,
-		far = 2600
+		close = 1200
 	}
 	presets.weapon.normal.ger_stg44_npc.autofire_rounds = {
 		3,
@@ -2568,9 +2568,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.normal.ger_geco_npc.range = {
+		far = 1000,
 		optimal = 800,
-		close = 600,
-		far = 1000
+		close = 600
 	}
 	presets.weapon.normal.ger_geco_npc.FALLOFF = {
 		{
@@ -2666,9 +2666,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_garand_npc.melee_dmg = 2
 	presets.weapon.good.usa_garand_npc.melee_retry_delay = presets.weapon.normal.usa_garand_npc.melee_retry_delay
 	presets.weapon.good.usa_garand_npc.range = {
+		far = 5000,
 		optimal = 3500,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.good.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.good.usa_garand_npc.FALLOFF = {
@@ -2978,9 +2978,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_kar98_npc.melee_dmg = 5
 	presets.weapon.good.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
 	presets.weapon.good.ger_kar98_npc.range = {
+		far = 4500,
 		optimal = 3500,
-		close = 2400,
-		far = 4500
+		close = 2400
 	}
 	presets.weapon.good.ger_kar98_npc.FALLOFF = {
 		{
@@ -3066,9 +3066,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_luger_npc.melee_dmg = 5
 	presets.weapon.good.ger_luger_npc.melee_retry_delay = presets.weapon.normal.ger_luger_npc.melee_retry_delay
 	presets.weapon.good.ger_luger_npc.range = {
+		far = 2200,
 		optimal = 1200,
-		close = 600,
-		far = 2200
+		close = 600
 	}
 	presets.weapon.good.ger_luger_npc.FALLOFF = {
 		{
@@ -3154,9 +3154,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_mp38_npc.melee_dmg = 5
 	presets.weapon.good.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
 	presets.weapon.good.ger_mp38_npc.range = {
+		far = 2500,
 		optimal = 2200,
-		close = 1000,
-		far = 2500
+		close = 1000
 	}
 	presets.weapon.good.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.good.ger_mp38_npc.FALLOFF = {
@@ -3243,9 +3243,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_stg44_npc.melee_dmg = 5
 	presets.weapon.good.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
 	presets.weapon.good.ger_stg44_npc.range = {
+		far = 2600,
 		optimal = 2400,
-		close = 1200,
-		far = 2600
+		close = 1200
 	}
 	presets.weapon.good.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.good.ger_stg44_npc.FALLOFF = {
@@ -3332,9 +3332,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_geco_npc.melee_dmg = 5
 	presets.weapon.good.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
 	presets.weapon.good.ger_geco_npc.range = {
+		far = 2000,
 		optimal = 1200,
-		close = 600,
-		far = 2000
+		close = 600
 	}
 	presets.weapon.good.ger_geco_npc.FALLOFF = {
 		{
@@ -3430,9 +3430,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_garand_npc.melee_dmg = 2
 	presets.weapon.expert.usa_garand_npc.melee_retry_delay = presets.weapon.normal.usa_garand_npc.melee_retry_delay
 	presets.weapon.expert.usa_garand_npc.range = {
+		far = 5000,
 		optimal = 3500,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.expert.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.expert.usa_garand_npc.FALLOFF = {
@@ -3742,9 +3742,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_kar98_npc.melee_dmg = 10
 	presets.weapon.expert.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
 	presets.weapon.expert.ger_kar98_npc.range = {
+		far = 3000,
 		optimal = 2600,
-		close = 1400,
-		far = 3000
+		close = 1400
 	}
 	presets.weapon.expert.ger_kar98_npc.FALLOFF = {
 		{
@@ -3830,9 +3830,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_luger_npc.melee_dmg = 10
 	presets.weapon.expert.ger_luger_npc.melee_retry_delay = presets.weapon.normal.ger_luger_npc.melee_retry_delay
 	presets.weapon.expert.ger_luger_npc.range = {
+		far = 2200,
 		optimal = 1200,
-		close = 600,
-		far = 2200
+		close = 600
 	}
 	presets.weapon.expert.ger_luger_npc.FALLOFF = {
 		{
@@ -3918,9 +3918,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_mp38_npc.melee_dmg = 10
 	presets.weapon.expert.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
 	presets.weapon.expert.ger_mp38_npc.range = {
+		far = 1400,
 		optimal = 1200,
-		close = 1000,
-		far = 1400
+		close = 1000
 	}
 	presets.weapon.expert.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.expert.ger_mp38_npc.FALLOFF = {
@@ -4007,9 +4007,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_stg44_npc.melee_dmg = 10
 	presets.weapon.expert.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
 	presets.weapon.expert.ger_stg44_npc.range = {
+		far = 3200,
 		optimal = 2400,
-		close = 1200,
-		far = 3200
+		close = 1200
 	}
 	presets.weapon.expert.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.expert.ger_stg44_npc.FALLOFF = {
@@ -4096,9 +4096,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_geco_npc.melee_dmg = 10
 	presets.weapon.expert.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
 	presets.weapon.expert.ger_geco_npc.range = {
+		far = 1000,
 		optimal = 900,
-		close = 600,
-		far = 1000
+		close = 600
 	}
 	presets.weapon.expert.ger_geco_npc.FALLOFF = {
 		{
@@ -4194,9 +4194,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_garand_npc.melee_dmg = 2
 	presets.weapon.insane.usa_garand_npc.melee_retry_delay = presets.weapon.normal.usa_garand_npc.melee_retry_delay
 	presets.weapon.insane.usa_garand_npc.range = {
+		far = 5000,
 		optimal = 3000,
-		close = 1000,
-		far = 5000
+		close = 1000
 	}
 	presets.weapon.insane.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.insane.usa_garand_npc.FALLOFF = {
@@ -4506,9 +4506,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_kar98_npc.melee_dmg = 10
 	presets.weapon.insane.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
 	presets.weapon.insane.ger_kar98_npc.range = {
+		far = 5000,
 		optimal = 3600,
-		close = 1400,
-		far = 5000
+		close = 1400
 	}
 	presets.weapon.insane.ger_kar98_npc.FALLOFF = {
 		{
@@ -4594,9 +4594,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_luger_npc.melee_dmg = 10
 	presets.weapon.insane.ger_luger_npc.melee_retry_delay = presets.weapon.normal.ger_luger_npc.melee_retry_delay
 	presets.weapon.insane.ger_luger_npc.range = {
+		far = 1200,
 		optimal = 800,
-		close = 600,
-		far = 1200
+		close = 600
 	}
 	presets.weapon.insane.ger_luger_npc.FALLOFF = {
 		{
@@ -4682,9 +4682,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_mp38_npc.melee_dmg = 10
 	presets.weapon.insane.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
 	presets.weapon.insane.ger_mp38_npc.range = {
+		far = 3400,
 		optimal = 2200,
-		close = 1000,
-		far = 3400
+		close = 1000
 	}
 	presets.weapon.insane.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.insane.ger_mp38_npc.FALLOFF = {
@@ -4771,9 +4771,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_stg44_npc.melee_dmg = 10
 	presets.weapon.insane.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
 	presets.weapon.insane.ger_stg44_npc.range = {
+		far = 3600,
 		optimal = 2400,
-		close = 1200,
-		far = 3600
+		close = 1200
 	}
 	presets.weapon.insane.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.insane.ger_stg44_npc.FALLOFF = {
@@ -4860,9 +4860,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_geco_npc.melee_dmg = 10
 	presets.weapon.insane.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
 	presets.weapon.insane.ger_geco_npc.range = {
+		far = 1000,
 		optimal = 800,
-		close = 600,
-		far = 1000
+		close = 600
 	}
 	presets.weapon.insane.ger_geco_npc.FALLOFF = {
 		{
@@ -4954,9 +4954,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.melee_dmg = presets.weapon.normal.ger_kar98_npc.melee_dmg
 	presets.weapon.sniper.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
 	presets.weapon.sniper.ger_kar98_npc.range = {
+		far = 80000,
 		optimal = 40000,
-		close = 15000,
-		far = 80000
+		close = 15000
 	}
 	presets.weapon.sniper.ger_kar98_npc.use_laser = true
 	presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
@@ -5117,9 +5117,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_mp38_npc.melee_dmg = 2
 	presets.weapon.gang_member.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
 	presets.weapon.gang_member.ger_mp38_npc.range = {
+		far = 6000,
 		optimal = 2500,
-		close = 1500,
-		far = 6000
+		close = 1500
 	}
 	presets.weapon.gang_member.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.gang_member.ger_mp38_npc.FALLOFF = {
@@ -5188,9 +5188,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_stg44_npc.melee_dmg = 2
 	presets.weapon.gang_member.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
 	presets.weapon.gang_member.ger_stg44_npc.range = {
+		far = 6000,
 		optimal = 2500,
-		close = 1500,
-		far = 6000
+		close = 1500
 	}
 	presets.weapon.gang_member.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.gang_member.ger_stg44_npc.FALLOFF = {
@@ -5259,9 +5259,9 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.usa_garand_npc.melee_dmg = 2
 	presets.weapon.gang_member.usa_garand_npc.melee_retry_delay = presets.weapon.normal.usa_garand_npc.melee_retry_delay
 	presets.weapon.gang_member.usa_garand_npc.range = {
+		far = 8000,
 		optimal = 3500,
-		close = 1500,
-		far = 8000
+		close = 1500
 	}
 	presets.weapon.gang_member.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.gang_member.usa_garand_npc.FALLOFF = {
@@ -5399,9 +5399,9 @@ function CharacterTweakData:_presets(tweak_data)
 		2
 	}
 	presets.weapon.gang_member.thompson_npc.range = {
+		far = 6000,
 		optimal = 2000,
-		close = 1000,
-		far = 6000
+		close = 1000
 	}
 	presets.weapon.gang_member.thompson_npc.autofire_rounds = {
 		10,
@@ -6782,9 +6782,9 @@ function CharacterTweakData:_presets(tweak_data)
 
 	presets.surrender = {
 		easy = {
+			base_chance = 0.75,
 			violence_timeout = 2,
 			significant_chance = 0.1,
-			base_chance = 0.75,
 			reasons = {
 				isolated = 0.1,
 				pants_down = 1,
@@ -6805,9 +6805,9 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		normal = {
+			base_chance = 0.5,
 			violence_timeout = 2,
 			significant_chance = 0.2,
-			base_chance = 0.5,
 			reasons = {
 				isolated = 0.08,
 				pants_down = 1,
@@ -6828,9 +6828,9 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		hard = {
+			base_chance = 0.35,
 			violence_timeout = 2,
 			significant_chance = 0.25,
-			base_chance = 0.35,
 			reasons = {
 				pants_down = 0.8,
 				weapon_down = 0.2,
@@ -6840,10 +6840,10 @@ function CharacterTweakData:_presets(tweak_data)
 				}
 			},
 			factors = {
+				isolated = 0.1,
 				enemy_weap_cold = 0.05,
 				unaware_of_aggressor = 0.1,
 				flanked = 0.04,
-				isolated = 0.1,
 				aggressor_dis = {
 					[300.0] = 0.1,
 					[1000.0] = 0
@@ -6851,9 +6851,9 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		special = {
+			base_chance = 0.25,
 			violence_timeout = 2,
 			significant_chance = 0.25,
-			base_chance = 0.25,
 			reasons = {
 				pants_down = 0.6,
 				weapon_down = 0.02,
@@ -6936,28 +6936,28 @@ function CharacterTweakData:_presets(tweak_data)
 		no_chatter = {},
 		cop = {
 			incomming_flamer = true,
+			contact = true,
+			go_go = true,
+			retreat = true,
+			aggressive = true,
 			clear = true,
 			follow_me = true,
 			smoke = true,
 			ready = true,
 			suppress = true,
-			contact = true,
-			go_go = true,
-			retreat = true,
-			aggressive = true,
 			incomming_commander = true
 		},
 		swat = {
 			incomming_flamer = true,
+			contact = true,
+			go_go = true,
+			retreat = true,
+			aggressive = true,
 			clear = true,
 			follow_me = true,
 			smoke = true,
 			ready = true,
 			suppress = true,
-			contact = true,
-			go_go = true,
-			retreat = true,
-			aggressive = true,
 			incomming_commander = true
 		},
 		shield = {

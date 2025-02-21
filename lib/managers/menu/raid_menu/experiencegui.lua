@@ -38,8 +38,8 @@ function ExperienceGui:_layout()
 		w = center - menu_shift
 	})
 	self._menu_right_side = self._object:panel({
-		layer = 1,
 		name = "menu_right_side",
+		layer = 1,
 		w = center + menu_shift
 	})
 
@@ -134,8 +134,8 @@ function ExperienceGui:_layout_equipped_upgrades()
 			end
 
 			local grid_item = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillTiny, {
-				layer = 1,
 				y = 4,
+				layer = 1,
 				name = "equippped_slot_" .. slot_type_str .. i,
 				x = x,
 				w = block_size,
@@ -297,10 +297,10 @@ function ExperienceGui:_layout_skill_profile()
 	local y_padding = 8
 	local x, y, w, h = self._equipable_upgrades_background:shape()
 	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
+		name = "skill_profiles_list",
 		selection_enabled = false,
 		visible = false,
 		loop_items = true,
-		name = "skill_profiles_list",
 		x = x + x_padding,
 		y = y + y_padding,
 		w = w - x_padding * 2,
@@ -570,34 +570,34 @@ function ExperienceGui:data_source_stats()
 	local t = {}
 
 	table.insert(t, {
-		text_id = "character_stats_health_label",
-		name = "health"
+		name = "health",
+		text_id = "character_stats_health_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_stamina_label",
-		name = "stamina"
+		name = "stamina",
+		text_id = "character_stats_stamina_label"
 	})
 	table.insert(t, {
+		name = "stamina_regen",
 		format_value = "%.2g/s",
-		text_id = "character_stats_stamina_regen_label",
-		name = "stamina_regen"
+		text_id = "character_stats_stamina_regen_label"
 	})
 	table.insert(t, {
+		name = "stamina_delay",
 		format_value = "%.2gs",
-		text_id = "character_stats_stamina_delay_label",
-		name = "stamina_delay"
+		text_id = "character_stats_stamina_delay_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_speed_walk_label",
-		name = "speed_walk"
+		name = "speed_walk",
+		text_id = "character_stats_speed_walk_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_speed_run_label",
-		name = "speed_run"
+		name = "speed_run",
+		text_id = "character_stats_speed_run_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_carry_limit_label",
-		name = "carry_limit"
+		name = "carry_limit",
+		text_id = "character_stats_carry_limit_label"
 	})
 
 	return t
@@ -626,8 +626,8 @@ function ExperienceGui:_layout_experience_progress()
 		texture_rect = backgrounds_chat_bg.texture_rect
 	})
 	self._progress_bar = self._menu_right_side:create_custom_control(RaidGUIControlSkilltreeProgressBar, {
-		horizontal_padding = 15,
 		name = "progress_bar",
+		horizontal_padding = 15,
 		w = self._menu_right_side:w() - 100,
 		h = h - 12
 	})

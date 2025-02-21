@@ -51,8 +51,8 @@ end
 
 function RaidGUIControlWeaponSkills:_create_tier_labels()
 	local tier_panel_params = {
-		name = "tier_label_panel",
-		h = 30
+		h = 30,
+		name = "tier_label_panel"
 	}
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}

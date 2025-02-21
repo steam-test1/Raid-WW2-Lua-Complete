@@ -28,9 +28,9 @@ end
 
 function HUDControllerHotswap:_create_panel(hud)
 	self._object = hud.panel:panel({
-		halign = "center",
 		valign = "center",
 		visible = false,
+		halign = "center",
 		name = HUDControllerHotswap.HOTSWAP_HUD_ID,
 		w = HUDControllerHotswap.W,
 		h = HUDControllerHotswap.H
@@ -60,8 +60,8 @@ function HUDControllerHotswap:update_input_device()
 		self._icon:set_texture_rect(unpack(gui.texture_rect))
 	else
 		self._icon = self._object:bitmap({
-			y = 4,
 			x = 4,
+			y = 4,
 			w = HUDControllerHotswap.H - 8,
 			h = HUDControllerHotswap.H - 8,
 			texture = gui.texture,
@@ -74,8 +74,8 @@ function HUDControllerHotswap:update_input_device()
 
 	if not self._text then
 		self._text = self._object:text({
-			align = "center",
 			vertical = "center",
+			align = "center",
 			x = self._icon:w() / 2,
 			font = self.TEXT_FONT,
 			font_size = self.TEXT_FONT_SIZE,

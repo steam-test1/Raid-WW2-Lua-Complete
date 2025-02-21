@@ -395,13 +395,13 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.player:force_drop_carry()
 	managers.hud:hide_stats_screen()
 	managers.hud:set_player_health({
-		current = 0,
 		no_hint = true,
+		current = 0,
 		total = 100
 	})
 	managers.hud:set_player_armor({
-		current = 0,
 		no_hint = true,
+		current = 0,
 		total = 100
 	})
 	managers.hud:set_player_condition("mugshot_in_custody", managers.localization:text("debug_mugshot_in_custody"))

@@ -47,13 +47,13 @@ end
 
 function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	local name_label_params = {
+		h = 24,
+		y = 0,
+		x = 0,
 		text = "UNKNOWN",
 		wrap = true,
 		vertical = "center",
 		align = "left",
-		h = 24,
-		y = 0,
-		x = 0,
 		name = self._params.name .. "_name_label",
 		w = self._object:w(),
 		font = tweak_data.gui.fonts.din_compressed,

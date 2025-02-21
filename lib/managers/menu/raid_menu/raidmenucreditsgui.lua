@@ -92,13 +92,13 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
+				word_wrap = true,
+				wrap = true,
+				layer = 3,
 				vertical = "top",
 				halign = "left",
-				layer = 3,
 				align = "center",
-				wrap = true,
 				x = 0,
-				word_wrap = true,
 				text = data.text,
 				y = ypos,
 				w = text_width,
@@ -176,8 +176,8 @@ function RaidMenuCreditsGui:_show_intro_video()
 	self._playing_intro_video = true
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		name = "press_any_key_prompt",
 		alpha = 0,
+		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

@@ -55,8 +55,8 @@ end
 
 function AIGraphUnitElement:_add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 19
+		mask = 19,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "nav_surface", 1, true) then

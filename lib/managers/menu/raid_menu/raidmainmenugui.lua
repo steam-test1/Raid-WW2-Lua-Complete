@@ -171,13 +171,13 @@ end
 
 function RaidMainMenuGui:_layout_list_menu()
 	local list_menu_params = {
-		name = "list_menu",
-		selection_enabled = true,
-		loop_items = true,
 		h = 972,
 		w = 480,
 		y = 144,
 		x = 0,
+		selection_enabled = true,
+		name = "list_menu",
+		loop_items = true,
 		vertical_spacing = 2,
 		item_class = RaidGUIControlListItemMenu,
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
@@ -211,9 +211,9 @@ function RaidMainMenuGui:_layout_version_id()
 	local item_params = {
 		h = 100,
 		w = 600,
-		name = "version_id",
 		vertical = "bottom",
 		alpha = 0.33,
+		name = "version_id",
 		y = self._root_panel:h() - 100,
 		text = text
 	}
@@ -240,9 +240,9 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	if not alive(self._widget_label_panel) then
 		local label_panel_params = {
 			h = 64,
-			name = "widget_label_panel",
+			visible = false,
 			halign = "scale",
-			visible = false
+			name = "widget_label_panel"
 		}
 		self._widget_label_panel = self._widget_panel:get_engine_panel():panel(label_panel_params)
 
@@ -250,12 +250,12 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	end
 
 	local widget_title_params = {
-		vertical = "center",
-		h = 64,
-		halign = "left",
-		align = "left",
 		name = "widget_title",
 		x = 32,
+		h = 64,
+		align = "left",
+		halign = "left",
+		vertical = "center",
 		w = self._widget_panel:w() - 32,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.menu_list),
 		font_size = tweak_data.gui.font_sizes.menu_list,
@@ -264,13 +264,13 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	}
 	local widget_title = self._widget_label_panel:text(widget_title_params)
 	local widget_action_title_params = {
-		w = 150,
-		vertical = "center",
-		h = 64,
-		halign = "right",
 		align = "right",
+		w = 150,
 		name = "widget_action_title",
 		text = "",
+		h = 64,
+		halign = "right",
+		vertical = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.extra_small),
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects
@@ -410,9 +410,9 @@ function RaidMainMenuGui:_list_menu_data_source()
 	local vertical_spacing = 36
 	local list_items = {
 		{
+			callback = "raid_play_tutorial",
 			item_h = 72,
 			item_font_size = 60,
-			callback = "raid_play_tutorial",
 			icon = "menu_item_tutorial",
 			text = managers.localization:to_upper_text("menu_tutorial_hl"),
 			vertical_spacing = vertical_spacing,
@@ -421,9 +421,9 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			item_h = 72,
 			item_font_size = 60,
 			callback = "raid_play_online",
+			item_h = 72,
 			icon = "menu_item_online",
 			text = managers.localization:to_upper_text("menu_play"),
 			availability_flags = {

@@ -30,9 +30,9 @@ end
 function HUDSpecialInteractionFuseCutting:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionFuseCutting.BACKGROUND_PLATE_IMAGE)
 	self._bg_plate = self._object:bitmap({
+		layer = 1,
 		halign = "center",
 		valign = "center",
-		layer = 1,
 		name = "special_interaction_bg_plate",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
@@ -59,12 +59,12 @@ end
 
 function HUDSpecialInteractionFuseCutting:_create_fuse_timer()
 	self._interact_text = self._object:text({
+		w = 240,
+		name = "_interact_text",
 		align = "center",
 		text = "--:--",
 		valign = "center",
 		h = 60,
-		w = 240,
-		name = "_interact_text",
 		layer = self._bg_plate:layer() + 2,
 		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
 		font_size = HUDSpecialInteractionFuseCutting.TIMER_FONT_SIZE

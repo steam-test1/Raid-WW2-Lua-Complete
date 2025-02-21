@@ -1,8 +1,8 @@
 SpecialObjectiveUnitElement = SpecialObjectiveUnitElement or class(MissionElement)
 SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "special_objective_action",
-		value = "so_action"
+		value = "so_action",
+		type = "special_objective_action"
 	}
 }
 SpecialObjectiveUnitElement._AI_SO_types = {
@@ -207,9 +207,9 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 			if draw then
 				self:_draw_link({
-					b = 0.75,
 					g = 0,
 					r = 0,
+					b = 0.75,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -223,9 +223,9 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 		if draw and unit and self._unit then
 			self:_draw_link({
-				b = 0.75,
 				g = 0,
 				r = 0,
+				b = 0.75,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -307,9 +307,9 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					b = 0,
 					g = 0.75,
 					r = 0,
+					b = 0,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -551,8 +551,8 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
 		tooltip = "Select a preset.",
-		name = "Preset:",
 		sorted = true,
+		name = "Preset:",
 		name_proportions = 1,
 		ctrlr_proportions = 2,
 		panel = panel,

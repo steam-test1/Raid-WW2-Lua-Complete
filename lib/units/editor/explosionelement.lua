@@ -27,12 +27,12 @@ function ExplosionUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "damage", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "The damage done to beings and props from the explosion")
 	self:_build_value_number(panel, panel_sizer, "player_damage", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "The player damage from the explosion")
 	self:_build_value_combobox(panel, panel_sizer, "explosion_effect", table.list_add({
 		"none"

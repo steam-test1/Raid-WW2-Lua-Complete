@@ -49,8 +49,8 @@ function RaidMenuOptionsNetwork:_layout_network()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_toggle_net_forwarding"),
 		on_menu_move = {
-			down = "use_compression",
-			up = "packet_throttling_params"
+			up = "packet_throttling_params",
+			down = "use_compression"
 		}
 	}
 	self._toggle_menu_net_forwarding = self._root_panel:toggle_button(forwarding_params)

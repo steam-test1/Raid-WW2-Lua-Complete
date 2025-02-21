@@ -307,8 +307,8 @@ function CopLogicAttack._start_action_move_back(data, my_data, focus_enemy, enga
 
 	local new_action_data = {
 		variant = "walk",
-		type = "walk",
 		body_part = 2,
+		type = "walk",
 		nav_path = {
 			from_pos,
 			retreat_to
@@ -497,8 +497,8 @@ function CopLogicAttack._request_action_walk_to_cover(data, my_data)
 	end
 
 	local new_action_data = {
-		type = "walk",
 		body_part = 2,
+		type = "walk",
 		nav_path = my_data.cover_path,
 		variant = movement_mode,
 		end_pose = end_pose
@@ -530,8 +530,8 @@ function CopLogicAttack._request_action_walk_to_cover_shoot_pos(data, my_data, p
 	CopLogicAttack._adjust_path_start_pos(data, path)
 
 	local new_action_data = {
-		type = "walk",
 		body_part = 2,
+		type = "walk",
 		nav_path = path,
 		variant = speed or "walk"
 	}

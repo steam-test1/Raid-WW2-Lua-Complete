@@ -644,8 +644,8 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 		})
 
 		managers.notification:add_notification({
-			duration = 3,
 			shelf_life = 5,
+			duration = 3,
 			id = hint_id,
 			text = notification_text
 		})

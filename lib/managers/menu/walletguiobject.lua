@@ -12,20 +12,20 @@ function WalletGuiObject.set_wallet(panel, layer)
 		layer = layer or 0
 	})
 	local money_icon = Global.wallet_panel:bitmap({
-		texture = "guis/textures/pd2/shared_wallet_symbol",
-		name = "wallet_money_icon"
+		name = "wallet_money_icon",
+		texture = "guis/textures/pd2/shared_wallet_symbol"
 	})
 	local level_icon = Global.wallet_panel:bitmap({
-		texture = "guis/textures/pd2/shared_level_symbol",
-		name = "wallet_level_icon"
+		name = "wallet_level_icon",
+		texture = "guis/textures/pd2/shared_level_symbol"
 	})
 	local skillpoint_icon = Global.wallet_panel:bitmap({
-		texture = "guis/textures/pd2/shared_skillpoint_symbol",
-		name = "wallet_skillpoint_icon"
+		name = "wallet_skillpoint_icon",
+		texture = "guis/textures/pd2/shared_skillpoint_symbol"
 	})
 	local money_text = Global.wallet_panel:text({
-		text = "",
 		name = "wallet_money_text",
+		text = "",
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text
@@ -63,12 +63,12 @@ function WalletGuiObject.set_wallet(panel, layer)
 
 	local max_w = skillpoint_text:right()
 	local bg_blur = Global.wallet_panel:bitmap({
-		h = 0,
-		render_template = "VertexColorTexturedBlur3D",
-		layer = -1,
 		texture = "guis/textures/test_blur_df",
 		w = 0,
-		name = "bg_blur"
+		render_template = "VertexColorTexturedBlur3D",
+		layer = -1,
+		name = "bg_blur",
+		h = 0
 	})
 
 	bg_blur:set_leftbottom(0, Global.wallet_panel:h())

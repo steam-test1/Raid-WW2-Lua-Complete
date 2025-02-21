@@ -951,8 +951,8 @@ function VehicleDrivingExt:enable_map_waypoint()
 
 	self._map_waypoint_data = {
 		show_on_screen = false,
-		waypoint_type = "unit_waypoint",
 		waypoint_origin = "waypoint_extension",
+		waypoint_type = "unit_waypoint",
 		icon = self._waypoint_hud_icon,
 		map_icon = self._waypoint_map_icon,
 		unit = self._unit,
@@ -993,9 +993,9 @@ function VehicleDrivingExt:enable_hud_waypoint()
 
 	self._hud_waypoint_data = {
 		waypoint_origin = "waypoint_extension",
+		distance = true,
 		waypoint_type = "unit_waypoint",
 		show_on_screen = true,
-		distance = true,
 		icon = self._waypoint_hud_icon,
 		unit = self._unit,
 		position_offset_z = self.hud_label_offset,
@@ -1320,9 +1320,9 @@ function VehicleDrivingExt:evacuate_seat(seat)
 
 	if Network:is_server() and not seat.occupant:character_damage():dead() then
 		seat.occupant:movement():action_request({
-			body_part = 1,
 			type = "idle",
-			sync = true
+			sync = true,
+			body_part = 1
 		})
 	end
 
@@ -1553,9 +1553,9 @@ function VehicleDrivingExt:on_team_ai_enter(ai_unit)
 
 			if Network:is_server() then
 				ai_unit:movement():action_request({
-					body_part = 1,
 					type = "idle",
-					sync = true
+					sync = true,
+					body_part = 1
 				})
 			end
 
@@ -2284,9 +2284,9 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		pose = "stand",
-		destroy_clbk_key = false,
 		type = "act",
+		destroy_clbk_key = false,
+		pose = "stand",
 		haste = haste,
 		nav_seg = align_nav_seg,
 		area = align_area,
@@ -2294,17 +2294,17 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
-			needs_full_blend = true,
 			align_sync = false,
 			body_part = 1,
 			type = "act",
+			needs_full_blend = true,
 			variant = team_ai_animation,
 			blocks = {
-				act = 1,
-				heavy_hurt = -1,
 				action = -1,
-				walk = -1,
-				hurt = -1
+				act = 1,
+				hurt = -1,
+				heavy_hurt = -1,
+				walk = -1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING

@@ -71,8 +71,8 @@ function HUDSpecialInteractionLockPick:_create_circles()
 		circle:set_current(circle_diff)
 
 		self._circles[i] = {
-			valid = true,
 			completed = false,
+			valid = true,
 			circle = circle
 		}
 	end

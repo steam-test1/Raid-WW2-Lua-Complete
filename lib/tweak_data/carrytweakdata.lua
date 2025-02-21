@@ -230,13 +230,13 @@ function CarryTweakData:init(tweak_data)
 		weight = self.gold_bar.weight * 3
 	}
 	self.crate_explosives = {
-		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
-		hud_icon = "carry_explosive",
-		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
-		skip_exit_secure = true,
 		name_id = "hud_carry_explosives",
+		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
 		type = "normal",
+		hud_icon = "carry_explosive",
 		weight = 2,
+		skip_exit_secure = true,
+		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
 		upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL
 	}
 	self.conspiracy_board = deep_clone(self.painting_sto)

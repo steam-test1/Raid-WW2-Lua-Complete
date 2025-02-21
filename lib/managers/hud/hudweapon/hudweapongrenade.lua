@@ -19,8 +19,8 @@ end
 
 function HUDWeaponGrenade:_create_panel(weapons_panel)
 	local panel_params = {
-		valign = "bottom",
 		halign = "right",
+		valign = "bottom",
 		name = "grenade_" .. tostring(self._index),
 		w = HUDWeaponGrenade.W,
 		h = HUDWeaponGrenade.H
@@ -30,11 +30,11 @@ end
 
 function HUDWeaponGrenade:_create_icon(icon)
 	local icon_panel_params = {
+		halign = "center",
 		y = 0,
 		x = 0,
 		valign = "top",
 		name = "icon_panel",
-		halign = "center",
 		w = self._object:w(),
 		h = self._object:h() / 2
 	}

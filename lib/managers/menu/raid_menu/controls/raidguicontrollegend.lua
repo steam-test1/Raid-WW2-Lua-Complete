@@ -103,9 +103,9 @@ function RaidGUIControlLegend:_create_pc_legend()
 
 	for _, legend_item in ipairs(self._legend.keyboard) do
 		local legend_pc_params = {
-			h = 32,
-			icon_align = "right",
 			y = 0,
+			icon_align = "right",
+			h = 32,
 			name = "pc_legend_" .. legend_item.key,
 			x = coord_x,
 			icon = tweak_data.gui.icons.ico_nav_right_base,

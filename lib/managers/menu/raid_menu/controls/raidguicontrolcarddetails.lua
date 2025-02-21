@@ -59,9 +59,9 @@ function RaidGUIControlCardDetails:_create_card_details()
 	local x_spacing = self._card_control:w() + 32
 	local params_card_description_right = {
 		text = "",
+		name = "card_description_label_right",
 		wrap = true,
 		visible = false,
-		name = "card_description_label_right",
 		color = Color.white,
 		layer = self._object:layer() + 1,
 		font = tweak_data.gui.fonts.lato,
@@ -71,12 +71,12 @@ function RaidGUIControlCardDetails:_create_card_details()
 	local icon_y = 8
 	local label_y = icon_y + 64
 	self._experience_bonus_count = self._object:label({
-		w = 160,
-		align = "right",
+		text = "",
 		visible = false,
 		name = "experience_bonus_count",
 		h = 64,
-		text = "",
+		w = 160,
+		align = "right",
 		x = x_spacing + 224,
 		y = icon_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -84,11 +84,11 @@ function RaidGUIControlCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._experience_bonus_label = self._object:label({
-		w = 160,
-		align = "right",
 		visible = false,
 		name = "experience_bonus_label",
 		h = 32,
+		w = 160,
+		align = "right",
 		x = x_spacing + 224,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -98,19 +98,19 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local type_def_icon = tweak_data.challenge_cards.type_definition.card_type_raid.texture_gui
 	self._type_icon = self._object:image({
-		visible = false,
 		name = "type_icon",
+		visible = false,
 		x = x_spacing,
 		y = icon_y,
 		texture = type_def_icon.texture,
 		texture_rect = type_def_icon.texture_rect
 	})
 	self._type_label = self._object:label({
-		w = 96,
-		align = "center",
+		text = "",
 		name = "type_label",
 		h = 32,
-		text = "",
+		w = 96,
+		align = "center",
 		x = x_spacing,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -119,19 +119,19 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 	local rarity_def_icon = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_gui
 	self._rarity_icon = self._object:image({
-		visible = false,
 		name = "rarity_icon",
+		visible = false,
 		x = x_spacing + 128,
 		y = icon_y,
 		texture = rarity_def_icon.texture,
 		texture_rect = rarity_def_icon.texture_rect
 	})
 	self._rarity_label = self._object:label({
-		w = 128,
-		align = "center",
+		text = "",
 		name = "rarity_label",
 		h = 32,
-		text = "",
+		w = 128,
+		align = "center",
 		x = x_spacing + 96,
 		y = label_y,
 		font = RaidGUIControlCardDetails.FONT,
@@ -234,8 +234,8 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 		if not line_data then
 			local gui = tweak_data.gui:get_full_gui_data("ico_condition")
 			local effect_icon = self._object:image({
-				h = 64,
 				w = 64,
+				h = 64,
 				name = "effect_icon_" .. tostring(i),
 				x = x_spacing,
 				y = list_start_y,
@@ -243,12 +243,12 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 				texture_rect = gui.texture_rect
 			})
 			local effect_label = self._object:label({
-				vertical = "center",
-				w = 340,
-				h = 64,
-				wrap = true,
-				align = "left",
 				text = "ABC",
+				w = 340,
+				wrap = true,
+				h = 64,
+				vertical = "center",
+				align = "left",
 				name = "effect_label_" .. tostring(i),
 				x = x_spacing + effect_icon:w() + 8,
 				y = list_start_y,

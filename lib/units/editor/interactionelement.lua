@@ -25,8 +25,8 @@ function InteractionUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, table.map_keys(tweak_data.interaction)))
 	self:_build_value_number(panel, panel_sizer, "override_timer", {
-		min = -1,
-		floats = 1
+		floats = 1,
+		min = -1
 	}, "Can be used to override the interaction time specified in tweak data. -1 means that it should not override.")
 	self:_add_help_text("This element creates an interaction. Override time is optional and will replace tweak data timer (-1 means do not overrride). Use disabled/enabled state on element to set active state on interaction.")
 end

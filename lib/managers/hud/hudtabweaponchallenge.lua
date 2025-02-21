@@ -64,8 +64,8 @@ end
 
 function HUDTabWeaponChallenge:_create_title()
 	local title_params = {
-		text = "INCREASE ACCURACY",
 		name = "weapon_challenge_title",
+		text = "INCREASE ACCURACY",
 		vertical = "center",
 		align = "left",
 		y = HUDTabWeaponChallenge.TITLE_Y,
@@ -81,8 +81,8 @@ end
 
 function HUDTabWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
-		text = "TI",
 		name = "weapon_challenge_tier",
+		text = "TI",
 		vertical = "center",
 		align = "left",
 		y = HUDTabWeaponChallenge.TITLE_Y,
@@ -107,9 +107,9 @@ end
 
 function HUDTabWeaponChallenge:_create_description()
 	local description_params = {
-		text = "Bla bla bla bla",
-		name = "weapon_challenge_description",
 		wrap = true,
+		name = "weapon_challenge_description",
+		text = "Bla bla bla bla",
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDTabWeaponChallenge.TITLE_Y + HUDTabWeaponChallenge.TITLE_H,
 		w = self._inner_panel:w() - HUDTabWeaponChallenge.RIGHT_SIDE_X,
@@ -125,10 +125,10 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local texture_left = "slider_large_left"
 	local texture_right = "slider_large_right"
 	local progress_bar_panel_params = {
-		x = 0,
 		name = "weapon_challenge_progress_bar_panel",
-		vertical = "bottom",
 		is_root_panel = true,
+		vertical = "bottom",
+		x = 0,
 		w = self._inner_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center)
 	}
@@ -148,12 +148,12 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
-		y = 0,
 		name = "weapon_challenge_progress_bar_foreground_panel",
-		x = 0,
+		y = 0,
 		halign = "scale",
 		layer = 2,
 		valign = "scale",
+		x = 0,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	}
@@ -169,13 +169,13 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
-		text = "123/456",
+		y = -2,
 		name = "weapon_challenge_progress_bar_text",
+		text = "123/456",
+		layer = 5,
 		vertical = "center",
 		align = "center",
 		x = 0,
-		y = -2,
-		layer = 5,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		font = tweak_data.gui.fonts.din_compressed,

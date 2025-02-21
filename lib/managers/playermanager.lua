@@ -27,27 +27,27 @@ function PlayerManager:init()
 	}
 	self._viewport_configs[1][1] = {
 		dimensions = {
-			w = 1,
 			y = 0,
 			x = 0,
-			h = 1
+			h = 1,
+			w = 1
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = {
-				w = 1,
 				y = 0,
 				x = 0,
-				h = 0.5
+				h = 0.5,
+				w = 1
 			}
 		},
 		{
 			dimensions = {
-				w = 1,
 				y = 0.5,
 				x = 0,
-				h = 0.5
+				h = 0.5,
+				w = 1
 			}
 		}
 	}
@@ -58,10 +58,6 @@ function PlayerManager:init()
 	self._local_player_minions = 0
 	self._player_states = {
 		foxhole = "ingame_standard",
-		driving = "ingame_driving",
-		bipod = "ingame_standard",
-		carry_corpse = "ingame_standard",
-		carry = "ingame_standard",
 		incapacitated = "ingame_incapacitated",
 		tased = "ingame_electrified",
 		charging = "ingame_standard",
@@ -70,7 +66,11 @@ function PlayerManager:init()
 		bleed_out = "ingame_bleed_out",
 		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
-		freefall = "ingame_freefall"
+		freefall = "ingame_freefall",
+		driving = "ingame_driving",
+		bipod = "ingame_standard",
+		carry_corpse = "ingame_standard",
+		carry = "ingame_standard"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -184,7 +184,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		add_coroutine = nil,
+		distance_sq = nil,
 		selections = {},
 		specials = {}
 	}
@@ -200,7 +200,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		add_coroutine = nil,
+		distance_sq = nil,
 		selections = {},
 		specials = {}
 	}
@@ -3505,9 +3505,9 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
+			disabled = true,
 			icon = "comm_wheel_no",
 			text_id = "",
-			disabled = true,
 			id = "carry_" .. i
 		}
 
@@ -3585,8 +3585,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
-			id = "cant_throw_body",
 			shelf_life = 5,
+			id = "cant_throw_body",
 			duration = 2,
 			text = managers.localization:text("cant_throw_body")
 		})
@@ -3944,8 +3944,8 @@ function PlayerManager:add_weapon_ammo_gain(name_id, amount)
 	if Application:production_build() then
 		self._debug_weapon_ammo_gains = self._debug_weapon_ammo_gains or {}
 		self._debug_weapon_ammo_gains[name_id] = self._debug_weapon_ammo_gains[name_id] or {
-			index = 0,
-			total = 0
+			total = 0,
+			index = 0
 		}
 		self._debug_weapon_ammo_gains[name_id].total = self._debug_weapon_ammo_gains[name_id].total + amount
 		self._debug_weapon_ammo_gains[name_id].index = self._debug_weapon_ammo_gains[name_id].index + 1

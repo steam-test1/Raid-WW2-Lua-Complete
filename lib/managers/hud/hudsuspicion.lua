@@ -21,13 +21,13 @@ function HUDSuspicion:init(hud, sound_source)
 
 	local scale = 1
 	local ring = self._suspicion_panel:bitmap({
+		visible = true,
 		valign = "center",
 		h = 256,
 		name = "ring",
-		visible = true,
+		alpha = 0.55,
 		w = 256,
 		texture = "ui/icons/hud_circle",
-		alpha = 0.55,
 		blend_mode = "add"
 	})
 

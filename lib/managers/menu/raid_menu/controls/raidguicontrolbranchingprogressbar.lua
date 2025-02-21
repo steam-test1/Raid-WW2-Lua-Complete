@@ -13,9 +13,9 @@ function RaidGUIControlBranchingProgressBar:init(parent, params)
 		h = params.h
 	})
 	self._scrollable_panel = self._object:panel({
+		y = 0,
 		x = 0,
 		name = "scrollable_panel",
-		y = 0,
 		w = params.w,
 		h = params.h
 	})

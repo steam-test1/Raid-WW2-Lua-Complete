@@ -19,9 +19,9 @@ function VehicleStateDestroyed:enter(state_data, enter_data)
 
 	if player_vehicle and player_vehicle.vehicle_unit == self._unit then
 		managers.notification:add_notification({
-			id = "hud_vehicle_broken",
 			duration = 3,
 			shelf_life = 5,
+			id = "hud_vehicle_broken",
 			text = managers.localization:text("hud_vehicle_broken")
 		})
 		managers.player:set_player_state("standard")
@@ -35,12 +35,12 @@ function VehicleStateDestroyed:enter(state_data, enter_data)
 
 	if Network:is_server() then
 		local damage_params = {
-			alert_radius = 20000,
 			no_raycast_check_characters = true,
 			damage = 300,
 			player_damage = 125,
 			curve_pow = 3,
 			range = 1200,
+			alert_radius = 20000,
 			hit_pos = self._unit:position(),
 			collision_slotmask = managers.slot:get_mask("explosion_targets"),
 			ignore_unit = self._unit

@@ -293,9 +293,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 	local default_advanced_video_params = {
+		y = 832,
 		x = 1472,
 		name = "default_advanced_video",
-		y = 832,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -378,8 +378,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_db"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = "TRIPLE_BUFFER",
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb")),
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb"))
 	})
@@ -407,8 +407,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = "SMAA",
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa")),
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa"))
 	})
@@ -441,8 +441,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = "high",
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
@@ -480,8 +480,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = "very high",
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high")),
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high"))
 	})
@@ -519,8 +519,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_8"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = 16,
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_16")),
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_16"))
 	})
@@ -548,8 +548,8 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_2"))
 	})
 	table.insert(result, {
-		selected = true,
 		value = 3,
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_3")),
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_3"))
 	})
@@ -607,9 +607,9 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 		text = "120"
 	})
 	table.insert(result, {
-		selected = true,
 		info = "135",
 		value = 135,
+		selected = true,
 		text = "135"
 	})
 	table.insert(result, {
@@ -681,9 +681,9 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chu
 		text = "2048"
 	})
 	table.insert(result, {
-		selected = true,
 		info = "4096",
 		value = 4096,
+		selected = true,
 		text = "4096"
 	})
 

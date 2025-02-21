@@ -285,9 +285,9 @@ keys - use key curve over time]]
 
 	local function validate_lifetime(p)
 		local ret = {
-			valid = true,
 			node = nil,
-			message = ""
+			message = "",
+			valid = true
 		}
 		local a = tonumber(p._value)
 

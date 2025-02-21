@@ -451,29 +451,29 @@ function ProjectilesTweakData:_init_thermite(tweak_data)
 	table.insert(self._projectiles_index, "thermite")
 
 	self.thermite = {
-		damage = 10,
+		fire_tweak_id = "thermite_grenade",
+		init_timer = 1,
+		alert_radius = 980,
 		time_cheat = 1,
+		range = 330,
+		player_damage = 4,
+		damage = 10,
+		is_a_grenade = true,
 		no_cheat_count = true,
 		expire_t = 1.48,
 		throw_allowed_expire_t = 0.662,
-		alert_radius = 980,
+		repeat_expire_t = 1.5,
 		pickup_filter = "nopickup",
 		max_amount = 1,
 		throwable = true,
 		impact_detonation = true,
 		anim_global_param = "projectile_frag",
 		icon = "thermite_grenade",
-		range = 330,
 		unit_dummy = "units/upd_blaze/weapons/gre_thermite/wpn_tps_gre_thermite",
-		is_a_grenade = true,
 		unit_hand = "units/upd_blaze/weapons/gre_thermite/wpn_fps_gre_thermite",
-		repeat_expire_t = 1.5,
 		unit = "units/upd_blaze/weapons/gre_thermite/wpn_prj_gre_thermite",
 		launch_speed = 300,
 		name_id = "bm_grenade_thermite",
-		fire_tweak_id = "thermite_grenade",
-		init_timer = 1,
-		player_damage = 4,
 		physic_effect = tweak_data.physics_effects.damp_rotation,
 		upgrade_amount = {
 			upgrade = "warcry_grenade_refill_amounts",
@@ -488,18 +488,18 @@ end
 
 function ProjectilesTweakData:_init_flamer_incendiary(tweak_data)
 	self.flamer_incendiary = {
-		damage = 10,
 		player_damage = 25,
-		no_cheat_count = false,
-		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
-		launch_speed = 350,
-		alert_radius = 1500,
-		name_id = "bm_grenade_molotov",
 		fire_tweak_id = "explosive_barrel",
 		impact_detonation = true,
 		killzone_range = 0,
+		alert_radius = 1500,
 		range = 250,
-		unit_dummy = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary_husk"
+		unit_dummy = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary_husk",
+		damage = 10,
+		no_cheat_count = false,
+		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
+		launch_speed = 350,
+		name_id = "bm_grenade_molotov"
 	}
 
 	table.insert(self._projectiles_index, "flamer_incendiary")
@@ -571,8 +571,8 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 	}
 	self.gold_bar.animations.equip_id = "equip_welrod"
 	self.gold_bar.sounds = {
-		impact = "gold_bar_hit",
-		flyby = "grenade_handle_fly"
+		flyby = "grenade_handle_fly",
+		impact = "gold_bar_hit"
 	}
 	self.gold_bar.gui = {
 		height_offset = -14,

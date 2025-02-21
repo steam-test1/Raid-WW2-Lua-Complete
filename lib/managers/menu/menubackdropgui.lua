@@ -14,8 +14,8 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 		self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 		self._black_bg_ws:panel():rect({
-			valign = "scale",
 			halign = "scale",
+			valign = "scale",
 			layer = -1000,
 			name = "bg",
 			color = Color.black
@@ -31,47 +31,47 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 	debug_pause("ASDFASDFASFASFASDFASFSADFASFSAFSA")
 
 	self._panel = self._workspace:panel():panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 0,
-		name = "panel"
+		name = "panel",
+		valign = "grow",
+		halign = "grow"
 	})
 
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 0,
-		name = "base_layer"
+		name = "base_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 1,
-		name = "pattern_layer"
+		name = "pattern_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 2,
-		name = "item_background_layer"
+		name = "item_background_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 3,
-		name = "particles_layer"
+		name = "particles_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 4,
-		name = "light_layer"
+		name = "light_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self._panel:panel({
-		valign = "grow",
-		halign = "grow",
 		layer = 5,
-		name = "item_foreground_layer"
+		name = "item_foreground_layer",
+		valign = "grow",
+		halign = "grow"
 	})
 	self:setup_saferect_shape()
 
@@ -121,8 +121,8 @@ function MenuBackdropGUI:create_black_borders()
 	self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 	self._black_bg_ws:panel():rect({
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		layer = -1000,
 		name = "bg",
 		color = Color.black
@@ -361,8 +361,8 @@ function MenuBackdropGUI:_create_particle()
 	local texture_rect_y = (math.random(self._column) - 1) * 32
 	local particle = particles_layer:bitmap({
 		w = 32,
-		h = 32,
 		alpha = 0,
+		h = 32,
 		texture = self._bitmap_texture,
 		texture_rect = {
 			texture_rect_x,

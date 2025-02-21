@@ -547,8 +547,8 @@ function CoreWorldCameraManager:play_world_camera_sequence(name, sequence, stay_
 
 	if not self._sound_environment_check_object then
 		self._sound_environment_check_object = managers.sound_environment:add_check_object({
-			primary = true,
 			active = false,
+			primary = true,
 			object = self._camera
 		})
 	end

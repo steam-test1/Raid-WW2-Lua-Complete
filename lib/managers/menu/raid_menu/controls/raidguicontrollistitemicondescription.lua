@@ -50,8 +50,8 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_sideline()
 	local sideline_params = {
-		x = 0,
 		alpha = 0,
+		x = 0,
 		y = (self._params.h - RaidGUIControlListItemIconDescription.ICON_HEIGHT) / 2,
 		w = RaidGUIControlListItemIconDescription.SIDELINE_W,
 		h = RaidGUIControlListItemIconDescription.ICON_HEIGHT,
@@ -79,8 +79,8 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_title()
 	local title_params = {
-		y = 0,
 		vertical = "center",
+		y = 0,
 		name = "list_item_title_" .. tostring(self._name),
 		x = self._icon:x() + self._icon:w() + RaidGUIControlListItemIconDescription.ICON_PADDING_RIGHT,
 		w = self._params.w,
@@ -102,8 +102,8 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_description()
 	local description_params = {
-		wrap = true,
 		vertical = "center",
+		wrap = true,
 		name = "list_item_description_" .. tostring(self._name),
 		x = self._title:x(),
 		y = self._title:y() + self._title:h() + RaidGUIControlListItemIconDescription.TITLE_PADDING_DOWN,

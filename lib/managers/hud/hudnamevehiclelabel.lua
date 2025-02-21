@@ -27,12 +27,12 @@ function HUDNameVehicleLabel:_create_name()
 	}
 	local crim_color = tweak_data.chat_colors[1]
 	local text = self._object:text({
+		w = 256,
+		name = "text",
 		h = 25,
 		layer = -1,
 		vertical = "top",
 		align = "left",
-		w = 256,
-		name = "text",
 		text = utf8.to_upper(self._vehicle_name),
 		font = HUDNameLabel.PLAYER_NAME_FONT,
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
@@ -49,13 +49,13 @@ function HUDNameVehicleLabel:_create_name()
 		color = (crim_color * 1.1):with_alpha(1)
 	})
 	local bag_number = self._object:text({
+		w = 32,
+		name = "bag_number",
 		h = 18,
+		visible = false,
 		layer = -1,
 		vertical = "top",
 		align = "left",
-		w = 32,
-		name = "bag_number",
-		visible = false,
 		text = utf8.to_upper(""),
 		font = HUDNameLabel.PLAYER_NAME_FONT,
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
@@ -63,26 +63,26 @@ function HUDNameVehicleLabel:_create_name()
 	})
 
 	self._object:text({
-		h = 18,
-		layer = -1,
-		align = "center",
 		w = 256,
 		name = "cheater",
+		h = 18,
 		visible = false,
+		layer = -1,
+		align = "center",
 		text = utf8.to_upper(managers.localization:text("menu_hud_cheater")),
 		font = HUDNameLabel.PLAYER_NAME_FONT,
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
 		color = tweak_data.screen_colors.pro_color
 	})
 	self._object:text({
+		w = 256,
+		name = "action",
 		h = 18,
+		visible = false,
 		rotation = 360,
 		layer = -1,
 		vertical = "bottom",
 		align = "left",
-		w = 256,
-		name = "action",
-		visible = false,
 		text = utf8.to_upper("Fixing"),
 		font = HUDNameLabel.PLAYER_NAME_FONT,
 		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,

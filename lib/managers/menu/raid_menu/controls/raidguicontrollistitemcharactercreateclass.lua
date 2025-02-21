@@ -37,12 +37,12 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 		color = tweak_data.gui.colors.raid_red
 	})
 	self._class_name_label = self._object:label({
+		align = "left",
+		h = 28,
 		w = 174,
 		y = 34,
 		x = 96,
 		vertical = "center",
-		align = "left",
-		h = 28,
 		text = self:translate(tweak_data.skilltree.classes[self._class_name].name_id, true),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,

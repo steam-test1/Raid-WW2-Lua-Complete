@@ -473,9 +473,9 @@ function CoreCutscenePlayer:_gui_panel(gui_name, preloading)
 		self._owned_gui_objects = self._owned_gui_objects or {}
 		local viewport_rect = self:_viewport_rect()
 		panel = self._workspace:panel():panel({
-			visible = false,
 			valign = "grow",
 			halign = "grow",
+			visible = false,
 			name = gui_name,
 			x = viewport_rect.px,
 			y = viewport_rect.py,
@@ -615,12 +615,12 @@ function CoreCutscenePlayer:_full_viewport_rect()
 	local resolution = RenderSettings.resolution
 
 	return {
-		py = 0,
-		y = 0,
 		w = 1,
 		x = 0,
-		h = 1,
 		px = 0,
+		h = 1,
+		py = 0,
+		y = 0,
 		pw = resolution.x,
 		ph = resolution.y
 	}

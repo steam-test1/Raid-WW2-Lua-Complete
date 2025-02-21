@@ -40,8 +40,8 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
+		sync_explosion_results = nil,
 		kills = 0,
-		pitch = nil,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -1914,10 +1914,10 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
-	sound_muffle_effect = true,
-	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	sound_event = "round_explode",
 	on_unit = true,
+	sound_muffle_effect = true,
+	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.explosive_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2020,8 +2020,8 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -2047,9 +2047,9 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
-	sound_muffle_effect = true,
 	sound_event = "round_explode",
 	on_unit = true,
+	sound_muffle_effect = true,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.flame_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2235,10 +2235,10 @@ end
 
 DOTBulletBase = DOTBulletBase or class(InstantBulletBase)
 DOTBulletBase.DOT_DATA = {
-	dot_damage = 0.5,
-	dot_tick_period = 0.5,
 	dot_length = 6,
-	hurt_animation_chance = 1
+	hurt_animation_chance = 1,
+	dot_damage = 0.5,
+	dot_tick_period = 0.5
 }
 
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)

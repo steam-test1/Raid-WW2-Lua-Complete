@@ -37,14 +37,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._class_icon:hide()
 
 	self._player_name = self._object:label({
-		h = 64,
-		w = 336,
-		name = "player_name",
 		y = 0,
 		x = 80,
 		text = "PLAYER NAME 1",
+		name = "player_name",
 		vertical = "center",
 		align = "left",
+		h = 64,
+		w = 336,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -54,14 +54,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_name:hide()
 
 	self._player_class_nation = self._object:label({
-		h = 64,
-		w = 336,
-		name = "player_class_nation",
 		y = 32,
 		x = 80,
 		text = "INFILTRATOR  |  GERMAN",
+		name = "player_class_nation",
 		vertical = "center",
 		align = "left",
+		h = 64,
+		w = 336,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects,
@@ -82,14 +82,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._host_icon:hide()
 
 	self._player_level = self._object:label({
-		h = 64,
-		w = 64,
-		name = "player_level",
 		y = 0,
 		x = 450,
 		text = "17",
+		name = "player_level",
 		vertical = "center",
 		align = "right",
+		h = 64,
+		w = 64,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white,

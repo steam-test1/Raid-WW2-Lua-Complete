@@ -210,8 +210,8 @@ function MissionManager:post_init()
 
 	self._fading_debug_output:set_leftbottom(0, self._workspace:height() / 3)
 	self._fading_debug_output:script().configure({
-		max_rows = 20,
-		font_size = 18
+		font_size = 18,
+		max_rows = 20
 	})
 
 	self._persistent_debug_output = self._workspace:panel():gui(Idstring("core/guis/core_persistent_debug_output"))

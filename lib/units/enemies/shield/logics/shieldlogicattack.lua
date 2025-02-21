@@ -258,8 +258,8 @@ function ShieldLogicAttack._cancel_optimal_attempt(data, my_data)
 		my_data.optimal_path = nil
 	elseif my_data.walking_to_optimal_pos then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)

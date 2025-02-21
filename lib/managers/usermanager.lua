@@ -28,10 +28,10 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
-			editor = nil,
+			reset_network_setting_map = nil,
+			value = nil,
+			dropin_loading_screen = nil,
 			initializing = true,
-			debug_post_effects_enabled = nil,
-			type = nil,
 			setting_map = {},
 			setting_data_map = {},
 			setting_data_id_to_name_map = {},

@@ -24,16 +24,16 @@ local bezier_curve = {
 CopActionShoot = CopActionShoot or class()
 CopActionShoot._ik_presets = {
 	spine = {
-		update = "_update_ik_spine",
 		start = "_begin_ik_spine",
-		get_blend = "_get_blend_ik_spine",
-		stop = "_stop_ik_spine"
+		update = "_update_ik_spine",
+		stop = "_stop_ik_spine",
+		get_blend = "_get_blend_ik_spine"
 	},
 	r_arm = {
-		update = "_update_ik_r_arm",
 		start = "_begin_ik_r_arm",
-		get_blend = "_get_blend_ik_r_arm",
-		stop = "_stop_ik_r_arm"
+		update = "_update_ik_r_arm",
+		stop = "_stop_ik_r_arm",
+		get_blend = "_get_blend_ik_r_arm"
 	}
 }
 

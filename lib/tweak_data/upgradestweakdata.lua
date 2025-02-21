@@ -1787,11 +1787,11 @@ function UpgradesTweakData:_create_raid_definitions_abilities()
 
 	self.values.player.warcry_dmg = {
 		{
+			cooldown = 10,
 			time = 1,
 			data = 1,
 			name = 1,
-			radius = 2,
-			cooldown = 10
+			radius = 2
 		}
 	}
 
@@ -2899,9 +2899,9 @@ function UpgradesTweakData:_init_pd2_values()
 	self.morale_boost_reload_speed_bonus = 1.2
 	self.morale_boost_base_cooldown = 3.5
 	self.hostage_max_num = {
-		damage_dampener = 1,
-		health_regen = 1,
 		health = 10,
+		health_regen = 1,
+		damage_dampener = 1,
 		stamina = 10
 	}
 	self.on_headshot_dealt_cooldown = 2
@@ -3981,19 +3981,19 @@ function UpgradesTweakData:_player_definitions()
 		}
 	}
 	self.definitions.toolset = {
-		image_slice = "upgrades_toolset_slice",
-		icon = "equipment_toolset",
 		subtitle_id = "debug_upgrade_toolset1",
-		unlock_lvl = 0,
+		image_slice = "upgrades_toolset_slice",
 		title_id = "debug_upgrade_player_upgrade",
 		equipment_id = "toolset",
-		name_id = "debug_upgrade_toolset1",
-		slot = 2,
-		category = "equipment",
 		description_text_id = "toolset",
+		slot = 2,
+		unlock_lvl = 0,
 		step = 1,
 		tree = 4,
+		category = "equipment",
 		image = "upgrades_toolset",
+		icon = "equipment_toolset",
+		name_id = "debug_upgrade_toolset1",
 		aquire = {
 			upgrade = "toolset1"
 		}
@@ -4004,12 +4004,12 @@ function UpgradesTweakData:_player_definitions()
 		local unlock_lvl = 3
 		local prio = i == 1 and "high"
 		self.definitions["toolset" .. i] = {
-			image_slice = "upgrades_toolset_slice",
-			icon = "equipment_toolset",
 			title_id = "debug_upgrade_player_upgrade",
 			description_text_id = "toolset",
+			image_slice = "upgrades_toolset_slice",
 			tree = 4,
 			image = "upgrades_toolset",
+			icon = "equipment_toolset",
 			step = self.steps.player.toolset[i],
 			category = UpgradesTweakData.DEF_CAT_FEATURE,
 			subtitle_id = "debug_upgrade_toolset" .. i,
@@ -4028,20 +4028,20 @@ end
 
 function UpgradesTweakData:_trip_mine_definitions()
 	self.definitions.trip_mine = {
-		image_slice = "upgrades_tripmines_slice",
-		icon = "equipment_trip_mine",
-		prio = "high",
 		subtitle_id = "debug_trip_mine",
-		unlock_lvl = 0,
+		image_slice = "upgrades_tripmines_slice",
 		title_id = "debug_upgrade_new_equipment",
 		equipment_id = "trip_mine",
-		name_id = "debug_trip_mine",
-		slot = 1,
-		category = "equipment",
 		description_text_id = "trip_mine",
+		slot = 1,
+		prio = "high",
+		unlock_lvl = 0,
 		step = 4,
 		tree = 2,
-		image = "upgrades_tripmines"
+		category = "equipment",
+		image = "upgrades_tripmines",
+		icon = "equipment_trip_mine",
+		name_id = "debug_trip_mine"
 	}
 	self.definitions.trip_mine_quantity_increase_1 = {
 		name_id = "menu_trip_mine_quantity_increase_1",
@@ -4074,20 +4074,20 @@ end
 
 function UpgradesTweakData:_ammo_bag_definitions()
 	self.definitions.ammo_bag = {
-		image_slice = "upgrades_ammobag_slice",
-		icon = "equipment_ammo_bag",
-		prio = "high",
 		subtitle_id = "debug_ammo_bag",
-		unlock_lvl = 0,
+		image_slice = "upgrades_ammobag_slice",
 		title_id = "debug_upgrade_new_equipment",
 		equipment_id = "ammo_bag",
-		name_id = "debug_ammo_bag",
-		slot = 1,
-		category = "equipment",
 		description_text_id = "ammo_bag",
+		slot = 1,
+		prio = "high",
+		unlock_lvl = 0,
 		step = 2,
 		tree = 1,
-		image = "upgrades_ammobag"
+		category = "equipment",
+		image = "upgrades_ammobag",
+		icon = "equipment_ammo_bag",
+		name_id = "debug_ammo_bag"
 	}
 
 	for i, _ in ipairs(self.values.ammo_bag.ammo_increase) do
@@ -4095,13 +4095,13 @@ function UpgradesTweakData:_ammo_bag_definitions()
 		local unlock_lvl = 11
 		local prio = i == 1 and "high"
 		self.definitions["ammo_bag_ammo_increase" .. i] = {
-			image_slice = "upgrades_ammobag_slice",
-			icon = "equipment_ammo_bag",
 			title_id = "debug_ammo_bag",
-			category = "equipment_upgrade",
 			description_text_id = "ammo_bag_increase",
+			image_slice = "upgrades_ammobag_slice",
 			tree = 1,
+			category = "equipment_upgrade",
 			image = "upgrades_ammobag",
+			icon = "equipment_ammo_bag",
 			step = self.steps.ammo_bag.ammo_increase[i],
 			name_id = "debug_upgrade_ammo_bag_ammo_increase" .. i,
 			subtitle_id = "debug_upgrade_amount_increase" .. i,
@@ -4119,20 +4119,20 @@ end
 
 function UpgradesTweakData:_doctor_bag_definitions()
 	self.definitions.doctor_bag = {
-		image_slice = "upgrades_doctorbag_slice",
-		icon = "equipment_doctor_bag",
-		prio = "high",
 		subtitle_id = "debug_doctor_bag",
-		unlock_lvl = 2,
+		image_slice = "upgrades_doctorbag_slice",
 		title_id = "debug_upgrade_new_equipment",
 		equipment_id = "doctor_bag",
-		name_id = "debug_doctor_bag",
-		slot = 1,
-		category = "equipment",
 		description_text_id = "doctor_bag",
+		slot = 1,
+		prio = "high",
+		unlock_lvl = 2,
 		step = 5,
 		tree = 3,
-		image = "upgrades_doctorbag"
+		category = "equipment",
+		image = "upgrades_doctorbag",
+		icon = "equipment_doctor_bag",
+		name_id = "debug_doctor_bag"
 	}
 
 	for i, _ in ipairs(self.values.doctor_bag.amount_increase) do
@@ -4140,13 +4140,13 @@ function UpgradesTweakData:_doctor_bag_definitions()
 		local unlock_lvl = 3
 		local prio = i == 1 and "high"
 		self.definitions["doctor_bag_amount_increase" .. i] = {
-			image_slice = "upgrades_doctorbag_slice",
-			icon = "equipment_doctor_bag",
 			title_id = "debug_doctor_bag",
-			category = "equipment_upgrade",
 			description_text_id = "doctor_bag_increase",
+			image_slice = "upgrades_doctorbag_slice",
 			tree = 3,
+			category = "equipment_upgrade",
 			image = "upgrades_doctorbag",
+			icon = "equipment_doctor_bag",
 			step = self.steps.doctor_bag.amount_increase[i],
 			name_id = "debug_upgrade_doctor_bag_amount_increase" .. i,
 			subtitle_id = "debug_upgrade_amount_increase" .. i,
@@ -4696,18 +4696,18 @@ end
 
 function UpgradesTweakData:_shape_charge_definitions()
 	self.definitions.shape_charge = {
+		name_id = "menu_shape_charge",
 		category = "equipment",
-		equipment_id = "shape_charge",
-		name_id = "menu_shape_charge"
+		equipment_id = "shape_charge"
 	}
 end
 
 function UpgradesTweakData:_first_aid_kit_definitions()
 	self.definitions.first_aid_kit = {
+		name_id = "menu_equipment_first_aid_kit",
 		slot = 1,
 		category = "equipment",
-		equipment_id = "first_aid_kit",
-		name_id = "menu_equipment_first_aid_kit"
+		equipment_id = "first_aid_kit"
 	}
 	self.definitions.first_aid_kit_quantity_increase_1 = {
 		incremental = true,

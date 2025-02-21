@@ -30,9 +30,9 @@ function RaidMenuOptionsSound:_layout_sound()
 	local start_y = 320
 	local default_width = 512
 	local master_params = {
-		name = "slider_master",
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
+		name = "slider_master",
 		description = utf8.to_upper(managers.localization:text("menu_master_volume")),
 		x = start_x,
 		y = start_y,
@@ -43,9 +43,9 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_master_volume = self._root_panel:slider(master_params)
 	local music_params = {
-		name = "slider_music",
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
+		name = "slider_music",
 		description = utf8.to_upper(managers.localization:text("menu_music_volume")),
 		x = start_x,
 		y = master_params.y + RaidGuiBase.PADDING,
@@ -57,9 +57,9 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_music_volume = self._root_panel:slider(music_params)
 	local sfx_params = {
-		name = "slider_sfx",
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
+		name = "slider_sfx",
 		description = utf8.to_upper(managers.localization:text("menu_sfx_volume")),
 		x = start_x,
 		y = music_params.y + RaidGuiBase.PADDING,
@@ -71,9 +71,9 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_sfx_volume = self._root_panel:slider(sfx_params)
 	local voice_over_params = {
-		name = "slider_voice_over",
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
+		name = "slider_voice_over",
 		description = utf8.to_upper(managers.localization:text("menu_voice_over_volume")),
 		x = start_x,
 		y = sfx_params.y + RaidGuiBase.PADDING,
@@ -85,9 +85,9 @@ function RaidMenuOptionsSound:_layout_sound()
 	}
 	self._progress_bar_menu_voice_over_volume = self._root_panel:slider(voice_over_params)
 	local voice_chat_params = {
-		name = "slider_voice_chat",
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
+		name = "slider_voice_chat",
 		description = utf8.to_upper(managers.localization:text("menu_voice_volume")),
 		x = start_x,
 		y = voice_over_params.y + RaidGuiBase.PADDING,

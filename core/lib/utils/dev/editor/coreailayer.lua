@@ -58,8 +58,8 @@ function AiLayer:save(save_params)
 	SystemFS:close(file)
 
 	local t = {
-		entry = "ai_nav_graphs",
 		single_data_block = true,
+		entry = "ai_nav_graphs",
 		data = {
 			file = file_name
 		}
@@ -68,8 +68,8 @@ function AiLayer:save(save_params)
 	managers.editor:add_save_data(t)
 
 	local t = {
-		entry = "ai_settings",
 		single_data_block = true,
+		entry = "ai_settings",
 		data = {
 			ai_settings = self._ai_settings,
 			ai_data = managers.ai_data:save_data()
@@ -87,8 +87,8 @@ function AiLayer:save(save_params)
 		SystemFS:close(mop_file)
 
 		local t = {
-			entry = "ai_mop_graphs",
 			single_data_block = true,
+			entry = "ai_mop_graphs",
 			data = {
 				file = mop_filename
 			}
@@ -211,9 +211,9 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
 				r = 1,
-				b = 1,
 				thick = true,
 				height_offset = 0,
+				b = 1,
 				g = 1,
 				from_unit = point.unit,
 				to_unit = to_unit,
@@ -270,32 +270,32 @@ function AiLayer:build_panel(notebook)
 
 	button_sizer1:add(calc_btn, 0, 5, "RIGHT")
 	calc_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_calc_graphs"), {
-		vis_graph = true,
-		build_type = "all"
+		build_type = "all",
+		vis_graph = true
 	})
 
 	local calc_selected_btn = EWS:Button(self._ews_panel, "Selected", "", "BU_EXACTFIT,NO_BORDER")
 
 	button_sizer1:add(calc_selected_btn, 0, 5, "RIGHT")
 	calc_selected_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_calc_graphs"), {
-		vis_graph = true,
-		build_type = "selected"
+		build_type = "selected",
+		vis_graph = true
 	})
 
 	local calc_ground_btn = EWS:Button(self._ews_panel, "Ground All", "", "BU_EXACTFIT,NO_BORDER")
 
 	button_sizer1:add(calc_ground_btn, 0, 5, "RIGHT")
 	calc_ground_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_calc_graphs"), {
-		vis_graph = false,
-		build_type = "all"
+		build_type = "all",
+		vis_graph = false
 	})
 
 	local calc_ground_selected_btn = EWS:Button(self._ews_panel, "Ground Selected", "", "BU_EXACTFIT,NO_BORDER")
 
 	button_sizer1:add(calc_ground_selected_btn, 0, 5, "RIGHT")
 	calc_ground_selected_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "_calc_graphs"), {
-		vis_graph = false,
-		build_type = "selected"
+		build_type = "selected",
+		vis_graph = false
 	})
 
 	local calc_vis_graph_btn = EWS:Button(self._ews_panel, "Visibility", "", "BU_EXACTFIT,NO_BORDER")
@@ -323,14 +323,14 @@ function AiLayer:build_panel(notebook)
 	build_settings:add(self._all_visible, 0, 0, "EXPAND")
 
 	self._ray_length_params = {
-		value = 150,
+		floats = 0,
 		name = "Ray length [cm]:",
+		value = 150,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
-		floats = 0,
 		panel = self._ews_panel,
 		sizer = build_settings
 	}
@@ -400,14 +400,14 @@ end
 function AiLayer:_build_ai_unit_settings()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Unit settings")
 	local suspicion_multiplier = {
-		value = 1,
+		floats = 1,
 		name = "Suspicion Multiplier:",
+		value = 1,
 		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 1,
 		tooltip = "multiplier applied to suspicion buildup rate",
-		floats = 1,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -417,14 +417,14 @@ function AiLayer:_build_ai_unit_settings()
 	suspicion_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_suspicion_mul"), nil)
 
 	local detection_multiplier = {
-		value = 1,
+		floats = 2,
 		name = "Detection Multiplier:",
+		value = 1,
 		ctrlr_proportions = 4,
 		name_proportions = 1,
 		sizer_proportions = 1,
 		min = 0.01,
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
-		floats = 2,
 		panel = self._ews_panel,
 		sizer = sizer
 	}
@@ -536,13 +536,13 @@ function AiLayer:_build_motion_path_section()
 	path_type_ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_mop_type"), nil)
 
 	local speed_limit = {
-		value = 50,
+		floats = 1,
 		name = "Default Speed Limit [km/h]:",
+		value = 50,
 		ctrlr_proportions = 3,
 		name_proportions = 1,
 		min = -1,
 		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
-		floats = 1,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer
 	}

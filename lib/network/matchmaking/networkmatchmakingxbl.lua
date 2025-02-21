@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			comparision_type = nil
+			dialog_creating_lobby_title = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 

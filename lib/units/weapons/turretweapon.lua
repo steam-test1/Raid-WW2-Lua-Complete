@@ -341,8 +341,8 @@ function TurretWeapon:deactivate()
 
 			if Network:is_server() then
 				self._puppet_unit:brain():set_objective({
-					type = "attack",
-					is_default = true
+					is_default = true,
+					type = "attack"
 				})
 			end
 		end
@@ -1171,9 +1171,9 @@ function TurretWeapon:_create_turret_SO()
 		fail_clbk = callback(self, self, "on_turret_SO_failed"),
 		complete_clbk = callback(self, self, "on_turret_SO_completed"),
 		action = {
-			type = "act",
-			needs_full_blend = true,
 			align_sync = true,
+			needs_full_blend = true,
+			type = "act",
 			body_part = 1,
 			variant = variant,
 			blocks = {
@@ -1442,8 +1442,8 @@ function TurretWeapon:_cancel_active_SO()
 			admin_unit_brain:set_logic("idle", nil)
 			admin_unit_brain:action_request({
 				body_part = 2,
-				type = "idle",
-				sync = true
+				sync = true,
+				type = "idle"
 			})
 			self:on_turret_SO_failed(self._administered_unit_data.unit)
 

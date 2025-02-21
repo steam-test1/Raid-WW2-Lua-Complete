@@ -283,8 +283,8 @@ function CivilianLogicIdle.damage_clbk(data, damage_info)
 	end
 
 	data.unit:brain():set_objective({
-		type = "free",
 		is_default = true,
+		type = "free",
 		dmg_info = damage_info
 	})
 end

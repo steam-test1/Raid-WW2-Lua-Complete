@@ -83,48 +83,48 @@ end
 
 function InteractionTweakData:_init_shared_sounds()
 	self.LOCKPICK_SOUNDS = {
+		dialog_fail = "player_gen_lockpick_fail",
+		dialog_success = "player_gen_lock_picked",
 		dialog_enter = "player_gen_picking_lock",
 		failed = "lock_fail",
 		success = "success",
-		dialog_fail = "player_gen_lockpick_fail",
-		dialog_success = "player_gen_lock_picked",
 		circles = {
 			{
-				lock = "lock_a",
-				mechanics = "lock_mechanics_a"
+				mechanics = "lock_mechanics_a",
+				lock = "lock_a"
 			},
 			{
-				lock = "lock_b",
-				mechanics = "lock_mechanics_b"
+				mechanics = "lock_mechanics_b",
+				lock = "lock_b"
 			},
 			{
-				lock = "lock_c",
-				mechanics = "lock_mechanics_c"
+				mechanics = "lock_mechanics_c",
+				lock = "lock_c"
 			},
 			{
-				lock = "lock_b",
-				mechanics = "lock_mechanics_b"
+				mechanics = "lock_mechanics_b",
+				lock = "lock_b"
 			}
 		}
 	}
 	self.DYNAMITE_SOUNDS = {
+		apply = "lock_a",
+		start = "plant_dynamite_start",
+		dialog_success = "player_gen_fuse_rigged",
 		finish = "plant_dynamite_finish",
 		dialog_enter = "player_gen_rigging_fuse",
 		failed = "lock_fail",
 		success = "success",
-		tick = "lock_mechanics_a",
-		start = "plant_dynamite_start",
-		apply = "lock_a",
-		dialog_success = "player_gen_fuse_rigged"
+		tick = "lock_mechanics_a"
 	}
 	self.REWIRE_SOUNDS = {
+		dialog_fail = "player_gen_lockpick_fail",
 		apply = "lock_a",
+		dialog_success = "player_gen_lock_picked",
 		dialog_enter = "player_gen_picking_lock",
 		failed = "lock_fail",
 		success = "success",
-		tick = "lock_mechanics_a",
-		dialog_fail = "player_gen_lockpick_fail",
-		dialog_success = "player_gen_lock_picked"
+		tick = "lock_mechanics_a"
 	}
 end
 
@@ -216,12 +216,12 @@ function InteractionTweakData:_init_interactions()
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	}
 	self.health_bag = {
+		icon = "equipment_doctor_bag",
+		contour = "deployable",
 		action_text_id = "hud_action_healing",
 		blocked_hint = "hint_full_health",
 		text_id = "hud_interact_doctor_bag_heal",
 		blocked_hint_sound = "no_more_health",
-		icon = "equipment_doctor_bag",
-		contour = "deployable",
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	}
 	self.health_bag_small = clone(self.health_bag)
@@ -1782,10 +1782,10 @@ function InteractionTweakData:_init_interactions()
 	self.close_container.text_id = "hud_close_container"
 	self.close_container.action_text_id = "hud_action_closing_container"
 	self.press_take_dogtags = {
-		sound_done = "dogtags_pickup",
 		dot_limit = 0.935,
-		text_id = "hud_int_press_take_dogtags",
 		start_active = true,
+		sound_done = "dogtags_pickup",
+		text_id = "hud_int_press_take_dogtags",
 		interact_distance = self.SMALL_OBJECT_INTERACTION_DISTANCE,
 		timer = self.INTERACT_TIMER_INSTA
 	}
@@ -1795,10 +1795,10 @@ function InteractionTweakData:_init_interactions()
 	self.hold_take_dogtags.timer = self.INTERACT_TIMER_VERY_SHORT
 	self.hold_take_dogtags.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_GENERIC
 	self.press_take_loot = {
-		start_active = true,
 		dot_limit = 0.935,
-		text_id = "hud_int_press_take_loot",
+		start_active = true,
 		sound_done = "pickup_tools",
+		text_id = "hud_int_press_take_loot",
 		timer = self.INTERACT_TIMER_INSTA
 	}
 	self.press_take_loot_tight = deep_clone(self.press_take_loot)
@@ -2559,9 +2559,9 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 1.5,
 		options = {
 			{
+				icon = "comm_wheel_yes",
 				id = "yes",
 				text_id = "com_wheel_yes",
-				icon = "comm_wheel_yes",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2572,9 +2572,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_no",
 				id = "no",
 				text_id = "com_wheel_no",
-				icon = "comm_wheel_no",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2585,9 +2585,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_found_it",
 				id = "found_it",
 				text_id = "com_wheel_found_it",
-				icon = "comm_wheel_found_it",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2598,9 +2598,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_not_here",
 				id = "not_here",
 				text_id = "com_wheel_not_here",
-				icon = "comm_wheel_not_here",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2611,9 +2611,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_follow_me",
 				id = "follow_me",
 				text_id = "com_wheel_follow_me",
-				icon = "comm_wheel_follow_me",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2624,9 +2624,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_wait",
 				id = "wait",
 				text_id = "com_wheel_wait",
-				icon = "comm_wheel_wait",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2637,9 +2637,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_assistance",
 				id = "assistance",
 				text_id = "com_wheel_assistance",
-				icon = "comm_wheel_assistance",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2650,9 +2650,9 @@ function InteractionTweakData:_init_comwheels()
 				}
 			},
 			{
+				icon = "comm_wheel_enemy",
 				id = "enemy",
 				text_id = "com_wheel_enemy",
-				icon = "comm_wheel_enemy",
 				color = com_wheel_color,
 				clbk = com_wheel_clbk,
 				clbk_data = {
@@ -2670,10 +2670,10 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 0.35,
 		options = {
 			{
-				id = "drop_all",
-				multiplier = 2,
-				text_id = "hud_carry_drop_all",
 				icon = "comm_wheel_follow_me",
+				id = "drop_all",
+				text_id = "hud_carry_drop_all",
+				multiplier = 2,
 				clbk = function ()
 					managers.player:drop_all_carry()
 				end
@@ -2686,25 +2686,25 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 0.35,
 		options = {
 			{
-				id = "airdrop_ammo",
 				icon = "comm_wheel_follow_me",
 				text_id = "hud_airdrop_ammo",
+				id = "airdrop_ammo",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big")
 				end
 			},
 			{
-				id = "airdrop_health",
 				icon = "comm_wheel_follow_me",
 				text_id = "hud_airdrop_health",
+				id = "airdrop_health",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/health/pku_ammo_big")
 				end
 			},
 			{
-				id = "airdrop_grenades",
 				icon = "comm_wheel_follow_me",
 				text_id = "hud_airdrop_grenades",
+				id = "airdrop_grenades",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_big")
 				end
@@ -2875,13 +2875,13 @@ function InteractionTweakData:_init_minigames()
 	self.sii_lockpick_easy_y_direction = deep_clone(self.sii_lockpick_easy)
 	self.sii_lockpick_easy_y_direction.axis = "y"
 	self.sii_lockpick_medium = {
-		number_of_circles = 2,
-		legend_exit_text_id = "hud_legend_lockpicking_exit",
 		interact_distance = 200,
-		action_text_id = "hud_action_sii_lockpicking",
+		number_of_circles = 2,
 		text_id = "hud_sii_lockpick",
-		legend_interact_text_id = "hud_legend_lockpicking_interact",
 		icon = "develop",
+		legend_interact_text_id = "hud_legend_lockpicking_interact",
+		action_text_id = "hud_action_sii_lockpicking",
+		legend_exit_text_id = "hud_legend_lockpicking_exit",
 		minigame_type = self.MINIGAME_PICK_LOCK,
 		circle_rotation_speed = {
 			220,
@@ -3152,10 +3152,10 @@ function InteractionTweakData:_init_minigames()
 	}
 	self.lockpick_cargo_door.sounds = self.LOCKPICK_SOUNDS
 	self.minigame_lockpicking_base = {
-		number_of_circles = 4,
 		interact_distance = 220,
-		action_text_id = "hud_action_lockpicking",
+		number_of_circles = 4,
 		text_id = "hud_int_pick_lock",
+		action_text_id = "hud_action_lockpicking",
 		legend_interact_text_id = "hud_legend_lockpicking_interact",
 		legend_exit_text_id = "hud_legend_lockpicking_exit",
 		minigame_type = self.MINIGAME_PICK_LOCK,
@@ -3222,10 +3222,10 @@ function InteractionTweakData:_init_minigames()
 		fuse_rotation_speed = 160,
 		sounds = self.REWIRE_SOUNDS,
 		node_types = {
-			bend = 5,
-			line = 1,
 			dead = 2,
-			trap = 2
+			trap = 2,
+			bend = 5,
+			line = 1
 		},
 		node_count_x = 3,
 		node_count_y = 3,
@@ -3251,13 +3251,13 @@ function InteractionTweakData:_init_minigames()
 	self.rewire_fuse_pane_medium = deep_clone(self.rewire_fuse_pane)
 	self.rewire_fuse_pane_hard = deep_clone(self.rewire_fuse_pane)
 	self.activate_burners = {
-		sound_interupt = "el_cable_connect_stop",
-		sound_start = "el_cable_connect",
+		axis = "y",
 		interact_distance = 200,
 		action_text_id = "hud_action_activate_burners",
 		text_id = "hud_activate_burners",
-		axis = "y",
 		sound_done = "el_cable_connected",
+		sound_interupt = "el_cable_connect_stop",
+		sound_start = "el_cable_connect",
 		timer = self.INTERACT_TIMER_LONG,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_REWIRE
 	}

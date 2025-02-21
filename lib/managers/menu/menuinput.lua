@@ -661,8 +661,8 @@ end
 
 function MenuInput:menu_axis_move()
 	local axis_moved = {
-		x = 0,
-		y = 0
+		y = 0,
+		x = 0
 	}
 
 	if self._controller then
@@ -678,8 +678,8 @@ end
 
 function MenuInput:menu_axis_scroll()
 	local axis_scrolled = {
-		x = 0,
-		y = 0
+		y = 0,
+		x = 0
 	}
 
 	if self._controller then

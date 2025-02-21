@@ -64,8 +64,8 @@ function RaidGUIControlSkillProgression:_init_skill_icon()
 	local lock_icon_data = tweak_data.gui:get_full_gui_data(RaidGUIControlSkillProgression.LOCK_ICON)
 	size = self._skill_icon:w() / 2
 	self._lock_icon = self._object:bitmap({
-		visible = false,
 		name = "lock_icon",
+		visible = false,
 		w = size,
 		h = size,
 		layer = self._object:layer() + 2,
@@ -82,8 +82,8 @@ end
 
 function RaidGUIControlSkillProgression:_init_skill_progress()
 	self._exp_fill = CircleBitmapGuiObject:new(self._object, {
-		bg_alpha = 0.5,
 		use_bg = true,
+		bg_alpha = 0.5,
 		w = self._object:w(),
 		h = self._object:w(),
 		radius = self._object:w() / 2,
@@ -112,8 +112,8 @@ function RaidGUIControlSkillProgression:_init_earned_progress()
 	local size = self._skill_icon:w() / 3
 	local gui_data = tweak_data.gui:get_full_gui_data("ico_map_mini_raid")
 	self._level_up_icon = self._object:bitmap({
-		visible = false,
 		name = "level_up_icon",
+		visible = false,
 		w = size,
 		h = size,
 		layer = self._object:layer() + 2,
@@ -224,9 +224,9 @@ end
 
 function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text = self._object:label({
-		name = "progress_text",
 		align = "center",
 		text = "???",
+		name = "progress_text",
 		w = self._object:w(),
 		font = self.FONT,
 		font_size = self.FONT_SIZE,
@@ -239,11 +239,11 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text:set_h(h)
 
 	self._progress_desc = self._object:label({
-		wrap = true,
-		name = "progress_desc",
 		align = "center",
+		name = "progress_desc",
 		text = "UNTIL NEXT TIER",
 		word_wrap = true,
+		wrap = true,
 		w = self._object:w(),
 		h = h * 2,
 		font = self.FONT,
