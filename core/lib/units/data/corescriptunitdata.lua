@@ -12,14 +12,6 @@ CoreScriptUnitData.only_visible_in_editor = false
 CoreScriptUnitData.editable_gui = false
 CoreScriptUnitData.editable_gui_text = "Default"
 CoreScriptUnitData.portal_visible_inverse = false
-CoreScriptUnitData.exists_in_stages = {
-	true,
-	true,
-	true,
-	true,
-	true,
-	true
-}
 CoreScriptUnitData.disable_shadows = nil
 CoreScriptUnitData.hide_on_projection_light = nil
 CoreScriptUnitData.disable_on_ai_graph = nil

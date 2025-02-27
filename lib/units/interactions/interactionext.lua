@@ -1234,7 +1234,7 @@ function DropPodInteractionExt:interact(player)
 
 	DropPodInteractionExt.super.interact(self, player)
 
-	local spawn_location = self._unit:get_object(Idstring("spawn_location"))
+	local spawn_location = self._unit:get_object(Idstring("spawn_location")) or self._unit:root_object()
 
 	managers.airdrop:spawn_unit_inside_pod(tostring(self._unit:id()), spawn_location:position(), spawn_location:rotation():yaw(), spawn_location:rotation():pitch(), spawn_location:rotation():roll())
 
@@ -2898,11 +2898,11 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
+		priority = 3,
 		doc_text = "hud_hint_consumable_mission_secured",
 		doc_icon = "notification_consumable",
 		duration = 4,
 		id = "hud_hint_consumable_mission",
-		priority = 3,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 

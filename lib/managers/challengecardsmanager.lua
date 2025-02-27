@@ -453,9 +453,13 @@ end
 function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key, peer_id, steam_instance_id)
 	Application:trace("[ChallengeCardsManager:sync_suggested_card_from_peer] challenge_card_key, peer_id, steam_instance_id ", challenge_card_key, peer_id, steam_instance_id)
 
-	local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
-	card.steam_instance_id = steam_instance_id
-	self._suggested_cards[peer_id] = card
+	if self._suggested_cards then
+		local card = tweak_data.challenge_cards:get_card_by_key_name(challenge_card_key)
+		card.steam_instance_id = steam_instance_id
+		self._suggested_cards[peer_id] = card
+	else
+		Application:error("[ChallengeCardsManager:sync_suggested_card_from_peer] Cant suggest cards without suggested_cards table!", self._suggested_cards)
+	end
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end

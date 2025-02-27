@@ -4,11 +4,14 @@ local idstr_pod = Idstring("units/vanilla/props/props_drop_pod/props_drop_pod")
 local idstr_spawn_pod = Idstring("spawn_pod")
 
 function AirdropManager:init()
+	Application:info("[AirdropManager] init")
+
 	self._in_cooldown = false
 	self._drop_point_groups = {}
 	self._planes = {}
 	self._drop_pods = {}
 	self._items_in_pods = {}
+	self._units_spawned_by_pods = {}
 end
 
 function AirdropManager:register_drop_point_group(drop_point_group)
@@ -17,10 +20,14 @@ function AirdropManager:register_drop_point_group(drop_point_group)
 end
 
 function AirdropManager:call_drop(unit)
-	if Network and Network:is_server() then
-		self:_call_drop(unit)
+	if DB:has("unit", unit) then
+		if Network and Network:is_server() then
+			self:_call_drop(unit)
+		else
+			managers.network:session():send_to_host("call_airdrop", unit)
+		end
 	else
-		managers.network:session():send_to_host("call_airdrop", unit)
+		Application:error("[AirdropManager] Attempted to call_drop with a unit that does not exist in database!", unit)
 	end
 end
 
@@ -115,7 +122,9 @@ end
 
 function AirdropManager:_spawn_unit_inside_pod(unit, position, rotation)
 	if self._items_in_pods[unit] ~= nil then
-		World:spawn_unit(Idstring(self._items_in_pods[unit]), position, rotation)
+		local unit = World:spawn_unit(Idstring(self._items_in_pods[unit]), position, rotation)
+
+		table.insert(self._units_spawned_by_pods, unit)
 	end
 end
 
@@ -152,20 +161,28 @@ function AirdropManager:cleanup()
 	Application:debug("[AirdropManager] Cleanup!")
 	managers.queued_tasks:unqueue_all(nil, self)
 
-	self._drop_point_groups = {}
-	self._items_in_pods = {}
-
-	for i = #self._planes, 1, -1 do
-		if self._planes[i]:alive() then
-			self._planes[i]:set_slot(0)
+	for _, unit in dpairs(self._planes) do
+		if unit:alive() then
+			unit:set_slot(0)
 		end
 	end
 
-	for i = #self._drop_pods, 1, -1 do
-		self._drop_pods[i]:set_slot(0)
+	for _, unit in dpairs(self._drop_pods) do
+		if unit:alive() then
+			unit:set_slot(0)
+		end
 	end
 
+	for _, unit in dpairs(self._units_spawned_by_pods) do
+		if unit:alive() then
+			unit:set_slot(0)
+		end
+	end
+
+	self._drop_point_groups = {}
+	self._items_in_pods = {}
 	self._planes = {}
 	self._drop_pods = {}
+	self._units_spawned_by_pods = {}
 	self._in_cooldown = false
 end

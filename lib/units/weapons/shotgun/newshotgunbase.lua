@@ -10,8 +10,6 @@ function NewShotgunBase:setup_default()
 	self._damage_falloff_far = tweak_data.weapon[self._name_id].damage_falloff_far
 	self._DAMAGE_AT_FAR = tweak_data.weapon[self._name_id].DAMAGE_AT_FAR or 1
 	self._rays = tweak_data.weapon[self._name_id].rays or 6
-	self._rays_choked = math.floor(self._rays / 3)
-	self._spread_choke = tweak_data.weapon[self._name_id].spread_choke or 0.667
 	self._range = self._damage_falloff_far
 	self._use_shotgun_reload = self._use_shotgun_reload or self._use_shotgun_reload == nil
 end
@@ -68,10 +66,13 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	local autoaim, dodge_enemies = self:check_autoaim(from_pos, direction, self._range)
 	local weight = 0.1
 	local enemy_died = false
+	local raycast_ignore_units = clone(self._setup.ignore_units)
 
 	local function hit_enemy(col_ray)
 		if col_ray.unit:character_damage() then
-			if not col_ray.unit:character_damage():dead() then
+			if col_ray.unit:character_damage():dead() then
+				table.insert(raycast_ignore_units, col_ray.unit)
+			else
 				table.insert(hit_enemies, col_ray)
 			end
 		else
@@ -87,27 +88,17 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		end
 	end
 
-	local spread = self:_get_spread(user_unit)
-
 	mvector3.set(mvec_direction, direction)
-
-	if spread then
-		-- Nothing
-	end
 
 	for i = 1, shoot_through_data and 1 or self._rays do
 		mvector3.set(mvec_spread_direction, mvec_direction)
 
+		local spread = self:_get_spread(user_unit)
+
 		if spread then
-			local s = nil
+			local spread_final = spread * (spread_mul or 1) * math.min(0.665, i / self._rays)
 
-			if self._rays > 1 and self._rays_choked and i <= self._rays_choked then
-				s = spread * (spread_mul or 1) * self._spread_choke
-			else
-				s = spread * (spread_mul or 1)
-			end
-
-			mvector3.spread(mvec_spread_direction, s)
+			mvector3.spread(mvec_spread_direction, spread_final)
 		end
 
 		mvector3.set(mvec_to, mvec_spread_direction)
@@ -115,7 +106,7 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 		mvector3.add(mvec_to, from_pos)
 
 		local ray_from_unit = shoot_through_data and alive(shoot_through_data.ray_from_unit) and shoot_through_data.ray_from_unit or nil
-		local col_ray = (ray_from_unit or World):raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
+		local col_ray = (ray_from_unit or World):raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", raycast_ignore_units)
 
 		if col_rays then
 			if col_ray then
@@ -202,8 +193,6 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 			local add_shoot_through_bullet = self:can_shoot_through_shields() or self:can_shoot_through_enemies() or self:can_shoot_through_walls()
 
 			if add_shoot_through_bullet then
-				print("[WEAPON_PEN] add_shoot_through_bullet")
-
 				my_result = NewShotgunBase.super._fire_raycast(self, user_unit, from_pos, col_ray.ray, dmg_mul, shoot_player, 0, autohit_mul, suppr_mul, shoot_through_data)
 			else
 				my_result = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
@@ -241,8 +230,8 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	if next(hit_enemies) then
 		if true or false then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = self._unit
 			})
 		end

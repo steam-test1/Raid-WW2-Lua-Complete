@@ -68,7 +68,7 @@ end
 function ElementInstigatorRule:_check_player_rules(rules, instigator)
 	for rule, data in pairs(rules) do
 		if rule == "carry_ids" then
-			local current_carry_id = managers.player:is_carrying_carry_id(data)
+			local current_carry_id = managers.player:is_carrying_carry_id(table.map_keys(data))
 
 			if not current_carry_id then
 				return false

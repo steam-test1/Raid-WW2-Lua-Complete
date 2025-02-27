@@ -4,7 +4,14 @@ GameState = GameState or class(CoreInternalGameState.GameState)
 
 function GameState:freeflight_drop_player(pos, rot)
 	if managers.player then
-		managers.player:warp_to(pos, rot)
+		local vehicle = managers.player:get_vehicle()
+
+		if vehicle then
+			vehicle.vehicle_unit:set_position(pos)
+			vehicle.vehicle_unit:set_rotation(rot)
+		else
+			managers.player:warp_to(pos, rot)
+		end
 	end
 end
 

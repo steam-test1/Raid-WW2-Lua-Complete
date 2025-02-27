@@ -1,11 +1,8 @@
 GoldAssetAutomaticExt = GoldAssetAutomaticExt or class(GoldAssetExt)
-local idstr_gold_asset = Idstring("gold_asset")
 
 function GoldAssetAutomaticExt:init(unit)
 	self._unit = unit
 	self._tweak_data = tweak_data.camp_customization.camp_upgrades_automatic[self.tweak_data_name]
-
-	self._unit:set_extension_update_enabled(idstr_gold_asset, false)
 
 	if self._tweak_data.gold then
 		managers.gold_economy:register_automatic_camp_upgrade_unit(self.tweak_data_name, unit)

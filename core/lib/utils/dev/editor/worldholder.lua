@@ -246,7 +246,6 @@ function CoreOldWorldDefinition:init(params)
 		group_names = self._old_groups.group_names
 	}
 	self._all_units = {}
-	self._stage_depended_units = {}
 	self._trigger_units = {}
 	self._use_unit_callbacks = {}
 	self._mission_element_units = {}
@@ -1122,18 +1121,6 @@ function CoreOldWorldDefinition:assign_unit_data(unit, data)
 
 	self:add_trigger_sequence(unit, data._triggers)
 
-	if not table.empty(data._exists_in_stages) then
-		local t = clone(CoreScriptUnitData.exists_in_stages)
-
-		for i, value in pairs(data._exists_in_stages) do
-			t[i] = value
-		end
-
-		unit:unit_data().exists_in_stages = t
-
-		table.insert(self._stage_depended_units, unit)
-	end
-
 	if unit:unit_data().only_visible_in_editor and not is_editor then
 		unit:set_visible(false)
 	end
@@ -1213,16 +1200,6 @@ function CoreOldWorldDefinition:get_unit_on_load(id, call)
 	end
 
 	return nil
-end
-
-function CoreOldWorldDefinition:check_stage_depended_units(stage)
-	for _, unit in ipairs(self._stage_depended_units) do
-		for i, value in ipairs(unit:unit_data().exists_in_stages) do
-			if stage == "stage" .. i and not value then
-				World:delete_unit(unit)
-			end
-		end
-	end
 end
 
 function CoreOldWorldDefinition:get_unit(id)
@@ -1661,8 +1638,7 @@ function CoreOldWorldDefinition:make_generic_data(in_data)
 	local data = {
 		_name_id = "none",
 		_lights = {},
-		_triggers = {},
-		_exists_in_stages = {}
+		_triggers = {}
 	}
 	local generic = in_data.generic
 	local lights = in_data.lights
@@ -1715,7 +1691,6 @@ function Generic:init(node)
 	self._name_id = "none"
 	self._lights = {}
 	self._triggers = {}
-	self._exists_in_stages = {}
 
 	node:for_each("generic", callback(self, self, "parse_generic"))
 	node:for_each("orientation", callback(self, self, "parse_orientation"))
@@ -1726,7 +1701,6 @@ function Generic:init(node)
 	node:for_each("editable_gui", callback(self, self, "parse_editable_gui"))
 	node:for_each("settings", callback(self, self, "parse_settings"))
 	node:for_each("legend_settings", callback(self, self, "parse_legend_settings"))
-	node:for_each("exists_in_stage", callback(self, self, "parse_exists_in_stage"))
 	node:for_each("cutscene_actor", callback(self, self, "cutscene_actor_settings"))
 	node:for_each("disable_shadows", callback(self, self, "parse_disable_shadows"))
 end
@@ -1825,10 +1799,6 @@ end
 
 function Generic:parse_disable_shadows(node)
 	self.disable_shadows = toboolean(node:parameter("value"))
-end
-
-function Generic:parse_exists_in_stage(node)
-	self._exists_in_stages[tonumber(node:parameter("stage"))] = toboolean(node:parameter("value"))
 end
 
 function Generic:parse_trigger(node)

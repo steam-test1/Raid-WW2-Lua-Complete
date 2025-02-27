@@ -166,11 +166,11 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._mission_image:set_center_y(self._folder_image:center_y() - 20)
 
 	local mission_title_params = {
-		name = "folder_mission_title",
 		h = 32,
 		w = 192,
 		vertical = "center",
 		align = "center",
+		name = "folder_mission_title",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.raid_light_red,
@@ -184,8 +184,9 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._folder_mission_title:set_center_y(self._mission_image:center_y() + 124)
 	self:_fit_mission_title()
 
-	if mission_tweak_data.photos and #mission_tweak_data.photos > 3 then
-		self._mission_photos = {}
+	self._mission_photos = {}
+
+	if mission_tweak_data.photos and #mission_tweak_data.photos >= 3 then
 		local mission_photos = deep_clone(mission_tweak_data.photos)
 
 		math.shuffle(mission_photos)
@@ -324,11 +325,11 @@ function RaidGUIControlMissionUnlock:_create_mission_description()
 	}
 	self._mission_title = self._description_panel:text(mission_title_params)
 	local mission_description_params = {
+		vertical = "top",
+		align = "center",
 		name = "mission_description",
 		y = 48,
 		wrap = true,
-		vertical = "top",
-		align = "center",
 		h = self._description_panel:h() - 32,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.extra_small,

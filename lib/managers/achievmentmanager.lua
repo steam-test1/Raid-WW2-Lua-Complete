@@ -420,15 +420,17 @@ function AchievmentManager:check_achievement_kill_30_enemies_with_vehicle_on_ban
 	local current_job = managers.raid_job:current_job()
 	local bank_level_name = "gold_rush"
 
-	if current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
-		is_bank_level = current_job.job_id == bank_level_name
-	elseif current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		local current_job_event_index = current_job.current_event
-		is_bank_level = current_job.events_index[current_job_event_index] == bank_level_name
-	end
+	if current_job then
+		if current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
+			is_bank_level = current_job.job_id == bank_level_name
+		elseif current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			local current_job_event_index = current_job.current_event
+			is_bank_level = current_job.events_index[current_job_event_index] == bank_level_name
+		end
 
-	if managers.statistics._global.session.killed_by_vehicle.count >= 30 and is_bank_level then
-		managers.achievment:award("Treasury - Bumpy ride")
+		if managers.statistics._global.session.killed_by_vehicle.count >= 30 and is_bank_level then
+			managers.achievment:award("Treasury - Bumpy ride")
+		end
 	end
 end
 
