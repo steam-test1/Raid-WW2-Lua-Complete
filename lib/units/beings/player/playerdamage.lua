@@ -962,22 +962,18 @@ function PlayerDamage:damage_fire(attack_data)
 		self:_call_listeners(damage_info)
 
 		return
-	elseif self:incapacitated() then
-		return
 	end
 
-	local damage = attack_data.damage or 1
-
-	if self._bleed_out then
+	if self:incapacitated() or self._bleed_out then
 		return
 	end
 
 	self._unit:sound():play("hit_fire_1p")
 
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("fire", self._unit:movement():current_state(), self:health_ratio())
-	attack_data.damage = damage * dmg_mul
-	local armor_subtracted = self:_calc_armor_damage(attack_data)
-	attack_data.damage = attack_data.damage - (armor_subtracted or 0)
+	attack_data.damage = (attack_data.damage or 1) * dmg_mul
+	local armor_subtracted = self:_calc_armor_damage(attack_data) or 0
+	attack_data.damage = attack_data.damage - armor_subtracted
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGE_TAKEN, attack_data)
 
@@ -1056,10 +1052,10 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
-					background = "backgrounds_detected_msg",
-					duration = 4,
 					id = "hint_downed",
+					background = "backgrounds_detected_msg",
 					priority = true,
+					duration = 4,
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,

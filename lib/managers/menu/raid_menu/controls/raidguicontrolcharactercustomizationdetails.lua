@@ -145,8 +145,8 @@ function RaidGUIControlCharacterCustomizationDetails:_set_customization_image(te
 	end
 
 	self._customization_image = customization_image_panel:bitmap({
-		name = "customization_image",
 		alpha = 0,
+		name = "customization_image",
 		texture = texture,
 		texture_rect = texture_rect
 	})
@@ -166,9 +166,9 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 	}
 	local redeem_description = self._left_panel:text(redeem_description_params)
 	local redeem_value_params = {
+		text = "456 XP",
 		alpha = 0,
 		name = "redeem_value",
-		text = "456 XP",
 		font = RaidGUIControlCharacterCustomizationDetails.FONT,
 		font_size = RaidGUIControlCharacterCustomizationDetails.REDEEM_VALUE_FONT_SIZE,
 		color = RaidGUIControlCharacterCustomizationDetails.REDEEM_VALUE_COLOR
@@ -178,9 +178,9 @@ function RaidGUIControlCharacterCustomizationDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
-		name = "redeem_xp_button",
-		alpha = 0,
 		x = 0,
+		alpha = 0,
+		name = "redeem_xp_button",
 		y = self._left_panel:h() - RaidGUIControlCharacterCustomizationDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 		text = self:translate("menu_loot_screen_redeem_xp", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -240,11 +240,11 @@ end
 
 function RaidGUIControlCharacterCustomizationDetails:_create_item_description_name()
 	local item_type_params = {
-		name = "item_type",
+		align = "left",
 		alpha = 0,
 		wrap = true,
 		vertical = "center",
-		align = "left",
+		name = "item_type",
 		x = self._description:x(),
 		y = RaidGUIControlCharacterCustomizationDetails.ITEM_TYPE_Y,
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,
@@ -259,9 +259,9 @@ end
 
 function RaidGUIControlCharacterCustomizationDetails:_create_customization_info()
 	local rarity_info_params = {
-		text = "",
-		top_offset_y = 15,
 		alpha = 0,
+		top_offset_y = 15,
+		text = "",
 		name = "rarity_info",
 		w = RaidGUIControlCharacterCustomizationDetails.RARITY_W,
 		h = RaidGUIControlCharacterCustomizationDetails.RARITY_H,
@@ -275,8 +275,8 @@ function RaidGUIControlCharacterCustomizationDetails:_create_customization_info(
 	self._rarity_info:set_x(self._description:x())
 
 	local nationality_info_params = {
-		top_offset_y = 6,
 		alpha = 0,
+		top_offset_y = 6,
 		text = "",
 		icon = "ico_flag_american",
 		name = "nationality_info",

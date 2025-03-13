@@ -150,18 +150,18 @@ function NpcVehicleDrivingExt:_start()
 			self._current_drive_controls = "accelerate"
 			self._next_checkpoint_distance = {
 				{
-					v_max = 40,
 					distance = 1200,
-					relative_angle_min = 30,
+					v_max = 40,
 					v_min = 30,
-					relative_angle_max = 60
+					relative_angle_max = 60,
+					relative_angle_min = 30
 				},
 				{
-					v_max = 60,
 					distance = 1500,
-					relative_angle_min = 30,
+					v_max = 60,
 					v_min = 40,
-					relative_angle_max = 90
+					relative_angle_max = 90,
+					relative_angle_min = 30
 				}
 			}
 			self._last_checkpoint_reached = false
@@ -494,8 +494,8 @@ function NpcVehicleDrivingExt:_find_bridge(cop_path, target_path, unit_and_pos)
 	local player_position = player_unit:position()
 	local cop_on_checkpoint = cop_path.marker_checkpoints[point_id_in_direction]
 	local min_distance_marker = {
-		distance = 2000000,
-		direction = nil
+		direction = nil,
+		distance = 2000000
 	}
 
 	for marker_from, markers_to in pairs(bridges_to_target) do
@@ -614,10 +614,10 @@ function NpcVehicleDrivingExt:_debug_show()
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
 		layer = 2000,
-		x = 14,
+		name = "debug_info",
 		font_size = 14,
 		text = "",
-		name = "debug_info",
+		x = 14,
 		y = 100 + debug_output_offset,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		color = Color.yellow
@@ -636,8 +636,8 @@ function NpcVehicleDrivingExt:_display_debug_info()
 			astar_found = false,
 			distance_to_player = 0,
 			ai_cost = {
-				fps = 0,
-				cost = 0
+				cost = 0,
+				fps = 0
 			}
 		}
 
@@ -649,8 +649,8 @@ function NpcVehicleDrivingExt:_display_debug_info()
 			nav_paths.astar_found = self._debug.nav_paths.astar_found or false
 			nav_paths.distance_to_player = self._debug.nav_paths.distance_to_player or 0
 			nav_paths.ai_cost = self._debug.nav_paths.ai_cost or {
-				fps = 0,
-				cost = 0
+				cost = 0,
+				fps = 0
 			}
 		end
 

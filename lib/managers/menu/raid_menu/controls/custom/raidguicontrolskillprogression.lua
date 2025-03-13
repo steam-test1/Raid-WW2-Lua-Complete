@@ -64,8 +64,8 @@ function RaidGUIControlSkillProgression:_init_skill_icon()
 	local lock_icon_data = tweak_data.gui:get_full_gui_data(RaidGUIControlSkillProgression.LOCK_ICON)
 	size = self._skill_icon:w() / 2
 	self._lock_icon = self._object:bitmap({
-		name = "lock_icon",
 		visible = false,
+		name = "lock_icon",
 		w = size,
 		h = size,
 		layer = self._object:layer() + 2,
@@ -82,8 +82,8 @@ end
 
 function RaidGUIControlSkillProgression:_init_skill_progress()
 	self._exp_fill = CircleBitmapGuiObject:new(self._object, {
-		use_bg = true,
 		bg_alpha = 0.5,
+		use_bg = true,
 		w = self._object:w(),
 		h = self._object:w(),
 		radius = self._object:w() / 2,
@@ -225,8 +225,8 @@ end
 function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text = self._object:label({
 		align = "center",
-		text = "???",
 		name = "progress_text",
+		text = "???",
 		w = self._object:w(),
 		font = self.FONT,
 		font_size = self.FONT_SIZE,

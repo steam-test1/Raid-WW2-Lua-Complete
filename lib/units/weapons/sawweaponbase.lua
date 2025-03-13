@@ -201,8 +201,8 @@ end
 
 function SawHit:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
-		decal = "saw",
 		no_sound = true,
+		decal = "saw",
 		col_ray = col_ray
 	})
 end

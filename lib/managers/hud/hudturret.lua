@@ -47,9 +47,9 @@ end
 
 function HUDTurret:_create_heat_indicator()
 	local heat_indicator_panel_params = {
-		valign = "bottom",
 		name = "heat_indicator_panel",
 		halign = "center",
+		valign = "bottom",
 		w = HUDTurret.HEAT_INDICATOR_W,
 		h = HUDTurret.HEAT_INDICATOR_H
 	}
@@ -65,11 +65,11 @@ function HUDTurret:_create_heat_indicator()
 	}
 	self._heat_indicator_background = self._heat_indicator_panel:bitmap(heat_indicator_background_params)
 	local heat_indicator_foreground_panel_params = {
-		name = "heat_indicator_foreground_panel",
-		x = 0,
-		y = 0,
 		valign = "scale",
+		y = 0,
+		x = 0,
 		halign = "scale",
+		name = "heat_indicator_foreground_panel",
 		w = self._heat_indicator_panel:w(),
 		h = self._heat_indicator_panel:h(),
 		layer = self._heat_indicator_background:layer() + 1
@@ -85,10 +85,10 @@ end
 
 function HUDTurret:_create_dismount_prompt()
 	local dismount_prompt_panel_params = {
-		valign = "top",
 		name = "dismount_prompt_panel",
 		alpha = 0,
 		halign = "scale",
+		valign = "top",
 		w = self._object:w(),
 		h = HUDTurret.DISMOUNT_PROMPT_H
 	}
@@ -118,10 +118,10 @@ end
 
 function HUDTurret:_create_reticle()
 	self._reticle = self._object:bitmap({
-		valign = "center",
-		name = "turret_reticle",
 		alpha = 0,
 		halign = "center",
+		valign = "center",
+		name = "turret_reticle",
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture_rect
 	})
@@ -130,10 +130,10 @@ function HUDTurret:_create_reticle()
 	self._reticle:set_center_y(self._object:h() / 2)
 
 	self._reticle_static = self._object:bitmap({
-		valign = "center",
-		name = "turret_reticle_static",
 		alpha = 0,
 		halign = "center",
+		valign = "center",
+		name = "turret_reticle_static",
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture_rect
 	})
@@ -144,11 +144,11 @@ end
 
 function HUDTurret:_create_shell()
 	local params_bg = {
-		valign = "center",
-		name = "shell_bg",
 		layer = 1,
 		alpha = 0,
 		halign = "center",
+		valign = "center",
+		name = "shell_bg",
 		texture = tweak_data.gui.icons.aa_gun_bg.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_bg.texture_rect
 	}
@@ -158,11 +158,11 @@ function HUDTurret:_create_shell()
 	self._shell_bg:set_bottom(self._object:h() - 32)
 
 	local params_fade = {
-		valign = "center",
-		name = "shell_fade",
 		layer = 2,
 		alpha = 0,
 		halign = "center",
+		valign = "center",
+		name = "shell_fade",
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}
@@ -172,11 +172,11 @@ function HUDTurret:_create_shell()
 	self._shell_fade:set_x(self._shell_bg:x() + 2)
 
 	local params_shell = {
-		valign = "center",
-		name = "shell",
 		layer = 3,
 		alpha = 0,
 		halign = "center",
+		valign = "center",
+		name = "shell",
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect
 	}

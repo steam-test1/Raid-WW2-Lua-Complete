@@ -90,9 +90,9 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 
 	local paragraph_params = {
 		wrap = true,
-		name = "paragraph",
 		y = 48,
 		x = 0,
+		name = "paragraph",
 		w = part_panel:w(),
 		font = RaidGUIControlOperationProgress.PARAGRAPH_FONT,
 		font_size = RaidGUIControlOperationProgress.PARAGRAPH_FONT_SIZE,

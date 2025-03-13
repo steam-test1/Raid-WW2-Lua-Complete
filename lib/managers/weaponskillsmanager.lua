@@ -390,14 +390,10 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 					for i = 1, #tweak_data_challenge_data.reminders do
 						if skill[1].challenge_tasks[1].reminders[i] ~= tweak_data_challenge_data.reminders[i] then
 							challenges_changed = true
-
-							print(inspect(skill[1].challenge_tasks[1].reminders[i]) .. ", " .. inspect(tweak_data_challenge_data.reminders[i]))
 						end
 
 						if challenge_from_manager._tasks[1]._reminders[i] ~= tweak_data_challenge_data.reminders[i] then
 							challenges_changed = true
-
-							print(challenge_from_manager._tasks[1]._reminders[i] .. ", " .. tweak_data_challenge_data.reminders[i])
 						end
 					end
 
@@ -406,8 +402,6 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 							if modifier ~= "enemy_type" then
 								if challenge_from_manager._tasks[1]._modifiers[modifier] ~= tweak_data_challenge_data.modifiers[modifier] then
 									challenges_changed = true
-
-									print(inspect(challenge_from_manager._tasks[1]._modifiers[modifier]) .. ", " .. inspect(tweak_data_challenge_data.modifiers[modifier]))
 								end
 
 								if not tweak_data_challenge_data.modifiers[modifier] or not skill[1].challenge_tasks[1].modifiers or not skill[1].challenge_tasks[1].modifiers[modifier] or skill[1].challenge_tasks[1].modifiers[modifier] ~= tweak_data_challenge_data.modifiers[modifier] then
@@ -427,14 +421,10 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 
 					if skill[1].challenge_tasks[1].target ~= tweak_data_challenge_data.target then
 						challenges_changed = true
-
-						print(skill[1].challenge_tasks[1].target .. ", " .. tweak_data_challenge_data.target)
 					end
 
 					if challenge_from_manager._tasks[1]._target ~= tweak_data_challenge_data.target then
 						challenges_changed = true
-
-						print(challenge_from_manager._tasks[1]._target .. ", " .. tweak_data_challenge_data.target)
 					end
 				end
 			end

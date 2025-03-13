@@ -27,10 +27,10 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 		layer = self._object:layer()
 	})
 	self._icon = self._object:image({
-		h = 32,
 		w = 32,
 		y = 0,
 		x = 0,
+		h = 32,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,
 		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
@@ -40,14 +40,14 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	self._icon:set_center(CharacterSelectionGui.BUTTON_W / 2, CharacterSelectionGui.BUTTON_H / 2)
 
 	self._label = self._object:label({
-		text = "",
-		vertical = "center",
 		align = "center",
 		visible = false,
 		h = 25,
 		w = 116,
 		y = 0,
 		x = 0,
+		text = "",
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.keybinding,
 		color = tweak_data.gui.colors.raid_black

@@ -113,10 +113,10 @@ end
 
 function RaidGUIControlWeaponSkillDesc:_create_labels()
 	local params_name_label = {
+		text = "UNKNOWN SKILL NAME",
+		h = 38,
 		y = 0,
 		x = 0,
-		h = 38,
-		text = "UNKNOWN SKILL NAME",
 		name = self._params.name .. "_name_label",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
@@ -124,8 +124,8 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._name_label = self._object:label(params_name_label)
 	local params_status_label = {
-		align = "left",
 		text = "lol",
+		align = "left",
 		vertical = "bottom",
 		y = 32,
 		x = 0,
@@ -138,11 +138,11 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._status_label = self._object:label(params_status_label)
 	local params_desc_label = {
-		word_wrap = true,
-		wrap = true,
 		text = "Unknown skill description. Lorem ipsum glupsum tumsum. Kajaznam kolko ovog stane u tri linije mozda jos malo a mozda i ne.",
 		y = 96,
 		x = 0,
+		word_wrap = true,
+		wrap = true,
 		h = 100,
 		name = self._params.name .. "_desc_label",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
@@ -152,14 +152,14 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._desc_label = self._object:label(params_desc_label)
 	local tier_unlocks_at_level_label_params = {
-		name = "cant_equip_explenation_label",
-		h = 58,
 		visible = false,
-		wrap = true,
-		align = "left",
 		text = "",
+		align = "left",
 		x = 0,
 		layer = 1,
+		name = "cant_equip_explenation_label",
+		wrap = true,
+		h = 58,
 		y = self._desc_label:y(),
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -172,8 +172,8 @@ end
 function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	local progress_bar_panel_params = {
 		vertical = "bottom",
-		x = 0,
 		h = 32,
+		x = 0,
 		name = self._params.name .. "_progress_bar_panel",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W
 	}
@@ -217,12 +217,12 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
-		align = "center",
 		text = "123/456",
 		vertical = "center",
 		y = -2,
 		x = 0,
 		layer = 5,
+		align = "center",
 		name = self._params.name .. "_progress_bar_text",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),

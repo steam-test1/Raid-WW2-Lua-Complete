@@ -47,13 +47,13 @@ end
 
 function HUDObjectiveSub:_create_objective_text()
 	local objective_text_params = {
-		vertical = "center",
 		align = "right",
+		halign = "right",
+		valign = "center",
+		vertical = "center",
 		name = "objective_text",
 		y = 0,
 		x = 0,
-		halign = "right",
-		valign = "center",
 		font = HUDObjectiveSub.OBJECTIVE_TEXT_FONT,
 		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
 		text = utf8.to_upper(self._objective.text)
@@ -106,8 +106,8 @@ function HUDObjectiveSub:_create_amount()
 	self._amount_progress_fill:set_center_y(self._amount_panel:h() / 2)
 
 	local current_amount_text_params = {
-		vertical = "center",
 		align = "center",
+		vertical = "center",
 		name = "current_amount_text",
 		text = "00",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
@@ -122,8 +122,8 @@ function HUDObjectiveSub:_create_amount()
 	self._current_amount_text:set_center_y(self._amount_panel:h() / 2)
 
 	local slash_params = {
-		vertical = "center",
 		align = "center",
+		vertical = "center",
 		name = "slash",
 		text = "/",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
@@ -138,8 +138,8 @@ function HUDObjectiveSub:_create_amount()
 	slash:set_center_y(self._amount_panel:h() / 2)
 
 	local total_amount_text_params = {
-		vertical = "center",
 		align = "center",
+		vertical = "center",
 		name = "total_amount_text",
 		text = "00",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,

@@ -1,7 +1,6 @@
 core:import("CoreWorldDefinition")
 
 CoreWorldCollection = CoreWorldCollection or class()
-CoreWorldCollection.PREDEFINED_WORLDS_XML = "lib/utils/dev/editor/xml/predefined_worlds"
 CoreWorldCollection.MAX_STITCHER_ID = 1000
 CoreWorldCollection.SKIP_LOADING_TICKS = 5
 CoreWorldCollection.STAGE_PREPARE = "STAGE_PREPARE"
@@ -25,9 +24,6 @@ function CoreWorldCollection:init(params)
 	self._mission_params = {}
 	self._motion_paths = {}
 	self._package_loading = {}
-
-	self:_load_predefined_worlds()
-
 	self._world_id_counter = 1
 	self._editor_world_names = {}
 	self._world_spawns = {}
@@ -120,8 +116,6 @@ function CoreWorldCollection:register_input_element(world_id, event, input_eleme
 end
 
 function CoreWorldCollection:unregister_input_element(world_id, event, input_element)
-	Application:debug("[CoreWorldCollection:unregister_input_element(]", world_id, event, input_element)
-
 	if self._input_elements[world_id] and self._input_elements[world_id][event] then
 		table.delete(self._input_elements[world_id][event], input_element)
 	end
@@ -139,8 +133,6 @@ function CoreWorldCollection:register_output_element(world_editor_name, event, o
 end
 
 function CoreWorldCollection:unregister_output_element(world_editor_name, event, output_element)
-	Application:debug("[CoreWorldCollection:unregister_output_element(]", world_editor_name, event, output_element)
-
 	if self._output_elements[world_editor_name] and self._output_elements[world_editor_name][event] then
 		table.delete(self._output_elements[world_editor_name][event], output_element)
 	end
@@ -153,19 +145,13 @@ function CoreWorldCollection:get_world_position(editor_name)
 end
 
 function CoreWorldCollection:get_world_from_pos(position)
-	local result = nil
 	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(position, true)
 	local world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 
-	if world_id then
-		result = self._world_definitions[world_id]
-	end
-
-	return result
+	return world_id and self._world_definitions[world_id]
 end
 
 function CoreWorldCollection:get_world_id_from_pos(position)
-	local result = nil
 	local nav_seg_id = managers.navigation:get_nav_seg_from_pos(position, true)
 	local world_id = managers.navigation:get_world_for_nav_seg(nav_seg_id)
 
@@ -176,15 +162,6 @@ function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
 	if self._editor_world_names[old_name] then
 		self._editor_world_names[new_name] = self._editor_world_names[old_name]
 		self._editor_world_names[old_name] = nil
-	end
-end
-
-function CoreWorldCollection:_load_predefined_worlds()
-	if DB:has("xml", CoreWorldCollection.PREDEFINED_WORLDS_XML) then
-		local file = DB:open("xml", CoreWorldCollection.PREDEFINED_WORLDS_XML)
-		self._all_worlds = ScriptSerializer:from_generic_xml(file:read())
-
-		table.sort(self._all_worlds)
 	end
 end
 
@@ -224,7 +201,7 @@ end
 function CoreWorldCollection:prepare_world(world, world_id, editor_name, counted_continents, excluded_continents)
 	local start = TimerManager:now()
 	local file_type = "world"
-	local world_dir = world.meta_data.file .. "/"
+	local world_dir = "levels/" .. world.level_data.world_name .. "/"
 	local file_path = world_dir .. file_type
 
 	if not DB:has(file_type, file_path) then
@@ -246,7 +223,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, counted
 	definition.creation_in_progress = true
 	definition.editor_name = editor_name
 	definition.counted_continents = counted_continents
-	definition.meta_data = world.meta_data
+	definition.level_data = world.level_data
 
 	if self._drop_in_sync and self._drop_in_sync[world_id] and self._drop_in_sync[world_id].sync_units then
 		for _, synced_unit in ipairs(self._drop_in_sync[world_id].sync_units) do
@@ -257,7 +234,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, counted
 	end
 
 	self._world_definitions[world_id] = definition
-	self._mission_paths[world_id] = world.meta_data.file .. "/mission"
+	self._mission_paths[world_id] = world_dir .. "mission"
 
 	table.insert(self.queued_world_creation, world_id)
 
@@ -540,7 +517,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 
 		self._skip_loading_counter = self._skip_loading_counter - 1
 	else
-		for key, definition in pairs(self._world_definitions) do
+		for _, definition in pairs(self._world_definitions) do
 			if not definition.destroyed then
 				if definition.is_prepared and definition.create_called then
 					if definition.creation_in_progress then
@@ -967,28 +944,6 @@ function CoreWorldCollection:sync_load(data)
 	self._first_pass = false
 end
 
-function CoreWorldCollection:get_world_meta_data(key)
-	local result = self._all_worlds[key]
-
-	if not result then
-		Application:error("[CoreWorldCollection:get_world_meta_data] Meta data for world does not exist: ", key)
-	end
-
-	return result
-end
-
-function CoreWorldCollection:get_all_worlds()
-	local res = {}
-
-	for k, v in pairs(self._all_worlds) do
-		table.insert(res, k)
-	end
-
-	table.sort(res)
-
-	return res
-end
-
 function CoreWorldCollection:get_unit_with_id(id, cb, world_id)
 	local unit = nil
 
@@ -1076,17 +1031,19 @@ function CoreWorldCollection:world_names()
 end
 
 function CoreWorldCollection:get_mission_elements_from_script(name, element_class)
-	if not self._all_worlds[name] then
+	local level_data = tweak_data.levels[name]
+
+	if not level_data then
 		Application:error("[CoreWorldCollection:get_mission_elements_from_script] Cannot get a world from", name, element_class)
 
 		return {}
 	end
 
-	local path = self._all_worlds[name].file .. "/" .. "world/world"
+	local path = "levels/" .. level_data.world_name .. "/world/world"
 	local instance_data = self:_serialize_to_script("mission", Idstring(path))
 	local mission_elements = {}
 
-	for script, script_data in pairs(instance_data) do
+	for _, script_data in pairs(instance_data) do
 		for _, element in ipairs(script_data.elements) do
 			if element.class == element_class then
 				table.insert(mission_elements, element.values.event)
@@ -1342,6 +1299,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.groupai:kill_all_AI()
 	managers.queued_tasks:queue(nil, managers.groupai:state().clean_up, managers.groupai:state(), nil, 0.1, nil, true)
 	managers.game_play_central:on_level_transition()
+	managers.airdrop:cleanup()
 	managers.portal:clear()
 	managers.drop_loot:clear()
 	managers.fire:clear()
@@ -1468,7 +1426,7 @@ end
 function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_data = managers.raid_job:current_job()
 	local job_id = job_data and job_data.job_id
-	local total_value = LootDropTweakData.TOTAL_DOGTAGS_DEFAULT
+	local total_value = 0
 
 	if job_data and job_data.dogtags and job_data.dogtags.min and job_data.dogtags.max then
 		total_value = math.random(job_data.dogtags.min, job_data.dogtags.max)

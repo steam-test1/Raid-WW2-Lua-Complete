@@ -3,123 +3,100 @@ LevelsTweakData = LevelsTweakData or class()
 function LevelsTweakData:init()
 	self.altitude_difference_limit = 300
 	self.streaming_level = {
-		name_id = "menu_stream",
 		world_name = "vanilla/streaming_level",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.camp = {
-		name_id = "menu_camp_hl",
-		briefing_id = "menu_germany_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/germany_camp",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.tutorial = {
-		name_id = "menu_tutorial_hl",
-		briefing_id = "menu_tutorial_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/zone_germany_tutorial",
-		predefined_world = "tutorial",
 		package = {
 			"packages/zone_germany"
-		},
-		cube = "cube_apply_heist_bank"
+		}
 	}
 	self.flakturm = {
-		name_id = "menu_ger_miss_01_hl",
-		briefing_id = "menu_ger_miss_01_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/flakturm",
-		predefined_world = "germany_flakturm",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.gold_rush = {
-		name_id = "menu_ger_miss_03_ld_hl",
-		briefing_id = "menu_ger_miss_03_ld_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/gold_rush",
-		predefined_world = "germany_gold_rush",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
+	self.reichsbank_streets = {
+		world_name = "instances/level_specific/reichsbank/streets_ending01"
+	}
 	self.train_yard = {
-		name_id = "menu_ger_miss_04_hl",
-		briefing_id = "menu_ger_miss_04_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/train_yard",
-		predefined_world = "germany_train_yard",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.ger_bridge = {
-		name_id = "menu_ger_bridge_00_hl",
-		briefing_id = "menu_ger_bridge_00_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/bridge",
-		predefined_world = "germany_bridge",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.ger_bridge_operation = {
-		name_id = "menu_ger_bridge_00_hl",
-		briefing_id = "menu_ger_bridge_00_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/bridge",
-		predefined_world = "germany_bridge_operation",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.radio_defense = {
-		name_id = "menu_afr_miss_04_hl",
-		briefing_id = "menu_afr_miss_04_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/radio_defense",
-		predefined_world = "germany_radio",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.settlement = {
-		name_id = "menu_afr_miss_05_hl",
-		briefing_id = "menu_afr_miss_05_desc",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/castle",
-		predefined_world = "germany_castle",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.forest_gumpy = {
-		name_id = "forest_gumpy",
-		briefing_id = "tank_radio_test_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/forest_gumpy",
-		predefined_world = "forest_gumpy",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.zone_germany_park = {
-		name_id = "menu_germany_hl",
-		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_park",
-		predefined_world = "zone_germany_park",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
-		},
-		cube = "cube_apply_heist_bank",
-		floor_coordinates = {
-			-10000
 		},
 		map = {
 			default = {
@@ -127,269 +104,147 @@ function LevelsTweakData:init()
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
 				base_location = {
-					y = -2850,
-					x = -200
+					x = -200,
+					y = -2850
 				},
 				world_borders = {
+					down = -28846,
 					up = 23122,
 					right = 34700,
-					left = -29736,
-					down = -28846
+					left = -29736
 				},
 				panel_shape = {
+					x = 105,
 					h = 710,
 					w = 885,
-					y = 220,
-					x = 105
+					y = 220
 				}
 			}
 		}
 	}
 	self.zone_germany_destroyed = {
-		name_id = "menu_germany_hl",
-		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_destroyed",
-		predefined_world = "zone_germany_destroyed",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
 		},
-		cube = "cube_apply_heist_bank",
-		floor_coordinates = {
-			-10000
-		},
-		map = {
-			default = {
-				pin_scale = 0.5,
-				texture = "map_zone_germany",
-				base_icon = "map_ico_camp",
-				base_location = {
-					y = -2850,
-					x = -200
-				},
-				world_borders = {
-					up = 23122,
-					right = 34700,
-					left = -29736,
-					down = -28846
-				},
-				panel_shape = {
-					h = 710,
-					w = 885,
-					y = 220,
-					x = 105
-				}
-			}
-		}
+		map = self.zone_germany_park.map
 	}
 	self.zone_germany_destroyed_fuel = {
-		name_id = "menu_germany_hl",
-		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_destroyed_fuel",
-		predefined_world = "zone_germany_destroyed_fuel",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
 		},
-		cube = "cube_apply_heist_bank",
-		floor_coordinates = {
-			-10000
-		},
-		map = {
-			default = {
-				pin_scale = 0.5,
-				texture = "map_zone_germany",
-				base_icon = "map_ico_camp",
-				base_location = {
-					y = -2850,
-					x = -200
-				},
-				world_borders = {
-					up = 23122,
-					right = 34700,
-					left = -29736,
-					down = -28846
-				},
-				panel_shape = {
-					h = 710,
-					w = 885,
-					y = 220,
-					x = 105
-				}
-			}
-		}
+		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout = {
-		name_id = "menu_germany_hl",
-		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_roundabout",
-		predefined_world = "zone_germany_roundabout",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
 		},
-		cube = "cube_apply_heist_bank",
-		floor_coordinates = {
-			-10000
-		},
-		map = {
-			default = {
-				pin_scale = 0.5,
-				texture = "map_zone_germany",
-				base_icon = "map_ico_camp",
-				base_location = {
-					y = -2850,
-					x = -200
-				},
-				world_borders = {
-					up = 23122,
-					right = 34700,
-					left = -29736,
-					down = -28846
-				},
-				panel_shape = {
-					h = 710,
-					w = 885,
-					y = 220,
-					x = 105
-				}
-			}
-		}
+		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout_fuel = {
-		name_id = "menu_germany_hl",
-		briefing_id = "menu_germany_desc",
 		world_name = "vanilla/zone_germany_roundabout_fuel",
-		predefined_world = "zone_germany_roundabout_fuel",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
 		},
-		cube = "cube_apply_heist_bank",
-		floor_coordinates = {
-			-10000
-		},
-		map = {
-			default = {
-				pin_scale = 0.5,
-				texture = "map_zone_germany",
-				base_icon = "map_ico_camp",
-				base_location = {
-					y = -2850,
-					x = -200
-				},
-				world_borders = {
-					up = 23122,
-					right = 34700,
-					left = -29736,
-					down = -28846
-				},
-				panel_shape = {
-					h = 710,
-					w = 885,
-					y = 220,
-					x = 105
-				}
-			}
-		}
+		map = self.zone_germany_park.map
 	}
 	self.bunker_test = {
-		name_id = "bunker_test",
-		briefing_id = "bunker_test_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/bunker_test",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "bunker_test",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.tnd = {
-		name_id = "tnd",
-		briefing_id = "tnd_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/tnd",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "tnd",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.hunters = {
-		name_id = "hunters",
-		briefing_id = "hunters_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/hunters",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "hunters",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.convoy = {
-		name_id = "convoy",
-		briefing_id = "convoy_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/convoy",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "convoy",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.spies_test = {
-		name_id = "spies_test",
-		briefing_id = "spies_test_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/spies_test_layout",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "spies_test",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.sto = {
-		name_id = "sto",
-		briefing_id = "sto_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "vanilla/sto",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "sto",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.silo = {
-		name_id = "silo",
-		briefing_id = "silo_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "upg_002/silo/silo_start",
 		package = {
 			"packages/zone_germany"
-		},
-		cube = "cube_apply_heist_bank",
-		predefined_world = "silo"
+		}
+	}
+	self.silo_mid_v1 = {
+		world_name = "upg_002/silo/silo_mid_v1"
+	}
+	self.silo_mid_v2 = {
+		world_name = "upg_002/silo/silo_mid_v2"
+	}
+	self.silo_end = {
+		world_name = "upg_002/silo/silo_end"
 	}
 	self.kelly = {
-		name_id = "kelly",
-		briefing_id = "kelly_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "upg_003/kelly",
 		package = {
 			"packages/zone_germany"
-		},
-		cube = "cube_apply_heist_bank",
-		predefined_world = "kelly"
+		}
 	}
 	self.fury_railway = {
-		name_id = "fury_railway",
-		briefing_id = "fury_railway_briefing",
+		load_env = true,
+		low_poly = "",
 		world_name = "upg_005/fury_railway",
-		cube = "cube_apply_heist_bank",
 		package = {
 			"packages/zone_germany"
-		},
-		predefined_world = "fury_railway"
+		}
 	}
 	self.forest_bunker = {
-		name_id = "forest_bunker",
-		briefing_id = "forest_bunker_briefing",
-		world_name = "levels/upg_fb/forest_bunker",
-		cube = "cube_apply_heist_bank",
-		predefined_world = "forest_bunker",
+		world_name = "upg_fb/forest_bunker",
+		load_env = true,
+		low_poly = "",
 		package = {
 			"packages/zone_germany"
-		},
-		floor_coordinates = {
-			-10000
 		},
 		map = {
 			default = {
@@ -397,36 +252,36 @@ function LevelsTweakData:init()
 				texture = "map_forest_bunker",
 				base_icon = "map_ico_bunker",
 				base_location = {
-					y = 2500,
-					x = -3600
+					x = -3600,
+					y = 2500
 				},
 				world_borders = {
+					down = -11900,
 					up = 14400,
 					right = 16900,
-					left = -16000,
-					down = -11900
+					left = -16000
 				},
 				panel_shape = {
+					x = 135,
 					h = 635,
 					w = 790,
-					y = 240,
-					x = 135
+					y = 240
 				}
 			},
 			bunker = {
-				pin_scale = 0.8,
 				texture = "map_forest_bunker_int",
+				pin_scale = 0.8,
 				world_borders = {
+					down = 900,
 					up = 4030,
 					right = -1400,
-					left = -6000,
-					down = 900
+					left = -6000
 				},
 				panel_shape = {
+					x = 140,
 					h = 472,
 					w = 750,
-					y = 312,
-					x = 140
+					y = 312
 				}
 			}
 		}
@@ -461,21 +316,11 @@ function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
-function LevelsTweakData:get_world_name_from_index(index)
-	if not self._level_index[index] then
-		return
-	end
-
-	return self[self._level_index[index]].world_name
-end
-
-function LevelsTweakData:get_level_name_from_index(index)
-	return self._level_index[index]
-end
-
 function LevelsTweakData:get_index_from_world_name(world_name)
-	for index, entry_name in ipairs(self._level_index) do
-		if world_name == self[entry_name].world_name then
+	for index, level_id in ipairs(self._level_index) do
+		local entry = self[level_id]
+
+		if entry and world_name == entry.world_name then
 			return index
 		end
 	end
@@ -489,47 +334,54 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
+function LevelsTweakData:get_level_id_from_index(index)
+	return self._level_index[index]
+end
+
+function LevelsTweakData:get_level_id_from_world_name(world_name)
+	for _, level_id in ipairs(self._level_index) do
+		local entry = self[level_id]
+
+		if entry and world_name == entry.world_name then
+			return level_id
+		end
+	end
+end
+
+function LevelsTweakData:get_world_name_from_level_id(level_id)
+	local entry = self[level_id]
+
+	return entry and entry.world_name
+end
+
+function LevelsTweakData:get_world_name_from_index(index)
+	local level_id = self._level_index[index]
+
+	return level_id and self:get_world_name_from_level_id(level_id)
+end
+
 function LevelsTweakData:requires_dlc(level_id)
-	return self[level_id].dlc
+	local entry = self[level_id]
+
+	return entry and entry.dlc
 end
 
 function LevelsTweakData:requires_dlc_by_index(index)
-	return self[self._level_index[index]].dlc
-end
+	local level_id = self._level_index[index]
 
-function LevelsTweakData:get_level_name_from_world_name(world_name)
-	for _, entry_name in ipairs(self._level_index) do
-		if world_name == self[entry_name].world_name then
-			return entry_name
-		end
-	end
-end
-
-function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
-	for _, entry_name in ipairs(self._level_index) do
-		if world_name == self[entry_name].world_name then
-			return managers.localization:text(self[entry_name].name_id)
-		end
-	end
-end
-
-function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
-	for _, entry_name in ipairs(self._level_index) do
-		if level_id == entry_name then
-			return managers.localization:text(self[entry_name].name_id)
-		end
-	end
+	return level_id and self:requires_dlc(level_id)
 end
 
 function LevelsTweakData:get_default_team_ID(type)
-	local lvl_tweak = self[Global.level_data.level_id]
+	local entry = self[Global.level_data.level_id]
+	local default_team = entry and entry.default_teams and entry.default_teams[type]
 
-	if lvl_tweak and lvl_tweak.default_teams and lvl_tweak.default_teams[type] then
-		if lvl_tweak.teams[lvl_tweak.default_teams[type]] then
-			return lvl_tweak.default_teams[type]
-		else
-			debug_pause("[LevelsTweakData:get_default_player_team_ID] Team not defined ", lvl_tweak.default_teams[type], "in", Global.level_data.level_id)
+	if default_team then
+		if entry.teams[default_team] then
+			return default_team
 		end
+
+		debug_pause("[LevelsTweakData:get_default_player_team_ID] Team not defined ", default_team, "in", Global.level_data.level_id)
 	end
 
 	if type == "player" then
@@ -554,28 +406,28 @@ function LevelsTweakData:get_team_setup()
 		teams = {
 			criminal1 = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			},
 			law1 = {
 				foes = {
-					criminal1 = true,
 					converted_enemy = true,
-					mobster1 = true
+					mobster1 = true,
+					criminal1 = true
 				}
 			},
 			mobster1 = {
 				foes = {
-					criminal1 = true,
+					law1 = true,
 					converted_enemy = true,
-					law1 = true
+					criminal1 = true
 				}
 			},
 			converted_enemy = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			},
 			neutral1 = {
@@ -583,8 +435,8 @@ function LevelsTweakData:get_team_setup()
 			},
 			hacked_turret = {
 				foes = {
-					law1 = true,
-					mobster1 = true
+					mobster1 = true,
+					law1 = true
 				}
 			}
 		}

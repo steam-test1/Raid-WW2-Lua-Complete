@@ -43,7 +43,7 @@ function AmmoClip:_pickup(unit)
 			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES) then
 				local grenades_refill_amount = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES)
 
-				managers.player:add_grenade_amount(grenades_refill_amount or 1)
+				managers.player:add_grenade_amount(grenades_refill_amount and 1)
 			end
 
 			local effect_ammo_pickup_multiplier = 1

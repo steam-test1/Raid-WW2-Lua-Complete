@@ -122,8 +122,8 @@ function RaidGUIControlXPRewardDetails:_create_reward_image()
 	}
 	self._reward_image_panel = self._left_panel:panel(reward_image_panel_params)
 	local reward_image_params = {
-		name = "reward_image",
 		alpha = 0,
+		name = "reward_image",
 		texture = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlXPRewardDetails.REWARD_ICON].texture_rect
 	}
@@ -280,8 +280,8 @@ end
 function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
 		align = "left",
-		alpha = 0,
 		wrap = true,
+		alpha = 0,
 		vertical = "top",
 		name = "description",
 		y = RaidGUIControlXPRewardDetails.DESCRIPTION_Y,

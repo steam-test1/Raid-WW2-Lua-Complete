@@ -143,72 +143,72 @@ function UnitList:init()
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		state = "ascending",
-		value = "name"
+		value = "name",
+		state = "ascending"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "amount"
+		value = "amount",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "memory"
+		value = "memory",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "models"
+		value = "models",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_bodies"
+		value = "nr_bodies",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "slot"
+		value = "slot",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "mass"
+		value = "mass",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_textures"
+		value = "nr_textures",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "nr_materials"
+		value = "nr_materials",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "vertices_per_tris"
+		value = "vertices_per_tris",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "instanced"
+		value = "instanced",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "author"
+		value = "author",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "unit_filename"
+		value = "unit_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "model_filename"
+		value = "model_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "diesel_filename"
+		value = "diesel_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "material_filename"
+		value = "material_filename",
+		state = "random"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "last_exported_from"
+		value = "last_exported_from",
+		state = "random"
 	})
 	panel_sizer:add(self._list, 2, 0, "EXPAND,TOP,BOTTOM")
 
@@ -2707,12 +2707,12 @@ function BrushLayerDebug:init(...)
 	self._column_states = {}
 
 	table.insert(self._column_states, {
-		state = "ascending",
-		value = "name"
+		value = "name",
+		state = "ascending"
 	})
 	table.insert(self._column_states, {
-		state = "random",
-		value = "amount"
+		value = "amount",
+		state = "random"
 	})
 
 	local toolbar_sizer = EWS:BoxSizer("VERTICAL")

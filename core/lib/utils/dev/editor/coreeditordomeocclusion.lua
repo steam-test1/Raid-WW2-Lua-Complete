@@ -42,8 +42,8 @@ function CoreEditor:_create_dome_occlusion(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
-		ignore_max_per_frame = true,
-		vis = false
+		vis = false,
+		ignore_max_per_frame = true
 	})
 
 	self._saved_hidden_object = {}
@@ -184,8 +184,8 @@ function CoreEditor:dome_occlusion_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
-		ignore_max_per_frame = false,
-		vis = true
+		vis = true,
+		ignore_max_per_frame = false
 	})
 
 	for _, obj in ipairs(self._saved_hidden_object) do

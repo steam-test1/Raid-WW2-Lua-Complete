@@ -157,23 +157,24 @@ function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id,
 		multiplicative = {}
 	}
 	local base_id = operation_id or mission_id
+	local job_data = game_state_machine:current_state():job_data()
 	local event_additive = {
 		id = "xp_additive_event"
 	}
 
 	if operation_id then
-		if table.index_of(game_state_machine:current_state():job_data().events_index, mission_id) == #game_state_machine:current_state():job_data().events_index then
+		if table.index_of(job_data.events_index, mission_id) == #job_data.events_index then
 			local operation_additive = {
 				id = "xp_additive_operation",
-				amount = tweak_data.operations.missions[operation_id].xp
+				amount = job_data.xp or 0
 			}
 
 			table.insert(exp_table.additive, operation_additive)
 		end
 
-		event_additive.amount = tweak_data.operations.missions[operation_id].events[mission_id].xp
+		event_additive.amount = job_data.events[mission_id].xp or 0
 	else
-		event_additive.amount = tweak_data.operations.missions[mission_id].xp
+		event_additive.amount = job_data.xp or 0
 	end
 
 	table.insert(exp_table.additive, event_additive)
@@ -217,8 +218,6 @@ function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id,
 
 	for _, event_id in ipairs(self._global.mission_xp) do
 		if table.contains(RaidExperienceManager.SCRIPT_XP_EVENTS, event_id) then
-			Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Event ID is a SCRIPT_XP_EVENTS id", event_id)
-
 			local event_id_data = tweak_data:get_value("experience_manager", event_id)
 
 			if event_id_data then
@@ -229,13 +228,8 @@ function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id,
 					local existing_event = false
 
 					for i, existing_event_multi in ipairs(exp_table.multiplicative) do
-						Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Should modify? ", existing_event_multi.event_id, event_loc_id, existing_event_multi.event_id == event_loc_id)
-
 						if existing_event_multi.id == event_loc_id then
 							existing_event_multi.amount = existing_event_multi.amount + event_amount
-
-							Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Modified event multi", existing_event_multi.id, existing_event_multi.amount)
-
 							existing_event = true
 
 							break
@@ -249,7 +243,6 @@ function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id,
 						}
 
 						table.insert(exp_table.multiplicative, event_multi)
-						Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Added event multi", event_loc_id, event_amount)
 					end
 				end
 			else

@@ -35,6 +35,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = top_left_icon.texture,
 		texture_rect = top_left_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -46,6 +47,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = top_icon.texture,
 		texture_rect = top_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -57,6 +59,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = top_right_icon.texture,
 		texture_rect = top_right_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -68,6 +71,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = self._object:h() - corner_size * 2,
 		texture = left_icon.texture,
 		texture_rect = left_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -80,6 +84,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = self._object:h() - corner_size * 2,
 		texture = center_icon.texture,
 		texture_rect = center_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -92,6 +97,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = self._object:h() - corner_size * 2,
 		texture = right_icon.texture,
 		texture_rect = right_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -103,6 +109,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = bottom_left_icon.texture,
 		texture_rect = bottom_left_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -115,6 +122,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = bottom_icon.texture,
 		texture_rect = bottom_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})
@@ -127,6 +135,7 @@ function RaidGUIControlNineCutBitmap:_layout_parts()
 		h = corner_size,
 		texture = bottom_right_icon.texture,
 		texture_rect = bottom_right_icon.texture_rect,
+		render_template = self._params.render_template,
 		alpha = self._params.alpha,
 		color = self._params.color
 	})

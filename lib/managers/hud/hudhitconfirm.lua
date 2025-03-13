@@ -3,10 +3,11 @@ HUDHitConfirm.MODE_OFF = 1
 HUDHitConfirm.MODE_MINIMAL = 2
 HUDHitConfirm.MODE_NORMAL = 3
 HUDHitConfirm.MODE_TRACK = 4
-HUDHitConfirm.COL_TYPE_HURT = "raid_white"
-HUDHitConfirm.COL_TYPE_KILL = "raid_red"
-HUDHitConfirm.COL_TYPE_CRIT = "raid_gold"
-HUDHitConfirm.COL_TYPE_IMMUNE = "raid_grey"
+HUDHitConfirm.COL_TYPE_HURT = "hitmarker_hurt"
+HUDHitConfirm.COL_TYPE_KILL = "hitmarker_kill"
+HUDHitConfirm.COL_TYPE_CRITKILL = "hitmarker_crit_kill"
+HUDHitConfirm.COL_TYPE_CRIT = "hitmarker_crit"
+HUDHitConfirm.COL_TYPE_IMMUNE = "hitmarker_weak"
 HUDHitConfirm.ICO_TYPE_BODY = "indicator_hit_body"
 HUDHitConfirm.ICO_TYPE_HEAD = "indicator_hit_head"
 HUDHitConfirm.ICO_TYPE_PELLET = "indicator_hit_dot"
@@ -39,10 +40,10 @@ end
 
 function HUDHitConfirm:_create_icon(name, icon)
 	local icon_params = {
-		valign = "center",
-		visible = false,
 		layer = 2,
 		halign = "center",
+		visible = false,
+		valign = "center",
 		name = name,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
@@ -69,7 +70,7 @@ function HUDHitConfirm:_on_hit_confirmed_as_single(data)
 	local is_armor = data.hit_type == HUDHitConfirm.HIT_ARMOR
 	local is_weakpoint = data.hit_type == HUDHitConfirm.HIT_WEAKPOINT
 	local hit_con = self._hit_confirm
-	local color, gui = nil
+	local gui = nil
 
 	if is_armor then
 		gui = tweak_data.gui.icons[HUDHitConfirm.ICO_TYPE_ARMOR]
@@ -91,6 +92,7 @@ end
 function HUDHitConfirm:on_hit_confirmed(data)
 	local is_minimalist_mode = managers.user:get_setting("hit_indicator") == HUDHitConfirm.MODE_MINIMAL
 	local is_pellet = not is_minimalist_mode and data.hit_type == HUDHitConfirm.HIT_SPLINTER
+	local crit_or_weak = data.is_crit or data.hit_type == HUDHitConfirm.HIT_WEAKPOINT
 	local hit_con = nil
 
 	if is_pellet then
@@ -102,10 +104,13 @@ function HUDHitConfirm:on_hit_confirmed(data)
 	local priority = data.is_headshot and 1 or 0
 	local col = nil
 
-	if data.is_killshot then
+	if data.is_killshot and crit_or_weak then
+		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_CRITKILL]
+		priority = priority + 4
+	elseif data.is_killshot then
 		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_KILL]
 		priority = priority + 4
-	elseif data.is_crit or data.hit_type == HUDHitConfirm.HIT_WEAKPOINT then
+	elseif crit_or_weak then
 		col = tweak_data.gui.colors[HUDHitConfirm.COL_TYPE_CRIT]
 		priority = priority + 2
 	elseif data.hit_type == HUDHitConfirm.HIT_ARMOR then

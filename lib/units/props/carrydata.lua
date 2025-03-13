@@ -410,41 +410,41 @@ function CarryData:_chk_register_steal_SO()
 	end
 
 	local drop_objective = {
-		interrupt_dis = 700,
-		haste = "walk",
-		action_duration = 2,
-		pose = "crouch",
 		type = "act",
+		haste = "walk",
 		interrupt_health = 0.9,
+		interrupt_dis = 700,
+		pose = "crouch",
+		action_duration = 2,
 		nav_seg = drop_nav_seg,
 		pos = drop_pos,
 		area = drop_area,
 		fail_clbk = callback(self, self, "on_secure_SO_failed"),
 		complete_clbk = callback(self, self, "on_secure_SO_completed"),
 		action = {
+			type = "act",
 			body_part = 1,
-			variant = "untie",
 			align_sync = true,
-			type = "act"
+			variant = "untie"
 		}
 	}
 	local pickup_objective = {
-		interrupt_dis = 700,
+		type = "act",
 		haste = "run",
 		destroy_clbk_key = false,
-		pose = "crouch",
-		type = "act",
 		interrupt_health = 0.9,
+		interrupt_dis = 700,
+		pose = "crouch",
 		nav_seg = pickup_nav_seg,
 		area = pickup_area,
 		pos = pickup_pos,
 		fail_clbk = callback(self, self, "on_pickup_SO_failed"),
 		complete_clbk = callback(self, self, "on_pickup_SO_completed"),
 		action = {
+			type = "act",
 			body_part = 1,
-			variant = "untie",
 			align_sync = true,
-			type = "act"
+			variant = "untie"
 		},
 		action_duration = math.lerp(1, 2.5, math.random()),
 		followup_objective = drop_objective

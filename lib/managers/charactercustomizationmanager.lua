@@ -40,6 +40,18 @@ function CharacterCustomizationManager:get_all_owned_customizations()
 	return self._global.owned_customizations
 end
 
+function CharacterCustomizationManager:is_customization_collection_complete(rarity)
+	local droppable_customizations = tweak_data.character_customization:get_droppable_customizations(rarity)
+
+	for _, key in ipairs(droppable_customizations) do
+		if not self._global.owned_customizations[key] then
+			return false
+		end
+	end
+
+	return true
+end
+
 function CharacterCustomizationManager:set_all_owned_customizations(customizations)
 	self:_filter_customizations(customizations)
 	self:_append_customizations(customizations, tweak_data.character_customization:get_defaults())

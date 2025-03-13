@@ -108,8 +108,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	size_keys:set_key_type("vector2")
 	size_keys:add_key({
-		t = 0,
-		v = "100 100"
+		v = "100 100",
+		t = 0
 	})
 	size_keys:set_min_max_keys(min_keys, max_keys)
 	size_keys:set_presets({
@@ -163,8 +163,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	size_scale_keys:set_key_type("vector2")
 	size_scale_keys:add_key({
-		t = 0,
-		v = "1 1"
+		v = "1 1",
+		t = 0
 	})
 	size_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", size_scale_keys)
@@ -185,8 +185,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		t = 0,
-		v = "255 255 255"
+		v = "255 255 255",
+		t = 0
 	})
 	color_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", color_keys)
@@ -195,8 +195,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_scale_keys:set_key_type("vector3")
 	color_scale_keys:add_key({
-		t = 0,
-		v = "1 1 1"
+		v = "1 1 1",
+		t = 0
 	})
 	color_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", color_scale_keys)
@@ -217,8 +217,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_keys:set_key_type("opacity")
 	opacity_keys:add_key({
-		t = 0,
-		v = "255"
+		v = "255",
+		t = 0
 	})
 	opacity_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", opacity_keys)
@@ -227,8 +227,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_scale_keys:set_key_type("float")
 	opacity_scale_keys:add_key({
-		t = 0,
-		v = "1"
+		v = "1",
+		t = 0
 	})
 	opacity_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", opacity_scale_keys)
@@ -249,8 +249,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	rotation_keys:set_key_type("angle")
 	rotation_keys:add_key({
-		t = 0,
-		v = "0"
+		v = "0",
+		t = 0
 	})
 	rotation_keys:set_min_max_keys(min_keys, max_keys)
 	rotation_keys:set_presets({
@@ -304,8 +304,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	rotation_scale_keys:set_key_type("float")
 	rotation_scale_keys:add_key({
-		t = 0,
-		v = "1"
+		v = "1",
+		t = 0
 	})
 	rotation_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", rotation_scale_keys)
@@ -436,8 +436,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		t = 0,
-		v = "255 255 255"
+		v = "255 255 255",
+		t = 0
 	})
 	color_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", color_keys)
@@ -446,8 +446,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_scale_keys:set_key_type("vector3")
 	color_scale_keys:add_key({
-		t = 0,
-		v = "1 1 1"
+		v = "1 1 1",
+		t = 0
 	})
 	color_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", color_scale_keys)
@@ -457,8 +457,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_multiplier_keys:set_key_type("vector3")
 	color_multiplier_keys:add_key({
-		t = 0,
-		v = "1 1 1"
+		v = "1 1 1",
+		t = 0
 	})
 	color_multiplier_keys:set_min_max_keys(min_keys, max_keys)
 	visualizer:add_property(color_multiplier_keys)
@@ -478,8 +478,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_keys:set_key_type("opacity")
 	opacity_keys:add_key({
-		t = 0,
-		v = "255"
+		v = "255",
+		t = 0
 	})
 	opacity_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", opacity_keys)
@@ -488,8 +488,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_scale_keys:set_key_type("float")
 	opacity_scale_keys:add_key({
-		t = 0,
-		v = "1"
+		v = "1",
+		t = 0
 	})
 	opacity_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", opacity_scale_keys)
@@ -499,8 +499,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_multiplier_keys:set_key_type("float")
 	opacity_multiplier_keys:add_key({
-		t = 0,
-		v = "1"
+		v = "1",
+		t = 0
 	})
 	opacity_multiplier_keys:set_min_max_keys(min_keys, max_keys)
 	visualizer:add_property(opacity_multiplier_keys)
@@ -520,8 +520,8 @@ scaled_channel - read from channel, scale over length with key curve]]
 
 	width_keys:set_key_type("float")
 	width_keys:add_key({
-		t = 0,
-		v = "50"
+		v = "50",
+		t = 0
 	})
 	width_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", width_keys)
@@ -530,8 +530,8 @@ scaled_channel - read from channel, scale over length with key curve]]
 
 	width_scale_keys:set_key_type("float")
 	width_scale_keys:add_key({
-		t = 0,
-		v = "1"
+		v = "1",
+		t = 0
 	})
 	width_scale_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("scaled_channel", width_scale_keys)
@@ -602,8 +602,8 @@ channel - read from channel]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		t = 0,
-		v = "255 255 255"
+		v = "255 255 255",
+		t = 0
 	})
 	color_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", color_keys)
@@ -623,8 +623,8 @@ channel - read from channel]]
 
 	multiplier_keys:set_key_type("float")
 	multiplier_keys:add_key({
-		t = 0,
-		v = "1.0"
+		v = "1.0",
+		t = 0
 	})
 	multiplier_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", multiplier_keys)
@@ -644,8 +644,8 @@ channel - read from channel]]
 
 	far_range_keys:set_key_type("float")
 	far_range_keys:add_key({
-		t = 0,
-		v = "100"
+		v = "100",
+		t = 0
 	})
 	far_range_keys:set_min_max_keys(min_keys, max_keys)
 	p:add_variant("keys", far_range_keys)

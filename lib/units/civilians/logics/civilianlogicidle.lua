@@ -247,8 +247,8 @@ function CivilianLogicIdle._delayed_alert_clbk(ignore_this, params)
 	data.call_police_delay_t = data.call_police_delay_t or TimerManager:game():time() + 20 + 10 * math.random()
 
 	data.unit:brain():set_objective({
-		is_default = true,
 		type = "free",
+		is_default = true,
 		alert_data = alert_data
 	})
 end
@@ -283,8 +283,8 @@ function CivilianLogicIdle.damage_clbk(data, damage_info)
 	end
 
 	data.unit:brain():set_objective({
-		is_default = true,
 		type = "free",
+		is_default = true,
 		dmg_info = damage_info
 	})
 end

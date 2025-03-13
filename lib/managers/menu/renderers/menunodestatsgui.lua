@@ -79,10 +79,10 @@ function MenuNodeStatsGui:_setup_stats(node)
 			y = y
 		})
 		local text = panel:text({
+			y = 0,
 			vertical = "center",
 			halign = "center",
 			align = "center",
-			y = 0,
 			font_size = tweak_data.menu.stats_font_size,
 			x = safe_rect.x,
 			w = safe_rect.width,
@@ -110,11 +110,11 @@ function MenuNodeStatsGui:_add_stats(params)
 		y = y
 	})
 	local topic = panel:text({
+		y = 0,
+		x = 0,
 		vertical = "center",
 		halign = "right",
 		align = "right",
-		y = 0,
-		x = 0,
 		font_size = tweak_data.menu.stats_font_size,
 		w = self:_left_align(),
 		font = self.font,
@@ -130,10 +130,10 @@ function MenuNodeStatsGui:_add_stats(params)
 
 	if params.type == "text" then
 		local text = panel:text({
+			y = 0,
 			vertical = "center",
 			halign = "left",
 			align = "left",
-			y = 0,
 			font_size = tweak_data.menu.stats_font_size,
 			x = self:_right_align(),
 			h = h,
@@ -147,21 +147,21 @@ function MenuNodeStatsGui:_add_stats(params)
 
 	if params.type == "progress" then
 		local bg = panel:rect({
+			w = 256,
+			h = 22,
 			vertical = "center",
 			halign = "center",
-			h = 22,
 			align = "center",
-			w = 256,
 			x = self:_right_align(),
 			y = h / 2 - 11,
 			color = Color.black:with_alpha(0.5),
 			layer = self.layers.items - 1
 		})
 		local bar = panel:gradient({
+			orientation = "vertical",
 			vertical = "center",
 			halign = "center",
 			align = "center",
-			orientation = "vertical",
 			gradient_points = {
 				0,
 				Color(1, 1, 0.6588235294117647, 0),
@@ -175,11 +175,11 @@ function MenuNodeStatsGui:_add_stats(params)
 			layer = self.layers.items
 		})
 		local text = panel:text({
+			y = 0,
+			valign = "center",
 			vertical = "center",
 			halign = "center",
-			valign = "center",
 			align = "center",
-			y = 0,
 			font_size = tweak_data.menu.stats_font_size,
 			x = self:_right_align(),
 			h = h,

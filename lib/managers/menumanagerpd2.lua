@@ -94,32 +94,32 @@ end
 function MenuInitiatorBase:create_toggle(node, params)
 	local data_node = {
 		{
-			icon = "ui/main_menu/textures/debug_menu_tickbox",
-			_meta = "option",
-			s_h = 24,
-			s_w = 24,
-			s_y = 24,
 			s_x = 24,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
 			h = 24,
 			w = 24,
 			y = 0,
 			x = 24,
-			value = "on"
-		},
-		{
+			value = "on",
 			icon = "ui/main_menu/textures/debug_menu_tickbox",
 			_meta = "option",
 			s_h = 24,
 			s_w = 24,
-			s_y = 24,
+			s_y = 24
+		},
+		{
 			s_x = 0,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
 			h = 24,
 			w = 24,
 			y = 0,
 			x = 0,
-			value = "off"
+			value = "off",
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
+			_meta = "option",
+			s_h = 24,
+			s_w = 24,
+			s_y = 24
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}

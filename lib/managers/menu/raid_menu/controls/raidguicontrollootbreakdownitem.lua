@@ -115,12 +115,12 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
+		name = "counter",
+		valign = "top",
 		text = "",
 		vertical = "center",
-		name = "counter",
 		align = "center",
 		halign = "scale",
-		valign = "top",
 		h = RaidGUIControlLootBreakdownItem.COUNTER_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,
 		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
@@ -143,11 +143,11 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
-		vertical = "center",
+		valign = "top",
 		name = "counter",
+		vertical = "center",
 		align = "center",
 		halign = "scale",
-		valign = "top",
 		y = self._counter:y() + self._counter:h(),
 		h = RaidGUIControlLootBreakdownItem.TITLE_H,
 		font = RaidGUIControlLootBreakdownItem.FONT,

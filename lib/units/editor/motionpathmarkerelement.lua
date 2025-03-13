@@ -233,9 +233,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw and unit then
 			self:_draw_link({
-				b = 0.01,
 				g = 0.849,
 				r = 0.514,
+				b = 0.01,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -249,9 +249,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 			if draw and alive(unit) and alive(self._unit) then
 				self:_draw_link({
-					b = 0.01,
 					g = 0.449,
 					r = 0.8,
+					b = 0.01,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -266,9 +266,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 			if alive(marker_from) and alive(marker_to) then
 				self:_draw_link({
-					b = 0.01,
 					g = 1,
 					r = 1,
+					b = 0.01,
 					from_unit = marker_from,
 					to_unit = marker_to
 				})

@@ -176,8 +176,8 @@ function WarcryManager:activate_warcry()
 	if not can_activate then
 		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
 		local notification_data = {
-			shelf_life = 5,
 			sound_effect = "generic_fail_sound",
+			shelf_life = 5,
 			id = self.WARCRY_BLOCKED_TEXT,
 			text = managers.localization:text(blocked_text_id),
 			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION
@@ -319,8 +319,8 @@ end
 
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
-		id = "warcry",
 		text_id = "com_wheel_warcry",
+		id = "warcry",
 		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
 		color = Color.white,
 		clbk = callback(self, self, "activate_warcry")
@@ -363,9 +363,9 @@ function WarcryManager:_on_meter_full(skip_notification)
 			end
 
 			managers.hud:set_big_prompt({
-				id = "warcry_ready",
-				background = "backgrounds_warcry_msg",
 				priority = true,
+				background = "backgrounds_warcry_msg",
+				id = "warcry_ready",
 				flares = true,
 				title = prompt_title,
 				description = prompt_desc,

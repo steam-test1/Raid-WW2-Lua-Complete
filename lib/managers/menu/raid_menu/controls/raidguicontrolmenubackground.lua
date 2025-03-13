@@ -9,73 +9,79 @@ function RaidGUIControlMenuBackground:init()
 		visible = false,
 		alpha = 0
 	})
-	self._background_video = self._hud_panel:video({
-		loop = true,
-		visible = false,
-		video = "movies/vanilla/raid_anim_bg"
-	})
-
-	managers.video:add_video(self._background_video)
-
 	self._base_resolution = tweak_data.gui.base_resolution
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
 	self._visible = false
 
-	self:_create_backgrounds()
+	self:_layout_background()
 end
 
-function RaidGUIControlMenuBackground:_create_backgrounds()
+function RaidGUIControlMenuBackground:destroy()
+	if self._resolution_changed_callback_id then
+		managers.viewport:remove_resolution_changed_func(self._resolution_changed_callback_id)
+	end
+
+	if self._background_video then
+		managers.video:remove_video(self._background_video)
+	end
+
+	self._hud_panel:clear()
+	managers.gui_data:destroy_workspace(self._workspace)
+end
+
+function RaidGUIControlMenuBackground:_layout_background()
 	local blur = self._object:bitmap({
-		valign = "scale",
-		alpha = 0.65,
-		render_template = "VertexColorTexturedBlur3D",
 		name = "blur",
+		render_template = "VertexColorTexturedBlur3D",
 		texture = "ui/icons/white_df",
 		halign = "scale",
+		alpha = 0.65,
+		valign = "scale",
 		w = self._object:w(),
 		h = self._object:h()
 	})
 	local tint = self._object:bitmap({
-		alpha = 0.92,
 		name = "color_tint",
-		halign = "scale",
-		valign = "scale",
 		render_template = "VertexColorTexturedGrayscale3D",
 		texture = "ui/icons/white_df",
-		layer = blur:layer() - 1,
-		color = Color(0.9, 0.82, 0.6),
+		halign = "scale",
+		valign = "scale",
+		alpha = 0.92,
 		w = self._object:w(),
-		h = self._object:h()
+		h = self._object:h(),
+		color = Color(0.9, 0.82, 0.6),
+		layer = blur:layer() - 1
 	})
+	local background_gui = tweak_data.gui.backgrounds.secondary_menu
 	local background = self._object:bitmap({
-		alpha = 0.75,
 		name = "fullscreen_background",
 		halign = "scale",
 		valign = "scale",
-		texture = tweak_data.gui.backgrounds.secondary_menu.texture,
-		texture_rect = tweak_data.gui.backgrounds.secondary_menu.texture_rect,
-		layer = blur:layer() + 1,
+		alpha = 0.75,
 		w = self._object:w(),
-		h = self._object:h()
+		h = self._object:h(),
+		texture = background_gui.texture,
+		texture_rect = background_gui.texture_rect,
+		layer = blur:layer() + 1
 	})
 	self._vignette = self._object:bitmap({
-		valign = "scale",
 		name = "vignette",
-		halign = "scale",
 		texture = "core/textures/vignette",
-		layer = blur:layer() + 4,
+		halign = "scale",
+		valign = "scale",
 		w = self._object:w(),
-		h = self._object:h()
+		h = self._object:h(),
+		layer = blur:layer() + 4
 	})
 	local noise_w = self._object:w() + RaidGUIControlMenuBackground.NOISE_PADDING
 	local noise_h = self._object:h() + RaidGUIControlMenuBackground.NOISE_PADDING
 	self._grain = self._object:bitmap({
-		wrap_mode = "wrap",
-		blend_mode = "add",
 		name = "film_grain",
+		texture = "core/textures/noise",
 		halign = "scale",
 		valign = "scale",
-		texture = "core/textures/noise",
+		wrap_mode = "wrap",
+		blend_mode = "add",
 		w = noise_w,
 		h = noise_h,
 		texture_rect = {
@@ -89,6 +95,16 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 	})
 end
 
+function RaidGUIControlMenuBackground:_layout_video()
+	self._background_video = self._hud_panel:video({
+		loop = true,
+		visible = false,
+		video = "movies/vanilla/raid_anim_bg"
+	})
+
+	managers.video:add_video(self._background_video)
+end
+
 function RaidGUIControlMenuBackground:set_visible(visible)
 	if self._visible == visible then
 		return
@@ -96,7 +112,7 @@ function RaidGUIControlMenuBackground:set_visible(visible)
 
 	self._visible = visible
 
-	if not visible then
+	if not visible and self._background_video then
 		self:set_video_visible(false)
 	end
 
@@ -104,7 +120,17 @@ function RaidGUIControlMenuBackground:set_visible(visible)
 	self._object:animate(callback(self, self, visible and "_animate_show" or "_animate_hide"))
 end
 
+function RaidGUIControlMenuBackground:set_right(right)
+	right = right or self._hud_panel:w()
+
+	self._object:set_right(right)
+end
+
 function RaidGUIControlMenuBackground:set_video_visible(visible)
+	if not self._background_video then
+		self:_layout_video()
+	end
+
 	if visible then
 		self._background_video:play()
 		self._object:stop()
@@ -114,16 +140,6 @@ function RaidGUIControlMenuBackground:set_video_visible(visible)
 	end
 
 	self._background_video:set_visible(visible)
-end
-
-function RaidGUIControlMenuBackground:destroy()
-	if self._resolution_changed_callback_id then
-		managers.viewport:remove_resolution_changed_func(self._resolution_changed_callback_id)
-	end
-
-	managers.video:remove_video(self._background_video)
-	self._hud_panel:clear()
-	managers.gui_data:destroy_workspace(self._workspace)
 end
 
 function RaidGUIControlMenuBackground:resolution_changed()

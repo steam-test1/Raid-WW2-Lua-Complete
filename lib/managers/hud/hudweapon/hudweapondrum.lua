@@ -56,8 +56,8 @@ function HUDWeaponDrum:_create_clip_left_info(weapons_panel)
 
 		local layer = clip_left_background:layer() + 1
 		local clip_left_fill = self._ammo_panel:bitmap({
-			render_template = "VertexColorTexturedRadial",
 			position_z = 1,
+			render_template = "VertexColorTexturedRadial",
 			name = "clip_left_fill" .. i,
 			texture = gui[2].texture,
 			texture_rect = gui[2].texture_rect,

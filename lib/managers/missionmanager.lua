@@ -434,11 +434,8 @@ function MissionManager:start_root_level_script()
 	self._root_level_script_started = true
 	local level = Global.level_data.level
 	local mission = Global.level_data.mission
-	local world_setting = Global.level_data.world_setting
-	local level_class_name = Global.level_data.level_class_name
-	local level_class = level_class_name and rawget(_G, level_class_name)
 
-	print("[MissionManager:start_root_level_script()]", level, mission, level_class_name)
+	print("[MissionManager:start_root_level_script()]", level, mission)
 
 	if level then
 		local level_path = "levels/" .. tostring(level)

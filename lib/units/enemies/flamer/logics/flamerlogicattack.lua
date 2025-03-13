@@ -153,8 +153,8 @@ function FlamerLogicAttack.update(data)
 
 			if focus_enemy.verified_dis < 800 and unit:anim_data().run then
 				local new_action = {
-					body_part = 2,
-					type = "idle"
+					type = "idle",
+					body_part = 2
 				}
 
 				data.unit:brain():action_request(new_action)
@@ -235,7 +235,7 @@ function FlamerLogicAttack._chk_throw_throwable(data, my_data, focus)
 
 	local head_pos = mov_ext:m_head_pos()
 	local throw_dis = focus.verified_dis
-	local min_distance = my_data.weapon_range_max * 1.1
+	local min_distance = my_data.weapon_range_max * 0.9
 
 	if not math_within(throw_dis, min_distance, 2400) then
 		return
@@ -260,7 +260,7 @@ function FlamerLogicAttack._chk_throw_throwable(data, my_data, focus)
 	mvec3_set_z(throw_dir, throw_dir.z + adjust)
 	mvec3_norm(throw_dir)
 
-	data.projectile_thrown_t = data.t + 35
+	data.projectile_thrown_t = data.t + (data.char_tweak.throwable.cooldown or 35)
 
 	if mov_ext:play_redirect("throw_grenade") then
 		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", data.unit, "throw_grenade")
@@ -305,8 +305,8 @@ function FlamerLogicAttack._cancel_chase_attempt(data, my_data)
 
 	if my_data.walking_to_chase_pos then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)
@@ -362,9 +362,9 @@ end
 function FlamerLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
-			no_strafe = false,
 			body_part = 2,
 			type = "walk",
+			no_strafe = false,
 			nav_path = my_data.chase_path,
 			variant = speed or "run",
 			end_rot = end_rot

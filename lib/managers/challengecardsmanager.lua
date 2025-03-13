@@ -157,10 +157,10 @@ function ChallengeCardsManager:get_temp_steam_loot()
 	return self._temp_steam_loot
 end
 
-function ChallengeCardsManager:get_card_description(card_key_name)
+function ChallengeCardsManager:get_card_description(card)
 	local positive_description = ""
 	local negative_description = ""
-	local card_data = self:get_challenge_card_data(card_key_name)
+	local card_data = type(card) == "string" and self:get_challenge_card_data(card) or card
 
 	if card_data then
 		if card_data.positive_description then
@@ -179,6 +179,8 @@ function ChallengeCardsManager:get_card_description(card_key_name)
 			end
 		end
 	end
+
+	Application:info("[ChallengeCardsManager:get_card_description]", card, positive_description, negative_description)
 
 	return positive_description, negative_description
 end
@@ -238,9 +240,11 @@ function ChallengeCardsManager:get_active_card()
 end
 
 function ChallengeCardsManager:set_active_card(card)
+	Application:trace(" ***************** [ChallengeCardsManager:set_active_card] card ", inspect(card))
+
 	self._active_card = card
 
-	if self._active_card and self._active_card.status == ChallengeCardsManager.CARD_STATUS_ACTIVE then
+	if self._active_card and self._active_card.status == ChallengeCardsManager.CARD_STATUS_ACTIVE and self._active_card.effects then
 		for _, effect in pairs(self._active_card.effects) do
 			effect.challenge_card_key = self._active_card.key_name
 			local effect_id = managers.buff_effect:activate_effect(effect)
@@ -256,6 +260,7 @@ function ChallengeCardsManager:set_active_card(card)
 		local card_status = card.status or ChallengeCardsManager.CARD_STATUS_ACTIVE
 
 		managers.network:session():send_to_peers_synched("sync_active_challenge_card", card_key, locked, card_status)
+		managers.network.matchmake:set_challenge_card_info()
 	end
 end
 
@@ -305,6 +310,8 @@ function ChallengeCardsManager:get_active_card_status()
 end
 
 function ChallengeCardsManager:mark_active_card_as_spent()
+	Application:trace("[ChallengeCardsManager:mark_active_card_as_spent]")
+
 	if self._active_card then
 		self._active_card.spent = true
 	end
@@ -340,14 +347,18 @@ end
 function ChallengeCardsManager:_activate_challenge_card()
 	Application:debug("[ChallengeCardsManager:_activate_challenge_card]")
 
-	managers.challenge_cards._suggested_cards = nil
-	managers.challenge_cards._temp_steam_loot = nil
+	self._suggested_cards = nil
+	self._temp_steam_loot = nil
 
 	if not self._active_card or self._active_card and self._active_card.status ~= ChallengeCardsManager.CARD_STATUS_NORMAL then
+		Application:warn("[ChallengeCardsManager:_activate_challenge_card] Card was not in normal state, skipping. State:", self._active_card and self._active_card.status)
+
 		return
 	end
 
-	if self._active_card.key_name == ChallengeCardsManager.CARD_PASS_KEY_NAME then
+	if self._active_card.key_name == "empty" then
+		Application:warn("[ChallengeCardsManager:_activate_challenge_card] Active card was an empty, skipping activation!")
+
 		return
 	end
 
@@ -357,10 +368,14 @@ function ChallengeCardsManager:_activate_challenge_card()
 
 	self._active_card.status = ChallengeCardsManager.CARD_STATUS_ACTIVE
 
+	Application:debug("[ChallengeCardsManager:_activate_challenge_card] Setting active card status to", self._active_card.status)
+
 	for _, effect in pairs(self._active_card.effects) do
 		effect.challenge_card_key = self._active_card.key_name
 		local effect_id = managers.buff_effect:activate_effect(effect)
 		effect.effect_id = effect_id
+
+		Application:debug("[ChallengeCardsManager:_activate_challenge_card] Effect", effect_id, effect)
 	end
 
 	if Network:is_server() then
@@ -406,11 +421,7 @@ end
 
 function ChallengeCardsManager:deactivate_active_challenge_card()
 	if self._active_card then
-		if self._active_card.effects then
-			for _, effect in pairs(self._active_card.effects) do
-				managers.buff_effect:deactivate_effect(effect.effect_id)
-			end
-		end
+		self:deactivate_active_effects()
 
 		self._active_card.status = ChallengeCardsManager.CARD_STATUS_FAILED
 	end
@@ -422,19 +433,22 @@ end
 
 function ChallengeCardsManager:remove_active_challenge_card()
 	if not self._active_card then
+		Application:warn("[ChallengeCardsManager:remove_active_challenge_card] Cannot remove active card", self._active_card)
+
 		return
 	end
 
+	Application:debug("[ChallengeCardsManager:remove_active_challenge_card] Removing active card", self._active_card and self._active_card.key_name)
 	self:deactivate_active_effects()
 
 	self._active_card = nil
 end
 
 function ChallengeCardsManager:deactivate_active_effects()
-	if self._active_card and self._active_card.effects then
-		for _, effect in pairs(self._active_card.effects) do
-			managers.buff_effect:deactivate_effect(effect.effect_id)
-		end
+	if self._active_card and self._active_card.key_name then
+		managers.buff_effect:deactivate_effect_by_card_id(self._active_card.key_name)
+	else
+		Application:warn("[ChallengeCardsManager:deactivate_active_effects] Cannot remove active card by key", self._active_card and self._active_card.key_name)
 	end
 end
 
@@ -521,6 +535,11 @@ end
 
 function ChallengeCardsManager:sync_toggle_lock_suggested_challenge_card(peer_id)
 	local suggested_card = self._suggested_cards[peer_id]
+
+	if not suggested_card then
+		return
+	end
+
 	suggested_card.locked_suggestion = not suggested_card.locked_suggestion
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
@@ -653,17 +672,19 @@ function ChallengeCardsManager:get_card_xp_label(card_key_name, hide_xp_suffix)
 	return result
 end
 
-function ChallengeCardsManager:get_loot_drop_group(card_name)
-	if not card_name then
+function ChallengeCardsManager:get_loot_drop_group(card)
+	if not card then
+		Application:error("[ChallengeCardsManager:get_loot_drop_group] Card name was nil!", card)
+
 		return
 	end
 
-	Application:debug("[ChallengeCardsManager:get_loot_drop_group]", card_name)
+	local card_data = type(card) == "string" and self:get_challenge_card_data(card) or card
+	local loot_drop_group = card_data.loot_drop_group
 
-	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_name)
-	local has_group = not not card_data.loot_drop_group
+	Application:debug("[ChallengeCardsManager:get_loot_drop_group] card loot drop group", LootDropTweakData.LOOT_GROUP_PREFIX, loot_drop_group)
 
-	return has_group and LootDropTweakData.LOOT_GROUP_PREFIX .. card_data.loot_drop_group or nil
+	return loot_drop_group and LootDropTweakData.LOOT_GROUP_PREFIX .. loot_drop_group or nil
 end
 
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)

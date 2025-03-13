@@ -10,106 +10,106 @@ EventCompleteState.SCREEN_ACTIVE_EXPERIENCE = 6
 EventCompleteState.LOOT_DATA_READY_KEY = "loot_data_ready"
 EventCompleteState.SUCCESS_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007"
+		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007"
+		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_03_salutes_v006"
+		path = "movies/vanilla/debrief_success/s_03_salutes_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008"
+		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006"
+		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006"
+		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007"
+		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_08_chess_v008"
+		path = "movies/vanilla/debrief_success/s_08_chess_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007"
+		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009"
+		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_11_swears_v005"
+		path = "movies/vanilla/debrief_success/s_11_swears_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005"
+		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007"
+		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_success/s_14_moustache_v006"
+		path = "movies/vanilla/debrief_success/s_14_moustache_v006",
+		chance = 1
 	}
 }
 EventCompleteState.FAILURE_VIDEOS = {
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007"
+		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007"
+		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_03_toasts_v008"
+		path = "movies/vanilla/debrief_failure/f_03_toasts_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008"
+		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008"
+		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008"
+		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008"
+		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008"
+		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008"
+		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_10_executes_v008"
+		path = "movies/vanilla/debrief_failure/f_10_executes_v008",
+		chance = 1
 	},
 	{
-		chance = 1,
-		path = "movies/vanilla/debrief_failure/f_11_sings_v007"
+		path = "movies/vanilla/debrief_failure/f_11_sings_v007",
+		chance = 1
 	}
 }
 
@@ -121,9 +121,9 @@ function EventCompleteState:init(game_state_machine, setup)
 	self._controller = nil
 	self._continue_block_timer = 0
 	self._awarded_rewards = {
-		loot = false,
+		greed_gold = false,
 		xp = false,
-		greed_gold = false
+		loot = false
 	}
 end
 
@@ -140,7 +140,7 @@ function EventCompleteState:set_controller_enabled(enabled)
 end
 
 function EventCompleteState:at_enter(old_state, params)
-	Application:trace("[EventCompleteState:at_enter()]")
+	Application:trace("[EventCompleteState] at_enter")
 	managers.player:replenish_player()
 
 	local player = managers.player:player_unit()
@@ -166,20 +166,21 @@ function EventCompleteState:at_enter(old_state, params)
 		self._controller_list[index] = con
 	end
 
-	self.loot_data = {}
 	self.is_at_last_event = managers.raid_job:is_at_last_event()
 	self._success = managers.raid_job:stage_success()
 	self.initial_xp = managers.experience:total()
 	self.initial_skills_xp = self:get_skill_xp_progress()
+	self.loot_data = {}
 	self.peers_loot_drops = {}
+	self._difficulty = Global.game_settings.difficulty
 
 	managers.consumable_missions:on_mission_completed(self._success)
 	managers.system_event_listener:add_listener("event_complete_state_top_stats_ready", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.TOP_STATS_READY
 	}, callback(self, self, "on_top_stats_ready"))
 
-	self._job_type = managers.raid_job:current_job_type()
-	self._current_job_data = clone(managers.raid_job:current_job())
+	self._current_job_data = managers.raid_job:current_job() and clone(managers.raid_job:current_job()) or managers.raid_job:previously_completed_job() and clone(managers.raid_job:previously_completed_job())
+	self._job_type = self._current_job_data.job_type
 	self._active_challenge_card = managers.challenge_cards:get_active_card()
 
 	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
@@ -233,7 +234,7 @@ function EventCompleteState:at_enter(old_state, params)
 	local total_killed = managers.statistics:session_total_killed()
 
 	if self.is_at_last_event then
-		local is_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
+		local is_operation = self._job_type == OperationsTweakData.JOB_TYPE_OPERATION
 
 		if is_operation and self:is_success() or not is_operation then
 			managers.challenge_cards:remove_active_challenge_card()
@@ -262,30 +263,26 @@ function EventCompleteState:at_enter(old_state, params)
 	else
 		self:_continue()
 	end
-
-	self._difficulty = Global.game_settings.difficulty
 end
 
 function EventCompleteState:_calculate_card_xp_bonuses()
-	local card_bonus_xp = 0
+	local card_xp_addition = 0
+	local card_xp_multiplier = 1
 
 	if self._active_challenge_card and self._active_challenge_card.status == ChallengeCardsManager.CARD_STATUS_SUCCESS then
-		local card = tweak_data.challenge_cards.cards[self._active_challenge_card[ChallengeCardsTweakData.KEY_NAME_FIELD]]
-		card_bonus_xp = card.bonus_xp or 0
+		card_xp_addition = self._active_challenge_card.bonus_xp or 0
 	end
-
-	local card_xp_multiplier = 1
 
 	if self._active_challenge_card and self._active_challenge_card.status == ChallengeCardsManager.CARD_STATUS_SUCCESS then
 		card_xp_multiplier = self._active_challenge_card.bonus_xp_multiplier or 1
 	end
 
-	self._card_bonus_xp = card_bonus_xp
+	self._card_xp_addition = card_xp_addition
 	self._card_xp_multiplier = card_xp_multiplier
 end
 
 function EventCompleteState:card_bonus_xp()
-	return self._card_bonus_xp
+	return self._card_xp_addition
 end
 
 function EventCompleteState:card_xp_multiplier()
@@ -310,9 +307,9 @@ function EventCompleteState:_calculate_extra_loot_secured()
 
 	if extra_loot_value > 0 then
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
+			total_value = 0,
 			icon = "rewards_extra_loot",
 			title = "menu_loot_screen_bonus_loot",
-			total_value = 0,
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
@@ -333,8 +330,8 @@ function EventCompleteState:on_loot_data_ready()
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
-		title = "menu_loot_screen_dog_tags",
 		icon = "rewards_dog_tags",
+		title = "menu_loot_screen_dog_tags",
 		acquired = self.loot_acquired,
 		total = self.loot_spawned,
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
@@ -346,7 +343,7 @@ function EventCompleteState:on_loot_data_ready()
 end
 
 function EventCompleteState:drop_loot_for_player()
-	Application:info("[EventCompleteState:drop_loot_for_player]")
+	Application:info("[EventCompleteState] drop_loot_for_player")
 
 	local acquired_loot_value = 0
 	local total_loot_value = 0
@@ -358,23 +355,27 @@ function EventCompleteState:drop_loot_for_player()
 		total_loot_value = total_loot_value + loot_item.total_value
 	end
 
-	if total_loot_value ~= 0 then
+	if total_loot_value > 0 then
 		loot_percentage = acquired_loot_value / total_loot_value
 	end
 
 	local loot_percentage = math.clamp(loot_percentage, 0, 1)
 
 	if self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty" then
-		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
+		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card)
+
+		Application:info("[EventCompleteState] Challenge card active, Forced loot group is:", forced_loot_group, "from card", self._active_challenge_card.key_name)
 	end
 
-	managers.lootdrop:give_loot_to_player(loot_percentage, false, forced_loot_group)
+	managers.lootdrop:give_loot_to_player(loot_percentage, forced_loot_group)
 
 	self._awarded_rewards.loot = true
+
+	Application:info("[EventCompleteState] drop_loot_for_player DONE!")
 end
 
 function EventCompleteState:on_loot_dropped_for_player()
-	Application:trace("[EventCompleteState:on_loot_dropped_for_player()]")
+	Application:trace("[EventCompleteState] on_loot_dropped_for_player")
 
 	self.local_player_loot_drop = managers.lootdrop:get_dropped_loot()
 
@@ -384,7 +385,7 @@ function EventCompleteState:on_loot_dropped_for_player()
 end
 
 function EventCompleteState:on_loot_dropped_for_peer()
-	Application:trace("[EventCompleteState:on_loot_dropped_for_peer()]")
+	Application:trace("[EventCompleteState] on_loot_dropped_for_peer")
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 
@@ -426,8 +427,8 @@ function EventCompleteState:_create_debrief_video()
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		is_root_panel = true,
 		name = "event_complete_video_root_panel",
+		is_root_panel = true,
 		x = full_panel:x(),
 		y = full_panel:y(),
 		h = full_panel:h(),
@@ -645,8 +646,8 @@ function EventCompleteState:on_top_stats_ready()
 			end
 
 			local top_stats_loot_data = {
-				title = "menu_loot_screen_top_stats",
 				icon = "rewards_top_stats",
+				title = "menu_loot_screen_top_stats",
 				acquired = #self.player_top_stats,
 				total = #self.special_honors,
 				acquired_value = acquired_value,
@@ -662,7 +663,7 @@ function EventCompleteState:on_top_stats_ready()
 		acquired_value = acquired_value + tweak_data.statistics.top_stats[stat.id].loot_value
 	end
 
-	local is_in_operation = managers.raid_job:current_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION
+	local is_in_operation = self._job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	self.stats_ready = true
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS and managers.menu_component._raid_menu_special_honors_gui then
@@ -768,7 +769,7 @@ function EventCompleteState:get_skill_xp_progress()
 end
 
 function EventCompleteState:get_base_xp_breakdown()
-	local is_in_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
+	local is_in_operation = self._job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	local current_operation = is_in_operation and self._current_job_data.job_id or nil
 	local current_event = nil
 
@@ -793,22 +794,23 @@ function EventCompleteState:calculate_xp()
 	local additive = 0
 
 	for i = 1, #self.xp_breakdown.additive do
-		additive = additive + self.xp_breakdown.additive[i].amount
+		additive = additive + (self.xp_breakdown.additive[i].amount or 0)
 	end
 
 	local multiplicative = 1
 
 	for i = 1, #self.xp_breakdown.multiplicative do
-		multiplicative = multiplicative + self.xp_breakdown.multiplicative[i].amount
+		local amount = self.xp_breakdown.multiplicative[i].amount or 0
+		multiplicative = multiplicative + amount
 
 		if self.xp_breakdown.multiplicative[i].id == "xp_multiplicative_level_difference" then
-			self._level_difference_bonus = 1 + self.xp_breakdown.multiplicative[i].amount
+			self._level_difference_bonus = 1 + amount
 		end
 	end
 
 	self.total_xp = additive * multiplicative
 
-	Application:info("[EventCompleteState:calculate_xp] NEW XP Total: " .. tostring(self.total_xp))
+	Application:info("[EventCompleteState] NEW XP Total: " .. tostring(self.total_xp))
 
 	return self.total_xp
 end
@@ -822,7 +824,7 @@ function EventCompleteState:recalculate_xp()
 end
 
 function EventCompleteState:award_xp(value)
-	Application:trace("[EventCompleteState:award_xp()] value: " .. tostring(value))
+	Application:trace("[EventCompleteState] value: " .. tostring(value))
 	managers.experience:add_points(value, false)
 
 	local skill_value = value
@@ -830,7 +832,7 @@ function EventCompleteState:award_xp(value)
 	if self._level_difference_bonus and self._level_difference_bonus > 1 then
 		skill_value = skill_value / self._level_difference_bonus
 
-		Application:trace("[EventCompleteState:award_xp()] reduced skill value: " .. tostring(skill_value), self._level_difference_bonus)
+		Application:trace("[EventCompleteState] reduced skill value: " .. tostring(skill_value), self._level_difference_bonus)
 	end
 
 	managers.skilltree:add_skill_points(skill_value)
@@ -848,7 +850,7 @@ function EventCompleteState:is_success()
 end
 
 function EventCompleteState:at_exit(next_state)
-	Application:trace("[EventCompleteState:at_exit()]")
+	Application:trace("[EventCompleteState] at_exit")
 	self:_clear_controller()
 
 	if managers.network.voice_chat then
@@ -940,7 +942,7 @@ function EventCompleteState:continue()
 end
 
 function EventCompleteState:_continue()
-	Application:trace("[EventCompleteState:_continue()]")
+	Application:trace("[EventCompleteState] _continue")
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_DEBRIEF_VIDEO then
 		self._active_screen = EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS
@@ -1074,10 +1076,10 @@ function EventCompleteState:_set_memory()
 end
 
 function EventCompleteState:set_statistics_values()
-	Application:info("[EventCompleteState:set_statistics_values] complete job with challenge card", self._active_challenge_card and inspect(self._active_challenge_card))
+	Application:info("[EventCompleteState] set_statistics_values: complete job with challenge card", self._active_challenge_card and inspect(self._active_challenge_card))
 
 	if self._active_challenge_card and self._active_challenge_card.event and managers.event_system:is_event_active() then
-		Application:info("[EventCompleteState:set_statistics_values] event", self._active_challenge_card and self._active_challenge_card.event)
+		Application:info("[EventCompleteState] set_statistics_values: event", self._active_challenge_card and self._active_challenge_card.event)
 
 		return
 	end

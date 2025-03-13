@@ -1214,7 +1214,7 @@ function WorldDefinition:_create_massunit(data, offset)
 	end
 end
 
-function check_is_environment_vanilla(environment_name)
+local function check_is_environment_vanilla(environment_name)
 	local vanilla_env_path = "environments/vanilla"
 
 	if environment_name:sub(0, vanilla_env_path:len()) ~= vanilla_env_path then
@@ -1226,7 +1226,7 @@ function WorldDefinition:_set_environment(environment_name)
 	check_is_environment_vanilla(environment_name)
 
 	if Global.game_settings.level_id then
-		local env_params = _G.tweak_data.levels[Global.game_settings.level_id].env_params
+		local env_params = self.level_data and self.level_data.env_params
 
 		if env_params then
 			environment_name = env_params.environment or environment_name
@@ -1240,16 +1240,11 @@ function WorldDefinition:_set_environment(environment_name)
 end
 
 function WorldDefinition:_create_environment(data, offset, world_in_world)
-	if not world_in_world or self.meta_data and self.meta_data.load_env == "true" then
+	if not world_in_world or self.level_data and self.level_data.load_env then
 		self:_set_environment(data.environment_values.environment)
 	end
 
-	local offset = 0
-
-	if self._translation then
-		offset = 0
-	end
-
+	offset = 0
 	local wind = data.wind
 
 	Wind:set_direction(wind.angle, wind.angle_var, 5)

@@ -11,12 +11,12 @@ TeamAIDamage._all_event_types = {
 	"none"
 }
 TeamAIDamage._RESULT_INDEX_TABLE = {
-	heavy_hurt = 5,
 	light_hurt = 4,
 	hurt = 1,
 	death = 3,
 	bleedout = 2,
-	fatal = 6
+	fatal = 6,
+	heavy_hurt = 5
 }
 TeamAIDamage._HEALTH_GRANULARITY = CopDamage._HEALTH_GRANULARITY
 TeamAIDamage.set_invulnerable = CopDamage.set_invulnerable
@@ -817,14 +817,14 @@ function TeamAIDamage:revive(reviving_unit)
 
 		local action_data = {
 			type = "act",
-			body_part = 1,
 			variant = "stand",
+			body_part = 1,
 			blocks = {
+				action = -1,
+				hurt = -1,
 				heavy_hurt = -1,
 				aim = -1,
-				walk = -1,
-				action = -1,
-				hurt = -1
+				walk = -1
 			}
 		}
 		local res = self._unit:movement():action_request(action_data)
@@ -912,13 +912,13 @@ function TeamAIDamage:on_tase_ended()
 		self._to_incapacitated_clbk_id = nil
 		local action_data = {
 			type = "act",
-			body_part = 1,
 			variant = "stand",
+			body_part = 1,
 			blocks = {
-				heavy_hurt = -1,
+				action = -1,
 				hurt = -1,
-				walk = -1,
-				action = -1
+				heavy_hurt = -1,
+				walk = -1
 			}
 		}
 		local res = self._unit:movement():action_request(action_data)

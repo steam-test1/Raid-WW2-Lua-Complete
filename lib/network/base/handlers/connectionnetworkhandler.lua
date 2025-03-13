@@ -264,7 +264,7 @@ function ConnectionNetworkHandler:sync_game_settings(job_index, level_id_index, 
 	end
 
 	local job_id = tweak_data.operations:get_raid_name_from_index(job_index)
-	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
+	local level_id = tweak_data.levels:get_level_id_from_index(level_id_index)
 	local difficulty = tweak_data:index_to_difficulty(difficulty_index)
 	Global.game_settings.level_id = level_id
 	Global.game_settings.mission = managers.raid_job:current_job()
@@ -284,7 +284,7 @@ function ConnectionNetworkHandler:sync_stage_settings(level_id_index, stage_num,
 		return
 	end
 
-	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
+	local level_id = tweak_data.levels:get_level_id_from_index(level_id_index)
 	Global.game_settings.level_id = level_id
 	Global.game_settings.mission = managers.raid_job:current_job()
 	Global.game_settings.world_setting = nil
@@ -330,7 +330,7 @@ function ConnectionNetworkHandler:sync_selected_raid_objective(obj_id, sender)
 end
 
 function ConnectionNetworkHandler:lobby_sync_update_level_id(level_id_index)
-	local level_id = tweak_data.levels:get_level_name_from_index(level_id_index)
+	local level_id = tweak_data.levels:get_level_id_from_index(level_id_index)
 	local lobby_menu = managers.menu:get_menu("lobby_menu")
 
 	if lobby_menu and lobby_menu.renderer:is_open() then
@@ -950,7 +950,7 @@ end
 
 function ConnectionNetworkHandler:sync_set_selected_job(job_id, difficulty)
 	tweak_data:set_difficulty(difficulty)
-	managers.raid_job:_set_selected_job(job_id)
+	managers.raid_job:local_set_selected_job(job_id)
 end
 
 function ConnectionNetworkHandler:sync_current_job(job_id, sender)
@@ -969,9 +969,9 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 	managers.lootdrop:set_picked_up_current_leg(picked_up_current_leg)
 	managers.lootdrop:set_picked_up_total(picked_up_total)
 	managers.notification:add_notification({
+		id = "hud_hint_grabbed_nazi_gold",
 		shelf_life = 5,
 		duration = 2,
-		id = "hud_hint_grabbed_nazi_gold",
 		notification_type = HUDNotification.DOG_TAG,
 		acquired = picked_up_current_leg,
 		total = picked_up_total
@@ -1055,10 +1055,10 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 		return
 	end
 
-	local mission = tweak_data.operations:mission_data(mission_id)
+	local mission_data = tweak_data.operations:mission_data(mission_id)
 
-	if mission.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		managers.raid_job:set_current_event(mission, event_id)
+	if mission_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		managers.raid_job:set_current_event(mission_data, event_id)
 	end
 
 	if reload_mission_flag then
@@ -1073,7 +1073,7 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 		managers.loot:reset()
 	end
 
-	managers.raid_job:do_external_start_mission(mission, event_id)
+	managers.raid_job:do_external_start_mission(mission_data, event_id)
 end
 
 function ConnectionNetworkHandler:sync_external_end_mission(restart_camp, failed, sender)
@@ -1202,16 +1202,6 @@ function ConnectionNetworkHandler:sync_objectives_manager_mission_start(sender)
 	end
 
 	managers.objectives:on_mission_start_callback()
-end
-
-function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, status, sender)
-	local sender_peer = self._verify_sender(sender)
-
-	if not sender_peer then
-		return
-	end
-
-	managers.challenge_cards:sync_active_challenge_card(card_key, locked, status)
 end
 
 function ConnectionNetworkHandler:sync_active_challenge_card(card_key, locked, status, sender)

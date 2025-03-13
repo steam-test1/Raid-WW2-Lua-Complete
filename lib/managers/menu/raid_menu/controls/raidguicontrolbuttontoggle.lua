@@ -32,8 +32,8 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self._sideline = self._object:rect(sideline_params)
 	self._description = self._object:text({
 		vertical = "center",
-		y = 0,
 		align = "left",
+		y = 0,
 		x = RaidGUIControlButtonToggle.SIDELINE_W + RaidGUIControlButtonToggle.TEXT_PADDING,
 		w = self._object:w() - RaidGUIControlButtonToggle.SIDELINE_W - RaidGUIControlButtonToggle.TEXT_PADDING * 2,
 		h = self._object:h(),
@@ -51,10 +51,10 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	}
 	self._checkbox_panel = self._object:panel(checkbox_panel_params)
 	local checkbox_border_params = {
-		y = 0,
-		x = 0,
 		valign = "scale",
 		halign = "scale",
+		y = 0,
+		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture_rect,
 		w = RaidGUIControlButtonToggle.W,

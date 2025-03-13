@@ -115,8 +115,8 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self:_create_shapes()
 
 	local spacing, spacing_params = self:_build_value_number(panel, panel_sizer, "spacing", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the spacing between navlinks")
 
 	spacing_params.name_ctrlr:set_label("spacing[cm]:")
@@ -124,17 +124,17 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self._spacing_params = spacing_params
 
 	spacing:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "spacing",
-		value = "spacing"
+		value = "spacing",
+		property = "spacing"
 	})
 	spacing:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "spacing",
-		value = "spacing"
+		value = "spacing",
+		property = "spacing"
 	})
 
 	local width, width_params = self:_build_value_number(panel, panel_sizer, "width", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the width for the shape")
 
 	width_params.name_ctrlr:set_label("Width[cm]:")
@@ -142,17 +142,17 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self._width_params = width_params
 
 	width:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "width",
-		value = "width"
+		value = "width",
+		property = "width"
 	})
 	width:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "width",
-		value = "width"
+		value = "width",
+		property = "width"
 	})
 
 	local depth, depth_params = self:_build_value_number(panel, panel_sizer, "depth", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the depth for the shape")
 
 	depth_params.name_ctrlr:set_label("Depth[cm]:")
@@ -160,17 +160,17 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self._depth_params = depth_params
 
 	depth:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "depth",
-		value = "depth"
+		value = "depth",
+		property = "depth"
 	})
 	depth:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "depth",
-		value = "depth"
+		value = "depth",
+		property = "depth"
 	})
 
 	local height, height_params = self:_build_value_number(panel, panel_sizer, "height", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the height for the shape")
 
 	height_params.name_ctrlr:set_label("Height[cm]:")
@@ -178,12 +178,12 @@ function NavigationStitcherUnitElement:_build_panel(panel, panel_sizer, disable_
 	self._height_params = height_params
 
 	height:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "height",
-		value = "height"
+		value = "height",
+		property = "height"
 	})
 	height:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "height",
-		value = "height"
+		value = "height",
+		property = "height"
 	})
 	self:scale_slider(panel, panel_sizer, width_params, "width", "Width scale:")
 	self:scale_slider(panel, panel_sizer, depth_params, "depth", "Depth scale:")

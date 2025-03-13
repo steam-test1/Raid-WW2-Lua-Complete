@@ -95,10 +95,17 @@ function GuiTweakData:_setup_colors()
 	self.colors.progress_bar_dot = Color("797f88")
 	self.colors.raid_grey_effects = Color("787878")
 	self.colors.raid_grey_skills = Color("a9a9ae")
+	self.colors.hitmarker_weak = Color("9e9e9e")
+	self.colors.hitmarker_hurt = Color("d7d7d7")
+	self.colors.hitmarker_kill = Color("de4a3e")
+	self.colors.hitmarker_crit_kill = Color("db8f68")
+	self.colors.hitmarker_crit = Color("d8b883")
 	self.colors.loot_rarity_common = Color("9e9e9e")
 	self.colors.loot_rarity_uncommon = Color("64bc4c")
 	self.colors.loot_rarity_rare = Color("b8392e")
 	self.colors.loot_rarity_halloween = Color("c78e38")
+	self.colors.card_booster = Color("70b35b")
+	self.colors.card_challenge = Color("de4a3e")
 end
 
 function GuiTweakData:_setup_hud_colors()
@@ -371,16 +378,16 @@ end
 function GuiTweakData:_setup_crosshairs()
 	self.crosshairs = {
 		pistol = {
+			edge_pips = 4,
 			edge_pips_icon = "weapons_reticles_flatline",
 			degree_field = 360,
-			base_rotation = 0,
-			edge_pips = 4
+			base_rotation = 0
 		},
 		smg = {
+			edge_pips = 3,
 			edge_pips_icon = "weapons_reticles_flatline",
 			degree_field = 270,
-			base_rotation = 0,
-			edge_pips = 3
+			base_rotation = 0
 		},
 		lmg = {
 			core_dot = "weapons_reticles_static_diamond",
@@ -406,34 +413,34 @@ function GuiTweakData:_setup_crosshairs()
 		"weapons_reticles_bowbend"
 	}
 	self.crosshairs.assault_rifle = {
+		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4,
-		edge_pips_icon = "weapons_reticles_flatline"
+		edge_pips = 4
 	}
 	self.crosshairs.sniper = {
+		edge_pips_icon = "weapons_reticles_flatline",
 		core_dot = "weapons_reticles_static_tri_small",
 		degree_field = 270,
 		base_rotation = 0,
-		edge_pips = 3,
-		edge_pips_icon = "weapons_reticles_flatline"
+		edge_pips = 3
 	}
 	self.crosshairs.shotgun = {
+		edge_pips_icon = "weapons_reticles_bowbend",
 		core_dot = "weapons_reticles_static_dot",
 		degree_field = 360,
 		base_rotation = 0,
-		edge_pips = 4,
-		edge_pips_icon = "weapons_reticles_bowbend"
+		edge_pips = 4
 	}
 	self.crosshairs.shotgun_db = deep_clone(self.crosshairs.shotgun)
 	self.crosshairs.shotgun_db.edge_pips = 2
 	self.crosshairs.grenade = {
+		edge_pips_icon = nil,
 		core_dot = "weapons_reticles_static_diamond",
 		degree_field = 0,
 		base_rotation = 0,
-		edge_pips = 0,
-		edge_pips_icon = nil
+		edge_pips = 0
 	}
 end
 
@@ -1772,6 +1779,15 @@ function GuiTweakData:_setup_icons()
 		}
 	}
 	self.icons.card_type_raid_dirty = {
+		texture = "ui/atlas/menu/cc_menu_tags_dirty",
+		texture_rect = {
+			64,
+			64,
+			64,
+			64
+		}
+	}
+	self.icons.card_type_none_dirty = {
 		texture = "ui/atlas/menu/cc_menu_tags_dirty",
 		texture_rect = {
 			64,

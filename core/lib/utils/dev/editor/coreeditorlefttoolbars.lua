@@ -15,9 +15,9 @@ function CoreEditor:build_left_toolbar()
 	self._left_upper_toolbar:add_check_tool("TB_DRAW_OCCLUDERS", "Draw Occluders", CoreEWS.image_path("world_editor\\draw_occluders_16x16.png"), "Toggle debug draw of occluder objects")
 	self._left_upper_toolbar:set_tool_state("TB_DRAW_OCCLUDERS", self._draw_occluders)
 	self._left_upper_toolbar:connect("TB_DRAW_OCCLUDERS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
+		menu = "_debug_menu",
 		value = "_draw_occluders",
-		toolbar = "_left_upper_toolbar",
-		menu = "_debug_menu"
+		toolbar = "_left_upper_toolbar"
 	})
 	self._left_upper_toolbar:add_check_tool("TB_DRAW_HIDDEN_UNITS", "Draw Hidden Units", CoreEWS.image_path("world_editor\\draw_hidden_units_16x16.png"), "Toggle debug draw of hidden units")
 	self._left_upper_toolbar:set_tool_state("TB_DRAW_HIDDEN_UNITS", self._draw_hidden_units)

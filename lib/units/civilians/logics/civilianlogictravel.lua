@@ -129,8 +129,8 @@ function CivilianLogicTravel.update(data)
 
 		local haste = objective and objective.haste or "walk"
 		local new_action_data = {
-			body_part = 2,
 			type = "walk",
+			body_part = 2,
 			nav_path = my_data.advance_path,
 			variant = haste,
 			end_rot = end_rot

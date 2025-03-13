@@ -25,10 +25,10 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 		layer = object_params.layer + 1
 	})
 	self._select_background_panel = self._object:panel({
-		layer = 1,
 		visible = false,
 		y = 0,
 		x = 0,
+		layer = 1,
 		w = params.item_w,
 		h = params.item_h
 	})
@@ -37,9 +37,9 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 		color = tweak_data.gui.colors.raid_select_card_background
 	})
 	self._top_select_triangle = self._select_background_panel:image({
-		layer = 15,
 		y = 0,
 		x = 0,
+		layer = 15,
 		w = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		h = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -119,12 +119,12 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect
 	})
 	self._bonus_label = self._object:label({
-		wrap = true,
-		visible = false,
-		text = "",
-		vertical = "center",
 		h = 64,
 		align = "left",
+		visible = false,
+		wrap = true,
+		text = "",
+		vertical = "center",
 		name = "bonus_label_" .. self._name,
 		layer = self._card_control:layer(),
 		x = self._bonus_image:x() + self._bonus_image:w(),
@@ -135,12 +135,12 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 		color = tweak_data.gui.colors.raid_white
 	})
 	self._malus_label = self._object:label({
-		wrap = true,
-		visible = false,
-		text = "",
-		vertical = "center",
 		h = 64,
 		align = "left",
+		visible = false,
+		wrap = true,
+		text = "",
+		vertical = "center",
 		name = "malus_label_" .. self._name,
 		layer = self._card_control:layer(),
 		x = self._malus_image:x() + self._malus_image:w(),

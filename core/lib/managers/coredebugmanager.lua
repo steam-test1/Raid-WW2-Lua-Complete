@@ -3073,17 +3073,17 @@ end
 
 MemoryDebug = MemoryDebug or class(BaseDebug)
 MemoryDebug.CALC_TYPE_FUNC_MAP = DebugManager.CALC_TYPE_FUNC_MAP or {
-	boolean = "add_calc_boolean",
 	number = "add_calc_number",
+	boolean = "add_calc_boolean",
 	userdata = "add_calc_userdata",
 	table = "add_calc_table",
-	function = "add_calc_function",
-	string = "add_calc_string"
+	string = "add_calc_string",
+	function = "add_calc_function"
 }
 MemoryDebug.PRIMITIVE_VALUE_TYPE_MAP = DebugManager.PRIMITIVE_VALUE_TYPE_MAP or {
-	string = true,
 	number = true,
-	boolean = true
+	boolean = true,
+	string = true
 }
 
 function MemoryDebug:extensions()
@@ -3161,8 +3161,8 @@ function MemoryDebug:traverse_instances(func, seen_map, map)
 	seen_map = seen_map or {}
 	local populate_map = {}
 	local info_map = {
-		count = 0,
 		found_count = 0,
+		count = 0,
 		seen_count = 0
 	}
 

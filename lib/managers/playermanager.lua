@@ -27,27 +27,27 @@ function PlayerManager:init()
 	}
 	self._viewport_configs[1][1] = {
 		dimensions = {
+			w = 1,
 			y = 0,
 			x = 0,
-			h = 1,
-			w = 1
+			h = 1
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = {
+				w = 1,
 				y = 0,
 				x = 0,
-				h = 0.5,
-				w = 1
+				h = 0.5
 			}
 		},
 		{
 			dimensions = {
+				w = 1,
 				y = 0.5,
 				x = 0,
-				h = 0.5,
-				w = 1
+				h = 0.5
 			}
 		}
 	}
@@ -57,20 +57,20 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
-		foxhole = "ingame_standard",
-		incapacitated = "ingame_incapacitated",
-		tased = "ingame_electrified",
-		charging = "ingame_standard",
-		fatal = "ingame_fatal",
-		turret = "ingame_standard",
 		bleed_out = "ingame_bleed_out",
 		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
 		freefall = "ingame_freefall",
+		foxhole = "ingame_standard",
 		driving = "ingame_driving",
 		bipod = "ingame_standard",
 		carry_corpse = "ingame_standard",
-		carry = "ingame_standard"
+		carry = "ingame_standard",
+		incapacitated = "ingame_incapacitated",
+		tased = "ingame_electrified",
+		charging = "ingame_standard",
+		fatal = "ingame_fatal",
+		turret = "ingame_standard"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -184,7 +184,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		distance_sq = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {}
 	}
@@ -200,7 +200,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		distance_sq = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {}
 	}
@@ -592,14 +592,14 @@ function PlayerManager:_add_level_equipment(player)
 	Application:debug("[PlayerManager:_add_level_equipment] Player", player)
 
 	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
-	id = id ~= "none" and id or nil
+	id = id ~= "none" and id
 	id = id or Global.level_data.level_id
 
 	if not id then
 		return
 	end
 
-	local equipment = tweak_data.levels[id] and tweak_data.levels[id].equipment or {}
+	local equipment = tweak_data.operations[id] and tweak_data.operations[id].equipment or {}
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) and managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) == true then
 		table.insert(equipment, "crowbar")
@@ -1447,8 +1447,33 @@ function PlayerManager:stamina_regen_delay_multiplier()
 	return multiplier
 end
 
-function PlayerManager:critical_hit_chance(distance)
+function PlayerManager:roll_crits(distance)
 	local equipped_weapon = self:equipped_weapon_unit()
+
+	if not equipped_weapon or not equipped_weapon.base then
+		return false
+	end
+
+	equipped_weapon = equipped_weapon:base()
+	local cchance = self:critical_hit_chance(distance)
+	local reserve = equipped_weapon.crit_reserve and math.max(cchance, equipped_weapon:crit_reserve()) or cchance
+
+	if reserve > 1 or math.random() < reserve then
+		if equipped_weapon.modify_crit_reserve then
+			equipped_weapon:modify_crit_reserve(-1)
+		end
+
+		return true
+	else
+		if equipped_weapon.modify_crit_reserve then
+			equipped_weapon:modify_crit_reserve(cchance)
+		end
+
+		return false
+	end
+end
+
+function PlayerManager:critical_hit_chance(distance)
 	local multiplier = 0
 	multiplier = multiplier + self:team_upgrade_value("player", "warcry_critical_hit_chance", 1) - 1
 	multiplier = multiplier + self:upgrade_value("player", "critbrain_critical_hit_chance", 1) - 1
@@ -1467,6 +1492,8 @@ function PlayerManager:critical_hit_chance(distance)
 		multiplier = multiplier + self:upgrade_value("player", "revenant_downed_critical_hit_chance", 1) - 1
 	end
 
+	local equipped_weapon = self:equipped_weapon_unit()
+
 	if alive(equipped_weapon) and equipped_weapon:base().critical_hit_chance then
 		multiplier = multiplier + equipped_weapon:base():critical_hit_chance()
 	end
@@ -1476,7 +1503,7 @@ function PlayerManager:critical_hit_chance(distance)
 	end
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) then
-		multiplier = multiplier * (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) or 1)
+		multiplier = multiplier + managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE)
 	end
 
 	return multiplier
@@ -3505,9 +3532,9 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
+			text_id = "",
 			disabled = true,
 			icon = "comm_wheel_no",
-			text_id = "",
 			id = "carry_" .. i
 		}
 
@@ -3586,8 +3613,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
 			shelf_life = 5,
-			id = "cant_throw_body",
 			duration = 2,
+			id = "cant_throw_body",
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -4101,6 +4128,12 @@ function PlayerManager:sync_enter_vehicle(vehicle, peer_id, player, seat_name)
 end
 
 function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
+	if not alive(player) or player:movement():downed() then
+		Application:warn("[PlayerManager:_enter_vehicle] invalid player attempted to enter a vehicle", peer_id)
+
+		return
+	end
+
 	self._global.synced_vehicle_data[peer_id] = {
 		vehicle_unit = vehicle,
 		seat = seat_name
@@ -4677,8 +4710,8 @@ function PlayerManager:tutorial_prompt_jump()
 	local text = managers.localization:to_upper_text("hud_hint_tutorial_jump")
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_jump",
 		duration = 3,
+		id = "prompt_hint_tutorial_jump",
 		text = text
 	})
 end
@@ -4687,8 +4720,8 @@ function PlayerManager:tutorial_prompt_duck()
 	local text = managers.localization:to_upper_text("hud_hint_tutorial_crouch")
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_crouch",
 		duration = 3,
+		id = "prompt_hint_tutorial_crouch",
 		text = text
 	})
 end
@@ -4697,8 +4730,8 @@ function PlayerManager:tutorial_prompt_detection()
 	local text = managers.localization:to_upper_text("hud_hint_tutorial_detection")
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_detection",
 		duration = 3,
+		id = "prompt_hint_tutorial_detection",
 		text = text
 	})
 end
@@ -4707,8 +4740,8 @@ function PlayerManager:tutorial_prompt_ammo()
 	local text = managers.localization:to_upper_text("hud_hint_tutorial_ammo")
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_ammo",
 		duration = 3,
+		id = "prompt_hint_tutorial_ammo",
 		text = text
 	})
 end
@@ -4717,8 +4750,8 @@ function PlayerManager:tutorial_prompt_weapons()
 	local text = managers.localization:to_upper_text("hud_hint_tutorial_switch_weapon")
 
 	managers.hud:set_big_prompt({
-		id = "prompt_hint_tutorial_switch_weapon",
 		duration = 3,
+		id = "prompt_hint_tutorial_switch_weapon",
 		text = text
 	})
 end

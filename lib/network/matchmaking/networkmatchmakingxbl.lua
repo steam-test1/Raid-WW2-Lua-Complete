@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			dialog_creating_lobby_title = nil
+			_searching_lobbys = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -885,7 +885,7 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 				managers.groupai:kill_all_AI()
 			end
 
-			local level_id = tweak_data.levels:get_level_name_from_index(level_index)
+			local level_id = tweak_data.levels:get_level_id_from_index(level_index)
 			Global.game_settings.level_id = level_id
 
 			if self._session then
@@ -1273,8 +1273,8 @@ function NetworkMatchMakingXBL:clbk_smartmatch_client(params, session, smartmatc
 
 			self._smartmatch_search_inexact = true
 			local smartmatch_params = {
-				hopper_name = "hopper_match_game_any_v1",
 				become_host = false,
+				hopper_name = "hopper_match_game_any_v1",
 				timeout = self.SMARTMATCH_CLIENT_TIMEOUT_T2
 			}
 			local progress_callback = callback(self, self, "clbk_smartmatch_client", {

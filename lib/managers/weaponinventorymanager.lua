@@ -144,13 +144,25 @@ function WeaponInventoryManager:get_melee_weapon_loot_drop_candidates()
 	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
 	local result = {}
 
-	for weapon_index, weapon_data in pairs(all_melee_weapons) do
-		if weapon_data.droppable then
+	for _, weapon_data in pairs(all_melee_weapons) do
+		if weapon_data.droppable and not weapon_data.is_challenge_reward then
 			table.insert(result, clone(weapon_data))
 		end
 	end
 
 	return result
+end
+
+function WeaponInventoryManager:is_drop_inventory_complete_melee()
+	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
+
+	for _, weapon_data in pairs(all_melee_weapons) do
+		if weapon_data.droppable and not weapon_data.is_challenge_reward and not self:is_melee_weapon_owned(weapon_data.weapon_id) then
+			return false
+		end
+	end
+
+	return true
 end
 
 function WeaponInventoryManager:add_melee_weapon_as_drop(drop)
@@ -592,42 +604,42 @@ function WeaponInventoryManager:_get_base_stats(name)
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
 	self._stats_shown = {
 		{
+			round_value = true,
 			stat_name = "extra_ammo",
-			name = "magazine",
-			round_value = true
-		},
-		{
-			stat_name = "total_ammo_mod",
-			name = "totalammo",
-			round_value = true
+			name = "magazine"
 		},
 		{
 			round_value = true,
-			name = "fire_rate"
+			stat_name = "total_ammo_mod",
+			name = "totalammo"
+		},
+		{
+			name = "fire_rate",
+			round_value = true
 		},
 		{
 			name = "damage"
 		},
 		{
-			name = "spread",
-			visual_multiplier = 0.5,
-			percent = true,
 			one_minus = true,
-			revert = true
+			revert = true,
+			visual_multiplier = 0.5,
+			name = "spread",
+			percent = true
 		},
 		{
-			percent = true,
+			offset = true,
+			revert = true,
 			name = "recoil",
-			offset = true,
-			revert = true
+			percent = true
 		},
 		{
-			index = true,
-			name = "concealment"
+			name = "concealment",
+			index = true
 		},
 		{
-			offset = true,
-			name = "suppression"
+			name = "suppression",
+			offset = true
 		}
 	}
 
@@ -980,27 +992,27 @@ end
 function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	self._mweapon_stats_shown = {
 		{
-			range = true,
-			name = "damage"
-		},
-		{
-			multiple_of = "damage",
-			name = "damage_effect",
+			name = "damage",
 			range = true
 		},
 		{
-			name = "charge_time",
+			range = true,
+			name = "damage_effect",
+			multiple_of = "damage"
+		},
+		{
 			inverse = true,
 			num_decimals = 1,
+			name = "charge_time",
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
-			range = true,
-			name = "range"
+			name = "range",
+			range = true
 		},
 		{
-			index = true,
-			name = "concealment"
+			name = "concealment",
+			index = true
 		}
 	}
 	local base_stats = {}
@@ -1016,19 +1028,19 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 		mods_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 		skill_stats[stat.name] = {
+			value = 0,
 			max_value = 0,
-			min_value = 0,
-			value = 0
+			min_value = 0
 		}
 
 		if stat.name == "damage" then

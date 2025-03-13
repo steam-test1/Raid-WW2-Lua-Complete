@@ -104,8 +104,8 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		end
 
 		if results.count_cop_kills > 0 then
-			for k, unit in pairs(hit_units) do
-				if unit:character_damage() and unit:character_damage():dead() and tweak_data.character[unit:base()._tweak_table].special_type and tweak_data.character[unit:base()._tweak_table].special_type == CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER then
+			for _, hit_unit in pairs(hit_units) do
+				if hit_unit:character_damage() and hit_unit:character_damage():dead() and hit_unit:base() and hit_unit:base().is_special_type and hit_unit:base():is_special_type(CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER) then
 					self:_award_achievement_spotter_grenade(thrower_peer_id)
 
 					break

@@ -19,12 +19,28 @@ function RaidGUIControlListItemOperations:init(parent, params, data)
 	self._on_click_callback = params.on_click_callback
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._on_double_click_callback = params.on_double_click_callback
-	self._data = data
-	self._color = params.color or tweak_data.gui.colors.raid_white
-	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
-	self._unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_OPERATION, data.value)
 	self._mouse_over_sound = params.on_mouse_over_sound_event
 	self._mouse_click_sound = params.on_mouse_click_sound_event
+	self._data = data
+	local mission_data = data.mission_data or tweak_data.operations.missions[data.value]
+	self._is_debug = not not mission_data.debug
+	self._is_unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_OPERATION, data.value)
+	self._color = params.color or tweak_data.gui.colors.raid_white
+	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
+
+	if self._is_debug then
+		self._color = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+
+		if self._is_unlocked then
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+		else
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR
+		end
+	elseif self._is_unlocked then
+		self._color_type = RaidGUIControlListItemRaids.UNLOCKED_COLOR
+	else
+		self._color_type = RaidGUIControlListItemRaids.LOCKED_COLOR
+	end
 
 	self:_layout_panel(params)
 	self:_layout_background(params)
@@ -136,7 +152,7 @@ function RaidGUIControlListItemOperations:_layout_breadcrumb()
 end
 
 function RaidGUIControlListItemOperations:_apply_progression_layout()
-	if self._unlocked then
+	if self._is_unlocked then
 		self._difficulty_indicator:show()
 		self._item_icon:set_color(RaidGUIControlListItemOperations.UNLOCKED_COLOR)
 		self._item_label:set_color(RaidGUIControlListItemOperations.UNLOCKED_COLOR)
@@ -192,7 +208,7 @@ function RaidGUIControlListItemOperations:select()
 
 	self._item_background:show()
 
-	if self._unlocked then
+	if self._is_unlocked then
 		self._item_label:set_color(self._selected_color)
 	end
 
@@ -217,7 +233,7 @@ function RaidGUIControlListItemOperations:unselect()
 
 	self._item_background:hide()
 
-	if self._unlocked then
+	if self._is_unlocked then
 		self._item_label:set_color(self._color)
 	end
 
@@ -235,7 +251,7 @@ function RaidGUIControlListItemOperations:highlight_on()
 		managers.menu_component:post_event(self._mouse_over_sound)
 	end
 
-	if not self._unlocked then
+	if not self._is_unlocked then
 		return
 	end
 

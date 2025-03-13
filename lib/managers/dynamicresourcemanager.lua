@@ -60,7 +60,7 @@ function DynamicResourceManager:is_ready_to_close()
 		return false
 	end
 
-	for key, entry in pairs(self._dyn_resources) do
+	for _, entry in pairs(self._dyn_resources) do
 		if not entry.ready then
 			if not self._loadign_temp_msg then
 				self._loadign_temp_msg = true

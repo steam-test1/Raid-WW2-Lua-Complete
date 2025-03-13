@@ -87,9 +87,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local texture_left = "skl_level_bg_left"
 	local texture_right = "skl_level_bg_right"
 	local background_params = {
+		name = "background",
 		y = 0,
 		x = 0,
-		name = "background",
 		w = self._background_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,

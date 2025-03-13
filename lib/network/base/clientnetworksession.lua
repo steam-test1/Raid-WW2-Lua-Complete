@@ -91,7 +91,7 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 	if reply == 1 then
 		self._host_sanity_send_t = TimerManager:wall():time() + self.HOST_SANITY_CHECK_INTERVAL
-		Global.game_settings.level_id = tweak_data.levels:get_level_name_from_index(level_index)
+		Global.game_settings.level_id = tweak_data.levels:get_level_id_from_index(level_index)
 
 		tweak_data:set_difficulty(tweak_data:index_to_difficulty(difficulty_index))
 
@@ -146,8 +146,8 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 			end
 
 			local mission = tweak_data.operations:mission_data(job_id)
-			data.background = tweak_data.operations.missions[job_id].loading.image
-			data.loading_text = tweak_data.operations.missions[job_id].loading.text
+			data.background = mission.loading.image
+			data.loading_text = mission.loading.text
 			data.mission = mission
 			mission.job_type = OperationsTweakData.JOB_TYPE_RAID
 

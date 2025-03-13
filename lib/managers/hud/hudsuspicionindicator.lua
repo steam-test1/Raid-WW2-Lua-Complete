@@ -45,8 +45,8 @@ end
 
 function HUDSuspicionIndicator:_create_panel(hud)
 	local panel_params = {
-		name = "suspicion_indicator",
 		alpha = 0,
+		name = "suspicion_indicator",
 		w = HUDSuspicionIndicator.W,
 		h = HUDSuspicionIndicator.H
 	}
@@ -56,8 +56,8 @@ end
 function HUDSuspicionIndicator:_create_eye_background()
 	local eye_panel_params = {
 		valign = "scale",
-		name = "eye_panel",
-		halign = "scale"
+		halign = "scale",
+		name = "eye_panel"
 	}
 	self._eye_panel = self._object:panel(eye_panel_params)
 	local eye_background_params = {
@@ -85,9 +85,9 @@ end
 
 function HUDSuspicionIndicator:_create_eye_fill()
 	local eye_fill_params = {
-		name = "eye_fill",
 		render_template = "VertexColorTexturedRadial",
 		position_z = 0,
+		name = "eye_fill",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_FILL_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDSuspicionIndicator.EYE_FILL_ICON),
@@ -107,14 +107,14 @@ end
 function HUDSuspicionIndicator:_create_calling_indicator()
 	local calling_indicator_panel_params = {
 		valign = "scale",
-		name = "calling_indicator_panel",
-		halign = "scale"
+		halign = "scale",
+		name = "calling_indicator_panel"
 	}
 	self._calling_indicator_panel = self._object:panel(calling_indicator_panel_params)
 	self._calling_indicators = {}
 	local phone_icon_params = {
-		name = "calling_indicator_phone",
 		alpha = 0,
+		name = "calling_indicator_phone",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_CENTER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_CENTER_ICON].texture_rect
 	}
@@ -124,8 +124,8 @@ function HUDSuspicionIndicator:_create_calling_indicator()
 	phone_icon:set_center_y(self._calling_indicator_panel:h() / 2)
 
 	local calling_icon_in_params = {
-		name = "calling_indicator_in",
 		alpha = 0,
+		name = "calling_indicator_in",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_ICON_IN].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_ICON_IN].texture_rect
 	}
@@ -135,8 +135,8 @@ function HUDSuspicionIndicator:_create_calling_indicator()
 	calling_icon_in:set_center_y(self._calling_indicator_panel:h() / 2)
 
 	local calling_icon_out_params = {
-		name = "calling_indicator_out",
 		alpha = 0,
+		name = "calling_indicator_out",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_ICON_OUT].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.CALLING_INDICATOR_ICON_OUT].texture_rect
 	}

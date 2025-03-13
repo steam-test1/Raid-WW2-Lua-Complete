@@ -41,7 +41,7 @@ end
 
 function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
 	self._background = self._object:three_cut_bitmap({
-		name = "candy_progress_bar_background",
+		name = "background",
 		visible = false,
 		alpha = 0,
 		w = self._object:w(),
@@ -72,8 +72,8 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_equipable(item_data)
 	item_data.separator_highlight_color = nil
 	self._profile_name_label = self._name_panel:label({
-		name = "profile_name_label",
 		vertical = "center",
+		name = "profile_name_label",
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
 		text = item_data.value,
@@ -100,8 +100,8 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	item_data.separator_highlight_color = self.PURCHASE_COLOR
 	self._profile_name_label = self._name_panel:label({
-		name = "profile_name_label",
 		vertical = "center",
+		name = "profile_name_label",
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
 		text = item_data.value,
@@ -110,9 +110,9 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	})
 	local purchase_cost = item_data.purchase_cost and tostring(item_data.purchase_cost)
 	self._gold_value_label = self._context_info_panel:label({
+		fit_text = true,
 		name = "profile_name_label",
 		vertical = "center",
-		fit_text = true,
 		font = self.PURCHASE_VALUE_FONT,
 		font_size = self.PURCHASE_VALUE_FONT_SIZE,
 		text = purchase_cost,
@@ -125,9 +125,9 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 	self._gold_icon = self._object:image({
-		name = "profile_gold_icon",
 		h = 25,
 		w = 25,
+		name = "profile_gold_icon",
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
 		color = self.PURCHASE_COLOR,
@@ -273,7 +273,7 @@ function RaidGUIControlListItemSkillProfile:_animate_unselect()
 end
 
 function RaidGUIControlListItemSkillProfile:on_mouse_released(button)
-	self:activate()
+	return self:activate()
 end
 
 function RaidGUIControlListItemSkillProfile:confirm_pressed()
@@ -281,7 +281,7 @@ function RaidGUIControlListItemSkillProfile:confirm_pressed()
 		return false
 	end
 
-	self:activate()
+	return self:activate()
 end
 
 function RaidGUIControlListItemSkillProfile:activate()

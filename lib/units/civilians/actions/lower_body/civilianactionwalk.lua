@@ -3,30 +3,30 @@ CivilianActionWalk._walk_anim_velocities = {
 	stand = {
 		ntl = {
 			walk = {
-				l = 136.1,
 				bwd = 111.3,
 				fwd = 129,
-				r = 136.1
+				r = 136.1,
+				l = 136.1
 			},
 			run = {
-				l = 436,
 				bwd = 222,
 				fwd = 421,
-				r = 419
+				r = 419,
+				l = 436
 			}
 		},
 		hos = {
 			walk = {
-				l = 170,
 				bwd = 170,
 				fwd = 170,
-				r = 170
+				r = 170,
+				l = 170
 			},
 			run = {
-				l = 436,
 				bwd = 222,
 				fwd = 421,
-				r = 419
+				r = 419,
+				l = 436
 			}
 		}
 	}

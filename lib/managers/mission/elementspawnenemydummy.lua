@@ -211,15 +211,15 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 		}
 	else
 		return {
+			type = "act",
 			body_part = 1,
 			align_sync = true,
-			type = "act",
 			variant = anim_name,
 			blocks = {
-				hurt = -1,
+				walk = -1,
 				action = -1,
-				heavy_hurt = -1,
-				walk = -1
+				hurt = -1,
+				heavy_hurt = -1
 			}
 		}
 	end

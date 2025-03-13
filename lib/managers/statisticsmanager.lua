@@ -860,8 +860,8 @@ function StatisticsManager:publish_camp_stats_to_steam()
 
 	for stat_name, stat_value in pairs(camp_values) do
 		stats[stat_name] = {
-			method = "set",
 			type = "int",
+			method = "set",
 			value = tonumber(stat_value) or 0
 		}
 	end
@@ -876,13 +876,13 @@ function StatisticsManager:publish_top_stats_to_steam()
 
 	local stats = {
 		ach_top_stats_award = {
-			method = "set",
 			type = "int",
+			method = "set",
 			value = self._global.misc.best_of_stats or 0
 		},
 		ach_all_3_top_stats_award = {
-			method = "set",
 			type = "int",
+			method = "set",
 			value = self._global.misc.best_of_stats_all_3 or 0
 		}
 	}
@@ -1089,8 +1089,8 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		for weapon_name, weapon_data in pairs(session.shots_by_weapon) do
 			if weapon_data.total > 0 and table.contains(weapon_list, weapon_name) then
 				stats["weapon_used_" .. weapon_name] = {
-					type = "int",
-					value = 1
+					value = 1,
+					type = "int"
 				}
 				stats["weapon_shots_" .. weapon_name] = {
 					type = "int",
@@ -1103,14 +1103,14 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 
 		if table.contains(melee_list, melee_name) then
 			stats["melee_used_" .. melee_name] = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		end
 
 		stats[Global.game_settings.difficulty] = {
-			type = "int",
-			value = 1
+			value = 1,
+			type = "int"
 		}
 	end
 
@@ -1187,203 +1187,203 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		value = session.killed_by_vehicle.count or 0
 	}
 	stats.challenge_cards_complete_operation_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_common_count or 0
 	}
 	stats.challenge_cards_complete_operation_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_rare_count or 0
 	}
 	stats.challenge_cards_complete_operation_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_operation_halloween_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_raid_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_common_count or 0
 	}
 	stats.challenge_cards_complete_raid_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_rare_count or 0
 	}
 	stats.challenge_cards_complete_raid_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_raid_halloween_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_start_operation_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_common_count or 0
 	}
 	stats.challenge_cards_start_operation_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_rare_count or 0
 	}
 	stats.challenge_cards_start_operation_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_start_operation_halloween_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0
 	}
 	stats.challenge_cards_start_raid_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_common_count or 0
 	}
 	stats.challenge_cards_start_raid_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_rare_count or 0
 	}
 	stats.challenge_cards_start_raid_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_start_raid_halloween_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0
 	}
 	stats.challenge_cards_complete_operation_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_operation_common_count or 0) + (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_operation_uncommon_count or 0) + (self._global.challenge_cards.complete_operation_halloween_count or 0)
 	}
 	stats.challenge_cards_complete_raid_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_raid_common_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0) + (self._global.challenge_cards.complete_raid_uncommon_count or 0) + (self._global.challenge_cards.complete_raid_halloween_count or 0)
 	}
 	stats.challenge_cards_start_operation_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.start_operation_common_count or 0) + (self._global.challenge_cards.start_operation_rare_count or 0) + (self._global.challenge_cards.start_operation_uncommon_count or 0) + (self._global.challenge_cards.start_operation_halloween_count or 0)
 	}
 	stats.challenge_cards_start_raid_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.start_raid_common_count or 0) + (self._global.challenge_cards.start_raid_rare_count or 0) + (self._global.challenge_cards.start_raid_uncommon_count or 0) + (self._global.challenge_cards.start_raid_halloween_count or 0)
 	}
 	stats.challenge_cards_complete_mission_rare_total = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0)
 	}
 	stats.challenge_cards_complete_mission_grand_total = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.challenge_cards.complete_mission_grand_total or 0
 	}
 	stats.booster_cards_complete_operation_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_operation_common_count or 0
 	}
 	stats.booster_cards_complete_operation_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_operation_rare_count or 0
 	}
 	stats.booster_cards_complete_operation_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_operation_uncommon_count or 0
 	}
 	stats.booster_cards_complete_raid_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_raid_common_count or 0
 	}
 	stats.booster_cards_complete_raid_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_raid_rare_count or 0
 	}
 	stats.booster_cards_complete_raid_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_raid_uncommon_count or 0
 	}
 	stats.booster_cards_start_operation_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_operation_common_count or 0
 	}
 	stats.booster_cards_start_operation_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_operation_rare_count or 0
 	}
 	stats.booster_cards_start_operation_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_operation_uncommon_count or 0
 	}
 	stats.booster_cards_start_raid_common_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_raid_common_count or 0
 	}
 	stats.booster_cards_start_raid_rare_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_raid_rare_count or 0
 	}
 	stats.booster_cards_start_raid_uncommon_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.start_raid_uncommon_count or 0
 	}
 	stats.booster_cards_complete_operation_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.booster_cards.complete_operation_common_count or 0) + (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_operation_uncommon_count or 0) + (self._global.booster_cards.complete_operation_halloween_count or 0)
 	}
 	stats.booster_cards_complete_raid_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.booster_cards.complete_raid_common_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0) + (self._global.booster_cards.complete_raid_uncommon_count or 0) + (self._global.booster_cards.complete_raid_halloween_count or 0)
 	}
 	stats.booster_cards_start_operation_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.booster_cards.start_operation_common_count or 0) + (self._global.booster_cards.start_operation_rare_count or 0) + (self._global.booster_cards.start_operation_uncommon_count or 0) + (self._global.booster_cards.start_operation_halloween_count or 0)
 	}
 	stats.booster_cards_start_raid_total_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.booster_cards.start_raid_common_count or 0) + (self._global.booster_cards.start_raid_rare_count or 0) + (self._global.booster_cards.start_raid_uncommon_count or 0) + (self._global.booster_cards.start_raid_halloween_count or 0)
 	}
 	stats.booster_cards_complete_mission_rare_total = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0)
 	}
 	stats.booster_cards_complete_mission_grand_total = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.booster_cards.complete_mission_grand_total or 0
 	}
 	stats.ach_open_loot_crates = {
@@ -1391,8 +1391,8 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		value = session.misc.open_loot_crate or 0
 	}
 	stats.ach_reach_level_40_count = {
-		method = "set",
 		type = "int",
+		method = "set",
 		value = self._global.misc.character_level_40_count or 0
 	}
 	stats.dogtags_collected = {
@@ -1409,48 +1409,48 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		if Network:is_server() then
 			if Global.game_settings.kick_option == 1 then
 				stats.option_decide_host = {
-					type = "int",
-					value = 1
+					value = 1,
+					type = "int"
 				}
 			elseif Global.game_settings.kick_option == 2 then
 				stats.option_decide_vote = {
-					type = "int",
-					value = 1
+					value = 1,
+					type = "int"
 				}
 			elseif Global.game_settings.kick_option == 0 then
 				stats.option_decide_none = {
-					type = "int",
-					value = 1
+					value = 1,
+					type = "int"
 				}
 			end
 
 			stats.info_playing_win_host = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		else
 			stats.info_playing_win_client = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		end
 	elseif completion == "win_dropin" then
 		if not Network:is_server() then
 			stats.info_playing_win_client_dropin = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		end
 	elseif completion == "fail" then
 		if Network:is_server() then
 			stats.info_playing_fail_host = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		else
 			stats.info_playing_fail_client = {
-				type = "int",
-				value = 1
+				value = 1,
+				type = "int"
 			}
 		end
 	end
@@ -1460,33 +1460,33 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(level_list, level_id) then
 		for level_name, level_data in pairs(self._global.sessions.levels) do
 			stats["level_" .. level_name .. "_completed"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.completed
 			}
 			stats["level_" .. level_name .. "_started"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.started
 			}
 			stats["level_" .. level_name .. "_drop_in"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.drop_in
 			}
 			stats["level_" .. level_name .. "_quit"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.quited
 			}
 			stats["level_" .. level_name .. "_from_beginning"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.from_beginning
 			}
 			stats["level_" .. level_name .. "_time"] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = level_data.time
 			}
 		end
@@ -1497,8 +1497,8 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(job_list, job_id) then
 		for job_name, job_data in pairs(self._global.sessions.jobs) do
 			stats["jobs_" .. job_name] = {
-				type = "int",
 				method = "set",
+				type = "int",
 				value = job_data
 			}
 		end
@@ -1526,24 +1526,24 @@ function StatisticsManager:publish_level_to_steam()
 	local stats = {}
 	local current_level = managers.experience:current_level()
 	stats.player_level = {
-		type = "int",
 		method = "set",
+		type = "int",
 		value = current_level
 	}
 	local max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false)
 
 	for i = 0, max_level, 10 do
 		stats["player_level_" .. i] = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = 0
 		}
 	end
 
 	local level_range = max_level <= current_level and max_level or math.floor(current_level / 10) * 10
 	stats["player_level_" .. level_range] = {
-		type = "int",
 		method = "set",
+		type = "int",
 		value = 1
 	}
 
@@ -1560,8 +1560,8 @@ function StatisticsManager:publish_gold_to_steam()
 
 	if player_gold_amount then
 		stats.player_gold_amount = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = player_gold_amount
 		}
 
@@ -1617,8 +1617,8 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if primary_index then
 		stats.equipped_primary = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = primary_index
 		}
 	end
@@ -1628,8 +1628,8 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if secondary_index then
 		stats.equipped_secondary = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = secondary_index
 		}
 	end
@@ -1639,8 +1639,8 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if melee_index then
 		stats.equipped_melee = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = melee_index
 		}
 	end
@@ -1650,8 +1650,8 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if grenade_index then
 		stats.equipped_grenade = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = grenade_index
 		}
 	end
@@ -1661,8 +1661,8 @@ function StatisticsManager:publish_equipped_to_steam()
 
 	if character_index then
 		stats.equipped_character = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = character_index
 		}
 	end
@@ -1690,20 +1690,20 @@ function StatisticsManager:check_version()
 
 	for _, res in pairs(resolution_list) do
 		stats["option_resolution_" .. res] = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = 0
 		}
 	end
 
 	stats.option_resolution_other = {
-		type = "int",
 		method = "set",
+		type = "int",
 		value = 0
 	}
 	stats[table.contains(resolution_list, resolution) and "option_resolution_" .. resolution or "option_resolution_other"] = {
-		type = "int",
 		method = "set",
+		type = "int",
 		value = 1
 	}
 
@@ -1711,8 +1711,8 @@ function StatisticsManager:check_version()
 		self:publish_skills_to_steam(true)
 
 		stats.stat_version = {
-			type = "int",
 			method = "set",
+			type = "int",
 			value = CURRENT_VERSION
 		}
 	end
@@ -2306,7 +2306,7 @@ function StatisticsManager:favourite_level()
 		end
 	end
 
-	return c_name and tweak_data.levels:get_localized_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
+	return c_name and tweak_data.levels:get_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
 end
 
 function StatisticsManager:total_completed_campaigns()

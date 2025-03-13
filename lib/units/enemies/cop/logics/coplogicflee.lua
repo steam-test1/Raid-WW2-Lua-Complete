@@ -88,9 +88,9 @@ function CopLogicFlee.update(data)
 				CopLogicAttack._adjust_path_start_pos(data, my_data.cover_path)
 
 				local new_action_data = {
-					type = "walk",
 					body_part = 2,
 					variant = "run",
+					type = "walk",
 					nav_path = my_data.cover_path
 				}
 				my_data.cover_path = nil
@@ -125,9 +125,9 @@ function CopLogicFlee.update(data)
 		elseif my_data.flee_path then
 			if my_data.path_blocked == false and not unit:movement():chk_action_forbidden("walk") then
 				local new_action_data = {
-					type = "walk",
 					variant = "run",
 					body_part = 2,
+					type = "walk",
 					path_simplified = true,
 					nav_path = my_data.flee_path
 				}

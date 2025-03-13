@@ -712,11 +712,11 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
-		name = "ammo_test",
-		w = 100,
 		y = 200,
+		h = 4,
 		x = 550,
-		h = 4
+		name = "ammo_test",
+		w = 100
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
@@ -726,8 +726,8 @@ function HUDManager:_create_ammo_test()
 		color = Color.black:with_alpha(0.5)
 	})
 	panel:rect({
-		layer = 1,
 		name = "ammo_test_rect",
+		layer = 1,
 		color = Color.white
 	})
 end
@@ -961,8 +961,8 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
-		valign = "grow",
 		halign = "left",
+		valign = "grow",
 		y = 0,
 		x = 0,
 		name = "teammates_panel",
@@ -1023,9 +1023,9 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
+		halign = "right",
 		valign = "bottom",
 		name = "weapons_panel",
-		halign = "right",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1351,8 +1351,8 @@ function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
 		height = 8,
-		width = 256,
 		name = "progress_timer_progress_bar",
+		width = 256,
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
@@ -1430,9 +1430,9 @@ function HUDManager:on_progression_cycle_completed()
 	end
 
 	local notification_params = {
-		priority = 4,
-		id = "progression_cycle_completed",
 		duration = 6,
+		id = "progression_cycle_completed",
+		priority = 4,
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 

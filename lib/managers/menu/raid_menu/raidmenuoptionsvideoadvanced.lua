@@ -567,64 +567,64 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	local result = {}
 
 	table.insert(result, {
-		info = "24",
 		value = 24,
+		info = "24",
 		text = "24"
 	})
 	table.insert(result, {
-		info = "30",
 		value = 30,
+		info = "30",
 		text = "30"
 	})
 	table.insert(result, {
-		info = "45",
 		value = 45,
+		info = "45",
 		text = "45"
 	})
 	table.insert(result, {
-		info = "60",
 		value = 60,
+		info = "60",
 		text = "60"
 	})
 	table.insert(result, {
-		info = "75",
 		value = 75,
+		info = "75",
 		text = "75"
 	})
 	table.insert(result, {
-		info = "90",
 		value = 90,
+		info = "90",
 		text = "90"
 	})
 	table.insert(result, {
-		info = "105",
 		value = 105,
+		info = "105",
 		text = "105"
 	})
 	table.insert(result, {
-		info = "120",
 		value = 120,
+		info = "120",
 		text = "120"
 	})
 	table.insert(result, {
-		info = "135",
 		value = 135,
+		info = "135",
 		selected = true,
 		text = "135"
 	})
 	table.insert(result, {
-		info = "144",
 		value = 144,
+		info = "144",
 		text = "144"
 	})
 	table.insert(result, {
-		info = "165",
 		value = 165,
+		info = "165",
 		text = "165"
 	})
 	table.insert(result, {
-		info = "240",
 		value = 240,
+		info = "240",
 		text = "240"
 	})
 	table.insert(result, {
@@ -646,43 +646,43 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chu
 	local result = {}
 
 	table.insert(result, {
-		info = "32",
 		value = 32,
+		info = "32",
 		text = "32"
 	})
 	table.insert(result, {
-		info = "64",
 		value = 64,
+		info = "64",
 		text = "64"
 	})
 	table.insert(result, {
-		info = "128",
 		value = 128,
+		info = "128",
 		text = "128"
 	})
 	table.insert(result, {
-		info = "256",
 		value = 256,
+		info = "256",
 		text = "256"
 	})
 	table.insert(result, {
-		info = "512",
 		value = 512,
+		info = "512",
 		text = "512"
 	})
 	table.insert(result, {
-		info = "1024",
 		value = 1024,
+		info = "1024",
 		text = "1024"
 	})
 	table.insert(result, {
-		info = "2048",
 		value = 2048,
+		info = "2048",
 		text = "2048"
 	})
 	table.insert(result, {
-		info = "4096",
 		value = 4096,
+		info = "4096",
 		selected = true,
 		text = "4096"
 	})

@@ -230,8 +230,8 @@ function NewShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, s
 	if next(hit_enemies) then
 		if true or false then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = self._unit
 			})
 		end

@@ -114,9 +114,9 @@ end
 
 function InstanceEventUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor",
-		mask = 1
+		ray_type = "body editor"
 	})
 
 	if not ray or not ray.unit then
@@ -396,9 +396,9 @@ end
 
 function InstancePointUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor",
-		mask = 1
+		ray_type = "body editor"
 	})
 
 	if not ray or not ray.unit then
@@ -609,10 +609,10 @@ end
 
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
+		floats = 0,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		floats = 0,
 		tooltip = "Set a default number variable.",
 		name = data.var_name,
 		panel = panel,
@@ -637,11 +637,11 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local params = {
+		tooltip = "Select an option from the combobox",
+		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
-		sorted = true,
 		name = data.var_name,
 		panel = panel,
 		sizer = horizontal_sizer,
@@ -777,9 +777,9 @@ end
 
 function InstanceSetParamsUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		mask = 1,
 		skip_instance_check = true,
-		ray_type = "body editor",
-		mask = 1
+		ray_type = "body editor"
 	})
 
 	if not ray or not ray.unit then
@@ -950,10 +950,10 @@ end
 
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
+		floats = 0,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		floats = 0,
 		tooltip = "Set a number variable.",
 		name = data.var_name,
 		panel = panel,
@@ -980,11 +980,11 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local combobox_params = {
+		tooltip = "Select an option from the combobox",
+		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
-		sorted = true,
 		name = data.var_name,
 		panel = panel,
 		sizer = horizontal_sizer,

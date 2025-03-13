@@ -615,8 +615,8 @@ function PlayerDriving:cb_leave()
 	if exit_position == nil then
 		print("[DRIVING] PlayerDriving: Could not found valid exit position, aborting exit.")
 		managers.notification:add_notification({
-			id = "hint_cant_exit_vehicle",
 			shelf_life = 5,
+			id = "hint_cant_exit_vehicle",
 			duration = 3,
 			text = managers.localization:text("hint_cant_exit_vehicle")
 		})

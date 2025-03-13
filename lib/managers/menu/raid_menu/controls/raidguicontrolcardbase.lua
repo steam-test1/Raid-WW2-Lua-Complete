@@ -36,8 +36,8 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		local card_rarity = tweak_data.challenge_cards:get_card_by_key_name(card).rarity
 		local card_rect = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_rect
 		self._card_panel = self._panel:panel({
-			name = "card_panel",
 			halign = "center",
+			name = "card_panel",
 			valign = "center",
 			x = params.x or 0,
 			y = params.y or 0,
@@ -297,7 +297,7 @@ function RaidGUIControlCardBase:set_card(card_data, is_inventory_item)
 				self._card_type_icon:show()
 			else
 				self._card_type_icon:hide()
-				Application:error("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
+				Application:warn("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
 			end
 		else
 			self._card_rarity_icon:hide()

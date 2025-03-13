@@ -22,7 +22,7 @@ function RaidGUIControlCategorizedGrid:_get_data()
 	self._grid_data = grid_data
 	self._total_items = 0
 	local row_count = 0
-	local labels_h = #self._grid_data * RaidGUIControlCategorizedGrid.LABEL_H
+	local labels_h = #self._grid_data * self.LABEL_H
 
 	for i = 1, #self._grid_data do
 		if grid_data[i].items then
@@ -69,9 +69,9 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	})
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	local background = category_panel:image({
+		name = "category_background",
 		layer = -1,
 		alpha = 0.4,
-		name = "category_background",
 		y = RaidGUIControlCategorizedGrid.LABEL_H - self._vertical_spacing / 2,
 		w = category_panel:w(),
 		h = category_panel:h() - RaidGUIControlCategorizedGrid.LABEL_H,

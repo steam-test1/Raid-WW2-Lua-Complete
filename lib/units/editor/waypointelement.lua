@@ -1,5 +1,6 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 WaypointUnitElement.HED_COLOR = Color.white
+WaypointUnitElement.USES_POINT_ORIENTATION = true
 
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)
@@ -201,8 +202,8 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_shapes()
 
 	local radius, radius_params = self:_build_value_number(panel, panel_sizer, "radius", {
-		min = 10,
-		floats = 0
+		floats = 0,
+		min = 10
 	}, "If map display type is \"circle,\" this specifies the radius of the element on the map (in pixels).")
 
 	radius_params.name_ctrlr:set_label("Radius [cm]:")
@@ -210,25 +211,25 @@ function WaypointUnitElement:_build_panel(panel, panel_sizer)
 	self._radius_params = radius_params
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
 	self:scale_slider(panel, panel_sizer, radius_params, "radius", "Radius scale:")
 
 	local range_max, range_max_params = self:_build_value_number(panel, panel_sizer, "range_max", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "The maximum range within the waypoint is visible (0 for always).")
 
 	range_max_params.name_ctrlr:set_label("Max Range [cm]:")
 
 	local range_min, range_min_params = self:_build_value_number(panel, panel_sizer, "range_min", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "The minimum range within the waypoint is visible (0 for always).")
 
 	range_min_params.name_ctrlr:set_label("Min Range [cm]:")

@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_24_02"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_24_03"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()
@@ -350,7 +350,7 @@ function NetworkMatchMaking:is_server_ok(friends_only, room, attributes_numbers,
 	local permission = tweak_data:index_to_permission(attributes_numbers[3])
 	local level_index, job_index = self:_split_attribute_number(attributes_numbers[1], 1000)
 
-	if not tweak_data.levels:get_level_name_from_index(level_index) then
+	if not tweak_data.levels:get_level_id_from_index(level_index) then
 		Application:error("No level data for index " .. level_index .. ". Payday1 data not compatible with Payday2.")
 
 		return false
@@ -494,7 +494,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 						managers.groupai:kill_all_AI()
 					end
 
-					local level_id = tweak_data.levels:get_level_name_from_index(level_index)
+					local level_id = tweak_data.levels:get_level_id_from_index(level_index)
 					Global.game_settings.level_id = level_id
 
 					managers.network:session():local_peer():set_in_lobby(false)

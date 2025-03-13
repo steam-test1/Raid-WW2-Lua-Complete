@@ -434,8 +434,8 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.ecm_vulnerability = 1
 	self.german_grunt_light.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_grunt_light.weapon_voice = "1"
@@ -480,8 +480,8 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.ecm_vulnerability = 1
 	self.german_grunt_mid.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_grunt_mid.weapon_voice = "1"
@@ -528,8 +528,8 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.ecm_vulnerability = 1
 	self.german_grunt_heavy.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_grunt_heavy.weapon_voice = "1"
@@ -574,8 +574,8 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.ecm_vulnerability = 1
 	self.german_gebirgsjager_light.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_gebirgsjager_light.weapon_voice = "1"
@@ -622,8 +622,8 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.ecm_vulnerability = 1
 	self.german_gebirgsjager_heavy.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_gebirgsjager_heavy.weapon_voice = "1"
@@ -668,8 +668,8 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.ecm_vulnerability = 1
 	self.german_light.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_light.weapon_voice = "1"
@@ -714,8 +714,8 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.ecm_vulnerability = 1
 	self.german_heavy.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_heavy.weapon_voice = "1"
@@ -760,8 +760,8 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.ecm_vulnerability = 1
 	self.german_fallschirmjager_light.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_fallschirmjager_light.weapon_voice = "1"
@@ -808,8 +808,8 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.ecm_vulnerability = 1
 	self.german_fallschirmjager_heavy.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_fallschirmjager_heavy.weapon_voice = "1"
@@ -856,8 +856,8 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.ecm_vulnerability = 1
 	self.german_gasmask.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_gasmask.weapon_voice = "1"
@@ -935,8 +935,8 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.ecm_vulnerability = 1
 	self.german_waffen_ss.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_waffen_ss.weapon_voice = "1"
@@ -978,8 +978,8 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.ecm_vulnerability = 1
 	self.german_commander.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_commander.weapon_voice = "1"
@@ -1031,8 +1031,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.ecm_vulnerability = 1
 	self.german_og_commander.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_og_commander.weapon_voice = "1"
@@ -1085,8 +1085,8 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.ecm_vulnerability = 1
 	self.german_officer.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_officer.weapon_voice = "1"
@@ -1126,8 +1126,8 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.ecm_vulnerability = 1
 	self.soviet_nkvd_int_security_captain.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.soviet_nkvd_int_security_captain.weapon_voice = "1"
@@ -1183,8 +1183,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.ecm_vulnerability = 0
 	self.german_flamer.ecm_hurts = {
 		ears = {
-			max_duration = 9,
-			min_duration = 7
+			min_duration = 7,
+			max_duration = 9
 		}
 	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
@@ -1250,8 +1250,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 		},
 		FALLOFF = {
 			{
-				dmg_mul = 1,
-				r = 200,
+				r = 400,
+				dmg_mul = 2,
 				acc = {
 					1,
 					1
@@ -1268,8 +1268,8 @@ function CharacterTweakData:_init_german_flamer(presets)
 				}
 			},
 			{
-				dmg_mul = 0.5,
 				r = 1000,
+				dmg_mul = 0.5,
 				acc = {
 					1,
 					1
@@ -1309,8 +1309,9 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self:_process_weapon_usage_table(self.german_flamer.weapon)
 
 	self.german_flamer.throwable = {
+		cooldown = 30,
 		projectile_id = "flamer_incendiary",
-		throw_chance = 0.18
+		throw_chance = 0.15
 	}
 	self.german_flamer.weapon_voice = "3"
 	self.german_flamer.speech_prefix_p1 = "ger"
@@ -1346,8 +1347,8 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.ecm_vulnerability = 0
 	self.german_sniper.ecm_hurts = {
 		ears = {
-			max_duration = 9,
-			min_duration = 7
+			min_duration = 7,
+			max_duration = 9
 		}
 	}
 	self.german_sniper.priority_shout = "shout_loud_sniper"
@@ -1392,31 +1393,31 @@ function CharacterTweakData:_init_german_sniper(presets)
 				none = 1
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.3
+				health_limit = 0.3,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.6
+				health_limit = 0.6,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.9
+				health_limit = 0.9,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
+				heavy = 0,
 				none = 1,
-				light = 0,
-				heavy = 0
+				moderate = 0,
+				light = 0
 			}
 		}
 	}
@@ -1444,8 +1445,8 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.ecm_vulnerability = 1
 	self.german_spotter.ecm_hurts = {
 		ears = {
-			max_duration = 10,
-			min_duration = 8
+			min_duration = 8,
+			max_duration = 10
 		}
 	}
 	self.german_spotter.weapon_voice = "1"
@@ -1471,31 +1472,31 @@ function CharacterTweakData:_init_german_spotter(presets)
 				none = 1
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.3
+				health_limit = 0.3,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.6
+				health_limit = 0.6,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
-				light = 0,
 				heavy = 0,
 				none = 1,
-				health_limit = 0.9
+				health_limit = 0.9,
+				moderate = 0,
+				light = 0
 			},
 			{
-				moderate = 0,
+				heavy = 0,
 				none = 1,
-				light = 0,
-				heavy = 0
+				moderate = 0,
+				light = 0
 			}
 		}
 	}
@@ -1628,28 +1629,28 @@ function CharacterTweakData:_presets(tweak_data)
 					none = 1
 				},
 				{
-					moderate = 0.05,
-					light = 0.7,
 					heavy = 0.05,
 					none = 0.2,
-					health_limit = 0.3
+					health_limit = 0.3,
+					moderate = 0.05,
+					light = 0.7
 				},
 				{
 					moderate = 0.4,
-					light = 0.4,
+					heavy = 0.2,
 					health_limit = 0.6,
-					heavy = 0.2
+					light = 0.4
 				},
 				{
 					moderate = 0.2,
-					light = 0.2,
+					heavy = 0.6,
 					health_limit = 0.9,
-					heavy = 0.6
+					light = 0.2
 				},
 				{
+					heavy = 1,
 					moderate = 0,
-					light = 0,
-					heavy = 1
+					light = 0
 				}
 			}
 		},
@@ -1667,12 +1668,12 @@ function CharacterTweakData:_presets(tweak_data)
 				},
 				{
 					explode = 0.4,
-					heavy = 0.6,
-					health_limit = 0.5
+					health_limit = 0.5,
+					heavy = 0.6
 				},
 				{
-					explode = 0.8,
-					heavy = 0.2
+					heavy = 0.2,
+					explode = 0.8
 				}
 			}
 		},
@@ -1684,28 +1685,28 @@ function CharacterTweakData:_presets(tweak_data)
 					none = 1
 				},
 				{
-					moderate = 0,
-					light = 0.7,
 					heavy = 0,
 					none = 0.3,
-					health_limit = 0.3
+					health_limit = 0.3,
+					moderate = 0,
+					light = 0.7
 				},
 				{
 					moderate = 0,
-					light = 1,
+					heavy = 0,
 					health_limit = 0.8,
-					heavy = 0
+					light = 1
 				},
 				{
 					moderate = 0.2,
-					light = 0.6,
+					heavy = 0.2,
 					health_limit = 0.9,
-					heavy = 0.2
+					light = 0.6
 				},
 				{
+					heavy = 9,
 					moderate = 0,
-					light = 0,
-					heavy = 9
+					light = 0
 				}
 			}
 		},
@@ -1740,9 +1741,9 @@ function CharacterTweakData:_presets(tweak_data)
 		headshot_dmg_mul = 1,
 		SPEED_WALK = {
 			pnc = 160,
-			cbt = 160,
 			hos = 180,
-			ntl = 120
+			ntl = 120,
+			cbt = 160
 		},
 		SPEED_RUN = 370,
 		crouch_move = true,
@@ -1810,10 +1811,10 @@ function CharacterTweakData:_presets(tweak_data)
 				light = 0.7
 			},
 			{
-				moderate = 0.3,
+				heavy = 0.1,
 				none = 0.1,
-				light = 0.5,
-				heavy = 0.1
+				moderate = 0.3,
+				light = 0.5
 			}
 		}
 	}
@@ -1871,8 +1872,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 100,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -1889,8 +1890,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 500,
+			dmg_mul = 2,
 			acc = {
 				0.4,
 				0.9
@@ -1907,8 +1908,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1000,
+			dmg_mul = 2,
 			acc = {
 				0.2,
 				0.8
@@ -1925,8 +1926,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.2,
 				0.5
@@ -1943,8 +1944,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.01,
 				0.35
@@ -1980,8 +1981,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
 			r = 100,
+			dmg_mul = 1,
 			acc = {
 				0.6,
 				0.9
@@ -1998,8 +1999,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 500,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.85
@@ -2016,8 +2017,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 1000,
+			dmg_mul = 1,
 			acc = {
 				0.375,
 				0.55
@@ -2034,8 +2035,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.25,
 				0.45
@@ -2052,8 +2053,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 3000,
+			dmg_mul = 1,
 			acc = {
 				0.01,
 				0.35
@@ -2093,8 +2094,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.usa_thomspon_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
 			r = 100,
+			dmg_mul = 1,
 			acc = {
 				0.6,
 				0.9
@@ -2111,8 +2112,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 500,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.9
@@ -2129,8 +2130,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 1000,
+			dmg_mul = 1,
 			acc = {
 				0.2,
 				0.8
@@ -2147,8 +2148,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.1,
 				0.45
@@ -2165,8 +2166,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 3000,
+			dmg_mul = 1,
 			acc = {
 				0.1,
 				0.35
@@ -2202,8 +2203,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 1600,
+			dmg_mul = 2,
 			acc = {
 				0.3,
 				0.7
@@ -2220,8 +2221,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 3500,
+			dmg_mul = 1.5,
 			acc = {
 				0.1,
 				0.7
@@ -2238,8 +2239,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 4000,
+			dmg_mul = 0.25,
 			acc = {
 				0.035,
 				0.55
@@ -2256,8 +2257,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.1,
 			r = 5000,
+			dmg_mul = 0.1,
 			acc = {
 				0.035,
 				0.25
@@ -2293,8 +2294,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 1.5,
 			r = 800,
+			dmg_mul = 1.5,
 			acc = {
 				0.7,
 				0.8
@@ -2311,8 +2312,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 1500,
+			dmg_mul = 0.5,
 			acc = {
 				0.2,
 				0.7
@@ -2329,8 +2330,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 2000,
+			dmg_mul = 0.25,
 			acc = {
 				0.05,
 				0.55
@@ -2347,8 +2348,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 2500,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.25
@@ -2388,8 +2389,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 1.5,
 			r = 1400,
+			dmg_mul = 1.5,
 			acc = {
 				0.4,
 				0.7
@@ -2406,8 +2407,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2000,
+			dmg_mul = 0.5,
 			acc = {
 				0.2,
 				0.7
@@ -2424,8 +2425,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 2500,
+			dmg_mul = 0.25,
 			acc = {
 				0.05,
 				0.55
@@ -2442,8 +2443,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 3000,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.25
@@ -2483,8 +2484,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
 			r = 1800,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.7
@@ -2501,8 +2502,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2500,
+			dmg_mul = 0.5,
 			acc = {
 				0.2,
 				0.7
@@ -2519,8 +2520,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 3000,
+			dmg_mul = 0.25,
 			acc = {
 				0.05,
 				0.55
@@ -2537,8 +2538,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 4000,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.25
@@ -2574,8 +2575,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.normal.ger_geco_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
 			r = 600,
+			dmg_mul = 1,
 			acc = {
 				0.6,
 				0.7
@@ -2592,8 +2593,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.3,
 			r = 1000,
+			dmg_mul = 0.3,
 			acc = {
 				0.2,
 				0.7
@@ -2610,8 +2611,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 1200,
+			dmg_mul = 0.25,
 			acc = {
 				0.05,
 				0.55
@@ -2628,8 +2629,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 2000,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.25
@@ -2673,8 +2674,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.good.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 100,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -2691,8 +2692,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 500,
+			dmg_mul = 2,
 			acc = {
 				0.4,
 				0.9
@@ -2709,8 +2710,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1000,
+			dmg_mul = 2,
 			acc = {
 				0.2,
 				0.8
@@ -2727,8 +2728,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.2,
 				0.5
@@ -2745,8 +2746,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.01,
 				0.35
@@ -2775,8 +2776,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.good.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 100,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -2793,8 +2794,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 500,
+			dmg_mul = 2,
 			acc = {
 				0.5,
 				0.85
@@ -2811,8 +2812,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1000,
+			dmg_mul = 2,
 			acc = {
 				0.375,
 				0.55
@@ -2829,8 +2830,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.25,
 				0.45
@@ -2847,8 +2848,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.01,
 				0.35
@@ -2878,8 +2879,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.good.usa_thomspon_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 100,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -2896,8 +2897,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 500,
+			dmg_mul = 2,
 			acc = {
 				0.4,
 				0.95
@@ -2914,8 +2915,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1000,
+			dmg_mul = 2,
 			acc = {
 				0.2,
 				0.75
@@ -2932,8 +2933,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.1,
 				0.45
@@ -2950,8 +2951,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.1,
 				0.35
@@ -2984,8 +2985,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 2.5,
 			r = 1600,
+			dmg_mul = 2.5,
 			acc = {
 				0.5,
 				0.9
@@ -3002,8 +3003,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2300,
+			dmg_mul = 2,
 			acc = {
 				0.35,
 				0.9
@@ -3020,8 +3021,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 3000,
+			dmg_mul = 0.5,
 			acc = {
 				0.1,
 				0.65
@@ -3038,8 +3039,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 4000,
+			dmg_mul = 0,
 			acc = {
 				0.035,
 				0.35
@@ -3072,8 +3073,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 800,
+			dmg_mul = 2,
 			acc = {
 				0.8,
 				0.9
@@ -3090,8 +3091,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 1500,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.9
@@ -3108,8 +3109,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2000,
+			dmg_mul = 0.5,
 			acc = {
 				0.15,
 				0.65
@@ -3126,8 +3127,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 2500,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.35
@@ -3161,8 +3162,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.good.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 1400,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -3179,8 +3180,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.9
@@ -3197,8 +3198,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2500,
+			dmg_mul = 0.5,
 			acc = {
 				0.15,
 				0.65
@@ -3215,8 +3216,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 3500,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.35
@@ -3250,8 +3251,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.good.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 1800,
+			dmg_mul = 2,
 			acc = {
 				0.6,
 				0.9
@@ -3268,8 +3269,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2500,
+			dmg_mul = 1,
 			acc = {
 				0.4,
 				0.9
@@ -3286,8 +3287,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 3000,
+			dmg_mul = 0.5,
 			acc = {
 				0.15,
 				0.65
@@ -3304,8 +3305,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 3500,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.35
@@ -3338,8 +3339,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.good.ger_geco_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 600,
+			dmg_mul = 2,
 			acc = {
 				0.7,
 				0.9
@@ -3356,8 +3357,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.7,
 			r = 1000,
+			dmg_mul = 0.7,
 			acc = {
 				0.4,
 				0.9
@@ -3374,8 +3375,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 1500,
+			dmg_mul = 0.5,
 			acc = {
 				0.15,
 				0.65
@@ -3392,8 +3393,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0,
 			r = 2000,
+			dmg_mul = 0,
 			acc = {
 				0.05,
 				0.25
@@ -3437,8 +3438,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.expert.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.6,
 				0.9
@@ -3455,8 +3456,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.55,
 				0.95
@@ -3473,8 +3474,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.525,
 				0.8
@@ -3491,8 +3492,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.7
@@ -3509,8 +3510,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.2,
 				0.4
@@ -3539,8 +3540,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.expert.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.6,
 				0.9
@@ -3557,8 +3558,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.9
@@ -3575,8 +3576,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.4,
 				0.65
@@ -3593,8 +3594,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.3,
 				0.5
@@ -3611,8 +3612,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.1,
 				0.25
@@ -3642,8 +3643,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.expert.usa_thomspon_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.6,
 				0.95
@@ -3660,8 +3661,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.6,
 				0.9
@@ -3678,8 +3679,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.4,
 				0.65
@@ -3696,8 +3697,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.4,
 				0.6
@@ -3714,8 +3715,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.2,
 				0.35
@@ -3748,8 +3749,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 4,
 			r = 1600,
+			dmg_mul = 4,
 			acc = {
 				0.5,
 				0.9
@@ -3766,8 +3767,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 2300,
+			dmg_mul = 3,
 			acc = {
 				0.4,
 				0.9
@@ -3784,8 +3785,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.1,
 				0.65
@@ -3802,8 +3803,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 3500,
+			dmg_mul = 1,
 			acc = {
 				0.035,
 				0.35
@@ -3836,8 +3837,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 800,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.9
@@ -3854,8 +3855,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 1500,
+			dmg_mul = 3,
 			acc = {
 				0.6,
 				0.9
@@ -3872,8 +3873,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.65
@@ -3890,8 +3891,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2500,
+			dmg_mul = 1,
 			acc = {
 				0.05,
 				0.35
@@ -3925,8 +3926,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.expert.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 4,
 			r = 1400,
+			dmg_mul = 4,
 			acc = {
 				0.6,
 				0.9
@@ -3943,8 +3944,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 2000,
+			dmg_mul = 3,
 			acc = {
 				0.5,
 				0.9
@@ -3961,8 +3962,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2500,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.65
@@ -3979,8 +3980,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 3000,
+			dmg_mul = 1,
 			acc = {
 				0.05,
 				0.35
@@ -4014,8 +4015,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.expert.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 5,
 			r = 1800,
+			dmg_mul = 5,
 			acc = {
 				0.6,
 				0.9
@@ -4032,8 +4033,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 2500,
+			dmg_mul = 3,
 			acc = {
 				0.5,
 				0.9
@@ -4050,8 +4051,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.65
@@ -4068,8 +4069,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 3500,
+			dmg_mul = 1,
 			acc = {
 				0.05,
 				0.35
@@ -4102,8 +4103,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.expert.ger_geco_npc.FALLOFF = {
 		{
-			dmg_mul = 5,
 			r = 600,
+			dmg_mul = 5,
 			acc = {
 				0.8,
 				0.9
@@ -4120,8 +4121,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 1000,
+			dmg_mul = 2.5,
 			acc = {
 				0.5,
 				0.9
@@ -4138,8 +4139,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1500,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.65
@@ -4156,8 +4157,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.05,
 				0.35
@@ -4201,8 +4202,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.insane.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4219,8 +4220,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.95
@@ -4237,8 +4238,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.8
@@ -4255,8 +4256,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.7
@@ -4273,8 +4274,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.3,
 				0.4
@@ -4303,8 +4304,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.insane.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4321,8 +4322,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4339,8 +4340,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.65
@@ -4357,8 +4358,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.5
@@ -4375,8 +4376,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.3,
 				0.25
@@ -4406,8 +4407,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.usa_thomspon_npc.autofire_rounds = presets.weapon.normal.usa_thomspon_npc.autofire_rounds
 	presets.weapon.insane.usa_thomspon_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 100,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.95
@@ -4424,8 +4425,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 500,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4442,8 +4443,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 1000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.65
@@ -4460,8 +4461,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 2000,
+			dmg_mul = 4.5,
 			acc = {
 				0.5,
 				0.6
@@ -4478,8 +4479,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 4.5,
 			r = 3000,
+			dmg_mul = 4.5,
 			acc = {
 				0.3,
 				0.35
@@ -4512,8 +4513,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 1600,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4530,8 +4531,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 2300,
+			dmg_mul = 3.5,
 			acc = {
 				0.5,
 				0.9
@@ -4548,8 +4549,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 3000,
+			dmg_mul = 2.5,
 			acc = {
 				0.25,
 				0.65
@@ -4566,8 +4567,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 3500,
+			dmg_mul = 1.5,
 			acc = {
 				0.15,
 				0.35
@@ -4600,8 +4601,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 4,
 			r = 800,
+			dmg_mul = 4,
 			acc = {
 				0.7,
 				0.9
@@ -4618,8 +4619,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 1500,
+			dmg_mul = 3,
 			acc = {
 				0.5,
 				0.9
@@ -4636,8 +4637,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 2000,
+			dmg_mul = 2.5,
 			acc = {
 				0.25,
 				0.65
@@ -4654,8 +4655,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2500,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.35
@@ -4689,8 +4690,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.insane.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 4.5,
 			r = 1400,
+			dmg_mul = 4.5,
 			acc = {
 				0.7,
 				0.9
@@ -4707,8 +4708,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 2000,
+			dmg_mul = 3.5,
 			acc = {
 				0.5,
 				0.9
@@ -4725,8 +4726,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 2500,
+			dmg_mul = 3,
 			acc = {
 				0.25,
 				0.65
@@ -4743,8 +4744,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3000,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.35
@@ -4778,8 +4779,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.insane.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 4,
 			r = 1800,
+			dmg_mul = 4,
 			acc = {
 				0.7,
 				0.9
@@ -4796,8 +4797,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 2500,
+			dmg_mul = 3.5,
 			acc = {
 				0.5,
 				0.9
@@ -4814,8 +4815,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3,
 			r = 3000,
+			dmg_mul = 3,
 			acc = {
 				0.25,
 				0.65
@@ -4832,8 +4833,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 3500,
+			dmg_mul = 2,
 			acc = {
 				0.15,
 				0.35
@@ -4866,8 +4867,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.insane.ger_geco_npc.FALLOFF = {
 		{
-			dmg_mul = 5,
 			r = 600,
+			dmg_mul = 5,
 			acc = {
 				0.9,
 				1
@@ -4884,8 +4885,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 1000,
+			dmg_mul = 2.5,
 			acc = {
 				0.5,
 				0.9
@@ -4902,8 +4903,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 1500,
+			dmg_mul = 2,
 			acc = {
 				0.25,
 				0.65
@@ -4920,8 +4921,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.15,
 				0.35
@@ -4961,8 +4962,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.use_laser = true
 	presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 1000,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.95
@@ -4979,8 +4980,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 15000,
+			dmg_mul = 3.5,
 			acc = {
 				0.4,
 				0.95
@@ -4997,8 +4998,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 40000,
+			dmg_mul = 2.5,
 			acc = {
 				0.1,
 				0.75
@@ -5015,8 +5016,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 80000,
+			dmg_mul = 1.5,
 			acc = {
 				0,
 				0.25
@@ -5053,8 +5054,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_luger_npc.range = presets.weapon.normal.ger_luger_npc.range
 	presets.weapon.gang_member.ger_luger_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 300,
+			dmg_mul = 3.5,
 			acc = {
 				0.7,
 				0.8
@@ -5071,8 +5072,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.1,
 				0.6
@@ -5089,8 +5090,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 10000,
+			dmg_mul = 1,
 			acc = {
 				0,
 				0.15
@@ -5124,8 +5125,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_mp38_npc.autofire_rounds = presets.weapon.normal.ger_mp38_npc.autofire_rounds
 	presets.weapon.gang_member.ger_mp38_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 300,
+			dmg_mul = 3.5,
 			acc = {
 				0.7,
 				1
@@ -5142,8 +5143,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2000,
+			dmg_mul = 0.5,
 			acc = {
 				0.1,
 				0.6
@@ -5160,8 +5161,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 10000,
+			dmg_mul = 0.5,
 			acc = {
 				0,
 				0.15
@@ -5195,8 +5196,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.ger_stg44_npc.autofire_rounds = presets.weapon.normal.ger_stg44_npc.autofire_rounds
 	presets.weapon.gang_member.ger_stg44_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 300,
+			dmg_mul = 3.5,
 			acc = {
 				0.7,
 				1
@@ -5213,8 +5214,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2000,
+			dmg_mul = 0.5,
 			acc = {
 				0.1,
 				0.6
@@ -5231,8 +5232,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 10000,
+			dmg_mul = 0.5,
 			acc = {
 				0,
 				0.15
@@ -5266,8 +5267,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.usa_garand_npc.autofire_rounds = presets.weapon.normal.usa_garand_npc.autofire_rounds
 	presets.weapon.gang_member.usa_garand_npc.FALLOFF = {
 		{
-			dmg_mul = 2,
 			r = 300,
+			dmg_mul = 2,
 			acc = {
 				0.9,
 				1
@@ -5284,8 +5285,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 2000,
+			dmg_mul = 1,
 			acc = {
 				0.9,
 				1
@@ -5302,8 +5303,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 10000,
+			dmg_mul = 0.5,
 			acc = {
 				0.9,
 				1
@@ -5332,8 +5333,8 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.gang_member.usa_m1911_npc.range = presets.weapon.normal.usa_m1911_npc.range
 	presets.weapon.gang_member.usa_m1911_npc.FALLOFF = {
 		{
-			dmg_mul = 4,
 			r = 300,
+			dmg_mul = 4,
 			acc = {
 				0.7,
 				1
@@ -5350,8 +5351,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 2,
 			r = 2000,
+			dmg_mul = 2,
 			acc = {
 				0.7,
 				1
@@ -5368,8 +5369,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 1,
 			r = 10000,
+			dmg_mul = 1,
 			acc = {
 				0.7,
 				1
@@ -5409,8 +5410,8 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.gang_member.thompson_npc.FALLOFF = {
 		{
-			dmg_mul = 1,
 			r = 300,
+			dmg_mul = 1,
 			acc = {
 				0.9,
 				1
@@ -5427,8 +5428,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.5,
 			r = 2000,
+			dmg_mul = 0.5,
 			acc = {
 				0.9,
 				1
@@ -5445,8 +5446,8 @@ function CharacterTweakData:_presets(tweak_data)
 			}
 		},
 		{
-			dmg_mul = 0.25,
 			r = 10000,
+			dmg_mul = 0.25,
 			acc = {
 				0.9,
 				1
@@ -6434,14 +6435,14 @@ function CharacterTweakData:_presets(tweak_data)
 				},
 				run = {
 					hos = {
-						bwd = 113,
-						strafe = 140,
-						fwd = 144
+						bwd = 170,
+						strafe = 180,
+						fwd = 216
 					},
 					cbt = {
-						bwd = 125,
-						strafe = 100,
-						fwd = 144
+						bwd = 170,
+						strafe = 180,
+						fwd = 216
 					}
 				}
 			},
@@ -6460,14 +6461,14 @@ function CharacterTweakData:_presets(tweak_data)
 				},
 				run = {
 					hos = {
-						bwd = 113,
-						strafe = 130,
-						fwd = 144
+						bwd = 170,
+						strafe = 180,
+						fwd = 216
 					},
 					cbt = {
-						bwd = 125,
-						strafe = 100,
-						fwd = 144
+						bwd = 170,
+						strafe = 180,
+						fwd = 216
 					}
 				}
 			}
@@ -6936,29 +6937,29 @@ function CharacterTweakData:_presets(tweak_data)
 		no_chatter = {},
 		cop = {
 			incomming_flamer = true,
-			contact = true,
-			go_go = true,
-			retreat = true,
-			aggressive = true,
+			incomming_commander = true,
 			clear = true,
 			follow_me = true,
 			smoke = true,
 			ready = true,
 			suppress = true,
-			incomming_commander = true
+			contact = true,
+			go_go = true,
+			retreat = true,
+			aggressive = true
 		},
 		swat = {
 			incomming_flamer = true,
-			contact = true,
-			go_go = true,
-			retreat = true,
-			aggressive = true,
+			incomming_commander = true,
 			clear = true,
 			follow_me = true,
 			smoke = true,
 			ready = true,
 			suppress = true,
-			incomming_commander = true
+			contact = true,
+			go_go = true,
+			retreat = true,
+			aggressive = true
 		},
 		shield = {
 			follow_me = true
@@ -7075,8 +7076,8 @@ function CharacterTweakData:_set_difficulty_1()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 1000,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.95
@@ -7093,8 +7094,8 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 15000,
+			dmg_mul = 3.5,
 			acc = {
 				0.4,
 				0.95
@@ -7111,8 +7112,8 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 40000,
+			dmg_mul = 2.5,
 			acc = {
 				0.1,
 				0.75
@@ -7129,8 +7130,8 @@ function CharacterTweakData:_set_difficulty_1()
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 80000,
+			dmg_mul = 1.5,
 			acc = {
 				0,
 				0.25
@@ -7148,6 +7149,8 @@ function CharacterTweakData:_set_difficulty_1()
 		}
 	}
 	self.german_flamer.HEALTH_INIT = 1600
+	self.german_flamer.throwable.throw_chance = 0
+	self.german_flamer.throwable.cooldown = 40
 end
 
 function CharacterTweakData:_set_difficulty_2()
@@ -7168,8 +7171,8 @@ function CharacterTweakData:_set_difficulty_2()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 1000,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.95
@@ -7186,8 +7189,8 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 15000,
+			dmg_mul = 3.5,
 			acc = {
 				0.4,
 				0.95
@@ -7204,8 +7207,8 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 40000,
+			dmg_mul = 2.5,
 			acc = {
 				0.1,
 				0.75
@@ -7222,8 +7225,8 @@ function CharacterTweakData:_set_difficulty_2()
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 80000,
+			dmg_mul = 1.5,
 			acc = {
 				0,
 				0.25
@@ -7241,6 +7244,8 @@ function CharacterTweakData:_set_difficulty_2()
 		}
 	}
 	self.german_flamer.HEALTH_INIT = 2000
+	self.german_flamer.throwable.throw_chance = 0.15
+	self.german_flamer.throwable.cooldown = 30
 end
 
 function CharacterTweakData:_set_difficulty_3()
@@ -7261,8 +7266,8 @@ function CharacterTweakData:_set_difficulty_3()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 1000,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.95
@@ -7279,8 +7284,8 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 15000,
+			dmg_mul = 3.5,
 			acc = {
 				0.4,
 				0.95
@@ -7297,8 +7302,8 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 40000,
+			dmg_mul = 2.5,
 			acc = {
 				0.1,
 				0.75
@@ -7315,8 +7320,8 @@ function CharacterTweakData:_set_difficulty_3()
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 80000,
+			dmg_mul = 1.5,
 			acc = {
 				0,
 				0.25
@@ -7334,6 +7339,8 @@ function CharacterTweakData:_set_difficulty_3()
 		}
 	}
 	self.german_flamer.HEALTH_INIT = 2200
+	self.german_flamer.throwable.throw_chance = 0.2
+	self.german_flamer.throwable.cooldown = 22
 end
 
 function CharacterTweakData:_set_difficulty_4()
@@ -7355,8 +7362,8 @@ function CharacterTweakData:_set_difficulty_4()
 
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
-			dmg_mul = 3.5,
 			r = 1000,
+			dmg_mul = 3.5,
 			acc = {
 				0.8,
 				0.95
@@ -7373,8 +7380,8 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			dmg_mul = 3.5,
 			r = 15000,
+			dmg_mul = 3.5,
 			acc = {
 				0.4,
 				0.95
@@ -7391,8 +7398,8 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			dmg_mul = 2.5,
 			r = 40000,
+			dmg_mul = 2.5,
 			acc = {
 				0.1,
 				0.75
@@ -7409,8 +7416,8 @@ function CharacterTweakData:_set_difficulty_4()
 			}
 		},
 		{
-			dmg_mul = 1.5,
 			r = 80000,
+			dmg_mul = 1.5,
 			acc = {
 				0,
 				0.25
@@ -7428,6 +7435,8 @@ function CharacterTweakData:_set_difficulty_4()
 		}
 	}
 	self.german_flamer.HEALTH_INIT = 2600
+	self.german_flamer.throwable.throw_chance = 0.28
+	self.german_flamer.throwable.cooldown = 15
 end
 
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)

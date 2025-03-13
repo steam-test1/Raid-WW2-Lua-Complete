@@ -96,9 +96,9 @@ function ReadyUpGui:_layout_buttons()
 
 	self._no_cards_warning_label = self._root_panel:label({
 		align = "right",
+		x = 1000,
 		name = "no_cards_warning_label",
 		visible = false,
-		x = 1000,
 		y = button_y,
 		text = self:translate("menu_card_dont_own", true),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -157,8 +157,14 @@ end
 function ReadyUpGui:_layout_header()
 	local selected_job = managers.raid_job:selected_job()
 	local current_job = managers.raid_job:current_job()
-	local selected_level_data = selected_job or current_job
-	local mission_data = tweak_data.operations:mission_data(selected_level_data.job_id)
+	local mission_data = selected_job or current_job
+
+	if not mission_data then
+		Application:warn("[ReadyUpGui:_layout_header] selected_job, current_job", selected_job, current_job)
+
+		return
+	end
+
 	local item_icon_name = mission_data.icon_menu
 	local item_icon = {
 		texture = tweak_data.gui.icons[item_icon_name].texture,
@@ -179,16 +185,16 @@ function ReadyUpGui:_layout_header()
 		local title_text = self:translate(name_id, true) .. mission_progress_fraction .. event_name
 		mission_name = title_text
 	else
-		mission_name = utf8.to_upper(managers.localization:text(tweak_data.operations.missions[selected_job.job_id].name_id))
+		mission_name = utf8.to_upper(managers.localization:text(selected_job.name_id))
 	end
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
-		h = 32,
-		name = "mission_name",
 		vertical = "center",
 		align = "left",
 		y = 0,
+		h = 32,
+		name = "mission_name",
 		x = mission_info_x,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -267,8 +273,8 @@ end
 function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
-		item_h = 224,
 		y = 384,
+		item_h = 224,
 		name = "player_loot_card",
 		x = self._root_panel:w() - 160,
 		item_w = card_w
@@ -288,10 +294,10 @@ function ReadyUpGui:_layout_card_info()
 		texture_rect = empty_slot_texture.texture_rect
 	})
 	self._card_not_selected_label = self._root_panel:label({
-		wrap = true,
-		h = 128,
-		name = "card_not_selected_label",
 		align = "center",
+		h = 128,
+		wrap = true,
+		name = "card_not_selected_label",
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
 		w = self._empty_card_slot:w() - 10,
@@ -305,12 +311,11 @@ function ReadyUpGui:_layout_card_info()
 	self._card_not_selected_label:set_visible(true)
 
 	self._positive_card_effect_label = self._root_panel:label({
-		wrap = true,
-		h = 128,
-		name = "positive_card_effect",
 		align = "left",
-		x = 0,
+		h = 128,
 		w = 352,
+		wrap = true,
+		name = "positive_card_effect",
 		y = self._card_control:bottom() + 32,
 		text = self:translate("hud_no_challenge_card_text", false),
 		font = tweak_data.gui.fonts.lato,
@@ -321,13 +326,12 @@ function ReadyUpGui:_layout_card_info()
 	self._positive_card_effect_label:set_right(self._root_panel:right())
 
 	self._negative_card_effect_label = self._root_panel:label({
-		wrap = true,
+		align = "left",
 		text = "",
 		h = 64,
-		name = "negative_card_effect",
-		align = "left",
-		x = 0,
 		w = 352,
+		wrap = true,
+		name = "negative_card_effect",
 		y = self._card_control:bottom() + 96,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,
@@ -906,9 +910,12 @@ function ReadyUpGui:_update_controls_contining_mission()
 			self._card_control:set_card(active_card)
 
 			self._forced_card = active_card.locked_suggestion
-			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card.key_name)
+			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card)
 
-			self._positive_card_effect_label:set_text("+ " .. bonus_description)
+			if bonus_description ~= "" then
+				self._positive_card_effect_label:show()
+				self._positive_card_effect_label:set_text("+ " .. bonus_description)
+			end
 
 			if malus_description ~= "" then
 				self._negative_card_effect_label:show()

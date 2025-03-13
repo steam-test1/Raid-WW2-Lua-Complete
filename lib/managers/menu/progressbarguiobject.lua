@@ -12,9 +12,9 @@ function ProgressBarGuiObject:init(panel, config)
 	self._color_green = Color(0.39215686274509803, 0.7372549019607844, 0.2980392156862745)
 	self._is_being_animated = false
 	self._progress_bar_bg = self._panel:bitmap({
-		name = "progress_bar_bg",
 		visible = false,
 		layer = 2,
+		name = "progress_bar_bg",
 		x = self._x - self._width / 2,
 		y = self._y - self._width / 2,
 		texture = tweak_data.gui.icons.interaction_hold_meter_bg.texture,
@@ -23,11 +23,11 @@ function ProgressBarGuiObject:init(panel, config)
 		h = self._height
 	})
 	self._progress_bar = self._panel:rect({
+		blend_mode = "normal",
 		name = "progress_bar",
 		h = 0,
-		blend_mode = "normal",
-		w = 0,
 		layer = 3,
+		w = 0,
 		x = self._x - self._width / 2,
 		y = self._y - self._height / 2,
 		color = tweak_data.gui.colors.interaction_bar
@@ -40,11 +40,11 @@ end
 
 function ProgressBarGuiObject:_create_description(description)
 	local description_params = {
-		align = "center",
 		name = "progress_bar_description",
 		h = 32,
 		w = 256,
 		valign = "bottom",
+		align = "center",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_white,

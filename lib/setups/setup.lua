@@ -255,7 +255,6 @@ require("lib/managers/hud/HUDSaveIcon")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlDialogTest")
 require("lib/utils/StatisticsGenerator")
 
-script_data = script_data or {}
 game_state_machine = game_state_machine or nil
 Setup = Setup or class(CoreSetup.CoreSetup)
 
@@ -324,6 +323,7 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		is_playing = false,
 		search_appropriate_jobs = true,
 		job_plan = -1,
 		kick_option = 1,
@@ -332,7 +332,6 @@ function Setup:init_managers(managers)
 		team_ai = true,
 		selected_team_ai = true,
 		permission = "public",
-		is_playing = false,
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
@@ -472,8 +471,8 @@ function Setup:_start_loading_screen()
 		load_level_data.controller_shapes = {
 			{
 				position = {
-					cx = 0.5,
-					cy = 0.5
+					cy = 0.5,
+					cx = 0.5
 				},
 				texture_rect = {
 					0,
@@ -502,8 +501,8 @@ function Setup:_start_loading_screen()
 			aspect_ratio = aspect_ratio,
 			res = res,
 			workspace_size = {
-				y = 0,
 				x = 0,
+				y = 0,
 				w = res.x,
 				h = res.y
 			},
@@ -542,10 +541,10 @@ function Setup:_setup_loading_environment()
 				slice3 = Vector3(5100, 17500, 0)
 			},
 			apply_ambient = {
+				ambient_falloff_scale = 0,
 				ambient_scale = 1,
 				ambient_color_scale = 0.31999999284744,
 				effect_light_scale = 1,
-				ambient_falloff_scale = 0,
 				ambient_color = Vector3(1, 1, 1),
 				sky_top_color = Vector3(0, 0, 0),
 				sky_bottom_color = Vector3(0, 0, 0)
@@ -585,7 +584,7 @@ end
 
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
-	game_state_machine:init_finilize()
+	game_state_machine:init_finalize()
 	managers.dlc:init_finalize()
 	managers.achievment:init_finalize()
 	managers.system_menu:init_finalize()
@@ -702,7 +701,6 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	Global.level_data.level = level
 	Global.level_data.mission = mission
 	Global.level_data.world_setting = world_setting
-	Global.level_data.level_class_name = level_class_name
 	Global.level_data.level_id = level_id
 
 	self:exec(level)
@@ -728,7 +726,6 @@ function Setup:load_start_menu(save_progress)
 	Global.level_data.level = nil
 	Global.level_data.mission = nil
 	Global.level_data.world_setting = nil
-	Global.level_data.level_class_name = nil
 	Global.level_data.level_id = nil
 
 	if save_progress then

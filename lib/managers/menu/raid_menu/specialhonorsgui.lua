@@ -59,8 +59,8 @@ end
 function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_big_panel_params = {
 		halign = "scale",
-		name = "top_stats_big_panel",
-		valign = "scale"
+		valign = "scale",
+		name = "top_stats_big_panel"
 	}
 	self._top_stats_big_panel = self._root_panel:panel(top_stats_big_panel_params)
 	local title_text = game_state_machine:current_state():is_success() and SpecialHonorsGui.TOP_STATS_TITLE_TEXT or SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE

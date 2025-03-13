@@ -33,11 +33,11 @@ end
 
 function HUDCardDetails:_create_card()
 	local card_panel_params = {
-		x = 0,
-		visible = true,
 		name = "card_panel",
 		is_root_panel = true,
 		y = 0,
+		x = 0,
+		visible = true,
 		w = self._object:w(),
 		h = HUDCardDetails.CARD_H
 	}
@@ -55,28 +55,28 @@ end
 
 function HUDCardDetails:_create_bonus()
 	local bonus_panel_params = {
-		x = 0,
 		name = "bonus_panel",
+		x = 0,
 		y = HUDCardDetails.BONUS_Y,
 		w = self._object:w(),
 		h = HUDCardDetails.BONUS_H
 	}
 	self._bonus_panel = self._object:panel(bonus_panel_params)
 	local bonus_icon_params = {
-		valign = "top",
 		name = "bonus_icon",
+		valign = "top",
 		texture = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.BONUS_ICON].texture_rect
 	}
 	self._bonus_icon = self._bonus_panel:bitmap(bonus_icon_params)
 	local bonus_text_params = {
-		name = "bonus_text",
+		vertical = "top",
 		align = "left",
+		y = 4,
+		name = "bonus_text",
 		valign = "scale",
 		text = "",
 		wrap = true,
-		vertical = "top",
-		y = 4,
 		x = HUDCardDetails.TEXT_X,
 		w = self._bonus_panel:w() - HUDCardDetails.TEXT_X,
 		h = self._bonus_panel:h() - 4,
@@ -88,28 +88,28 @@ end
 
 function HUDCardDetails:_create_malus()
 	local malus_panel_params = {
-		x = 0,
 		name = "malus_panel",
+		x = 0,
 		y = HUDCardDetails.MALUS_Y,
 		w = self._object:w(),
 		h = HUDCardDetails.MALUS_H
 	}
 	self._malus_panel = self._object:panel(malus_panel_params)
 	local malus_icon_params = {
-		valign = "top",
 		name = "malus_icon",
+		valign = "top",
 		texture = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCardDetails.MALUS_ICON].texture_rect
 	}
 	self._malus_icon = self._malus_panel:bitmap(malus_icon_params)
 	local malus_text_params = {
-		name = "malus_text",
+		vertical = "top",
 		align = "left",
+		y = 4,
+		name = "malus_text",
 		valign = "scale",
 		text = "",
 		wrap = true,
-		vertical = "top",
-		y = 4,
 		x = HUDCardDetails.TEXT_X,
 		w = self._malus_panel:w() - HUDCardDetails.TEXT_X,
 		h = self._malus_panel:h() - 4,
@@ -123,7 +123,7 @@ function HUDCardDetails:set_card_details(card)
 	self._preview_card:set_card(card)
 
 	if card and card.effects then
-		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card.key_name)
+		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card)
 
 		self._bonus_text:set_text(bonus_description)
 		self._malus_text:set_text(malus_description)
@@ -155,5 +155,7 @@ function HUDCardDetails:set_card_details(card)
 			self._malus_panel:set_y(effect_y)
 			self._malus_panel:set_h(math.max(self._malus_text:h(), self._malus_icon:h()))
 		end
+	else
+		Application:warn("[HUDCardDetails:set_card_details] Missing effects to get details!", card and card.effects)
 	end
 end

@@ -49,6 +49,9 @@ end
 
 function InventoryGenerator._items_challenge_cards(items)
 	local error = 0
+	local basic_color_hex = InventoryGenerator._create_hex_color(tweak_data.gui.colors.raid_white)
+	local boost_color_hex = InventoryGenerator._create_hex_color(tweak_data.gui.colors.card_booster)
+	local malus_color_hex = InventoryGenerator._create_hex_color(tweak_data.gui.colors.card_challenge)
 	local challenge_card_indexed_list = deep_clone(tweak_data.challenge_cards:get_all_cards_indexed())
 
 	for card_idx, challenge_card_data in pairs(challenge_card_indexed_list) do
@@ -58,11 +61,12 @@ function InventoryGenerator._items_challenge_cards(items)
 
 		local description = ""
 		local tags = ""
+		local type_color_hex = ""
 		local rarity_color_hex = ""
 		local rarity_name = challenge_card_data.rarity and managers.localization:text(challenge_card_data.rarity) or ""
 		local collection_name = challenge_card_data.collection and managers.localization:text(challenge_card_data.collection) or ""
 
-		if challenge_card_data.rarity and rarity_name and rarity_name ~= "" and false then
+		if challenge_card_data.rarity and rarity_name and rarity_name ~= "" then
 			local color = tweak_data.gui.colors[challenge_card_data.rarity]
 
 			if color then
@@ -71,50 +75,52 @@ function InventoryGenerator._items_challenge_cards(items)
 				Application:warn("[InventoryGenerator] No color tweakdata for", challenge_card_data.rarity)
 			end
 
-			description = description .. "[color=#d7d7d7]Rarity:[/color] [color=#" .. rarity_color_hex .. "]" .. rarity_name .. "[/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "]Rarity:[/color] [color=#" .. rarity_color_hex .. "]" .. rarity_name .. "[/color]\\n"
 			tags = tags .. "rarity:" .. string.lower(rarity_name) .. ";"
 		end
 
 		if challenge_card_data.bonus_xp then
-			description = description .. "[color=#d7d7d7]Awards: +" .. challenge_card_data.bonus_xp .. " Base Mission XP[/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "]Awards: +" .. challenge_card_data.bonus_xp .. " Base Mission XP[/color]\\n"
 		elseif challenge_card_data.bonus_xp_multiplier then
-			description = description .. "[color=#d7d7d7]Awards: " .. challenge_card_data.bonus_xp_multiplier .. "x Base Mission XP[/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "]Awards: " .. challenge_card_data.bonus_xp_multiplier .. "x Base Mission XP[/color]\\n"
 		end
 
 		if challenge_card_data.loot_drop_group then
-			description = description .. "[color=#d7d7d7]Awards: Special Loot Drop Item(s)[/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "]Awards: Special Loot Drop Item(s)[/color]\\n"
 		end
 
 		if challenge_card_data.achievement_id and challenge_card_data.achievement_id ~= "" then
-			description = description .. "[color=#d7d7d7][i]Awards: " .. challenge_card_data.achievement_id .. " achievement[/i][/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "][i]Awards: " .. challenge_card_data.achievement_id .. " achievement[/i][/color]\\n"
 		end
 
 		local description_positive_text, description_negative_text = managers.challenge_cards:get_card_description(card_id)
 
 		if description_positive_text or description_negative_text then
-			description = description .. "\\n[color=#d7d7d7]Effects:[/color]"
+			description = description .. "\\n[color=#" .. basic_color_hex .. "]Effects:[/color]"
 
 			if description_positive_text and description_positive_text ~= "" then
-				description = description .. "\\n[color=#70b35b]+ " .. description_positive_text .. "[/color]"
+				description = description .. "\\n[color=#" .. boost_color_hex .. "]+ " .. description_positive_text .. "[/color]"
 			end
 
 			if description_negative_text and description_negative_text ~= "" then
-				description = description .. "\\n[color=#de4a3e]- " .. description_negative_text .. "[/color]"
+				description = description .. "\\n[color=#" .. malus_color_hex .. "]- " .. description_negative_text .. "[/color]"
 			end
 
 			description = description .. "\\n"
 		end
 
 		if collection_name and collection_name ~= "" then
-			description = description .. "\\n[color=#d7d7d7][i]" .. collection_name .. "[/i][/color]"
+			description = description .. "\\n[color=#" .. basic_color_hex .. "][i]" .. collection_name .. "[/i][/color]"
 		end
 
 		if description_negative_text ~= "" then
 			challenge_card_data.display_type = challenge_card_data.display_type or "display_type_challenge_card"
 			tags = tags .. "cards:challenge;"
+			type_color_hex = malus_color_hex
 		else
 			challenge_card_data.display_type = challenge_card_data.display_type or "display_type_booster_card"
 			tags = tags .. "cards:booster;"
+			type_color_hex = boost_color_hex
 		end
 
 		if challenge_card_data.effects then
@@ -128,7 +134,7 @@ function InventoryGenerator._items_challenge_cards(items)
 		challenge_card_data.item_slot = "challenge_card"
 		challenge_card_data.description = description
 		challenge_card_data.tags = tags
-		challenge_card_data.name_color = rarity_color_hex
+		challenge_card_data.name_color = type_color_hex
 
 		table.insert(items, challenge_card_data)
 	end
@@ -168,6 +174,7 @@ end
 
 function InventoryGenerator._items_card_crafts(items)
 	local error = 0
+	local basic_color_hex = InventoryGenerator._create_hex_color(tweak_data.gui.colors.raid_white)
 
 	for nick, data in pairs(tweak_data.challenge_cards.crafting_items) do
 		Application:info("[InventoryGenerator] Building Crafting Item " .. nick .. " - DefID:" .. data.def_id)
@@ -178,7 +185,7 @@ function InventoryGenerator._items_card_crafts(items)
 
 		if data.tags_list and data.tags_list.card_scrap then
 			local tag_loc = managers.localization:text(data.tags_list.card_scrap)
-			description = description .. "[color=#d7d7d7][i]Torn up " .. tag_loc .. " card scraps.\\nCan be used for crafting or upgrading " .. tag_loc .. " cards.[/i][/color]\\n"
+			description = description .. "[color=#" .. basic_color_hex .. "][i]Torn up " .. tag_loc .. " card scraps.\\nCan be used for crafting or upgrading " .. tag_loc .. " cards.[/i][/color]\\n"
 		end
 
 		data.description = description
@@ -227,7 +234,7 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 			InventoryGenerator._create_steam_itemdef_gameplay(json, item, defid_data)
 		elseif item.category == "bundles" then
 			InventoryGenerator._create_steam_itemdef_bundle(json, item, defid_data)
-		elseif item.category == "contents" then
+		elseif item.category == "generator" or item.category == "tag_generator" then
 			InventoryGenerator._create_steam_itemdef_content(json, item, defid_data)
 		else
 			json:puts("\t\"type\": \"item\",")
@@ -360,7 +367,7 @@ end
 
 function InventoryGenerator._create_steam_itemdef_content(json, item, defid_data)
 	Application:info("[InventoryGenerator._create_steam_itemdef_content] START ", json, inspect(item), defid_data)
-	json:puts("\t\"type\": \"generator\",")
+	json:puts("\t\"type\": \"" .. item.category .. "\",")
 
 	if item.bundle then
 		local bs = InventoryGenerator._make_bundle_string(item.bundle)

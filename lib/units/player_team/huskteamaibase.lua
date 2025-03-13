@@ -1,4 +1,5 @@
 HuskTeamAIBase = HuskTeamAIBase or class(HuskCopBase)
+HuskTeamAIBase.set_visible = HuskPlayerBase.set_visible
 
 function HuskTeamAIBase:default_weapon_name()
 	return TeamAIBase.default_weapon_name(self)

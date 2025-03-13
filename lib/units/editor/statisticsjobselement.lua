@@ -53,7 +53,7 @@ function StatisticsJobsElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "include_prof", "Select if professional heists should be included.")
 	self:_build_value_checkbox(panel, panel_sizer, "include_dropin", "Select if drop-in is counted as well.")
 	self:_build_value_number(panel, panel_sizer, "required", {
-		floats = 0,
-		min = 1
+		min = 1,
+		floats = 0
 	}, "Type the required amount that is needed.")
 end

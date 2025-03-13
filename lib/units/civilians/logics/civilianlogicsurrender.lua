@@ -332,9 +332,9 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 			-- Nothing
 		elseif anim_data.react or anim_data.panic or anim_data.halt then
 			local action_data = {
-				clamp_to_graph = true,
-				body_part = 1,
 				type = "act",
+				body_part = 1,
+				clamp_to_graph = true,
 				variant = anim_data.move and "halt" or "drop"
 			}
 			local action_res = data.unit:brain():action_request(action_data)

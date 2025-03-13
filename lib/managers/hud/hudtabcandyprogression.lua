@@ -123,10 +123,10 @@ function HUDTabCandyProgression:_create_progress_bar()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	self._progress_bar_overlay = self._progress_bar_foreground_panel:bitmap({
+		name = "candy_progress_bar_background",
 		blend_mode = "add",
 		alpha = 0.3,
 		wrap_mode = "wrap",
-		name = "candy_progress_bar_background",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -151,8 +151,8 @@ function HUDTabCandyProgression:_create_tier_info()
 		layer = self._progress_bar_panel:layer() + 5
 	})
 	self._malus_effects_panel = self._object:panel({
-		h = 0,
 		name = "malus_effects_panel",
+		h = 0,
 		x = self._card_panel:right(),
 		y = self._card_panel:y(),
 		w = self.DEBUFF_W
@@ -188,16 +188,16 @@ function HUDTabCandyProgression:set_data(data)
 		local y = self._malus_effects_panel:h()
 		local icon_data = tweak_data.gui:get_full_gui_data(data.malus_effect.icon)
 		local malus_icon = self._malus_effects_panel:bitmap({
-			h = 28,
 			w = 28,
+			h = 28,
 			name = "malus_icon_" .. data.malus_effect.name,
 			y = y + 2,
 			texture = icon_data.texture,
 			texture_rect = icon_data.texture_rect
 		})
 		local malus_text = self._malus_effects_panel:text({
-			word_wrap = true,
 			wrap = true,
+			word_wrap = true,
 			name = "malus_text_" .. data.malus_effect.name,
 			x = malus_icon:right() + 4,
 			y = y,

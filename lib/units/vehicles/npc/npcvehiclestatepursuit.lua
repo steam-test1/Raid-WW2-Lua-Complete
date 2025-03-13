@@ -7,25 +7,25 @@ function NpcVehicleStatePursuit:init(unit)
 	self._vehicle = self._unit:vehicle()
 	self._next_checkpoint_distance = {
 		{
+			relative_angle_max = 60,
+			relative_angle_min = 30,
 			distance = 1200,
 			v_max = 40,
-			v_min = 30,
-			relative_angle_max = 60,
-			relative_angle_min = 30
+			v_min = 30
 		},
 		{
+			relative_angle_max = 90,
+			relative_angle_min = 30,
 			distance = 1400,
 			v_max = 60,
-			v_min = 40,
-			relative_angle_max = 90,
-			relative_angle_min = 30
+			v_min = 40
 		},
 		{
+			relative_angle_max = 90,
+			relative_angle_min = 30,
 			distance = 2000,
 			v_max = 90,
-			v_min = 60,
-			relative_angle_max = 90,
-			relative_angle_min = 30
+			v_min = 60
 		}
 	}
 	local cop_position = self._unit:position()
@@ -171,9 +171,9 @@ function NpcVehicleStatePursuit:_loco_unit_proximity(npc_driving_ext, target_ste
 		npc_driving_ext:set_state(NpcVehicleDrivingExt.STATE_PLAYER_PROXIMITY)
 
 		retval = {
+			acceleration = 0,
 			handbrake = 1,
 			brake = 1,
-			acceleration = 0,
 			steering = target_steering
 		}
 	end

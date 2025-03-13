@@ -126,17 +126,17 @@ local material_defaults = {
 	diffuse_layer3_texture = Idstring("texture_removed_in_cleanup")
 }
 local material_textures = {
-	base_gradient = "diffuse_layer1_texture",
 	sticker = "diffuse_layer3_texture",
 	pattern = "diffuse_layer0_texture",
-	pattern_gradient = "diffuse_layer2_texture"
+	pattern_gradient = "diffuse_layer2_texture",
+	base_gradient = "diffuse_layer1_texture"
 }
 local material_variables = {
-	pattern_tweak = "pattern_tweak",
 	cubemap_pattern_control = "cubemap_pattern_control",
 	pattern_pos = "pattern_pos",
 	uv_offset_rot = "uv_offset_rot",
 	uv_scale = "uv_scale",
+	pattern_tweak = "pattern_tweak",
 	wear_and_tear = Application:production_build() and "wear_tear_value" or nil
 }
 
@@ -178,8 +178,8 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 				if mat_texture or base_texture then
 					texture_key = mat_texture and mat_texture:key() or base_texture and base_texture:key()
 					textures[texture_key] = textures[texture_key] or {
-						ready = false,
 						applied = false,
+						ready = false,
 						name = mat_texture or base_texture
 					}
 				end

@@ -365,16 +365,9 @@ function GameSetup:init_game()
 		managers.mission:set_mission_filter({})
 
 		local level = Global.level_data.level
-		local mission = Global.level_data.mission
 		local world_setting = Global.level_data.world_setting
-		local level_class_name = Global.level_data.level_class_name
-		local level_class = level_class_name and rawget(_G, level_class_name)
 
 		if level then
-			if level_class then
-				script_data.level_script = level_class:new()
-			end
-
 			local level_path = "levels/" .. tostring(level)
 			local t = {
 				file_type = "world",
@@ -394,10 +387,6 @@ end
 
 function GameSetup:init_finalize()
 	Application:debug("[GameSetup:init_finalize()] Finalizing now...")
-
-	if script_data.level_script and script_data.level_script.post_init then
-		script_data.level_script:post_init()
-	end
 
 	if Global.current_load_package then
 		PackageManager:unload(Global.current_load_package)
@@ -459,11 +448,6 @@ function GameSetup:update(t, dt)
 	managers.queued_tasks:update(t, dt)
 	managers.test:update(t, dt)
 	managers.warcry:update(t, dt)
-
-	if script_data.level_script and script_data.level_script.update then
-		script_data.level_script:update(t, dt)
-	end
-
 	self:_update_debug_input()
 	managers.buff_effect:update(t, dt)
 end
@@ -476,20 +460,11 @@ function GameSetup:paused_update(t, dt)
 		managers.worldcollection:update(t, dt, true)
 	end
 
-	if script_data.level_script and script_data.level_script.paused_update then
-		script_data.level_script:paused_update(t, dt)
-	end
-
 	self:_update_debug_input()
 end
 
 function GameSetup:destroy()
 	Setup.destroy(self)
-
-	if script_data.level_script and script_data.level_script.destroy then
-		script_data.level_script:destroy()
-	end
-
 	managers.navigation:destroy()
 	managers.time_speed:destroy()
 	managers.network.account:set_playing(false)

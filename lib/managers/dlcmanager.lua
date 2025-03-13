@@ -334,8 +334,8 @@ function PS4DLCManager:buy_full_game()
 	managers.menu:show_waiting_NPCommerce_open()
 
 	self._request = {
-		product = "full_game",
-		type = "buy_product"
+		type = "buy_product",
+		product = "full_game"
 	}
 	self._activity = {
 		type = "open"
@@ -468,13 +468,13 @@ function XB1DLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					index = 0,
 					verified = true,
+					index = 0,
 					is_default = true
 				},
 				preorder = {
-					index = 1,
 					product_id = "123456",
+					index = 1,
 					is_default = false
 				}
 			}
@@ -534,26 +534,26 @@ function WINDLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					no_install = true,
 					external = true,
+					no_install = true,
 					verified = true,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {
-					app_id = "707070",
-					no_install = true
+					no_install = true,
+					app_id = "707070"
 				},
 				special_edition = {
-					app_id = "707080",
-					no_install = true
+					no_install = true,
+					app_id = "707080"
 				},
 				raid_community = {
 					no_install = true,
 					source_id = "103582791460014708"
 				},
 				official_soundtrack = {
-					app_id = "720860",
-					no_install = true
+					no_install = true,
+					app_id = "720860"
 				}
 			}
 		}

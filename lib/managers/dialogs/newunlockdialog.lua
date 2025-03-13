@@ -16,8 +16,8 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 
 	self._ws = self._data.ws or manager:_get_ws()
 	local text_config = {
-		no_scroll_legend = true,
 		no_close_legend = true,
+		no_scroll_legend = true,
 		title_font = data.title_font,
 		title_font_size = data.title_font_size,
 		font = data.font,
@@ -31,9 +31,9 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 		text_blend_mode = data.text_blend_mode
 	}
 	local image_config = {
-		padding = 10,
 		keep_ratio = true,
 		layer = 2,
+		padding = 10,
 		w = data.image_w or 128,
 		h = data.image_h or 128,
 		textures = data.textures,

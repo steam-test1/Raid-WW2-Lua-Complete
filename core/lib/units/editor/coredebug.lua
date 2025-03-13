@@ -45,8 +45,8 @@ end
 
 function CoreDebugUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
 		sample = true,
+		ray_type = "editor",
 		mask = managers.slot:get_mask("all")
 	})
 

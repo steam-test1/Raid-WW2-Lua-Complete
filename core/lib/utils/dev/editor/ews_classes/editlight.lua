@@ -22,12 +22,12 @@ function EditUnitLight:init(editor)
 
 	local lights_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._lights_params = {
-		sorted = true,
-		name = "Lights:",
 		ctrlr_proportions = 4,
 		name_proportions = 3,
+		sorted = true,
 		tooltip = "Select a light to edit from the combobox",
 		sizer_proportions = 4,
+		name = "Lights:",
 		panel = panel,
 		sizer = lights_sizer,
 		options = {}
@@ -41,9 +41,10 @@ function EditUnitLight:init(editor)
 	self._color_ctrlr:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
 	lights_sizer:add(self._color_ctrlr, 0, 5, "EXPAND,LEFT")
 
-	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT")
+	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT,TE_PROCESS_ENTER")
 
-	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_color"), "")
+	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_color"), "")
+	self._color_hex_ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_color"), "")
 	lights_sizer:add(self._color_hex_ctrl, 0, 5, "EXPAND,LEFT")
 
 	self._enabled_ctrlr = EWS:CheckBox(panel, "Enabled", "")
@@ -53,13 +54,13 @@ function EditUnitLight:init(editor)
 	sizer:add(lights_sizer, 0, 5, "EXPAND,BOTTOM")
 
 	self._near_range_params = {
-		floats = 0,
-		value = 0,
-		name = "Near range [cm]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		tooltip = "Sets the near range of the light in cm",
 		min = 0,
+		floats = 0,
+		value = 0,
+		name = "Near range [cm]:",
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -77,13 +78,13 @@ function EditUnitLight:init(editor)
 	CoreEws.number_controller(self._near_range_params)
 
 	self._range_params = {
-		floats = 0,
-		value = 0,
-		name = "Far range [cm]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		tooltip = "Sets the range of the light in cm",
 		min = 0,
+		floats = 0,
+		value = 0,
+		name = "Far range [cm]:",
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -101,12 +102,12 @@ function EditUnitLight:init(editor)
 	CoreEws.number_controller(self._range_params)
 
 	self._upper_clipping_params = {
-		floats = 0,
-		value = 0,
-		name = "Set the upper clipping [cm]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		tooltip = "Sets the upper clipping in cm",
+		floats = 0,
+		value = 0,
+		name = "Set the upper clipping [cm]:",
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -124,12 +125,12 @@ function EditUnitLight:init(editor)
 	CoreEws.number_controller(self._upper_clipping_params)
 
 	self._lower_clipping_params = {
-		floats = 0,
-		value = 0,
-		name = "Set the lower clipping [cm]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		tooltip = "Sets the lower clipping in cm",
+		floats = 0,
+		value = 0,
+		name = "Set the lower clipping [cm]:",
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -153,12 +154,12 @@ function EditUnitLight:init(editor)
 	end
 
 	self._intensity_params = {
-		default = "none",
-		sorted = false,
-		name = "Intensity:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
+		sorted = false,
 		tooltip = "Select an intensity from the combobox",
+		default = "none",
+		name = "Intensity:",
 		panel = panel,
 		sizer = sizer,
 		options = intensity_options
@@ -168,14 +169,14 @@ function EditUnitLight:init(editor)
 	self._intensity_params.ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_intensity"), nil)
 
 	self._falloff_params = {
+		ctrlr_proportions = 3,
+		name_proportions = 1,
+		max = 2,
+		tooltip = "Controls quadratic attenuation factor",
+		min = 0,
 		floats = 7,
 		value = 0.0001,
 		name = "Quadratic attenuation:",
-		max = 2,
-		ctrlr_proportions = 3,
-		name_proportions = 1,
-		tooltip = "Controls quadratic attenuation factor",
-		min = 0,
 		panel = panel,
 		sizer = sizer
 	}
@@ -187,14 +188,14 @@ function EditUnitLight:init(editor)
 	self._falloff_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_falloff"), nil)
 
 	self._linear_atten_params = {
+		ctrlr_proportions = 3,
+		name_proportions = 1,
+		max = 1,
+		tooltip = "Controls linear attenuation factor",
+		min = 1e-07,
 		floats = 7,
 		value = 0.0001,
 		name = "Linear attenuation:",
-		max = 1,
-		ctrlr_proportions = 3,
-		name_proportions = 1,
-		tooltip = "Controls linear attenuation factor",
-		min = 1e-07,
 		panel = panel,
 		sizer = sizer
 	}
@@ -206,14 +207,14 @@ function EditUnitLight:init(editor)
 	self._linear_atten_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_linear_atten"), nil)
 
 	self._spot_start_angle_params = {
+		ctrlr_proportions = 3,
+		name_proportions = 1,
+		max = 179,
+		tooltip = "Controls the start angle of the spot light",
+		min = 1,
 		floats = 0,
 		value = 1,
 		name = "Start angle:",
-		max = 179,
-		ctrlr_proportions = 3,
-		name_proportions = 1,
-		tooltip = "Controls the start angle of the spot light",
-		min = 1,
 		panel = panel,
 		sizer = sizer
 	}
@@ -225,14 +226,14 @@ function EditUnitLight:init(editor)
 	self._spot_start_angle_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_start_angle"), nil)
 
 	self._spot_end_angle_params = {
+		ctrlr_proportions = 3,
+		name_proportions = 1,
+		max = 179,
+		tooltip = "Controls the end angle of the spot light",
+		min = 1,
 		floats = 0,
 		value = 1,
 		name = "End angle:",
-		max = 179,
-		ctrlr_proportions = 3,
-		name_proportions = 1,
-		tooltip = "Controls the end angle of the spot light",
-		min = 1,
 		panel = panel,
 		sizer = sizer
 	}
@@ -244,12 +245,12 @@ function EditUnitLight:init(editor)
 	self._spot_end_angle_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "update_end_angle"), nil)
 
 	self._shadow_resolution_params = {
-		sorted = false,
-		numbers = true,
-		name = "Shadow Resolution:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
+		sorted = false,
 		tooltip = "Select an resolution from the combobox",
+		numbers = true,
+		name = "Shadow Resolution:",
 		panel = panel,
 		sizer = sizer,
 		value = EditUnitLight.DEFAULT_SHADOW_RESOLUTION,
@@ -267,11 +268,11 @@ function EditUnitLight:init(editor)
 	self._shadow_resolution_params.ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_resolution"), nil)
 
 	self._spot_projection_texture_params = {
-		sorted = true,
-		name = "Spot Texture:",
 		ctrlr_proportions = 3,
 		name_proportions = 1,
+		sorted = true,
 		tooltip = "Select a spot projection texture from the combobox",
+		name = "Spot Texture:",
 		panel = panel,
 		sizer = sizer,
 		value = EditUnitLight.DEFAULT_SPOT_PROJECTION_TEXTURE,
@@ -387,7 +388,10 @@ function EditUnitLight:show_color_dialog()
 	local colordlg = EWS:ColourDialog(self._panel, true, self._color_ctrlr:background_colour() / 255)
 
 	if colordlg:show_modal() then
-		self._color_ctrlr:set_background_colour(colordlg:get_colour().x * 255, colordlg:get_colour().y * 255, colordlg:get_colour().z * 255)
+		local r, g, b = (colordlg:get_colour() * 255):unpack()
+
+		self._color_ctrlr:set_background_colour(r, g, b)
+		self._color_hex_ctrl:set_value(string.format("%X%X%X", r, g, b))
 
 		for _, light in ipairs(self:_selected_lights()) do
 			light:set_color(self._color_ctrlr:background_colour() / 255)

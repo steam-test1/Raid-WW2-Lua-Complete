@@ -151,9 +151,9 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
+		name = "default_interface",
 		y = 832,
 		x = 1472,
-		name = "default_interface",
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_interface"),
 		layer = RaidGuiBase.FOREGROUND_LAYER,

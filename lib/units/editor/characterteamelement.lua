@@ -102,8 +102,8 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 
 	local team_params = {
 		name = "Team:",
-		sorted = true,
 		ctrlr_proportions = 2,
+		sorted = true,
 		name_proportions = 1,
 		tooltip = "Select wanted team for the character.",
 		default = "",

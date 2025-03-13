@@ -239,7 +239,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
-		stand = nil,
+		sync = nil,
 		minions = {}
 	}
 end
@@ -1409,10 +1409,10 @@ function GroupAIStateBase:register_criminal(unit)
 
 	local is_deployable = unit:base().sentry_gun
 	local u_sighting = {
-		dispatch_t = 0,
-		engaged_force = 0,
-		undetected = true,
 		arrest_timeout = -100,
+		dispatch_t = 0,
+		undetected = true,
+		engaged_force = 0,
 		unit = unit,
 		ai = is_AI,
 		tracker = tracker,
@@ -2008,9 +2008,9 @@ function GroupAIStateBase:on_objective_failed(unit, objective)
 
 		if u_data and unit:brain():is_active() and not unit:character_damage():dead() then
 			new_objective = {
-				is_default = true,
-				type = "free",
 				scan = true,
+				type = "free",
+				is_default = true,
 				attitude = objective.attitude
 			}
 
@@ -2515,8 +2515,8 @@ function GroupAIStateBase:spawn_one_teamAI(is_drop_in, char_name, spawn_on_unit,
 			if not tracker:lost() then
 				local search_pos = player_pos - spawn_fwd * 200
 				local ray_params = {
-					allow_entry = false,
 					trace = true,
+					allow_entry = false,
 					tracker_from = tracker,
 					pos_to = search_pos
 				}
@@ -2677,9 +2677,9 @@ function GroupAIStateBase:on_civilian_objective_complete(unit, objective)
 
 			local action = {
 				clamp_to_graph = true,
+				align_sync = true,
 				body_part = 1,
 				type = "act",
-				align_sync = true,
 				variant = objective.break_so
 			}
 
@@ -2818,9 +2818,9 @@ function GroupAIStateBase:_determine_spawn_objective_for_criminal_AI()
 	if #valid_criminals > 0 then
 		local follow_unit = self._player_criminals[valid_criminals[math.random(#valid_criminals)]].unit
 		new_objective = {
+			scan = true,
 			type = "follow",
 			is_default = true,
-			scan = true,
 			follow_unit = follow_unit
 		}
 	end
@@ -2848,9 +2848,9 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 
 	if closest_record then
 		objective = {
-			is_default = true,
-			type = "follow",
 			scan = true,
+			type = "follow",
+			is_default = true,
 			follow_unit = closest_record.unit
 		}
 		player_pos = closest_record.unit:position()
@@ -2877,10 +2877,10 @@ function GroupAIStateBase:_determine_objective_for_criminal_AI(unit)
 					self._guard_hostage_trade_time_map[unit_key] = time
 
 					return {
-						interrupt_dis = 300,
+						type = "free",
 						stance = "hos",
 						scan = true,
-						type = "free",
+						interrupt_dis = 300,
 						nav_seg = hostage.tracker:nav_segment()
 					}
 				end
@@ -3139,9 +3139,9 @@ end
 
 function GroupAIStateBase:on_AI_criminal_death(criminal_name, unit)
 	managers.notification:add_notification({
-		id = "hint_teammate_dead",
 		shelf_life = 5,
 		duration = 3,
+		id = "hint_teammate_dead",
 		text = managers.localization:text("hint_teammate_dead", {
 			TEAMMATE = unit:base():nick_name()
 		})
@@ -3169,9 +3169,9 @@ function GroupAIStateBase:on_player_criminal_death(peer_id)
 
 	if my_peer_id ~= peer_id then
 		managers.notification:add_notification({
-			id = "hint_teammate_dead",
 			shelf_life = 5,
 			duration = 3,
+			id = "hint_teammate_dead",
 			text = managers.localization:text("hint_teammate_dead", {
 				TEAMMATE = unit:base():nick_name()
 			})
@@ -3599,8 +3599,8 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		[""] = nil,
-		skip_idle_check = true
+		skip_idle_check = true,
+		position = nil
 	})
 end
 
@@ -3951,9 +3951,9 @@ end
 function GroupAIStateBase:_create_group(group_desc)
 	local id = self:_get_new_group_id(group_desc.type)
 	local new_group = {
+		has_spawned = false,
 		casualties = 0,
 		size = 0,
-		has_spawned = false,
 		id = id,
 		type = group_desc.type,
 		initial_size = group_desc.size,
@@ -4827,16 +4827,16 @@ function GroupAIStateBase:sync_event(event_id, blame_id)
 end
 
 GroupAIStateBase.blame_triggers = {
-	german_heavy = "cop",
+	german_fallschirmjager_light = "cop",
 	german_spotter = "cop",
 	german_flamer = "cop",
 	german_gebirgsjager_light = "cop",
 	german_fallschirmjager_heavy = "cop",
-	german_fallschirmjager_light = "cop",
+	escort = "civ",
 	german_gasmask_commander_backup_shotgun = "cop",
 	german_gasmask_commander_backup = "cop",
 	german_gasmask = "cop",
-	civilian = "civ",
+	german_heavy = "cop",
 	german_light = "cop",
 	german_grunt_heavy = "cop",
 	german_grunt_mid = "cop",
@@ -4846,8 +4846,8 @@ GroupAIStateBase.blame_triggers = {
 	german_commander = "cop",
 	patrol = "cop",
 	civilian_female = "civ",
-	escort = "civ",
-	sniper = "cop"
+	sniper = "cop",
+	civilian = "civ"
 }
 
 function GroupAIStateBase:fetch_highest_giveaway(...)
@@ -5232,9 +5232,9 @@ function GroupAIStateBase._create_hud_spotter_icon(obs_key, u_observer, u_suspec
 	end
 
 	local icon = managers.hud:add_waypoint(icon_id, {
-		state = "sneak_present",
 		radius = 146,
 		distance = false,
+		state = "sneak_present",
 		blend_mode = "add",
 		present_timer = 0,
 		no_sync = true,

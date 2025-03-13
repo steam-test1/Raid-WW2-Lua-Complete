@@ -64,10 +64,10 @@ end
 function RaidGUIControlButtonWeaponSkill:_create_selector()
 	local selector_panel_params = {
 		x = 0,
+		halign = "scale",
 		name = "selector_panel",
 		valign = "scale",
 		alpha = 0,
-		halign = "scale",
 		y = 0,
 		w = self._object:w(),
 		h = self._object:h()
@@ -75,12 +75,12 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_background_params = {
 		x = 0,
-		name = "selector_background",
 		layer = -10,
-		y = 0,
 		alpha = 0,
 		valign = "scale",
 		halign = "scale",
+		name = "selector_background",
+		y = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture_rect
 	}
@@ -90,12 +90,12 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	self._selector_rect:set_center_y(self._object:h() / 2)
 
 	local selector_triangle_up_params = {
-		name = "selector_triangle_up",
-		alpha = 0,
-		y = 0,
 		x = 0,
 		valign = "top",
+		alpha = 0,
 		halign = "left",
+		name = "selector_triangle_up",
+		y = 0,
 		w = RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W,
 		h = RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -103,10 +103,10 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	}
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
 	local selector_triangle_down_params = {
-		name = "selector_triangle_down",
-		alpha = 0,
 		valign = "bottom",
+		alpha = 0,
 		halign = "right",
+		name = "selector_triangle_down",
 		x = self._selector_panel:w() - RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W,
 		y = self._selector_panel:h() - RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H,
 		w = RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W,
@@ -280,44 +280,44 @@ end
 function RaidGUIControlButtonWeaponSkill:_init_state_data()
 	self._state_data = {
 		[RaidGUIControlButtonWeaponSkill.STATE_NORMAL] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_light_gold,
 			highlight_on = tweak_data.gui.colors.raid_light_gold
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_CHALLENGE_ACTIVE] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_white,
 			highlight_on = tweak_data.gui.colors.raid_white
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_BLOCKED] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_dark_grey
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_SELECTED] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 1,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_red,
 			highlight_on = tweak_data.gui.colors.raid_red
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_ACTIVE] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_red,
 			highlight_on = tweak_data.gui.colors.raid_red
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE] = {
-			show_selector_panel_alpha = 1,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 1,
 			highlight_off = tweak_data.gui.colors.raid_brown_red,
 			highlight_on = tweak_data.gui.colors.raid_brown_red
 		},
 		[RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE] = {
-			show_selector_panel_alpha = 0,
 			show_selector_triangles_alpha = 0,
+			show_selector_panel_alpha = 0,
 			highlight_off = tweak_data.gui.colors.raid_dark_grey,
 			highlight_on = tweak_data.gui.colors.raid_dark_grey
 		}

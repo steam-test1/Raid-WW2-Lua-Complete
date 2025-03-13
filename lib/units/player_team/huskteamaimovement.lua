@@ -21,6 +21,8 @@ function HuskTeamAIMovement:_upd_actions(t)
 end
 
 function HuskTeamAIMovement:load(data)
+	HuskTeamAIMovement.super.load(self, data)
+
 	if self._unit:customization() and data.movement and data.movement.customization then
 		local customization = managers.blackmarket:unpack_team_ai_customization_from_string(data.movement.customization)
 

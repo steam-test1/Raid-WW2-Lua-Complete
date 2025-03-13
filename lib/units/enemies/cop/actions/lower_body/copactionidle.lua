@@ -150,8 +150,8 @@ function CopActionIdle:update(t)
 					if math.abs(spin) > 70 then
 						self._rot_offset = -spin
 						local new_action_data = {
-							type = "turn",
 							body_part = 2,
+							type = "turn",
 							angle = spin
 						}
 
@@ -168,8 +168,8 @@ function CopActionIdle:update(t)
 		self._modifier:set_target_z(target_vec)
 	elseif self._rot_offset then
 		local new_action_data = {
-			type = "turn",
 			body_part = 2,
+			type = "turn",
 			angle = self._start_fwd:to_polar_with_reference(self._common_data.fwd, math.UP).spin
 		}
 

@@ -222,10 +222,10 @@ function BuffEffectCandy:_activate_sugar_high(effect)
 
 	table.insert(effects, malus_effect)
 	managers.notification:add_notification({
+		id = "candy_progress",
+		progress = 1,
 		initial_progress = 1,
 		priority = 0,
-		progress = 1,
-		id = "candy_progress",
 		notification_type = HUDNotification.CANDY_PROGRESSION,
 		sugar_high = {
 			tier = self._current_stage - 1,
@@ -250,8 +250,8 @@ function BuffEffectCandy:sync_candy_consumed(tweak_id)
 	local progress = (self._candy_consumed - self._previous_target) / (self._candy_target - self._previous_target)
 
 	managers.notification:add_notification({
-		priority = 0,
 		id = "candy_progress",
+		priority = 0,
 		notification_type = HUDNotification.CANDY_PROGRESSION,
 		progress = progress,
 		initial_progress = initial_progress

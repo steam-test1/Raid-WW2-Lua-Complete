@@ -27,8 +27,8 @@ end
 function EscortUnitElement:_raycast_get_type()
 	local unit_type, unit, id = nil
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -80,9 +80,9 @@ function EscortUnitElement:test_element()
 
 	test_unit:anim_data().panic = true
 	local action = {
-		body_part = 1,
 		clamp_to_graph = true,
 		type = "act",
+		body_part = 1,
 		variant = self._hed.break_so
 	}
 

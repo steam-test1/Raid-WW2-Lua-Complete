@@ -249,8 +249,8 @@ function CopMovement:post_init()
 	self._machine:set_callback_object(self)
 
 	self._stance = {
-		code = 1,
 		name = "ntl",
+		code = 1,
 		values = {
 			1,
 			0,
@@ -465,21 +465,21 @@ function CopMovement:_upd_actions(t)
 
 	if has_no_action and (not self._queued_actions or not next(self._queued_actions)) then
 		self:action_request({
-			body_part = 1,
-			type = "idle"
+			type = "idle",
+			body_part = 1
 		})
 	end
 
 	if not a_actions[1] and not a_actions[2] and (not self._queued_actions or not next(self._queued_actions)) and not self:chk_action_forbidden("action") then
 		if a_actions[3] then
 			self:action_request({
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			})
 		else
 			self:action_request({
-				body_part = 1,
-				type = "idle"
+				type = "idle",
+				body_part = 1
 			})
 		end
 	end
@@ -1318,23 +1318,23 @@ function CopMovement:on_suppressed(state)
 	if Network:is_server() and state and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.stand) and not self:chk_action_forbidden("walk") then
 		if state == "panic" and not self:chk_action_forbidden("act") then
 			local action_desc = {
+				clamp_to_graph = true,
 				body_part = 1,
 				type = "act",
-				clamp_to_graph = true,
 				variant = self._ext_anim.run and self._ext_anim.move_fwd and "e_so_sup_fumble_run_fwd" or "e_so_sup_fumble_inplace",
 				blocks = {
-					walk = -1,
-					action = -1
+					action = -1,
+					walk = -1
 				}
 			}
 
 			self:action_request(action_desc)
 		elseif self._ext_anim.idle and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 			local action_desc = {
-				body_part = 1,
-				variant = "suppressed_reaction",
-				type = "act",
 				clamp_to_graph = true,
+				body_part = 1,
+				type = "act",
+				variant = "suppressed_reaction",
 				blocks = {
 					walk = -1
 				}
@@ -1343,8 +1343,8 @@ function CopMovement:on_suppressed(state)
 			self:action_request(action_desc)
 		elseif not self._ext_anim.crouch and self._tweak_data.crouch_move and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) then
 			local action_desc = {
-				body_part = 4,
-				type = "crouch"
+				type = "crouch",
+				body_part = 4
 			}
 
 			self:action_request(action_desc)
@@ -1418,9 +1418,9 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 		blocks = {
 			walk = -1,
 			tase = -1,
-			act = -1,
+			aim = -1,
 			action = -1,
-			aim = -1
+			act = -1
 		}
 
 		if hurt_type == "bleedout" then
@@ -1867,6 +1867,8 @@ function CopMovement:save(save_data)
 		my_save_data.stance_wnd = true
 	end
 
+	my_save_data.cool_state = self._cool and true or false
+
 	for _, action in ipairs(self._active_actions) do
 		if action and action.save then
 			local action_save_data = {}
@@ -1991,12 +1993,10 @@ function CopMovement:_do_load()
 
 	if my_load_data.stance_code then
 		self:_change_stance(my_load_data.stance_code)
+	end
 
-		if my_load_data.stance_code == 1 then
-			self:set_cool(true)
-		else
-			self:set_cool(false)
-		end
+	if my_load_data.cool_state ~= self._cool then
+		self:set_cool(my_load_data.cool_state)
 	end
 
 	if my_load_data.stance_wnd then
@@ -2225,10 +2225,10 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 		type = "act",
 		variant = redir_name,
 		blocks = {
-			walk = -1,
 			action = -1,
-			act = -1,
-			idle = -1
+			walk = -1,
+			idle = -1,
+			act = -1
 		},
 		start_rot = start_rot,
 		start_pos = start_pos,
@@ -2313,18 +2313,18 @@ function CopMovement:sync_action_hurt_end()
 		if hurt_type == "bleedout" or hurt_type == "fatal" then
 			local action_data = {
 				body_part = 1,
-				variant = "stand",
 				type = "act",
 				client_interrupt = true,
+				variant = "stand",
 				blocks = {
-					walk = -1,
 					action = -1,
-					heavy_hurt = -1,
-					light_hurt = -1,
 					hurt = -1,
-					stand = -1,
+					light_hurt = -1,
+					heavy_hurt = -1,
 					aim = -1,
-					crouch = -1
+					walk = -1,
+					crouch = -1,
+					stand = -1
 				}
 			}
 			local res = CopMovement.action_request(self, action_data)

@@ -6,6 +6,7 @@ function ElementWaypoint:init(...)
 	ElementWaypoint.super.init(self, ...)
 
 	self._network_execute = true
+	self._waypoint_shown = nil
 
 	if self._values.icon == "guis/textures/waypoint2" or self._values.icon == "guis/textures/waypoint" then
 		self._values.icon = "wp_standard"
@@ -37,12 +38,13 @@ function ElementWaypoint:on_executed(instigator)
 	local map_icon = self._values.map_display == "icon" and self._values.icon or nil
 	local wp_data = tweak_data.gui.icons[self._values.icon] or tweak_data.gui.icons.wp_standard
 	local wp_color = wp_data and wp_data.color or Color(1, 1, 1)
+	local pos, rot = self:get_orientation()
 
 	managers.hud:add_waypoint(self:_get_unique_id(), {
 		waypoint_type = "objective",
+		show_on_screen = true,
 		state = "sneak_present",
 		distance = true,
-		show_on_screen = true,
 		text = text,
 		icon = self._values.icon,
 		waypoint_display = self._values.map_display,
@@ -53,15 +55,26 @@ function ElementWaypoint:on_executed(instigator)
 		range_max = self._values.range_max,
 		range_min = self._values.range_min,
 		map_icon = map_icon,
-		position = self._values.position
+		position = pos
 	})
+
+	self._waypoint_shown = true
+
 	ElementWaypoint.super.on_executed(self, instigator)
 end
 
 function ElementWaypoint:operation_remove()
-	managers.hud:remove_waypoint(self:_get_unique_id())
+	if self._waypoint_shown then
+		managers.hud:remove_waypoint(self:_get_unique_id())
+
+		self._waypoint_shown = nil
+	end
 end
 
 function ElementWaypoint:pre_destroy()
-	managers.hud:remove_waypoint(self:_get_unique_id())
+	if self._waypoint_shown then
+		managers.hud:remove_waypoint(self:_get_unique_id())
+
+		self._waypoint_shown = nil
+	end
 end

@@ -14,13 +14,13 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 	local difficulty_params = {
-		ctrlr_proportions = 2,
-		name_proportions = 1,
-		max = 1,
 		min = 0,
+		name = "Difficulty:",
 		tooltip = "Set the current difficulty in level",
 		floats = 2,
-		name = "Difficulty:",
+		name_proportions = 1,
+		ctrlr_proportions = 2,
+		max = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.difficulty

@@ -329,14 +329,14 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		scan = true,
 		action = {
 			body_part = 1,
-			type = "act",
 			variant = "crouch",
+			type = "act",
 			blocks = {
-				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
 				action = -1,
-				aim = -1
+				aim = -1,
+				heavy_hurt = -1
 			}
 		}
 	}
@@ -355,26 +355,26 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			type = "act",
 			align_sync = true,
+			type = "act",
 			body_part = 1,
 			variant = "revive",
 			blocks = {
-				light_hurt = -1,
 				hurt = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				action = -1,
-				aim = -1
+				aim = -1,
+				light_hurt = -1
 			}
 		}
 	}
 	local so_descriptor = {
-		AI_group = "friendlies",
 		usage_amount = 1,
 		chance_inc = 0,
 		base_chance = 1,
 		interval = 0,
+		AI_group = "friendlies",
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),
 		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),

@@ -183,9 +183,9 @@ function PlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 	local setup_data = {
-		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
+		alert_AI = true,
 		user_unit = self._unit,
 		ignore_units = {
 			self._unit,
@@ -221,9 +221,9 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 	end
 
 	local setup_data = {
-		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
+		alert_AI = true,
 		user_unit = self._unit,
 		ignore_units = {
 			self._unit,

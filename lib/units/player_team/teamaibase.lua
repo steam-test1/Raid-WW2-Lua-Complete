@@ -1,4 +1,5 @@
 TeamAIBase = TeamAIBase or class(CopBase)
+TeamAIBase.set_visible = HuskPlayerBase.set_visible
 
 function TeamAIBase:post_init()
 	self._ext_movement = self._unit:movement()

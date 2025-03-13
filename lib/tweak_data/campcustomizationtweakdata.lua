@@ -24,14 +24,14 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		bomb = {
 			levels = {
 				{
-					name_id = "golden_bomb_lvl_1_name_id",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_bomb/bomb_l01_hud",
-					description_id = "golden_bomb_lvl_1_desc_id",
-					scene_unit = "units/vanilla/props/props_camp_upgrades/props_bomb/level_1/props_camp_bomb_level_01_shop"
+					name_id = "golden_bomb_lvl_1_name_id",
+					scene_unit = "units/vanilla/props/props_camp_upgrades/props_bomb/level_1/props_camp_bomb_level_01_shop",
+					description_id = "golden_bomb_lvl_1_desc_id"
 				},
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_bomb/bomb_l02_hud",
 					gold_price = 500,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_bomb/bomb_l02_hud",
 					description_id = "golden_bomb_lvl_2_desc_id",
 					name_id = "golden_bomb_lvl_2_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_bomb/level_2/props_camp_bomb_level_02_shop"
@@ -67,14 +67,14 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		mission_table = {
 			levels = {
 				{
-					name_id = "mission_table_lvl_1_name_id",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_mission/table_missions_l01_hud",
-					description_id = "mission_table_lvl_1_desc_id",
-					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_mission/level_1/props_table_mission_level_01_shop"
+					name_id = "mission_table_lvl_1_name_id",
+					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_mission/level_1/props_table_mission_level_01_shop",
+					description_id = "mission_table_lvl_1_desc_id"
 				},
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_mission/table_missions_l02_hud",
 					gold_price = 250,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_mission/table_missions_l02_hud",
 					description_id = "mission_table_lvl_2_desc_id",
 					name_id = "mission_table_lvl_2_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_mission/level_2/props_table_mission_level_02_shop"
@@ -103,14 +103,14 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		skill_table = {
 			levels = {
 				{
-					name_id = "skill_table_lvl_1_name_id",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_skills/table_skills_l01_hud",
-					description_id = "skill_table_lvl_1_desc_id",
-					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_skills/level_1/props_table_skills_level_01_shop"
+					name_id = "skill_table_lvl_1_name_id",
+					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_skills/level_1/props_table_skills_level_01_shop",
+					description_id = "skill_table_lvl_1_desc_id"
 				},
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_skills/table_skills_l02_hud",
 					gold_price = 250,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_skills/table_skills_l02_hud",
 					description_id = "skill_table_lvl_2_desc_id",
 					name_id = "skill_table_lvl_2_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_skills/level_2/props_table_skills_level_02_shop"
@@ -139,14 +139,14 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		card_table = {
 			levels = {
 				{
-					name_id = "card_table_lvl_1_name_id",
 					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/table_cards_l01_hud",
-					description_id = "card_table_lvl_1_desc_id",
-					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/level_1/props_card_table_level_01_shop"
+					name_id = "card_table_lvl_1_name_id",
+					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/level_1/props_card_table_level_01_shop",
+					description_id = "card_table_lvl_1_desc_id"
 				},
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/table_cards_l02_hud",
 					gold_price = 250,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/table_cards_l02_hud",
 					description_id = "card_table_lvl_2_desc_id",
 					name_id = "card_table_lvl_2_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_table_challenge_cards/level_2/props_card_table_level_02_shop"
@@ -175,8 +175,8 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		large_picture_1 = {
 			levels = {
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_painting_medium_01/painting_medium_01_l02_hud",
 					gold_price = 50,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_painting_medium_01/painting_medium_01_l02_hud",
 					description_id = "large_picture_lvl_1_desc_id",
 					name_id = "large_picture_lvl_1_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_painting_medium_01/level_1/props_painting_medium_01_level_01_shop"
@@ -186,8 +186,8 @@ function CampCustomizationTweakData:_setup_camp_assets()
 		large_picture_2 = {
 			levels = {
 				{
-					grid_icon = "units/vanilla/props/props_camp_upgrades/props_painting_medium_02/painting_medium_02_l02_hud",
 					gold_price = 50,
+					grid_icon = "units/vanilla/props/props_camp_upgrades/props_painting_medium_02/painting_medium_02_l02_hud",
 					description_id = "large_picture_lvl_2_desc_id",
 					name_id = "large_picture_lvl_2_name_id",
 					scene_unit = "units/vanilla/props/props_camp_upgrades/props_painting_medium_02/level_1/props_painting_medium_02_level_01_shop"
@@ -254,8 +254,8 @@ function CampCustomizationTweakData:_setup_camp_assets()
 					scene_unit_rotation = Rotation(180, 0, 0)
 				},
 				{
-					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_hud",
 					gold_price = 150,
+					grid_icon = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_hud",
 					description_id = "flags_raider_desc_id",
 					name_id = "flags_raider_name_id",
 					scene_unit = "units/upd_021/props/camp_upgrades/camp_flags/camp_flag_raider_shop_prop",
@@ -272,60 +272,60 @@ function CampCustomizationTweakData:_setup_default_camp_list()
 			upgrade = "gold_pile"
 		},
 		{
-			upgrade = "bomb",
-			level = 1
+			level = 1,
+			upgrade = "bomb"
 		},
 		{
-			upgrade = "toilet",
-			level = 1
+			level = 1,
+			upgrade = "toilet"
 		},
 		{
-			upgrade = "mission_table",
-			level = 1
+			level = 1,
+			upgrade = "mission_table"
 		},
 		{
-			upgrade = "weapons_table",
-			level = 1
+			level = 1,
+			upgrade = "weapons_table"
 		},
 		{
-			upgrade = "skill_table",
-			level = 1
+			level = 1,
+			upgrade = "skill_table"
 		},
 		{
-			upgrade = "character_table",
-			level = 1
+			level = 1,
+			upgrade = "character_table"
 		},
 		{
-			upgrade = "card_table",
-			level = 1
+			level = 1,
+			upgrade = "card_table"
 		},
 		{
-			upgrade = "radio_table",
-			level = 1
+			level = 1,
+			upgrade = "radio_table"
 		},
 		{
-			upgrade = "large_picture_1",
-			level = 0
+			level = 0,
+			upgrade = "large_picture_1"
 		},
 		{
-			upgrade = "large_picture_2",
-			level = 0
+			level = 0,
+			upgrade = "large_picture_2"
 		},
 		{
-			upgrade = "piano",
-			level = 1
+			level = 1,
+			upgrade = "piano"
 		},
 		{
-			upgrade = "rug",
-			level = 0
+			level = 0,
+			upgrade = "rug"
 		},
 		{
-			upgrade = "control_table",
-			level = 1
+			level = 1,
+			upgrade = "control_table"
 		},
 		{
-			upgrade = "flags",
-			level = 1
+			level = 1,
+			upgrade = "flags"
 		}
 	}
 end

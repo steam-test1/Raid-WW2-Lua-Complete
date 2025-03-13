@@ -55,10 +55,10 @@ function RaidGUIControlIntelImage:_create_image()
 
 	local background_params = {
 		texture = "ui/main_menu/textures/mission_paper_background",
+		valign = "scale",
 		y = 0,
 		x = 0,
 		name = "background",
-		valign = "scale",
 		halign = "scale",
 		w = self._image_panel:w(),
 		h = self._image_panel:h(),
@@ -72,8 +72,8 @@ function RaidGUIControlIntelImage:_create_image()
 	}
 	self._background = self._image_panel:bitmap(background_params)
 	local foreground_params = {
-		halign = "scale",
 		name = "foreground",
+		halign = "scale",
 		valign = "scale",
 		w = self._image_panel:w() * RaidGUIControlIntelImage.FOREGROUND_SIZE_PERCENTAGE,
 		h = self._image_panel:h() * RaidGUIControlIntelImage.FOREGROUND_SIZE_PERCENTAGE,
@@ -87,14 +87,14 @@ function RaidGUIControlIntelImage:_create_image()
 	self._foreground:set_center_y(self._image_panel:h() / 2)
 
 	local selector_params = {
+		valign = "scale",
+		alpha = 0,
+		h = 24,
 		w = 24,
 		y = 0,
 		x = 0,
-		h = 24,
 		name = "selector",
-		valign = "scale",
 		halign = "scale",
-		alpha = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlIntelImage.SELECTOR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlIntelImage.SELECTOR_ICON].texture_rect,
 		layer = self._object:layer() + 3

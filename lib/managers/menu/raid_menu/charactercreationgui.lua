@@ -75,11 +75,11 @@ function CharacterCreationGui:_layout()
 	self._nationality_screen_controls = {}
 
 	self._root_panel:label({
+		h = 38,
 		w = 416,
 		y = 96,
 		x = 0,
 		name = "subtitle_profiles",
-		h = 38,
 		text = self:translate("character_creation_subtitle", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_38,
 		font_size = tweak_data.gui.font_sizes.size_38,
@@ -87,11 +87,11 @@ function CharacterCreationGui:_layout()
 	})
 
 	local subtitle_class = self._root_panel:label({
+		h = 24,
 		w = 416,
 		y = 144,
 		x = 0,
 		name = "subtitle_small_profile_class",
-		h = 24,
 		text = self:translate("character_creation_subtitle_class", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -101,11 +101,11 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, subtitle_class)
 
 	local subtitle_nationality = self._root_panel:label({
+		h = 24,
 		w = 416,
 		y = 144,
 		x = 0,
 		name = "subtitle_small_profile_nationality",
-		h = 24,
 		text = self:translate("character_creation_subtitle_nationality", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -115,14 +115,14 @@ function CharacterCreationGui:_layout()
 	table.insert(self._nationality_screen_controls, subtitle_nationality)
 
 	self._class_list = self._root_panel:list_active({
+		item_h = 96,
+		selection_enabled = true,
+		h = 384,
 		w = 416,
 		y = 224,
 		x = 0,
 		name = "class_list",
 		vertical_spacing = 2,
-		item_h = 96,
-		selection_enabled = true,
-		h = 384,
 		item_class = RaidGUIControlListItemCharacterCreateClass,
 		on_item_clicked_callback = callback(self, self, "_on_class_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -133,14 +133,14 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._class_list)
 
 	self._nation_list = self._root_panel:list_active({
+		item_h = 96,
+		selection_enabled = true,
+		h = 384,
 		w = 416,
 		y = 224,
 		x = 0,
 		name = "nation_list",
 		vertical_spacing = 2,
-		item_h = 96,
-		selection_enabled = true,
-		h = 384,
 		item_class = RaidGUIControlListItemCharacterCreateNation,
 		on_item_clicked_callback = callback(self, self, "_on_nation_click_callback"),
 		on_item_double_clicked_callback = callback(self, self, "_on_click_button_next"),
@@ -152,10 +152,10 @@ function CharacterCreationGui:_layout()
 
 	local list_bottom = self._class_list:bottom()
 	local your_selection = self._root_panel:label({
+		h = 24,
 		w = 256,
 		x = 0,
 		name = "label_your_selection",
-		h = 24,
 		y = list_bottom + 64,
 		text = self:translate("character_creation_your_selection", true),
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
@@ -173,9 +173,9 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._class_label = self._root_panel:label({
+		h = 42,
 		w = 160,
 		name = "class_label",
-		h = 42,
 		x = self._number_1:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate(tweak_data.skilltree.classes[self._selected_class].name_id, true),
@@ -194,9 +194,9 @@ function CharacterCreationGui:_layout()
 		texture_rect = tex_rect
 	})
 	self._nationality_label = self._root_panel:label({
+		h = 42,
 		w = 256,
 		name = "nationality_label",
-		h = 42,
 		x = self._number_2:right() + 10,
 		y = your_selection:bottom() + 40,
 		text = self:translate("character_profile_creation_" .. self._selected_nation, true),
@@ -211,23 +211,22 @@ function CharacterCreationGui:_layout()
 	self._nationality_label:set_x(self._number_2:right() + 10)
 
 	self._next_button = self._root_panel:short_primary_button({
+		name = "next_button",
 		w = 192,
 		x = 0,
-		name = "next_button",
 		y = list_bottom + 224,
 		text = self:translate("character_profile_next_button", true),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_next")
 	})
 	self._right_side_info_class = self._root_panel:create_custom_control(RaidGUIControlClassDescription, {
-		w = 516,
-		y = 0,
-		x = 1308,
 		name = "right_side_info_panel",
 		visible = false,
-		h = 720
+		h = 720,
+		w = 516,
+		y = 0,
+		x = 1308
 	}, {
-		level = nil,
 		class = nil
 	})
 
@@ -236,14 +235,13 @@ function CharacterCreationGui:_layout()
 	table.insert(self._class_screen_controls, self._right_side_info_class)
 
 	self._right_side_info_nationality = self._root_panel:create_custom_control(RaidGUIControlNationalityDescription, {
-		w = 480,
-		y = 0,
-		x = 1308,
 		name = "right_side_info_panel",
 		visible = false,
-		h = 620
+		h = 620,
+		w = 480,
+		y = 0,
+		x = 1308
 	}, {
-		level = nil,
 		class = nil
 	})
 

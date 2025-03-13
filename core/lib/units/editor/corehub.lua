@@ -448,8 +448,8 @@ function CoreHub:add_action(a)
 
 	local s = self:id_string(a)
 	self._hed.actions_data[s] = {
-		action_delay = 0,
 		type = "",
+		action_delay = 0,
 		unit_id = a:unit_data().unit_id
 	}
 

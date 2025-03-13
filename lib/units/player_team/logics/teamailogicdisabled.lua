@@ -226,34 +226,34 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 			variant = "crouch",
 			body_part = 1,
 			blocks = {
+				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
-				aim = -1,
-				action = -1
+				aim = -1
 			}
 		}
 	}
 	local objective = {
-		destroy_clbk_key = false,
 		called = true,
-		type = "revive",
 		scan = true,
+		type = "revive",
+		destroy_clbk_key = false,
 		follow_unit = data.unit,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		action = {
+			type = "act",
 			align_sync = true,
 			body_part = 1,
-			type = "act",
 			variant = rescue_type,
 			blocks = {
+				light_hurt = -1,
+				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
-				aim = -1,
-				action = -1,
-				light_hurt = -1
+				aim = -1
 			}
 		},
 		action_duration = tweak_data.interaction:get_interaction(data.name == "surrender" and "free" or "revive").timer,

@@ -95,7 +95,7 @@ function ProgressionManager:_offer_mission(mission_id)
 end
 
 function ProgressionManager:mission_unlocked(job_type, mission_id)
-	if self._mission_progression[job_type][mission_id] and self._mission_progression[job_type][mission_id].state == ProgressionManager.MISSION_STATE_UNLOCKED then
+	if self._mission_progression[job_type] and self._mission_progression[job_type][mission_id] and self._mission_progression[job_type][mission_id].state == ProgressionManager.MISSION_STATE_UNLOCKED then
 		return true
 	end
 

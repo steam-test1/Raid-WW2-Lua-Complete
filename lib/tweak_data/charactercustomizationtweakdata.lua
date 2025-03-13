@@ -1970,11 +1970,11 @@ function CharacterCustomizationTweakData:get_reward_loot_by_rarity(rarity)
 	return customizations
 end
 
-function CharacterCustomizationTweakData:get_droppable_customizations()
+function CharacterCustomizationTweakData:get_droppable_customizations(rarity)
 	local customizations = {}
 
 	for key, customization in pairs(self.customizations) do
-		if self:_is_customization_droppable(customization) then
+		if (not rarity or rarity == customization.rarity) and self:_is_customization_droppable(customization) then
 			table.insert(customizations, key)
 		end
 	end

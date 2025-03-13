@@ -58,8 +58,8 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	})
 	local grid_item_fg = tweak_data.gui:get_full_gui_data("grid_item_fg")
 	self._grid_item_icon_fg = self._object:bitmap({
-		name = "grid_item_icon_fg",
 		layer = 12,
+		name = "grid_item_icon_fg",
 		x = image_coord_x + RaidGUIControlGridItemSkill.OUTLINE_THICKNESS,
 		y = image_coord_y + RaidGUIControlGridItemSkill.OUTLINE_THICKNESS,
 		w = params.item_w - RaidGUIControlGridItemSkill.OUTLINE_THICKNESS * 2,
@@ -87,11 +87,11 @@ function RaidGUIControlGridItemSkill:_layout_level_tier(level)
 	if level and level > 0 then
 		self._level_tier_text = self._object:text({
 			h = 32,
-			name = "level_tier_text",
 			layer = 50,
 			vertical = "center",
 			w = 32,
 			align = "left",
+			name = "level_tier_text",
 			font = tweak_data.gui.fonts.lato,
 			font_size = tweak_data.gui.font_sizes.size_18,
 			text = to_roman(level)

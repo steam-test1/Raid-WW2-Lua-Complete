@@ -21,29 +21,29 @@ end
 
 function RaidGUIControlXPSkillSet:_create_panel(parent)
 	local panel_params = {
-		name = "skill_set_unlock_panel",
-		halign = "scale",
 		valign = "scale",
-		visible = false
+		visible = false,
+		name = "skill_set_unlock_panel",
+		halign = "scale"
 	}
 	self._object = parent:panel(panel_params)
 end
 
 function RaidGUIControlXPSkillSet:_create_content_panel()
 	local panel_params = {
-		name = "content_panel",
-		halign = "scale",
 		valign = "scale",
-		alpha = 0
+		alpha = 0,
+		name = "content_panel",
+		halign = "scale"
 	}
 	self._content_panel = self._object:panel(panel_params)
 end
 
 function RaidGUIControlXPSkillSet:_create_icon_panel()
 	local icon_panel_params = {
-		name = "icon_panel",
+		valign = "scale",
 		halign = "scale",
-		valign = "scale"
+		name = "icon_panel"
 	}
 	self._icon_panel = self._content_panel:panel(icon_panel_params)
 end
@@ -225,29 +225,29 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_panel(parent)
 	local panel_params = {
-		name = "skill_set_unlock_panel",
-		halign = "scale",
 		valign = "scale",
-		visible = false
+		visible = false,
+		name = "skill_set_unlock_panel",
+		halign = "scale"
 	}
 	self._object = parent:panel(panel_params)
 end
 
 function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	local weapon_panel_params = {
+		valign = "scale",
 		name = "weapon_panel",
 		alpha = 0,
 		halign = "scale",
-		valign = "scale",
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2
 	}
 	self._weapon_panel = self._object:panel(weapon_panel_params)
 	local weapon_icon_panel_params = {
-		name = "weapon_icon_panel",
+		valign = "scale",
 		halign = "scale",
-		valign = "scale"
+		name = "weapon_icon_panel"
 	}
 	self._weapon_icon_panel = self._weapon_panel:panel(weapon_icon_panel_params)
 	local weapon_name_params = {
@@ -268,10 +268,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	local skill_panel_params = {
+		valign = "scale",
 		name = "skill_panel",
 		alpha = 0,
 		halign = "scale",
-		valign = "scale",
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		x = self._object:w() / 2,
@@ -279,9 +279,9 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	}
 	self._skill_panel = self._object:panel(skill_panel_params)
 	local skill_icon_panel_params = {
-		name = "skill_icon_panel",
+		valign = "scale",
 		halign = "scale",
-		valign = "scale"
+		name = "skill_icon_panel"
 	}
 	self._skill_icon_panel = self._skill_panel:panel(skill_icon_panel_params)
 	local skill_set_title_params = {

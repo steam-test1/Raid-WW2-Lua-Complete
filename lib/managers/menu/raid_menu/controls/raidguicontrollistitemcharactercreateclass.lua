@@ -21,18 +21,18 @@ end
 function RaidGUIControlListItemCharacterCreateClass:_layout()
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. self._class_name] or tweak_data.gui.icons.ico_flag_empty
 	self._background = self._object:rect({
+		visible = false,
 		y = 0,
 		x = 0,
-		visible = false,
 		w = self._params.w,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._red_selected_line = self._object:rect({
+		visible = false,
 		w = 2,
 		y = 0,
 		x = 0,
-		visible = false,
 		h = self._params.h,
 		color = tweak_data.gui.colors.raid_red
 	})

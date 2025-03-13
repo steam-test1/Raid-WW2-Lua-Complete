@@ -151,10 +151,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	end
 
 	local action_desc = {
-		type = "walk",
 		persistent = true,
 		path_simplified = true,
 		body_part = 2,
+		type = "walk",
 		variant = haste_code == 1 and "walk" or "run",
 		end_rot = end_rot,
 		nav_path = nav_path,
@@ -162,10 +162,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		no_strafe = no_strafe,
 		end_pose = end_pose,
 		blocks = {
-			turn = -1,
-			act = -1,
 			walk = -1,
-			idle = -1
+			idle = -1,
+			turn = -1,
+			act = -1
 		}
 	}
 
@@ -224,8 +224,8 @@ function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, 
 	end
 
 	local action_desc = {
-		body_part = 1,
 		type = "warp",
+		body_part = 1,
 		position = has_pos and pos,
 		rotation = has_rot and Rotation(360 * (yaw - 1) / 254, 0, 0)
 	}
@@ -837,9 +837,9 @@ function UnitNetworkHandler:action_aim_state(cop, state)
 
 	if state then
 		local shoot_action = {
-			body_part = 3,
+			block_type = "action",
 			type = "shoot",
-			block_type = "action"
+			body_part = 3
 		}
 
 		cop:movement():action_request(shoot_action)
@@ -1105,8 +1105,8 @@ function UnitNetworkHandler:action_tase_event(taser_unit, event_id, sender)
 		end
 
 		local tase_action = {
-			type = "tase",
-			body_part = 3
+			body_part = 3,
+			type = "tase"
 		}
 
 		taser_unit:movement():action_request(tase_action)
@@ -1905,44 +1905,44 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 	if local_peer:unit() and unit:key() == local_peer:unit():key() then
 		local valid_transitions = {
 			standard = {
+				bleed_out = true,
 				carry = true,
 				incapacitated = true,
-				tased = true,
-				bleed_out = true
+				tased = true
 			},
 			carry = {
+				bleed_out = true,
 				standard = true,
 				incapacitated = true,
-				tased = true,
-				bleed_out = true
+				tased = true
 			},
 			mask_off = {
-				standard = true,
-				carry = true
+				carry = true,
+				standard = true
 			},
 			bleed_out = {
-				standard = true,
 				carry = true,
+				standard = true,
 				fatal = true
 			},
 			fatal = {
-				standard = true,
-				carry = true
+				carry = true,
+				standard = true
 			},
 			tased = {
 				carry = true,
-				incapacitated = true,
-				standard = true
+				standard = true,
+				incapacitated = true
 			},
 			incapacitated = {
-				standard = true,
-				carry = true
+				carry = true,
+				standard = true
 			},
 			clean = {
+				mask_off = true,
 				civilian = true,
 				standard = true,
-				carry = true,
-				mask_off = true
+				carry = true
 			}
 		}
 
@@ -3620,11 +3620,11 @@ end
 local function warcry_dmg_func(peer_name, data)
 	local percent = Utl.mul_to_string_percent(data)
 	local notification_data = {
-		force = true,
-		priority = 1,
-		duration = 5,
 		icon = "test_icon",
+		priority = 1,
+		force = true,
 		id = "skill_ammo_warcry_from",
+		duration = 5,
 		notification_type = HUDNotification.ICON,
 		text = managers.localization:text("skill_ammo_warcry_from", {
 			NAME = peer_name,

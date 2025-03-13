@@ -140,7 +140,9 @@ function CarryTweakData:init(tweak_data)
 		hud_icon = "carry_flak_shell",
 		throw_sound = "flakshell_throw",
 		upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL,
-		weight = 4
+		weight = 4,
+		throw_rotations = Rotation(0, 0, 66),
+		throw_positions = Vector3(0, 0, 18)
 	}
 	self.flak_shell_explosive = deep_clone(self.flak_shell)
 	self.flak_shell_explosive.type = "normal"
@@ -230,13 +232,13 @@ function CarryTweakData:init(tweak_data)
 		weight = self.gold_bar.weight * 3
 	}
 	self.crate_explosives = {
-		name_id = "hud_carry_explosives",
-		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
-		type = "normal",
-		hud_icon = "carry_explosive",
 		weight = 2,
+		hud_icon = "carry_explosive",
 		skip_exit_secure = true,
 		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
+		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
+		type = "normal",
+		name_id = "hud_carry_explosives",
 		upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL
 	}
 	self.conspiracy_board = deep_clone(self.painting_sto)
@@ -381,16 +383,16 @@ end
 
 function CarryTweakData:_init_shared_multipliers()
 	self.WEIGHT_MULTIPLIERS_SHELL = {
-		category = "carry",
-		upgrade = "saboteur_shell_weight_multiplier"
+		upgrade = "saboteur_shell_weight_multiplier",
+		category = "carry"
 	}
 	self.WEIGHT_MULTIPLIERS_CORPSE = {
-		category = "carry",
-		upgrade = "predator_corpse_weight_multiplier"
+		upgrade = "predator_corpse_weight_multiplier",
+		category = "carry"
 	}
 	self.THROW_MULTIPLIERS_GENERIC = {
-		category = "carry",
-		upgrade = "strongback_throw_distance_multiplier"
+		upgrade = "strongback_throw_distance_multiplier",
+		category = "carry"
 	}
 end
 

@@ -58,8 +58,8 @@ end
 function VehicleDamage:damage_mission(dmg)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "killzone"
+			variant = "killzone",
+			type = "hurt"
 		}
 	}
 	local attack_data = {
@@ -109,8 +109,8 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -215,15 +215,15 @@ function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body,
 
 	if death then
 		result = {
-			type = "death",
-			variant = "bullet"
+			variant = "bullet",
+			type = "death"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		}
 
 		self:set_health(self._health - damage)
@@ -250,8 +250,8 @@ function VehicleDamage:damage_explosion(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "explosion"
+			variant = "explosion",
+			type = "hurt"
 		}
 	}
 
@@ -386,8 +386,8 @@ function VehicleDamage:damage_fire(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "fire"
+			variant = "fire",
+			type = "hurt"
 		}
 	}
 
@@ -523,8 +523,8 @@ function VehicleDamage:damage_collision(attack_data)
 
 		local damage_info = {
 			result = {
-				type = "hurt",
-				variant = "collision"
+				variant = "collision",
+				type = "hurt"
 			}
 		}
 

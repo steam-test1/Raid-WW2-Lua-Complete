@@ -40,8 +40,8 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		sync_explosion_results = nil,
 		kills = 0,
+		push_units = nil,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -648,27 +648,26 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 	local autoaim, suppression_enemies = self:check_autoaim(from_pos, direction)
 
 	if self._autoaim then
-		local weight = 0.1
+		local weight = self._autohit_data.WEIGHT or 0.25
 
 		if col_ray and col_ray.unit:in_slot(managers.slot:get_mask("enemies")) then
 			self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 			damage = self:get_damage_falloff(col_ray, user_unit) * dmg_mul
 			hit_unit = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
 		elseif autoaim then
-			local autohit_chance = 1
-			autohit_chance = tweak_data.weapon[self._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP and 1 or 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
+			local autohit_chance = math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
 			if autohit_mul then
 				autohit_chance = autohit_chance * autohit_mul
 			end
 
 			if math.random() < autohit_chance then
-				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
+				self._autohit_current = self._autohit_current / (1 + weight)
 				damage = self:get_damage_falloff(autoaim, user_unit) * dmg_mul
 				hit_unit = self._bullet_class:on_collision(autoaim, self._unit, user_unit, damage)
 				col_ray = autoaim
 			else
-				self._autohit_current = self._autohit_current / (1 + weight)
+				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 			end
 		elseif col_ray then
 			damage = self:get_damage_falloff(col_ray, user_unit) * dmg_mul
@@ -1915,9 +1914,9 @@ InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
 	sound_event = "round_explode",
+	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	on_unit = true,
 	sound_muffle_effect = true,
-	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	camera_shake_max_mul = tweak_data.upgrades.explosive_bullet.camera_shake_max_mul,
 	idstr_decal = Idstring("explosion_round"),
@@ -2020,8 +2019,8 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end

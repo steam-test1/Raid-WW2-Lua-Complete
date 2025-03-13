@@ -25,9 +25,9 @@ function MenuNodeButtonLayoutGui:_setup()
 		for button, data in pairs(coords) do
 			local c = data.id == "menu_button_unassigned" and Color(0.5, 0.5, 0.5) or Color.white
 			data.text = self.ws:panel():text({
-				visible = false,
 				valign = "center",
 				halign = "center",
+				visible = false,
 				text = managers.localization:to_upper_text(data.id),
 				font_size = self.font_size,
 				font = self.font,
@@ -70,8 +70,8 @@ function MenuNodeButtonLayoutGui:_setup()
 	})
 	self._controller = self.ws:panel():bitmap({
 		h = 256,
-		w = 512,
 		texture = "guis/textures/controller",
+		w = 512,
 		layer = self.layers.items
 	})
 

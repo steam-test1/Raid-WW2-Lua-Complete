@@ -30,11 +30,11 @@ end
 
 function HUDWeaponGrenade:_create_icon(icon)
 	local icon_panel_params = {
+		valign = "top",
+		name = "icon_panel",
 		halign = "center",
 		y = 0,
 		x = 0,
-		valign = "top",
-		name = "icon_panel",
 		w = self._object:w(),
 		h = self._object:h() / 2
 	}

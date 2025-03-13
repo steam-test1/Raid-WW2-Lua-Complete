@@ -21,10 +21,10 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 
 	if self._on_remove_callback and self._grid_params and self._grid_params.remove_texture and params.peer_id == managers.network:session():local_peer():id() then
 		self._remove_card_button = self._card_panel:image({
-			h = 36,
 			w = 36,
 			y = 0,
 			name = "remove_card_button",
+			h = 36,
 			x = self._card_panel:w() - 38,
 			texture = tweak_data.gui.icons.btn_circ_x.texture,
 			texture_rect = tweak_data.gui.icons.btn_circ_x.texture_rect,
@@ -34,11 +34,11 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 
 	if self._on_lock_callback and self._grid_params and self._grid_params.lock_texture and params.peer_id == managers.network:session():local_peer():id() then
 		self._lock_card_button = self._card_panel:image({
-			h = 36,
 			w = 36,
 			y = 0,
 			x = 4,
 			name = "lock_card_button",
+			h = 36,
 			texture = tweak_data.gui.icons.btn_circ_lock.texture,
 			texture_rect = tweak_data.gui.icons.btn_circ_lock.texture_rect,
 			layer = self._card_image:layer() + 1
@@ -47,9 +47,9 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 
 	if self._grid_params and self._grid_params.lock_texture then
 		self._lock_card_image = self._card_panel:image({
-			h = 48,
 			w = 48,
 			name = "lock_card_image",
+			h = 48,
 			x = self._card_panel:w() / 2 - 18,
 			y = self._card_panel:h() / 4,
 			texture = tweak_data.gui.icons.btn_circ_lock.texture,

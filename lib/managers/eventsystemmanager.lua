@@ -45,10 +45,6 @@ function EventSystemManager:load_profile_slot(data)
 		return
 	end
 
-	if state.version and state.version ~= EventSystemManager.VERSION then
-		-- Nothing
-	end
-
 	local daily_event_id = state.daily_event_id
 
 	self:_check_special_event()
@@ -109,6 +105,28 @@ function EventSystemManager:active_event_data()
 	return tweak_data.events.special_events[self._active_event]
 end
 
+function EventSystemManager:activate_current_event(force_active)
+	if not self._active_event then
+		return
+	end
+
+	if not Network:is_server() then
+		return
+	end
+
+	local event = tweak_data.events.special_events[self._active_event]
+
+	if not event or not event.card_id then
+		return
+	end
+
+	local card = managers.challenge_cards:get_challenge_card_data(event.card_id)
+	card.status = force_active and ChallengeCardsManager.CARD_STATUS_ACTIVE or ChallengeCardsManager.CARD_STATUS_NORMAL
+	card.locked_suggestion = true
+
+	managers.challenge_cards:set_active_card(card)
+end
+
 function EventSystemManager:on_camp_entered()
 	local server_time = Steam:server_time()
 	local time_table = os.date("!*t", server_time)
@@ -162,10 +180,10 @@ function EventSystemManager:_fire_daily_event()
 	local reward_data = login_rewards[self._consecutive_logins]
 	local reward = reward_data.reward
 	local notification_params = {
-		priority = 4,
 		duration = 13,
 		notification_type = "active_duty_bonus",
 		name = "active_duty_bonus",
+		priority = 4,
 		consecutive = self._consecutive_logins,
 		total = #login_rewards
 	}
@@ -221,26 +239,4 @@ function EventSystemManager:card_drop_callback(notification_params, error, loot_
 	end
 
 	managers.notification:add_notification(notification_params)
-end
-
-function EventSystemManager:activate_current_event(force_active)
-	if not self._active_event then
-		return
-	end
-
-	if not Network:is_server() then
-		return
-	end
-
-	local event = tweak_data.events.special_events[self._active_event]
-
-	if not event or not event.card_id then
-		return
-	end
-
-	local card = managers.challenge_cards:get_challenge_card_data(event.card_id)
-	card.status = force_active and ChallengeCardsManager.CARD_STATUS_ACTIVE or ChallengeCardsManager.CARD_STATUS_NORMAL
-	card.locked_suggestion = true
-
-	managers.challenge_cards:set_active_card(card)
 end

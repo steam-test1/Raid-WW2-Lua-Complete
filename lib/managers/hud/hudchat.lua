@@ -75,8 +75,8 @@ end
 
 function HUDChat:_create_input()
 	local input_panel_params = {
-		name = "input_panel",
 		alpha = 0.3,
+		name = "input_panel",
 		halign = "scale",
 		valign = "bottom",
 		w = self._object:w(),
@@ -112,10 +112,10 @@ function HUDChat:_create_input()
 	background:set_center_y(self._input_text_panel:h() / 2)
 
 	local input_text_params = {
-		name = "input_text",
+		layer = 5,
 		halign = "scale",
 		valign = "center",
-		layer = 5,
+		name = "input_text",
 		text = "",
 		vertical = "center",
 		align = "left",
@@ -207,31 +207,31 @@ end
 
 function HUDChat:_create_input_panel()
 	self._input_panel = self._panel:panel({
-		alpha = 0,
+		h = 24,
 		name = "input_panel",
+		alpha = 0,
 		layer = 1,
 		x = 0,
-		h = 24,
 		w = self._panel_width
 	})
 
 	self._input_panel:rect({
-		name = "focus_indicator",
-		visible = false,
 		layer = 0,
+		visible = false,
+		name = "focus_indicator",
 		color = Color.white:with_alpha(0.2)
 	})
 
 	local say = self._input_panel:text({
-		name = "say",
-		y = 0,
-		hvertical = "center",
-		blend_mode = "normal",
 		layer = 1,
+		blend_mode = "normal",
 		x = 0,
 		halign = "left",
 		vertical = "center",
 		align = "left",
+		name = "say",
+		y = 0,
+		hvertical = "center",
 		text = utf8.to_upper(managers.localization:text("menu_chat_say")),
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
@@ -242,37 +242,37 @@ function HUDChat:_create_input_panel()
 	say:set_size(w, self._input_panel:h())
 
 	local input_text = self._input_panel:text({
-		name = "input_text",
-		y = 0,
-		hvertical = "center",
-		word_wrap = false,
 		layer = 1,
+		blend_mode = "normal",
 		x = 0,
 		wrap = true,
-		blend_mode = "normal",
 		halign = "left",
 		text = "",
 		vertical = "center",
 		align = "left",
+		name = "input_text",
+		y = 0,
+		hvertical = "center",
+		word_wrap = false,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		color = Color.white
 	})
 	local caret = self._input_panel:rect({
+		layer = 2,
 		w = 0,
 		h = 0,
 		name = "caret",
 		y = 0,
 		x = 0,
-		layer = 2,
 		color = Color(0.05, 1, 1, 1)
 	})
 
 	self._input_panel:gradient({
+		layer = -1,
 		name = "input_bg",
 		blend_mode = "sub",
 		valign = "grow",
-		layer = -1,
 		gradient_points = {
 			0,
 			Color.white:with_alpha(0),

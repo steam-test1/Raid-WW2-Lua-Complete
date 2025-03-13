@@ -21,17 +21,17 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
+		halign = "grow",
 		name = "custody_panel",
-		valign = "grow",
-		halign = "grow"
+		valign = "grow"
 	})
 	local timer_message_params = {
+		text = "custodddddy in",
 		h = 40,
 		w = 400,
 		vertical = "center",
-		name = "timer_msg",
 		align = "center",
-		text = "custodddddy in",
+		name = "timer_msg",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
 	}
@@ -46,11 +46,11 @@ function HUDPlayerCustody:init(hud)
 	timer_msg:set_y(28)
 
 	local timer_params = {
+		text = "00:00",
 		h = 32,
 		vertical = "bottom",
-		name = "timer",
 		align = "center",
-		text = "00:00",
+		name = "timer",
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list

@@ -6,9 +6,9 @@ local idstr_contour_distance = Idstring("contour_distance")
 ContourExt.UNSET_CONTOUR_DISTANCE = 200000
 ContourExt._types = {
 	teammate = {
+		ray_check = true,
 		persistence = 0.1,
-		priority = 5,
-		ray_check = true
+		priority = 5
 	},
 	teammate_downed = {
 		priority = 4,
@@ -42,9 +42,9 @@ ContourExt._types = {
 		color = tweak_data.contour.character.friendly_color
 	},
 	mark_enemy = {
+		fadeout = 4.5,
 		fadeout_silent = 13.5,
 		priority = 5,
-		fadeout = 4.5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_damage_bonus = {
@@ -53,29 +53,29 @@ ContourExt._types = {
 		color = tweak_data.contour.character.more_dangerous_color
 	},
 	mark_enemy_turret = {
+		fadeout = 4.5,
 		fadeout_silent = 13.5,
 		priority = 5,
-		fadeout = 4.5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_ghost = {
+		distance = 3200,
+		fadeout = 0,
 		persistence = 0.1,
 		priority = 6,
-		fadeout = 0,
-		distance = 3200,
 		color = tweak_data.contour.character.ghost_warcry
 	},
 	mark_enemy_sharpshooter = {
+		fadeout = 0,
 		persistence = 0.1,
 		priority = 3,
-		fadeout = 0,
 		color = tweak_data.contour.character.sharpshooter_warcry
 	},
 	mark_enemy_silver_bullet = {
+		distance = 3000,
+		fadeout = 0,
 		persistence = 0.1,
 		priority = 6,
-		fadeout = 0,
-		distance = 3000,
 		color = tweak_data.contour.character.silver_bullet_warcry
 	},
 	highlight = {

@@ -7,34 +7,34 @@ function NavFieldBuilder:init()
 		walk = 1
 	}
 	self._opposite_side_str = {
-		y_neg = "y_pos",
-		y_pos = "y_neg",
 		x_neg = "x_pos",
-		x_pos = "x_neg"
+		x_pos = "x_neg",
+		y_neg = "y_pos",
+		y_pos = "y_neg"
 	}
 	self._perp_pos_dir_str_map = {
-		y_neg = "x_pos",
-		y_pos = "x_pos",
 		x_neg = "y_pos",
-		x_pos = "y_pos"
+		x_pos = "y_pos",
+		y_neg = "x_pos",
+		y_pos = "x_pos"
 	}
 	self._perp_neg_dir_str_map = {
-		y_neg = "x_neg",
-		y_pos = "x_neg",
 		x_neg = "y_neg",
-		x_pos = "y_neg"
+		x_pos = "y_neg",
+		y_neg = "x_neg",
+		y_pos = "x_neg"
 	}
 	self._dim_str_map = {
-		y_neg = "y",
-		y_pos = "y",
 		x_neg = "x",
-		x_pos = "x"
+		x_pos = "x",
+		y_neg = "y",
+		y_pos = "y"
 	}
 	self._perp_dim_str_map = {
-		y_neg = "x",
-		y_pos = "x",
 		x_neg = "y",
-		x_pos = "y"
+		x_pos = "y",
+		y_neg = "x",
+		y_pos = "x"
 	}
 	self._neg_dir_str_map = {
 		x_neg = true,

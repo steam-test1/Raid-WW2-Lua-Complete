@@ -65,9 +65,10 @@ function RaidGUIControlPlayerStats:_create_items()
 		return
 	end
 
+	local padding = self._params.items_padding or self.ITEMS_PADDING
 	local i_horizontal = 0
-	local item_left = RaidGUIControlPlayerStats.ITEMS_PADDING / 2
-	local item_width = (self._object:w() - RaidGUIControlPlayerStats.ITEMS_PADDING) / #self._stats_data
+	local item_left = padding / 2
+	local item_width = (self._object:w() - padding) / #self._stats_data
 	local item_height = self._object:h()
 	self._stat_items = {}
 	local item_params = clone(self._item_params)

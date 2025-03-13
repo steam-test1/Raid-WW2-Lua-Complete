@@ -1,6 +1,8 @@
 CriminalActionWalk = CriminalActionWalk or class(CopActionWalk)
 CriminalActionWalk._anim_block_presets = {
 	block_all = {
+		shoot = -1,
+		dodge = -1,
 		stand = -1,
 		crouch = -1,
 		walk = -1,
@@ -11,11 +13,10 @@ CriminalActionWalk._anim_block_presets = {
 		heavy_hurt = -1,
 		hurt = -1,
 		light_hurt = -1,
-		turn = -1,
-		shoot = -1,
-		dodge = -1
+		turn = -1
 	},
 	block_lower = {
+		dodge = -1,
 		stand = -1,
 		crouch = -1,
 		walk = -1,
@@ -25,14 +26,13 @@ CriminalActionWalk._anim_block_presets = {
 		heavy_hurt = -1,
 		hurt = -1,
 		light_hurt = -1,
-		turn = -1,
-		dodge = -1
+		turn = -1
 	},
 	block_upper = {
-		stand = -1,
-		crouch = -1,
 		shoot = -1,
-		action = -1
+		action = -1,
+		stand = -1,
+		crouch = -1
 	},
 	block_none = {
 		stand = -1,

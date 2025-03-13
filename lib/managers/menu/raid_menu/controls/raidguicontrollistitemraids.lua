@@ -21,24 +21,25 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self._on_click_callback = params.on_click_callback
 	self._on_item_selected_callback = params.on_item_selected_callback
 	self._on_double_click_callback = params.on_double_click_callback
-	self._data = data
-	self._is_consumable = tweak_data.operations.missions[data.value].consumable ~= nil
-	self._is_debug = tweak_data.operations.missions[data.value].debug ~= nil
-	self._unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value)
 	self._mouse_over_sound = params.on_mouse_over_sound_event
 	self._mouse_click_sound = params.on_mouse_click_sound_event
+	self._data = data
+	local mission_data = data.mission_data or tweak_data.operations.missions[data.value]
+	self._is_consumable = not not mission_data.consumable
+	self._is_debug = not not mission_data.debug
+	self._is_unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value)
 	self._color = params.color or tweak_data.gui.colors.raid_white
 	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
 
 	if self._is_debug then
 		self._color = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
 
-		if self._unlocked then
+		if self._is_unlocked then
 			self._color_type = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
 		else
 			self._color_type = RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR
 		end
-	elseif self._unlocked then
+	elseif self._is_unlocked then
 		self._color_type = RaidGUIControlListItemRaids.UNLOCKED_COLOR
 	else
 		self._color_type = RaidGUIControlListItemRaids.LOCKED_COLOR
@@ -143,7 +144,7 @@ function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 end
 
 function RaidGUIControlListItemRaids:_layout_exp(params, data)
-	local xp_value = tweak_data.operations.missions[self._data.value].xp
+	local xp_value = data.mission_data and data.mission_data.xp or tweak_data.operations.missions[self._data.value].xp or 0
 	self._exp_label = self._object:text({
 		align = "right",
 		vertical = "center",
@@ -237,7 +238,7 @@ function RaidGUIControlListItemRaids:_layout_breadcrumb()
 end
 
 function RaidGUIControlListItemRaids:_apply_progression_layout()
-	if self._unlocked then
+	if self._is_unlocked then
 		self._lock_icon:hide()
 		self._exp_label:show()
 		self._difficulty_locked_indicator:hide()
@@ -300,7 +301,7 @@ function RaidGUIControlListItemRaids:select()
 
 	self._item_background:show()
 
-	if self._unlocked then
+	if self._is_unlocked then
 		self._item_label:set_color(self._selected_color)
 	end
 
@@ -325,7 +326,7 @@ function RaidGUIControlListItemRaids:unselect()
 
 	self._item_background:hide()
 
-	if self._unlocked then
+	if self._is_unlocked then
 		self._item_label:set_color(self._color_type)
 	end
 
@@ -343,7 +344,7 @@ function RaidGUIControlListItemRaids:highlight_on()
 		managers.menu_component:post_event(self._mouse_over_sound)
 	end
 
-	if not self._unlocked then
+	if not self._is_unlocked then
 		return
 	end
 

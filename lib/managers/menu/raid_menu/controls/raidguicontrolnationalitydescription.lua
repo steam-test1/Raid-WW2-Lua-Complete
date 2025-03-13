@@ -20,10 +20,10 @@ function RaidGUIControlNationalityDescription:_layout()
 	local padding = 16
 	local padded_width = self._object:w() - padding * 2
 	local object_bg_params = {
-		x = -4,
-		name = "object_bg",
 		y = 0,
 		layer = -1,
+		x = -4,
+		name = "object_bg",
 		w = self._object:w() + 8,
 		h = self._object:h(),
 		texture = tweak_data.gui.icons.paper_reward_large.texture,
@@ -70,8 +70,8 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._backstory_label = self._object:label({
-		vertical = "top",
 		wrap = true,
+		vertical = "top",
 		name = "backstory_label",
 		h = 128,
 		align = "center",
@@ -98,8 +98,8 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._disclaimer_label = self._object:label({
-		vertical = "top",
 		wrap = true,
+		vertical = "top",
 		name = "preferred_nationality_disclaimer",
 		h = 320,
 		align = "center",

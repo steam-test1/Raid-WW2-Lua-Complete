@@ -520,7 +520,7 @@ function MenuCallbackHandler:connect_to_host_rpc(item)
 		if res == "JOINED_LOBBY" then
 			self:on_enter_lobby()
 		elseif res == "JOINED_GAME" then
-			local level_id = tweak_data.levels:get_level_name_from_world_name(item:parameters().level_name)
+			local level_id = tweak_data.levels:get_level_id_from_world_name(item:parameters().level_name)
 
 			managers.network:session():load_level(item:parameters().level_name, nil, nil, nil, level_id, nil)
 		elseif res == "KICKED" then
@@ -538,7 +538,7 @@ function MenuCallbackHandler:host_multiplayer(item)
 
 	local level_id = item:parameters().level_id
 	local level_name = level_id and tweak_data.levels[level_id].world_name
-	level_id = level_id or tweak_data.levels:get_level_name_from_world_name(item:parameters().level)
+	level_id = level_id or tweak_data.levels:get_level_id_from_world_name(item:parameters().level)
 	level_name = level_name or item:parameters().level or "bank"
 	Global.game_settings.level_id = level_id
 
@@ -767,7 +767,7 @@ function MenuCallbackHandler:debug_level_jump(item)
 
 	managers.network:host_game()
 
-	local level_id = tweak_data.levels:get_level_name_from_world_name(param_map.level)
+	local level_id = tweak_data.levels:get_level_id_from_world_name(param_map.level)
 
 	managers.network:session():load_level(param_map.level, param_map.mission, param_map.world_setting, param_map.level_class_name, level_id, nil)
 end
@@ -954,7 +954,6 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.consumable_missions:on_level_exited(false)
 	managers.greed:on_level_exited(false)
 	managers.worldcollection:on_simulation_ended()
-	managers.challenge_cards:clear_suggested_cards()
 
 	if managers.airdrop then
 		managers.airdrop:cleanup()

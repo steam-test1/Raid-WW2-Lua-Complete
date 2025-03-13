@@ -193,8 +193,8 @@ function CoreEditor:_init_listener()
 
 	self._listener_always_enabled = false
 	self._sound_check_object = managers.sound_environment:add_check_object({
-		active = true,
 		primary = true,
+		active = true,
 		object = self:camera()
 	})
 end
@@ -1887,10 +1887,10 @@ function CoreEditor:reload_units(unit_names, small_compile, skip_replace_units)
 		end
 
 		Application:data_compile({
-			verbose = false,
 			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
 			target_db_name = "all",
+			verbose = false,
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),
 			target_db_root = Application:base_path() .. "assets",
@@ -2683,8 +2683,8 @@ function CoreEditor:update_ruler(t, dt)
 	Application:draw_sphere(pos, 10, 1, 1, 1)
 
 	local ray = self:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -3264,10 +3264,10 @@ end
 function CoreEditor:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		verbose = false,
 		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
 		target_db_name = "all",
+		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",
@@ -3553,8 +3553,8 @@ end
 
 function CoreEditor:_save_continent_files(dir)
 	local layer_files = {
-		mission = "mission",
-		mission_scripts = "mission"
+		mission_scripts = "mission",
+		mission = "mission"
 	}
 
 	for continent, data in pairs(self._continent_save_tables) do
@@ -4339,8 +4339,8 @@ end
 
 function CoreEditor:change_continent_by_unit()
 	local ray = self:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -4416,8 +4416,8 @@ function CoreEditor:set_ruler_points()
 	end
 
 	local ray = self:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 

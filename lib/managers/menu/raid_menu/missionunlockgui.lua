@@ -52,8 +52,8 @@ end
 
 function MissionUnlockGui:_layout_contents_panel()
 	local contents_panel_params = {
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		name = "contents_panel"
 	}
 	self._contents_panel = self._root_panel:panel(contents_panel_params)
@@ -114,8 +114,8 @@ end
 
 function MissionUnlockGui:_layout_unlock_button()
 	local unlock_button_params = {
-		name = "unlock_button",
 		layer = 1,
+		name = "unlock_button",
 		text = self:translate("mission_unlock_button_text", true),
 		on_click_callback = callback(self, self, "show_unlock_confirmation_prompt")
 	}
@@ -151,14 +151,14 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	end
 
 	local video_panel_params = {
-		is_root_panel = true,
-		layer = 100
+		layer = 100,
+		is_root_panel = true
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
+		layer = 1,
 		valign = "scale",
 		name = "video_background",
-		layer = 1,
 		halign = "scale",
 		color = Color.black
 	}

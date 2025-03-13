@@ -24,16 +24,18 @@ function MolotovGrenade:detonate(normal)
 	local position = self._unit:position()
 
 	managers.explosion:detect_and_give_dmg({
-		push_units = false,
 		ignite_character = true,
+		no_raycast_check_characters = true,
+		push_units = false,
 		hit_pos = position,
-		collision_slotmask = managers.slot:get_mask("explosion_targets"),
-		range = self._range,
 		damage = self._damage,
 		player_damage = self._player_damage,
-		alert_radius = self._alert_radius,
+		range = self._range,
 		curve_pow = self._curve_pow,
-		user = self._unit
+		collision_slotmask = managers.slot:get_mask("explosion_targets"),
+		ignore_unit = self._unit,
+		user = self._unit,
+		alert_radius = self._alert_radius
 	})
 
 	self._fire_data = managers.fire:propagate_fire(position, self._fire_entry)

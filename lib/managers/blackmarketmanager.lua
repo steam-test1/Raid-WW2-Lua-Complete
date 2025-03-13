@@ -4,12 +4,6 @@ BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID = "m1911"
 BlackMarketManager.DEFAULT_PRIMARY_FACTORY_ID = "wpn_fps_smg_thompson"
 BlackMarketManager.DEFAULT_SECONDARY_FACTORY_ID = "wpn_fps_pis_m1911"
 BlackMarketManager.OUTFIT_INDEX_MAP = {
-	character_customization_nationality = 17,
-	character_customization_lower = 16,
-	character_customization_upper = 15,
-	character_customization_head = 14,
-	warcry_weapon = 13,
-	grenade_cosmetic = 12,
 	grenade = 11,
 	melee_weapon = 10,
 	concealment_modifier = 9,
@@ -20,7 +14,13 @@ BlackMarketManager.OUTFIT_INDEX_MAP = {
 	primary_blueprint = 4,
 	primary = 3,
 	character = 2,
-	armor = 1
+	armor = 1,
+	character_customization_nationality = 17,
+	character_customization_lower = 16,
+	character_customization_upper = 15,
+	character_customization_head = 14,
+	warcry_weapon = 13,
+	grenade_cosmetic = 12
 }
 
 function BlackMarketManager:init()
@@ -65,9 +65,9 @@ function BlackMarketManager:_setup_armors()
 
 	for armor, _ in pairs(tweak_data.blackmarket.armors) do
 		armors[armor] = {
-			equipped = false,
 			owned = false,
-			unlocked = false
+			unlocked = false,
+			equipped = false
 		}
 	end
 
@@ -83,11 +83,11 @@ function BlackMarketManager:_setup_grenades()
 	for grenade_id, grenade in pairs(tweak_data.projectiles) do
 		if grenade.throwable then
 			grenades[grenade_id] = {
+				amount = 0,
+				unlocked = true,
 				level = 0,
 				skill_based = false,
-				equipped = false,
-				amount = 0,
-				unlocked = true
+				equipped = false
 			}
 			local is_default, weapon_level = managers.upgrades:get_value(grenade_id, self._defaults.grenade)
 			grenades[grenade_id].level = weapon_level
@@ -106,12 +106,12 @@ function BlackMarketManager:_setup_melee_weapons()
 
 	for melee_weapon, _ in pairs(tweak_data.blackmarket.melee_weapons) do
 		melee_weapons[melee_weapon] = {
-			level = 0,
-			durability = 1,
-			skill_based = false,
-			equipped = false,
 			owned = true,
-			unlocked = true
+			durability = 1,
+			level = 0,
+			unlocked = true,
+			skill_based = false,
+			equipped = false
 		}
 	end
 
@@ -127,9 +127,9 @@ function BlackMarketManager:_setup_characters()
 
 	for character, _ in pairs(tweak_data.blackmarket.characters) do
 		characters[character] = {
-			equipped = false,
 			owned = true,
-			unlocked = true
+			unlocked = true,
+			equipped = false
 		}
 	end
 
@@ -678,8 +678,8 @@ function BlackMarketManager:create_preload_ws()
 	panel:set_script(new_script)
 
 	local square_panel = panel:panel({
-		layer = 1,
-		name = "square_panel"
+		name = "square_panel",
+		layer = 1
 	})
 	local num_squares = 0
 
@@ -701,9 +701,9 @@ function BlackMarketManager:create_preload_ws()
 	for i = 1, num_squares do
 		row_index = row_index + 1
 		last_rect = square_panel:rect({
-			blend_mode = "add",
 			h = 15,
 			w = 15,
+			blend_mode = "add",
 			x = x,
 			y = y,
 			color = Color(0.3, 0.3, 0.3)
@@ -721,11 +721,11 @@ function BlackMarketManager:create_preload_ws()
 
 	square_panel:set_size(max_w, max_h)
 	panel:rect({
+		h = 19,
+		w = 19,
 		layer = 2,
 		name = "progress",
 		blend_mode = "add",
-		h = 19,
-		w = 19,
 		color = Color(0.3, 0.3, 0.3)
 	})
 
@@ -862,10 +862,10 @@ end
 
 function BlackMarketManager:get_weapon_category(category)
 	local weapon_index = {
-		secondaries = 1,
 		primaries = 2,
 		equipments = 3,
-		melees = 4
+		melees = 4,
+		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -883,10 +883,10 @@ end
 
 function BlackMarketManager:get_weapon_names_category(category)
 	local weapon_index = {
-		secondaries = 1,
 		primaries = 2,
 		equipments = 3,
-		melees = 4
+		melees = 4,
+		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -1888,9 +1888,9 @@ function BlackMarketManager:load(data)
 	for armor, _ in pairs(tweak_data.blackmarket.armors) do
 		if not self._global.armors[armor] then
 			self._global.armors[armor] = {
-				equipped = false,
 				owned = false,
-				unlocked = false
+				unlocked = false,
+				equipped = false
 			}
 		else
 			self._global.armors[armor].equipped = false
@@ -1939,9 +1939,9 @@ function BlackMarketManager:load(data)
 			local selection_index = data.use_data.selection_index
 			local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon)
 			self._global.weapons[weapon] = {
-				equipped = false,
 				owned = false,
 				unlocked = false,
+				equipped = false,
 				factory_id = factory_id,
 				selection_index = selection_index
 			}
@@ -1976,9 +1976,9 @@ function BlackMarketManager:load(data)
 	for character, _ in pairs(tweak_data.blackmarket.characters) do
 		if not self._global.characters[character] then
 			self._global.characters[character] = {
-				equipped = false,
 				owned = true,
-				unlocked = true
+				unlocked = true,
+				equipped = false
 			}
 		end
 	end
@@ -2153,8 +2153,8 @@ function BlackMarketManager:_verify_dlc_items()
 	local equipped_primary_slot = self:equipped_weapon_slot("primaries")
 	local equipped_secondary_slot = self:equipped_weapon_slot("secondaries")
 	local locked_equipped = {
-		secondaries = false,
-		primaries = false
+		primaries = false,
+		secondaries = false
 	}
 	local locked_weapons = {
 		primaries = {},

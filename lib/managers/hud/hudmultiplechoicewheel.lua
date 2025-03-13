@@ -43,12 +43,12 @@ end
 
 function HUDMultipleChoiceWheel:_create_panel(hud)
 	local panel_params = {
-		halign = "center",
+		name = "multiple_choice_wheel_panel",
 		visible = false,
+		halign = "center",
+		layer = 1200,
 		valign = "top",
 		alpha = 0,
-		name = "multiple_choice_wheel_panel",
-		layer = 1200,
 		w = HUDMultipleChoiceWheel.W,
 		h = HUDMultipleChoiceWheel.H
 	}
@@ -69,8 +69,8 @@ function HUDMultipleChoiceWheel:_create_background()
 	background:set_center_y(self._object:h() / 2)
 
 	local background_circle_params = {
-		layer = 10,
 		name = "background_circle",
+		layer = 10,
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture_rect,
 		w = HUDMultipleChoiceWheel.WHEEL_RADIUS * 2,
@@ -83,9 +83,9 @@ function HUDMultipleChoiceWheel:_create_background()
 	background_circle:set_center_y(self._object:h() / 2)
 
 	local selection_arc_params = {
-		render_template = "VertexColorTexturedRadial",
 		visible = false,
 		name = "selection_arc",
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDMultipleChoiceWheel.CIRCLE_IMAGE),
@@ -360,11 +360,11 @@ end
 
 function HUDMultipleChoiceWheel:_create_option_text(index, parent)
 	local option_text_params = {
-		align = "center",
-		layer = 5,
 		vertical = "center",
 		halign = "left",
+		align = "center",
 		valign = "top",
+		layer = 5,
 		name = "text_" .. tostring(self._option_data[index].id),
 		font = HUDMultipleChoiceWheel.TEXT_FONT,
 		font_size = HUDMultipleChoiceWheel.TEXT_FONT_SIZE,

@@ -214,8 +214,8 @@ function TeamAILogicTravel._upd_ai_perceptors(data)
 		for _, p in ipairs(players) do
 			local id = managers.network:session():peer_by_unit(p):id()
 			TeamAILogicTravel._ai_perceptors[id] = {
-				is_rotating = false,
 				is_moving = false,
+				is_rotating = false,
 				position = Vector3(),
 				rotation = Rotation(),
 				last_position = Vector3(),

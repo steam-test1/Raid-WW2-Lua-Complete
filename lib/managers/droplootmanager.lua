@@ -13,8 +13,8 @@ end
 function DropLootManager:_choose_item(current_level_table, level, multiplier)
 	local chance = math.random()
 	local chance_interval = {
-		lower = 0,
-		upper = 0
+		upper = 0,
+		lower = 0
 	}
 
 	for u_key, u_data in pairs(current_level_table) do

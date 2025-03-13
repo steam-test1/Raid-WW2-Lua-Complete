@@ -107,8 +107,10 @@ function RaidGUIControlTabs:_tab_selected(tab_idx, callback_param)
 		return
 	end
 
+	local previous_idx = self._selected_item_idx
+
 	self:_initial_tab_selected(tab_idx)
-	self._on_click_callback(callback_param)
+	self._on_click_callback(callback_param, previous_idx, tab_idx)
 
 	if self._bottom_line then
 		self._bottom_line:stop()
@@ -144,6 +146,35 @@ function RaidGUIControlTabs:set_selected(value)
 
 		self:_tab_selected(self._selected_item_idx, callback_param)
 	end
+end
+
+function RaidGUIControlTabs:set_tabs(tabs_params)
+	if not tabs_params then
+		return
+	end
+
+	self:_unselect_all()
+
+	for _, item in ipairs(self._items) do
+		item:close()
+	end
+
+	self._items = {}
+	self._selected = false
+	self._params.tabs_params = tabs_params
+
+	self._object:clear()
+	self._object:set_w(self._tab_width * #self._params.tabs_params)
+
+	self._tab_width = self._params.tab_width or self._parent:w() / #self._params.tabs_params
+
+	self:_create_items()
+
+	if self._item_class.needs_bottom_line() then
+		self:_create_bottom_line()
+	end
+
+	self:_initial_tab_selected(self._initial_tab_idx)
 end
 
 function RaidGUIControlTabs:move_up()

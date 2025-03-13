@@ -494,15 +494,15 @@ function ElementSpecialObjective:get_objective(instigator)
 			action = {
 				body_part = 1,
 				type = "act",
-				align_sync = true,
 				needs_full_blend = true,
+				align_sync = true,
 				variant = self._values.so_action,
 				blocks = {
 					walk = -1,
-					action = -1,
-					heavy_hurt = -1,
 					hurt = -1,
-					light_hurt = -1
+					light_hurt = -1,
+					heavy_hurt = -1,
+					action = -1
 				}
 			}
 			objective.type = "act"

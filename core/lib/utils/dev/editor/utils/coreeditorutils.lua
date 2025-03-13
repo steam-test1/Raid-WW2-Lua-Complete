@@ -119,25 +119,20 @@ function get_intensity_preset(multiplier)
 	end
 
 	local intensity_values = INTENSITY_VALUES
+	local closest_index = 1
 
 	for i = 1, #intensity_values do
-		local next = intensity_values[i + 1]
-		local this = intensity_values[i]
+		local closest = intensity_values[closest_index]
+		local current = intensity_values[i]
 
-		if not next then
-			return LightIntensityDB:reverse_lookup(this)
-		end
-
-		if this < multiplier and multiplier < next then
-			if multiplier - this < next - multiplier then
-				return LightIntensityDB:reverse_lookup(this)
-			else
-				return LightIntensityDB:reverse_lookup(next)
-			end
-		elseif multiplier < this then
-			return LightIntensityDB:reverse_lookup(this)
+		if math.abs(current - multiplier) < math.abs(closest - multiplier) then
+			closest_index = i
 		end
 	end
+
+	local winner = intensity_values[closest_index]
+
+	return LightIntensityDB:reverse_lookup(winner)
 end
 
 function get_sequence_files_by_unit(unit, sequence_files)

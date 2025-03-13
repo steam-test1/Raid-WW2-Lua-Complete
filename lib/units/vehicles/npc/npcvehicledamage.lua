@@ -83,15 +83,15 @@ function NpcVehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bo
 
 	if death then
 		result = {
-			variant = "bullet",
-			type = "death"
+			type = "death",
+			variant = "bullet"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		}
 		self._health = self._health - damage
 		self._health_ratio = self._health / self._current_max_health
@@ -177,8 +177,8 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 		self:die(attack_data.variant)
 
 		local data = {
-			variant = "explosion",
 			head_shot = false,
+			variant = "explosion",
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -290,8 +290,8 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 		self:die(attack_data.variant)
 
 		local data = {
-			variant = "fire",
 			head_shot = false,
+			variant = "fire",
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -344,8 +344,8 @@ function NpcVehicleDamage:damage_collision(attack_data)
 
 		local damage_info = {
 			result = {
-				variant = "collision",
-				type = "hurt"
+				type = "hurt",
+				variant = "collision"
 			}
 		}
 		local damage = attack_data.damage

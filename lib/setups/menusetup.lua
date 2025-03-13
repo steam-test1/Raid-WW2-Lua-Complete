@@ -156,7 +156,7 @@ function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
 	if not Application:editor() then
-		local event_id, checkpoint_index, level, level_class_name, mission, world_setting, difficulty, intro_skipped = nil
+		local event_id, checkpoint_index, level, mission, world_setting, difficulty, intro_skipped = nil
 
 		if not Global.exe_arguments_parsed then
 			local arg_list = Application:argv()
@@ -177,9 +177,6 @@ function MenuSetup:init_game()
 				elseif arg == "-difficulty" then
 					difficulty = arg_list[i + 1]
 					Global.exe_argument_difficulty = difficulty
-					i = i + 1
-				elseif arg == "-class" then
-					level_class_name = arg_list[i + 1]
 					i = i + 1
 				elseif arg == "-mission" then
 					mission = arg_list[i + 1]

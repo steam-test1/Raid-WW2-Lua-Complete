@@ -25,7 +25,6 @@ function RaidGUIControlTab:init(parent, params)
 	if params.icon then
 		self._tab_icon = self._object:image({
 			vertical = "center",
-			y = 0,
 			name = "tab_control_icon_" .. self._name,
 			x = RaidGUIControlTab.PADDING,
 			w = params.icon.texture_rect[3],
@@ -60,8 +59,8 @@ function RaidGUIControlTab:init(parent, params)
 	self._callback_param = params.callback_param
 	self._tab_select_callback = params.tab_select_callback
 	self._bottom_line = self._object:rect({
-		x = 0,
 		name = "tab_control_bottom_line",
+		x = 0,
 		y = params.h - RaidGUIControlTab.BOTTOM_LINE_NORMAL_HEIGHT,
 		w = params.w,
 		h = RaidGUIControlTab.BOTTOM_LINE_NORMAL_HEIGHT,

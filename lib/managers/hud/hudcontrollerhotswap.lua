@@ -28,9 +28,9 @@ end
 
 function HUDControllerHotswap:_create_panel(hud)
 	self._object = hud.panel:panel({
+		halign = "center",
 		valign = "center",
 		visible = false,
-		halign = "center",
 		name = HUDControllerHotswap.HOTSWAP_HUD_ID,
 		w = HUDControllerHotswap.W,
 		h = HUDControllerHotswap.H

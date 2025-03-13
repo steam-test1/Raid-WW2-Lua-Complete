@@ -52,231 +52,231 @@ RaidMenuOptionsControlsKeybinds.AXIS_ORDERED = {
 }
 RaidMenuOptionsControlsKeybinds.CONTROLS_INFO = {
 	move = {
-		type = "movement",
 		category = "normal",
-		hidden = true
+		hidden = true,
+		type = "movement"
 	},
 	up = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_move_forward",
-		category = "normal"
+		type = "movement"
 	},
 	down = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_move_back",
-		category = "normal"
+		type = "movement"
 	},
 	left = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_move_left",
-		category = "normal"
+		type = "movement"
 	},
 	right = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_move_right",
-		category = "normal"
+		type = "movement"
 	},
 	run = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_sprint",
-		category = "normal"
+		type = "movement"
 	},
 	jump = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_jump",
-		category = "normal"
+		type = "movement"
 	},
 	duck = {
-		type = "movement",
+		category = "normal",
 		text_id = "menu_button_crouch",
-		category = "normal"
+		type = "movement"
 	},
 	primary_attack = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_fire_weapon",
-		category = "normal"
+		type = "usage"
 	},
 	secondary_attack = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_aim_down_sight",
-		category = "normal"
+		type = "usage"
 	},
 	primary_choice1 = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_weapon_slot1",
-		category = "normal"
+		type = "usage"
 	},
 	primary_choice2 = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_weapon_slot2",
-		category = "normal"
+		type = "usage"
 	},
 	primary_choice3 = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_weapon_slot3",
-		category = "normal"
+		type = "usage"
 	},
 	primary_choice4 = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_weapon_slot4",
-		category = "normal"
+		type = "usage"
 	},
 	switch_weapon = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_switch_weapon",
-		category = "normal"
+		type = "usage"
 	},
 	reload = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_reload",
-		category = "normal"
+		type = "usage"
 	},
 	weapon_firemode = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_weapon_firemode",
-		category = "normal"
+		type = "usage"
 	},
 	melee = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_melee",
-		category = "normal"
+		type = "usage"
 	},
 	interact = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_shout",
-		category = "normal"
+		type = "usage"
 	},
 	activate_warcry = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_activate_warcry",
-		category = "normal"
+		type = "usage"
 	},
 	use_item = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_deploy",
-		category = "normal"
+		type = "usage"
 	},
 	toggle_hud = {
-		type = "usage",
+		category = "normal",
 		text_id = "menu_button_toggle_hud",
-		category = "normal"
+		type = "usage"
 	},
 	toggle_chat = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_chat_message",
-		category = "normal"
+		type = "communication"
 	},
 	push_to_talk = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_push_to_talk",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_yes = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_yes",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_no = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_no",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_found_it = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_found_it",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_wait = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_wait",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_not_here = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_not_here",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_follow_me = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_follow_me",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_assistance = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_assistance",
-		category = "normal"
+		type = "communication"
 	},
 	comm_wheel_enemy = {
-		type = "communication",
+		category = "normal",
 		text_id = "menu_button_comm_wheel_enemy",
-		category = "normal"
+		type = "communication"
 	},
 	continue = {
 		text_id = "menu_button_continue",
 		category = "normal"
 	},
 	drive = {
-		type = "movement",
 		category = "vehicle",
-		hidden = true
+		hidden = true,
+		type = "movement"
 	},
 	accelerate = {
-		type = "movement",
+		category = "vehicle",
 		text_id = "menu_button_accelerate",
-		category = "vehicle"
+		type = "movement"
 	},
 	brake = {
-		type = "movement",
+		category = "vehicle",
 		text_id = "menu_button_brake",
-		category = "vehicle"
+		type = "movement"
 	},
 	turn_left = {
-		type = "movement",
+		category = "vehicle",
 		text_id = "menu_button_turn_left",
-		category = "vehicle"
+		type = "movement"
 	},
 	turn_right = {
-		type = "movement",
+		category = "vehicle",
 		text_id = "menu_button_turn_right",
-		category = "vehicle"
+		type = "movement"
 	},
 	hand_brake = {
-		type = "movement",
+		category = "vehicle",
 		text_id = "menu_button_handbrake",
-		category = "vehicle"
+		type = "movement"
 	},
 	vehicle_change_camera = {
-		type = "usage",
+		category = "vehicle",
 		text_id = "menu_button_vehicle_change_camera",
-		category = "vehicle"
+		type = "usage"
 	},
 	vehicle_rear_camera = {
-		type = "usage",
+		category = "vehicle",
 		text_id = "menu_button_vehicle_rear_camera",
-		category = "vehicle"
+		type = "usage"
 	},
 	vehicle_shooting_stance = {
-		type = "usage",
 		category = "vehicle",
 		text_id = "menu_button_vehicle_shooting_stance",
+		type = "usage",
 		block = {
 			"normal"
 		}
 	},
 	vehicle_exit = {
-		type = "usage",
+		category = "vehicle",
 		text_id = "menu_button_vehicle_exit",
-		category = "vehicle"
+		type = "usage"
 	},
 	vehicle_change_seat = {
-		type = "usage",
+		category = "vehicle",
 		text_id = "menu_button_vehicle_change_seat",
-		category = "vehicle"
+		type = "usage"
 	}
 }
 
@@ -296,11 +296,12 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 	RaidMenuOptionsControlsKeybinds.super._layout(self)
 
 	self._keybind_panel = self._root_panel:panel({
+		name = "keybind_panel",
 		y = 0,
-		x = 0,
-		name = "keybind_panel"
+		x = 0
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
+		initial_tab_idx = 1,
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 160,
@@ -308,7 +309,6 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		y = 96,
 		x = 0,
 		dont_trigger_special_buttons = true,
-		initial_tab_idx = 1,
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{
@@ -324,9 +324,9 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		}
 	})
 	local default_controls_keybinds_params = {
+		name = "default_controls_keybinds",
 		y = 832,
 		x = 1472,
-		name = "default_controls_keybinds",
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER

@@ -31,7 +31,8 @@ BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_MELEE = "enemies_vulnerable_
 BuffEffectManager.EFFECT_ENEMIES_IMPERVIOUS_TO_EXPLOSIVE_DAMAGE = "enemies_impervious_to_explosive_damage"
 BuffEffectManager.EFFECT_SHOOTING_SECONDARY_WEAPON_FILLS_PRIMARY_AMMO = "shooting_secondary_weapon_refills_primary_ammo"
 BuffEffectManager.EFFECT_SHOOTING_PRIMARY_WEAPON_CONSUMES_BOTH_AMMOS = "shooting_primary_weapon_consumes_both_ammos"
-BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE = "player_pistol_damage"
+BuffEffectManager.EFFECT_PLAYER_PRIMARY_DAMAGE = "player_primary_damage"
+BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE = "player_secondary_damage"
 BuffEffectManager.EFFECT_ENEMY_HEALTH = "enemy_health"
 BuffEffectManager.EFFECT_PLAYER_DIED = "player_died"
 BuffEffectManager.EFFECT_PLAYER_BLEEDOUT = "player_bleedout"
@@ -74,12 +75,14 @@ BuffEffectManager.EFFECT_CLASSES = {
 
 function BuffEffectManager:init()
 	self._active_effects = {}
-	self._effect_id_counter = 0
 	self._timers = {}
+	self._effect_id_counter = 0
 	self._dt_sum = 0
 end
 
 function BuffEffectManager:activate_effect(effect_data)
+	Application:debug("[BuffEffectManager:activate_effect]", effect_data and inspect(effect_data))
+
 	local effect_class = effect_data.effect_class and BuffEffectManager.EFFECT_CLASSES[effect_data.effect_class] and CoreSerialize.string_to_classtable(effect_data.effect_class) or BuffEffect
 	local effect = effect_class:new(effect_data.name, effect_data.value, effect_data.challenge_card_key, effect_data.fail_message, effect_data.params)
 	self._effect_id_counter = self._effect_id_counter + 1
@@ -104,6 +107,20 @@ function BuffEffectManager:activate_effect(effect_data)
 	end
 
 	return self._effect_id_counter
+end
+
+function BuffEffectManager:deactivate_effect_by_card_id(card_id)
+	for _, effect in pairs(self._active_effects) do
+		if effect.challenge_card_key and effect.challenge_card_key == card_id then
+			if effect.destroy then
+				effect:destroy()
+			end
+
+			self:deactivate_special_effect_and_timer(effect.effect_id)
+
+			self._active_effects[effect.effect_id] = nil
+		end
+	end
 end
 
 function BuffEffectManager:deactivate_effect(active_effect_id)

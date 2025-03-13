@@ -21,6 +21,7 @@ function NewRaycastWeaponBase:init(unit)
 	NewRaycastWeaponBase.super.init(self, unit)
 	unit:set_extension_update_enabled(Idstring("base"), true)
 
+	self._crit_reserve = 0
 	self._gadgets = nil
 	self._armor_piercing_chance = self:weapon_tweak_data().armor_piercing_chance or 0
 	self._use_shotgun_reload = self:weapon_tweak_data().use_shotgun_reload
@@ -433,6 +434,7 @@ function NewRaycastWeaponBase:_update_stats_values()
 		self._current_stats.suspicion = stats_tweak_data.concealment[stats.suspicion]
 	end
 
+	self._crit_reserve = 0
 	self._alert_size = self._current_stats.alert_size or self._alert_size
 	self._suppression = self._current_stats.suppression or self._suppression
 	self._zoom = self._current_stats.zoom or self._zoom
@@ -1263,6 +1265,14 @@ function NewRaycastWeaponBase:dismember_chance()
 	end
 
 	return chance * multiplier
+end
+
+function NewRaycastWeaponBase:crit_reserve()
+	return self._crit_reserve or 0
+end
+
+function NewRaycastWeaponBase:modify_crit_reserve(amount)
+	self._crit_reserve = math.max(self._crit_reserve + amount, -1)
 end
 
 function NewRaycastWeaponBase:critical_hit_chance()

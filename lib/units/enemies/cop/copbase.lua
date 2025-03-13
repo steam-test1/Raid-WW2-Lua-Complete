@@ -205,6 +205,10 @@ function CopBase:special_type()
 	return self._char_tweak.special_type
 end
 
+function CopBase:is_special_type(special_type)
+	return self._char_tweak.special_type == special_type
+end
+
 function CopBase:visibility_state()
 	return self._visibility_state
 end

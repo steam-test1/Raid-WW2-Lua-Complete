@@ -98,8 +98,8 @@ function GuiDataManager:_aspect_ratio()
 end
 
 local base_res = {
-	y = 1080,
-	x = 1920
+	x = 1920,
+	y = 1080
 }
 
 function GuiDataManager:_setup_workspace_data()

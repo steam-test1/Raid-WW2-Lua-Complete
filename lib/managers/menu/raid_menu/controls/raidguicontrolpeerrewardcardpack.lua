@@ -47,10 +47,10 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	}
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 	local params_player_name = {
-		text = "",
-		name = "peer_card_pack_name_label",
 		layer = 1,
 		align = "left",
+		text = "",
+		name = "peer_card_pack_name_label",
 		x = RaidGUIControlPeerRewardCardPack.TEXT_X,
 		y = RaidGUIControlPeerRewardCardPack.NAME_Y,
 		w = self._object:w() - RaidGUIControlPeerRewardCardPack.TEXT_X,
@@ -64,9 +64,9 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	self._name_label:set_h(h)
 
 	local params_card_pack_description = {
-		name = "card_pack_description_label",
 		layer = 1,
 		align = "left",
+		name = "card_pack_description_label",
 		text = self:translate(RaidGUIControlPeerRewardCardPack.DESCRIPTION, true),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlPeerRewardCardPack.NAME_PADDING_DOWN,

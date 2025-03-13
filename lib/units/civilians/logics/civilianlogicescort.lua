@@ -35,10 +35,10 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 
 	if data.unit:anim_data().tied then
 		local action_data = {
-			clamp_to_graph = true,
-			type = "act",
 			variant = "panic",
-			body_part = 1
+			body_part = 1,
+			clamp_to_graph = true,
+			type = "act"
 		}
 
 		data.unit:brain():action_request(action_data)
@@ -124,10 +124,10 @@ function CivilianLogicEscort.update(data)
 			my_data.commanded_to_move = nil
 
 			data.unit:movement():action_request({
-				clamp_to_graph = true,
-				type = "act",
 				variant = "panic",
-				body_part = 1
+				body_part = 1,
+				clamp_to_graph = true,
+				type = "act"
 			})
 		end
 	elseif not data.char_tweak.immortal then
@@ -387,15 +387,15 @@ end
 
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
-		clamp_to_graph = true,
 		variant = "cm_so_escort_get_up_hesitant",
 		body_part = 1,
 		type = "act",
+		clamp_to_graph = true,
 		blocks = {
-			heavy_hurt = -1,
-			hurt = -1,
 			walk = -1,
-			action = -1
+			action = -1,
+			hurt = -1,
+			heavy_hurt = -1
 		}
 	}
 	my_data.getting_up = data.unit:movement():action_request(action)

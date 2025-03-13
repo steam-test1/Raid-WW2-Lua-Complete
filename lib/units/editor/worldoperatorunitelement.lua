@@ -152,10 +152,8 @@ function WorldOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "operation", self._actions, "Select an operation for the selected elements")
 
-	local worlds = managers.worldcollection:get_all_worlds()
+	local worlds = self:_get_worlds()
 
-	table.insert(worlds, "")
-	table.sort(worlds)
 	self:_build_value_combobox(panel, panel_sizer, "operation_world_id", worlds, "Select a world ID for the selected elements to change to")
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
@@ -167,4 +165,20 @@ function WorldOperatorUnitElement:_build_panel(panel, panel_sizer)
 	toolbar:realize()
 	panel_sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 	self:_add_help_text("Choose an operation to perform on the selected elements. An element might not have the selected operation implemented and will then generate error when executed.")
+end
+
+function WorldOperatorUnitElement:_get_worlds()
+	local t = {
+		""
+	}
+
+	for level_id, data in pairs(_G.tweak_data.levels) do
+		if type(data) == "table" and data.world_name then
+			table.insert(t, level_id)
+		end
+	end
+
+	table.sort(t)
+
+	return t
 end

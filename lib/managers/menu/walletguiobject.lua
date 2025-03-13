@@ -63,12 +63,12 @@ function WalletGuiObject.set_wallet(panel, layer)
 
 	local max_w = skillpoint_text:right()
 	local bg_blur = Global.wallet_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		w = 0,
+		name = "bg_blur",
+		h = 0,
 		render_template = "VertexColorTexturedBlur3D",
 		layer = -1,
-		name = "bg_blur",
-		h = 0
+		texture = "guis/textures/test_blur_df",
+		w = 0
 	})
 
 	bg_blur:set_leftbottom(0, Global.wallet_panel:h())

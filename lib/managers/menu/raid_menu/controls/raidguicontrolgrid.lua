@@ -23,8 +23,8 @@ function RaidGUIControlGrid:init(parent, params)
 	end
 
 	self._grid_panel = self._panel:panel({
-		x = 0,
 		y = 0,
+		x = 0,
 		w = self._grid_control_width
 	})
 	self._object = self._grid_panel
@@ -214,8 +214,10 @@ function RaidGUIControlGrid:_unselect_all()
 	self._selected_item = nil
 	self._selected_item_idx = 0
 
-	for _, grid_item in ipairs(self._grid_items) do
-		grid_item:unselect()
+	if self._grid_items then
+		for _, grid_item in ipairs(self._grid_items) do
+			grid_item:unselect()
+		end
 	end
 end
 

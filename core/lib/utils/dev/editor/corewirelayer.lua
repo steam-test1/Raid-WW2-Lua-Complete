@@ -217,15 +217,15 @@ function WireLayer:build_panel(notebook)
 	self._sizer:add(slack_sizer, 1, 0, "EXPAND")
 
 	local slack_params = {
+		number_ctrlr_proportions = 1,
 		slider_ctrlr_proportions = 3,
 		ctrlr_proportions = 4,
 		name_proportions = 1,
 		max = 2500,
 		min = 0,
-		floats = 0,
 		name = "Slack:",
 		value = 0,
-		number_ctrlr_proportions = 1,
+		floats = 0,
 		panel = self._ews_panel,
 		sizer = slack_sizer
 	}

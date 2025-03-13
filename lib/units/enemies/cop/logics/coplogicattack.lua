@@ -359,8 +359,8 @@ function CopLogicAttack._peek_for_pos_sideways(data, my_data, from_racker, peek_
 
 	local back_pos = my_pos + back_vec
 	local ray_params = {
-		allow_entry = true,
 		trace = true,
+		allow_entry = true,
 		tracker_from = my_tracker,
 		pos_to = back_pos
 	}
@@ -497,8 +497,8 @@ function CopLogicAttack._request_action_walk_to_cover(data, my_data)
 	end
 
 	local new_action_data = {
-		body_part = 2,
 		type = "walk",
+		body_part = 2,
 		nav_path = my_data.cover_path,
 		variant = movement_mode,
 		end_pose = end_pose

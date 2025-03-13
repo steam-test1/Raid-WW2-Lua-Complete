@@ -52,8 +52,8 @@ end
 
 function RaidGUIControlXPBreakdown:_create_experience_label()
 	local experience_label_params = {
-		vertical = "center",
 		name = "experience_label",
+		vertical = "center",
 		x = RaidGUIControlStatsBreakdown.EXPERIENCE_LABEL_X,
 		y = RaidGUIControlStatsBreakdown.EXPERIENCE_LABEL_Y,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
@@ -79,16 +79,16 @@ function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
 			},
 			columns = {
 				{
-					align = "left",
 					vertical = "center",
+					align = "left",
 					w = self._object:w() * RaidGUIControlXPBreakdown.TABLE_DESCRIPTION_W_PERCENT / 100,
 					h = RaidGUIControlXPBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlXPCell,
 					color = RaidGUIControlXPBreakdown.TABLE_COLOR
 				},
 				{
-					align = "right",
 					vertical = "center",
+					align = "right",
 					w = self._object:w() * RaidGUIControlXPBreakdown.TABLE_VALUE_W_PERCENT / 100,
 					h = RaidGUIControlXPBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlXPCell,

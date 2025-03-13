@@ -950,9 +950,9 @@ function VehicleDrivingExt:enable_map_waypoint()
 	end
 
 	self._map_waypoint_data = {
-		show_on_screen = false,
 		waypoint_origin = "waypoint_extension",
 		waypoint_type = "unit_waypoint",
+		show_on_screen = false,
 		icon = self._waypoint_hud_icon,
 		map_icon = self._waypoint_map_icon,
 		unit = self._unit,
@@ -993,9 +993,9 @@ function VehicleDrivingExt:enable_hud_waypoint()
 
 	self._hud_waypoint_data = {
 		waypoint_origin = "waypoint_extension",
-		distance = true,
 		waypoint_type = "unit_waypoint",
 		show_on_screen = true,
+		distance = true,
 		icon = self._waypoint_hud_icon,
 		unit = self._unit,
 		position_offset_z = self.hud_label_offset,
@@ -1169,8 +1169,8 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			position = nil,
-			skip_idle_check = true
+			skip_idle_check = true,
+			position = nil
 		})
 	end
 
@@ -2284,8 +2284,8 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 	end
 
 	local ride_objective = {
-		type = "act",
 		destroy_clbk_key = false,
+		type = "act",
 		pose = "stand",
 		haste = haste,
 		nav_seg = align_nav_seg,
@@ -2294,27 +2294,27 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
-			align_sync = false,
-			body_part = 1,
 			type = "act",
+			body_part = 1,
 			needs_full_blend = true,
+			align_sync = false,
 			variant = team_ai_animation,
 			blocks = {
-				action = -1,
-				act = 1,
 				hurt = -1,
+				walk = -1,
+				act = 1,
 				heavy_hurt = -1,
-				walk = -1
+				action = -1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
 	}
 	local SO_descriptor = {
-		AI_group = "friendlies",
-		usage_amount = 1,
 		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
+		AI_group = "friendlies",
+		usage_amount = 1,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),

@@ -30,9 +30,9 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
+				b = 0,
 				g = 0.75,
 				r = 0,
-				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})

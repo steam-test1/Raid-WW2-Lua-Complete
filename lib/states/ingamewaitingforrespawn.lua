@@ -86,8 +86,8 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 
 	self._listener_activation_id = managers.listener:activate_set("main", "spectator_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
-		primary = true,
 		active = true,
+		primary = true,
 		object = self._camera_object
 	})
 end
@@ -322,26 +322,38 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 			end
 		end
 
+		local distance = 150
+
 		if vehicle_unit and vehicle_seat then
-			local target_pos = vehicle_unit:vehicle():object_position(vehicle_seat.object)
+			local target_pos = vehicle_unit:position()
 
 			mvec3_set(self._vec_target, target_pos)
 
 			local oobb = vehicle_unit:oobb()
-			local up = oobb:z() * 2.5
+			local up = oobb:z() * 2
 
 			mvec3_add(self._vec_target, up)
+
+			local back = oobb:y():length() * 1.5
+			distance = distance + back
 		else
 			watch_u_head:m_position(self._vec_target)
 		end
 
 		mvec3_set(self._vec_eye, self._fwd)
-		mvec3_multiply(self._vec_eye, 150)
+		mvec3_multiply(self._vec_eye, distance)
 		mvec3_negate(self._vec_eye)
 		mvec3_add(self._vec_eye, self._vec_target)
 		mrot_set_look_at(self._rot, self._fwd, math_up)
 
-		local col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask)
+		local col_ray = nil
+
+		if vehicle_unit then
+			col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask, "ignore_unit", vehicle_unit)
+		else
+			col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask)
+		end
+
 		local dis_new = nil
 
 		if col_ray then
@@ -395,13 +407,13 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.player:force_drop_carry()
 	managers.hud:hide_stats_screen()
 	managers.hud:set_player_health({
-		no_hint = true,
 		current = 0,
+		no_hint = true,
 		total = 100
 	})
 	managers.hud:set_player_armor({
-		no_hint = true,
 		current = 0,
+		no_hint = true,
 		total = 100
 	})
 	managers.hud:set_player_condition("mugshot_in_custody", managers.localization:text("debug_mugshot_in_custody"))

@@ -6,29 +6,29 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._yes_callback = self._params.yes_callback
 	self._no_callback = self._params.no_callback
 	self._object = self._panel:panel({
-		name = "dialog_panel",
 		y = 0,
 		x = 0,
+		name = "dialog_panel",
 		w = self._panel:w(),
 		h = self._panel:h(),
 		layer = self._panel:layer() + 100
 	})
 	self._background = self._object:rect({
-		name = "background",
 		y = 0,
 		x = 0,
+		name = "background",
 		w = self._object:w(),
 		h = self._object:h(),
 		color = tweak_data.gui.colors.raid_black:with_alpha(0.9)
 	})
 	local center_x, center_y = self._object:center()
 	self._title_label = self._object:label({
-		name = "dialog_title",
-		vertical = "center",
 		align = "center",
 		h = 32,
 		w = 576,
 		visible = false,
+		name = "dialog_title",
+		vertical = "center",
 		x = center_x,
 		y = center_y - 82,
 		text = self:translate("character_creation_create_title", true),
@@ -40,10 +40,10 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._title_label:set_visible(true)
 
 	self._input_box = self._object:input_field({
-		name = "input_field",
 		h = 48,
 		w = 430,
 		visible = false,
+		name = "input_field",
 		x = center_x,
 		y = center_y,
 		ws = self._params.ws

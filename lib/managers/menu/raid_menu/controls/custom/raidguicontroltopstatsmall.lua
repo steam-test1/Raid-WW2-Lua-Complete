@@ -38,12 +38,12 @@ end
 
 function RaidGUIControlTopStatSmall:_create_stat_info()
 	local player_name_params = {
-		name = "player_name_label",
 		vertical = "center",
-		text = "PLAYER NAME",
 		layer = 1,
+		text = "PLAYER NAME",
 		align = "right",
 		y = -3,
+		name = "player_name_label",
 		x = RaidGUIControlTopStatSmall.ICON_SIZE,
 		w = self._object:w() - RaidGUIControlTopStatSmall.ICON_SIZE,
 		h = RaidGUIControlTopStatSmall.PLAYER_NAME_H,
@@ -53,13 +53,13 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 	}
 	self._player_name_label = self._object:label(player_name_params)
 	local stat_name_params = {
-		word_wrap = true,
-		name = "stat_name_label",
-		wrap = true,
-		text = "Most things done well",
 		layer = 3,
+		wrap = true,
 		vertical = "center",
 		align = "right",
+		text = "Most things done well",
+		word_wrap = true,
+		name = "stat_name_label",
 		w = self._object:w(),
 		h = RaidGUIControlTopStatSmall.STAT_NAME_H,
 		font = RaidGUIControlTopStatSmall.FONT,

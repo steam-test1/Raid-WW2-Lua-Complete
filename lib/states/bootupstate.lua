@@ -90,19 +90,19 @@ function BootupState:setup()
 	self._panel = self._workspace:panel()
 
 	self._full_panel:rect({
-		layer = 0,
 		visible = false,
+		layer = 0,
 		color = Color.red
 	})
 
 	local press_any_key_font_size = tweak_data.gui.font_sizes.medium
 	local press_any_key_prompt_params = {
+		align = "center",
 		layer = 3,
 		alpha = 0,
 		name = "press_any_key_text",
 		wrap = true,
 		vertical = "bottom",
-		align = "center",
 		w = self._full_panel:w(),
 		h = press_any_key_font_size,
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),

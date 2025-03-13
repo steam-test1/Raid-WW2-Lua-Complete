@@ -48,22 +48,22 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 		layer = self._object:layer()
 	})
 	self._slider_line = self._slider_line_panel:three_cut_bitmap({
+		left = "slider_line_left_base",
 		y = 0,
 		x = 0,
 		right = "slider_line_right_base",
 		center = "slider_line_center_base",
-		left = "slider_line_left_base",
 		name = self._name .. "_slider_line",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR,
 		layer = self._slider_line_panel:layer()
 	})
 	self._slider_line_active = self._slider_line_panel:three_cut_bitmap({
+		left = "slider_line_left_base",
 		y = 0,
 		x = 0,
 		right = "slider_line_right_base",
 		center = "slider_line_center_base",
-		left = "slider_line_left_base",
 		name = self._name .. "_slider_line_active",
 		w = self._slider_line_panel:w(),
 		color = RaidGUIControlSliderSimple.SLIDER_COLOR,

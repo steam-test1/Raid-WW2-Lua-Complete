@@ -36,10 +36,10 @@ function RaidGUIControlClassDescription:_layout()
 	}
 	self._object_bg = self._object:image(object_bg_params)
 	local object_bg_params2 = {
-		x = -4,
 		name = "object_bg",
 		y = 0,
 		layer = -2,
+		x = -4,
 		w = self._object:w() + 8,
 		h = self._object:h(),
 		texture = tweak_data.gui.icons.paper_mission_book.texture,

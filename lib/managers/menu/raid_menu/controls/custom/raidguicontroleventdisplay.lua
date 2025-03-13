@@ -26,9 +26,9 @@ end
 
 function RaidGUIControlEventDisplay:_create_panel()
 	self._object = self._panel:panel({
-		valign = "bottom",
 		halign = "right",
 		name = "event_display_panel",
+		valign = "bottom",
 		h = self.HEIGHT
 	})
 	self._background = self._object:nine_cut_bitmap({
@@ -54,8 +54,8 @@ end
 
 function RaidGUIControlEventDisplay:_create_title()
 	self._title = self._object:text({
-		text = "SUPER SPECIAL EVENT",
 		name = "event_title",
+		text = "SUPER SPECIAL EVENT",
 		align = "center",
 		font = tweak_data.gui:get_font_path(self.TITLE_FONT, self.TITLE_FONT_SIZE),
 		font_size = self.TITLE_FONT_SIZE
@@ -64,10 +64,10 @@ end
 
 function RaidGUIControlEventDisplay:_create_inner_panel()
 	self._inner_panel = self._object:panel({
-		valign = "grow",
 		name = "event_inner_panel",
 		layer = 1,
 		halign = "grow",
+		valign = "grow",
 		w = self._object:w() - self.INNER_PADDING,
 		h = self.INNER_HEIGHT
 	})
@@ -104,9 +104,9 @@ function RaidGUIControlEventDisplay:_create_challenge()
 		layer = self._background:layer() + 1
 	})
 	self._description = self._inner_panel:text({
+		text = "Bla bla bla bla",
 		wrap = true,
 		name = "weapon_challenge_description",
-		text = "Bla bla bla bla",
 		x = self.RIGHT_SIDE_X,
 		y = self.CHALLENGES_Y,
 		w = self._inner_panel:w() - self.RIGHT_SIDE_X,
@@ -135,10 +135,10 @@ function RaidGUIControlEventDisplay:_create_challenge()
 		color = Color.white:with_alpha(0.5)
 	})
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel({
-		valign = "scale",
 		name = "weapon_challenge_progress_bar_foreground_panel",
 		layer = 2,
 		halign = "scale",
+		valign = "scale",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	})
@@ -153,10 +153,10 @@ function RaidGUIControlEventDisplay:_create_challenge()
 	local icon_data = tweak_data.gui:get_full_gui_data(self.PROGRESS_IMAGE_OVERLAY)
 	icon_data.texture_rect[3] = self._progress_bar_panel:w() * 0.55
 	local overlay = self._progress_bar_foreground_panel:bitmap({
-		wrap_mode = "wrap",
+		blend_mode = "add",
 		name = "candy_progress_bar_background",
 		alpha = 0.3,
-		blend_mode = "add",
+		wrap_mode = "wrap",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		texture = icon_data.texture,
@@ -166,10 +166,10 @@ function RaidGUIControlEventDisplay:_create_challenge()
 	})
 	self._progress_text = self._progress_bar_panel:label({
 		vertical = "center",
-		name = "weapon_challenge_progress_bar_text",
-		align = "center",
 		text = "123/456",
 		y = -2,
+		name = "weapon_challenge_progress_bar_text",
+		align = "center",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),
 		font = tweak_data.gui.fonts.din_compressed,

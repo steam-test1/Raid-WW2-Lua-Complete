@@ -1,6 +1,10 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = {
 	any_ingame = {
+		ingame_electrified = true,
+		ingame_fatal = true,
+		ingame_bleed_out = true,
+		ingame_standard = true,
 		gameoverscreen = true,
 		event_complete_screen = true,
 		world_camera = true,
@@ -13,13 +17,14 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
 		ingame_waiting_for_players = true,
-		ingame_incapacitated = true,
+		ingame_incapacitated = true
+	},
+	any_ingame_playing = {
 		ingame_electrified = true,
 		ingame_fatal = true,
 		ingame_bleed_out = true,
-		ingame_standard = true
-	},
-	any_ingame_playing = {
+		ingame_standard = true,
+		event_complete_screen = true,
 		world_camera = true,
 		ingame_menu = true,
 		gameoverscreen = true,
@@ -29,25 +34,20 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_driving = true,
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
-		ingame_incapacitated = true,
+		ingame_incapacitated = true
+	},
+	any_ingame_mission = {
 		ingame_electrified = true,
 		ingame_fatal = true,
 		ingame_bleed_out = true,
 		ingame_standard = true,
-		event_complete_screen = true
-	},
-	any_ingame_mission = {
 		ingame_special_interaction = true,
 		ingame_freefall = true,
 		ingame_parachuting = true,
 		ingame_driving = true,
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
-		ingame_incapacitated = true,
-		ingame_electrified = true,
-		ingame_fatal = true,
-		ingame_bleed_out = true,
-		ingame_standard = true
+		ingame_incapacitated = true
 	},
 	downed = {
 		ingame_fatal = true,
@@ -63,9 +63,9 @@ BaseNetworkHandler._gamestate_filter = {
 		gameoverscreen = true
 	},
 	any_end_game = {
+		victoryscreen = true,
 		event_complete_screen = true,
-		gameoverscreen = true,
-		victoryscreen = true
+		gameoverscreen = true
 	},
 	waiting_for_players = {
 		ingame_waiting_for_players = true
@@ -74,17 +74,17 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_waiting_for_respawn = true
 	},
 	menu = {
-		ingame_menu = true,
-		menu_main = true
+		menu_main = true,
+		ingame_menu = true
 	},
 	player_slot = {
+		menu_main = true,
 		ingame_lobby_menu = true,
-		ingame_waiting_for_players = true,
-		menu_main = true
+		ingame_waiting_for_players = true
 	},
 	lobby = {
-		ingame_lobby_menu = true,
-		menu_main = true
+		menu_main = true,
+		ingame_lobby_menu = true
 	}
 }
 

@@ -155,13 +155,13 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	table.insert(spawn_action_options, "none")
 	self:_build_value_combobox(panel, panel_sizer, "spawn_action", spawn_action_options)
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "Used to specify how often this spawn can be used. 0 means no interval")
 	self:_build_value_number(panel, panel_sizer, "voice", {
-		floats = 0,
 		max = 5,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Voice variant. 1-5. 0 for random.")
 	self:_build_value_combobox(panel, panel_sizer, "accessibility", ElementSpawnEnemyDummy.ACCESSIBILITIES, "Only units with this movement type will be spawned from this element.")
 

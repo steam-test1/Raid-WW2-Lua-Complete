@@ -46,9 +46,9 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	end
 
 	local params_customization_image = {
-		y = 0,
 		x = 0,
 		name = "card_image",
+		y = 0,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}

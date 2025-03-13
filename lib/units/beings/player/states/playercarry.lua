@@ -151,9 +151,9 @@ function PlayerCarry:_check_action_run(t, input)
 		PlayerCarry.super._check_action_run(self, t, input)
 	elseif input.btn_run_press then
 		managers.notification:add_notification({
+			duration = 2,
 			shelf_life = 5,
 			id = "hint_cant_run",
-			duration = 2,
 			text = managers.localization:text("hint_cant_run")
 		})
 	end

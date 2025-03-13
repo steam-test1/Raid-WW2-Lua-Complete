@@ -15,12 +15,12 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
 	self._controller_image = self._root_panel:bitmap({
-		y = 0,
-		x = 0,
-		name = "controller_image",
 		texture = "ui/main_menu/textures/controller",
 		h = 600,
-		w = 1200
+		w = 1200,
+		y = 0,
+		x = 0,
+		name = "controller_image"
 	})
 
 	self._controller_image:set_center_x(self._root_panel:w() / 2)

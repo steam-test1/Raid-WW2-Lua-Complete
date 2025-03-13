@@ -148,15 +148,15 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 
 		my_data.performing_act_objective = nil
 		local crouch_action = {
+			body_part = 1,
 			type = "act",
 			variant = "crouch",
-			body_part = 1,
 			blocks = {
+				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
-				action = -1,
-				aim = -1
+				action = -1
 			}
 		}
 
@@ -314,9 +314,9 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 
 	if objective_type == "follow" then
 		objective = {
-			scan = true,
 			destroy_clbk_key = false,
 			called = true,
+			scan = true,
 			type = objective_type,
 			follow_unit = other_unit
 		}
@@ -325,37 +325,37 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			type = "act",
 			scan = true,
 			action = {
+				body_part = 1,
 				type = "act",
 				variant = "crouch",
-				body_part = 1,
 				blocks = {
+					aim = -1,
 					heavy_hurt = -1,
 					hurt = -1,
 					walk = -1,
-					action = -1,
-					aim = -1
+					action = -1
 				}
 			}
 		}
 		objective = {
-			scan = true,
-			type = "revive",
 			destroy_clbk_key = false,
 			called = true,
+			type = "revive",
+			scan = true,
 			follow_unit = other_unit,
 			nav_seg = other_unit:movement():nav_tracker():nav_segment(),
 			action = {
-				type = "act",
-				align_sync = true,
 				body_part = 1,
+				align_sync = true,
+				type = "act",
 				variant = objective_action,
 				blocks = {
-					heavy_hurt = -1,
-					action = -1,
-					walk = -1,
-					hurt = -1,
 					light_hurt = -1,
-					aim = -1
+					aim = -1,
+					heavy_hurt = -1,
+					hurt = -1,
+					walk = -1,
+					action = -1
 				}
 			},
 			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
@@ -962,9 +962,9 @@ function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, pl
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
 			type = "act",
-			variant = "arrest",
 			body_part = 3,
-			align_sync = true
+			align_sync = true,
+			variant = "arrest"
 		}
 
 		if criminal:brain():action_request(new_action) then

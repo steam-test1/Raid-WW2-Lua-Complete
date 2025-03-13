@@ -35,12 +35,12 @@ function VehicleStateDestroyed:enter(state_data, enter_data)
 
 	if Network:is_server() then
 		local damage_params = {
+			range = 1200,
+			alert_radius = 20000,
 			no_raycast_check_characters = true,
 			damage = 300,
 			player_damage = 125,
 			curve_pow = 3,
-			range = 1200,
-			alert_radius = 20000,
 			hit_pos = self._unit:position(),
 			collision_slotmask = managers.slot:get_mask("explosion_targets"),
 			ignore_unit = self._unit

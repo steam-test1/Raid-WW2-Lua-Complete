@@ -56,8 +56,8 @@ end
 function HUDSpecialInteractionRoulette:_create_timer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.TIMER_GUI_ID)
 	self._timer = CircleBitmapGuiObject:new(self._object, {
-		use_bg = false,
 		radius = 128,
+		use_bg = false,
 		image = gui_data.texture,
 		color = gui_data.color,
 		sides = self._sides,
@@ -84,8 +84,8 @@ function HUDSpecialInteractionRoulette:_create_wheel()
 	circle:set_center(self._object:center())
 
 	self._circle = {
-		completed = false,
 		valid = true,
+		completed = false,
 		circle = circle
 	}
 end

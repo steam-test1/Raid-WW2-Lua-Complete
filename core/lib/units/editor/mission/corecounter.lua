@@ -3,8 +3,8 @@ CoreCounterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterUnitElement.SAVE_UNIT_ROTATION = false
 CoreCounterUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "counter_target",
-		type = "number"
+		type = "number",
+		value = "counter_target"
 	}
 }
 CounterUnitElement = CounterUnitElement or class(CoreCounterUnitElement)
@@ -110,8 +110,8 @@ end
 
 function CoreCounterUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -122,8 +122,8 @@ end
 
 function CoreCounterUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -198,8 +198,8 @@ CoreCounterOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterOperatorUnitElement.SAVE_UNIT_ROTATION = false
 CoreCounterOperatorUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "amount",
-		type = "number"
+		type = "number",
+		value = "amount"
 	}
 }
 CounterOperatorUnitElement = CounterOperatorUnitElement or class(CoreCounterOperatorUnitElement)

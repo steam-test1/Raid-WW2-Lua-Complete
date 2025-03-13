@@ -21,15 +21,17 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
+	explode = "expl_hurt",
+	heavy = "heavy_hurt",
 	moderate = "hurt",
 	light = "light_hurt",
 	none = false,
 	poison = "poison_hurt",
-	fire = "fire_hurt",
-	explode = "expl_hurt",
-	heavy = "heavy_hurt"
+	fire = "fire_hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
+	shield = false,
+	taser = false,
 	tank = false,
 	german_spotter = "enemy_spotter_comment_death",
 	german_og_commander = "enemy_officer_comment_death",
@@ -37,9 +39,7 @@ CopDamage._COMMENT_DEATH_TABLE = {
 	german_officer = "enemy_officer_comment_death",
 	german_flamer = "enemy_flamer_comment_death",
 	german_sniper = "enemy_sniper_comment_death",
-	sniper = false,
-	shield = false,
-	taser = false
+	sniper = false
 }
 CopDamage._impact_bones = {}
 local impact_bones_tmp = {
@@ -282,8 +282,8 @@ function CopDamage:_dismember_part(dismember_part, decal_data, variant)
 		local check_to = self._unit:movement() and self._unit:movement():m_head_pos() or self._unit:position()
 
 		if managers.player:is_player_looking_at(check_to, {
-			raycheck = true,
-			distance = 4000
+			distance = 4000,
+			raycheck = true
 		}) then
 			managers.dialog:queue_dialog("player_gen_grenade_aftermath", {
 				skip_idle_check = true
@@ -1161,24 +1161,18 @@ function CopDamage:damage_explosion(attack_data)
 end
 
 function CopDamage:roll_critical_hit(damage, ray)
-	local critical_hits = self._char_tweak.critical_hits or {}
-	local critical_hit = false
-	local critical_value = (critical_hits.base_chance or 0) + managers.player:critical_hit_chance(ray and ray.distance) * (critical_hits.player_chance_multiplier or 1)
-
-	if critical_value > 0 then
-		local critical_roll = math.rand(1)
-		critical_hit = critical_roll < critical_value
-	end
+	local critical_hit = managers.player:roll_crits(ray and ray.distance)
 
 	if critical_hit then
-		local critical_damage_mul = critical_hits.damage_mul or self._char_tweak.headshot_dmg_mul
-		critical_damage_mul = critical_damage_mul + managers.player:upgrade_value("player", "critbrain_critical_hit_damage", 1) - 1
+		local critical_damage_mul = self._char_tweak.headshot_dmg_mul
+		local critical_hits = self._char_tweak.critical_hits
 
-		if critical_damage_mul then
-			damage = damage * critical_damage_mul
-		else
-			damage = self._health * 10
+		if critical_hits and critical_hits.damage_mul then
+			critical_damage_mul = critical_hits.damage_mul
 		end
+
+		critical_damage_mul = critical_damage_mul + managers.player:upgrade_value("player", "critbrain_critical_hit_damage", 1) - 1
+		damage = damage * critical_damage_mul
 	end
 
 	return critical_hit, damage
@@ -1939,8 +1933,8 @@ function CopDamage:sync_damage_knockdown(attacker_unit, damage_percent, i_body, 
 
 	attack_data.attack_dir = attack_dir
 	local result = {
-		type = "expl_hurt",
-		variant = "expl_hurt"
+		variant = "expl_hurt",
+		type = "expl_hurt"
 	}
 	attack_data.variant = "expl_hurt"
 	attack_data.attacker_unit = attacker_unit
@@ -2289,8 +2283,8 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 
 	if is_kill_shot then
 		local data = {
-			variant = "fire",
 			head_shot = false,
+			variant = "fire",
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -2837,42 +2831,42 @@ function CopDamage:_create_debug_ws()
 
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
+		font = "fonts/font_medium_shadow_mf",
+		visible = true,
+		render_template = "OverlayVertexColorTextured",
+		y = 0,
+		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		name = "health",
-		layer = 1,
 		align = "left",
-		y = 0,
-		font = "fonts/font_medium_shadow_mf",
-		render_template = "OverlayVertexColorTextured",
-		visible = true,
+		name = "health",
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
+		font = "fonts/font_medium_shadow_mf",
+		text = "",
+		visible = true,
+		render_template = "OverlayVertexColorTextured",
+		y = 30,
+		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		name = "ld",
-		layer = 1,
 		align = "left",
-		y = 30,
-		font = "fonts/font_medium_shadow_mf",
-		render_template = "OverlayVertexColorTextured",
-		visible = true,
-		text = "",
+		name = "ld",
 		color = Color.white
 	})
 	self._ws:panel():text({
+		font = "fonts/font_medium_shadow_mf",
+		text = "",
+		visible = true,
+		render_template = "OverlayVertexColorTextured",
+		y = 60,
+		layer = 1,
 		font_size = 30,
 		vertical = "top",
-		name = "variant",
-		layer = 1,
 		align = "left",
-		y = 60,
-		font = "fonts/font_medium_shadow_mf",
-		render_template = "OverlayVertexColorTextured",
-		visible = true,
-		text = "",
+		name = "variant",
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -2915,17 +2909,17 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		if damage_info and damage_info.damage > 0 then
 			local text = self._ws:panel():text({
-				font_size = 20,
-				h = 40,
-				vertical = "center",
-				layer = 1,
-				align = "center",
 				y = -20,
-				font = "fonts/font_medium_shadow_mf",
-				visible = true,
 				rotation = 360,
+				h = 40,
 				render_template = "OverlayVertexColorTextured",
+				visible = true,
+				layer = 1,
+				font_size = 20,
+				vertical = "center",
+				align = "center",
 				w = 40,
+				font = "fonts/font_medium_shadow_mf",
 				text = string.format("%.2f", damage_info.damage),
 				color = Color.white
 			})
@@ -3078,8 +3072,17 @@ function CopDamage:_apply_damage_modifier(damage, attack_data)
 		damage_modifier = multiplier * damage_modifier
 	end
 
-	if attack_data and attack_data.attacker_unit == managers.player:local_player() and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE) and attack_data.weapon_unit and attack_data.weapon_unit:base()._use_data and attack_data.weapon_unit:base()._use_data.player.selection_index == 1 then
-		damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE) or 1) - 1
+	local primary_damage_buff = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PRIMARY_DAMAGE)
+	local secondary_damage_buff = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE)
+
+	if attack_data and attack_data.attacker_unit == managers.player:local_player() and attack_data.weapon_unit and attack_data.weapon_unit:base()._use_data and attack_data.weapon_unit:base()._use_data.player and (primary_damage_buff or secondary_damage_buff) then
+		if primary_damage_buff and attack_data.weapon_unit:base()._use_data.player.selection_index == tweak_data.WEAPON_SLOT_PRIMARY then
+			damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_PRIMARY_DAMAGE) or 1) - 1
+		end
+
+		if secondary_damage_buff and attack_data.weapon_unit:base()._use_data.player.selection_index == tweak_data.WEAPON_SLOT_SECONDARY then
+			damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE) or 1) - 1
+		end
 	end
 
 	damage_modifier = damage_modifier - damage_reduction
@@ -3093,21 +3096,21 @@ function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_ty
 		hurt_type = hurt_type or "knockdown"
 		local client_interrupt = Network:is_client()
 		local action_data = {
-			type = "hurt",
-			block_type = "heavy_hurt",
 			body_part = 1,
+			block_type = "heavy_hurt",
+			type = "hurt",
 			direction_vec = direction,
 			hit_pos = hit_position,
 			hurt_type = hurt_type,
 			client_interrupt = client_interrupt,
 			blocks = {
+				aim = -1,
+				act = -1,
+				action = -1,
 				walk = -1,
 				hurt = -1,
 				idle = -1,
-				dodge = -1,
-				aim = -1,
-				act = -1,
-				action = -1
+				dodge = -1
 			}
 		}
 

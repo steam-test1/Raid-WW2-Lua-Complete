@@ -52,8 +52,8 @@ end
 
 function RaidGUIControlStatsBreakdown:_create_stats_label()
 	local stats_label_params = {
-		vertical = "center",
 		name = "stats_label",
+		vertical = "center",
 		x = RaidGUIControlStatsBreakdown.STATS_LABEL_X,
 		y = RaidGUIControlStatsBreakdown.STATS_LABEL_Y,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
@@ -68,9 +68,9 @@ end
 
 function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	local breakdown_table_params = {
-		use_selector_mark = false,
 		x = 0,
 		name = "breakdown_table",
+		use_selector_mark = false,
 		y = self._stats_label:y() + self._stats_label:h() + RaidGUIControlStatsBreakdown.LABEL_PADDING_DOWN,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
 		table_params = {
@@ -81,16 +81,16 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 			data_source_callback = params.data_source_callback,
 			columns = {
 				{
-					vertical = "center",
 					align = "left",
+					vertical = "center",
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_DESCRIPTION_W_PERCENT / 100,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlTableCell,
 					color = RaidGUIControlStatsBreakdown.TABLE_COLOR
 				},
 				{
-					vertical = "center",
 					align = "right",
+					vertical = "center",
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_VALUE_W_PERCENT / 100,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
 					cell_class = RaidGUIControlTableCell,

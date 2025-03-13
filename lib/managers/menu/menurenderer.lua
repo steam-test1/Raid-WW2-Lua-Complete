@@ -20,10 +20,10 @@ function MenuRenderer:show_node(node)
 	end
 
 	local parameters = {
+		marker_alpha = 1,
 		row_item_blend_mode = "normal",
 		to_upper = true,
 		align = "left",
-		marker_alpha = 1,
 		font = tweak_data.menu.pd2_medium_font,
 		row_item_color = tweak_data.menu.default_font_row_item_color,
 		row_item_hightlight_color = tweak_data.menu.default_hightlight_row_item_color,
@@ -280,19 +280,19 @@ function MenuRenderer:ws_test()
 	local y = 200
 	local fx, fy = managers.gui_data:safe_to_full(x, y)
 	local safe = self._test_safe:panel():rect({
-		orientation = "vertical",
 		layer = 0,
 		w = 48,
 		h = 48,
+		orientation = "vertical",
 		x = x,
 		y = y,
 		color = Color.green
 	})
 	local full = self._test_full:panel():rect({
-		orientation = "vertical",
 		layer = 0,
 		w = 48,
 		h = 48,
+		orientation = "vertical",
 		x = fx,
 		y = fy,
 		color = Color.red

@@ -647,8 +647,8 @@ end
 
 function CopActionShoot:get_husk_interrupt_desc()
 	local old_action_desc = {
-		body_part = 3,
 		block_type = "action",
+		body_part = 3,
 		type = "shoot"
 	}
 
@@ -958,9 +958,9 @@ function CopActionShoot:anim_clbk_melee_strike()
 	if defense_data == "countered" then
 		self._common_data.melee_countered_t = TimerManager:game():time()
 		local action_data = {
-			damage_effect = 1,
 			damage = 0,
 			variant = "counter_spooc",
+			damage_effect = 1,
 			attacker_unit = self._strike_unit,
 			col_ray = {
 				body = self._unit:body("body"),

@@ -73,8 +73,8 @@ function RaidGUIControlButtonSkillTiny:update_skill_data(skill_data, skill_id)
 		if not self._grid_item_icon_update then
 			local col = tweak_data.gui.colors.raid_dirty_white
 			self._grid_item_icon_update = self._object:gradient({
-				orientation = "vertical",
 				name = "grid_item_icon_update",
+				orientation = "vertical",
 				y = self._object:h(),
 				w = self._object:w(),
 				h = self._object:h(),

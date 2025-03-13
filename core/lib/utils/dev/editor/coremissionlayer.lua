@@ -555,8 +555,8 @@ function MissionLayer:build_panel(notebook)
 
 	self._ews_triggers.insert = callback(self, self, "toolbar_toggle_trg", {
 		toolbar = "_element_toolbar",
-		id = "EDIT_ELEMENT",
 		value = "_editing_mission_element",
+		id = "EDIT_ELEMENT",
 		class = self
 	})
 

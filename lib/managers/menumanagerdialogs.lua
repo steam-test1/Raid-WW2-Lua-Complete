@@ -995,9 +995,15 @@ end
 
 function MenuManager:show_restart_mission_dialog(params)
 	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_mission_title"),
-		text = managers.localization:text("dialog_mp_restart_mission_host_message")
+		title = managers.localization:text("dialog_mp_restart_mission_title")
 	}
+	local dialog_text = managers.localization:text("dialog_mp_restart_mission_host_message")
+
+	if managers.challenge_cards:get_active_card() and not managers.raid_job:current_job().active_card and not managers.event_system:is_event_active() then
+		dialog_text = dialog_text .. "/n" .. managers.localization:text("dialog_warning_card_will_consume")
+	end
+
+	dialog_data.text = dialog_text
 	local yes_button = {
 		text = managers.localization:text("dialog_yes"),
 		callback_func = params.yes_func
@@ -2624,9 +2630,9 @@ function MenuManager:show_skill_profile_rename_dialog(params)
 		callback_func = params.callback_no
 	}
 	local dialog_data = {
-		focus_button = 1,
-		capitalize = false,
 		textbox = true,
+		capitalize = false,
+		focus_button = 1,
 		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
 		textbox_value = params.textbox_value,
 		button_list = {

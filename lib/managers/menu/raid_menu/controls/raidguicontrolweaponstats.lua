@@ -45,34 +45,34 @@ end
 function RaidGUIControlWeaponStats:_set_default_values()
 	self._values = {
 		damage = {
-			delta_value = "00",
 			value = "00",
+			delta_value = "00",
 			text = self:translate("menu_weapons_stats_damage", true)
 		},
 		magazine = {
-			delta_value = "00",
 			value = "000",
+			delta_value = "00",
 			text = self:translate("menu_weapons_stats_magazine", true)
 		},
 		total_ammo = {
-			delta_value = "00",
 			value = "000",
+			delta_value = "00",
 			text = self:translate("menu_weapons_stats_total_ammo", true)
 		},
 		rate_of_fire = {
-			delta_value = "00",
 			value = "00",
+			delta_value = "00",
 			text = self:translate("menu_weapons_stats_rate_of_fire", true)
 		},
 		accuracy = {
+			value = "00",
 			delta_value = "00",
 			accuracy_as_spread = false,
-			value = "00",
 			text = self:translate("menu_weapons_stats_accuracy", true)
 		},
 		stability = {
-			delta_value = "00",
 			value = "00",
+			delta_value = "00",
 			text = self:translate("menu_weapons_stats_stability", true)
 		}
 	}

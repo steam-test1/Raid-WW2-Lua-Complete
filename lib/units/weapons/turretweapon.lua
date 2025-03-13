@@ -299,13 +299,13 @@ function TurretWeapon:set_turret_rot(dt)
 
 	local player_unit = managers.player:player_unit()
 
-	if not player_unit then
+	if not alive(player_unit) then
 		Application:trace("TurretWeapon:_set_turret_rot - missing player unit ")
 
 		return
 	end
 
-	local player_rotation = managers.player:player_unit():movement():m_head_rot()
+	local player_rotation = player_unit:movement():m_head_rot()
 	self._player_rotation = player_rotation
 end
 
@@ -1160,10 +1160,10 @@ function TurretWeapon:_create_turret_SO()
 	managers.navigation:destroy_nav_tracker(tracker_align)
 
 	local turret_objective = {
-		pose = "stand",
 		haste = "run",
-		type = "turret",
 		destroy_clbk_key = false,
+		pose = "stand",
+		type = "turret",
 		nav_seg = align_nav_seg,
 		area = align_area,
 		pos = align_pos,
@@ -1171,25 +1171,25 @@ function TurretWeapon:_create_turret_SO()
 		fail_clbk = callback(self, self, "on_turret_SO_failed"),
 		complete_clbk = callback(self, self, "on_turret_SO_completed"),
 		action = {
-			align_sync = true,
 			needs_full_blend = true,
-			type = "act",
+			align_sync = true,
 			body_part = 1,
+			type = "act",
 			variant = variant,
 			blocks = {
-				walk = -1,
-				heavy_hurt = -1,
 				action = -1,
-				hurt = -1
+				hurt = -1,
+				walk = -1,
+				heavy_hurt = -1
 			}
 		}
 	}
 	local twk_data = tweak_data.weapon[self.name_id]
 	local SO_descriptor = {
-		AI_group = "enemies",
 		usage_amount = 1,
 		interval = 1,
 		search_dis_sq = 4000000,
+		AI_group = "enemies",
 		objective = turret_objective,
 		search_pos = turret_objective.pos,
 		base_chance = twk_data.SO_CHANCE_BASE or 1,
@@ -1441,8 +1441,8 @@ function TurretWeapon:_cancel_active_SO()
 			admin_unit_brain:set_objective(nil)
 			admin_unit_brain:set_logic("idle", nil)
 			admin_unit_brain:action_request({
-				body_part = 2,
 				sync = true,
+				body_part = 2,
 				type = "idle"
 			})
 			self:on_turret_SO_failed(self._administered_unit_data.unit)
