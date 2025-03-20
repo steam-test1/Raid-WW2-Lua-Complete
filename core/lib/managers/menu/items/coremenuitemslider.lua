@@ -83,11 +83,11 @@ function ItemSlider:setup_gui(node, row_item)
 
 	local bar_w = 192
 	row_item.gui_slider_bg = row_item.gui_panel:rect({
+		visible = false,
+		h = 22,
 		vertical = "center",
 		halign = "center",
 		align = "center",
-		visible = false,
-		h = 22,
 		x = node:_left_align() - bar_w,
 		y = h / 2 - 11,
 		w = bar_w,
@@ -95,10 +95,10 @@ function ItemSlider:setup_gui(node, row_item)
 		layer = node.layers.items - 1
 	})
 	row_item.gui_slider_gfx = row_item.gui_panel:gradient({
+		orientation = "vertical",
 		vertical = "center",
 		halign = "center",
 		align = "center",
-		orientation = "vertical",
 		gradient_points = {
 			0,
 			_G.tweak_data.screen_colors.button_stage_3,

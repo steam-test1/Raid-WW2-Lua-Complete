@@ -53,9 +53,9 @@ function CoreUnitSequenceTriggerUnitElement:update_selected()
 			self._sequence_units[id] = nil
 		else
 			local params = {
+				r = 0,
 				b = 1,
 				g = 0,
-				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -85,9 +85,9 @@ function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._sequence_units) do
 		local params = {
+			r = 0,
 			b = 0.5,
 			g = 0,
-			r = 0,
 			from_unit = unit,
 			to_unit = self._unit
 		}
@@ -280,13 +280,13 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
 	local sequence_params = {
-		default = "none",
-		sorted = true,
 		name = "Sequence:",
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		sorted = true,
 		tooltip = "Select a sequence from the combobox",
+		default = "none",
 		panel = panel,
 		sizer = h_sizer,
 		options = sequences,

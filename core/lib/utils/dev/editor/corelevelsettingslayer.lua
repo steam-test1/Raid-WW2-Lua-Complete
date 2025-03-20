@@ -79,13 +79,13 @@ end
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
+		tooltip = "Select a level id to use when simulating the level.",
+		value = "none",
+		default = "none",
 		sorted = true,
 		name = "Simulation level id:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select a level id to use when simulating the level.",
-		value = "none",
-		default = "none",
 		panel = self._ews_panel,
 		sizer = sizer,
 		options = rawget(_G, "tweak_data").levels:get_level_index()
@@ -108,13 +108,13 @@ end
 function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
 	local id = "simulation_mission_flag"
 	local params = {
+		tooltip = "Select a mission flag to use when simulating the level.",
+		value = "none",
+		default = "none",
 		sorted = true,
 		name = "Simulation mission flag:",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select a mission flag to use when simulating the level.",
-		value = "none",
-		default = "none",
 		panel = self._ews_panel,
 		sizer = sizer,
 		options = rawget(_G, "tweak_data").operations:get_all_mission_flags()
@@ -165,12 +165,12 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 		"init"
 	}
 	local combobox_params = {
+		tooltip = "Select an option from the combobox",
 		sorted = false,
 		sizer_proportions = 1,
 		name = "Chunk Name",
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
 		panel = panel,
 		sizer = horizontal_sizer,
 		options = options,

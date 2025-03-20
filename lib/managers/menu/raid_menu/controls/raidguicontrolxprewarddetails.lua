@@ -72,8 +72,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_title()
 	local title_description_params = {
-		align = "left",
 		alpha = 0,
+		align = "left",
 		vertical = "center",
 		name = "title_description",
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_Y,
@@ -89,8 +89,8 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		align = "center",
 		alpha = 0,
+		align = "center",
 		vertical = "top",
 		name = "customization_name",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlXPRewardDetails.TITLE_PADDING_TOP,
@@ -279,9 +279,9 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
-		align = "left",
-		wrap = true,
 		alpha = 0,
+		wrap = true,
+		align = "left",
 		vertical = "top",
 		name = "description",
 		y = RaidGUIControlXPRewardDetails.DESCRIPTION_Y,
@@ -296,11 +296,11 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	self._description:set_right(self._right_panel:w())
 
 	local title_description_right_params = {
-		align = "left",
 		alpha = 0,
-		wrap = true,
 		vertical = "center",
+		align = "left",
 		name = "title_description_right",
+		wrap = true,
 		x = self._description:x(),
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_Y,
 		w = RaidGUIControlXPRewardDetails.DESCRIPTION_W,

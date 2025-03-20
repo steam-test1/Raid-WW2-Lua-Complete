@@ -28,12 +28,12 @@ function NewRaycastWeaponBase:init(unit)
 	self._movement_penalty = tweak_data.upgrades.weapon_movement_penalty[self:weapon_tweak_data().category] or 1
 	self._gun_kick = {
 		x = {
-			velocity = 0,
-			delta = 0
+			delta = 0,
+			velocity = 0
 		},
 		y = {
-			velocity = 0,
-			delta = 0
+			delta = 0,
+			velocity = 0
 		}
 	}
 	self._textures = {}

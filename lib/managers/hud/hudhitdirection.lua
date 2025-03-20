@@ -111,9 +111,9 @@ function HUDHitDirection:on_hit_unit(attack_data, unit_type_hit)
 		local indicator = self:_create_indicator("damage_indicator_unit_" .. attacker_id, 0, "center", "center")
 		local enemy_position = attack_data.attacker_unit:position()
 		self._indicators[attacker_id] = {
+			fade_out_t = 0,
 			need_to_extend = false,
 			severity = 1,
-			fade_out_t = 0,
 			indicator = indicator,
 			position = enemy_position,
 			damage = attack_data.damage,

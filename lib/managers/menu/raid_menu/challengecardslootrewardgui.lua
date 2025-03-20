@@ -28,9 +28,9 @@ function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 		w = self._root_panel:w(),
 		h = self._root_panel:h() - coord_y,
 		item_params = {
-			wrapper_h = 600,
 			item_h = 352,
-			item_w = 256
+			item_w = 256,
+			wrapper_h = 600
 		},
 		loot_list = loot_list
 	}

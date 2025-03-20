@@ -27,13 +27,13 @@ function GoldAssetStoreGui:_layout()
 	self:_disable_dof()
 
 	local gold_asset_store_grid_scrollable_area_params = {
+		scrollbar_offset = 14,
 		scroll_step = 30,
 		h = 612,
 		w = 498,
 		y = 120,
 		x = 0,
-		name = "gold_asset_store_grid_scrollable_area",
-		scrollbar_offset = 14
+		name = "gold_asset_store_grid_scrollable_area"
 	}
 	self._gold_asset_store_grid_scrollable_area = self._root_panel:scrollable_area(gold_asset_store_grid_scrollable_area_params)
 	local gold_asset_store_grid_params = {
@@ -43,8 +43,8 @@ function GoldAssetStoreGui:_layout()
 		name = "gold_asset_store_grid",
 		scrollable_area_ref = self._gold_asset_store_grid_scrollable_area,
 		grid_params = {
-			scroll_marker_w = 32,
 			vertical_spacing = 5,
+			scroll_marker_w = 32,
 			data_source_callback = callback(self, self, "_data_source_gold_asset_store"),
 			on_click_callback = callback(self, self, "_on_click_gold_asset_store"),
 			on_double_click_callback = callback(self, self, "_on_double_click_gold_asset_store"),
@@ -70,12 +70,12 @@ function GoldAssetStoreGui:_layout()
 	}
 	self._rotate_gold_item = self._root_panel:rotate_unit(params_rotate_gold_item)
 	self._item_title = self._root_panel:label({
+		align = "left",
 		text = "",
 		h = 64,
 		w = 352,
 		y = 0,
 		x = 0,
-		align = "left",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		color = tweak_data.gui.colors.raid_dirty_white
@@ -191,8 +191,8 @@ function GoldAssetStoreGui:_layout_greed_info()
 	local greed_panel_default_h = 288
 	local greed_panel_bottom = 896
 	local greed_info_panel_params = {
-		name = "greed_info_panel",
 		w = 352,
+		name = "greed_info_panel",
 		h = greed_panel_default_h
 	}
 	self._greed_info_panel = self._root_panel:panel(greed_info_panel_params)

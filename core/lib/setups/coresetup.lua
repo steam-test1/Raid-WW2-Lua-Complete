@@ -205,8 +205,8 @@ function CoreSetup:__init()
 	managers.slot = CoreSlotManager.SlotManager:new()
 	managers.sequence = CoreSequenceManager.SequenceManager:new()
 	managers.worldcollection = CoreWorldCollection:new({
-		random = false,
-		ordered = true
+		ordered = true,
+		random = false
 	})
 
 	if not Global.__coresetup_bootdone then

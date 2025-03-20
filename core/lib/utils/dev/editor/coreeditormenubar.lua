@@ -175,8 +175,8 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("GROUP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "group"), nil)
 	Global.frame:connect("UNGROUP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "ungroup"), nil)
 	Global.frame:connect("DEBUG_DRAW_GROUPS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		value = "_debug_draw_groups",
-		menu = "_group_menu"
+		menu = "_group_menu",
+		value = "_debug_draw_groups"
 	})
 	Global.frame:connect("SAVE_GROUP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "save_group"), nil)
 	Global.frame:connect("LOAD_GROUP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "load_group"), nil)
@@ -222,8 +222,8 @@ function CoreEditor:build_menubar()
 	self._mission_menu:append_check_item("MISSION_DEBUG_DRAW_AREAS", "Draw areas during simulation", "Will draw areas while running simulation")
 	self._mission_menu:set_checked("MISSION_DEBUG_DRAW_AREAS", self._simulation_debug_areas)
 	Global.frame:connect("MISSION_DEBUG_DRAW_AREAS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		value = "_simulation_debug_areas",
-		menu = "_mission_menu"
+		menu = "_mission_menu",
+		value = "_simulation_debug_areas"
 	})
 	self._mission_menu:append_separator()
 	self._mission_menu:append_item("CONNECT_SLAVE", "Connect Slave System", "Full Client Sync")
@@ -349,8 +349,8 @@ function CoreEditor:build_menubar()
 		vis = true
 	})
 	Global.frame:connect("HIDE HELPERS EXCEPT LIGHTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_hide_helper_units"), {
-		vis = false,
-		skip_lights = true
+		skip_lights = true,
+		vis = false
 	})
 	Global.frame:connect("RENDER_EFFECTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toggle_render_effects"), {
 		hide_menu,

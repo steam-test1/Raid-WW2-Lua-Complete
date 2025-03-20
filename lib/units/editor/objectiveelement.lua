@@ -35,9 +35,9 @@ function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0.85,
 				b = 0.25,
 				g = 0.85,
-				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -144,9 +144,9 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(self._sub_objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		max = 100,
 		min = 0,
-		floats = 0
+		floats = 0,
+		max = 100
 	}, "Overrides objective amount counter with this value.")
 
 	local help = {

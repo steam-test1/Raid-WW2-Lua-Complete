@@ -83,15 +83,15 @@ function NpcVehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_bo
 
 	if death then
 		result = {
-			type = "death",
-			variant = "bullet"
+			variant = "bullet",
+			type = "death"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		}
 		self._health = self._health - damage
 		self._health_ratio = self._health / self._current_max_health
@@ -344,8 +344,8 @@ function NpcVehicleDamage:damage_collision(attack_data)
 
 		local damage_info = {
 			result = {
-				type = "hurt",
-				variant = "collision"
+				variant = "collision",
+				type = "hurt"
 			}
 		}
 		local damage = attack_data.damage

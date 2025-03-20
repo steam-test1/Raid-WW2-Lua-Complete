@@ -78,8 +78,8 @@ end
 
 function AIAreaElement:_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 19,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 19
 	})
 
 	if not ray then

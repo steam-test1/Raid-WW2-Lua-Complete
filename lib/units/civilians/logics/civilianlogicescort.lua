@@ -387,14 +387,14 @@ end
 
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
+		clamp_to_graph = true,
 		variant = "cm_so_escort_get_up_hesitant",
 		body_part = 1,
 		type = "act",
-		clamp_to_graph = true,
 		blocks = {
 			walk = -1,
-			action = -1,
 			hurt = -1,
+			action = -1,
 			heavy_hurt = -1
 		}
 	}

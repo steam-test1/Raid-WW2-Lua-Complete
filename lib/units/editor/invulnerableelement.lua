@@ -26,9 +26,9 @@ function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				b = 0,
 				g = 0.85,
 				r = 0,
-				b = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})

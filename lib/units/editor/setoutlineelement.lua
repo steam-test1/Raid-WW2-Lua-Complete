@@ -63,9 +63,9 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0.9,
 				b = 1,
 				g = 0.5,
-				r = 0.9,
 				from_unit = self._unit,
 				to_unit = unit
 			})

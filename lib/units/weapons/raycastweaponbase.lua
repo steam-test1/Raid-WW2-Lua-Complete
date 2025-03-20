@@ -41,7 +41,7 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
 		kills = 0,
-		push_units = nil,
+		pow = nil,
 		from = Vector3()
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
@@ -2019,8 +2019,8 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -2234,10 +2234,10 @@ end
 
 DOTBulletBase = DOTBulletBase or class(InstantBulletBase)
 DOTBulletBase.DOT_DATA = {
-	dot_length = 6,
 	hurt_animation_chance = 1,
 	dot_damage = 0.5,
-	dot_tick_period = 0.5
+	dot_tick_period = 0.5,
+	dot_length = 6
 }
 
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)

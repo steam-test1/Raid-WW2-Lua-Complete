@@ -74,17 +74,17 @@ end
 
 function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 	self.special_events.trick_or_treat = {
-		login_rewards = "halloween",
 		name_id = "hud_trick_or_treat_title",
 		package = "packages/halloween_candy",
 		challenge_id = "candy_gold_bar",
 		card_id = "ra_trick_or_treat",
 		camp_continent = "event_halloween",
 		accent_color = "progress_orange",
+		login_rewards = "halloween",
 		game_logo = tweak_data.gui.icons.raid_hw_logo_small,
 		date = {
-			start = 1023,
-			finish = 1110
+			finish = 1110,
+			start = 1023
 		},
 		upgrades = {
 			"temporary_candy_health_regen",
@@ -103,8 +103,8 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 			190
 		},
 		bonus_effects = {
-			undead = "hud_trick_or_treat_buff_undead",
 			refill_health = "hud_trick_or_treat_buff_health",
+			undead = "hud_trick_or_treat_buff_undead",
 			refill_ammo = "hud_trick_or_treat_buff_ammo",
 			refill_warcry = "hud_trick_or_treat_buff_warcry",
 			refill_down = "hud_trick_or_treat_buff_down"

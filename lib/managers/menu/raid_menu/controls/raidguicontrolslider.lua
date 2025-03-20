@@ -79,9 +79,9 @@ end
 
 function RaidGUIControlSlider:_create_slider_controls()
 	local sideline_params = {
+		alpha = 0,
 		y = 0,
 		x = 0,
-		alpha = 0,
 		w = RaidGUIControlSlider.SIDELINE_W,
 		h = self._object:h(),
 		color = RaidGUIControlSlider.SIDELINE_COLOR

@@ -75,8 +75,8 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_gold_bar_value()
 	local title_description_params = {
-		align = "left",
 		name = "title_description",
+		align = "left",
 		alpha = 0,
 		vertical = "center",
 		y = RaidGUIControlGoldBarRewardDetails.TITLE_DESCRIPTION_Y,
@@ -149,8 +149,8 @@ end
 
 function RaidGUIControlGoldBarRewardDetails:_create_description()
 	local description_params = {
-		align = "left",
 		name = "description",
+		align = "left",
 		alpha = 0,
 		wrap = true,
 		vertical = "top",

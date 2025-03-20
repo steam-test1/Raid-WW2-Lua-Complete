@@ -26,9 +26,9 @@ end
 function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
-		x = 0,
 		y = 0,
 		name = "class_icon",
+		x = 0,
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect,
 		layer = self._selector:layer() + 1
@@ -37,14 +37,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._class_icon:hide()
 
 	self._player_name = self._object:label({
-		text = "PLAYER NAME 1",
+		y = 0,
 		name = "player_name",
+		text = "PLAYER NAME 1",
+		x = 80,
 		vertical = "center",
 		align = "left",
 		h = 64,
 		w = 336,
-		y = 0,
-		x = 80,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -54,14 +54,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_name:hide()
 
 	self._player_class_nation = self._object:label({
-		text = "INFILTRATOR  |  GERMAN",
+		y = 32,
 		name = "player_class_nation",
+		text = "INFILTRATOR  |  GERMAN",
+		x = 80,
 		vertical = "center",
 		align = "left",
 		h = 64,
 		w = 336,
-		y = 32,
-		x = 80,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects,
@@ -71,9 +71,9 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_class_nation:hide()
 
 	self._host_icon = self._object:bitmap({
-		x = 416,
 		y = 16,
 		name = "host_icon",
+		x = 416,
 		texture = tweak_data.gui.icons.player_panel_host_indicator.texture,
 		texture_rect = tweak_data.gui.icons.player_panel_host_indicator.texture_rect,
 		layer = self._selector:layer() + 1
@@ -82,14 +82,14 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._host_icon:hide()
 
 	self._player_level = self._object:label({
-		text = "17",
+		y = 0,
 		name = "player_level",
+		text = "17",
+		x = 450,
 		vertical = "center",
 		align = "right",
 		h = 64,
 		w = 64,
-		y = 0,
-		x = 450,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white,

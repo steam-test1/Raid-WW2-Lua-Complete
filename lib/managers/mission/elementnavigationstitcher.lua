@@ -100,8 +100,8 @@ function ElementNavigationStitcher:_create_nav_data()
 		segments = {}
 	}
 	self._nav_data.segments[1] = {
-		id = 1,
 		location_id = "default",
+		id = 1,
 		position = self._values.position,
 		pos = self._values.position,
 		vis_groups = {}

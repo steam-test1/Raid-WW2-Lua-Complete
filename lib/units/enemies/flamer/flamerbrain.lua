@@ -127,8 +127,8 @@ function FlamerBrain:_queued_update(t, dt)
 		self._old_assault_pos = mvector3.copy(assault_target.pos)
 
 		self:set_objective({
-			attitude = "engage",
-			type = "free"
+			type = "free",
+			attitude = "engage"
 		})
 		managers.queued_tasks:queue(nil, self._hunt, self, assault_target, FlamerBrain.ATTACK_INTERVAL)
 	end

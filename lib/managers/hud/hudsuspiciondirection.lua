@@ -50,8 +50,8 @@ function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer
 	local indicator = self:_create_suspicion_indicator(observer_key)
 	local indicator_active_alpha = HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES == true and suspect == "teammate" and HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA or HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA
 	self._indicators[observer_key] = {
-		need_to_init = true,
 		state = "heard_something",
+		need_to_init = true,
 		indicator = indicator,
 		position = observer_position,
 		suspect = suspect,

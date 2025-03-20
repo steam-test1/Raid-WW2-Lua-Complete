@@ -87,9 +87,15 @@ function StaticLayer:clone(to_continent)
 	self:_cloning_done()
 end
 
+function StaticLayer:spawn_unit_release()
+	self._point_unit_at_current = nil
+end
+
 function StaticLayer:spawn_unit()
 	if not self._grab and not self:condition() then
 		self:do_spawn_unit(self._unit_name)
+
+		self._point_unit_at_current = true
 	end
 end
 
@@ -244,8 +250,14 @@ function StaticLayer:move_unit(btn, pressed)
 	end
 end
 
+function StaticLayer:rotate_unit_release(btn, pressed)
+	self._point_units_at_current = nil
+end
+
 function StaticLayer:rotate_unit(btn, pressed)
-	if self._selected_unit and not self:condition() then
+	if self:alt() then
+		self._point_units_at_current = true
+	elseif self._selected_unit and not self:condition() then
 		local rot_axis = nil
 		local snap_axis = self:snap_rotation_axis()
 
@@ -407,6 +419,40 @@ function StaticLayer:update(t, dt)
 
 	self:update_move_triggers(t, dt)
 	self:update_rotate_triggers(t, dt)
+	self:_update_point_at()
+end
+
+function StaticLayer:_update_point_at()
+	if self._point_unit_at_current then
+		self:update_aim_unit(self._selected_unit)
+	elseif self._point_units_at_current then
+		if self:alt() then
+			for _, unit in ipairs(self._selected_units) do
+				self:update_aim_unit(unit)
+			end
+		else
+			self._point_units_at_current = nil
+		end
+	end
+end
+
+function StaticLayer:update_aim_unit(unit)
+	if alive(unit) then
+		local dist = mvector3.distance(self._current_pos, unit:position())
+
+		if dist > self:grid_size() / 2 then
+			local dir_2d = (self._current_pos:with_z(0) - unit:position():with_z(0)):normalized()
+			local up = unit:rotation():z()
+			local rot = Rotation:look_at(dir_2d, up)
+
+			unit:set_rotation(rot)
+			self:_on_unit_rotated(unit, rot)
+
+			local pos = unit:position() + Vector3(0, 0, 1)
+
+			Application:draw_line(pos, pos + dir_2d * 10000, 1, 0, 0)
+		end
+	end
 end
 
 function StaticLayer:draw_marker(t, dt)
@@ -571,20 +617,32 @@ function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
 	text = text .. "Create unit:        Right mouse button" .. n
+	text = text .. t .. "+Alt;   Create without selections" .. n
+	text = text .. t .. "+Ctrl;  Create keeping selections" .. n
+	text = text .. t .. "+Shift; Create keeping selections" .. n
 	text = text .. "Select unit:        Left mouse button" .. n
-	text = text .. "Snap rotate:        Middle mouse button or K" .. n
+	text = text .. t .. "+Alt;   Deselect only" .. n
+	text = text .. t .. "+Ctrl;  Add to selections" .. n
+	text = text .. t .. "+Shift; Select as focused" .. n
+	text = text .. "Snap rotate:        Middle mouse button or [F] key" .. n
+	text = text .. t .. "+Alt;   Point at cursor" .. n
+	text = text .. t .. "+Ctrl;  Rotate by 1 degree" .. n
+	text = text .. t .. "+Shift; Reverse rotation" .. n
 	text = text .. "Move unit:          Thumb mouse button (keep pressed to drag)" .. n
+	text = text .. t .. "+Shift; Position at cursor" .. n
 	text = text .. "Remove unit:        Delete" .. n
 	text = text .. "Align with unit:    Point and press P" .. n
 	text = text .. "Sample unit:        Point and press B" .. n
 	text = text .. "Replace unit:       Press R" .. n
-	text = text .. "Clone unit:         Ctrl+V" .. n
-	text = text .. "Clone values:       Point and press M, selected unit will apply its values to targeted unit. Combined with shift the selected unit will inherit the target unit values." .. n
+	text = text .. "Clone unit:         Ctrl + V" .. n
 	text = text .. "Toggle local/world: Numpad 0" .. n
 	text = text .. "Rotate around X:    Numpad 8 and 2" .. n
 	text = text .. "Rotate around Y:    Numpad 1 and 3" .. n
 	text = text .. "Rotate around Z:    Numpad 4 and 6" .. n
-	text = text .. "Reset rotation:     Numpad-Enter (reset but keeps Z-rotation, combine with shift to reset Z as well)" .. n
+	text = text .. "Clone values:       Point and press [M] key to clone values to all selected" .. n
+	text = text .. t .. "+Shift; Instead clone values from focused to pointed" .. n
+	text = text .. "Reset rotation:     Numpad-Enter (reset but keeps Z-axis rotations)" .. n
+	text = text .. t .. "+Shift; Reset all axis" .. n
 	text = text .. "Hide / Unide:       Ctrl+J will hide the selected units, CTRL+SHIFT+J will unide all hidden units" .. n
 
 	return text
@@ -634,10 +692,16 @@ function StaticLayer:add_triggers()
 	StaticLayer.super.add_triggers(self)
 
 	local vc = self._editor_data.virtual_controller
+	local IDS_RMB = Idstring("rmb")
 
-	vc:add_trigger(Idstring("rmb"), callback(self, self, "spawn_unit"))
-	vc:add_trigger(Idstring("rmb"), callback(self, self, "use_grab_info"))
-	vc:add_trigger(Idstring("mmb"), callback(self, self, "rotate_unit"))
+	vc:add_trigger(IDS_RMB, callback(self, self, "spawn_unit"))
+	vc:add_release_trigger(IDS_RMB, callback(self, self, "spawn_unit_release"))
+	vc:add_trigger(IDS_RMB, callback(self, self, "use_grab_info"))
+
+	local IDS_MMB = Idstring("mmb")
+
+	vc:add_trigger(IDS_MMB, callback(self, self, "rotate_unit"))
+	vc:add_release_trigger(IDS_MMB, callback(self, self, "rotate_unit_release"))
 	vc:add_trigger(Idstring("move_unit"), callback(self, self, "move_unit"))
 	vc:add_release_trigger(Idstring("move_unit"), callback(self, self, "release_unit"))
 	vc:add_trigger(Idstring("destroy"), callback(self, self, "delete_selected_unit"))

@@ -8,28 +8,28 @@ end
 function AchievementTweakData:_init_experience_awards()
 	self.experience = {
 		{
-			level = 2,
-			id = "ach_reach_level_2"
+			id = "ach_reach_level_2",
+			level = 2
 		},
 		{
-			level = 5,
-			id = "ach_reach_level_5"
+			id = "ach_reach_level_5",
+			level = 5
 		},
 		{
-			level = 10,
-			id = "ach_reach_level_10"
+			id = "ach_reach_level_10",
+			level = 10
 		},
 		{
-			level = 20,
-			id = "ach_reach_level_20"
+			id = "ach_reach_level_20",
+			level = 20
 		},
 		{
-			level = 30,
-			id = "ach_reach_level_30"
+			id = "ach_reach_level_30",
+			level = 30
 		},
 		{
-			level = 40,
-			id = "ach_reach_level_40"
+			id = "ach_reach_level_40",
+			level = 40
 		}
 	}
 end
@@ -43,9 +43,9 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
+				id = "ach_clear_skies_no_bleedout",
 				num_peers = 2,
-				no_bleedout = true,
-				id = "ach_clear_skies_no_bleedout"
+				no_bleedout = true
 			},
 			{
 				num_peers = 2,
@@ -60,9 +60,9 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
+				id = "ach_burn_no_bleedout",
 				num_peers = 2,
-				no_bleedout = true,
-				id = "ach_burn_no_bleedout"
+				no_bleedout = true
 			},
 			{
 				num_peers = 2,
@@ -77,8 +77,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_flak"
+				id = "ach_bring_them_home_flak",
+				all_dogtags = true
 			}
 		},
 		settlement = {
@@ -87,8 +87,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_castle"
+				id = "ach_bring_them_home_castle",
+				all_dogtags = true
 			}
 		},
 		train_yard = {
@@ -97,8 +97,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_trainyard"
+				id = "ach_bring_them_home_trainyard",
+				all_dogtags = true
 			}
 		},
 		gold_rush = {
@@ -107,8 +107,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_bank"
+				id = "ach_bring_them_home_bank",
+				all_dogtags = true
 			}
 		},
 		radio_defense = {
@@ -117,8 +117,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_radiodefence"
+				id = "ach_bring_them_home_radiodefence",
+				all_dogtags = true
 			}
 		},
 		ger_bridge = {
@@ -127,8 +127,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_bridge"
+				id = "ach_bring_them_home_bridge",
+				all_dogtags = true
 			}
 		},
 		hunters = {
@@ -137,12 +137,12 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				stealth = true,
-				id = "ach_hunters_stealth"
+				id = "ach_hunters_stealth",
+				stealth = true
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_hunters"
+				id = "ach_bring_them_home_hunters",
+				all_dogtags = true
 			}
 		},
 		tnd = {
@@ -151,8 +151,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_tank_depot"
+				id = "ach_bring_them_home_tank_depot",
+				all_dogtags = true
 			}
 		},
 		bunker_test = {
@@ -161,8 +161,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_bunkers"
+				id = "ach_bring_them_home_bunkers",
+				all_dogtags = true
 			}
 		},
 		convoy = {
@@ -171,8 +171,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_sommelier"
+				id = "ach_bring_them_home_sommelier",
+				all_dogtags = true
 			}
 		},
 		spies_test = {
@@ -181,8 +181,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_airfield"
+				id = "ach_bring_them_home_airfield",
+				all_dogtags = true
 			}
 		},
 		silo = {
@@ -191,8 +191,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_silo"
+				id = "ach_bring_them_home_silo",
+				all_dogtags = true
 			}
 		},
 		kelly = {
@@ -201,12 +201,12 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				stealth = true,
-				id = "ach_kelly_stealth"
+				id = "ach_kelly_stealth",
+				stealth = true
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_kelly"
+				id = "ach_bring_them_home_kelly",
+				all_dogtags = true
 			}
 		},
 		sto = {
@@ -215,8 +215,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				stealth = true,
-				id = "ach_gallery_stealth"
+				id = "ach_gallery_stealth",
+				stealth = true
 			}
 		},
 		forest_gumpy = {
@@ -237,8 +237,8 @@ function AchievementTweakData:_init_mission_awards()
 				difficulty = very_hard
 			},
 			{
-				all_dogtags = true,
-				id = "ach_bring_them_home_forest_bunker"
+				id = "ach_bring_them_home_forest_bunker",
+				all_dogtags = true
 			}
 		}
 	}

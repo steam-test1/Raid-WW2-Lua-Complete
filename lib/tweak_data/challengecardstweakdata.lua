@@ -325,8 +325,8 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.card_templates = {}
 	self.cards.empty = {
 		name = "NAME",
-		texture = "",
 		steam_skip = true,
+		texture = "",
 		menu_skip = true,
 		description = "DESC",
 		effects = {},
@@ -441,7 +441,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		tradable = true,
 		effects = {
 			{
-				value = 1.1,
+				value = 0.1,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 			},
@@ -1368,7 +1368,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		tradable = true,
 		effects = {
 			{
-				value = 1.07,
+				value = 0.07,
 				type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 				name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 			},
@@ -1660,7 +1660,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.cards.lucky_day = setup_card("lucky_day")
 	self.cards.lucky_day.effects = {
 		{
-			value = 1.1,
+			value = 0.1,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE
 		},

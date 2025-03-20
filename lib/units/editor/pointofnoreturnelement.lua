@@ -30,9 +30,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 
 	local time_params_easy = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on easy:",
@@ -52,9 +52,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_normal = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on normal:",
@@ -74,9 +74,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_hard = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on hard:",
@@ -96,9 +96,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on overkill:",
@@ -118,9 +118,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_145 = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on overkill 145:",
@@ -140,9 +140,9 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_290 = {
-		min = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		min = 1,
 		tooltip = "Set the time left",
 		floats = 0,
 		name = "Time left on overkill 290:",
@@ -188,8 +188,8 @@ end
 
 function PointOfNoReturnElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name():s() == "core/units/mission_elements/trigger_area/trigger_area" then

@@ -121,8 +121,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		name = "motion_dot",
 		stepper_w = 280,
+		name = "motion_dot",
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
@@ -136,8 +136,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		name = "motion_dot_size",
 		stepper_w = 280,
+		name = "motion_dot_size",
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot_size"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,

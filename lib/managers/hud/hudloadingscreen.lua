@@ -63,22 +63,22 @@ function HUDLoadingScreen:init(hud)
 	self._hud_panel = self._workspace:panel()
 	self._state = "hidden"
 	self._panel = self._hud_panel:panel({
+		y = 0,
+		x = 0,
 		halign = "scale",
 		name = "black_screen_panel",
 		valign = "scale",
 		layer = 65000,
-		y = 0,
-		x = 0,
 		w = self._hud_panel:w(),
 		h = self._hud_panel:h()
 	})
 	self._black = self._panel:rect({
-		halign = "scale",
-		valign = "scale",
 		y = 0,
 		x = 0,
 		name = "loading_screen_black_rect",
 		alpha = 0,
+		halign = "scale",
+		valign = "scale",
 		w = self._panel:w(),
 		h = self._panel:h(),
 		color = Color.black
@@ -93,8 +93,8 @@ function HUDLoadingScreen:_create_loading_icon()
 	local saferect_data = managers.gui_data:safe_scaled_size()
 	local saferect_y = (self._panel:h() - saferect_data.h) / 2
 	local loading_icon_panel_params = {
-		name = "loading_icon_panel",
 		x = 0,
+		name = "loading_icon_panel",
 		y = saferect_y + saferect_data.h - HUDLoadingScreen.LOADING_ICON_PANEL_H,
 		w = self._panel:w(),
 		h = HUDLoadingScreen.LOADING_ICON_PANEL_H
@@ -111,10 +111,10 @@ function HUDLoadingScreen:setup(data)
 	end
 
 	self._bg = self._panel:bitmap({
-		name = "loading_Screen_background",
-		alpha = 0,
 		y = 0,
 		x = 0,
+		name = "loading_Screen_background",
+		alpha = 0,
 		texture = "ui/loading_screens/" .. data.background,
 		layer = self._black:layer() + 1
 	})
@@ -179,9 +179,9 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	raid_title_panel:set_center_y(HUDLoadingScreen.RAID_INFO_TITLE_CENTER_Y)
 
 	local raid_icon_params = {
-		name = "raid_icon",
 		y = 0,
 		x = 0,
+		name = "raid_icon",
 		texture = tweak_data.gui.icons[current_job.icon_menu].texture,
 		texture_rect = tweak_data.gui.icons[current_job.icon_menu].texture_rect
 	}
@@ -190,8 +190,8 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	raid_icon:set_center_y(raid_title_panel:h() / 2)
 
 	local raid_title_params = {
-		align = "center",
 		vertical = "center",
+		align = "center",
 		name = "raid_title",
 		x = raid_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = raid_title_panel:h(),
@@ -253,9 +253,9 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	}
 	local raid_title_panel = self._info_panel:panel(raid_title_panel_params)
 	local raid_icon_params = {
-		name = "raid_icon",
 		y = 0,
 		x = 0,
+		name = "raid_icon",
 		texture = tweak_data.gui.icons[current_job.icon_menu].texture,
 		texture_rect = tweak_data.gui.icons[current_job.icon_menu].texture_rect
 	}
@@ -264,8 +264,8 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	raid_icon:set_center_y(raid_title_panel:h() / 2)
 
 	local raid_title_params = {
-		align = "center",
 		vertical = "center",
+		align = "center",
 		name = "raid_title",
 		x = raid_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = raid_title_panel:h(),
@@ -303,10 +303,10 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	mission_status_panel:set_center_x(self._info_panel:w() / 2)
 
 	local mission_status_params = {
-		name = "mission_status",
-		vertical = "top",
 		wrap = true,
 		align = "center",
+		vertical = "top",
+		name = "mission_status",
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -334,9 +334,9 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	}
 	local operation_title_panel = self._info_panel:panel(operation_title_panel_params)
 	local operation_icon_params = {
-		name = "operation_icon",
 		y = 0,
 		x = 0,
+		name = "operation_icon",
 		texture = tweak_data.gui.icons[current_job.operation_icon].texture,
 		texture_rect = tweak_data.gui.icons[current_job.operation_icon].texture_rect
 	}
@@ -345,8 +345,8 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	operation_icon:set_center_y(operation_title_panel:h() / 2)
 
 	local operation_title_params = {
-		align = "center",
 		vertical = "center",
+		align = "center",
 		name = "operation_title",
 		x = operation_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = operation_title_panel:h(),
@@ -428,9 +428,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	}
 	local operation_title_panel = self._info_panel:panel(operation_title_panel_params)
 	local operation_icon_params = {
-		name = "operation_icon",
 		y = 0,
 		x = 0,
+		name = "operation_icon",
 		texture = tweak_data.gui.icons[current_job.icon_menu].texture,
 		texture_rect = tweak_data.gui.icons[current_job.icon_menu].texture_rect
 	}
@@ -439,8 +439,8 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	operation_icon:set_center_y(operation_title_panel:h() / 2)
 
 	local operation_title_params = {
-		align = "center",
 		vertical = "center",
+		align = "center",
 		name = "operation_title",
 		x = operation_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = operation_title_panel:h(),
@@ -495,10 +495,10 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 	mission_status_panel:set_center_x(self._info_panel:w() / 2)
 
 	local mission_status_params = {
-		name = "mission_status",
-		vertical = "top",
 		wrap = true,
 		align = "center",
+		vertical = "top",
+		name = "mission_status",
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.MISSION_COMPLETED_FONT, HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE),
 		font_size = HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE,
 		color = success and HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS or HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL,
@@ -527,9 +527,9 @@ function HUDLoadingScreen:_layout_camp()
 	}
 	local title_panel = self._info_panel:panel(title_panel_params)
 	local icon_params = {
-		name = "icon",
 		y = 0,
 		x = 0,
+		name = "icon",
 		texture = tweak_data.gui.icons[current_job.icon_hud].texture,
 		texture_rect = tweak_data.gui.icons[current_job.icon_hud].texture_rect
 	}
@@ -538,8 +538,8 @@ function HUDLoadingScreen:_layout_camp()
 	icon:set_center_y(title_panel:h() / 2)
 
 	local title_params = {
-		align = "center",
 		vertical = "center",
+		align = "center",
 		name = "title",
 		x = icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 		h = title_panel:h(),
@@ -565,10 +565,10 @@ function HUDLoadingScreen:_layout_camp()
 	tip_panel:set_center_x(self._info_panel:w() / 2)
 
 	local tip_params = {
-		name = "tip",
-		vertical = "top",
 		wrap = true,
 		align = "center",
+		vertical = "top",
+		name = "tip",
 		font = tweak_data.gui:get_font_path(HUDLoadingScreen.TIP_TEXT_FONT, HUDLoadingScreen.TIP_TEXT_FONT_SIZE),
 		font_size = HUDLoadingScreen.TIP_TEXT_FONT_SIZE,
 		color = HUDLoadingScreen.TIP_TEXT_COLOR,

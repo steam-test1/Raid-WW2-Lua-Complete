@@ -195,12 +195,12 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
-		tooltip = "Select an object from the combobox",
-		name = "Object:",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
+		tooltip = "Select an object from the combobox",
+		name = "Object:",
 		panel = panel,
 		sizer = h_sizer,
 		options = all_object_names,

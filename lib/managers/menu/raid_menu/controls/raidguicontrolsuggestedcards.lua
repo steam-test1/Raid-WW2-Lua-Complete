@@ -51,11 +51,11 @@ function RaidGUIControlSuggestedCards:_create_items()
 		end
 
 		self._label_peer_name = self._suggested_cards_panel:label({
-			name = "label_peer_name",
+			align = "center",
 			h = 30,
+			name = "label_peer_name",
 			wrap = true,
 			vertical = "center",
-			align = "center",
 			x = item_params.x,
 			y = self._suggested_cards_panel:h() - 30,
 			w = self._item_width,

@@ -40,10 +40,10 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._title_label:set_visible(true)
 
 	self._input_box = self._object:input_field({
-		h = 48,
 		w = 430,
 		visible = false,
 		name = "input_field",
+		h = 48,
 		x = center_x,
 		y = center_y,
 		ws = self._params.ws

@@ -164,8 +164,8 @@ end
 
 function GreedManager:pickup_greed_item(value, unit)
 	local notification_item = {
-		icon = "carry_gold",
 		name_id = "menu_greed_loot_title",
+		icon = "carry_gold",
 		value = value
 	}
 

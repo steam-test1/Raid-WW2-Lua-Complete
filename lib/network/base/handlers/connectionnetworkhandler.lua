@@ -709,8 +709,8 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -738,8 +738,8 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				skip_bullet_count = true,
 				hit = true,
+				skip_bullet_count = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -759,10 +759,10 @@ function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 end
 
 ConnectionNetworkHandler._SYNC_AWARD_ACHIEVEMENT_ALLOWED = {
+	ach_decoy_kill_anyone = true,
 	ach_grenade_kill_spotter = true,
 	ach_kill_enemies_with_single_grenade_5 = true,
-	landmines_kill_some = true,
-	ach_decoy_kill_anyone = true
+	landmines_kill_some = true
 }
 
 function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)

@@ -28,8 +28,8 @@ function RaidGUIControlListItemContextButton:_layout(params)
 	})
 	local foreground_data = tweak_data.gui:get_full_gui_data(self.FOREGROUND_ICON)
 	self._foreground = self._object:bitmap({
-		name = "context_foreground",
 		alpha = 0,
+		name = "context_foreground",
 		w = self._object:w(),
 		h = self._object:h(),
 		color = self.BACKGROUND_SELECTED_COLOR,

@@ -16,24 +16,24 @@ HUDNameLabel.TIMER_FONT = "din_compressed_outlined_24"
 HUDNameLabel.TIMER_FONT_SIZE = tweak_data.gui.font_sizes.size_24
 HUDNameLabel.STATES = {
 	{
-		id = "downed",
-		control = "timer_panel"
+		control = "timer_panel",
+		id = "downed"
 	},
 	{
-		id = "interaction",
-		control = "interaction_panel"
+		control = "interaction_panel",
+		id = "interaction"
 	},
 	{
-		id = "special_interaction",
-		control = "special_interaction_icon"
+		control = "special_interaction_icon",
+		id = "special_interaction"
 	},
 	{
-		id = "mounted_weapon",
-		control = "mounted_weapon_icon"
+		control = "mounted_weapon_icon",
+		id = "mounted_weapon"
 	},
 	{
-		id = "normal",
-		control = "character_name"
+		control = "character_name",
+		id = "normal"
 	}
 }
 
@@ -75,8 +75,8 @@ end
 function HUDNameLabel:_create_name()
 	local name_params = {
 		name = "character_name",
-		vertical = "center",
 		align = "center",
+		vertical = "center",
 		w = self._object:w(),
 		h = HUDNameLabel.PLAYER_NAME_H,
 		font = HUDNameLabel.PLAYER_NAME_FONT,
@@ -107,10 +107,10 @@ end
 function HUDNameLabel:_create_special_interaction_icon()
 	local gui_icon = tweak_data.gui:get_full_gui_data(HUDNameLabel.LOCKPICK_ICON)
 	self._special_interaction_icon = self._object:bitmap({
+		valign = "center",
 		alpha = 0,
 		name = "special_interaction_icon",
 		halign = "center",
-		valign = "center",
 		texture = gui_icon.texture,
 		texture_rect = gui_icon.texture_rect
 	})
@@ -120,10 +120,10 @@ end
 
 function HUDNameLabel:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
+		valign = "center",
 		alpha = 0,
 		name = "mounted_weapon_icon",
 		halign = "center",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture_rect
 	}
@@ -136,14 +136,14 @@ end
 function HUDNameLabel:_create_timer()
 	local timer_panel_params = {
 		alpha = 0,
-		layer = 5,
-		name = "timer_panel"
+		name = "timer_panel",
+		layer = 5
 	}
 	self._timer_panel = self._object:panel(timer_panel_params)
 	local timer_background_params = {
+		valign = "center",
 		name = "timer_background",
 		halign = "center",
-		valign = "center",
 		layer = 1,
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture_rect
@@ -154,11 +154,11 @@ function HUDNameLabel:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
+		name = "timer_bar",
+		layer = 2,
 		halign = "center",
 		valign = "center",
 		render_template = "VertexColorTexturedRadial",
-		name = "timer_bar",
-		layer = 2,
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BAR_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDNameLabel.TIMER_BAR_ICON),
@@ -175,13 +175,13 @@ function HUDNameLabel:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		name = "timer_text",
-		x = 0,
-		y = 0,
-		text = "37",
 		vertical = "center",
+		name = "timer_text",
 		align = "center",
 		layer = 3,
+		y = 0,
+		x = 0,
+		text = "37",
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDNameLabel.TIMER_FONT],
@@ -222,8 +222,8 @@ function HUDNameLabel:_create_interaction_progress_bar()
 
 	local interaction_progress_fill_params = {
 		position_z = 0,
-		render_template = "VertexColorTexturedRadial",
 		name = "interaction_progress_fill",
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDNameLabel.PROGRESS_BAR_ICON_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDNameLabel.PROGRESS_BAR_ICON_FILL),

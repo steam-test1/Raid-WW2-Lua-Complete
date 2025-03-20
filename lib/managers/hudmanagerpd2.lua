@@ -714,9 +714,9 @@ function HUDManager:_create_ammo_test()
 	local panel = hud.panel:panel({
 		y = 200,
 		h = 4,
+		w = 100,
 		x = 550,
-		name = "ammo_test",
-		w = 100
+		name = "ammo_test"
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
@@ -961,11 +961,11 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
-		halign = "left",
 		valign = "grow",
 		y = 0,
 		x = 0,
 		name = "teammates_panel",
+		halign = "left",
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -1023,9 +1023,9 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
-		halign = "right",
 		valign = "bottom",
 		name = "weapons_panel",
+		halign = "right",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
 	}
@@ -1351,8 +1351,8 @@ function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
 		height = 8,
-		name = "progress_timer_progress_bar",
 		width = 256,
+		name = "progress_timer_progress_bar",
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),

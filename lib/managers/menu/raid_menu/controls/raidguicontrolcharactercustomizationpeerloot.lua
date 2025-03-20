@@ -46,9 +46,9 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	end
 
 	local params_customization_image = {
-		x = 0,
 		name = "card_image",
 		y = 0,
+		x = 0,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect
 	}
@@ -71,9 +71,9 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 	self._name_label:set_h(h)
 
 	local params_customization_description = {
-		wrap = true,
 		align = "left",
 		text = "",
+		wrap = true,
 		layer = 1,
 		name = "customization_description_label",
 		x = self._name_label:x(),

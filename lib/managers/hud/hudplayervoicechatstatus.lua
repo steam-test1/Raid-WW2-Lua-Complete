@@ -19,8 +19,8 @@ end
 
 function HUDPlayerVoiceChatStatus:_create_panel(index, parent_panel)
 	local panel_params = {
-		valign = "top",
 		halign = "right",
+		valign = "top",
 		x = HUDPlayerVoiceChatStatus.DEFAULT_X,
 		y = index * HUDPlayerVoiceChatStatus.DEFAULT_H,
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
@@ -46,10 +46,10 @@ end
 
 function HUDPlayerVoiceChatStatus:_create_player_name()
 	local player_name_params = {
-		text = "",
-		layer = 30,
 		x = 0,
 		name = "player_name",
+		text = "",
+		layer = 30,
 		w = self._object:w() - HUDPlayerVoiceChatStatus.CHAT_PANEL_W,
 		h = HUDPlayerVoiceChatStatus.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDPlayerVoiceChatStatus.PLAYER_NAME_FONT],

@@ -92,17 +92,17 @@ function LevelsTweakData:init()
 		}
 	}
 	self.zone_germany_park = {
-		world_name = "vanilla/zone_germany_park",
 		load_env = true,
 		low_poly = "",
+		world_name = "vanilla/zone_germany_park",
 		package = {
 			"packages/zone_germany"
 		},
 		map = {
 			default = {
-				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
+				pin_scale = 0.5,
 				base_location = {
 					x = -200,
 					y = -2850
@@ -123,36 +123,36 @@ function LevelsTweakData:init()
 		}
 	}
 	self.zone_germany_destroyed = {
-		world_name = "vanilla/zone_germany_destroyed",
 		load_env = true,
 		low_poly = "",
+		world_name = "vanilla/zone_germany_destroyed",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_destroyed_fuel = {
-		world_name = "vanilla/zone_germany_destroyed_fuel",
 		load_env = true,
 		low_poly = "",
+		world_name = "vanilla/zone_germany_destroyed_fuel",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout = {
-		world_name = "vanilla/zone_germany_roundabout",
 		load_env = true,
 		low_poly = "",
+		world_name = "vanilla/zone_germany_roundabout",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout_fuel = {
-		world_name = "vanilla/zone_germany_roundabout_fuel",
 		load_env = true,
 		low_poly = "",
+		world_name = "vanilla/zone_germany_roundabout_fuel",
 		package = {
 			"packages/zone_germany"
 		},
@@ -240,17 +240,17 @@ function LevelsTweakData:init()
 		}
 	}
 	self.forest_bunker = {
-		world_name = "upg_fb/forest_bunker",
 		load_env = true,
 		low_poly = "",
+		world_name = "upg_fb/forest_bunker",
 		package = {
 			"packages/zone_germany"
 		},
 		map = {
 			default = {
-				pin_scale = 0.5,
 				texture = "map_forest_bunker",
 				base_icon = "map_ico_bunker",
+				pin_scale = 0.5,
 				base_location = {
 					x = -3600,
 					y = 2500
@@ -419,8 +419,8 @@ function LevelsTweakData:get_team_setup()
 			},
 			mobster1 = {
 				foes = {
-					law1 = true,
 					converted_enemy = true,
+					law1 = true,
 					criminal1 = true
 				}
 			},

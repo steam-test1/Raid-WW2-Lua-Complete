@@ -42,8 +42,8 @@ end
 
 function CharacterTeamElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then
@@ -101,12 +101,12 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
 	local team_params = {
-		name = "Team:",
-		ctrlr_proportions = 2,
 		sorted = true,
 		name_proportions = 1,
+		ctrlr_proportions = 2,
 		tooltip = "Select wanted team for the character.",
 		default = "",
+		name = "Team:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = tweak_data.levels:get_team_names_indexed(),

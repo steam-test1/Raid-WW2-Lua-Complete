@@ -44,14 +44,14 @@ end
 
 function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
-		y = 0,
-		x = 0,
 		align = "center",
-		text = "PLAYER NAME",
 		vertical = "center",
 		alpha = 0,
 		layer = 1,
 		name = "player_name_label",
+		y = 0,
+		x = 0,
+		text = "PLAYER NAME",
 		w = self._object:w(),
 		h = RaidGUIControlTopStat.PLAYER_NAME_H,
 		color = RaidGUIControlTopStat.PLAYER_NAME_COLOR,
@@ -60,15 +60,15 @@ function RaidGUIControlTopStat:_create_stat_info()
 	}
 	self._player_name_label = self._control_panel:label(params_player_name)
 	local params_stat_name = {
-		x = 0,
 		align = "center",
-		text = "Most things done well",
 		vertical = "top",
-		wrap = true,
-		alpha = 0,
 		word_wrap = true,
+		alpha = 0,
 		layer = 3,
 		name = "stat_name_label",
+		x = 0,
+		wrap = true,
+		text = "Most things done well",
 		y = self._object:h() - RaidGUIControlTopStat.STAT_NAME_H,
 		w = RaidGUIControlTopStat.WIDTH,
 		h = RaidGUIControlTopStat.STAT_NAME_H,

@@ -51,12 +51,12 @@ end
 
 function RaidGUIControlTopStatBig:_create_stat_info()
 	local player_name_params = {
+		vertical = "center",
 		alpha = 0,
+		align = "center",
 		text = "PLAYER NAME",
 		name = "player_name_label",
 		layer = 1,
-		vertical = "center",
-		align = "center",
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.PLAYER_NAME_H,
 		font = RaidGUIControlTopStatBig.FONT,
@@ -68,14 +68,14 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 	self._player_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.PLAYER_NAME_CENTER_Y_FROM_BOTTOM)
 
 	local stat_name_params = {
+		vertical = "center",
+		alpha = 0,
+		align = "center",
 		word_wrap = true,
 		wrap = true,
-		alpha = 0,
-		name = "stat_name_label",
 		text = "Most things done well",
+		name = "stat_name_label",
 		layer = 3,
-		vertical = "center",
-		align = "center",
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.STAT_NAME_H,
 		font = RaidGUIControlTopStatBig.FONT,
@@ -87,14 +87,14 @@ function RaidGUIControlTopStatBig:_create_stat_info()
 	self._stat_name_label:set_center_y(self._object:h() - RaidGUIControlTopStatBig.STAT_NAME_CENTER_Y_FROM_BOTTOM)
 
 	local stat_value_params = {
+		vertical = "center",
+		alpha = 0,
+		align = "center",
 		word_wrap = true,
 		wrap = true,
-		alpha = 0,
-		name = "stat_value_label",
 		text = "1",
+		name = "stat_value_label",
 		layer = 3,
-		vertical = "center",
-		align = "center",
 		w = self._object:w(),
 		h = RaidGUIControlTopStatBig.STAT_VALUE_H,
 		font = RaidGUIControlTopStatBig.FONT,

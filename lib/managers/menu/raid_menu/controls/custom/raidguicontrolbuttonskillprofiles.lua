@@ -49,10 +49,10 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 
 	local button = managers.localization:btn_macro("menu_controller_face_top")
 	self._controller_button = self._object:label({
+		name = "controller_switch_button",
 		vertical = "bottom",
 		align = "center",
 		x = 2,
-		name = "controller_switch_button",
 		text = button,
 		font = self.CONTROLLER_FONT,
 		font_size = self.CONTROLLER_FONT_SIZE,

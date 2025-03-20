@@ -69,8 +69,8 @@ function MenuNodeButtonLayoutGui:_setup()
 		layer = self.layers.background
 	})
 	self._controller = self.ws:panel():bitmap({
-		h = 256,
 		texture = "guis/textures/controller",
+		h = 256,
 		w = 512,
 		layer = self.layers.items
 	})

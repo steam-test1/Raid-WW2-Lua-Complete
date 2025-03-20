@@ -38,8 +38,8 @@ function ExperienceGui:_layout()
 		w = center - menu_shift
 	})
 	self._menu_right_side = self._object:panel({
-		layer = 1,
 		name = "menu_right_side",
+		layer = 1,
 		w = center + menu_shift
 	})
 
@@ -98,9 +98,9 @@ function ExperienceGui:_layout_equipped_upgrades()
 	block_size = math.floor(block_size / 2 - total_icons * 0.025)
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	self._equipped_upgrades_area = self._menu_left_side:bitmap({
+		name = "_temp_equipped_upgrades",
 		alpha = 0.8,
 		layer = 0,
-		name = "_temp_equipped_upgrades",
 		w = self._menu_left_side:w(),
 		h = block_size + 8,
 		texture = backgrounds_chat_bg.texture,
@@ -134,8 +134,8 @@ function ExperienceGui:_layout_equipped_upgrades()
 			end
 
 			local grid_item = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillTiny, {
-				y = 4,
 				layer = 1,
+				y = 4,
 				name = "equippped_slot_" .. slot_type_str .. i,
 				x = x,
 				w = block_size,
@@ -163,8 +163,8 @@ function ExperienceGui:_layout_equipped_upgrades()
 	self:_update_equipped_upgrades()
 
 	self._skill_profiles_button = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillProfiles, {
-		y = 4,
 		name = "skill_profiles_button",
+		y = 4,
 		w = skill_profiles_w,
 		h = block_size,
 		on_click_callback = callback(self, self, "_on_toggle_skill_profiles")
@@ -243,9 +243,9 @@ function ExperienceGui:_layout_equipable_upgrades()
 	local h = self._menu_left_side:h() - y
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	self._equipable_upgrades_background = self._menu_left_side:bitmap({
+		name = "grid_item_icon_sprite",
 		alpha = 0.5,
 		layer = -1,
-		name = "grid_item_icon_sprite",
 		y = y,
 		w = self._menu_left_side:w(),
 		h = h,
@@ -298,8 +298,8 @@ function ExperienceGui:_layout_skill_profile()
 	local x, y, w, h = self._equipable_upgrades_background:shape()
 	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
 		name = "skill_profiles_list",
-		selection_enabled = false,
 		visible = false,
+		selection_enabled = false,
 		loop_items = true,
 		x = x + x_padding,
 		y = y + y_padding,
@@ -552,8 +552,8 @@ function ExperienceGui:_layout_player_stats()
 	self._player_stats_panel:set_bottom(self._menu_right_side:h())
 
 	self._player_stats = self._player_stats_panel:player_stats({
-		items_padding = 10,
 		name = "player_stats",
+		items_padding = 10,
 		w = self._player_stats_panel:w(),
 		h = self._player_stats_panel:h(),
 		data_source_callback = callback(self, self, "data_source_stats"),
@@ -580,13 +580,13 @@ function ExperienceGui:data_source_stats()
 	})
 	table.insert(t, {
 		text_id = "character_stats_stamina_regen_label",
-		format_value = "%.2g/s",
-		name = "stamina_regen"
+		name = "stamina_regen",
+		format_value = "%.2g/s"
 	})
 	table.insert(t, {
 		text_id = "character_stats_stamina_delay_label",
-		format_value = "%.2gs",
-		name = "stamina_delay"
+		name = "stamina_delay",
+		format_value = "%.2gs"
 	})
 	table.insert(t, {
 		text_id = "character_stats_speed_walk_label",
@@ -598,8 +598,8 @@ function ExperienceGui:data_source_stats()
 	})
 	table.insert(t, {
 		text_id = "character_stats_crit_chance_label",
-		format_value = "%s%%",
-		name = "crit_chance"
+		name = "crit_chance",
+		format_value = "%s%%"
 	})
 	table.insert(t, {
 		text_id = "character_stats_carry_limit_label",
@@ -623,8 +623,8 @@ function ExperienceGui:_layout_experience_progress()
 	local y = self._player_stats_panel:y() - h
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	self._experience_progress_background = self._menu_right_side:bitmap({
-		layer = -1,
 		name = "grid_item_icon_sprite",
+		layer = -1,
 		y = y,
 		w = self._menu_right_side:w(),
 		h = h,
@@ -632,8 +632,8 @@ function ExperienceGui:_layout_experience_progress()
 		texture_rect = backgrounds_chat_bg.texture_rect
 	})
 	self._progress_bar = self._menu_right_side:create_custom_control(RaidGUIControlSkilltreeProgressBar, {
-		horizontal_padding = 15,
 		name = "progress_bar",
+		horizontal_padding = 15,
 		w = self._menu_right_side:w() - 100,
 		h = h - 12
 	})

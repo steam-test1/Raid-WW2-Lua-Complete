@@ -93,11 +93,11 @@ function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 	self._unit:movement():on_activated(tweak_table_id)
 
 	local weapon_setup_data = {
+		auto_reload = true,
 		spread_mul = 1,
 		alert_AI = false,
 		autoaim = true,
 		expend_ammo = true,
-		auto_reload = true,
 		ignore_units = {
 			self._unit
 		},
@@ -187,10 +187,10 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, damage_mu
 	end
 
 	local setup_data = {
+		creates_alerts = true,
 		alert_AI = true,
 		autoaim = true,
 		expend_ammo = true,
-		creates_alerts = true,
 		user_unit = self._owner,
 		ignore_units = {
 			self._unit,

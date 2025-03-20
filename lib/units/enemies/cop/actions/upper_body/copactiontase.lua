@@ -156,8 +156,8 @@ function CopActionTase:on_exit()
 
 		if self._expired then
 			self._ext_movement:action_request({
-				type = "idle",
-				body_part = 3
+				body_part = 3,
+				type = "idle"
 			})
 		end
 	end

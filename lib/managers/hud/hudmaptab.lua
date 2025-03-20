@@ -16,18 +16,18 @@ end
 
 function HUDMapTab:_create_panel(panel, params)
 	self._object = panel:panel({
-		name = "map_panel",
 		halign = "scale",
 		valign = "scale",
+		name = "map_panel",
 		layer = params.layer or panel:layer()
 	})
 end
 
 function HUDMapTab:_create_inner_panel()
 	self._inner_panel = self._object:panel({
-		name = "inner_panel",
 		halign = "center",
 		valign = "center",
+		name = "inner_panel",
 		layer = HUDMapTab.INNER_PANEL_LAYER
 	})
 end
@@ -38,9 +38,9 @@ function HUDMapTab:_create_pin_panel()
 	end
 
 	local player_pins_panel = self._inner_panel:panel({
-		name = "player_pins_panel",
 		halign = "scale",
 		valign = "scale",
+		name = "player_pins_panel",
 		layer = HUDMapTab.PLAYER_PINS_LAYER
 	})
 end
@@ -51,9 +51,9 @@ function HUDMapTab:_create_waypoint_panel()
 	end
 
 	local waypoint_panel = self._inner_panel:panel({
-		name = "waypoint_panel",
 		halign = "scale",
 		valign = "scale",
+		name = "waypoint_panel",
 		layer = HUDMapTab.WAYPOINT_PANEL_LAYER
 	})
 end
@@ -136,9 +136,9 @@ function HUDMapTab:_create_map_background()
 	local map_texture = self._tweak_data.texture
 	local gui_data = tweak_data.gui:get_full_gui_data(map_texture)
 	local background_panel = self._object:panel({
+		valign = "center",
 		name = "map_background_panel",
 		halign = "center",
-		valign = "center",
 		w = gui_data.texture_rect[3],
 		h = gui_data.texture_rect[4],
 		layer = HUDMapTab.BACKGROUND_LAYER

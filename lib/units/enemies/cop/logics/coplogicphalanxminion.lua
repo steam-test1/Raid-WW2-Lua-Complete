@@ -46,8 +46,8 @@ function CopLogicPhalanxMinion.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				type = "idle",
-				body_part = 3
+				body_part = 3,
+				type = "idle"
 			})
 		end
 

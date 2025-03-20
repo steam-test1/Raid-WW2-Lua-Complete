@@ -103,8 +103,8 @@ function TeamAIDamage:force_bleedout()
 		}
 	}
 	local result = {
-		type = "none",
-		variant = "bullet"
+		variant = "bullet",
+		type = "none"
 	}
 	attack_data.result = result
 	local damage_percent, health_subtracted = self:_apply_damage(attack_data, result, true)
@@ -125,8 +125,8 @@ end
 
 function TeamAIDamage:damage_bullet(attack_data)
 	local result = {
-		type = "none",
-		variant = "bullet"
+		variant = "bullet",
+		type = "none"
 	}
 	attack_data.result = result
 
@@ -816,15 +816,15 @@ function TeamAIDamage:revive(reviving_unit)
 		self:_regenerated()
 
 		local action_data = {
-			type = "act",
-			variant = "stand",
 			body_part = 1,
+			variant = "stand",
+			type = "act",
 			blocks = {
-				action = -1,
 				hurt = -1,
-				heavy_hurt = -1,
 				aim = -1,
-				walk = -1
+				walk = -1,
+				action = -1,
+				heavy_hurt = -1
 			}
 		}
 		local res = self._unit:movement():action_request(action_data)
@@ -911,14 +911,14 @@ function TeamAIDamage:on_tase_ended()
 
 		self._to_incapacitated_clbk_id = nil
 		local action_data = {
-			type = "act",
-			variant = "stand",
 			body_part = 1,
+			variant = "stand",
+			type = "act",
 			blocks = {
-				action = -1,
 				hurt = -1,
-				heavy_hurt = -1,
-				walk = -1
+				walk = -1,
+				action = -1,
+				heavy_hurt = -1
 			}
 		}
 		local res = self._unit:movement():action_request(action_data)

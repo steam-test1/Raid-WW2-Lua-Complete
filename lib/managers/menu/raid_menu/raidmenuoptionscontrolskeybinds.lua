@@ -262,8 +262,8 @@ RaidMenuOptionsControlsKeybinds.CONTROLS_INFO = {
 	},
 	vehicle_shooting_stance = {
 		category = "vehicle",
-		text_id = "menu_button_vehicle_shooting_stance",
 		type = "usage",
+		text_id = "menu_button_vehicle_shooting_stance",
 		block = {
 			"normal"
 		}
@@ -296,9 +296,9 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 	RaidMenuOptionsControlsKeybinds.super._layout(self)
 
 	self._keybind_panel = self._root_panel:panel({
-		name = "keybind_panel",
 		y = 0,
-		x = 0
+		x = 0,
+		name = "keybind_panel"
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
 		initial_tab_idx = 1,
@@ -324,9 +324,9 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		}
 	})
 	local default_controls_keybinds_params = {
+		x = 1472,
 		name = "default_controls_keybinds",
 		y = 832,
-		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER

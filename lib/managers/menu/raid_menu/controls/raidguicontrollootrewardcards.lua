@@ -90,8 +90,8 @@ function RaidGUIControlLootRewardCards:_create_title()
 	self._title_description:set_w(w)
 
 	local title_params = {
-		alpha = 0,
 		name = "pack_title",
+		alpha = 0,
 		vertical = "top",
 		align = "center",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlLootRewardCards.TITLE_PADDING_TOP,

@@ -66,9 +66,9 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_background(params)
 	local background_params = {
-		x = 0,
-		y = 1,
 		visible = false,
+		y = 1,
+		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = self._object:h() - 2,
@@ -79,10 +79,10 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 	local marker_params = {
-		w = 3,
-		x = 0,
-		y = 1,
 		visible = false,
+		w = 3,
+		y = 1,
+		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
 		color = self._selected_color
@@ -107,8 +107,8 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 	local raid_name_params = {
-		vertical = "center",
 		y = 0,
+		vertical = "center",
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		w = params.w,

@@ -28,13 +28,13 @@ function EditZipLine:init(editor)
 	end_pos_sizer:add(btn_toolbar, 0, 1, "EXPAND,LEFT")
 
 	self._speed_params = {
+		tooltip = "Sets the speed of the zipline in cm/s",
+		floats = 0,
+		value = 0,
 		name = "Speed [cm/s]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
-		tooltip = "Sets the speed of the zipline in cm/s",
-		floats = 0,
-		value = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -52,13 +52,13 @@ function EditZipLine:init(editor)
 	CoreEws.number_controller(self._speed_params)
 
 	self._slack_params = {
+		tooltip = "Value to define slack of the zipline in cm",
+		floats = 0,
+		value = 0,
 		name = "Slack [cm]:",
 		ctrlr_proportions = 1,
 		name_proportions = 1,
 		min = 0,
-		tooltip = "Value to define slack of the zipline in cm",
-		floats = 0,
-		value = 0,
 		panel = panel,
 		sizer = sizer,
 		events = {
@@ -76,11 +76,11 @@ function EditZipLine:init(editor)
 	CoreEws.number_controller(self._slack_params)
 
 	self._type_params = {
-		name = "Type:",
-		name_proportions = 1,
 		tooltip = "Select a type from the combobox",
-		ctrlr_proportions = 1,
 		sorted = true,
+		name = "Type:",
+		ctrlr_proportions = 1,
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
 		options = ZipLine.TYPES

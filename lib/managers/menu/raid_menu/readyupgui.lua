@@ -96,9 +96,9 @@ function ReadyUpGui:_layout_buttons()
 
 	self._no_cards_warning_label = self._root_panel:label({
 		align = "right",
-		x = 1000,
 		name = "no_cards_warning_label",
 		visible = false,
+		x = 1000,
 		y = button_y,
 		text = self:translate("menu_card_dont_own", true),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -190,11 +190,11 @@ function ReadyUpGui:_layout_header()
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
+		h = 32,
+		name = "mission_name",
 		vertical = "center",
 		align = "left",
 		y = 0,
-		h = 32,
-		name = "mission_name",
 		x = mission_info_x,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -294,10 +294,10 @@ function ReadyUpGui:_layout_card_info()
 		texture_rect = empty_slot_texture.texture_rect
 	})
 	self._card_not_selected_label = self._root_panel:label({
-		align = "center",
-		h = 128,
 		wrap = true,
+		h = 128,
 		name = "card_not_selected_label",
+		align = "center",
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
 		w = self._empty_card_slot:w() - 10,
@@ -311,11 +311,11 @@ function ReadyUpGui:_layout_card_info()
 	self._card_not_selected_label:set_visible(true)
 
 	self._positive_card_effect_label = self._root_panel:label({
-		align = "left",
-		h = 128,
-		w = 352,
 		wrap = true,
+		h = 128,
 		name = "positive_card_effect",
+		align = "left",
+		w = 352,
 		y = self._card_control:bottom() + 32,
 		text = self:translate("hud_no_challenge_card_text", false),
 		font = tweak_data.gui.fonts.lato,
@@ -326,12 +326,12 @@ function ReadyUpGui:_layout_card_info()
 	self._positive_card_effect_label:set_right(self._root_panel:right())
 
 	self._negative_card_effect_label = self._root_panel:label({
-		align = "left",
-		text = "",
-		h = 64,
-		w = 352,
 		wrap = true,
+		h = 64,
+		text = "",
 		name = "negative_card_effect",
+		align = "left",
+		w = 352,
 		y = self._card_control:bottom() + 96,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,

@@ -235,9 +235,9 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 		}
 	}
 	local objective = {
-		called = true,
-		scan = true,
 		type = "revive",
+		scan = true,
+		called = true,
 		destroy_clbk_key = false,
 		follow_unit = data.unit,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
@@ -248,11 +248,11 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 			body_part = 1,
 			variant = rescue_type,
 			blocks = {
-				light_hurt = -1,
+				walk = -1,
 				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				walk = -1,
+				light_hurt = -1,
 				aim = -1
 			}
 		},

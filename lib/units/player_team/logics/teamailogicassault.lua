@@ -219,9 +219,9 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
-			align_sync = true,
-			variant = "arrest",
 			type = "act",
+			variant = "arrest",
+			align_sync = true,
 			body_part = 3
 		}
 

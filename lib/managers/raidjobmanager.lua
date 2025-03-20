@@ -58,8 +58,8 @@ function RaidJobManager:local_set_selected_job(job_id, job_data)
 	self._current_job = nil
 
 	managers.statistics:stop_session({
-		quit = true,
-		success = false
+		success = false,
+		quit = true
 	})
 	managers.network:session():send_to_peers_synched("stop_statistics_session", false, true, "")
 
@@ -116,8 +116,9 @@ function RaidJobManager:_select_operation()
 end
 
 function RaidJobManager:_goto_operation_objective()
-	Application:debug("[RaidJobManager:_goto_operation_objective] selected job", (self._selected_job or self._current_job).job_id)
-	Application:stack_dump()
+	if not self:is_camp_loaded() then
+		return
+	end
 
 	local id = nil
 
@@ -220,8 +221,8 @@ function RaidJobManager:start_selected_job()
 	self._previously_completed_job = nil
 
 	managers.statistics:start_session({
-		drop_in = false,
-		from_beginning = true
+		from_beginning = true,
+		drop_in = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", true, false)
 	managers.network:session():send_to_peers_synched("sync_current_job", self._current_job.job_id)
@@ -268,8 +269,8 @@ end
 
 function RaidJobManager:_on_restart_to_camp()
 	managers.statistics:stop_session({
-		quit = true,
-		success = false
+		success = false,
+		quit = true
 	})
 	managers.lootdrop:reset_loot_value_counters()
 	Application:debug("[AirdropManager] cleanup from RaidJobManager:_on_restart_to_camp")
@@ -931,8 +932,8 @@ function RaidJobManager:start_event(event_id)
 	managers.global_state:reset_flags_for_job("level_flag")
 	managers.global_state:set_flag(self._current_job.current_event_data.mission_flag)
 	managers.statistics:start_session({
-		drop_in = false,
-		from_beginning = false
+		from_beginning = false,
+		drop_in = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", false, false)
 	managers.lootdrop:reset_loot_value_counters()
@@ -1291,6 +1292,7 @@ function RaidJobManager:sync_load(data)
 			tweak_data.operations.missions[state.current_job_id].events_index = state.events_index
 
 			self:set_current_event(self._current_job, state.current_job_event)
+			self:_goto_operation_objective()
 		end
 
 		self._loot_data = state.loot_data

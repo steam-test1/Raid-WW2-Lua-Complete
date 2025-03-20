@@ -80,8 +80,8 @@ end
 
 function SpawnEnemyGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) then
@@ -130,12 +130,12 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	}), "Specify how the enemy will be spawned.")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled", "Select if disabled spawn points should be ignored or not")
 	self:_build_value_random_number(panel, panel_sizer, "amount", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specify amount of enemies to spawn from group")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Used to specify how often this spawn can be used. 0 means no interval")
 	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
 		"default"

@@ -236,9 +236,9 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 	}, edited_field_label) then
 		local hsv_values = self:_parse_values({
 			Value = 100,
-			Sat = 100,
+			Hue = 1,
 			Alpha = 255,
-			Hue = 1
+			Sat = 100
 		})
 
 		if hsv_values then

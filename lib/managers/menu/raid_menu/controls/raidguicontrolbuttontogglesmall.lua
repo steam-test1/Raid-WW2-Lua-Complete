@@ -52,8 +52,8 @@ end
 function RaidGUIControlButtonToggleSmall:_create_active_icon()
 	local active_icon = self._params.active_icon ~= nil and self._params.active_icon or self._params.inactive_icon
 	local active_icon_params = {
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
 		texture = tweak_data.gui.icons[active_icon].texture,
 		texture_rect = tweak_data.gui.icons[active_icon].texture_rect
 	}
@@ -65,8 +65,8 @@ end
 function RaidGUIControlButtonToggleSmall:_create_inactive_icon()
 	local inactive_icon = self._params.inactive_icon ~= nil and self._params.inactive_icon or self._params.active_icon
 	local inactive_icon_params = {
-		halign = "scale",
 		valign = "scale",
+		halign = "scale",
 		texture = tweak_data.gui.icons[inactive_icon].texture,
 		texture_rect = tweak_data.gui.icons[inactive_icon].texture_rect
 	}

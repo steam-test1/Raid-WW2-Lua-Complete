@@ -990,8 +990,8 @@ function CopLogicTravel._get_pos_on_wall(from_pos, max_dist, step_offset, is_rec
 
 	local from_tracker = nav_manager:create_nav_tracker(from_pos)
 	local ray_params = {
-		allow_entry = false,
 		trace = true,
+		allow_entry = false,
 		tracker_from = from_tracker,
 		pos_to = to_pos
 	}

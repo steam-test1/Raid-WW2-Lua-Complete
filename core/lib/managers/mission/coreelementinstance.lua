@@ -148,9 +148,11 @@ function ElementInstancePoint:_create()
 	end
 
 	if self._values.instance then
+		local pos, rot = self:get_orientation()
+
 		managers.world_instance:custom_create_instance(self._values.instance, self._sync_id, {
-			position = self._values.position,
-			rotation = self._values.rotation
+			position = pos,
+			rotation = rot
 		})
 	elseif Application:editor() then
 		managers.editor:output_error("[ElementInstancePoint:_create()] No instance defined in [" .. self._editor_name .. "]")

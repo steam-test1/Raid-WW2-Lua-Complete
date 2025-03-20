@@ -715,9 +715,9 @@ function TweakData:init()
 		color = d_color
 	}
 	self.overlay_effects.damage_left = {
-		orientation = "horizontal",
 		fade_in = 0,
 		blend_mode = "add",
+		orientation = "horizontal",
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -733,9 +733,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_right = {
-		orientation = "horizontal",
 		fade_in = 0,
 		blend_mode = "add",
+		orientation = "horizontal",
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -751,9 +751,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_up = {
-		orientation = "vertical",
 		fade_in = 0,
 		blend_mode = "add",
+		orientation = "vertical",
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -769,9 +769,9 @@ function TweakData:init()
 		}
 	}
 	self.overlay_effects.damage_down = {
-		orientation = "vertical",
 		fade_in = 0,
 		blend_mode = "add",
+		orientation = "vertical",
 		sustain = d_sustain,
 		fade_out = d_fade_out,
 		color = d_color,
@@ -794,20 +794,20 @@ function TweakData:init()
 		color = Color(0.1, 1, 1, 1)
 	}
 	self.overlay_effects.fade_out_e3_demo = {
-		text_to_upper = true,
-		text = [[
-Great job, Raid gang!
-
-You've reached the end of our PAX EAST demo.
-]],
 		text_blend_mode = "add",
+		font = "fonts/font_large_mf",
 		font_size = 44,
 		play_paused = true,
 		fade_out = 0,
 		fade_in = 3,
 		sustain = 20,
-		font = "fonts/font_large_mf",
+		text_to_upper = true,
 		blend_mode = "normal",
+		text = [[
+Great job, Raid gang!
+
+You've reached the end of our PAX EAST demo.
+]],
 		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 		text_color = Color(255, 255, 204, 0) / 255
@@ -1282,10 +1282,10 @@ function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
 		[Idstring("german"):key()] = {
-			sd_w_interact_multiplier = 1.55,
 			large = 0.9,
-			w_interact_multiplier = 1.65,
 			small = 1,
+			w_interact_multiplier = 1.65,
+			sd_w_interact_multiplier = 1.55,
 			kit_desc_large = 0.9,
 			menu_logo_multiplier = 0.9,
 			objectives_text_kern = -1,
@@ -1296,13 +1296,13 @@ function TweakData:set_scale()
 			sd_large = 0.9
 		},
 		[Idstring("french"):key()] = {
-			sd_w_interact_multiplier = 1.3,
+			large = 0.9,
 			subtitle_multiplier = 0.85,
 			sd_level_up_font_multiplier = 0.9,
 			victory_screen_kern = -0.5,
-			large = 0.9,
-			w_interact_multiplier = 1.4,
 			small = 1,
+			w_interact_multiplier = 1.4,
+			sd_w_interact_multiplier = 1.3,
 			kit_desc_large = 0.9,
 			objectives_text_kern = -0.8,
 			level_up_text_kern = -1.5,
@@ -1311,25 +1311,25 @@ function TweakData:set_scale()
 			sd_large = 0.9
 		},
 		[Idstring("italian"):key()] = {
-			small = 1,
-			objectives_text_kern = -0.8,
 			sd_w_interact_multiplier = 1.5,
-			w_interact_multiplier = 1.35,
+			objectives_text_kern = -0.8,
 			large = 1,
+			w_interact_multiplier = 1.35,
+			small = 1,
 			sd_small = 1,
 			sd_large = 1,
 			kit_desc_large = 0.9
 		},
 		[Idstring("spanish"):key()] = {
-			sd_w_interact_multiplier = 1.5,
+			large = 1,
 			victory_title_multiplier = 0.9,
 			server_list_font_multiplier = 0.9,
 			objectives_desc_text_kern = 0,
 			upgrade_menu_kern = -1.25,
 			sd_level_up_font_multiplier = 0.9,
-			large = 1,
-			w_interact_multiplier = 1.6,
 			small = 1,
+			w_interact_multiplier = 1.6,
+			sd_w_interact_multiplier = 1.5,
 			kit_desc_large = 0.9,
 			menu_logo_multiplier = 0.9,
 			objectives_text_kern = -0.8,
@@ -1465,35 +1465,35 @@ end
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
-			upgrades_font_size = 1,
 			challenges_font_size = 1,
 			topic_font_size = 0.8,
-			mission_end_font_size = 1
+			mission_end_font_size = 1,
+			upgrades_font_size = 1
 		},
 		[Idstring("french"):key()] = {
-			upgrades_font_size = 1,
 			challenges_font_size = 1,
 			topic_font_size = 1,
-			mission_end_font_size = 1
+			mission_end_font_size = 1,
+			upgrades_font_size = 1
 		},
 		[Idstring("italian"):key()] = {
-			upgrades_font_size = 1,
 			challenges_font_size = 1,
 			topic_font_size = 1,
-			mission_end_font_size = 0.95
+			mission_end_font_size = 0.95,
+			upgrades_font_size = 1
 		},
 		[Idstring("spanish"):key()] = {
-			upgrades_font_size = 1,
 			challenges_font_size = 0.95,
 			topic_font_size = 0.95,
-			mission_end_font_size = 1
+			mission_end_font_size = 1,
+			upgrades_font_size = 1
 		}
 	}
 	local lang_mods = lang_mods_def[SystemInfo:language():key()] or {
-		upgrades_font_size = 1,
 		challenges_font_size = 1,
 		topic_font_size = 1,
-		mission_end_font_size = 1
+		mission_end_font_size = 1,
+		upgrades_font_size = 1
 	}
 	local scale_multiplier = self.scale.default_font_multiplier
 	local small_scale_multiplier = self.scale.small_font_multiplier
@@ -1572,45 +1572,45 @@ end
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
-			present_mid_text_font_size = 0.8,
 			active_objective_title_font_size = 0.9,
 			stats_challenges_font_size = 0.7,
 			hint_font_size = 0.9,
 			location_font_size = 1,
-			next_player_font_size = 0.85
+			next_player_font_size = 0.85,
+			present_mid_text_font_size = 0.8
 		},
 		[Idstring("french"):key()] = {
-			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 0.825,
 			location_font_size = 1,
-			next_player_font_size = 0.85
+			next_player_font_size = 0.85,
+			present_mid_text_font_size = 1
 		},
 		[Idstring("italian"):key()] = {
-			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 1,
 			location_font_size = 1,
-			next_player_font_size = 0.85
+			next_player_font_size = 0.85,
+			present_mid_text_font_size = 1
 		},
 		[Idstring("spanish"):key()] = {
-			present_mid_text_font_size = 1,
 			active_objective_title_font_size = 1,
 			stats_challenges_font_size = 1,
 			hint_font_size = 1,
 			location_font_size = 0.7,
-			next_player_font_size = 0.85
+			next_player_font_size = 0.85,
+			present_mid_text_font_size = 1
 		}
 	}
 	local lang_mods = lang_mods_def[SystemInfo:language():key()] or {
-		present_mid_text_font_size = 1,
 		active_objective_title_font_size = 1,
 		stats_challenges_font_size = 1,
 		hint_font_size = 1,
 		location_font_size = 1,
-		next_player_font_size = 1
+		next_player_font_size = 1,
+		present_mid_text_font_size = 1
 	}
 	self.hud.large_font = "fonts/font_large"
 	self.hud.medium_kern = 1.7
@@ -1710,51 +1710,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.normal.triangle = {
 			x = 511,
-			id = "menu_button_switch_weapon",
 			align = "left",
-			y = 104
+			y = 104,
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.circle = {
 			x = 511,
-			id = "menu_button_crouch",
 			align = "left",
-			y = 128
+			y = 128,
+			id = "menu_button_crouch"
 		}
 		coords.normal.cross = {
 			x = 511,
-			id = "menu_button_jump",
 			align = "left",
-			y = 153
+			y = 153,
+			id = "menu_button_jump"
 		}
 		coords.normal.square = {
 			x = 511,
-			id = "menu_button_reload",
 			align = "left",
-			y = 181
+			y = 181,
+			id = "menu_button_reload"
 		}
 		coords.normal.r1_trigger = {
 			x = 511,
-			id = "menu_button_fire_weapon",
 			align = "left",
-			y = 10
+			y = 10,
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.r2_trigger = {
 			x = 511,
-			id = "menu_button_shout",
 			align = "left",
-			y = 55
+			y = 55,
+			id = "menu_button_shout"
 		}
 		coords.normal.l1_trigger = {
 			x = 0,
-			id = "menu_button_aim_down_sight",
 			align = "right",
-			y = 10
+			y = 10,
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.l2_trigger = {
 			x = 0,
-			id = "menu_button_deploy",
 			align = "right",
-			y = 55
+			y = 55,
+			id = "menu_button_deploy"
 		}
 		coords.normal.start = {
 			x = 219,
@@ -1821,51 +1821,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.vehicle.triangle = {
 			x = 511,
-			id = "menu_button_unassigned",
 			align = "left",
-			y = 104
+			y = 104,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.circle = {
 			x = 511,
-			id = "menu_button_vehicle_shooting_stance",
 			align = "left",
-			y = 128
+			y = 128,
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.cross = {
 			x = 511,
-			id = "menu_button_handbrake",
 			align = "left",
-			y = 153
+			y = 153,
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.square = {
 			x = 511,
-			id = "menu_button_vehicle_change_camera",
 			align = "left",
-			y = 181
+			y = 181,
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.r1_trigger = {
 			x = 511,
-			id = "menu_button_accelerate",
 			align = "left",
-			y = 10
+			y = 10,
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.r2_trigger = {
 			x = 511,
-			id = "menu_button_unassigned",
 			align = "left",
-			y = 55
+			y = 55,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.l1_trigger = {
 			x = 0,
-			id = "menu_button_brake",
 			align = "right",
-			y = 10
+			y = 10,
+			id = "menu_button_brake"
 		}
 		coords.vehicle.l2_trigger = {
 			x = 0,
-			id = "menu_button_unassigned",
 			align = "right",
-			y = 55
+			y = 55,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.start = {
 			x = 219,
@@ -1933,51 +1933,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.normal.y = {
 			x = 512,
-			id = "menu_button_switch_weapon",
 			align = "left",
-			y = 57
+			y = 57,
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.x = {
 			x = 512,
-			id = "menu_button_reload",
 			align = "left",
-			y = 140
+			y = 140,
+			id = "menu_button_reload"
 		}
 		coords.normal.b = {
 			x = 512,
-			id = "menu_button_crouch",
 			align = "left",
-			y = 85
+			y = 85,
+			id = "menu_button_crouch"
 		}
 		coords.normal.a = {
 			x = 512,
-			id = "menu_button_jump",
 			align = "left",
-			y = 113
+			y = 113,
+			id = "menu_button_jump"
 		}
 		coords.normal.right_shoulder = {
 			x = 390,
-			id = "menu_button_shout",
 			align = "center",
-			y = -10
+			y = -10,
+			id = "menu_button_shout"
 		}
 		coords.normal.right_trigger = {
 			x = 512,
-			id = "menu_button_fire_weapon",
 			align = "left",
-			y = 18
+			y = 18,
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.left_shoulder = {
 			x = 180,
-			id = "menu_button_deploy",
 			align = "right",
-			y = -10
+			y = -10,
+			id = "menu_button_deploy"
 		}
 		coords.normal.left_trigger = {
 			x = 0,
-			id = "menu_button_aim_down_sight",
 			align = "right",
-			y = 18
+			y = 18,
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.start = {
 			x = 288,
@@ -2044,51 +2044,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.vehicle.y = {
 			x = 512,
-			id = "menu_button_unassigned",
 			align = "left",
-			y = 57
+			y = 57,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.x = {
 			x = 512,
-			id = "menu_button_vehicle_change_camera",
 			align = "left",
-			y = 140
+			y = 140,
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.b = {
 			x = 512,
-			id = "menu_button_vehicle_shooting_stance",
 			align = "left",
-			y = 85
+			y = 85,
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.a = {
 			x = 512,
-			id = "menu_button_handbrake",
 			align = "left",
-			y = 113
+			y = 113,
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.right_shoulder = {
 			x = 390,
-			id = "menu_button_unassigned",
 			align = "center",
-			y = -10
+			y = -10,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.right_trigger = {
 			x = 512,
-			id = "menu_button_accelerate",
 			align = "left",
-			y = 18
+			y = 18,
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.left_shoulder = {
 			x = 180,
-			id = "menu_button_unassigned",
 			align = "right",
-			y = -10
+			y = -10,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left_trigger = {
 			x = 0,
-			id = "menu_button_brake",
 			align = "right",
-			y = 18
+			y = 18,
+			id = "menu_button_brake"
 		}
 		coords.vehicle.start = {
 			x = 288,
@@ -2156,51 +2156,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.normal.y = {
 			x = 512,
-			id = "menu_button_switch_weapon",
 			align = "left",
-			y = 97
+			y = 97,
+			id = "menu_button_switch_weapon"
 		}
 		coords.normal.x = {
 			x = 512,
-			id = "menu_button_reload",
 			align = "left",
-			y = 180
+			y = 180,
+			id = "menu_button_reload"
 		}
 		coords.normal.b = {
 			x = 512,
-			id = "menu_button_crouch",
 			align = "left",
-			y = 125
+			y = 125,
+			id = "menu_button_crouch"
 		}
 		coords.normal.a = {
 			x = 512,
-			id = "menu_button_jump",
 			align = "left",
-			y = 153
+			y = 153,
+			id = "menu_button_jump"
 		}
 		coords.normal.right_shoulder = {
 			x = 512,
-			id = "menu_button_shout",
 			align = "left",
-			y = 49
+			y = 49,
+			id = "menu_button_shout"
 		}
 		coords.normal.right_trigger = {
 			x = 512,
-			id = "menu_button_fire_weapon",
 			align = "left",
-			y = 19
+			y = 19,
+			id = "menu_button_fire_weapon"
 		}
 		coords.normal.left_shoulder = {
 			x = 0,
-			id = "menu_button_deploy",
 			align = "right",
-			y = 49
+			y = 49,
+			id = "menu_button_deploy"
 		}
 		coords.normal.left_trigger = {
 			x = 0,
-			id = "menu_button_aim_down_sight",
 			align = "right",
-			y = 19
+			y = 19,
+			id = "menu_button_aim_down_sight"
 		}
 		coords.normal.start = {
 			x = 288,
@@ -2278,51 +2278,51 @@ function TweakData:get_controller_help_coords()
 		}
 		coords.vehicle.y = {
 			x = 512,
-			id = "menu_button_unassigned",
 			align = "left",
-			y = 97
+			y = 97,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.x = {
 			x = 512,
-			id = "menu_button_vehicle_change_camera",
 			align = "left",
-			y = 180
+			y = 180,
+			id = "menu_button_vehicle_change_camera"
 		}
 		coords.vehicle.b = {
 			x = 512,
-			id = "menu_button_vehicle_shooting_stance",
 			align = "left",
-			y = 125
+			y = 125,
+			id = "menu_button_vehicle_shooting_stance"
 		}
 		coords.vehicle.a = {
 			x = 512,
-			id = "menu_button_handbrake",
 			align = "left",
-			y = 153
+			y = 153,
+			id = "menu_button_handbrake"
 		}
 		coords.vehicle.right_shoulder = {
 			x = 512,
-			id = "menu_button_unassigned",
 			align = "left",
-			y = 49
+			y = 49,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.right_trigger = {
 			x = 512,
-			id = "menu_button_accelerate",
 			align = "left",
-			y = 19
+			y = 19,
+			id = "menu_button_accelerate"
 		}
 		coords.vehicle.left_shoulder = {
 			x = 0,
-			id = "menu_button_unassigned",
 			align = "right",
-			y = 49
+			y = 49,
+			id = "menu_button_unassigned"
 		}
 		coords.vehicle.left_trigger = {
 			x = 0,
-			id = "menu_button_brake",
 			align = "right",
-			y = 19
+			y = 19,
+			id = "menu_button_brake"
 		}
 		coords.vehicle.start = {
 			x = 288,

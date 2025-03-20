@@ -369,8 +369,8 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
-			shelf_life = 5,
 			duration = 2,
+			shelf_life = 5,
 			id = hint_id,
 			text = managers.localization:text(hint_id)
 		})
@@ -1380,10 +1380,6 @@ function ReviveInteractionExt:_at_interact_start_revive(player, timer)
 	else
 		self._unit:character_damage():pause_bleed_out()
 	end
-
-	if player:base().is_local_player then
-		managers.achievment:set_script_data("player_reviving", true)
-	end
 end
 
 function ReviveInteractionExt:_at_interact_interupt(player, complete)
@@ -1405,10 +1401,6 @@ function ReviveInteractionExt:_at_interact_interupt_revive(player)
 		self._unit:network():send_to_unit(revive_rpc_params)
 	else
 		self._unit:character_damage():unpause_bleed_out()
-	end
-
-	if player:base().is_local_player then
-		managers.achievment:set_script_data("player_reviving", false)
 	end
 end
 
@@ -1456,8 +1448,8 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 		local hint = "hint_teammate_downed"
 
 		managers.notification:add_notification({
-			shelf_life = 5,
 			duration = 3,
+			shelf_life = 5,
 			id = hint,
 			text = managers.localization:text(hint, {
 				TEAMMATE = self._unit:base():nick_name(),
@@ -1525,7 +1517,6 @@ function ReviveInteractionExt:interact(reviving_unit)
 		end
 
 		ReviveInteractionExt.super.interact(self, reviving_unit)
-		managers.achievment:set_script_data("player_reviving", false)
 	end
 
 	self:remove_interact()
@@ -2898,11 +2889,11 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
-		id = "hud_hint_consumable_mission",
 		priority = 3,
 		doc_text = "hud_hint_consumable_mission_secured",
-		duration = 4,
+		id = "hud_hint_consumable_mission",
 		doc_icon = "notification_consumable",
+		duration = 4,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 

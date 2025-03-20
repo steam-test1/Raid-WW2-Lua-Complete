@@ -5,14 +5,14 @@ ElementSoundSwitch.SWITCHES = {
 }
 ElementSoundSwitch.SWITCH_VALUES = {
 	daytime_set_day = {
-		name = "daytime_switch",
 		value = "day",
-		type = "ambience"
+		type = "ambience",
+		name = "daytime_switch"
 	},
 	daytime_set_night = {
-		name = "daytime_switch",
 		value = "night",
-		type = "ambience"
+		type = "ambience",
+		name = "daytime_switch"
 	}
 }
 

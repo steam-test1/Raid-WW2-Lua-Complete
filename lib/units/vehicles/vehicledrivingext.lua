@@ -950,9 +950,9 @@ function VehicleDrivingExt:enable_map_waypoint()
 	end
 
 	self._map_waypoint_data = {
+		show_on_screen = false,
 		waypoint_origin = "waypoint_extension",
 		waypoint_type = "unit_waypoint",
-		show_on_screen = false,
 		icon = self._waypoint_hud_icon,
 		map_icon = self._waypoint_map_icon,
 		unit = self._unit,
@@ -1169,8 +1169,8 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			skip_idle_check = true,
-			position = nil
+			position = nil,
+			skip_idle_check = true
 		})
 	end
 
@@ -2295,16 +2295,16 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		action = {
 			type = "act",
-			body_part = 1,
 			needs_full_blend = true,
 			align_sync = false,
+			body_part = 1,
 			variant = team_ai_animation,
 			blocks = {
 				hurt = -1,
 				walk = -1,
-				act = 1,
+				action = -1,
 				heavy_hurt = -1,
-				action = -1
+				act = 1
 			}
 		},
 		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING

@@ -21,30 +21,30 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	})
 	self._title = self._object:text({
 		x = 96,
+		text = "",
 		h = 64,
 		w = 384,
 		y = 96,
-		text = "",
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
 		color = tweak_data.gui.colors.chat_border
 	})
 	local scrollable_area_description_params = {
+		h = 448,
+		scroll_step = 19,
+		scrollbar_width = 10,
 		w = 416,
 		y = 160,
 		x = 96,
 		name = "scrollable_area_description",
-		scroll_step = 19,
-		h = 448,
-		scrollbar_width = 10,
 		layer = self._object:layer() + 2
 	}
 	self._scrollable_area_description = self._object:scrollable_area(scrollable_area_description_params)
 	local content_panel_params = {
-		w = 384,
 		y = 0,
 		x = 0,
+		w = 384,
 		layer = self._object:layer() + 2
 	}
 	self._content_panel = self._scrollable_area_description:get_panel():panel(content_panel_params)
@@ -53,21 +53,21 @@ function RaidGUIControlIntelOppositeForces:_layout()
 
 	self._description = self._content_panel:text({
 		x = 0,
-		y = 0,
+		text = "",
 		w = 380,
 		wrap = true,
-		text = "",
+		y = 0,
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.chat_border
 	})
 	local image_viewer_params = {
-		w = 320,
 		h = 480,
+		visible = true,
+		w = 320,
 		y = 128,
-		x = 576,
-		visible = true
+		x = 576
 	}
 	self._image_viewer = self._object:create_custom_control(RaidGUIControlImageViewer, image_viewer_params)
 end

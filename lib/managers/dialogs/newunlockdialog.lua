@@ -16,8 +16,8 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 
 	self._ws = self._data.ws or manager:_get_ws()
 	local text_config = {
-		no_close_legend = true,
 		no_scroll_legend = true,
+		no_close_legend = true,
 		title_font = data.title_font,
 		title_font_size = data.title_font_size,
 		font = data.font,

@@ -148,8 +148,8 @@ end
 
 function CoreAreaTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -195,8 +195,8 @@ function CoreAreaTriggerUnitElement:add_element()
 	end
 
 	local ray = managers.editor:unit_by_raycast({
-		mask = 1,
-		ray_type = "body editor"
+		ray_type = "body editor",
+		mask = 1
 	})
 
 	if ray and ray.unit then
@@ -332,8 +332,8 @@ end
 
 function CoreAreaTriggerUnitElement:create_values_ctrlrs(panel, panel_sizer, disable)
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		min = 0.01,
-		floats = 2
+		floats = 2,
+		min = 0.01
 	}, "Set the check interval for the area, in seconds.")
 
 	if not disable or not disable.trigger_type then
@@ -385,8 +385,8 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	end
 
 	local width, width_params = self:_build_value_number(panel, panel_sizer, "width", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the width for the shape")
 
 	width_params.name_ctrlr:set_label("Width[cm]:")
@@ -394,17 +394,17 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	self._width_params = width_params
 
 	width:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "width",
-		property = "width"
+		property = "width",
+		value = "width"
 	})
 	width:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "width",
-		property = "width"
+		property = "width",
+		value = "width"
 	})
 
 	local depth, depth_params = self:_build_value_number(panel, panel_sizer, "depth", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the depth for the shape")
 
 	depth_params.name_ctrlr:set_label("Depth[cm]:")
@@ -412,17 +412,17 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	self._depth_params = depth_params
 
 	depth:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "depth",
-		property = "depth"
+		property = "depth",
+		value = "depth"
 	})
 	depth:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "depth",
-		property = "depth"
+		property = "depth",
+		value = "depth"
 	})
 
 	local height, height_params = self:_build_value_number(panel, panel_sizer, "height", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the height for the shape")
 
 	height_params.name_ctrlr:set_label("Height[cm]:")
@@ -430,17 +430,17 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	self._height_params = height_params
 
 	height:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "height",
-		property = "height"
+		property = "height",
+		value = "height"
 	})
 	height:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "height",
-		property = "height"
+		property = "height",
+		value = "height"
 	})
 
 	local radius, radius_params = self:_build_value_number(panel, panel_sizer, "radius", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the radius for the shape")
 
 	radius_params.name_ctrlr:set_label("Radius[cm]:")
@@ -448,12 +448,12 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 	self._radius_params = radius_params
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		value = "radius",
-		property = "radius"
+		property = "radius",
+		value = "radius"
 	})
 	self:scale_slider(panel, panel_sizer, width_params, "width", "Width scale:")
 	self:scale_slider(panel, panel_sizer, depth_params, "depth", "Depth scale:")
@@ -576,8 +576,8 @@ end
 
 function CoreAreaOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name():s() == "core/units/mission_elements/trigger_area/trigger_area" then

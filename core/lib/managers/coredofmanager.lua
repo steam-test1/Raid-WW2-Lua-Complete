@@ -17,11 +17,11 @@ function DOFManager:init()
 	self._game_timer = TimerManager:game()
 	self._env_dof_enabled = true
 	self._environment_parameters = {
-		clamp = 0,
 		far_max = 0,
 		far_min = 0,
 		near_max = 0,
-		near_min = 0
+		near_min = 0,
+		clamp = 0
 	}
 	self._clamp_prev_frame = 0
 end
@@ -250,11 +250,11 @@ function DOFManager:play(dof_data, amplitude_multiplier)
 		}
 	else
 		cur_values = {
-			clamp = 0,
 			far_max = 0,
 			far_min = 0,
 			near_max = 0,
-			near_min = 0
+			near_min = 0,
+			clamp = 0
 		}
 	end
 

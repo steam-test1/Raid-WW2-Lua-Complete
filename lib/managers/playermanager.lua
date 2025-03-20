@@ -27,27 +27,27 @@ function PlayerManager:init()
 	}
 	self._viewport_configs[1][1] = {
 		dimensions = {
+			h = 1,
 			w = 1,
 			y = 0,
-			x = 0,
-			h = 1
+			x = 0
 		}
 	}
 	self._viewport_configs[2] = {
 		{
 			dimensions = {
+				h = 0.5,
 				w = 1,
 				y = 0,
-				x = 0,
-				h = 0.5
+				x = 0
 			}
 		},
 		{
 			dimensions = {
+				h = 0.5,
 				w = 1,
 				y = 0.5,
-				x = 0,
-				h = 0.5
+				x = 0
 			}
 		}
 	}
@@ -57,6 +57,7 @@ function PlayerManager:init()
 
 	self._local_player_minions = 0
 	self._player_states = {
+		turret = "ingame_standard",
 		bleed_out = "ingame_bleed_out",
 		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
@@ -69,8 +70,7 @@ function PlayerManager:init()
 		incapacitated = "ingame_incapacitated",
 		tased = "ingame_electrified",
 		charging = "ingame_standard",
-		fatal = "ingame_fatal",
-		turret = "ingame_standard"
+		fatal = "ingame_fatal"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -184,7 +184,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		mvector3 = nil,
 		selections = {},
 		specials = {}
 	}
@@ -200,7 +200,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		mvector3 = nil,
 		selections = {},
 		specials = {}
 	}
@@ -326,29 +326,27 @@ function PlayerManager:set_customization_equiped_lower_name(lower_name)
 end
 
 function PlayerManager:get_customization_for_nationality(nationality)
+	local customization = {
+		nationality = nationality
+	}
+
 	for i = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		local save_data = Global.savefile_manager.meta_data_list[i]
 
 		if save_data and save_data.is_cached_slot and save_data.cache and save_data.cache.PlayerManager and nationality == save_data.cache.PlayerManager.character_profile_nation then
 			local player_man = save_data.cache.PlayerManager
-			local customization = {
-				equiped_head_name = player_man.customization_equiped_head_name,
-				equiped_upper_name = player_man.customization_equiped_upper_name,
-				equiped_lower_name = player_man.customization_equiped_lower_name,
-				nationality = nationality
-			}
+			customization.equiped_head_name = player_man.customization_equiped_head_name
+			customization.equiped_upper_name = player_man.customization_equiped_upper_name
+			customization.equiped_lower_name = player_man.customization_equiped_lower_name
 
-			return customization
+			break
 		end
 	end
 
 	local cc = managers.character_customization
-	local customization = {
-		equiped_head_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_HEAD),
-		equiped_upper_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_UPPER),
-		equiped_lower_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_LOWER),
-		nationality = nationality
-	}
+	customization.equiped_head_name = customization.equiped_head_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_HEAD)
+	customization.equiped_upper_name = customization.equiped_upper_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_UPPER)
+	customization.equiped_lower_name = customization.equiped_lower_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_LOWER)
 
 	return customization
 end
@@ -3532,8 +3530,8 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
-			text_id = "",
 			disabled = true,
+			text_id = "",
 			icon = "comm_wheel_no",
 			id = "carry_" .. i
 		}
@@ -3971,8 +3969,8 @@ function PlayerManager:add_weapon_ammo_gain(name_id, amount)
 	if Application:production_build() then
 		self._debug_weapon_ammo_gains = self._debug_weapon_ammo_gains or {}
 		self._debug_weapon_ammo_gains[name_id] = self._debug_weapon_ammo_gains[name_id] or {
-			total = 0,
-			index = 0
+			index = 0,
+			total = 0
 		}
 		self._debug_weapon_ammo_gains[name_id].total = self._debug_weapon_ammo_gains[name_id].total + amount
 		self._debug_weapon_ammo_gains[name_id].index = self._debug_weapon_ammo_gains[name_id].index + 1

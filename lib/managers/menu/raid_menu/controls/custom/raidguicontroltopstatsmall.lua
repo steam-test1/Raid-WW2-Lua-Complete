@@ -39,8 +39,8 @@ end
 function RaidGUIControlTopStatSmall:_create_stat_info()
 	local player_name_params = {
 		vertical = "center",
-		layer = 1,
 		text = "PLAYER NAME",
+		layer = 1,
 		align = "right",
 		y = -3,
 		name = "player_name_label",
@@ -53,11 +53,11 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 	}
 	self._player_name_label = self._object:label(player_name_params)
 	local stat_name_params = {
-		layer = 3,
-		wrap = true,
 		vertical = "center",
-		align = "right",
+		wrap = true,
+		layer = 3,
 		text = "Most things done well",
+		align = "right",
 		word_wrap = true,
 		name = "stat_name_label",
 		w = self._object:w(),

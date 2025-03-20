@@ -217,16 +217,16 @@ CopActionHurt.hurt_anim_variants = {
 		}
 	},
 	expl_hurt = {
-		fwd = 8,
-		bwd = 8,
 		l = 7,
-		r = 7
+		r = 7,
+		fwd = 8,
+		bwd = 8
 	},
 	fire_hurt = {
-		fwd = 8,
-		bwd = 8,
 		l = 7,
-		r = 7
+		r = 7,
+		fwd = 8,
+		bwd = 8
 	}
 }
 CopActionHurt.running_hurt_anim_variants = {
@@ -235,16 +235,16 @@ CopActionHurt.running_hurt_anim_variants = {
 ShieldActionHurt = ShieldActionHurt or class(CopActionHurt)
 ShieldActionHurt.hurt_anim_variants = deep_clone(CopActionHurt.hurt_anim_variants)
 ShieldActionHurt.hurt_anim_variants.expl_hurt = {
-	fwd = 2,
-	bwd = 2,
 	l = 2,
-	r = 2
+	r = 2,
+	fwd = 2,
+	bwd = 2
 }
 ShieldActionHurt.hurt_anim_variants.fire_hurt = {
-	fwd = 2,
-	bwd = 2,
 	l = 2,
-	r = 2
+	r = 2,
+	fwd = 2,
+	bwd = 2
 }
 CopActionHurt.fire_death_anim_variants_length = {
 	9,

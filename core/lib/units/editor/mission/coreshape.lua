@@ -110,8 +110,8 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	end
 
 	local width, width_params = self:_build_value_number(panel, panel_sizer, "width", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the width for the shape")
 
 	width_params.name_ctrlr:set_label("Width[cm]:")
@@ -119,17 +119,17 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self._width_params = width_params
 
 	width:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "width",
-		value = "width"
+		value = "width",
+		property = "width"
 	})
 	width:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "width",
-		value = "width"
+		value = "width",
+		property = "width"
 	})
 
 	local depth, depth_params = self:_build_value_number(panel, panel_sizer, "depth", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the depth for the shape")
 
 	depth_params.name_ctrlr:set_label("Depth[cm]:")
@@ -137,17 +137,17 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self._depth_params = depth_params
 
 	depth:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "depth",
-		value = "depth"
+		value = "depth",
+		property = "depth"
 	})
 	depth:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "depth",
-		value = "depth"
+		value = "depth",
+		property = "depth"
 	})
 
 	local height, height_params = self:_build_value_number(panel, panel_sizer, "height", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the height for the shape")
 
 	height_params.name_ctrlr:set_label("Height[cm]:")
@@ -155,17 +155,17 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self._height_params = height_params
 
 	height:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "height",
-		value = "height"
+		value = "height",
+		property = "height"
 	})
 	height:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "height",
-		value = "height"
+		value = "height",
+		property = "height"
 	})
 
 	local radius, radius_params = self:_build_value_number(panel, panel_sizer, "radius", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the radius for the shape")
 
 	radius_params.name_ctrlr:set_label("Radius[cm]:")
@@ -173,17 +173,17 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self._radius_params = radius_params
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_shape_property"), {
-		property = "radius",
-		value = "radius"
+		value = "radius",
+		property = "radius"
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_shape_property"), {
-		property = "radius",
-		value = "radius"
+		value = "radius",
+		property = "radius"
 	})
 
 	local grow, grow_params = self:_build_value_number(panel, panel_sizer, "grow", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Set the grow(cm) for unit OOBB")
 
 	grow_params.name_ctrlr:set_label("Grow[cm]:")
@@ -256,9 +256,9 @@ function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(unit) then
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
+						r = 0,
 						b = 0.75,
 						g = 0.5,
-						r = 0,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -273,8 +273,8 @@ end
 
 function CoreShapeUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 

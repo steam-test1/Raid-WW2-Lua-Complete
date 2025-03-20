@@ -85,8 +85,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_panel()
 	local panel_params = {
-		name = "loot_breakdown_item",
 		alpha = 0,
+		name = "loot_breakdown_item",
 		w = RaidGUIControlLootBreakdownItem.W
 	}
 	self._object = self._panel:panel(panel_params)
@@ -115,8 +115,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
-		name = "counter",
 		valign = "top",
+		name = "counter",
 		text = "",
 		vertical = "center",
 		align = "center",

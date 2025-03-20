@@ -1,10 +1,6 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = {
 	any_ingame = {
-		ingame_electrified = true,
-		ingame_fatal = true,
-		ingame_bleed_out = true,
-		ingame_standard = true,
 		gameoverscreen = true,
 		event_complete_screen = true,
 		world_camera = true,
@@ -17,9 +13,19 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
 		ingame_waiting_for_players = true,
-		ingame_incapacitated = true
+		ingame_incapacitated = true,
+		ingame_electrified = true,
+		ingame_fatal = true,
+		ingame_bleed_out = true,
+		ingame_standard = true
 	},
 	any_ingame_playing = {
+		ingame_parachuting = true,
+		ingame_driving = true,
+		ingame_access_camera = true,
+		ingame_waiting_for_respawn = true,
+		gameoverscreen = true,
+		ingame_incapacitated = true,
 		ingame_electrified = true,
 		ingame_fatal = true,
 		ingame_bleed_out = true,
@@ -27,45 +33,39 @@ BaseNetworkHandler._gamestate_filter = {
 		event_complete_screen = true,
 		world_camera = true,
 		ingame_menu = true,
-		gameoverscreen = true,
 		ingame_special_interaction = true,
-		ingame_freefall = true,
+		ingame_freefall = true
+	},
+	any_ingame_mission = {
 		ingame_parachuting = true,
 		ingame_driving = true,
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
-		ingame_incapacitated = true
-	},
-	any_ingame_mission = {
+		ingame_incapacitated = true,
 		ingame_electrified = true,
 		ingame_fatal = true,
 		ingame_bleed_out = true,
 		ingame_standard = true,
 		ingame_special_interaction = true,
-		ingame_freefall = true,
-		ingame_parachuting = true,
-		ingame_driving = true,
-		ingame_access_camera = true,
-		ingame_waiting_for_respawn = true,
-		ingame_incapacitated = true
+		ingame_freefall = true
 	},
 	downed = {
-		ingame_fatal = true,
 		ingame_bleed_out = true,
-		ingame_incapacitated = true
+		ingame_incapacitated = true,
+		ingame_fatal = true
 	},
 	need_revive = {
-		ingame_fatal = true,
 		ingame_bleed_out = true,
-		ingame_incapacitated = true
+		ingame_incapacitated = true,
+		ingame_fatal = true
 	},
 	game_over = {
 		gameoverscreen = true
 	},
 	any_end_game = {
-		victoryscreen = true,
 		event_complete_screen = true,
-		gameoverscreen = true
+		gameoverscreen = true,
+		victoryscreen = true
 	},
 	waiting_for_players = {
 		ingame_waiting_for_players = true
@@ -78,9 +78,9 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_menu = true
 	},
 	player_slot = {
-		menu_main = true,
+		ingame_waiting_for_players = true,
 		ingame_lobby_menu = true,
-		ingame_waiting_for_players = true
+		menu_main = true
 	},
 	lobby = {
 		menu_main = true,

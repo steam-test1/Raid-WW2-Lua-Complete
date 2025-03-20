@@ -10,106 +10,106 @@ EventCompleteState.SCREEN_ACTIVE_EXPERIENCE = 6
 EventCompleteState.LOOT_DATA_READY_KEY = "loot_data_ready"
 EventCompleteState.SUCCESS_VIDEOS = {
 	{
-		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_01_throws_himself_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_02_chickens_out_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_03_salutes_v006",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_03_salutes_v006"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_04_shoots_and_miss_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_05_crunches_bones_v006"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_06_plays_with_tin_men_v006"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_07_cries_tannenbaum_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_08_chess_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_08_chess_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_09_is_having_a_reverie_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_10_colours_a_map_v009"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_11_swears_v005",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_11_swears_v005"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_12_plays_with_tanks_v005"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_13_flips_a_table_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_success/s_14_moustache_v006",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_success/s_14_moustache_v006"
 	}
 }
 EventCompleteState.FAILURE_VIDEOS = {
 	{
-		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_01_edelweiss_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_02_sizzles_v007"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_03_toasts_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_03_toasts_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_04_misunderstands_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_05_hugs_the_world_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_06_tin_soldiers_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_07_told_you_so_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_08_pumps_his_fists_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_09_bras_dhonneur_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_10_executes_v008",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_10_executes_v008"
 	},
 	{
-		path = "movies/vanilla/debrief_failure/f_11_sings_v007",
-		chance = 1
+		chance = 1,
+		path = "movies/vanilla/debrief_failure/f_11_sings_v007"
 	}
 }
 
@@ -121,9 +121,9 @@ function EventCompleteState:init(game_state_machine, setup)
 	self._controller = nil
 	self._continue_block_timer = 0
 	self._awarded_rewards = {
+		loot = false,
 		greed_gold = false,
-		xp = false,
-		loot = false
+		xp = false
 	}
 end
 
@@ -193,8 +193,8 @@ function EventCompleteState:at_enter(old_state, params)
 	self:_set_memory()
 	self:set_statistics_values()
 	managers.statistics:stop_session({
-		type = "victory",
 		quit = false,
+		type = "victory",
 		success = self._success
 	})
 	managers.statistics:send_statistics()
@@ -307,9 +307,9 @@ function EventCompleteState:_calculate_extra_loot_secured()
 
 	if extra_loot_value > 0 then
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
-			total_value = 0,
 			icon = "rewards_extra_loot",
 			title = "menu_loot_screen_bonus_loot",
+			total_value = 0,
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
@@ -453,8 +453,8 @@ function EventCompleteState:_create_debrief_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_prompt = self._safe_panel:text({
-		alpha = 0,
 		name = "press_any_key_prompt",
+		alpha = 0,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),

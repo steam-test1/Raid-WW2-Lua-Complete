@@ -152,8 +152,8 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 
 	local action_desc = {
 		persistent = true,
-		path_simplified = true,
 		body_part = 2,
+		path_simplified = true,
 		type = "walk",
 		variant = haste_code == 1 and "walk" or "run",
 		end_rot = end_rot,
@@ -162,10 +162,10 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 		no_strafe = no_strafe,
 		end_pose = end_pose,
 		blocks = {
-			walk = -1,
 			idle = -1,
 			turn = -1,
-			act = -1
+			act = -1,
+			walk = -1
 		}
 	}
 
@@ -837,9 +837,9 @@ function UnitNetworkHandler:action_aim_state(cop, state)
 
 	if state then
 		local shoot_action = {
-			block_type = "action",
+			body_part = 3,
 			type = "shoot",
-			body_part = 3
+			block_type = "action"
 		}
 
 		cop:movement():action_request(shoot_action)
@@ -3621,10 +3621,10 @@ local function warcry_dmg_func(peer_name, data)
 	local percent = Utl.mul_to_string_percent(data)
 	local notification_data = {
 		icon = "test_icon",
-		priority = 1,
 		force = true,
-		id = "skill_ammo_warcry_from",
+		priority = 1,
 		duration = 5,
+		id = "skill_ammo_warcry_from",
 		notification_type = HUDNotification.ICON,
 		text = managers.localization:text("skill_ammo_warcry_from", {
 			NAME = peer_name,

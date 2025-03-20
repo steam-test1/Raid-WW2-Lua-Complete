@@ -40,10 +40,10 @@ end
 
 function HUDHitConfirm:_create_icon(name, icon)
 	local icon_params = {
+		valign = "center",
+		visible = false,
 		layer = 2,
 		halign = "center",
-		visible = false,
-		valign = "center",
 		name = name,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect

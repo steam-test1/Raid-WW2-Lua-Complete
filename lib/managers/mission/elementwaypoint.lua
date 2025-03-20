@@ -41,10 +41,10 @@ function ElementWaypoint:on_executed(instigator)
 	local pos, rot = self:get_orientation()
 
 	managers.hud:add_waypoint(self:_get_unique_id(), {
-		waypoint_type = "objective",
-		show_on_screen = true,
-		state = "sneak_present",
 		distance = true,
+		state = "sneak_present",
+		show_on_screen = true,
+		waypoint_type = "objective",
 		text = text,
 		icon = self._values.icon,
 		waypoint_display = self._values.map_display,

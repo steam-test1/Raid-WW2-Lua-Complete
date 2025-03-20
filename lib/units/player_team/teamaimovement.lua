@@ -180,9 +180,9 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 		if self._unit:brain()._logic_data and self._unit:brain():is_available_for_assignment() then
 			self._unit:brain():set_objective()
 			self._unit:movement():action_request({
+				body_part = 1,
 				type = "idle",
-				sync = true,
-				body_part = 1
+				sync = true
 			})
 		end
 

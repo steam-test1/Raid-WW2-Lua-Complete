@@ -78,13 +78,13 @@ end
 
 function HUDTabScreen:_create_background(fullscreen_hud)
 	local background_params = {
+		valign = "scale",
+		y = 0,
+		x = 0,
 		name = "tab_screen_background",
 		alpha = 0.9,
 		visible = false,
 		halign = "scale",
-		valign = "scale",
-		y = 0,
-		x = 0,
 		w = fullscreen_hud.panel:w(),
 		h = fullscreen_hud.panel:h(),
 		color = tweak_data.gui.colors.raid_black,
@@ -106,12 +106,12 @@ end
 
 function HUDTabScreen:_create_panel(hud)
 	local panel_params = {
-		name = "tab_screen",
-		visible = false,
-		halign = "scale",
 		valign = "scale",
 		y = 0,
 		x = 0,
+		name = "tab_screen",
+		visible = false,
+		halign = "scale",
 		w = hud.panel:w(),
 		h = hud.panel:h(),
 		layer = tweak_data.gui.TAB_SCREEN_LAYER + 5
@@ -141,12 +141,12 @@ function HUDTabScreen:_create_card_info()
 	}
 	self._empty_card_panel = self._card_info_panel:panel(empty_card_panel_params)
 	local empty_card_title_params = {
-		name = "empty_card_title",
-		vertical = "center",
 		align = "left",
 		h = 32,
 		y = 0,
 		x = 0,
+		name = "empty_card_title",
+		vertical = "center",
 		w = self._empty_card_panel:w(),
 		font = tweak_data.gui:get_font_path(HUDTabScreen.CARD_INFO_TITLE_FONT, HUDTabScreen.CARD_INFO_TITLE_FONT_SIZE),
 		font_size = HUDTabScreen.CARD_INFO_TITLE_FONT_SIZE,
@@ -166,12 +166,12 @@ function HUDTabScreen:_create_card_info()
 	}
 	local empty_card_image = self._empty_card_panel:bitmap(empty_card_image_params)
 	local empty_card_text_params = {
-		name = "empty_card_text",
+		align = "left",
 		valign = "scale",
+		name = "empty_card_text",
 		halign = "scale",
 		wrap = true,
 		vertical = "top",
-		align = "left",
 		x = empty_card_image:x() + 5,
 		y = HUDTabScreen.NO_CARD_TEXT_Y + HUDTabScreen.CARD_Y,
 		w = self._empty_card_panel:w(),
@@ -193,12 +193,12 @@ function HUDTabScreen:_create_card_info()
 	}
 	self._active_card_panel = self._card_info_panel:panel(active_card_panel_params)
 	local active_card_title_params = {
-		name = "active_card_title",
-		vertical = "center",
 		align = "left",
 		h = 32,
 		y = 0,
 		x = 0,
+		name = "active_card_title",
+		vertical = "center",
 		w = self._active_card_panel:w(),
 		font = tweak_data.gui:get_font_path(HUDTabScreen.CARD_INFO_TITLE_FONT, HUDTabScreen.CARD_INFO_TITLE_FONT_SIZE),
 		font_size = HUDTabScreen.CARD_INFO_TITLE_FONT_SIZE,
@@ -232,13 +232,13 @@ function HUDTabScreen:_create_profile_info()
 	}
 	self._profile_info_panel = self._object:panel(profile_info_panel_params)
 	local profile_name_params = {
-		name = "profile_name",
-		text = "",
-		vertical = "bottom",
 		align = "left",
 		h = 32,
 		y = 0,
 		x = 0,
+		name = "profile_name",
+		text = "",
+		vertical = "bottom",
 		w = self._profile_info_panel:w(),
 		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_NAME_FONT_SIZE),
 		font_size = HUDTabScreen.PROFILE_NAME_FONT_SIZE
@@ -252,9 +252,9 @@ function HUDTabScreen:_create_profile_info()
 	}
 	local profile_details_panel = RaidGUIPanel:new(self._profile_info_panel, details_panel_params)
 	local class_info_icon_params = {
-		name = "class_icon",
 		w = 96,
 		icon = "player_panel_class_assault",
+		name = "class_icon",
 		h = profile_details_panel:h(),
 		icon_color = Color.white,
 		icon_h = tweak_data.gui:icon_h("player_panel_class_assault"),
@@ -266,8 +266,8 @@ function HUDTabScreen:_create_profile_info()
 	self._class_icon = profile_details_panel:info_icon(class_info_icon_params)
 	local placeholder_nationality = "british"
 	local nationality_info_icon_params = {
-		name = "nationality_icon",
 		w = 96,
+		name = "nationality_icon",
 		h = profile_details_panel:h(),
 		icon = "ico_flag_" .. placeholder_nationality,
 		icon_color = Color.white,
@@ -281,11 +281,11 @@ function HUDTabScreen:_create_profile_info()
 	self._nationality_icon:set_center_x(profile_details_panel:w() / 2)
 
 	local level_info_icon_params = {
-		name = "level_text",
-		title = "6",
 		w = 96,
 		y = 7,
+		name = "level_text",
 		title_h = 64,
+		title = "6",
 		h = profile_details_panel:h() - 7,
 		title_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE,
 		title_color = tweak_data.gui.colors.raid_white,
@@ -320,13 +320,13 @@ function HUDTabScreen:_create_profile_info()
 	nationality_icon:set_center_x(self._profile_info_panel:w() / 2 + 3)
 
 	local level_text_params = {
+		align = "center",
+		h = 40,
+		w = 40,
 		name = "level_text",
 		text = "6",
 		visible = false,
 		vertical = "bottom",
-		align = "center",
-		h = 40,
-		w = 40,
 		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_LEVEL_FONT_SIZE),
 		font_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE
 	}
@@ -346,13 +346,13 @@ function HUDTabScreen:_create_profile_info()
 	}
 	self._profile_info_panel = self._object:panel(profile_info_panel_params)
 	local profile_name_params = {
-		name = "profile_name",
-		text = "",
-		vertical = "bottom",
 		align = "left",
 		h = 32,
 		y = 0,
 		x = 0,
+		name = "profile_name",
+		text = "",
+		vertical = "bottom",
 		w = self._profile_info_panel:w(),
 		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_NAME_FONT_SIZE),
 		font_size = HUDTabScreen.PROFILE_NAME_FONT_SIZE
@@ -366,9 +366,9 @@ function HUDTabScreen:_create_profile_info()
 	}
 	local profile_details_panel = RaidGUIPanel:new(self._profile_info_panel, details_panel_params)
 	local class_info_icon_params = {
-		name = "class_icon",
 		w = 96,
 		icon = "player_panel_class_assault",
+		name = "class_icon",
 		h = profile_details_panel:h(),
 		icon_color = Color.white,
 		icon_h = tweak_data.gui:icon_h("player_panel_class_assault"),
@@ -380,8 +380,8 @@ function HUDTabScreen:_create_profile_info()
 	self._class_icon = profile_details_panel:info_icon(class_info_icon_params)
 	local placeholder_nationality = "british"
 	local nationality_info_icon_params = {
-		name = "nationality_icon",
 		w = 96,
+		name = "nationality_icon",
 		h = profile_details_panel:h(),
 		icon = "ico_flag_" .. placeholder_nationality,
 		icon_color = Color.white,
@@ -395,11 +395,11 @@ function HUDTabScreen:_create_profile_info()
 	self._nationality_icon:set_center_x(profile_details_panel:w() / 2)
 
 	local level_info_icon_params = {
-		name = "level_text",
-		title = "6",
 		w = 96,
 		y = 7,
+		name = "level_text",
 		title_h = 64,
+		title = "6",
 		h = profile_details_panel:h() - 7,
 		title_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE,
 		title_color = tweak_data.gui.colors.raid_white,
@@ -434,13 +434,13 @@ function HUDTabScreen:_create_profile_info()
 	nationality_icon:set_center_x(self._profile_info_panel:w() / 2 + 3)
 
 	local level_text_params = {
+		align = "center",
+		h = 40,
+		w = 40,
 		name = "level_text",
 		text = "6",
 		visible = false,
 		vertical = "bottom",
-		align = "center",
-		h = 40,
-		w = 40,
 		font = tweak_data.gui:get_font_path(HUDTabScreen.PROFILE_NAME_FONT, HUDTabScreen.PROFILE_LEVEL_FONT_SIZE),
 		font_size = HUDTabScreen.PROFILE_LEVEL_FONT_SIZE
 	}
@@ -468,10 +468,10 @@ function HUDTabScreen:_create_timer()
 	self._timer_panel:set_right(self._object:w())
 
 	local timer_params = {
-		name = "timer",
-		text = "00:00",
-		vertical = "top",
 		align = "right",
+		text = "00:00",
+		name = "timer",
+		vertical = "top",
 		y = HUDTabScreen.TIMER_Y,
 		w = HUDTabScreen.TIMER_W,
 		h = HUDTabScreen.TIMER_H,
@@ -543,11 +543,11 @@ function HUDTabScreen:_create_progression_timer()
 
 	local is_final_unlock_cycle = managers.progression:at_final_unlock_cycle()
 	local timer_title_params = {
-		name = "progression_timer_title",
-		halign = "left",
-		vertical = "center",
 		h = 32,
+		halign = "left",
 		x = 70,
+		name = "progression_timer_title",
+		vertical = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white,
@@ -555,11 +555,11 @@ function HUDTabScreen:_create_progression_timer()
 	}
 	local timer_title = self._progression_timer_content_panel:text(timer_title_params)
 	local timer_description_params = {
-		name = "progression_timer_description",
-		halign = "left",
-		vertical = "center",
 		h = 32,
+		halign = "left",
 		x = 70,
+		name = "progression_timer_description",
+		vertical = "center",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_20),
 		font_size = tweak_data.gui.font_sizes.size_20,
 		color = tweak_data.gui.colors.raid_grey_effects,
@@ -570,12 +570,12 @@ function HUDTabScreen:_create_progression_timer()
 	timer_description:set_bottom(self._progression_timer_content_panel:h())
 
 	local timer_params = {
-		name = "progression_timer_timer",
-		text = "",
+		h = 32,
 		horizontal = "right",
 		halign = "right",
+		name = "progression_timer_timer",
+		text = "",
 		vertical = "center",
-		h = 32,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white
@@ -606,9 +606,9 @@ function HUDTabScreen:_create_mission_info()
 	mission_icon:set_center_y(self._mission_info_panel:h() / 2)
 
 	local mission_name_params = {
+		align = "left",
 		name = "mission_name",
 		vertical = "center",
-		align = "left",
 		x = HUDTabScreen.MISSION_INFO_TEXT_X,
 		y = HUDTabScreen.MISSION_INFO_TEXT_Y,
 		w = self._mission_info_panel:w() - HUDTabScreen.MISSION_INFO_TEXT_X,
@@ -620,12 +620,12 @@ function HUDTabScreen:_create_mission_info()
 	}
 	local mission_name_text = self._mission_info_panel:text(mission_name_params)
 	local mission_name_small_params = {
-		name = "mission_name_small",
-		visible = false,
-		vertical = "center",
 		align = "left",
 		h = 32,
 		y = 0,
+		name = "mission_name_small",
+		visible = false,
+		vertical = "center",
 		x = HUDTabScreen.MISSION_INFO_TEXT_X,
 		w = self._mission_info_panel:w() - HUDTabScreen.MISSION_INFO_TEXT_X,
 		font = tweak_data.gui:get_font_path(HUDTabScreen.MISSION_INFO_TEXT_FONT, tweak_data.gui.font_sizes.small),
@@ -651,11 +651,11 @@ end
 function HUDTabScreen:_create_loot_info()
 	local loot_panel_params = {
 		name = "loot_info_panel",
-		halign = "right",
+		valing = "bottom",
 		h = 96,
 		w = 416,
 		visible = false,
-		valing = "bottom",
+		halign = "right",
 		layer = tweak_data.gui.TAB_SCREEN_LAYER + 10
 	}
 	self._loot_info_panel = self._object:panel(loot_panel_params)
@@ -683,12 +683,12 @@ function HUDTabScreen:_create_loot_info()
 	dog_tag_icon:set_center_y(self._dog_tag_panel:h() / 2)
 
 	local dog_tag_amount_params = {
-		name = "dog_tag_amount",
-		text = "0 / 0",
-		vertical = "center",
 		align = "center",
 		h = 64,
 		w = 160,
+		text = "0 / 0",
+		name = "dog_tag_amount",
+		vertical = "center",
 		font = tweak_data.gui:get_font_path(HUDTabScreen.LOOT_INFO_FONT, HUDTabScreen.LOOT_INFO_VALUE_FONT_SIZE),
 		font_size = HUDTabScreen.LOOT_INFO_VALUE_FONT_SIZE,
 		color = HUDTabScreen.LOOT_INFO_VALUE_COLOR
@@ -699,11 +699,11 @@ function HUDTabScreen:_create_loot_info()
 	self._dog_tag_amount:set_center_y(32)
 
 	local dog_tag_title_params = {
-		name = "dog_tag_title",
-		vertical = "center",
 		align = "center",
 		h = 32,
 		w = 128,
+		name = "dog_tag_title",
+		vertical = "center",
 		font = tweak_data.gui:get_font_path(HUDTabScreen.LOOT_INFO_FONT, HUDTabScreen.LOOT_INFO_TITLE_FONT_SIZE),
 		font_size = HUDTabScreen.LOOT_INFO_TITLE_FONT_SIZE,
 		color = HUDTabScreen.LOOT_INFO_TITLE_COLOR,

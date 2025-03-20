@@ -32,6 +32,16 @@ local UpgradePickpocket = {
 		local _, ammo_gained = local_player:inventory():add_ammo_to_equipped(steal_amount_ammo)
 		success = ammo_gained and ammo_gained > 0
 
+		if not success then
+			_, ammo_gained = local_player:inventory():add_ammo_to_selection(PlayerInventory.SLOT_2, steal_amount_ammo)
+			success = ammo_gained and ammo_gained > 0
+		end
+
+		if not success then
+			_, ammo_gained = local_player:inventory():add_ammo_to_selection(PlayerInventory.SLOT_1, steal_amount_ammo)
+			success = ammo_gained and ammo_gained > 0
+		end
+
 		if self._health_steal > 0 and not local_player:character_damage():dead() then
 			local health_restored = local_player:character_damage():restore_health(self._health_steal, true)
 			success = success or health_restored

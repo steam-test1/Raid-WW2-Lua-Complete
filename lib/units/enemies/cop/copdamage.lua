@@ -21,25 +21,25 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
+	fire = "fire_hurt",
 	explode = "expl_hurt",
 	heavy = "heavy_hurt",
 	moderate = "hurt",
 	light = "light_hurt",
 	none = false,
-	poison = "poison_hurt",
-	fire = "fire_hurt"
+	poison = "poison_hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
-	shield = false,
-	taser = false,
-	tank = false,
-	german_spotter = "enemy_spotter_comment_death",
 	german_og_commander = "enemy_officer_comment_death",
 	german_commander = "enemy_officer_comment_death",
 	german_officer = "enemy_officer_comment_death",
 	german_flamer = "enemy_flamer_comment_death",
 	german_sniper = "enemy_sniper_comment_death",
-	sniper = false
+	sniper = false,
+	shield = false,
+	taser = false,
+	tank = false,
+	german_spotter = "enemy_spotter_comment_death"
 }
 CopDamage._impact_bones = {}
 local impact_bones_tmp = {
@@ -1592,8 +1592,8 @@ function CopDamage:damage_mission(attack_data)
 		end
 
 		local data = {
-			variant = "explosion",
 			head_shot = false,
+			variant = "explosion",
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attack_data.weapon_unit
@@ -2057,8 +2057,8 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 		self:die(attack_data)
 
 		local data = {
-			variant = "explosion",
 			head_shot = false,
+			variant = "explosion",
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
@@ -2114,8 +2114,8 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 
 	if is_kill_shot then
 		local data = {
-			variant = "explosion",
 			head_shot = false,
+			variant = "explosion",
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -2221,8 +2221,8 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 		self:chk_killshot(attacker_unit, "fire")
 
 		local data = {
-			variant = "fire",
 			head_shot = false,
+			variant = "fire",
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
@@ -2831,42 +2831,42 @@ function CopDamage:_create_debug_ws()
 
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
-		font = "fonts/font_medium_shadow_mf",
 		visible = true,
 		render_template = "OverlayVertexColorTextured",
 		y = 0,
+		name = "health",
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		name = "health",
+		font = "fonts/font_medium_shadow_mf",
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
-		font = "fonts/font_medium_shadow_mf",
-		text = "",
 		visible = true,
 		render_template = "OverlayVertexColorTextured",
 		y = 30,
+		name = "ld",
+		text = "",
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		name = "ld",
+		font = "fonts/font_medium_shadow_mf",
 		color = Color.white
 	})
 	self._ws:panel():text({
-		font = "fonts/font_medium_shadow_mf",
-		text = "",
 		visible = true,
 		render_template = "OverlayVertexColorTextured",
 		y = 60,
+		name = "variant",
+		text = "",
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		name = "variant",
+		font = "fonts/font_medium_shadow_mf",
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -2909,16 +2909,16 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		if damage_info and damage_info.damage > 0 then
 			local text = self._ws:panel():text({
-				y = -20,
+				w = 40,
 				rotation = 360,
-				h = 40,
-				render_template = "OverlayVertexColorTextured",
-				visible = true,
 				layer = 1,
+				y = -20,
+				visible = true,
+				render_template = "OverlayVertexColorTextured",
+				h = 40,
 				font_size = 20,
 				vertical = "center",
 				align = "center",
-				w = 40,
 				font = "fonts/font_medium_shadow_mf",
 				text = string.format("%.2f", damage_info.damage),
 				color = Color.white
@@ -3096,21 +3096,21 @@ function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_ty
 		hurt_type = hurt_type or "knockdown"
 		local client_interrupt = Network:is_client()
 		local action_data = {
-			body_part = 1,
 			block_type = "heavy_hurt",
+			body_part = 1,
 			type = "hurt",
 			direction_vec = direction,
 			hit_pos = hit_position,
 			hurt_type = hurt_type,
 			client_interrupt = client_interrupt,
 			blocks = {
-				aim = -1,
 				act = -1,
 				action = -1,
 				walk = -1,
-				hurt = -1,
 				idle = -1,
-				dodge = -1
+				hurt = -1,
+				dodge = -1,
+				aim = -1
 			}
 		}
 

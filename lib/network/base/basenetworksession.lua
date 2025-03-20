@@ -447,7 +447,6 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 			Network:remove_client(peer:rpc())
 
 			if player_left then
-				managers.achievment:set_script_data("cant_touch_fail", true)
 				managers.criminals:on_peer_left(peer_id)
 				managers.criminals:remove_character_by_peer_id(peer_id)
 

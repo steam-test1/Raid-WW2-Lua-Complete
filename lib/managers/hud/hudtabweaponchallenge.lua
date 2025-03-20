@@ -41,8 +41,8 @@ end
 
 function HUDTabWeaponChallenge:_create_inner_panel()
 	local inner_panel_params = {
-		valign = "grow",
 		name = "weapon_challenge_inner_panel",
+		valign = "grow",
 		halign = "grow",
 		w = self._object:w() - HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE
 	}
@@ -125,8 +125,8 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local texture_left = "slider_large_left"
 	local texture_right = "slider_large_right"
 	local progress_bar_panel_params = {
-		x = 0,
 		name = "weapon_challenge_progress_bar_panel",
+		x = 0,
 		is_root_panel = true,
 		vertical = "bottom",
 		w = self._inner_panel:w(),
@@ -148,12 +148,12 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
-		x = 0,
 		name = "weapon_challenge_progress_bar_foreground_panel",
 		y = 0,
 		halign = "scale",
-		layer = 2,
+		x = 0,
 		valign = "scale",
+		layer = 2,
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h()
 	}
@@ -169,9 +169,9 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
-		x = 0,
 		name = "weapon_challenge_progress_bar_text",
 		text = "123/456",
+		x = 0,
 		vertical = "center",
 		align = "center",
 		y = -2,

@@ -36,8 +36,8 @@ function ElementExplosion:on_executed(instigator)
 
 	if Network:is_server() then
 		managers.explosion:detect_and_give_dmg({
-			curve_pow = 5,
 			player_damage = 0,
+			curve_pow = 5,
 			hit_pos = pos,
 			range = self._values.range,
 			collision_slotmask = managers.slot:get_mask("explosion_targets"),

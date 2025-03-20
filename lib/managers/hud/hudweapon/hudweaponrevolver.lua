@@ -43,8 +43,8 @@ function HUDWeaponRevolver:_create_clip_left_info(weapons_panel)
 	for i = 1, self._max_clip do
 		local dx, dy = self:_orbit_math(self._offset_from_center, single_bullet_angle * i + self._initial_rotation + single_bullet_angle / 2)
 		local bullet = self._rotation_panel:bitmap({
-			h = 8,
 			w = 8,
+			h = 8,
 			name = "bullet" .. i,
 			texture = gui_bullet.texture,
 			texture_rect = gui_bullet.texture_rect,

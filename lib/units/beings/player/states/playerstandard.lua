@@ -2891,7 +2891,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		print = nil,
+		["unit "] = nil,
 		text = text
 	})
 

@@ -63,24 +63,24 @@ end
 
 function RaidGUIControlButtonWeaponSkill:_create_selector()
 	local selector_panel_params = {
-		x = 0,
-		halign = "scale",
-		name = "selector_panel",
 		valign = "scale",
 		alpha = 0,
+		halign = "scale",
 		y = 0,
+		x = 0,
+		name = "selector_panel",
 		w = self._object:w(),
 		h = self._object:h()
 	}
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_background_params = {
-		x = 0,
-		layer = -10,
-		alpha = 0,
 		valign = "scale",
+		alpha = 0,
 		halign = "scale",
 		name = "selector_background",
 		y = 0,
+		x = 0,
+		layer = -10,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture_rect
 	}
@@ -90,12 +90,12 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	self._selector_rect:set_center_y(self._object:h() / 2)
 
 	local selector_triangle_up_params = {
-		x = 0,
 		valign = "top",
-		alpha = 0,
 		halign = "left",
+		alpha = 0,
 		name = "selector_triangle_up",
 		y = 0,
+		x = 0,
 		w = RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W,
 		h = RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
@@ -104,8 +104,8 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	self._selector_triangle_up = self._selector_panel:image(selector_triangle_up_params)
 	local selector_triangle_down_params = {
 		valign = "bottom",
-		alpha = 0,
 		halign = "right",
+		alpha = 0,
 		name = "selector_triangle_down",
 		x = self._selector_panel:w() - RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W,
 		y = self._selector_panel:h() - RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H,

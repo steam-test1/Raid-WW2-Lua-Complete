@@ -71,8 +71,8 @@ end
 
 function CorePhysicsPushUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
-		name = "core/physic_effects/hubelement_push",
 		category = "physic_effects",
+		name = "core/physic_effects/hubelement_push",
 		continent = self._unit:unit_data().continent
 	})
 end

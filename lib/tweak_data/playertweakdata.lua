@@ -49,8 +49,8 @@ end
 function PlayerTweakData:init()
 	self.killzones = {
 		fire = {
-			damage = 4,
-			timer = 0.15
+			timer = 0.15,
+			damage = 4
 		},
 		inferno = {
 			death_on_down = true,
@@ -58,14 +58,14 @@ function PlayerTweakData:init()
 			damage = 8
 		},
 		gas = {
-			damage = 3,
-			timer = 0.25
+			timer = 0.25,
+			damage = 3
 		},
 		sniper = {
+			warning_chance = 0.75,
 			warning_timer = 4,
 			timer = 1.5,
-			damage = 50,
-			warning_chance = 0.75
+			damage = 50
 		}
 	}
 	self.run_move_dir_treshold = 0.7
@@ -103,28 +103,28 @@ function PlayerTweakData:init()
 	self.SUSPICION_OFFSET_LERP = 0.75
 	self.MANTLE_PRECISION = 3
 	self.long_dis_interaction = {
+		highlight_range = 8000,
 		intimidate_strength = 0.5,
 		intimidate_range_civilians = 1000,
-		intimidate_range_enemies = 1,
-		highlight_range = 8000
+		intimidate_range_enemies = 1
 	}
 	self.suppression = {
-		decay_start_delay = 0.15,
-		max_value = 9,
-		tolerance = 1,
 		autohit_chance_mul = 0.9,
 		spread_mul = 1,
-		receive_mul = 7
+		receive_mul = 7,
+		decay_start_delay = 0.15,
+		max_value = 9,
+		tolerance = 1
 	}
 	self.suspicion = {
-		buildup_mul = 1,
 		max_value = 8,
-		range_mul = 1
+		range_mul = 1,
+		buildup_mul = 1
 	}
 	self.max_nr_following_hostages = 1
 	self.max_floor_jump_angle = {
-		min = 58,
-		max = 72
+		max = 72,
+		min = 58
 	}
 	self.reload_interupt_buffer = 0.58
 	self.primary_attack_buffer = 0.25

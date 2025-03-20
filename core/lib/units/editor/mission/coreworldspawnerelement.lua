@@ -122,11 +122,11 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	h_sizer:add(world_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
-		sizer_proportions = 2,
-		ctrlr_proportions = 2,
 		name_proportions = 0,
 		tooltip = "Select an event from the combobox",
 		sorted = true,
+		sizer_proportions = 2,
+		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
 		options = events,

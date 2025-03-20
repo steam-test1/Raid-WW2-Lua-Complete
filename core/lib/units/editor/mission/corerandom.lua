@@ -45,8 +45,8 @@ end
 
 function CoreRandomUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
@@ -100,12 +100,12 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_counter_id")
 	})
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Specifies the amount of elements to be executed")
 	self:_build_value_number(panel, panel_sizer, "amount_random", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Add a random amount to amount")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled")
 	self:_add_help_text("Use 'Amount' only to specify an exact amount of elements to execute. Use 'Amount Random' to add a random amount to 'Amount' ('Amount' + random('Amount Random').")

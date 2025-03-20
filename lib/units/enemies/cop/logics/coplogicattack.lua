@@ -306,9 +306,9 @@ function CopLogicAttack._start_action_move_back(data, my_data, focus_enemy, enga
 	CopLogicAttack._cancel_cover_pathing(data, my_data)
 
 	local new_action_data = {
-		variant = "walk",
 		body_part = 2,
 		type = "walk",
+		variant = "walk",
 		nav_path = {
 			from_pos,
 			retreat_to
@@ -359,8 +359,8 @@ function CopLogicAttack._peek_for_pos_sideways(data, my_data, from_racker, peek_
 
 	local back_pos = my_pos + back_vec
 	local ray_params = {
-		trace = true,
 		allow_entry = true,
+		trace = true,
 		tracker_from = my_tracker,
 		pos_to = back_pos
 	}
@@ -465,8 +465,8 @@ function CopLogicAttack._cancel_walking_to_cover(data, my_data, skip_action)
 	if my_data.moving_to_cover then
 		if not skip_action then
 			local new_action = {
-				body_part = 2,
-				type = "idle"
+				type = "idle",
+				body_part = 2
 			}
 
 			data.unit:brain():action_request(new_action)
@@ -497,8 +497,8 @@ function CopLogicAttack._request_action_walk_to_cover(data, my_data)
 	end
 
 	local new_action_data = {
-		type = "walk",
 		body_part = 2,
+		type = "walk",
 		nav_path = my_data.cover_path,
 		variant = movement_mode,
 		end_pose = end_pose
@@ -553,8 +553,8 @@ function CopLogicAttack._request_action_crouch(data)
 	end
 
 	local new_action_data = {
-		body_part = 4,
-		type = "crouch"
+		type = "crouch",
+		body_part = 4
 	}
 	local res = data.unit:brain():action_request(new_action_data)
 
@@ -567,8 +567,8 @@ function CopLogicAttack._request_action_stand(data)
 	end
 
 	local new_action_data = {
-		body_part = 4,
-		type = "stand"
+		type = "stand",
+		body_part = 4
 	}
 	local res = data.unit:brain():action_request(new_action_data)
 
@@ -1220,8 +1220,8 @@ function CopLogicAttack._upd_aim(data, my_data)
 
 		if not my_data.shooting and not data.unit:anim_data().reload and not data.unit:movement():chk_action_forbidden("action") then
 			local shoot_action = {
-				body_part = 3,
-				type = "shoot"
+				type = "shoot",
+				body_part = 3
 			}
 
 			if data.unit:brain():action_request(shoot_action) then
@@ -1234,13 +1234,13 @@ function CopLogicAttack._upd_aim(data, my_data)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					body_part = 3,
-					type = "reload"
+					type = "reload",
+					body_part = 3
 				}
 			else
 				new_action = {
-					body_part = 3,
-					type = "idle"
+					type = "idle",
+					body_part = 3
 				}
 			end
 

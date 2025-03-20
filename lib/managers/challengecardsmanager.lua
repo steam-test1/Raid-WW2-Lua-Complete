@@ -573,8 +573,8 @@ end
 
 function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id, peer_id)
 	local notification_data = {
-		priority = 1,
 		duration = 10,
+		priority = 1,
 		id = challenge_card_key,
 		notification_type = HUDNotification.CARD_FAIL,
 		card = challenge_card_key,

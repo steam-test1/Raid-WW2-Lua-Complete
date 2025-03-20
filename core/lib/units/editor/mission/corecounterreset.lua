@@ -39,8 +39,8 @@ end
 
 function CoreCounterResetUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "logic_counter/logic_counter", 1, true) then
@@ -80,13 +80,13 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
 	local counter_target_params = {
+		ctrlr_proportions = 2,
+		sorted = false,
 		name = "Counter target:",
 		name_proportions = 1,
 		min = 0,
-		ctrlr_proportions = 2,
 		tooltip = "Specifies what the selected counted should reset to",
 		floats = 0,
-		sorted = false,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.counter_target

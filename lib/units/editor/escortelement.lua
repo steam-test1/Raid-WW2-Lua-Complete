@@ -80,9 +80,9 @@ function EscortUnitElement:test_element()
 
 	test_unit:anim_data().panic = true
 	local action = {
-		clamp_to_graph = true,
 		type = "act",
 		body_part = 1,
+		clamp_to_graph = true,
 		variant = self._hed.break_so
 	}
 

@@ -48,8 +48,8 @@ end
 
 function RaidGUIControlSkillsBreakdown:_create_skills_label()
 	self._skills_label = self._object:text({
-		name = "skills_label",
 		vertical = "center",
+		name = "skills_label",
 		x = RaidGUIControlSkillsBreakdown.LABEL_X,
 		y = RaidGUIControlSkillsBreakdown.LABEL_Y,
 		w = RaidGUIControlSkillsBreakdown.DEFAULT_W,

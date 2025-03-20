@@ -98,8 +98,8 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 	self._bonus_image = self._object:image({
 		h = 64,
 		visible = false,
-		w = 64,
 		x = 0,
+		w = 64,
 		name = "bonus_image_" .. self._name,
 		layer = self._card_panel:layer(),
 		y = self._card_panel:h() + 20,
@@ -110,8 +110,8 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 	self._malus_image = self._object:image({
 		h = 64,
 		visible = false,
-		w = 64,
 		x = 0,
+		w = 64,
 		name = "malus_image_" .. self._name,
 		y = self._bonus_image:y() + self._bonus_image:h() + 26,
 		layer = self._card_control:layer(),

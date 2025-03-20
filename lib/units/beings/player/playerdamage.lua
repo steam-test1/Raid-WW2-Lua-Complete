@@ -310,8 +310,8 @@ function PlayerDamage:_regenerated(downs_regen)
 	if downs_regen and downs_regen > 0 then
 		if self:_change_revives(downs_regen) then
 			managers.hud:set_big_prompt({
-				id = "hint_downs_remaining",
 				duration = 3,
+				id = "hint_downs_remaining",
 				title = managers.localization:to_upper_text("hud_hint_down_restored_title"),
 				description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 					DOWNS = self._revives - 1,
@@ -1052,10 +1052,10 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
-					id = "hint_downed",
 					background = "backgrounds_detected_msg",
-					priority = true,
 					duration = 4,
+					priority = true,
+					id = "hint_downed",
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,

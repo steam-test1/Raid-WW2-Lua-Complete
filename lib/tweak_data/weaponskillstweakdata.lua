@@ -404,8 +404,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 5,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -428,8 +428,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 6,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -455,8 +455,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -478,8 +478,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 7,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -502,8 +502,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -523,8 +523,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -575,8 +575,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -599,8 +599,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
-				cost = 3,
 				value = 4,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -637,8 +637,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -664,8 +664,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -685,8 +685,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -712,8 +712,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -740,8 +740,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -761,8 +761,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -788,8 +788,8 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -824,8 +824,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -845,8 +845,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -868,8 +868,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
@@ -891,8 +891,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -912,8 +912,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -939,8 +939,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -961,8 +961,8 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1000,8 +1000,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -1021,8 +1021,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -1045,8 +1045,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
@@ -1068,8 +1068,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1089,8 +1089,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1114,8 +1114,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -1137,8 +1137,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -1166,8 +1166,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1187,8 +1187,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1215,8 +1215,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -1238,8 +1238,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 6,
 				value = 3,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -1268,8 +1268,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1292,8 +1292,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1320,8 +1320,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
-				cost = 6,
 				value = 5,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_smg_thompson_m_drum"
@@ -1347,8 +1347,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_smg_thompson_o_m1928"
@@ -1391,8 +1391,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -1412,8 +1412,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -1439,8 +1439,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -1466,8 +1466,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1487,8 +1487,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1515,8 +1515,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -1542,8 +1542,8 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -1576,8 +1576,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -1599,8 +1599,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
@@ -1621,8 +1621,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -1646,8 +1646,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -1673,8 +1673,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 5,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -1696,8 +1696,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1721,8 +1721,8 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1753,8 +1753,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -1780,8 +1780,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -1801,8 +1801,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -1827,8 +1827,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
@@ -1850,8 +1850,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 1,
 				value = 2,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1878,8 +1878,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 1,
 				value = 2,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -1899,8 +1899,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 1,
 				value = 2,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -1926,8 +1926,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -1951,8 +1951,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 1,
 				value = 3,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -1979,8 +1979,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 1,
 				value = 3,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2000,8 +2000,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 1,
 				value = 3,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2027,8 +2027,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -2052,8 +2052,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
-				cost = 1,
 				value = 4,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2077,8 +2077,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 1,
 				value = 4,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2101,8 +2101,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
-				cost = 1,
 				value = 4,
+				cost = 1,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_smg_sten_body_mk3_vented"
@@ -2131,8 +2131,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_smg_sten_m_long_double"
@@ -2171,8 +2171,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -2198,8 +2198,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -2225,8 +2225,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2253,8 +2253,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2280,8 +2280,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2301,8 +2301,8 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 1,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -2334,8 +2334,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -2361,8 +2361,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -2388,8 +2388,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2416,8 +2416,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2443,8 +2443,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 1,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -2465,8 +2465,8 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2497,8 +2497,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -2524,8 +2524,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -2551,8 +2551,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2579,8 +2579,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2606,8 +2606,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 3,
 				value = 1,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -2628,8 +2628,8 @@ function WeaponSkillsTweakData:_init_lee_enfield_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2663,8 +2663,8 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -2690,8 +2690,8 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -2717,8 +2717,8 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2745,8 +2745,8 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2772,8 +2772,8 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2804,8 +2804,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -2825,8 +2825,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -2853,8 +2853,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2874,8 +2874,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2899,8 +2899,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2925,8 +2925,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -2946,8 +2946,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -2971,8 +2971,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -2998,8 +2998,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 1,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -3023,8 +3023,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3047,8 +3047,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshots_beyond_range_completed",
 				challenge_briefing_id = "weapon_skill_headshots_beyond_range_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3075,8 +3075,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_ass_garand_s_folding"
@@ -3105,8 +3105,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
-				cost = 8,
 				value = 2,
+				cost = 8,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_ass_garand_m_bar_extended"
@@ -3145,8 +3145,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -3166,8 +3166,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -3194,8 +3194,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3215,8 +3215,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3240,8 +3240,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -3266,8 +3266,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3287,8 +3287,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
 				challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3312,8 +3312,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -3339,8 +3339,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 1,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -3364,8 +3364,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3388,8 +3388,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshots_beyond_range_completed",
 				challenge_briefing_id = "weapon_skill_headshots_beyond_range_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3416,8 +3416,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_specials_completed",
 				challenge_briefing_id = "weapon_skill_kill_specials_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_ass_garand_s_folding"
@@ -3446,8 +3446,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_steelsight_kill_completed",
 				challenge_briefing_id = "weapon_skill_steelsight_kill_briefing",
-				cost = 8,
 				value = 2,
+				cost = 8,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				weapon_parts = {
 					"wpn_fps_ass_garand_m_bar_extended"
@@ -3486,8 +3486,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -3513,8 +3513,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -3534,8 +3534,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -3561,8 +3561,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3589,8 +3589,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3610,8 +3610,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -3637,8 +3637,8 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -3671,8 +3671,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -3698,8 +3698,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -3719,8 +3719,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -3746,8 +3746,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3774,8 +3774,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3798,8 +3798,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 2,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -3825,8 +3825,8 @@ function WeaponSkillsTweakData:_init_bren_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 4,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -3859,8 +3859,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -3883,8 +3883,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -3911,8 +3911,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -3939,8 +3939,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -3963,8 +3963,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -3986,8 +3986,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4014,8 +4014,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4038,8 +4038,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4059,8 +4059,8 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 6,
 				value = 5,
+				cost = 6,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -4095,8 +4095,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -4116,8 +4116,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-			cost = 2,
 			value = 1,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 			challenge_tasks = {
 				{
@@ -4139,8 +4139,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -4164,8 +4164,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4185,8 +4185,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -4208,8 +4208,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4233,8 +4233,8 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4271,8 +4271,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -4298,8 +4298,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 5,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -4325,8 +4325,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4353,8 +4353,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 6,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4380,8 +4380,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4403,8 +4403,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4431,8 +4431,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 7,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4458,8 +4458,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4481,8 +4481,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
-				cost = 3,
 				value = 4,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4509,8 +4509,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
 				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
-				cost = 4,
 				value = 8,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_sho_m1912_b_heat_shield"
@@ -4535,8 +4535,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4572,8 +4572,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -4596,8 +4596,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 5,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -4620,8 +4620,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4648,8 +4648,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 6,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4672,8 +4672,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4695,8 +4695,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4723,8 +4723,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 7,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4750,8 +4750,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4773,8 +4773,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
-				cost = 3,
 				value = 4,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4801,8 +4801,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_within_range_completed",
 				challenge_briefing_id = "weapon_skill_kill_within_range_briefing",
-				cost = 4,
 				value = 8,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				weapon_parts = {
 					"wpn_fps_sho_ithaca_b_heat_shield"
@@ -4827,8 +4827,8 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_kill_flamers_completed",
 				challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
-				cost = 4,
 				value = 4,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4864,8 +4864,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 			challenge_tasks = {
 				{
@@ -4888,8 +4888,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 2,
 			value = 5,
+			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -4912,8 +4912,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -4940,8 +4940,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 2,
 				value = 6,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -4964,8 +4964,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -4985,8 +4985,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 2,
 				value = 6,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -5010,8 +5010,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 3,
 				value = 3,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -5038,8 +5038,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 4,
 				value = 7,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -5065,8 +5065,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -5086,8 +5086,8 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 4,
 				value = 7,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{
@@ -5183,8 +5183,8 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -5204,8 +5204,8 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-			cost = 1,
 			value = 5,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			challenge_tasks = {
 				{
@@ -5228,8 +5228,8 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -5249,8 +5249,8 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_headshot_kill_completed",
 				challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
-				cost = 3,
 				value = 6,
+				cost = 3,
 				skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 				challenge_tasks = {
 					{
@@ -5273,8 +5273,8 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -5309,8 +5309,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 		{
 			challenge_done_text_id = "weapon_skill_generic_kill_completed",
 			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-			cost = 1,
 			value = 1,
+			cost = 1,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 			challenge_tasks = {
 				{
@@ -5334,8 +5334,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -5358,8 +5358,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 2,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -5388,8 +5388,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_generic_kill_completed",
 				challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
 				challenge_tasks = {
 					{
@@ -5409,8 +5409,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
 				challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
-				cost = 2,
 				value = 3,
+				cost = 2,
 				skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
 				challenge_tasks = {
 					{
@@ -5434,8 +5434,8 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 			{
 				challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 				challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-				cost = 4,
 				value = 3,
+				cost = 4,
 				skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
 				challenge_tasks = {
 					{

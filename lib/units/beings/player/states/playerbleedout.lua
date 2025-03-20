@@ -325,18 +325,18 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		type = "act",
 		scan = true,
+		type = "act",
 		action = {
-			body_part = 1,
 			variant = "crouch",
+			body_part = 1,
 			type = "act",
 			blocks = {
-				hurt = -1,
 				walk = -1,
 				action = -1,
 				aim = -1,
-				heavy_hurt = -1
+				heavy_hurt = -1,
+				hurt = -1
 			}
 		}
 	}
@@ -355,17 +355,17 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
-			align_sync = true,
 			type = "act",
 			body_part = 1,
 			variant = "revive",
+			align_sync = true,
 			blocks = {
-				hurt = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				action = -1,
 				aim = -1,
-				light_hurt = -1
+				light_hurt = -1,
+				hurt = -1
 			}
 		}
 	}

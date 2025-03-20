@@ -25,9 +25,9 @@ end
 
 function RaidGUIControlIntelControlArchive:_layout()
 	self._bg_image = self._object:bitmap({
-		y = 0,
 		x = 0,
 		visible = false,
+		y = 0,
 		w = tweak_data.gui.icons.intel_table_archive.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_archive.texture_rect[4],
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
@@ -35,36 +35,36 @@ function RaidGUIControlIntelControlArchive:_layout()
 		layer = self._object:layer() + 1
 	})
 	self._image = self._object:bitmap({
+		x = 112,
+		visible = false,
 		w = 796,
 		y = 128,
 		h = 448,
-		x = 112,
-		visible = false,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect
 	})
 	self._play_panel = self._object:panel({
-		y = 0,
 		x = 0,
 		visible = false,
+		y = 0,
 		w = tweak_data.gui.icons.play_icon_outline.texture_rect[3],
 		h = tweak_data.gui.icons.play_icon_outline.texture_rect[4],
 		layer = self._object:layer() + 2
 	})
 	self._play_circle = self._play_panel:bitmap({
-		y = 0,
 		x = 0,
 		visible = false,
+		y = 0,
 		layer = self._object:layer() + 3,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		texture = tweak_data.gui.icons.play_icon_outline.texture,
 		texture_rect = tweak_data.gui.icons.play_icon_outline.texture_rect
 	})
 	self._play_icon = self._play_panel:bitmap({
+		visible = false,
 		y = 0,
 		x = 0,
-		visible = false,
 		layer = self._object:layer() + 4,
 		texture = tweak_data.gui.icons.play_icon.texture,
 		texture_rect = tweak_data.gui.icons.play_icon.texture_rect
@@ -241,8 +241,8 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	self._safe_rect_workspace = gui:create_screen_workspace()
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		name = "control_video_root_panel",
 		is_root_panel = true,
+		name = "control_video_root_panel",
 		x = full_panel:x(),
 		y = full_panel:y(),
 		h = full_panel:h(),

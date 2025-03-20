@@ -46,9 +46,9 @@ end
 
 function RaidGUIControlLootBracket:_create_notch()
 	local notch_params = {
+		name = "notch",
 		y = 0,
 		x = 0,
-		name = "notch",
 		texture = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture_rect,
 		color = RaidGUIControlLootBracket.NOTCH_COLOR_INACTIVE,
@@ -62,9 +62,9 @@ end
 
 function RaidGUIControlLootBracket:_create_bracket_icon()
 	local bracket_icon_params = {
+		name = "bracket_icon",
 		y = 0,
 		x = 0,
-		name = "bracket_icon",
 		h = RaidGUIControlLootBracket.ICON_INACTIVE_H,
 		w = RaidGUIControlLootBracket.ICON_INACTIVE_H * tweak_data.gui:icon_w(RaidGUIControlLootBracket.ICON) / tweak_data.gui:icon_h(RaidGUIControlLootBracket.ICON),
 		texture = tweak_data.gui.icons[RaidGUIControlLootBracket.ICON].texture,

@@ -15,8 +15,8 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 
 	self._item_data = item_data
 	self._object = self._panel:panel({
-		layer = 0,
 		name = "panel_grid_item",
+		layer = 0,
 		x = params.x,
 		y = params.y,
 		w = params.selected_marker_w,
@@ -43,17 +43,17 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	self._params.item_h = params.item_h or self._panel:h()
 	self._name = "grid_item"
 	local background_panel_params = {
-		x = 0,
 		layer = 1,
 		visible = false,
 		y = 0,
+		x = 0,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h
 	}
 	local background_rect_params = {
-		x = 0,
 		layer = 2,
 		y = 0,
+		x = 0,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h,
 		color = tweak_data.gui.colors.raid_grey:with_alpha(0.3)
@@ -88,8 +88,8 @@ end
 
 function RaidGUIControlGridItem:_layout_locks()
 	self._item_status_resource_icon = self._object:image({
-		layer = 200,
 		name = "grid_item_resource_icon",
+		layer = 200,
 		color = tweak_data.gui.colors.gold_orange,
 		texture = tweak_data.gui.icons.gold_amount_footer.texture,
 		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect
@@ -99,8 +99,8 @@ function RaidGUIControlGridItem:_layout_locks()
 	self._item_status_resource_icon:set_bottom(self._grid_item_icon:bottom() - 14)
 
 	self._item_status_lock_icon = self._object:image({
-		name = "grid_item_lock_icon",
 		layer = 200,
+		name = "grid_item_lock_icon",
 		texture = tweak_data.gui.icons.ico_locker.texture,
 		texture_rect = tweak_data.gui.icons.ico_locker.texture_rect
 	})
@@ -109,8 +109,8 @@ function RaidGUIControlGridItem:_layout_locks()
 	self._item_status_lock_icon:set_bottom(self._grid_item_icon:bottom() - 14)
 
 	self._item_status_dlc_lock = self._object:image({
-		name = "grid_item_dlc_lock_icon",
 		layer = 200,
+		name = "grid_item_dlc_lock_icon",
 		texture = tweak_data.gui.icons.ico_dlc.texture,
 		texture_rect = tweak_data.gui.icons.ico_dlc.texture_rect
 	})
@@ -121,8 +121,8 @@ end
 
 function RaidGUIControlGridItem:_layout_triangles()
 	self._top_marker_triangle = self._triangle_markers_panel:image({
-		x = 0,
 		y = 0,
+		x = 0,
 		w = RaidGUIControlGridItem.SELECT_TRINGLE_SIZE,
 		h = RaidGUIControlGridItem.SELECT_TRINGLE_SIZE,
 		color = tweak_data.gui.colors.gold_orange,

@@ -1,6 +1,14 @@
 FragGrenade = FragGrenade or class(GrenadeBase)
 FragGrenade.MAX_CLUSTER_ATTEMPTS = 15
 
+function FragGrenade:destroy()
+	if self._delete_queue_id then
+		managers.queued_tasks:unqueue(self._delete_queue_id)
+
+		self._delete_queue_id = nil
+	end
+end
+
 function FragGrenade:_setup_from_tweak_data()
 	local grenade_entry = self.name_id
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
@@ -117,13 +125,13 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	self:_detonate_with_clusters()
 
-	local queue_id = "delete_grenade_" .. tostring(self._unit:key())
+	self._delete_queue_id = "delete_grenade_" .. tostring(self._unit:key())
 
-	managers.queued_tasks:queue(queue_id, self.delete_unit, self, nil, 0.1)
+	managers.queued_tasks:queue(self._delete_queue_id, self.delete_unit, self, nil, 0.1)
 end
 
 function FragGrenade:delete_unit()
-	if Network:is_server() then
+	if Network:is_server() and alive(self._unit) then
 		self._unit:set_slot(0)
 	end
 end

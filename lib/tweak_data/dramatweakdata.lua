@@ -4,10 +4,10 @@ function DramaTweakData:init()
 	Application:debug("[DramaTweakData] Drama tweakdata init!")
 
 	self.drama_actions = {
-		criminal_hurt = 0.34,
 		criminal_disabled = 0.3,
 		criminal_dead = 0.35,
-		criminal_hurt_minimum = 0.02
+		criminal_hurt_minimum = 0.02,
+		criminal_hurt = 0.34
 	}
 	self.decay_period = 60
 	self.max_dis = 12000

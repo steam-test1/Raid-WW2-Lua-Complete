@@ -607,20 +607,20 @@ function MenuComponentManager:add_minimized(config)
 	self._minimized_list = self._minimized_list or {}
 	self._minimized_id = (self._minimized_id or 0) + 1
 	local panel = self._main_panel:panel({
-		w = 100,
 		h = 20,
+		w = 100,
 		layer = tweak_data.gui.MENU_COMPONENT_LAYER
 	})
 	local text = nil
 
 	if config.text then
 		text = panel:text({
+			layer = 2,
 			align = "center",
 			font_size = 22,
 			hvertical = "center",
 			vertical = "center",
 			halign = "left",
-			layer = 2,
 			text = config.text,
 			font = tweak_data.menu.default_font
 		})
@@ -634,12 +634,12 @@ function MenuComponentManager:add_minimized(config)
 	end
 
 	local help_text = panel:parent():text({
-		align = "left",
-		layer = 3,
-		visible = false,
 		hvertical = "center",
 		vertical = "center",
 		halign = "left",
+		align = "left",
+		layer = 3,
+		visible = false,
 		text = config.help_text or "CLICK TO MAXIMIZE WEAPON INFO",
 		font = tweak_data.menu.small_font,
 		font_size = tweak_data.menu.small_font_size,
@@ -649,17 +649,17 @@ function MenuComponentManager:add_minimized(config)
 	help_text:set_shape(help_text:text_rect())
 
 	local unselected = panel:bitmap({
-		texture = "guis/textures/menu_unselected",
-		layer = 0
+		layer = 0,
+		texture = "guis/textures/menu_unselected"
 	})
 
 	unselected:set_h(64 * panel:h() / 32)
 	unselected:set_center_y(panel:center_y())
 
 	local selected = panel:bitmap({
+		visible = false,
 		texture = "guis/textures/menu_selected",
-		layer = 1,
-		visible = false
+		layer = 1
 	})
 
 	selected:set_h(64 * panel:h() / 32)
@@ -667,9 +667,9 @@ function MenuComponentManager:add_minimized(config)
 	panel:set_bottom(self._main_panel:h() - CoreMenuRenderer.Renderer.border_height)
 
 	local top_line = panel:parent():bitmap({
+		visible = false,
 		texture = "guis/textures/headershadow",
 		layer = 1,
-		visible = false,
 		w = panel:w()
 	})
 
@@ -2414,8 +2414,8 @@ end
 
 function MenuComponentManager:_create_voice_chat_status_info()
 	local widget_panel_params = {
-		x = 0,
 		name = "voice_chat_panel",
+		x = 0,
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4
 	}

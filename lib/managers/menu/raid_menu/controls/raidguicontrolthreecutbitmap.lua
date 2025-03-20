@@ -17,7 +17,7 @@ end
 function RaidGUIControlThreeCutBitmap:_create_panel()
 	local three_cut_params = clone(self._params)
 	three_cut_params.name = three_cut_params.name .. "_three_cut_bitmap"
-	three_cut_params.layer = self._panel:layer()
+	three_cut_params.layer = three_cut_params.layer or self._panel:layer()
 	three_cut_params.h = self._params.h or self:h()
 	self._slider_panel = self._panel:panel(three_cut_params)
 	self._object = self._slider_panel

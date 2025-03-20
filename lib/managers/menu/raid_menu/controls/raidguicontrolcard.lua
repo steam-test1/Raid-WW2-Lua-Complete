@@ -13,10 +13,10 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 	}, true)
 	self._object = self._card_panel
 	self._card_glow = self._card_panel:bitmap({
+		name = "glow_texture",
 		visible = false,
 		y = -2,
 		x = -2,
-		name = "glow_texture",
 		w = self._card_panel:w() + 6,
 		h = self._card_panel:h() + 5,
 		color = Color.green,
@@ -24,10 +24,10 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 		texture_rect = tweak_data.challenge_cards.card_glow.texture_rect
 	})
 	self._card_lock_glow = self._card_panel:bitmap({
+		name = "glow_lock_texture",
 		visible = false,
 		y = -2,
 		x = -2,
-		name = "glow_lock_texture",
 		w = self._card_panel:w() + 6,
 		h = self._card_panel:h() + 5,
 		color = tweak_data.menu.raid_red,
@@ -44,14 +44,14 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 			texture_rect = tweak_data.challenge_cards.rarity_definition[item_data.rarity].texture_rect_thumb
 		})
 		self._xp_value = self._card_panel:label({
-			y = 112,
+			wrap = true,
+			name = "label_xp_value",
+			font_size = 15,
 			text = "$$$",
 			h = 17,
 			w = 33,
-			font_size = 15,
-			wrap = true,
+			y = 112,
 			x = 5,
-			name = "label_xp_value",
 			font = tweak_data.menu.pd2_medium_font
 		})
 	end
@@ -72,9 +72,9 @@ end
 function RaidGUIControlCard:_create_border()
 	local border_thickness = 1.6
 	self._border_left = self._card_panel:gradient({
-		orientation = "vertical",
 		layer = 2,
 		name = "border_left",
+		orientation = "vertical",
 		w = border_thickness,
 		h = self._card_panel:h()
 	})
@@ -87,10 +87,10 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_right = self._card_panel:gradient({
-		y = 0,
-		orientation = "vertical",
 		layer = 2,
 		name = "border_right",
+		orientation = "vertical",
+		y = 0,
 		x = self._card_panel:w() - border_thickness,
 		w = border_thickness,
 		h = self._card_panel:h()
@@ -104,11 +104,11 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_up = self._card_panel:gradient({
-		y = 0,
-		orientation = "horizontal",
 		layer = 2,
-		x = 0,
 		name = "border_up",
+		orientation = "horizontal",
+		y = 0,
+		x = 0,
 		w = self._card_panel:w(),
 		h = border_thickness
 	})
@@ -127,10 +127,10 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_down = self._card_panel:gradient({
-		orientation = "horizontal",
 		layer = 2,
-		x = 0,
 		name = "border_down",
+		orientation = "horizontal",
+		x = 0,
 		y = self._card_panel:h() - border_thickness,
 		w = self._card_panel:w(),
 		h = border_thickness

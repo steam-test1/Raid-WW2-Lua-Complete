@@ -13,12 +13,12 @@ function EditUnitTriggable:init(editor)
 	self._element_guis = {}
 	local sequence_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._triggers_params = {
-		ctrlr_proportions = 2,
+		sizer_proportions = 1,
+		name = "Triggers:",
 		tooltip = "Select a sequence that should trigger other unit sequences",
 		sorted = true,
-		name = "Triggers:",
+		ctrlr_proportions = 2,
 		name_proportions = 1,
-		sizer_proportions = 1,
 		panel = panel,
 		sizer = sequence_sizer,
 		options = {}

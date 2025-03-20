@@ -291,21 +291,21 @@ function EquipmentsTweakData:init()
 		sync_possession = true
 	}
 	self.max_amount = {
+		grenades = 4,
 		asset_sentry_gun = 4,
 		asset_grenade_crate = 3,
 		asset_doctor_bag = 3,
 		asset_ammo_bag = 4,
-		grenades = 4,
+		first_aid_kit = 14,
 		trip_mine = 6,
 		sentry_gun = 2,
 		ecm_jammer = 2,
 		doctor_bag = 2,
-		ammo_bag = 2,
-		first_aid_kit = 14
+		ammo_bag = 2
 	}
 	self.class_name_to_deployable_id = {
+		AmmoBagBase = "ammo_bag",
 		FirstAidKitBase = "first_aid_kit",
-		DoctorBagBase = "doctor_bag",
-		AmmoBagBase = "ammo_bag"
+		DoctorBagBase = "doctor_bag"
 	}
 end

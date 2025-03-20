@@ -110,8 +110,8 @@ end
 
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -122,8 +122,8 @@ end
 
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = managers.slot:get_mask("all")
 	})
 

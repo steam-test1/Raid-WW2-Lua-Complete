@@ -3,9 +3,7 @@ core:import("CoreMissionScriptElement")
 
 ElementWorldOutputEvent = ElementWorldOutputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementWorldOutputEvent:init(...)
-	ElementWorldOutputEvent.super.init(self, ...)
-
+function ElementWorldOutputEvent:on_script_activated()
 	if self._values.event_list then
 		for _, event_list_data in ipairs(self._values.event_list) do
 			managers.worldcollection:register_output_element(event_list_data.world_name, event_list_data.event, self)
@@ -34,10 +32,6 @@ function ElementWorldOutputEvent:destroy()
 end
 
 ElementWorldOutput = ElementWorldOutput or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementWorldOutput:init(...)
-	ElementWorldOutput.super.init(self, ...)
-end
 
 function ElementWorldOutput:client_on_executed(...)
 end
@@ -117,6 +111,10 @@ function ElementWorldInputEvent:on_executed(instigator)
 end
 
 ElementWorldPoint = ElementWorldPoint or class(CoreMissionScriptElement.MissionScriptElement)
+ElementWorldPoint.DELAY_DESTROY_SINGLE = 1.1
+ElementWorldPoint.DELAY_CREATE_SINGLE = 2
+ElementWorldPoint.DELAY_DESTROY_MULTI = 3
+ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
 function ElementWorldPoint:init(...)
 	ElementWorldPoint.super.init(self, ...)
@@ -134,11 +132,6 @@ end
 function ElementWorldPoint:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
-
-ElementWorldPoint.DELAY_DESTROY_SINGLE = 1.1
-ElementWorldPoint.DELAY_CREATE_SINGLE = 2
-ElementWorldPoint.DELAY_DESTROY_MULTI = 3
-ElementWorldPoint.DELAY_CREATE_MULTI = 5
 
 function ElementWorldPoint:on_executed(instigator)
 	Application:debug("[ElementWorldPoint:on_executed] on_executed world name:", self._values.world, "enable:", self._values.enabled, "IDX:", self._world_id, "Action:", self._action)
@@ -204,9 +197,7 @@ function ElementWorldPoint:_set_alarm_state(state)
 
 	local spawn = managers.worldcollection:world_spawn(self._world_id)
 
-	if not spawn then
-		_G.debug_pause("[ElementWorldPoint:on_executed] Tried to set alarm flag on world that is still not spawned!")
-	else
+	if spawn then
 		managers.worldcollection:set_alarm_for_world_id(self._world_id, state)
 	end
 end

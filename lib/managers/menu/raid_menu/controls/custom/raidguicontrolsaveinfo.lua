@@ -56,12 +56,12 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	dog_tag_icon:set_center_y(self._dog_tag_panel:h() / 2)
 
 	local dog_tag_count_params = {
-		text = "120 / 140",
-		h = 32,
-		y = 0,
 		vertical = "center",
-		name = "dog_tag_count",
+		h = 32,
 		align = "center",
+		y = 0,
+		name = "dog_tag_count",
+		text = "120 / 140",
 		x = RaidGUIControlSaveInfo.DOG_TAG_LABEL_X,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_32,
@@ -69,11 +69,11 @@ function RaidGUIControlSaveInfo:_create_info_icons()
 	}
 	self._dog_tag_count = self._dog_tag_panel:text(dog_tag_count_params)
 	local dog_tag_label_params = {
-		h = 32,
-		y = 32,
 		vertical = "center",
-		name = "dog_tag_label",
+		h = 32,
 		align = "center",
+		y = 32,
+		name = "dog_tag_label",
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_black,
@@ -100,11 +100,11 @@ end
 
 function RaidGUIControlSaveInfo:_create_peer_details_title()
 	local peer_details_title_params = {
+		vertical = "center",
 		h = 32,
 		y = 137,
-		vertical = "center",
-		name = "peer_details_title",
 		align = "left",
+		name = "peer_details_title",
 		x = self._info_icons_panel:x(),
 		w = self._info_icons_panel:w(),
 		font = RaidGUIControlPeerDetails.FONT,

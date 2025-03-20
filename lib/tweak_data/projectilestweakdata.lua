@@ -3,22 +3,22 @@ ProjectilesTweakData = ProjectilesTweakData or class()
 function ProjectilesTweakData:init(tweak_data)
 	self.GRENADE_QUANTITY_UPGARDE = {
 		{
-			upgrade = "grenadier_grenade_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "grenadier_grenade_quantity"
 		},
 		{
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		}
 	}
 	self.MINE_QUANTITY_UPGARDE = {
 		{
-			upgrade = "sapper_mine_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "sapper_mine_quantity"
 		},
 		{
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		}
 	}
 	self._projectiles_index = {}
@@ -362,8 +362,8 @@ function ProjectilesTweakData:_init_decoy_coin(tweak_data)
 		icon = "frag_grenade",
 		max_amount = 5,
 		upgrade_amount = {
-			upgrade = "pack_mule_equipment_quantity",
-			category = "player"
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity"
 		},
 		pickup_filter = "coins",
 		is_a_grenade = true,
@@ -413,8 +413,8 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 		pickup_filter = "nopickup",
 		upgrade_amounts = table.list_union(self.GRENADE_QUANTITY_UPGARDE, {
 			{
-				upgrade = "warcry_grenade_refill_amounts",
-				category = "player"
+				category = "player",
+				upgrade = "warcry_grenade_refill_amounts"
 			}
 		}),
 		throw_allowed_expire_t = 0.662,
@@ -435,14 +435,14 @@ function ProjectilesTweakData:_init_anti_tank(tweak_data)
 	}
 	self.anti_tank.sound_event = "grenade_explode"
 	self.anti_tank.gui = {
+		display_offset = 10,
 		height_offset = -14,
 		distance_offset = -80,
 		rotation_offset = 3,
-		display_offset = 10,
 		initial_rotation = {
+			roll = 0,
 			pitch = 60,
-			yaw = -90,
-			roll = 0
+			yaw = -90
 		}
 	}
 end
@@ -451,33 +451,33 @@ function ProjectilesTweakData:_init_thermite(tweak_data)
 	table.insert(self._projectiles_index, "thermite")
 
 	self.thermite = {
+		name_id = "bm_grenade_thermite",
+		init_timer = 1,
+		alert_radius = 980,
+		fire_tweak_id = "thermite_grenade",
+		expire_t = 1.48,
+		range = 330,
+		player_damage = 4,
+		damage = 10,
+		is_a_grenade = true,
+		time_cheat = 1,
+		no_cheat_count = true,
+		throw_allowed_expire_t = 0.662,
+		repeat_expire_t = 1.5,
+		pickup_filter = "nopickup",
 		max_amount = 1,
 		throwable = true,
 		impact_detonation = true,
 		anim_global_param = "projectile_frag",
 		icon = "thermite_grenade",
 		unit_dummy = "units/upd_blaze/weapons/gre_thermite/wpn_tps_gre_thermite",
-		alert_radius = 980,
 		unit_hand = "units/upd_blaze/weapons/gre_thermite/wpn_fps_gre_thermite",
-		time_cheat = 1,
 		unit = "units/upd_blaze/weapons/gre_thermite/wpn_prj_gre_thermite",
 		launch_speed = 300,
-		repeat_expire_t = 1.5,
-		name_id = "bm_grenade_thermite",
-		fire_tweak_id = "thermite_grenade",
-		init_timer = 1,
-		range = 330,
-		player_damage = 4,
-		damage = 10,
-		is_a_grenade = true,
-		no_cheat_count = true,
-		expire_t = 1.48,
-		throw_allowed_expire_t = 0.662,
-		pickup_filter = "nopickup",
 		physic_effect = tweak_data.physics_effects.damp_rotation,
 		upgrade_amount = {
-			upgrade = "warcry_grenade_refill_amounts",
-			category = "player"
+			category = "player",
+			upgrade = "warcry_grenade_refill_amounts"
 		},
 		animations = {
 			equip_id = "equip_welrod",
@@ -488,18 +488,18 @@ end
 
 function ProjectilesTweakData:_init_flamer_incendiary(tweak_data)
 	self.flamer_incendiary = {
-		player_damage = 25,
-		fire_tweak_id = "flamer_incendiary",
+		name_id = "bm_grenade_molotov",
 		impact_detonation = true,
+		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
+		fire_tweak_id = "flamer_incendiary",
 		killzone_range = 0,
+		player_damage = 25,
 		alert_radius = 1500,
 		range = 300,
 		unit_dummy = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary_husk",
 		damage = 10,
 		no_cheat_count = false,
-		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
-		launch_speed = 350,
-		name_id = "bm_grenade_molotov"
+		launch_speed = 350
 	}
 
 	table.insert(self._projectiles_index, "flamer_incendiary")
@@ -541,12 +541,12 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 		max_amount = 5,
 		upgrade_amounts = {
 			{
-				upgrade = "pack_mule_equipment_quantity",
-				category = "player"
+				category = "player",
+				upgrade = "pack_mule_equipment_quantity"
 			},
 			{
-				upgrade = "midas_gold_bar_quantity",
-				category = "player"
+				category = "player",
+				upgrade = "midas_gold_bar_quantity"
 			}
 		},
 		pickup_filter = "gold_bar",
@@ -571,18 +571,18 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 	}
 	self.gold_bar.animations.equip_id = "equip_welrod"
 	self.gold_bar.sounds = {
-		flyby = "grenade_handle_fly",
-		impact = "gold_bar_hit"
+		impact = "gold_bar_hit",
+		flyby = "grenade_handle_fly"
 	}
 	self.gold_bar.gui = {
+		display_offset = 22,
 		height_offset = -14,
 		distance_offset = -140,
 		rotation_offset = 3,
-		display_offset = 22,
 		initial_rotation = {
+			roll = 0,
 			pitch = 80,
-			yaw = 52,
-			roll = 0
+			yaw = 52
 		}
 	}
 

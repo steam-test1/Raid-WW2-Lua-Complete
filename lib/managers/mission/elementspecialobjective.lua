@@ -55,16 +55,16 @@ ElementSpecialObjective._HASTES = {
 	"run"
 }
 ElementSpecialObjective._DEFAULT_VALUES = {
-	action_duration_max = 0,
-	action_duration_min = 0,
-	interaction_voice = 1,
-	interrupt_dmg = 0,
-	interrupt_dis = -1,
 	chance_inc = 0,
 	base_chance = 1,
 	interval = -1,
 	path_style = 1,
-	ai_group = 1
+	ai_group = 1,
+	action_duration_max = 0,
+	action_duration_min = 0,
+	interaction_voice = 1,
+	interrupt_dmg = 0,
+	interrupt_dis = -1
 }
 
 function ElementSpecialObjective:init(...)
@@ -392,9 +392,9 @@ function ElementSpecialObjective:operation_remove()
 				if self._receiver_units[u_key] and alive(unit) and not unit:brain()._current_logic.inactive then
 					unit:brain():set_objective(nil)
 					unit:brain():action_request({
+						body_part = 2,
 						type = "idle",
-						sync = true,
-						body_part = 2
+						sync = true
 					})
 				end
 			end
@@ -498,11 +498,11 @@ function ElementSpecialObjective:get_objective(instigator)
 				align_sync = true,
 				variant = self._values.so_action,
 				blocks = {
-					walk = -1,
-					hurt = -1,
 					light_hurt = -1,
+					hurt = -1,
+					action = -1,
 					heavy_hurt = -1,
-					action = -1
+					walk = -1
 				}
 			}
 			objective.type = "act"

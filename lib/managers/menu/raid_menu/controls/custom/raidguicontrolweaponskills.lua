@@ -60,8 +60,8 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS do
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
-			vertical = "bottom",
 			align = "center",
+			vertical = "bottom",
 			name = "tier_" .. tostring(i) .. "_label",
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_24,

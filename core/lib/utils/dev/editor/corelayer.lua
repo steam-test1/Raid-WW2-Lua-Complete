@@ -1007,8 +1007,8 @@ end
 function Layer:unit_sampler()
 	if not self._grab and not self:condition() then
 		local data = {
-			sample = true,
 			ray_type = "body editor",
+			sample = true,
 			mask = managers.slot:get_mask("editor_all")
 		}
 		local ray = managers.editor:unit_by_raycast(data)
@@ -1441,13 +1441,14 @@ end
 
 function Layer:add_triggers()
 	local vc = self._editor_data.virtual_controller
+	local IDS_LMB = Idstring("lmb")
 
-	vc:add_trigger(Idstring("lmb"), callback(self, self, "click_widget"))
-	vc:add_release_trigger(Idstring("lmb"), callback(self, self, "release_widget"))
+	vc:add_trigger(IDS_LMB, callback(self, self, "click_widget"))
+	vc:add_release_trigger(IDS_LMB, callback(self, self, "release_widget"))
+	vc:add_trigger(IDS_LMB, callback(self, self, "click_select_unit"))
+	vc:add_release_trigger(IDS_LMB, callback(self, self, "select_release"))
 	vc:add_trigger(Idstring("deselect"), callback(self, self, "deselect"))
 	vc:add_trigger(Idstring("unit_sampler"), callback(self, self, "unit_sampler"))
-	vc:add_trigger(Idstring("lmb"), callback(self, self, "click_select_unit"))
-	vc:add_release_trigger(Idstring("lmb"), callback(self, self, "select_release"))
 	vc:add_trigger(Idstring("clone_edited_values"), callback(self, self, "on_clone_edited_values"))
 	vc:add_trigger(Idstring("center_view_on_selected_unit"), callback(self, self, "on_center_view_on_selected_unit"))
 end
@@ -1480,14 +1481,16 @@ function Layer:on_clone_edited_values()
 		return
 	end
 
-	if self._selected_unit then
+	if self._selected_units then
 		local ray = self._owner:select_unit_by_raycast(managers.slot:get_mask("editor_all"), "body editor")
 
 		if ray and ray.unit then
 			if self:shift() then
-				self:clone_edited_values(self._selected_unit, ray.unit)
-			else
 				self:clone_edited_values(ray.unit, self._selected_unit)
+			else
+				for _, unit in ipairs(self._selected_units) do
+					self:clone_edited_values(unit, ray.unit)
+				end
 			end
 
 			self:update_unit_settings()

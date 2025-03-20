@@ -501,8 +501,8 @@ function Setup:_start_loading_screen()
 			aspect_ratio = aspect_ratio,
 			res = res,
 			workspace_size = {
-				x = 0,
 				y = 0,
+				x = 0,
 				w = res.x,
 				h = res.y
 			},
@@ -541,10 +541,10 @@ function Setup:_setup_loading_environment()
 				slice3 = Vector3(5100, 17500, 0)
 			},
 			apply_ambient = {
-				ambient_falloff_scale = 0,
-				ambient_scale = 1,
 				ambient_color_scale = 0.31999999284744,
 				effect_light_scale = 1,
+				ambient_falloff_scale = 0,
+				ambient_scale = 1,
 				ambient_color = Vector3(1, 1, 1),
 				sky_top_color = Vector3(0, 0, 0),
 				sky_bottom_color = Vector3(0, 0, 0)

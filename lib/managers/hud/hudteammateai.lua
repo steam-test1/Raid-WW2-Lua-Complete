@@ -16,24 +16,24 @@ HUDTeammateAI.MOUNTED_WEAPON_ICON = "player_panel_status_mounted_weapon"
 HUDTeammateAI.DEAD_ICON = "player_panel_status_dead_ai"
 HUDTeammateAI.STATES = {
 	{
-		id = "dead",
-		control = "dead_icon"
+		control = "dead_icon",
+		id = "dead"
 	},
 	{
-		id = "downed",
-		control = "timer_panel"
+		control = "timer_panel",
+		id = "downed"
 	},
 	{
-		id = "interaction",
-		control = "interaction_meter_panel"
+		control = "interaction_meter_panel",
+		id = "interaction"
 	},
 	{
-		id = "mounted_weapon",
-		control = "mounted_weapon_icon"
+		control = "mounted_weapon_icon",
+		id = "mounted_weapon"
 	},
 	{
-		id = "normal",
-		control = "nationality_icon"
+		control = "nationality_icon",
+		id = "normal"
 	}
 }
 
@@ -130,12 +130,12 @@ function HUDTeammateAI:_create_interaction_meter()
 	interaction_meter_background:set_center_y(self._interaction_meter_panel:h() / 2)
 
 	local interaction_meter_params = {
+		render_template = "VertexColorTexturedRadial",
+		name = "interaction_meter",
 		position_z = 0,
 		layer = 2,
 		valign = "scale",
 		halign = "scale",
-		render_template = "VertexColorTexturedRadial",
-		name = "interaction_meter",
 		texture = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.INTERACTION_METER_FILL),
@@ -155,13 +155,13 @@ end
 
 function HUDTeammateAI:_create_timer()
 	local timer_panel_params = {
-		y = 0,
 		x = 0,
 		name = "timer_panel",
 		layer = 5,
 		valign = "center",
 		alpha = 0,
-		halign = "left"
+		halign = "left",
+		y = 0
 	}
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
 	local timer_background_params = {
@@ -178,11 +178,11 @@ function HUDTeammateAI:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
+		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
 		layer = 2,
 		valign = "scale",
 		halign = "scale",
-		render_template = "VertexColorTexturedRadial",
-		name = "timer_bar",
 		texture = tweak_data.gui.icons[HUDTeammateAI.TIMER_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.TIMER_ICON),
@@ -199,13 +199,13 @@ function HUDTeammateAI:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		name = "timer_text",
-		layer = 3,
-		y = 0,
-		x = 0,
 		text = "23",
 		vertical = "center",
 		align = "center",
+		name = "timer_text",
+		x = 0,
+		layer = 3,
+		y = 0,
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDTeammateAI.TIMER_FONT],
@@ -261,12 +261,12 @@ end
 
 function HUDTeammateAI:_create_player_name()
 	local player_name_params = {
-		name = "player_name",
-		y = 0,
-		x = 0,
 		text = "TEST",
 		vertical = "center",
 		align = "left",
+		name = "player_name",
+		x = 0,
+		y = 0,
 		w = self._right_panel:w(),
 		h = self._right_panel:h(),
 		font = tweak_data.gui.fonts[HUDTeammateAI.PLAYER_NAME_FONT],

@@ -1426,15 +1426,26 @@ end
 function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_data = managers.raid_job:current_job()
 	local job_id = job_data and job_data.job_id
+	local dogtag_data = {}
+
+	if job_data then
+		if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			dogtag_data = job_data.current_event_data and job_data.current_event_data.dogtags or {}
+		else
+			dogtag_data = job_data.dogtags or {}
+		end
+	end
+
 	local total_value = 0
+	local min_dist = dogtag_data.min_dist or 200
 
-	if job_data and job_data.dogtags and job_data.dogtags.min and job_data.dogtags.max then
-		total_value = math.random(job_data.dogtags.min, job_data.dogtags.max)
+	if dogtag_data.min and dogtag_data.max then
+		total_value = math.random(dogtag_data.min, dogtag_data.max)
 
-		if job_data.dogtags.diff_bonus then
+		if dogtag_data.diff_bonus then
 			local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
 			local difficulty_index = tweak_data:difficulty_to_index(difficulty)
-			local diff_value = job_data.dogtags.diff_bonus * (difficulty_index - 1)
+			local diff_value = dogtag_data.diff_bonus * (difficulty_index - 1)
 			total_value = total_value + diff_value
 
 			Application:info("[CoreWorldCollection:_plant_loot_on_spawned_levels] total dogtag value", total_value, "+difficulty value", diff_value, "- index", difficulty_index)
@@ -1446,7 +1457,7 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	end
 
 	if not self._world_spawns or self:count_world_spawns() == 0 then
-		managers.lootdrop:plant_loot_on_level(0, total_value, job_id)
+		managers.lootdrop:plant_loot_on_level(0, total_value, min_dist, job_id)
 		managers.consumable_missions:plant_document_on_level(0)
 		managers.greed:plant_greed_items_on_level(world_id)
 	else
@@ -1462,7 +1473,7 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 
 		for world_id, data in pairs(self._world_spawns) do
 			if data.active and data.plant_loot then
-				managers.lootdrop:plant_loot_on_level(world_id, loot_per_level, job_id)
+				managers.lootdrop:plant_loot_on_level(world_id, loot_per_level, min_dist, job_id)
 				managers.consumable_missions:plant_document_on_level(world_id)
 				managers.greed:plant_greed_items_on_level(world_id)
 			elseif data.active then

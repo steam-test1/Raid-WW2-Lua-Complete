@@ -436,8 +436,8 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	end
 
 	local action_data = {
-		damage = 0,
 		variant = "counter_tased",
+		damage = 0,
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 2,
 		attacker_unit = self._unit,
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,
@@ -463,8 +463,8 @@ function PlayerTased:_on_malfunction_to_taser_event()
 	})
 
 	local action_data = {
-		damage = 0,
 		variant = "melee",
+		damage = 0,
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 10,
 		attacker_unit = self._unit,
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,

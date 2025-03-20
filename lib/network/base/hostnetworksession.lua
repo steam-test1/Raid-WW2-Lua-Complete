@@ -659,7 +659,6 @@ function HostNetworkSession:chk_spawn_member_unit(peer, peer_id)
 end
 
 function HostNetworkSession:_spawn_dropin_player(peer)
-	managers.achievment:set_script_data("cant_touch_fail", true)
 	peer:spawn_unit(0, true)
 	managers.groupai:state():fill_criminal_team_with_AI(true)
 end

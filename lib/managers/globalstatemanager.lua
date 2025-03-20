@@ -183,9 +183,9 @@ function GlobalStateManager:fire_event(flag_name)
 				self._next_hint_t = t + 6
 
 				managers.notification:add_notification({
-					id = "hud_waiting_for_player_dropin",
 					duration = 2,
 					shelf_life = 5,
+					id = "hud_waiting_for_player_dropin",
 					text = managers.localization:text("hud_waiting_for_player_dropin")
 				})
 			end

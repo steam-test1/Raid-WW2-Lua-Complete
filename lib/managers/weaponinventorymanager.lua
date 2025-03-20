@@ -604,14 +604,14 @@ function WeaponInventoryManager:_get_base_stats(name)
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
 	self._stats_shown = {
 		{
+			name = "magazine",
 			round_value = true,
-			stat_name = "extra_ammo",
-			name = "magazine"
+			stat_name = "extra_ammo"
 		},
 		{
+			name = "totalammo",
 			round_value = true,
-			stat_name = "total_ammo_mod",
-			name = "totalammo"
+			stat_name = "total_ammo_mod"
 		},
 		{
 			name = "fire_rate",
@@ -621,16 +621,16 @@ function WeaponInventoryManager:_get_base_stats(name)
 			name = "damage"
 		},
 		{
-			one_minus = true,
-			revert = true,
-			visual_multiplier = 0.5,
 			name = "spread",
-			percent = true
+			visual_multiplier = 0.5,
+			percent = true,
+			one_minus = true,
+			revert = true
 		},
 		{
+			name = "recoil",
 			offset = true,
 			revert = true,
-			name = "recoil",
 			percent = true
 		},
 		{
@@ -996,14 +996,14 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 			range = true
 		},
 		{
-			range = true,
 			name = "damage_effect",
-			multiple_of = "damage"
+			multiple_of = "damage",
+			range = true
 		},
 		{
+			name = "charge_time",
 			inverse = true,
 			num_decimals = 1,
-			name = "charge_time",
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
@@ -1028,18 +1028,18 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
-			value = 0,
 			max_value = 0,
+			value = 0,
 			min_value = 0
 		}
 		mods_stats[stat.name] = {
-			value = 0,
 			max_value = 0,
+			value = 0,
 			min_value = 0
 		}
 		skill_stats[stat.name] = {
-			value = 0,
 			max_value = 0,
+			value = 0,
 			min_value = 0
 		}
 

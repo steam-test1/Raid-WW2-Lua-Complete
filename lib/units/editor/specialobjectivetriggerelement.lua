@@ -36,9 +36,9 @@ function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
+				r = 0,
 				b = 0,
 				g = 0.75,
-				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -51,8 +51,8 @@ end
 
 function SpecialObjectiveTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and self:_correct_unit(ray.unit:name():s()) then

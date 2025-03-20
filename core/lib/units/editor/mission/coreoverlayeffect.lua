@@ -73,12 +73,12 @@ function CoreOverlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	end
 
 	local effect_params = {
-		name_proportions = 1,
 		ctrlr_proportions = 2,
 		tooltip = "Select a preset effect for the combo box",
 		default = "none",
 		name = "Effect:",
 		sorted = true,
+		name_proportions = 1,
 		panel = panel,
 		sizer = panel_sizer,
 		options = options,

@@ -17,10 +17,10 @@ end
 
 function BookBoxGui:add_page(name, box_gui, visible)
 	local panel = self._panel:panel({
+		x = 0,
 		w = 40,
 		h = 20,
 		layer = 10,
-		x = 0,
 		name = name
 	})
 
@@ -30,12 +30,12 @@ function BookBoxGui:add_page(name, box_gui, visible)
 		color = Color(1, 0.5, 0.5, 0.5)
 	})
 	panel:text({
-		align = "center",
+		y = 0,
 		hvertical = "center",
 		vertical = "center",
 		halign = "center",
 		layer = 1,
-		y = 0,
+		align = "center",
 		x = 0,
 		name = "name_text",
 		text = string.upper(name),

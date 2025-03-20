@@ -1,7 +1,7 @@
 CarryData = CarryData or class()
 CarryData.EVENT_IDS = {
-	explode = 2,
-	will_explode = 1
+	will_explode = 1,
+	explode = 2
 }
 
 function CarryData:init(unit)
@@ -157,11 +157,11 @@ function CarryData:bullet_hit()
 end
 
 CarryData.EXPLOSION_SETTINGS = {
+	damage = 40,
+	player_damage = 20,
 	range = 1000,
 	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
-	curve_pow = 3,
-	damage = 40,
-	player_damage = 20
+	curve_pow = 3
 }
 CarryData.EXPLOSION_CUSTOM_PARAMS = {
 	camera_shake_mul = 4,
@@ -411,29 +411,29 @@ function CarryData:_chk_register_steal_SO()
 
 	local drop_objective = {
 		type = "act",
-		haste = "walk",
 		interrupt_health = 0.9,
 		interrupt_dis = 700,
-		pose = "crouch",
+		haste = "walk",
 		action_duration = 2,
+		pose = "crouch",
 		nav_seg = drop_nav_seg,
 		pos = drop_pos,
 		area = drop_area,
 		fail_clbk = callback(self, self, "on_secure_SO_failed"),
 		complete_clbk = callback(self, self, "on_secure_SO_completed"),
 		action = {
-			type = "act",
 			body_part = 1,
-			align_sync = true,
-			variant = "untie"
+			type = "act",
+			variant = "untie",
+			align_sync = true
 		}
 	}
 	local pickup_objective = {
-		type = "act",
-		haste = "run",
 		destroy_clbk_key = false,
+		type = "act",
 		interrupt_health = 0.9,
 		interrupt_dis = 700,
+		haste = "run",
 		pose = "crouch",
 		nav_seg = pickup_nav_seg,
 		area = pickup_area,
@@ -441,19 +441,19 @@ function CarryData:_chk_register_steal_SO()
 		fail_clbk = callback(self, self, "on_pickup_SO_failed"),
 		complete_clbk = callback(self, self, "on_pickup_SO_completed"),
 		action = {
-			type = "act",
 			body_part = 1,
-			align_sync = true,
-			variant = "untie"
+			type = "act",
+			variant = "untie",
+			align_sync = true
 		},
 		action_duration = math.lerp(1, 2.5, math.random()),
 		followup_objective = drop_objective
 	}
 	local so_descriptor = {
-		usage_amount = 1,
 		interval = 0,
 		chance_inc = 0,
 		base_chance = 1,
+		usage_amount = 1,
 		objective = pickup_objective,
 		search_pos = pickup_objective.pos,
 		verification_clbk = callback(self, self, "clbk_pickup_SO_verification"),

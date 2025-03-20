@@ -28,10 +28,10 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
-			game_settings = nil,
+			remove_user_state_changed_callback = nil,
 			initializing = true,
+			has_setting_changed = nil,
 			table = nil,
-			SoundDevice = nil,
 			setting_map = {},
 			setting_data_map = {},
 			setting_data_id_to_name_map = {},

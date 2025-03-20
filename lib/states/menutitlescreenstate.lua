@@ -77,8 +77,8 @@ function MenuTitlescreenState:setup()
 	self._text_gradient:set_bottom(panel:h())
 
 	local logo_params = {
-		alpha = 0,
 		name = "title_screen_game_logo",
+		alpha = 0,
 		texture = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture_rect,
 		w = tweak_data.gui:icon_w(MenuTitlescreenState.GAME_LOGO_IMAGE) * y_scale,
@@ -92,12 +92,12 @@ function MenuTitlescreenState:setup()
 
 	local legal_text_font_size = MenuTitlescreenState.LEGAL_TEXT_FONT_SIZE
 	local legal_text_params = {
-		alpha = 0,
-		layer = 50,
 		name = "legal_text",
-		align = "center",
 		wrap = true,
+		align = "center",
+		layer = 50,
 		vertical = "bottom",
+		alpha = 0,
 		w = self._workspace:panel():w(),
 		h = self._workspace:panel():h(),
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.LEGAL_TEXT_FONT, legal_text_font_size),
@@ -113,11 +113,11 @@ function MenuTitlescreenState:setup()
 
 	local press_any_key_font_size = MenuTitlescreenState.PRESS_ANY_KEY_TEXT_FONT_SIZE
 	local press_any_key_prompt_params = {
-		alpha = 0,
 		name = "press_any_key_text",
-		align = "center",
 		wrap = true,
+		align = "center",
 		vertical = "bottom",
+		alpha = 0,
 		w = self._workspace:panel():w(),
 		h = self._workspace:panel():h(),
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),

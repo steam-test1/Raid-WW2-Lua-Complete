@@ -1080,9 +1080,9 @@ end
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
 		target_db_name = "all",
-		send_idstrings = false,
 		preprocessor_definitions = "preprocessor_definitions",
 		verbose = false,
+		send_idstrings = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
 		target_db_root = Application:base_path() .. "assets",
@@ -1141,9 +1141,9 @@ function InstancesLayer:_create_overlay_gui()
 	end
 
 	self._gui_panel = self._workspace:panel():panel({
-		halign = "scale",
-		valign = "scale",
 		h = 16,
+		valign = "scale",
+		halign = "scale",
 		y = self._workspace:panel():h() - 16
 	})
 end

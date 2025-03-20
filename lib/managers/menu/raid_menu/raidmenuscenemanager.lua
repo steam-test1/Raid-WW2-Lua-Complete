@@ -136,7 +136,7 @@ RaidMenuSceneManager.menus.comic_book_menu = {
 	name = "comic_book_menu"
 }
 
-function _get_background_image_instance()
+local function _get_background_image_instance()
 	if not Global.background_image then
 		Global.menu_background_image = RaidGUIControlMenuBackground:new()
 	end
@@ -381,7 +381,7 @@ function RaidMenuSceneManager:on_escape(flag_close_all_menus)
 		return
 	end
 
-	local active_menu = active_menu.name
+	active_menu = active_menu.name
 
 	managers.raid_menu:close_menu()
 
@@ -445,7 +445,7 @@ function RaidMenuSceneManager:_start_menu_camera(menu)
 	end
 end
 
-function RaidMenuSceneManager:get_active_control(control)
+function RaidMenuSceneManager:get_active_control()
 	return self._active_control
 end
 
@@ -594,21 +594,6 @@ function RaidMenuSceneManager:show_dialog_already_in_game()
 	}
 	dialog_data.button_list = {
 		ok_button
-	}
-
-	managers.system_menu:show(dialog_data)
-end
-
-function RaidMenuSceneManager:show_release_dialog_helper(message)
-	local dialog_data = {
-		title = "release dialog helper",
-		text = message
-	}
-	local no_button = {
-		text = "ok"
-	}
-	dialog_data.button_list = {
-		no_button
 	}
 
 	managers.system_menu:show(dialog_data)

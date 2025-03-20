@@ -53,8 +53,8 @@ end
 
 function HUDWeaponGrenade:_create_amount_text()
 	local amount_text_params = {
-		text = "",
 		name = "amount_text",
+		text = "",
 		font = HUDWeaponGrenade.AMOUNT_FONT,
 		font_size = HUDWeaponGrenade.AMOUNT_FONT_SIZE,
 		color = HUDWeaponGrenade.AMOUNT_TEXT_COLOR,
