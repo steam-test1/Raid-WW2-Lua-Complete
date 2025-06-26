@@ -1,7 +1,6 @@
 GreedTweakData = GreedTweakData or class()
 
 function GreedTweakData:init()
-	self.points_spawned_on_level_default = 850
 	self.difficulty_level_point_multipliers = {
 		1,
 		2,
@@ -170,11 +169,11 @@ function GreedTweakData:_init_cache_items()
 			0.94
 		},
 		sounds = {
+			dialog_fail = "player_gen_lockpick_fail",
 			dialog_success = "player_gen_lock_picked",
 			dialog_enter = "player_gen_picking_lock",
 			failed = "lock_fail",
 			success = "success",
-			dialog_fail = "player_gen_lockpick_fail",
 			circles = {
 				{
 					lock = "lock_a",

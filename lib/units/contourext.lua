@@ -6,9 +6,9 @@ local idstr_contour_distance = Idstring("contour_distance")
 ContourExt.UNSET_CONTOUR_DISTANCE = 200000
 ContourExt._types = {
 	teammate = {
+		priority = 5,
 		ray_check = true,
-		persistence = 0.1,
-		priority = 5
+		persistence = 0.1
 	},
 	teammate_downed = {
 		priority = 4,
@@ -43,8 +43,8 @@ ContourExt._types = {
 	},
 	mark_enemy = {
 		fadeout = 4.5,
-		fadeout_silent = 13.5,
 		priority = 5,
+		fadeout_silent = 13.5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_damage_bonus = {
@@ -54,28 +54,28 @@ ContourExt._types = {
 	},
 	mark_enemy_turret = {
 		fadeout = 4.5,
-		fadeout_silent = 13.5,
 		priority = 5,
+		fadeout_silent = 13.5,
 		color = tweak_data.contour.character.dangerous_color
 	},
 	mark_enemy_ghost = {
 		distance = 3200,
+		priority = 6,
 		fadeout = 0,
 		persistence = 0.1,
-		priority = 6,
 		color = tweak_data.contour.character.ghost_warcry
 	},
 	mark_enemy_sharpshooter = {
 		fadeout = 0,
-		persistence = 0.1,
 		priority = 3,
+		persistence = 0.1,
 		color = tweak_data.contour.character.sharpshooter_warcry
 	},
 	mark_enemy_silver_bullet = {
 		distance = 3000,
+		priority = 6,
 		fadeout = 0,
 		persistence = 0.1,
-		priority = 6,
 		color = tweak_data.contour.character.silver_bullet_warcry
 	},
 	highlight = {
@@ -94,28 +94,24 @@ ContourExt._types = {
 		priority = 1,
 		color = tweak_data.contour.character_interactable.selected_color
 	},
-	hostage_trade = {
-		priority = 1,
-		color = tweak_data.contour.character_interactable.standard_color
-	},
 	deployable_selected = {
-		unique = true,
 		priority = 1,
+		unique = true,
 		color = tweak_data.contour.deployable.selected_color
 	},
 	deployable_disabled = {
-		unique = true,
 		priority = 2,
+		unique = true,
 		color = tweak_data.contour.deployable.disabled_color
 	},
 	deployable_active = {
-		unique = true,
 		priority = 3,
+		unique = true,
 		color = tweak_data.contour.deployable.active_color
 	},
 	deployable_interactable = {
-		unique = true,
 		priority = 4,
+		unique = true,
 		color = tweak_data.contour.deployable.interact_color
 	}
 }

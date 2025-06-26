@@ -148,15 +148,15 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 
 		my_data.performing_act_objective = nil
 		local crouch_action = {
-			body_part = 1,
-			variant = "crouch",
 			type = "act",
+			variant = "crouch",
+			body_part = 1,
 			blocks = {
-				action = -1,
-				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				walk = -1
+				walk = -1,
+				action = -1,
+				aim = -1
 			}
 		}
 
@@ -261,7 +261,7 @@ function TeamAILogicIdle.damage_clbk(data, damage_info)
 		end
 	end
 
-	if (damage_info.result.type == "bleedout" or damage_info.result.type == "fatal" or damage_info.variant == "tase") and data.name ~= "disabled" then
+	if data.name ~= "disabled" and (damage_info.result.type == "bleedout" or damage_info.variant == "tase") then
 		CopLogicBase._exit_to_state(data.unit, "disabled")
 	end
 end
@@ -289,21 +289,21 @@ function TeamAILogicIdle.on_alert(data, alert_data)
 	end
 end
 
-function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
+function TeamAILogicIdle.on_long_distance_interact(data, instigator)
 	if data.objective and data.objective.type == "revive" then
 		return
 	end
 
 	local objective_type, objective_action, interrupt = nil
 
-	if other_unit:base().is_local_player then
-		if other_unit:character_damage():need_revive() then
+	if instigator:base().is_local_player then
+		if instigator:character_damage():need_revive() then
 			objective_type = "revive"
 			objective_action = "revive"
 		else
 			objective_type = "follow"
 		end
-	elseif other_unit:movement():need_revive() then
+	elseif instigator:movement():need_revive() then
 		objective_type = "revive"
 		objective_action = "revive"
 	else
@@ -318,51 +318,51 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 			destroy_clbk_key = false,
 			called = true,
 			type = objective_type,
-			follow_unit = other_unit
+			follow_unit = instigator
 		}
 	else
 		local followup_objective = {
-			scan = true,
 			type = "act",
+			scan = true,
 			action = {
-				body_part = 1,
-				variant = "crouch",
 				type = "act",
+				variant = "crouch",
+				body_part = 1,
 				blocks = {
-					action = -1,
-					aim = -1,
 					heavy_hurt = -1,
 					hurt = -1,
-					walk = -1
+					walk = -1,
+					action = -1,
+					aim = -1
 				}
 			}
 		}
 		objective = {
+			type = "revive",
 			scan = true,
 			destroy_clbk_key = false,
 			called = true,
-			type = "revive",
-			follow_unit = other_unit,
-			nav_seg = other_unit:movement():nav_tracker():nav_segment(),
+			follow_unit = instigator,
+			nav_seg = instigator:movement():nav_tracker():nav_segment(),
 			action = {
 				align_sync = true,
-				body_part = 1,
 				type = "act",
+				body_part = 1,
 				variant = objective_action,
 				blocks = {
-					light_hurt = -1,
-					action = -1,
-					aim = -1,
 					heavy_hurt = -1,
 					hurt = -1,
-					walk = -1
+					walk = -1,
+					action = -1,
+					light_hurt = -1,
+					aim = -1
 				}
 			},
-			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
+			action_duration = tweak_data.interaction:get_interaction(objective_action).timer,
 			followup_objective = followup_objective
 		}
 
-		other_unit:sound():say("player_gen_call_help", true)
+		instigator:sound():say("player_gen_call_help", true)
 	end
 
 	data.unit:brain():set_objective(objective)
@@ -416,23 +416,6 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 	local delay = CopLogicBase._upd_attention_obj_detection(data, nil, max_reaction)
 	local new_attention, new_prio_slot, new_reaction = TeamAILogicIdle._get_priority_attention(data, data.detected_attention_objects, nil)
 
-	if (not my_data._intimidate_t or my_data._intimidate_t + 2 < data.t) and not data.cool and not my_data._turning_to_intimidate and not my_data.acting and (not new_attention or AIAttentionObject.REACT_SCARED > new_reaction) then
-		local can_turn = not data.unit:movement():chk_action_forbidden("walk")
-		local civ = TeamAILogicIdle.find_civilian_to_intimidate(data.unit, can_turn and 180 or 90, 1200)
-
-		if civ then
-			my_data._intimidate_t = data.t
-			new_attention, new_prio_slot, new_reaction = nil
-
-			if can_turn and CopLogicAttack._request_action_turn_to_enemy(data, my_data, data.m_pos, civ:movement():m_pos()) then
-				my_data._turning_to_intimidate = true
-				my_data._primary_intimidation_target = civ
-			else
-				TeamAILogicIdle.intimidate_civilians(data, data.unit, true, true)
-			end
-		end
-	end
-
 	TeamAILogicBase._set_attention_obj(data, new_attention, new_reaction)
 
 	if new_reaction and AIAttentionObject.REACT_SCARED <= new_reaction then
@@ -482,158 +465,12 @@ function TeamAILogicIdle._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicIdle._upd_enemy_detection, data, data.t + delay)
 end
 
-function TeamAILogicIdle.find_civilian_to_intimidate(criminal, max_angle, max_dis)
-	local best_civ = TeamAILogicIdle._find_intimidateable_civilians(criminal, false, max_angle, max_dis)
-
-	return best_civ
-end
-
-function TeamAILogicIdle._find_intimidateable_civilians(criminal, use_default_shout_shape, max_angle, max_dis)
-	local head_pos = criminal:movement():m_head_pos()
-	local look_vec = criminal:movement():m_rot():y()
-	local close_dis = 400
-	local intimidateable_civilians = {}
-	local best_civ = nil
-	local best_civ_wgt = false
-	local best_civ_angle = nil
-	local highest_wgt = 1
-	local my_tracker = criminal:movement():nav_tracker()
-	local chk_vis_func = my_tracker.check_visibility
-
-	for key, unit in pairs(managers.groupai:state():fleeing_civilians()) do
-		if chk_vis_func(my_tracker, unit:movement():nav_tracker()) and tweak_data.character[unit:base()._tweak_table].intimidateable and not unit:base().unintimidateable and not unit:anim_data().unintimidateable and not unit:brain():is_tied() then
-			local u_head_pos = unit:movement():m_head_pos() + math.UP * 30
-			local vec = u_head_pos - head_pos
-			local dis = mvector3.normalize(vec)
-			local angle = vec:angle(look_vec)
-
-			if use_default_shout_shape then
-				max_angle = math.max(8, math.lerp(90, 30, dis / 1200))
-				max_dis = 1200
-			end
-
-			if dis < close_dis or dis < max_dis and angle < max_angle then
-				local slotmask = managers.slot:get_mask("AI_visibility")
-				local ray = World:raycast("ray", head_pos, u_head_pos, "slot_mask", slotmask, "ray_type", "ai_vision")
-
-				if not ray then
-					local inv_wgt = dis * dis * (1 - vec:dot(look_vec))
-
-					table.insert(intimidateable_civilians, {
-						unit = unit,
-						key = key,
-						inv_wgt = inv_wgt
-					})
-
-					if not best_civ_wgt or inv_wgt < best_civ_wgt then
-						best_civ_wgt = inv_wgt
-						best_civ = unit
-						best_civ_angle = angle
-					end
-
-					if highest_wgt < inv_wgt then
-						highest_wgt = inv_wgt
-					end
-				end
-			end
-		end
-	end
-
-	return best_civ, highest_wgt, intimidateable_civilians
-end
-
-function TeamAILogicIdle.intimidate_civilians(data, criminal, play_sound, play_action, primary_target)
-	if primary_target and (not alive(primary_target) or not managers.groupai:state():fleeing_civilians()[primary_target:key()]) then
-		primary_target = nil
-	end
-
-	local best_civ, highest_wgt, intimidateable_civilians = TeamAILogicIdle._find_intimidateable_civilians(criminal, true)
-	local plural = false
-
-	if #intimidateable_civilians > 1 then
-		plural = true
-	elseif #intimidateable_civilians <= 0 then
-		return false
-	end
-
-	local act_name, sound_name = nil
-	local sound_suffix = plural and "plu" or "sin"
-
-	if best_civ:anim_data().move then
-		act_name = "gesture_stop"
-		sound_name = "f02x_" .. sound_suffix
-	else
-		act_name = "arrest"
-		sound_name = "f02x_" .. sound_suffix
-	end
-
-	if play_sound then
-		criminal:sound():say(sound_name, true)
-	end
-
-	if play_action and not criminal:movement():chk_action_forbidden("action") then
-		local new_action = {
-			body_part = 3,
-			align_sync = true,
-			type = "act",
-			variant = act_name
-		}
-
-		if criminal:brain():action_request(new_action) then
-			data.internal_data.gesture_arrest = true
-		end
-	end
-
-	local intimidated_primary_target = false
-
-	for _, civ in ipairs(intimidateable_civilians) do
-		local amount = civ.inv_wgt / highest_wgt
-
-		if best_civ == civ.unit then
-			amount = 1
-		end
-
-		if primary_target == civ.unit then
-			intimidated_primary_target = true
-			amount = 1
-		end
-
-		civ.unit:brain():on_intimidated(amount, criminal)
-	end
-
-	if not intimidated_primary_target and primary_target then
-		primary_target:brain():on_intimidated(1, criminal)
-	end
-
-	if not managers.groupai:state():enemy_weapons_hot() then
-		local alert = {
-			"vo_intimidate",
-			data.m_pos,
-			800,
-			data.SO_access,
-			data.unit
-		}
-
-		managers.groupai:state():propagate_alert(alert)
-	end
-
-	return primary_target or best_civ
-end
-
 function TeamAILogicIdle.on_action_completed(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
 
 	if action_type == "turn" then
 		data.internal_data.turning = nil
-
-		if my_data._turning_to_intimidate then
-			my_data._turning_to_intimidate = nil
-
-			TeamAILogicIdle.intimidate_civilians(data, data.unit, true, true, my_data._primary_intimidation_target)
-
-			my_data._primary_intimidation_target = nil
-		end
 	elseif action_type == "act" then
 		my_data.acting = nil
 
@@ -703,11 +540,11 @@ function TeamAILogicIdle.is_available_for_assignment(data, new_objective)
 	return true
 end
 
-function TeamAILogicIdle.clbk_heat(data)
+function TeamAILogicIdle.clbk_weapons_hot(data)
 	local inventory = data.unit:inventory()
 
-	if inventory:is_selection_available(2) and inventory:equipped_selection() ~= 2 then
-		inventory:equip_selection(2)
+	if inventory:is_selection_available(PlayerInventory.SLOT_2) and inventory:equipped_selection() ~= PlayerInventory.SLOT_2 then
+		inventory:equip_selection(PlayerInventory.SLOT_2)
 	end
 end
 
@@ -961,10 +798,10 @@ function TeamAILogicIdle.mark_sneak_char(data, criminal, to_mark, play_sound, pl
 
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
-			body_part = 3,
 			align_sync = true,
 			variant = "arrest",
-			type = "act"
+			type = "act",
+			body_part = 3
 		}
 
 		if criminal:brain():action_request(new_action) then

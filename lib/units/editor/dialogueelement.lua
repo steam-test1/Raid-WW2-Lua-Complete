@@ -79,8 +79,8 @@ function DialogueUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator")
 	self:_build_value_checkbox(panel, panel_sizer, "repeating", "Automatically repeat the dialogue on a set interval")
 	self:_build_value_number(panel, panel_sizer, "repeat_interval", {
+		max = 900,
 		min = 1,
-		floats = 2,
-		max = 900
+		floats = 2
 	}, "The interval to repeat the dialog on, in seconds")
 end

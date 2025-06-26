@@ -5,9 +5,9 @@ function RaidGUIControlMenuBackground:init()
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._hud_panel = self._workspace:panel()
 	self._object = self._hud_panel:panel({
-		alpha = 0,
 		name = "menu_background_panel",
-		visible = false
+		visible = false,
+		alpha = 0
 	})
 	self._base_resolution = tweak_data.gui.base_resolution
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
@@ -31,22 +31,22 @@ end
 
 function RaidGUIControlMenuBackground:_layout_background()
 	local blur = self._object:bitmap({
+		texture = "ui/icons/white_df",
+		halign = "scale",
+		name = "blur",
 		valign = "scale",
 		render_template = "VertexColorTexturedBlur3D",
 		alpha = 0.65,
-		texture = "ui/icons/white_df",
-		name = "blur",
-		halign = "scale",
 		w = self._object:w(),
 		h = self._object:h()
 	})
 	local tint = self._object:bitmap({
-		valign = "scale",
-		name = "color_tint",
 		alpha = 0.92,
+		name = "color_tint",
 		render_template = "VertexColorTexturedGrayscale3D",
 		texture = "ui/icons/white_df",
 		halign = "scale",
+		valign = "scale",
 		w = self._object:w(),
 		h = self._object:h(),
 		color = Color(0.9, 0.82, 0.6),
@@ -54,10 +54,10 @@ function RaidGUIControlMenuBackground:_layout_background()
 	})
 	local background_gui = tweak_data.gui.backgrounds.secondary_menu
 	local background = self._object:bitmap({
-		valign = "scale",
 		halign = "scale",
 		alpha = 0.75,
 		name = "fullscreen_background",
+		valign = "scale",
 		w = self._object:w(),
 		h = self._object:h(),
 		texture = background_gui.texture,
@@ -65,10 +65,10 @@ function RaidGUIControlMenuBackground:_layout_background()
 		layer = blur:layer() + 1
 	})
 	self._vignette = self._object:bitmap({
-		valign = "scale",
-		halign = "scale",
 		texture = "core/textures/vignette",
+		halign = "scale",
 		name = "vignette",
+		valign = "scale",
 		w = self._object:w(),
 		h = self._object:h(),
 		layer = blur:layer() + 4
@@ -76,12 +76,12 @@ function RaidGUIControlMenuBackground:_layout_background()
 	local noise_w = self._object:w() + RaidGUIControlMenuBackground.NOISE_PADDING
 	local noise_h = self._object:h() + RaidGUIControlMenuBackground.NOISE_PADDING
 	self._grain = self._object:bitmap({
+		blend_mode = "add",
+		halign = "scale",
+		name = "film_grain",
+		texture = "core/textures/noise",
 		valign = "scale",
 		wrap_mode = "wrap",
-		blend_mode = "add",
-		name = "film_grain",
-		halign = "scale",
-		texture = "core/textures/noise",
 		w = noise_w,
 		h = noise_h,
 		texture_rect = {
@@ -97,9 +97,9 @@ end
 
 function RaidGUIControlMenuBackground:_layout_video()
 	self._background_video = self._hud_panel:video({
-		video = "movies/vanilla/raid_anim_bg",
 		loop = true,
-		visible = false
+		visible = false,
+		video = "movies/vanilla/raid_anim_bg"
 	})
 
 	managers.video:add_video(self._background_video)

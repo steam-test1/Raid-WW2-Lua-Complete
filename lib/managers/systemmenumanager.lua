@@ -7,8 +7,6 @@ require("lib/managers/dialogs/XB1KeyboardInputDialog")
 require("lib/managers/dialogs/XB1SelectUserDialog")
 require("lib/managers/dialogs/XB1AchievementsDialog")
 require("lib/managers/dialogs/XB1PlayerDialog")
-require("lib/managers/dialogs/NewUnlockDialog")
-require("lib/managers/dialogs/SpecializationDialog")
 
 SystemMenuManager = SystemMenuManager or class()
 SystemMenuManager.PLATFORM_CLASS_MAP = {}
@@ -23,10 +21,6 @@ GenericSystemMenuManager = GenericSystemMenuManager or class()
 GenericSystemMenuManager.DIALOG_CLASS = GenericDialog
 GenericSystemMenuManager.GENERIC_DIALOG_CLASS = GenericDialog
 GenericSystemMenuManager.PLATFORM_DIALOG_CLASS = GenericDialog
-GenericSystemMenuManager.NEW_UNLOCK_CLASS = NewUnlockDialog
-GenericSystemMenuManager.GENERIC_NEW_UNLOCK_CLASS = NewUnlockDialog
-GenericSystemMenuManager.SPECIALIZATION_CLASS = SpecializationDialog
-GenericSystemMenuManager.GENERIC_SPECIALIZATION_CLASS = SpecializationDialog
 
 function GenericSystemMenuManager:init()
 	if not Global.dialog_manager then
@@ -41,6 +35,7 @@ function GenericSystemMenuManager:init()
 	self._active_changed_callback_handler = CoreEvent.CallbackEventHandler:new()
 	self._controller = managers.controller:create_controller("dialog", nil, false)
 
+	self._controller:set_enabled(false)
 	managers.controller:add_default_wrapper_index_change_callback(callback(self, self, "changed_controller_index"))
 
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
@@ -324,48 +319,12 @@ function GenericSystemMenuManager:show_select_storage(data)
 	self:_show_class(data, self.GENERIC_SELECT_STORAGE_DIALOG_CLASS, self.SELECT_STORAGE_DIALOG_CLASS, false)
 end
 
-function GenericSystemMenuManager:show_delete_file(data)
-	self:_show_class(data, self.GENERIC_DELETE_FILE_DIALOG_CLASS, self.DELETE_FILE_DIALOG_CLASS, false)
-end
-
 function GenericSystemMenuManager:show_keyboard_input(data)
 	self:_show_class(data, self.GENERIC_KEYBOARD_INPUT_DIALOG, self.KEYBOARD_INPUT_DIALOG, true)
 end
 
 function GenericSystemMenuManager:show_select_user(data)
 	self:_show_class(data, self.GENERIC_SELECT_USER_DIALOG, self.SELECT_USER_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_achievements(data)
-	self:_show_class(data, self.GENERIC_ACHIEVEMENTS_DIALOG, self.ACHIEVEMENTS_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_friends(data)
-	self:_show_class(data, self.GENERIC_FRIENDS_DIALOG, self.FRIENDS_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_player_review(data)
-	self:_show_class(data, self.GENERIC_PLAYER_REVIEW_DIALOG, self.PLAYER_REVIEW_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_player(data)
-	self:_show_class(data, self.GENERIC_PLAYER_DIALOG, self.PLAYER_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_marketplace(data)
-	self:_show_class(data, self.GENERIC_MARKETPLACE_DIALOG, self.MARKETPLACE_DIALOG, false)
-end
-
-function GenericSystemMenuManager:show_new_unlock(data)
-	local success = self:_show_class(data, self.GENERIC_NEW_UNLOCK_CLASS, self.NEW_UNLOCK_CLASS, data.force)
-
-	self:_show_result(success, data)
-end
-
-function GenericSystemMenuManager:show_specialization_convert(data)
-	local success = self:_show_class(data, self.GENERIC_SPECIALIZATION_CLASS, self.SPECIALIZATION_CLASS, data.force)
-
-	self:_show_result(success, data)
 end
 
 function GenericSystemMenuManager:_show_class(data, generic_dialog_class, dialog_class, force)

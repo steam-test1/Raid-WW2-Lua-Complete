@@ -16,10 +16,6 @@ function HuskCopDamage:die(variant)
 
 	self:set_mover_collision_state(false)
 
-	if self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_convert" then
-		self._unit:interaction():set_active(false)
-	end
-
 	if self._death_sequence then
 		if self._unit:damage() and self._unit:damage():has_sequence(self._death_sequence) then
 			self._unit:damage():run_sequence_simple(self._death_sequence)

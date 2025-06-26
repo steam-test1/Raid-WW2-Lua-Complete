@@ -2,7 +2,7 @@ local UpgradeBlammFu = {
 	check_activate = function (self)
 		managers.system_event_listener:remove_listener("blammfu_explosive_melee")
 
-		if managers.player:has_category_upgrade("player", "blammfu_explosive_grenade_melee") then
+		if alive(managers.player:local_player()) and managers.player:has_category_upgrade("player", "blammfu_explosive_grenade_melee") then
 			managers.system_event_listener:add_listener("blammfu_explosive_melee", {
 				CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGED_ENEMY_MELEE
 			}, callback(self, self, "_on_melee"))

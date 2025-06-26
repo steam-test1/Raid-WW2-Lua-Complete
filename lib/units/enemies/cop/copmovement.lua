@@ -43,7 +43,7 @@ CopMovement._gadgets = {
 	}
 }
 local action_variants = {
-	security = {
+	default = {
 		idle = CopActionIdle,
 		act = CopActionAct,
 		walk = CopActionWalk,
@@ -56,125 +56,35 @@ local action_variants = {
 		tase = CopActionTase,
 		dodge = CopActionDodge,
 		warp = CopActionWarp
+	},
+	civilian = {
+		idle = CopActionIdle,
+		act = CopActionAct,
+		walk = CivilianActionWalk,
+		turn = CopActionTurn,
+		hurt = CopActionHurt
 	}
 }
-local security_variant = action_variants.security
-action_variants.german_commander = security_variant
-action_variants.german_og_commander = security_variant
-action_variants.german_officer = security_variant
-action_variants.german_grunt_light = security_variant
-action_variants.german_grunt_light_mp38 = security_variant
-action_variants.german_grunt_light_kar98 = security_variant
-action_variants.german_grunt_light_shotgun = security_variant
-action_variants.german_grunt_mid = security_variant
-action_variants.german_grunt_mid_mp38 = security_variant
-action_variants.german_grunt_mid_kar98 = security_variant
-action_variants.german_grunt_mid_shotgun = security_variant
-action_variants.german_grunt_heavy = security_variant
-action_variants.german_grunt_heavy_mp38 = security_variant
-action_variants.german_grunt_heavy_kar98 = security_variant
-action_variants.german_grunt_heavy_shotgun = security_variant
-action_variants.german_light = security_variant
-action_variants.german_light_kar98 = security_variant
-action_variants.german_light_shotgun = security_variant
-action_variants.german_heavy = security_variant
-action_variants.german_heavy_kar98 = security_variant
-action_variants.german_heavy_shotgun = security_variant
-action_variants.german_gasmask = security_variant
-action_variants.german_gasmask_shotgun = security_variant
-action_variants.german_gasmask_commander_backup = security_variant
-action_variants.german_gasmask_commander_backup_shotgun = security_variant
-action_variants.german_light_commander_backup = security_variant
-action_variants.german_light_commander_backup_kar98 = security_variant
-action_variants.german_light_commander_backup_shotgun = security_variant
-action_variants.german_heavy_commander_backup = security_variant
-action_variants.german_heavy_commander_backup_kar98 = security_variant
-action_variants.german_heavy_commander_backup_shotgun = security_variant
-action_variants.german_heavy_commander_backup = security_variant
-action_variants.german_fallschirmjager_light = security_variant
-action_variants.german_fallschirmjager_light_kar98 = security_variant
-action_variants.german_fallschirmjager_light_shotgun = security_variant
-action_variants.german_fallschirmjager_light_mp38 = security_variant
-action_variants.german_fallschirmjager_heavy = security_variant
-action_variants.german_fallschirmjager_heavy_kar98 = security_variant
-action_variants.german_fallschirmjager_heavy_shotgun = security_variant
-action_variants.german_fallschirmjager_heavy_mp38 = security_variant
-action_variants.german_waffen_ss = security_variant
-action_variants.german_waffen_ss_kar98 = security_variant
-action_variants.german_waffen_ss_shotgun = security_variant
-action_variants.german_gebirgsjager_light = security_variant
-action_variants.german_gebirgsjager_light_kar98 = security_variant
-action_variants.german_gebirgsjager_light_shotgun = security_variant
-action_variants.german_gebirgsjager_light_mp38 = security_variant
-action_variants.german_gebirgsjager_heavy = security_variant
-action_variants.german_gebirgsjager_heavy_kar98 = security_variant
-action_variants.german_gebirgsjager_heavy_shotgun = security_variant
-action_variants.german_gebirgsjager_heavy_mp38 = security_variant
-action_variants.german_flamer = security_variant
-action_variants.german_sniper = security_variant
-action_variants.german_spotter = security_variant
-action_variants.soviet_nkvd_int_security_captain = security_variant
-action_variants.soviet_nkvd_int_security_captain_b = security_variant
-action_variants.gensec = security_variant
-action_variants.cop = security_variant
-action_variants.fbi = security_variant
-action_variants.swat = security_variant
-action_variants.heavy_swat = security_variant
-action_variants.fbi_swat = security_variant
-action_variants.fbi_heavy_swat = security_variant
-action_variants.nathan = security_variant
-action_variants.sniper = security_variant
-action_variants.spotter = security_variant
-action_variants.flamer = security_variant
-action_variants.gangster = security_variant
-action_variants.biker = security_variant
-action_variants.mobster = security_variant
-action_variants.mobster_boss = security_variant
-action_variants.hector_boss = security_variant
-action_variants.hector_boss_no_armor = security_variant
-action_variants.dealer = security_variant
-action_variants.biker_escape = security_variant
-action_variants.city_swat = security_variant
-action_variants.old_hoxton_mission = security_variant
-action_variants.shield = clone(security_variant)
+local default_variant = action_variants.default
+action_variants.shield = clone(default_variant)
 action_variants.shield.hurt = ShieldActionHurt
 action_variants.phalanx_minion = clone(action_variants.shield)
 action_variants.phalanx_vip = clone(action_variants.shield)
-action_variants.tank = clone(security_variant)
+action_variants.tank = clone(default_variant)
 action_variants.tank.walk = TankCopActionWalk
-action_variants.tank_hw = action_variants.tank
-action_variants.taser = security_variant
-action_variants.inside_man = security_variant
-action_variants.fb_german_commander_boss = security_variant
-action_variants.fb_german_commander = security_variant
-action_variants.civilian = {
-	idle = CopActionIdle,
-	act = CopActionAct,
-	walk = CivilianActionWalk,
-	turn = CopActionTurn,
-	hurt = CopActionHurt
-}
 action_variants.civilian_female = action_variants.civilian
 action_variants.bank_manager = action_variants.civilian
 action_variants.drunk_pilot = action_variants.civilian
 action_variants.escort = action_variants.civilian
 action_variants.escort.walk = EscortWithSuitcaseActionWalk
-action_variants.escort_suitcase = clone(action_variants.civilian)
-action_variants.escort_suitcase.walk = EscortWithSuitcaseActionWalk
-action_variants.escort_prisoner = clone(action_variants.civilian)
-action_variants.escort_prisoner.walk = EscortPrisonerActionWalk
-action_variants.escort_cfo = action_variants.civilian
-action_variants.escort_ralph = action_variants.civilian
-action_variants.escort_undercover = clone(action_variants.civilian)
-action_variants.escort_undercover.walk = EscortWithSuitcaseActionWalk
-action_variants.team_ai = clone(security_variant)
+action_variants.team_ai = clone(default_variant)
 action_variants.team_ai.walk = CriminalActionWalk
 action_variants.german = action_variants.team_ai
 action_variants.british = action_variants.team_ai
 action_variants.american = action_variants.team_ai
 action_variants.russian = action_variants.team_ai
 CopMovement._action_variants = action_variants
-security_variant = nil
+default_variant = nil
 action_variants = nil
 CopMovement._stance = {
 	names = {
@@ -213,7 +123,7 @@ function CopMovement:init(unit)
 	self._footstep_event = ""
 	self._obj_com = unit:get_object(Idstring("Hips"))
 	self._slotmask_gnd_ray = managers.slot:get_mask("AI_graph_obstacle_check")
-	self._actions = self._action_variants[self._unit:movement()._action_variant or self._unit:base()._tweak_table]
+	self._actions = self:_get_action_variants(self._unit:movement()._action_variant or self._unit:base()._tweak_table)
 	self._active_actions = {
 		false,
 		false,
@@ -226,6 +136,13 @@ function CopMovement:init(unit)
 	self._suppression = {
 		value = 0
 	}
+end
+
+function CopMovement:_get_action_variants(key)
+	local logic_variant = CopMovement._action_variants[self._unit:base()._tweak_table]
+	logic_variant = logic_variant or CopMovement._action_variants.default
+
+	return logic_variant
 end
 
 function CopMovement:get_mover_blocker()
@@ -280,41 +197,33 @@ function CopMovement:post_init()
 		"counter_tased",
 		"taser_tased",
 		"death",
-		"fatal",
 		"fire_hurt",
 		"poison_hurt"
 	}, callback(self, self, "damage_clbk"))
-	self._unit:inventory():add_listener("movement", {
+	self._ext_inventory:add_listener("movement", {
 		"equip",
 		"unequip"
 	}, callback(self, self, "clbk_inventory"))
 
-	local prim_weap_name = self._ext_base:default_weapon_name("primary")
-	local sec_weap_name = self._ext_base:default_weapon_name("secondary")
+	local default_weapon_primary = self._ext_base:default_weapon_name("primary")
+	local default_weapon_secondary = self._ext_base:default_weapon_name("secondary")
 
-	if prim_weap_name then
-		self._unit:inventory():add_unit_by_name(prim_weap_name)
+	if default_weapon_primary then
+		self._ext_inventory:add_unit_by_name(default_weapon_primary)
 	end
 
-	if sec_weap_name and sec_weap_name ~= prim_weap_name then
-		self._unit:inventory():add_unit_by_name(sec_weap_name)
+	if default_weapon_secondary and default_weapon_secondary ~= default_weapon_primary then
+		self._ext_inventory:add_unit_by_name(default_weapon_secondary)
 	end
 
-	if self._unit:inventory():is_selection_available(2) then
-		if managers.groupai:state():whisper_mode() or not self._unit:inventory():is_selection_available(1) then
-			self._unit:inventory():equip_selection(2, true)
-		else
-			self._unit:inventory():equip_selection(1, true)
-		end
-	elseif self._unit:inventory():is_selection_available(1) then
-		self._unit:inventory():equip_selection(1, true)
+	local starting_weapon = PlayerInventory.SLOT_1
+
+	if self._ext_inventory:is_selection_available(PlayerInventory.SLOT_2) then
+		starting_weapon = PlayerInventory.SLOT_2
 	end
 
-	if self._ext_inventory:equipped_selection() == 1 and managers.groupai:state():whisper_mode() then
-		self._ext_inventory:set_weapon_enabled(false)
-	end
+	self._ext_inventory:equip_selection(starting_weapon, true)
 
-	local weap_name = self._ext_base:default_weapon_name(managers.groupai:state():enemy_weapons_hot() and "primary" or "secondary")
 	local fwd = self._m_rot:y()
 	self._action_common_data = {
 		stance = self._stance,
@@ -657,19 +566,19 @@ end
 function CopMovement:play_redirect(redirect_name, at_time)
 	local result = self._unit:play_redirect(Idstring(redirect_name), at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 function CopMovement:play_state(state_name, at_time)
 	local result = self._unit:play_state(Idstring(state_name), at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 function CopMovement:play_state_idstr(state_name, at_time)
 	local result = self._unit:play_state(state_name, at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 function CopMovement:set_root_blend(state)
@@ -1318,23 +1227,23 @@ function CopMovement:on_suppressed(state)
 	if Network:is_server() and state and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.crouch) and (not self._tweak_data.allowed_poses or self._tweak_data.allowed_poses.stand) and not self:chk_action_forbidden("walk") then
 		if state == "panic" and not self:chk_action_forbidden("act") then
 			local action_desc = {
+				body_part = 1,
 				type = "act",
 				clamp_to_graph = true,
-				body_part = 1,
 				variant = self._ext_anim.run and self._ext_anim.move_fwd and "e_so_sup_fumble_run_fwd" or "e_so_sup_fumble_inplace",
 				blocks = {
-					walk = -1,
-					action = -1
+					action = -1,
+					walk = -1
 				}
 			}
 
 			self:action_request(action_desc)
 		elseif self._ext_anim.idle and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 			local action_desc = {
-				variant = "suppressed_reaction",
+				body_part = 1,
 				type = "act",
 				clamp_to_graph = true,
-				body_part = 1,
+				variant = "suppressed_reaction",
 				blocks = {
 					walk = -1
 				}
@@ -1416,9 +1325,9 @@ function CopMovement:damage_clbk(my_unit, damage_info)
 
 	if not lgt_hurt then
 		blocks = {
+			action = -1,
 			act = -1,
 			tase = -1,
-			action = -1,
 			aim = -1,
 			walk = -1
 		}
@@ -1478,24 +1387,6 @@ function CopMovement:anim_clbk_spawn_effect(unit, effect_name, object_name)
 		effect = Idstring(effect_name),
 		parent = self._unit:get_object(Idstring(object_name))
 	})
-end
-
-function CopMovement:anim_clbk_footstep(unit)
-	managers.game_play_central:request_play_footstep(unit, self._m_pos)
-end
-
-function CopMovement:get_footstep_event()
-	local event_name = nil
-
-	if self._footstep_style and self._unit:anim_data()[self._footstep_style] then
-		event_name = self._footstep_event
-	else
-		self._footstep_style = self._unit:anim_data().run and "_run" or ""
-		event_name = "footsteps_npc" .. self._footstep_style
-		self._footstep_event = event_name
-	end
-
-	return event_name
 end
 
 function CopMovement:get_walk_to_pos()
@@ -1615,20 +1506,11 @@ end
 
 function CopMovement:anim_clbk_police_called(unit)
 	if Network:is_server() then
-		if not managers.groupai:state():is_ecm_jammer_active("call") then
-			local group_state = managers.groupai:state()
-			local cop_type = tostring(group_state.blame_triggers[self._ext_base._tweak_table])
+		local group_state = managers.groupai:state()
+		local cop_type = tostring(group_state.blame_triggers[self._ext_base._tweak_table])
 
-			managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, "called")
-
-			if cop_type == "civ" then
-				group_state:on_police_called(self:coolness_giveaway())
-			else
-				group_state:on_police_called(self:coolness_giveaway())
-			end
-		else
-			managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, "call_interrupted")
-		end
+		managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, "called")
+		group_state:on_police_called(self:coolness_giveaway())
 	end
 end
 
@@ -2221,14 +2103,14 @@ function CopMovement:sync_action_act_start(index, blocks_hurt, clamp_to_graph, n
 
 	local redir_name = self._actions.act:_get_act_name_from_index(index)
 	local action_data = {
-		type = "act",
 		body_part = 1,
+		type = "act",
 		variant = redir_name,
 		blocks = {
-			act = -1,
 			action = -1,
-			walk = -1,
-			idle = -1
+			act = -1,
+			idle = -1,
+			walk = -1
 		},
 		start_rot = start_rot,
 		start_pos = start_pos,
@@ -2310,21 +2192,21 @@ function CopMovement:sync_action_hurt_end()
 
 		local hurt_type = action:hurt_type()
 
-		if hurt_type == "bleedout" or hurt_type == "fatal" then
+		if hurt_type == "bleedout" then
 			local action_data = {
-				variant = "stand",
-				type = "act",
 				body_part = 1,
+				type = "act",
 				client_interrupt = true,
+				variant = "stand",
 				blocks = {
-					stand = -1,
-					heavy_hurt = -1,
-					hurt = -1,
-					light_hurt = -1,
 					action = -1,
+					heavy_hurt = -1,
+					light_hurt = -1,
+					hurt = -1,
 					aim = -1,
-					walk = -1,
-					crouch = -1
+					stand = -1,
+					crouch = -1,
+					walk = -1
 				}
 			}
 			local res = CopMovement.action_request(self, action_data)
@@ -2432,7 +2314,7 @@ function CopMovement:set_team(team_data)
 	if Network:is_server() and self._unit:id() ~= -1 then
 		local team_index = tweak_data.levels:get_team_index(team_data.id)
 
-		if team_index <= 256 then
+		if team_index <= 16 then
 			self._ext_network:send("sync_char_team", team_index)
 		else
 			debug_pause_unit(self._unit, "[CopMovement:set_team] team limit reached!", team_data.id)
@@ -2507,9 +2389,9 @@ function CopMovement:on_anim_turret_enter_finished(unit, param1)
 end
 
 function CopMovement:on_anim_turret_mg34_exit_finished(unit, param1)
-	self._unit:inventory():show_equipped_unit()
+	self._ext_inventory:show_equipped_unit()
 end
 
 function CopMovement:on_anim_turret_flakvierling_exit_finished(unit, param1)
-	self._unit:inventory():show_equipped_unit()
+	self._ext_inventory:show_equipped_unit()
 end

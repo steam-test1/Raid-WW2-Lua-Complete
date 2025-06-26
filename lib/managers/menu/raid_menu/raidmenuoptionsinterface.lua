@@ -22,7 +22,7 @@ end
 
 function RaidMenuOptionsInterface:_layout_menu()
 	local start_x = 0
-	local start_y = 320
+	local start_y = 270
 	local default_width = 576
 	local previous_panel = nil
 	previous_panel = {
@@ -33,8 +33,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_subtitle"),
 		on_menu_move = {
-			up = "default_interface",
-			down = "objective_reminder"
+			down = "objective_reminder",
+			up = "default_interface"
 		}
 	}
 	self._toggle_menu_subtitle = self._root_panel:toggle_button(previous_panel)
@@ -75,24 +75,50 @@ function RaidMenuOptionsInterface:_layout_menu()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_skip_cinematics"),
 		on_menu_move = {
-			down = "hud_special_weapon_panels",
+			down = "capitalize_names",
 			up = previous_panel.name
 		}
 	}
 	self._toggle_skip_cinematics = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		name = "hud_special_weapon_panels",
-		description = managers.localization:to_upper_text("menu_options_video_hud_special_weapon_panels"),
+		name = "capitalize_names",
+		description = managers.localization:to_upper_text("menu_capitalize_names"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
 		w = default_width,
+		on_click_callback = callback(self, self, "on_click_capitalize_names"),
+		on_menu_move = {
+			down = "hud_special_weapon_panels",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_capitalize_names = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "hud_special_weapon_panels",
+		description = managers.localization:to_upper_text("menu_options_video_hud_special_weapon_panels"),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
 		on_click_callback = callback(self, self, "on_click_hud_special_weapon_panels"),
+		on_menu_move = {
+			down = "throwable_contours",
+			up = previous_panel.name
+		}
+	}
+	self._toggle_menu_hud_special_weapon_panels = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
+		name = "throwable_contours",
+		description = managers.localization:to_upper_text("menu_throwable_contours"),
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+		w = default_width,
+		on_click_callback = callback(self, self, "on_click_throwable_contours"),
 		on_menu_move = {
 			down = "hud_crosshairs",
 			up = previous_panel.name
 		}
 	}
-	self._toggle_menu_hud_special_weapon_panels = self._root_panel:toggle_button(previous_panel)
+	self._toggle_throwable_contours = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
 		name = "hud_crosshairs",
 		description = managers.localization:to_upper_text("menu_options_video_hud_crosshairs"),
@@ -121,8 +147,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		stepper_w = 280,
 		name = "motion_dot",
+		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
@@ -136,8 +162,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		stepper_w = 280,
 		name = "motion_dot_size",
+		stepper_w = 280,
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot_size"),
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
@@ -151,9 +177,9 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
+		x = 1472,
 		name = "default_interface",
 		y = 832,
-		x = 1472,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_interface"),
 		layer = RaidGuiBase.FOREGROUND_LAYER,
@@ -238,17 +264,25 @@ function RaidMenuOptionsInterface:_load_menu_values()
 
 	self._toggle_skip_cinematics:set_value_and_render(skip_cinematics, true)
 
+	local capitalize_names = managers.user:get_setting("capitalize_names")
+
+	self._toggle_capitalize_names:set_value_and_render(capitalize_names, true)
+
 	local warcry_ready_indicator = managers.user:get_setting("warcry_ready_indicator")
 
 	self._toggle_warcry_ready_indicator:set_value_and_render(warcry_ready_indicator, true)
 
-	local subtitle = managers.user:get_setting("subtitle")
+	local subtitle = managers.user:get_setting("subtitles")
 
 	self._toggle_menu_subtitle:set_value_and_render(subtitle, true)
 
 	local hud_special_weapon_panels = managers.user:get_setting("hud_special_weapon_panels")
 
 	self._toggle_menu_hud_special_weapon_panels:set_value_and_render(hud_special_weapon_panels, true)
+
+	local throwable_contours = managers.user:get_setting("throwable_contours")
+
+	self._toggle_throwable_contours:set_value_and_render(throwable_contours, true)
 
 	local hud_crosshairs = managers.user:get_setting("hud_crosshairs")
 
@@ -296,6 +330,12 @@ function RaidMenuOptionsInterface:on_click_skip_cinematics()
 	managers.menu:active_menu().callback_handler:toggle_skip_cinematics_raid(skip_cinematics)
 end
 
+function RaidMenuOptionsInterface:on_click_capitalize_names()
+	local capitalize_names = self._toggle_capitalize_names:get_value()
+
+	managers.menu:active_menu().callback_handler:toggle_capitalize_names_raid(capitalize_names)
+end
+
 function RaidMenuOptionsInterface:on_click_hit_indicator()
 	local hit_indicator = self._stepper_menu_hit_indicator:get_value()
 
@@ -312,6 +352,12 @@ function RaidMenuOptionsInterface:on_click_hud_special_weapon_panels()
 	local value = self._toggle_menu_hud_special_weapon_panels:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_hud_special_weapon_panels(value)
+end
+
+function RaidMenuOptionsInterface:on_click_throwable_contours()
+	local value = self._toggle_throwable_contours:get_value()
+
+	managers.user:set_setting("throwable_contours", value)
 end
 
 function RaidMenuOptionsInterface:on_click_motion_dot()
@@ -338,7 +384,7 @@ function RaidMenuOptionsInterface:on_click_default_interface()
 end
 
 function RaidMenuOptionsInterface:_callback_default_settings()
-	managers.user:reset_interface_setting_map()
+	managers.user:reset_setting_map("interface")
 	self:_load_menu_values()
 end
 

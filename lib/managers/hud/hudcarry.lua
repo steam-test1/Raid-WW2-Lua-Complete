@@ -46,10 +46,10 @@ function HUDCarry:_create_icon()
 		h = HUDCarry.ICON_SIZE
 	})
 	self._icon_fill_left = self._icon_panel:bitmap({
-		name = "icon_fill_left",
 		valign = "center",
 		render_template = "VertexColorTexturedRadial",
 		halign = "left",
+		name = "icon_fill_left",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
 		x = HUDCarry.ICON_SIZE,
@@ -60,11 +60,11 @@ function HUDCarry:_create_icon()
 		layer = self._icon:layer() + 1
 	})
 	self._icon_fill_right = self._icon_panel:bitmap({
-		name = "icon_fill_right",
 		valign = "center",
 		x = 0,
 		render_template = "VertexColorTexturedRadial",
 		halign = "right",
+		name = "icon_fill_right",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
 		y = HUDCarry.ICON_SIZE,
@@ -77,12 +77,12 @@ end
 
 function HUDCarry:_create_prompt()
 	local prompt_params = {
-		name = "prompt",
+		valign = "top",
 		halign = "left",
 		text = "",
 		vertical = "top",
 		align = "center",
-		valign = "top",
+		name = "prompt",
 		w = HUDCarry.PROMPT_W,
 		h = self._object:h(),
 		font = HUDCarry.PROMPT_FONT,

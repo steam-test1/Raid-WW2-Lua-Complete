@@ -4,8 +4,7 @@ TeamAIDamage._RESULT_NAME_TABLE = {
 	"bleedout",
 	"death",
 	"light_hurt",
-	"heavy_hurt",
-	"fatal"
+	"heavy_hurt"
 }
 TeamAIDamage._ATTACK_VARIANTS = CopDamage._ATTACK_VARIANTS
 
@@ -13,7 +12,7 @@ function HuskTeamAIDamage:update(unit, t, dt)
 end
 
 function HuskTeamAIDamage:damage_bullet(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -23,7 +22,13 @@ function HuskTeamAIDamage:damage_bullet(attack_data)
 		return
 	end
 
-	local damage_abs, damage_percent = self:_clamp_health_percentage(attack_data.damage, true)
+	local damage = attack_data.damage
+
+	if self._unit:anim_data().revive then
+		damage = damage * (self._char_tweak.damage.reviving_damage_mul or 1)
+	end
+
+	local damage_abs, damage_percent = self:_clamp_health_percentage(damage, true)
 
 	if damage_percent > 0 then
 		local body_index = self._unit:get_body_index(attack_data.col_ray.body:name())
@@ -40,27 +45,34 @@ function HuskTeamAIDamage:damage_bullet(attack_data)
 end
 
 function HuskTeamAIDamage:damage_explosion(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
-	local damage_abs, damage_percent = self:_clamp_health_percentage(attack_data.damage, true)
+	local damage = attack_data.damage
+	damage = damage * (self._char_tweak.damage.explosion_damage_mul or 1)
+
+	if self._unit:anim_data().revive then
+		damage = damage * (self._char_tweak.damage.reviving_damage_mul or 1)
+	end
+
+	local damage_abs, damage_percent = self:_clamp_health_percentage(damage, true)
 
 	if damage_percent > 0 then
-		local hit_offset_height = math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
 		local attacker = attack_data.attacker_unit
+		local attack_variant = CopDamage._get_attack_variant_index(self, "explosion")
 
 		if attacker and attacker:id() == -1 then
 			attacker = self._unit
 		end
 
-		self._unit:network():send_to_host("damage_explosion_fire", attacker, damage_percent, CopDamage._get_attack_variant_index(self, "explosion"), self._dead and true or false, attack_data.col_ray.ray)
+		self._unit:network():send_to_host("damage_explosion_fire", attacker, damage_percent, attack_variant, self._dead and true or false, attack_data.col_ray.ray)
 		self:_send_damage_drama(attack_data, damage_abs)
 	end
 end
 
 function HuskTeamAIDamage:damage_fire(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -76,24 +88,32 @@ function HuskTeamAIDamage:damage_fire(attack_data)
 		return
 	end
 
-	local dmg = attack_data.damage * 0.8
-	local damage_abs, damage_percent = self:_clamp_health_percentage(dmg, true)
+	local damage = attack_data.damage
+	damage = damage * (self._char_tweak.damage.fire_damage_mul or 1)
 
-	if damage_percent > 0 then
-		local hit_offset_height = math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
-		local attacker = attack_data.attacker_unit
-
-		if attacker and attacker:id() == -1 then
-			attacker = self._unit
-		end
-
-		self._unit:network():send_to_host("damage_explosion_fire", attacker, damage_percent, CopDamage._get_attack_variant_index(self, "fire"), self._dead and true or false, attack_data.col_ray.ray)
-		self:_send_damage_drama(attack_data, damage_abs)
+	if self._unit:anim_data().revive then
+		damage = damage * (self._char_tweak.damage.reviving_damage_mul or 1)
 	end
+
+	local damage_abs, damage_percent = self:_clamp_health_percentage(damage, true)
+
+	if not damage_percent > 0 then
+		return
+	end
+
+	local attacker = attack_data.attacker_unit
+	local attack_variant = CopDamage._get_attack_variant_index(self, "fire")
+
+	if attacker and attacker:id() == -1 then
+		attacker = self._unit
+	end
+
+	self._unit:network():send_to_host("damage_explosion_fire", attacker, damage_percent, attack_variant, self._dead and true or false, attack_data.col_ray.ray)
+	self:_send_damage_drama(attack_data, damage_abs)
 end
 
 function HuskTeamAIDamage:damage_melee(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -101,7 +121,13 @@ function HuskTeamAIDamage:damage_melee(attack_data)
 		return
 	end
 
-	local damage_abs, damage_percent = self:_clamp_health_percentage(attack_data.damage, true)
+	local damage = attack_data.damage
+
+	if self._unit:anim_data().revive then
+		damage = damage * (self._char_tweak.damage.reviving_damage_mul or 1)
+	end
+
+	local damage_abs, damage_percent = self:_clamp_health_percentage(damage, true)
 
 	if damage_percent > 0 then
 		local hit_offset_height = math.clamp(attack_data.col_ray.position.z - self._unit:movement():m_pos().z, 0, 300)
@@ -117,7 +143,7 @@ function HuskTeamAIDamage:damage_melee(attack_data)
 end
 
 function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -152,9 +178,7 @@ function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, r
 		result = result
 	}
 
-	if result_type == "fatal" then
-		self:_on_fatal()
-	elseif result_type == "bleedout" then
+	if result_type == "bleedout" then
 		self:_on_bleedout()
 	end
 
@@ -162,7 +186,7 @@ function HuskTeamAIDamage:sync_damage_bullet(attacker_unit, hit_offset_height, r
 end
 
 function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_attack_variant)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -198,9 +222,7 @@ function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_a
 		result = result
 	}
 
-	if result_type == "fatal" then
-		self:_on_fatal()
-	elseif result_type == "bleedout" then
+	if result_type == "bleedout" then
 		self:_on_bleedout()
 	end
 
@@ -208,7 +230,7 @@ function HuskTeamAIDamage:sync_damage_explosion(attacker_unit, result_index, i_a
 end
 
 function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack_variant)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -244,9 +266,7 @@ function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack
 		result = result
 	}
 
-	if result_type == "fatal" then
-		self:_on_fatal()
-	elseif result_type == "bleedout" then
+	if result_type == "bleedout" then
 		self:_on_bleedout()
 	end
 
@@ -254,7 +274,7 @@ function HuskTeamAIDamage:sync_damage_fire(attacker_unit, result_index, i_attack
 end
 
 function HuskTeamAIDamage:sync_damage_melee(attacker_unit, hit_offset_height, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -291,9 +311,7 @@ function HuskTeamAIDamage:sync_damage_melee(attacker_unit, hit_offset_height, re
 		result = result
 	}
 
-	if result_type == "fatal" then
-		self:_on_fatal()
-	elseif result_type == "bleedout" then
+	if result_type == "bleedout" then
 		self:_on_bleedout()
 	end
 
@@ -313,23 +331,11 @@ function HuskTeamAIDamage:sync_damage_bleeding()
 	self:_unregister_unit()
 end
 
-function HuskTeamAIDamage:sync_damage_incapacitated()
-	self._fatal = true
-
-	self._unit:interaction():set_active(true, false)
-
-	local dmg_info = {
-		variant = "bleeding",
-		result = {
-			type = "fatal"
-		}
-	}
-
-	self:_call_listeners(dmg_info)
-end
-
 function HuskTeamAIDamage:sync_damage_tase()
 	self:damage_tase()
+end
+
+function HuskTeamAIDamage:_schedule_regen()
 end
 
 function HuskTeamAIDamage:sync_unit_recovered()
@@ -337,7 +343,6 @@ function HuskTeamAIDamage:sync_unit_recovered()
 		World:effect_manager():fade_kill(self._tase_effect)
 	end
 
-	self._fatal = nil
 	self._bleed_out = nil
 
 	self._unit:interaction():set_active(false, false)
@@ -375,31 +380,21 @@ end
 
 function HuskTeamAIDamage:_on_bleedout(from_dropin)
 	self._bleed_out = true
-	self._fatal = nil
 
 	if not from_dropin then
 		self._unit:interaction():set_tweak_data("revive")
 		self._unit:interaction():set_active(true, false)
 		managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
+
+		self._health = 0
+
+		self:_update_health_hud()
 	end
-end
-
-function HuskTeamAIDamage:_on_fatal(from_dropin)
-	self._fatal = true
-
-	if not self._bleed_out and not from_dropin then
-		self._unit:interaction():set_tweak_data("revive")
-		self._unit:interaction():set_active(true, false)
-		managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
-	end
-
-	self._bleed_out = nil
 end
 
 function HuskTeamAIDamage:_on_death()
 	self._dead = true
 	self._bleed_out = nil
-	self._fatal = nil
 
 	self._unit:interaction():set_active(false, false)
 	self:_unregister_unit()
@@ -410,23 +405,20 @@ function HuskTeamAIDamage:load(data)
 		return
 	end
 
+	self._health = data.char_dmg.health
+	self._health_ratio = self._health / self._HEALTH_INIT
+
 	if data.char_dmg.bleedout then
 		self._queued_teammate_panel_update = "bleedout"
-	end
-
-	if data.char_dmg.fatal then
-		self._queued_teammate_panel_update = "fatal"
 	end
 end
 
 function HuskTeamAIDamage:run_queued_teammate_panel_update()
-	if self._queued_teammate_panel_update then
-		if self._queued_teammate_panel_update == "bleedout" then
-			self:_on_bleedout()
-		elseif self._queued_teammate_panel_update == "fatal" then
-			self:_on_fatal()
-		end
+	if self._queued_teammate_panel_update and self._queued_teammate_panel_update == "bleedout" then
+		self:_on_bleedout()
 	end
 
 	self._queued_teammate_panel_update = false
+
+	self:_update_health_hud()
 end

@@ -223,9 +223,9 @@ function BuffEffectCandy:_activate_sugar_high(effect)
 	table.insert(effects, malus_effect)
 	managers.notification:add_notification({
 		progress = 1,
+		id = "candy_progress",
 		initial_progress = 1,
 		priority = 0,
-		id = "candy_progress",
 		notification_type = HUDNotification.CANDY_PROGRESSION,
 		sugar_high = {
 			tier = self._current_stage - 1,

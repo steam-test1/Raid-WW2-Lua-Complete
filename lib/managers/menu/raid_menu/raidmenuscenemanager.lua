@@ -299,7 +299,6 @@ function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
 		end
 
 		if managers.dialog then
-			managers.dialog:set_paused(false)
 			managers.dialog:set_subtitles_shown(true)
 		end
 
@@ -320,10 +319,6 @@ function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 	end
 
 	if managers.dialog then
-		if managers.raid_job:is_camp_loaded() then
-			managers.dialog:set_paused(true)
-		end
-
 		managers.dialog:set_subtitles_shown(false)
 		managers.subtitle:set_enabled(false)
 	end
@@ -503,6 +498,7 @@ end
 
 function RaidMenuSceneManager:system_start_raid()
 	Application:trace("[RaidMenuSceneManager:system_start_raid]")
+	Application:stack_dump()
 	managers.challenge_cards:activate_challenge_card()
 	managers.player:replenish_player()
 	managers.player:replenish_player_weapons()

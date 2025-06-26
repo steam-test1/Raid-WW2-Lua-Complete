@@ -22,69 +22,69 @@ function EnvironmentLayer:init(owner)
 	self._wind_speeds = {}
 
 	table.insert(self._wind_speeds, {
+		description = "Calm",
 		beaufort = 0,
-		speed = 0,
-		description = "Calm"
+		speed = 0
 	})
 	table.insert(self._wind_speeds, {
+		description = "Light air",
 		beaufort = 1,
-		speed = 0.3,
-		description = "Light air"
+		speed = 0.3
 	})
 	table.insert(self._wind_speeds, {
+		description = "Light breeze",
 		beaufort = 2,
-		speed = 1.6,
-		description = "Light breeze"
+		speed = 1.6
 	})
 	table.insert(self._wind_speeds, {
+		description = "Gentle breeze",
 		beaufort = 3,
-		speed = 3.4,
-		description = "Gentle breeze"
+		speed = 3.4
 	})
 	table.insert(self._wind_speeds, {
+		description = "Moderate breeze",
 		beaufort = 4,
-		speed = 5.5,
-		description = "Moderate breeze"
+		speed = 5.5
 	})
 	table.insert(self._wind_speeds, {
+		description = "Fresh breeze",
 		beaufort = 5,
-		speed = 8,
-		description = "Fresh breeze"
+		speed = 8
 	})
 	table.insert(self._wind_speeds, {
+		description = "Strong breeze",
 		beaufort = 6,
-		speed = 10.8,
-		description = "Strong breeze"
+		speed = 10.8
 	})
 	table.insert(self._wind_speeds, {
+		description = "Near Gale",
 		beaufort = 7,
-		speed = 13.9,
-		description = "Near Gale"
+		speed = 13.9
 	})
 	table.insert(self._wind_speeds, {
+		description = "Fresh Gale",
 		beaufort = 8,
-		speed = 17.2,
-		description = "Fresh Gale"
+		speed = 17.2
 	})
 	table.insert(self._wind_speeds, {
+		description = "Strong Gale",
 		beaufort = 9,
-		speed = 20.8,
-		description = "Strong Gale"
+		speed = 20.8
 	})
 	table.insert(self._wind_speeds, {
+		description = "Whole storm",
 		beaufort = 10,
-		speed = 24.5,
-		description = "Whole storm"
+		speed = 24.5
 	})
 	table.insert(self._wind_speeds, {
+		description = "Violent storm",
 		beaufort = 11,
-		speed = 28.5,
-		description = "Violent storm"
+		speed = 28.5
 	})
 	table.insert(self._wind_speeds, {
+		description = "Hurricane",
 		beaufort = 12,
-		speed = 32.7,
-		description = "Hurricane"
+		speed = 32.7
 	})
 
 	self._draw_wind = false
@@ -148,7 +148,7 @@ end
 
 function EnvironmentLayer:_load_effects(effects)
 	for _, effect in ipairs(effects) do
-		local unit = self:do_spawn_unit(self._effect_unit, effect.position, effect.rotation)
+		local unit = self:do_spawn_unit(self._effect_unit, effect.position, effect.rotation, nil, nil, true)
 
 		if effect.name_id then
 			self:set_name_id(unit, effect.name_id)
@@ -160,7 +160,7 @@ end
 
 function EnvironmentLayer:_load_environment_areas()
 	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
 		unit:unit_data().environment_area = area
 		local new_name_id = unit:unit_data().environment_area:set_unit(unit)
 
@@ -176,7 +176,7 @@ function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 	end
 
 	for _, dome_occ_shape in ipairs(dome_occ_shapes) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation)
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation, nil, nil, true)
 		unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new(dome_occ_shape)
 
 		unit:unit_data().occ_shape:set_unit(unit)
@@ -215,14 +215,14 @@ function EnvironmentLayer:old_load(environment)
 
 	if environment._unit_effects then
 		for _, effect in ipairs(environment._unit_effects) do
-			local unit = self:do_spawn_unit(self._effect_unit, effect.pos, effect.rot)
+			local unit = self:do_spawn_unit(self._effect_unit, effect.pos, effect.rot, nil, nil, true)
 
 			self:play_effect(unit, effect.name)
 		end
 	end
 
 	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
 		unit:unit_data().environment_area = area
 		local new_name_id = unit:unit_data().environment_area:set_unit(unit)
 

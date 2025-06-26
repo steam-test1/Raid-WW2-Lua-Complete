@@ -55,15 +55,20 @@ function SentryGunWeapon:_init()
 			parent = self._effect_align[2]
 		}
 	}
-	self._use_shell_ejection_effect = IS_PC
 
-	if self._use_shell_ejection_effect then
+	if self:ejects_shells() then
 		self._obj_shell_ejection = self._unit:get_object(Idstring("shell"))
-		self._shell_ejection_effect = Idstring(tweak_data.weapon[self._name_id].shell_ejection or "effects/vanilla/weapons/shells/shell_556")
+		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection
 		}
+
+		if self._obj_shell_ejection then
+			self._use_shell_ejection_effect = true
+		else
+			Application:warn("[SentryGunWeapon] Using ejects_shells but could not find an object for 'shell'.")
+		end
 	end
 
 	self._damage = self._tweak_data.DAMAGE
@@ -71,6 +76,10 @@ function SentryGunWeapon:_init()
 	self._alert_size = self._tweak_data.alert_size
 	self._alert_fires = {}
 	self._suppression = self._tweak_data.SUPPRESSION
+end
+
+function SentryGunWeapon:ejects_shells()
+	return IS_PC
 end
 
 function SentryGunWeapon:setup(setup_data, damage_multiplier)

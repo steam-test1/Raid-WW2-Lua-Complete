@@ -349,3 +349,22 @@ function Ladder:load(data)
 
 	self:set_config()
 end
+
+function Ladder:setup_load(data)
+	if not data.ladder then
+		return
+	end
+
+	self:set_width(data.ladder.width)
+	self:set_height(data.ladder.height)
+end
+
+if Application:editor() then
+	function Ladder:editor_save(data)
+		local state = {
+			width = self:width(),
+			height = self:height()
+		}
+		data.ladder = state
+	end
+end

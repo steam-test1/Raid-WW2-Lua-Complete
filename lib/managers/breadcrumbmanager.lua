@@ -52,6 +52,10 @@ BreadcrumbManager.CATEGORY_WEAPON_UPGRADE = {
 	identifier = "weapon_upgrade",
 	slot = BreadcrumbManager.SLOT_PROFILE
 }
+BreadcrumbManager.CATEGORY_WEAPON_SKIN = {
+	identifier = "weapon_skin",
+	slot = BreadcrumbManager.SLOT_PROFILE
+}
 BreadcrumbManager.CATEGORY_WEAPON = {
 	subcategories = {
 		BreadcrumbManager.CATEGORY_WEAPON_PRIMARY,

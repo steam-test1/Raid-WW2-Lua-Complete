@@ -916,14 +916,6 @@ function RaidGUIPanel:progress_bar_simple(params)
 	return control
 end
 
-function RaidGUIPanel:branching_progress_bar(params)
-	local control = RaidGUIControlBranchingProgressBar:new(self, params)
-
-	self:_add_control(control)
-
-	return control
-end
-
 function RaidGUIPanel:keybind(params)
 	local control = RaidGuiControlKeyBind:new(self, params)
 

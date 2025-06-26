@@ -3,8 +3,6 @@ GrenadeBase.EVENT_IDS = {
 	detonate = 1
 }
 GrenadeBase.DETONATE_UP_OFFSET = Vector3(0, 0.1, 0)
-local mvec1 = Vector3()
-local mvec2 = Vector3()
 
 function GrenadeBase:_setup_server_data()
 	self._slot_mask = managers.slot:get_mask("trip_mine_targets")
@@ -51,10 +49,11 @@ function GrenadeBase:_on_collision(col_ray)
 end
 
 function GrenadeBase:_detonate()
+	Application:info("[GrenadeBase] Function '_detonate' is incomplete!")
 end
 
 function GrenadeBase:_detonate_on_client()
-	print("no _detonate_on_client function for grenade base")
+	Application:info("[GrenadeBase] Function '_detonate_on_client' is incomplete!")
 end
 
 function GrenadeBase:sync_net_event(event_id)
@@ -94,8 +93,8 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 
 	if weapon_id and not self._recorded_hit then
 		managers.statistics:shot_fired({
-			hit = true,
 			skip_bullet_count = true,
+			hit = true,
 			name_id = weapon_id
 		})
 
@@ -114,10 +113,10 @@ end
 
 function GrenadeBase:get_use_data(character_setup)
 	local use_data = {
+		selection_index = 3,
 		equip = {
 			align_place = "right_hand"
 		},
-		selection_index = 3,
 		unequip = {
 			align_place = "back"
 		}

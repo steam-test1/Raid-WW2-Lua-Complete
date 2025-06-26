@@ -1,6 +1,7 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = {
 	any_ingame = {
+		ingame_standard = true,
 		gameoverscreen = true,
 		event_complete_screen = true,
 		world_camera = true,
@@ -13,51 +14,40 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
 		ingame_waiting_for_players = true,
-		ingame_incapacitated = true,
 		ingame_electrified = true,
-		ingame_fatal = true,
-		ingame_bleed_out = true,
-		ingame_standard = true
+		ingame_bleed_out = true
 	},
 	any_ingame_playing = {
-		ingame_parachuting = true,
-		ingame_driving = true,
-		ingame_access_camera = true,
-		ingame_waiting_for_respawn = true,
-		gameoverscreen = true,
-		ingame_incapacitated = true,
-		ingame_electrified = true,
-		ingame_fatal = true,
-		ingame_bleed_out = true,
 		ingame_standard = true,
+		gameoverscreen = true,
 		event_complete_screen = true,
 		world_camera = true,
 		ingame_menu = true,
 		ingame_special_interaction = true,
-		ingame_freefall = true
-	},
-	any_ingame_mission = {
+		ingame_freefall = true,
 		ingame_parachuting = true,
 		ingame_driving = true,
 		ingame_access_camera = true,
 		ingame_waiting_for_respawn = true,
-		ingame_incapacitated = true,
 		ingame_electrified = true,
-		ingame_fatal = true,
-		ingame_bleed_out = true,
+		ingame_bleed_out = true
+	},
+	any_ingame_mission = {
 		ingame_standard = true,
 		ingame_special_interaction = true,
-		ingame_freefall = true
+		ingame_freefall = true,
+		ingame_parachuting = true,
+		ingame_driving = true,
+		ingame_access_camera = true,
+		ingame_waiting_for_respawn = true,
+		ingame_electrified = true,
+		ingame_bleed_out = true
 	},
 	downed = {
-		ingame_bleed_out = true,
-		ingame_incapacitated = true,
-		ingame_fatal = true
+		ingame_bleed_out = true
 	},
 	need_revive = {
-		ingame_bleed_out = true,
-		ingame_incapacitated = true,
-		ingame_fatal = true
+		ingame_bleed_out = true
 	},
 	game_over = {
 		gameoverscreen = true
@@ -74,17 +64,17 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_waiting_for_respawn = true
 	},
 	menu = {
-		menu_main = true,
-		ingame_menu = true
+		ingame_menu = true,
+		menu_main = true
 	},
 	player_slot = {
-		ingame_waiting_for_players = true,
 		ingame_lobby_menu = true,
+		ingame_waiting_for_players = true,
 		menu_main = true
 	},
 	lobby = {
-		menu_main = true,
-		ingame_lobby_menu = true
+		ingame_lobby_menu = true,
+		menu_main = true
 	}
 }
 

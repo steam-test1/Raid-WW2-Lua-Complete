@@ -1,6 +1,5 @@
 TeamAIMovement = TeamAIMovement or class(CopMovement)
 TeamAIMovement._char_name_to_index = HuskPlayerMovement._char_name_to_index
-TeamAIMovement._char_model_names = HuskPlayerMovement._char_model_names
 
 function TeamAIMovement:_post_init()
 	if managers.groupai:state():whisper_mode() then
@@ -13,6 +12,12 @@ function TeamAIMovement:_post_init()
 		end
 
 		self._unit:base():set_slot(self._unit, 24)
+
+		local inventory = self._unit:inventory()
+
+		if inventory:is_selection_available(PlayerInventory.SLOT_1) and inventory:equipped_selection() ~= PlayerInventory.SLOT_1 then
+			inventory:equip_selection(PlayerInventory.SLOT_1)
+		end
 	else
 		self:set_cool(false)
 	end
@@ -110,8 +115,6 @@ function TeamAIMovement:set_cool(state)
 		return
 	end
 
-	local old_state = self._cool
-
 	if state then
 		self._cool = true
 
@@ -121,6 +124,12 @@ function TeamAIMovement:set_cool(state)
 			managers.groupai:state():add_listener(self._heat_listener_clbk, {
 				"whisper_mode"
 			}, callback(self, self, "heat_clbk"))
+		end
+
+		local inventory = self._unit:inventory()
+
+		if inventory:is_selection_available(PlayerInventory.SLOT_1) and inventory:equipped_selection() ~= PlayerInventory.SLOT_1 then
+			inventory:equip_selection(PlayerInventory.SLOT_1)
 		end
 
 		self._unit:base():set_slot(self._unit, 24)
@@ -144,6 +153,12 @@ function TeamAIMovement:heat_clbk(whisper_state)
 end
 
 function TeamAIMovement:_switch_to_not_cool(instant)
+	local inventory = self._unit:inventory()
+
+	if inventory:is_selection_available(PlayerInventory.SLOT_2) and inventory:equipped_selection() ~= PlayerInventory.SLOT_2 then
+		inventory:equip_selection(PlayerInventory.SLOT_2)
+	end
+
 	if not Network:is_server() then
 		return
 	end
@@ -180,9 +195,9 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 		if self._unit:brain()._logic_data and self._unit:brain():is_available_for_assignment() then
 			self._unit:brain():set_objective()
 			self._unit:movement():action_request({
+				sync = true,
 				body_part = 1,
-				type = "idle",
-				sync = true
+				type = "idle"
 			})
 		end
 

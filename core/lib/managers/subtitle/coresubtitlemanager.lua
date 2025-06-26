@@ -132,7 +132,7 @@ end
 
 function SubtitleManager:_update_presenter_visibility()
 	local presenter = self:presenter()
-	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitle"))
+	local show_presenter = self:enabled() and self:visible() and (not managers.user or managers.user:get_setting("subtitles"))
 
 	presenter[show_presenter and "show" or "hide"](presenter)
 end

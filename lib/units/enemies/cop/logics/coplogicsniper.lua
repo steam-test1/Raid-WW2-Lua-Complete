@@ -10,17 +10,9 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	}
 
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
-
-	local objective = data.objective
-
 	data.unit:brain():cancel_all_pathing_searches()
 
 	local old_internal_data = data.internal_data
-	local my_data = {
-		unit = data.unit,
-		detection = data.char_tweak.detection.recon,
-		vision = data.char_tweak.vision.combat
-	}
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -31,8 +23,8 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				type = "idle",
-				body_part = 3
+				body_part = 3,
+				type = "idle"
 			})
 		end
 	end
@@ -42,6 +34,8 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	my_data.detection_task_key = "CopLogicSniper._upd_enemy_detection" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSniper._upd_enemy_detection, data)
+
+	local objective = data.objective
 
 	if objective then
 		my_data.wanted_stance = objective.stance
@@ -59,15 +53,21 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 		cbt = true
 	})
 
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	my_data.detection = data.char_tweak.detection.recon
+	my_data.vision = data.char_tweak.vision.combat
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
 
-	if data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].use_laser then
-		data.unit:inventory():equipped_unit():base():set_laser_enabled(true)
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
 
-		my_data.weapon_laser_on = true
+		if data.char_tweak.weapon[usage].use_laser then
+			data.unit:inventory():equipped_unit():base():set_laser_enabled(true)
 
-		managers.enemy:_destroy_unit_gfx_lod_data(data.key)
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.weapon_laser_on)
+			my_data.weapon_laser_on = true
+
+			managers.enemy:_destroy_unit_gfx_lod_data(data.key)
+			managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.weapon_laser_on)
+		end
 	end
 end
 
@@ -187,7 +187,6 @@ end
 
 function CopLogicSniper._upd_aim(data, my_data)
 	local aim, shoot = data.logic._should_aim_or_shoot(data, my_data)
-	local focus_enemy = data.attention_obj
 	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk")
 	action_taken = action_taken or data.logic._upd_aim_action(data, my_data)
 
@@ -304,13 +303,13 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					type = "reload",
-					body_part = 3
+					body_part = 3,
+					type = "reload"
 				}
 			else
 				new_action = {
-					type = "idle",
-					body_part = 3
+					body_part = 3,
+					type = "idle"
 				}
 			end
 
@@ -326,13 +325,13 @@ function CopLogicSniper._aim_or_shoot(data, my_data, aim, shoot)
 end
 
 function CopLogicSniper._request_action_shoot(data, my_data)
-	if my_data.shooting or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
+	if my_data.shooting or not data.unit:inventory():equipped_selection() or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
 		return
 	end
 
 	local shoot_action = {
-		type = "shoot",
-		body_part = 3
+		body_part = 3,
+		type = "shoot"
 	}
 
 	if data.unit:brain():action_request(shoot_action) then

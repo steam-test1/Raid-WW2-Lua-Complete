@@ -27,14 +27,14 @@ end
 
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
-		selection_enabled = true,
-		vertical_spacing = 2,
+		h = 640,
+		w = 480,
 		y = 144,
 		x = 0,
 		name = "list_menu_options",
-		h = 640,
-		w = 480,
 		loop_items = true,
+		selection_enabled = true,
+		vertical_spacing = 2,
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
 		item_class = RaidGUIControlListItemMenu

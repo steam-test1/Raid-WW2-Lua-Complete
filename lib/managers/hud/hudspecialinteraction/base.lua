@@ -27,10 +27,10 @@ function HUDSpecialInteraction:_create_panel(hud)
 	end
 
 	self._object = hud.panel:panel({
-		visible = false,
-		halign = "center",
 		valign = "center",
 		name = "special_interaction_panel",
+		visible = false,
+		halign = "center",
 		layer = HUDSpecialInteraction.PANEL_LAYER
 	})
 end
@@ -40,8 +40,8 @@ function HUDSpecialInteraction:_create_background()
 	self._bg_panel = self._workspace:panel()
 	self._background = self._bg_panel:bitmap({
 		name = "special_interaction_background",
-		halign = "center",
 		valign = "center",
+		halign = "center",
 		texture = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture,
 		texture_rext = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture_rext,
 		alpha = HUDSpecialInteraction.BACKGROUND_ALPHA,
@@ -53,11 +53,11 @@ end
 
 function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text = self._object:text({
+		name = "legend_interact_text",
+		valign = "bottom",
 		text = "[F] LOCKPICK",
 		vertical = "center",
 		align = "center",
-		name = "legend_interact_text",
-		valign = "bottom",
 		font = HUDSpecialInteraction.LEGEND_FONT,
 		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 		color = HUDSpecialInteraction.LEGEND_FONT_COLOR
@@ -67,11 +67,11 @@ function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text:set_center_y(self._object:center_y())
 
 	self._legend_exit_text = self._object:text({
+		name = "legend_exit_text",
+		valign = "bottom",
 		text = "[SPACE] CANCEL",
 		vertical = "center",
 		align = "center",
-		name = "legend_exit_text",
-		valign = "bottom",
 		font = HUDSpecialInteraction.LEGEND_FONT,
 		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 		color = HUDSpecialInteraction.LEGEND_FONT_COLOR

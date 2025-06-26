@@ -191,6 +191,7 @@ function FreeFlight:_setup_controller(controller_manager)
 	self._con:add_trigger("freeflight_modifier_toggle", callback(self, self, "_next_modifier_toggle"))
 	self._con:add_trigger("freeflight_modifier_up", callback(self, self, "_curr_modifier_up"))
 	self._con:add_trigger("freeflight_modifier_down", callback(self, self, "_curr_modifier_down"))
+	self._con:disable()
 end
 
 function FreeFlight:_setup_gui()

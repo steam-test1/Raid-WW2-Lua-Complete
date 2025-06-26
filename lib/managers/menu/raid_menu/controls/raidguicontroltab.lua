@@ -39,8 +39,8 @@ function RaidGUIControlTab:init(parent, params)
 	end
 
 	self._tab_label = self._object:label({
-		vertical = "center",
 		y = 0,
+		vertical = "center",
 		name = "tab_control_label_" .. self._name,
 		x = label_coord_x,
 		w = label_width,

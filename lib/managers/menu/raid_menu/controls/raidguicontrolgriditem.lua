@@ -15,8 +15,8 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 
 	self._item_data = item_data
 	self._object = self._panel:panel({
-		name = "panel_grid_item",
 		layer = 0,
+		name = "panel_grid_item",
 		x = params.x,
 		y = params.y,
 		w = params.selected_marker_w,
@@ -43,17 +43,17 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 	self._params.item_h = params.item_h or self._panel:h()
 	self._name = "grid_item"
 	local background_panel_params = {
-		layer = 1,
-		visible = false,
 		y = 0,
 		x = 0,
+		layer = 1,
+		visible = false,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h
 	}
 	local background_rect_params = {
-		layer = 2,
 		y = 0,
 		x = 0,
+		layer = 2,
 		w = self._params.selected_marker_w,
 		h = self._params.selected_marker_h,
 		color = tweak_data.gui.colors.raid_grey:with_alpha(0.3)
@@ -88,8 +88,8 @@ end
 
 function RaidGUIControlGridItem:_layout_locks()
 	self._item_status_resource_icon = self._object:image({
-		name = "grid_item_resource_icon",
 		layer = 200,
+		name = "grid_item_resource_icon",
 		color = tweak_data.gui.colors.gold_orange,
 		texture = tweak_data.gui.icons.gold_amount_footer.texture,
 		texture_rect = tweak_data.gui.icons.gold_amount_footer.texture_rect

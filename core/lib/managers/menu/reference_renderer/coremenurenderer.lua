@@ -25,8 +25,8 @@ function Renderer:init(logic, parameters)
 	self.ws = managers.gui_data:create_saferect_workspace()
 	self._fullscreen_ws = managers.gui_data:create_fullscreen_workspace()
 	self._fullscreen_panel = self._fullscreen_ws:panel():panel({
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		layer = self._base_layer
 	})
 

@@ -7,22 +7,16 @@ end
 
 function PlayerTweakData:_set_difficulty_2()
 	self.damage.automatic_respawn_time = 60
-	self.damage.DOWNED_TIME_DEC = 7
-	self.damage.DOWNED_TIME_MIN = 5
 	self.damage.MIN_DAMAGE_INTERVAL = 0.32
 end
 
 function PlayerTweakData:_set_difficulty_3()
 	self.damage.automatic_respawn_time = 90
-	self.damage.DOWNED_TIME_DEC = 10
-	self.damage.DOWNED_TIME_MIN = 5
 	self.damage.MIN_DAMAGE_INTERVAL = 0.3
 end
 
 function PlayerTweakData:_set_difficulty_4()
 	self.damage.automatic_respawn_time = 90
-	self.damage.DOWNED_TIME_DEC = 15
-	self.damage.DOWNED_TIME_MIN = 1
 	self.damage.MIN_DAMAGE_INTERVAL = 0.28
 end
 
@@ -49,23 +43,23 @@ end
 function PlayerTweakData:init()
 	self.killzones = {
 		fire = {
-			timer = 0.15,
-			damage = 4
+			damage = 4,
+			timer = 0.15
 		},
 		inferno = {
-			death_on_down = true,
+			damage = 8,
 			timer = 0.15,
-			damage = 8
+			death_on_down = true
 		},
 		gas = {
-			timer = 0.25,
-			damage = 3
+			damage = 3,
+			timer = 0.25
 		},
 		sniper = {
-			warning_chance = 0.75,
 			warning_timer = 4,
 			timer = 1.5,
-			damage = 50
+			damage = 50,
+			warning_chance = 0.75
 		}
 	}
 	self.run_move_dir_treshold = 0.7
@@ -83,45 +77,34 @@ function PlayerTweakData:init()
 	self.damage.DOWNED_WARCRY_REDUCTION = 0.5
 	self.damage.TASED_TIME = 10
 	self.damage.TASED_RECOVER_TIME = 1
-	self.damage.BLEED_OUT_HEALTH_INIT = 10
 	self.damage.DOWNED_TIME = 30
-	self.damage.DOWNED_TIME_DEC = 5
-	self.damage.DOWNED_TIME_MIN = 10
-	self.damage.INCAPACITATED_TIME = 30
 	self.damage.MIN_DAMAGE_INTERVAL = 0.36
 
 	if IS_CONSOLE then
 		self.damage.MIN_DAMAGE_INTERVAL = self.damage.MIN_DAMAGE_INTERVAL + 0.1
 	end
 
-	self.damage.respawn_time_penalty = 30
-	self.damage.base_respawn_time_penalty = 5
-	self.damage.automatic_assault_ai_trade_time = 120
-	self.damage.automatic_assault_ai_trade_time_max = 180
 	self.fall_health_damage = 4
 	self.fall_damage_alert_size = 250
 	self.SUSPICION_OFFSET_LERP = 0.75
 	self.MANTLE_PRECISION = 3
 	self.long_dis_interaction = {
 		highlight_range = 8000,
-		intimidate_strength = 0.5,
-		intimidate_range_civilians = 1000,
-		intimidate_range_enemies = 1
+		intimidate_range_escort = 800
 	}
 	self.suppression = {
-		autohit_chance_mul = 0.9,
 		spread_mul = 1,
 		receive_mul = 7,
 		decay_start_delay = 0.15,
 		max_value = 9,
-		tolerance = 1
+		tolerance = 1,
+		autohit_chance_mul = 0.9
 	}
 	self.suspicion = {
-		max_value = 8,
 		range_mul = 1,
-		buildup_mul = 1
+		buildup_mul = 1,
+		max_value = 8
 	}
-	self.max_nr_following_hostages = 1
 	self.max_floor_jump_angle = {
 		max = 72,
 		min = 58
@@ -277,7 +260,7 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default.damage.LOW_HEALTH_REGEN = 0.03
 	self.class_defaults.default.damage.LOW_HEALTH_REGEN_LIMIT = 0.25
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN_HEIGHT = 310
-	self.class_defaults.default.damage.FALL_DAMAGE_FATAL_HEIGHT = 850
+	self.class_defaults.default.damage.FALL_DAMAGE_BLEEDOUT_HEIGHT = 850
 	self.class_defaults.default.damage.FALL_DAMAGE_DEATH_HEIGHT = 1100
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 5
 	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 75
@@ -511,6 +494,38 @@ function PlayerTweakData:_init_pistol_stances()
 	self.stances.welrod.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.welrod.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.welrod.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
+	self.stances.georg = deep_clone(self.stances.default)
+	local pivot_shoulder_translation = Vector3(8.1257, 29.4187, 1.86738)
+	local pivot_shoulder_rotation = Rotation(0, 0, 0)
+	local pivot_head_translation = Vector3(7, 25, -3)
+	local pivot_head_rotation = Rotation(-1, 0, -2.5)
+	self.stances.georg.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.georg.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.georg.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(7, -3, -10)
+	self.stances.georg.standard.vel_overshot.yaw_neg = 6
+	self.stances.georg.standard.vel_overshot.yaw_pos = -6
+	self.stances.georg.standard.vel_overshot.pitch_neg = -8
+	self.stances.georg.standard.vel_overshot.pitch_pos = 8
+	local pivot_head_translation = Vector3(6, 22, -2)
+	local pivot_head_rotation = Rotation(0.5, 1.8, -6)
+	self.stances.georg.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.georg.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.georg.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(4, -3, -8)
+	self.stances.georg.crouched.vel_overshot.yaw_neg = 7
+	self.stances.georg.crouched.vel_overshot.yaw_pos = -7
+	self.stances.georg.crouched.vel_overshot.pitch_neg = -8
+	self.stances.georg.crouched.vel_overshot.pitch_pos = 8
+	local pivot_head_translation = Vector3(0, 25, 0.18)
+	local pivot_head_rotation = Rotation(0, 0.15, 0)
+	self.stances.georg.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.georg.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.georg.steelsight.FOV = self.stances.georg.standard.FOV
+	self.stances.georg.steelsight.zoom_fov = false
+	self.stances.georg.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, 28, -15)
+	self.stances.georg.steelsight.vel_overshot.yaw_neg = 1
+	self.stances.georg.steelsight.vel_overshot.yaw_pos = -1
+	self.stances.georg.steelsight.vel_overshot.pitch_neg = -1
+	self.stances.georg.steelsight.vel_overshot.pitch_pos = 1
 	self.stances.nagant = deep_clone(self.stances.default)
 	local pivot_shoulder_translation = Vector3(8.14841, 33.5584, 1.75919)
 	local pivot_shoulder_rotation = Rotation(8.24405e-05, 0.000829823, -0.000204329)

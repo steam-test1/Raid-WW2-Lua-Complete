@@ -25,6 +25,15 @@ function GreedManager:reset()
 	self._secured_bounty = false
 end
 
+function GreedManager:on_simulation_ended()
+	self._registered_greed_items = {}
+	self._registered_greed_cache_items = {}
+	self._mission_loot_counter = 0
+	self._gold_awarded_in_mission = 0
+	self._active_greed_items = {}
+	self._secured_bounty = false
+end
+
 function GreedManager:register_greed_item(unit, tweak_table, world_id)
 	self._registered_greed_items[world_id] = self._registered_greed_items[world_id] or {}
 	local item_tweak_data = tweak_data.greed.greed_items[tweak_table]
@@ -53,7 +62,20 @@ function GreedManager:plant_greed_items_on_level(world_id)
 	end
 
 	local job_data = managers.raid_job:current_job()
-	local total_value = tweak_data.greed.points_spawned_on_level_default
+
+	if not job_data then
+		Application:debug("[GreedManager:plant_greed_items_on_level] attempted to plant greed items without an active job")
+
+		return
+	end
+
+	if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		local event_index = job_data.current_event
+		local event_name = job_data.events_index[event_index]
+		job_data = job_data.events[event_name]
+	end
+
+	local total_value = 0
 	local job_id = job_data and job_data.job_id
 
 	if job_data and job_data.greed_items then
@@ -78,6 +100,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 	for _, greed_item in ipairs(self._registered_greed_items[world_id]) do
 		if not alive(greed_item.unit) then
 			greed_item.deleted = true
+			greed_item.unit = nil
 		else
 			local should_remove_greed_item = total_value <= self._greed_items_spawned_value
 
@@ -85,6 +108,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 				greed_item.unit:set_slot(0)
 
 				greed_item.deleted = true
+				greed_item.unit = nil
 			else
 				self._greed_items_spawned_value = self._greed_items_spawned_value + greed_item.value
 
@@ -119,6 +143,7 @@ function GreedManager:plant_greed_items_on_level(world_id)
 			cache_item.unit:set_slot(0)
 
 			cache_item.deleted = true
+			cache_item.unit = nil
 		end
 	end
 
@@ -164,8 +189,8 @@ end
 
 function GreedManager:pickup_greed_item(value, unit)
 	local notification_item = {
-		name_id = "menu_greed_loot_title",
 		icon = "carry_gold",
+		name_id = "menu_greed_loot_title",
 		value = value
 	}
 

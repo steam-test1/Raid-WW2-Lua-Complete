@@ -1,4 +1,11 @@
 SetOutlineElement = SetOutlineElement or class(MissionElement)
+SetOutlineElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		output = true,
+		type = "outline"
+	}
+}
 
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
@@ -63,9 +70,9 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				g = 0.5,
 				r = 0.9,
 				b = 1,
-				g = 0.5,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -75,8 +82,8 @@ end
 
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then

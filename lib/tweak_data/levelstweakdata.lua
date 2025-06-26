@@ -9,33 +9,33 @@ function LevelsTweakData:init()
 		}
 	}
 	self.camp = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/germany_camp",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.tutorial = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/zone_germany_tutorial",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.flakturm = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/flakturm",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.gold_rush = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/gold_rush",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
@@ -44,65 +44,57 @@ function LevelsTweakData:init()
 		world_name = "instances/level_specific/reichsbank/streets_ending01"
 	}
 	self.train_yard = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/train_yard",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.ger_bridge = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/bridge",
-		package = {
-			"packages/zone_germany"
-		}
-	}
-	self.ger_bridge_operation = {
 		load_env = true,
-		low_poly = "",
-		world_name = "vanilla/bridge",
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.radio_defense = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/radio_defense",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.settlement = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/castle",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.forest_gumpy = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/forest_gumpy",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.zone_germany_park = {
+		world_name = "vanilla/zone_germany_park",
 		load_env = true,
 		low_poly = "",
-		world_name = "vanilla/zone_germany_park",
 		package = {
 			"packages/zone_germany"
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_zone_germany",
 				base_icon = "map_ico_camp",
-				pin_scale = 0.5,
 				base_location = {
 					x = -200,
 					y = -2850
@@ -123,93 +115,93 @@ function LevelsTweakData:init()
 		}
 	}
 	self.zone_germany_destroyed = {
+		world_name = "vanilla/zone_germany_destroyed",
 		load_env = true,
 		low_poly = "",
-		world_name = "vanilla/zone_germany_destroyed",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_destroyed_fuel = {
+		world_name = "vanilla/zone_germany_destroyed_fuel",
 		load_env = true,
 		low_poly = "",
-		world_name = "vanilla/zone_germany_destroyed_fuel",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout = {
+		world_name = "vanilla/zone_germany_roundabout",
 		load_env = true,
 		low_poly = "",
-		world_name = "vanilla/zone_germany_roundabout",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.zone_germany_roundabout_fuel = {
+		world_name = "vanilla/zone_germany_roundabout_fuel",
 		load_env = true,
 		low_poly = "",
-		world_name = "vanilla/zone_germany_roundabout_fuel",
 		package = {
 			"packages/zone_germany"
 		},
 		map = self.zone_germany_park.map
 	}
 	self.bunker_test = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/bunker_test",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.tnd = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/tnd",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.hunters = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/hunters",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.convoy = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/convoy",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.spies_test = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/spies_test_layout",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.sto = {
-		load_env = true,
 		low_poly = "",
 		world_name = "vanilla/sto",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.silo = {
-		load_env = true,
 		low_poly = "",
 		world_name = "upg_002/silo/silo_start",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
@@ -224,33 +216,33 @@ function LevelsTweakData:init()
 		world_name = "upg_002/silo/silo_end"
 	}
 	self.kelly = {
-		load_env = true,
 		low_poly = "",
 		world_name = "upg_003/kelly",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.fury_railway = {
-		load_env = true,
 		low_poly = "",
 		world_name = "upg_005/fury_railway",
+		load_env = true,
 		package = {
 			"packages/zone_germany"
 		}
 	}
 	self.forest_bunker = {
+		world_name = "upg_fb/forest_bunker",
 		load_env = true,
 		low_poly = "",
-		world_name = "upg_fb/forest_bunker",
 		package = {
 			"packages/zone_germany"
 		},
 		map = {
 			default = {
+				pin_scale = 0.5,
 				texture = "map_forest_bunker",
 				base_icon = "map_ico_bunker",
-				pin_scale = 0.5,
 				base_location = {
 					x = -3600,
 					y = 2500
@@ -412,16 +404,16 @@ function LevelsTweakData:get_team_setup()
 			},
 			law1 = {
 				foes = {
-					converted_enemy = true,
 					mobster1 = true,
-					criminal1 = true
+					criminal1 = true,
+					converted_enemy = true
 				}
 			},
 			mobster1 = {
 				foes = {
 					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
+					criminal1 = true,
+					law1 = true
 				}
 			},
 			converted_enemy = {

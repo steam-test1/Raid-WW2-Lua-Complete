@@ -52,7 +52,7 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
-			_compare_sort_list = nil,
+			progress_wrong_user = nil,
 			meta_data_list = {}
 		}
 	end
@@ -200,6 +200,7 @@ function SavefileManager:clear_progress_data()
 	managers.character_customization:reset()
 	managers.raid_job:reset()
 	managers.raid_job:set_tutorial_played_flag(false)
+	managers.raid_job:set_bounty_completed_seed(nil)
 	managers.statistics:reset()
 	managers.challenge:reset()
 	managers.weapon_skills:_setup(true)
@@ -473,9 +474,9 @@ function SavefileManager:_save(slot, cache_only, save_system)
 	else
 		local meta_data = self:_meta_data(slot)
 		local task_data = {
+			max_queue_size = 1,
 			date_format = "%c",
 			queued_in_save_manager = true,
-			max_queue_size = 1,
 			first_slot = slot,
 			task_type = self.SAVE_TASK_TYPE,
 			user_index = managers.user:get_platform_id()
@@ -530,7 +531,7 @@ function SavefileManager:_save_cache(slot)
 		managers.character_customization:save(cache)
 		managers.raid_job:save_game(cache)
 		managers.statistics:save(cache)
-		managers.weapon_inventory:save_account_wide_info(cache)
+		managers.weapon_inventory:save_profile_slot(cache)
 		managers.skilltree:save_profile_slot(cache)
 		managers.challenge:save_profile_slot(cache)
 		managers.breadcrumb:save_profile_slot(cache)
@@ -551,6 +552,7 @@ function SavefileManager:_save_cache(slot)
 		managers.music:save_profile(cache)
 		managers.challenge:save_character_slot(cache)
 		managers.warcry:save(cache)
+		managers.weapon_inventory:save(cache)
 		managers.weapon_skills:save(cache)
 		managers.breadcrumb:save_character_slot(cache)
 	end
@@ -932,7 +934,7 @@ function SavefileManager:_load_cache(slot)
 			self:_set_setting_changed(false)
 			managers.skilltree:load_profile_slot(cache, version)
 			managers.challenge:load_profile_slot(cache, version)
-			managers.weapon_inventory:load_account_wide_info(cache)
+			managers.weapon_inventory:load_profile_slot(cache)
 			managers.breadcrumb:load_profile_slot(cache, version)
 			managers.consumable_missions:load(cache, version)
 			managers.gold_economy:load(cache, version)
@@ -950,6 +952,7 @@ function SavefileManager:_load_cache(slot)
 			managers.dlc:load(cache, version)
 			managers.challenge:load_character_slot(cache, version)
 			managers.warcry:load(cache, version)
+			managers.weapon_inventory:load(cache)
 			managers.weapon_skills:load(cache, version)
 			managers.breadcrumb:load_character_slot(cache, version)
 		end
@@ -961,12 +964,12 @@ function SavefileManager:_meta_data(slot)
 
 	if not meta_data then
 		meta_data = {
+			is_synched_cache = false,
+			is_corrupt = false,
+			cache = nil,
+			is_load_done = false,
 			is_cached_slot = false,
 			is_synched_text = false,
-			is_load_done = false,
-			cache = nil,
-			is_corrupt = false,
-			is_synched_cache = false,
 			slot = slot
 		}
 		Global.savefile_manager.meta_data_list[slot] = meta_data

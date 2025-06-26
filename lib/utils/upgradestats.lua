@@ -143,7 +143,7 @@ function UpgradeStats.get_formatted_description(desc_id, macros)
 		if not range.start_index then
 			range.start_index = start_index - found
 		else
-			range.end_index = end_index - found
+			range.end_index = end_index - found - 1
 
 			table.insert(desc_colors, range)
 

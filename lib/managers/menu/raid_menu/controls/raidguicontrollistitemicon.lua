@@ -55,10 +55,10 @@ function RaidGUIControlListItemIcon:init(parent, params, data)
 		color = tweak_data.gui.colors.raid_list_background
 	})
 	self._item_highlight_marker = self._object:rect({
+		w = 3,
 		y = 1,
 		x = 0,
 		visible = false,
-		w = 3,
 		name = "list_item_highlight_" .. self._name,
 		h = params.h - 2,
 		color = self._selected_color

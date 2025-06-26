@@ -1,10 +1,11 @@
 SelectGroupByName = SelectGroupByName or class(CoreEditorEwsDialog)
+local tmp_vec3 = Vector3()
 
 function SelectGroupByName:init(...)
 	local styles = managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 
-	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(400, 500, 0), styles, ...)
-	self._dialog:set_min_size(Vector3(400, 400, 0))
+	CoreEditorEwsDialog.init(self, nil, "Select group by name", "", Vector3(300, 150, 0), Vector3(500, 300, 0), styles, ...)
+	self._dialog:set_min_size(Vector3(500, 240, 0))
 	self:create_panel("VERTICAL")
 
 	local horizontal_ctrlr_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -36,11 +37,17 @@ function SelectGroupByName:init(...)
 	select_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_select_group"), "")
 	select_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
-	local find_btn = EWS:Button(self._panel, "Ungroup", "", "")
+	local find_btn = EWS:Button(self._panel, "Find", "", "")
 
 	button_sizer:add(find_btn, 0, 2, "RIGHT,LEFT")
-	find_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_ungroup"), "")
+	find_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_find_group"), "")
 	find_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
+
+	local ungroup_btn = EWS:Button(self._panel, "Ungroup", "", "")
+
+	button_sizer:add(ungroup_btn, 0, 2, "RIGHT,LEFT")
+	ungroup_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_ungroup"), "")
+	ungroup_btn:connect("EVT_KEY_DOWN", callback(self, self, "key_cancel"), "")
 
 	local delete_btn = EWS:Button(self._panel, "Delete", "", "")
 
@@ -113,6 +120,29 @@ function SelectGroupByName:on_select_group()
 	managers.editor:freeze_gui_lists()
 	managers.editor:select_group(group)
 	managers.editor:thaw_gui_lists()
+end
+
+function SelectGroupByName:on_find_group()
+	local group = self:_selected_item_group()
+
+	if not group then
+		return
+	end
+
+	local radius = 0
+
+	mvector3.set_zero(tmp_vec3)
+
+	for _, unit in ipairs(self:_selected_item_group():units()) do
+		if radius < unit:bounding_sphere_radius() then
+			radius = unit:bounding_sphere_radius()
+		end
+
+		mvector3.add(tmp_vec3, unit:position())
+	end
+
+	mvector3.multiply(tmp_vec3, 1 / #self:_selected_item_group():units())
+	managers.editor:center_view_on_point(tmp_vec3, radius * 4)
 end
 
 function SelectGroupByName:_selected_item_groups()

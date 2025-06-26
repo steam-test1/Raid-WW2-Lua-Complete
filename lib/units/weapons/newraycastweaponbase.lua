@@ -28,14 +28,16 @@ function NewRaycastWeaponBase:init(unit)
 	self._movement_penalty = tweak_data.upgrades.weapon_movement_penalty[self:weapon_tweak_data().category] or 1
 	self._gun_kick = {
 		x = {
-			delta = 0,
-			velocity = 0
+			velocity = 0,
+			delta = 0
 		},
 		y = {
-			delta = 0,
-			velocity = 0
+			velocity = 0,
+			delta = 0
 		}
 	}
+	self._texture_switches = {}
+	self._parts_texture_switches = {}
 	self._textures = {}
 	self._cosmetics_data = nil
 	self._materials = nil
@@ -50,14 +52,6 @@ function NewRaycastWeaponBase:skip_queue()
 	return false
 end
 
-function NewRaycastWeaponBase:use_thq()
-	return false
-end
-
-function NewRaycastWeaponBase:skip_thq_parts()
-	return tweak_data.weapon.factory[self._factory_id].skip_thq_parts
-end
-
 function NewRaycastWeaponBase:set_texture_switches(texture_switches)
 	self._texture_switches = texture_switches
 end
@@ -66,32 +60,8 @@ function NewRaycastWeaponBase:set_factory_data(factory_id)
 	self._factory_id = factory_id
 end
 
-function NewRaycastWeaponBase:_check_thq_align_anim()
-	if not self:is_npc() then
-		return
-	end
-
-	if not self:use_thq() then
-		return
-	end
-
-	local thq_anim_name = self:weapon_tweak_data().animations and self:weapon_tweak_data().animations.thq_align_anim
-
-	if thq_anim_name then
-		self._unit:anim_set_time(Idstring(thq_anim_name), self._unit:anim_length(Idstring(thq_anim_name)))
-	end
-end
-
 function NewRaycastWeaponBase:_third_person()
-	if not self:is_npc() then
-		return false
-	end
-
-	if not self:use_thq() then
-		return true
-	end
-
-	return self:skip_thq_parts() and true or false
+	return self:is_npc()
 end
 
 function NewRaycastWeaponBase:assemble(factory_id)
@@ -100,7 +70,6 @@ function NewRaycastWeaponBase:assemble(factory_id)
 	self._parts, self._blueprint = managers.weapon_factory:assemble_default(factory_id, self._unit, third_person, callback(self, self, "clbk_assembly_complete", function ()
 	end), skip_queue)
 
-	self:_check_thq_align_anim()
 	self:_update_stats_values()
 end
 
@@ -110,7 +79,6 @@ function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, clb
 	self._parts, self._blueprint = managers.weapon_factory:assemble_from_blueprint(factory_id, self._unit, blueprint, third_person, callback(self, self, "clbk_assembly_complete", clbk or function ()
 	end), skip_queue)
 
-	self:_check_thq_align_anim()
 	self:_update_stats_values()
 end
 
@@ -126,6 +94,16 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 		self:set_timer(self._setup.timer)
 	end
 
+	self:_setup_magazine()
+	self:_apply_cosmetics(clbk or function ()
+	end)
+	self:apply_texture_switches()
+	self:check_npc()
+	self:set_parts_enabled(self._enabled)
+	clbk()
+end
+
+function NewRaycastWeaponBase:_setup_magazine()
 	local magazine = managers.weapon_factory:get_part_from_weapon_by_type("magazine", self._parts)
 
 	if magazine then
@@ -177,18 +155,6 @@ function NewRaycastWeaponBase:clbk_assembly_complete(clbk, parts, blueprint)
 			end
 		end
 	end
-
-	self:_apply_cosmetics(clbk or function ()
-	end)
-	self:apply_texture_switches()
-	self:check_npc()
-	self:_set_parts_enabled(self._enabled)
-
-	if self._second_sight_data then
-		self._second_sight_data.unit = self._parts[self._second_sight_data.part_id].unit
-	end
-
-	clbk()
 end
 
 function NewRaycastWeaponBase:get_weapon_hud_type()
@@ -196,46 +162,72 @@ function NewRaycastWeaponBase:get_weapon_hud_type()
 end
 
 function NewRaycastWeaponBase:apply_texture_switches()
+	if not self._parts then
+		Application:stack_dump_error("[NewRaycastWeaponBase:apply_modified_textures] Cannot texture, parts must be assembled, or at least contain a parts list first!")
+
+		return
+	end
+
+	if self._texture_switches then
+		for part_id, texture_data in pairs(self._texture_switches) do
+			self:apply_modified_textures(part_id, texture_data)
+		end
+	end
+
+	local parts_tweak = tweak_data.weapon.factory.parts
+	local skin_texture_switches = {}
+
+	for part_id, part_data in pairs(self._parts) do
+		skin_texture_switches[part_id] = parts_tweak[part_id][self:is_npc() and "materials_tps" or "materials_fps"]
+	end
+
+	if skin_texture_switches then
+		for part_id, texture_data in pairs(skin_texture_switches) do
+			self:apply_modified_textures(part_id, texture_data)
+		end
+	end
+end
+
+function NewRaycastWeaponBase:apply_modified_textures(part_id, texture_data)
 	local parts_tweak = tweak_data.weapon.factory.parts
 	self._parts_texture_switches = self._parts_texture_switches or {}
 
-	if self._texture_switches then
-		local texture_switch, part_data, unit, material_ids, material_config, switch_material = nil
+	if self._parts_texture_switches[part_id] == texture_data then
+		return
+	end
 
-		for part_id, texture_data in pairs(self._texture_switches) do
-			if self._parts_texture_switches[part_id] ~= texture_data then
-				switch_material = nil
-				texture_switch = parts_tweak[part_id] and parts_tweak[part_id].texture_switch
-				part_data = self._parts and self._parts[part_id]
+	local unique_materials = parts_tweak[part_id] and parts_tweak[part_id].unique_materials
+	local part_data = self._parts and self._parts[part_id]
 
-				if texture_switch and part_data then
-					unit = part_data.unit
-					material_ids = Idstring(texture_switch.material)
-					material_config = unit:get_objects_by_type(IDS_MATERIAL)
+	if not part_data or not unique_materials then
+		Application:warn("[NewRaycastWeaponBase:apply_modified_textures] Part lacks unique_materials table, part will not be modified!", part_id)
 
-					for _, material in ipairs(material_config) do
-						if material:name() == material_ids then
-							switch_material = material
+		return
+	end
 
-							break
-						end
-					end
+	local unit = part_data.unit
+	local material_config = unit:get_objects_by_type(IDS_MATERIAL)
 
-					if switch_material then
-						local texture_id = managers.blackmarket:get_texture_switch_from_data(texture_data, part_id)
+	for _, material_str in ipairs(unique_materials) do
+		if texture_data[material_str] then
+			local material_ids = Idstring(material_str)
 
+			for _, material in ipairs(material_config) do
+				if material:name() == material_ids and texture_data[material_str] then
+					for channel, texture_id in pairs(texture_data[material_str]) do
 						if texture_id and DB:has(Idstring("texture"), texture_id) then
 							local retrieved_texture = TextureCache:retrieve(texture_id, "normal")
 
-							Application:set_material_texture(switch_material, Idstring(texture_switch.channel), retrieved_texture)
+							Application:set_material_texture(material, Idstring(channel), retrieved_texture)
 
-							if self._parts_texture_switches[part_id] then
-								TextureCache:unretrieve(Idstring(self._parts_texture_switches[part_id]))
+							if self._parts_texture_switches[part_id] and self._parts_texture_switches[part_id][channel] then
+								TextureCache:unretrieve(Idstring(self._parts_texture_switches[part_id][channel]))
 							end
 
-							self._parts_texture_switches[part_id] = Idstring(texture_id)
+							self._parts_texture_switches[part_id] = self._parts_texture_switches[part_id] or {}
+							self._parts_texture_switches[part_id][channel] = texture_id
 						else
-							Application:error("[NewRaycastWeaponBase:apply_texture_switches] Switch texture do not exists", texture_id)
+							Application:error("[NewRaycastWeaponBase:apply_modified_textures] ---- Switch texture do not exists", texture_id)
 						end
 					end
 				end
@@ -290,15 +282,17 @@ function NewRaycastWeaponBase:blueprint_to_string()
 	return s
 end
 
+local FIRE_IDS = Idstring("fire")
+
 function NewRaycastWeaponBase:_update_fire_object()
-	local fire = managers.weapon_factory:get_part_from_weapon_by_type("barrel_ext", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("slide", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("barrel", self._parts)
+	local fire = managers.weapon_factory:get_part_from_weapon_by_type("barrel_ext", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("barrel", self._parts) or managers.weapon_factory:get_part_from_weapon_by_type("slide", self._parts)
 
 	if not fire then
-		debug_pause("[NewRaycastWeaponBase:_update_fire_object] Weapon \"" .. tostring(self._factory_id) .. "\" is missing fire object !")
-	elseif not fire.unit:get_object(Idstring("fire")) then
+		debug_pause("[NewRaycastWeaponBase:_update_fire_object] Weapon \"" .. tostring(self._factory_id) .. "\" is missing fire object!")
+	elseif not fire.unit:get_object(FIRE_IDS) then
 		debug_pause("[NewRaycastWeaponBase:_update_fire_object] Weapon \"" .. tostring(self._factory_id) .. "\" is missing fire object for part \"" .. tostring(fire.unit) .. "\"!")
 	else
-		self:change_fire_object(fire.unit:get_object(Idstring("fire")))
+		self:change_fire_object(fire.unit:get_object(FIRE_IDS))
 	end
 end
 
@@ -446,7 +440,6 @@ function NewRaycastWeaponBase:_update_stats_values()
 	self._gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("gadget", self._factory_id, self._blueprint)
 	self._scopes = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("scope", self._factory_id, self._blueprint)
 
-	self:_check_second_sight()
 	self:_check_reticle_obj()
 	self:replenish()
 end
@@ -463,53 +456,6 @@ function NewRaycastWeaponBase:_check_reticle_obj()
 			self._reticle_obj = part.unit:get_object(Idstring(part_tweak.reticle_obj))
 		end
 	end
-end
-
-function NewRaycastWeaponBase:_check_second_sight()
-	self._second_sight_data = nil
-
-	if self._gadgets then
-		local factory = tweak_data.weapon.factory
-
-		for _, part_id in ipairs(self._gadgets) do
-			if factory.parts[part_id].sub_type == "second_sight" then
-				self._second_sight_data = {
-					part_id = part_id,
-					unit = self._parts and self._parts[part_id] and alive(self._parts[part_id].unit) and self._parts[part_id].unit
-				}
-
-				break
-			end
-		end
-	end
-end
-
-function NewRaycastWeaponBase:zoom()
-	if self:is_second_sight_on() then
-		local gadget_zoom_stats = tweak_data.weapon.factory.parts[self._second_sight_data.part_id].stats.gadget_zoom
-
-		return tweak_data.weapon.stats.zoom[gadget_zoom_stats]
-	end
-
-	return NewRaycastWeaponBase.super.zoom(self)
-end
-
-function NewRaycastWeaponBase:lens_distortion()
-	if self:is_second_sight_on() then
-		local gadget_zoom_stats = tweak_data.weapon.factory.parts[self._second_sight_data.part_id].stats.gadget_zoom
-
-		return tweak_data.weapon.stats.zoom[gadget_zoom_stats]
-	end
-
-	return NewRaycastWeaponBase.super.zoom(self)
-end
-
-function NewRaycastWeaponBase:is_second_sight_on()
-	if not self._second_sight_data or not self._second_sight_data.unit then
-		return false
-	end
-
-	return self._second_sight_data.unit:base():is_on()
 end
 
 function NewRaycastWeaponBase:_check_sound_switch()
@@ -639,39 +585,72 @@ function NewRaycastWeaponBase:stance_mod()
 		return nil
 	end
 
-	local using_second_sight = self:is_second_sight_on()
-
-	return managers.weapon_factory:get_stance_mod(self._factory_id, self._blueprint, self:is_second_sight_on())
+	return managers.weapon_factory:get_stance_mod(self._factory_id, self._blueprint)
 end
 
-function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
+function NewRaycastWeaponBase:lens_distortion()
+	local stance_mod = self:stance_mod()
+
+	return stance_mod and stance_mod.lens_distortion or managers.environment_controller:get_lens_distortion_value()
+end
+
+function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier, time)
+	speed_multiplier = speed_multiplier or 1
+	local had_animation = false
+
+	local function anim_doer(unit, data)
+		if unit and data.animations and data.animations[anim] then
+			local ids_anim_name = Idstring(data.animations[anim])
+			local length = unit:anim_length(ids_anim_name)
+
+			unit:anim_stop(ids_anim_name)
+			unit:anim_play_to(ids_anim_name, length, speed_multiplier)
+
+			if time then
+				unit:anim_set_time(ids_anim_name, length * time)
+			end
+
+			return true
+		end
+
+		return false
+	end
+
 	local data = tweak_data.weapon.factory[self._factory_id]
 
-	if data.animations and data.animations[anim] then
-		local anim_name = data.animations[anim]
-		local length = self._unit:anim_length(Idstring(anim_name))
-		speed_multiplier = speed_multiplier or 1
-
-		self._unit:anim_stop(Idstring(anim_name))
-		self._unit:anim_play_to(Idstring(anim_name), length, speed_multiplier)
+	if anim_doer(self._unit, data) then
+		had_animation = true
 	end
 
 	for part_id, part_data in pairs(self._parts) do
-		if not part_data.unit then
-			-- Nothing
-		elseif part_data.animations and part_data.animations[anim] then
-			local anim_name = part_data.animations[anim]
-			local length = part_data.unit:anim_length(Idstring(anim_name))
-			speed_multiplier = speed_multiplier or 1
-
-			part_data.unit:anim_stop(Idstring(anim_name))
-			part_data.unit:anim_play_to(Idstring(anim_name), length, speed_multiplier)
+		if anim_doer(part_data.unit, part_data) then
+			had_animation = true
 		end
 	end
 
-	NewRaycastWeaponBase.super.tweak_data_anim_play(self, anim, speed_multiplier)
+	return had_animation
+end
 
-	return true
+function NewRaycastWeaponBase:has_tweak_data_anim(anim)
+	local function anim_doer(unit, data)
+		if unit and data.animations and data.animations[anim] then
+			return true
+		end
+	end
+
+	local data = tweak_data.weapon.factory[self._factory_id]
+
+	if anim_doer(self._unit, data) then
+		return true
+	end
+
+	for part_id, part_data in pairs(self._parts) do
+		if anim_doer(part_data.unit, part_data) then
+			return true
+		end
+	end
+
+	return false
 end
 
 function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
@@ -694,20 +673,15 @@ function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
 	NewRaycastWeaponBase.super.tweak_data_anim_stop(self, anim)
 end
 
-function NewRaycastWeaponBase:_set_parts_enabled(enabled)
+function NewRaycastWeaponBase:set_parts_enabled(enabled)
 	if self._parts then
-		local anim_groups = nil
-		local empty_s = Idstring("")
-
 		for part_id, data in pairs(self._parts) do
 			if alive(data.unit) then
 				if not enabled then
-					anim_groups = data.unit:anim_groups()
-
-					for _, anim in ipairs(anim_groups) do
-						if anim ~= empty_s then
+					for _, anim in ipairs(data.unit:anim_groups()) do
+						if anim ~= IDS_EMPTY then
 							data.unit:anim_play_to(anim, 0)
-							data.unit:anim_stop()
+							data.unit:anim_stop(anim)
 						end
 					end
 				end
@@ -728,7 +702,7 @@ end
 
 function NewRaycastWeaponBase:on_enabled(...)
 	NewRaycastWeaponBase.super.on_enabled(self, ...)
-	self:_set_parts_enabled(true)
+	self:set_parts_enabled(true)
 
 	self._spread_firing = 0
 	self._spread_last_shot_t = 0
@@ -746,7 +720,7 @@ end
 function NewRaycastWeaponBase:on_disabled(...)
 	NewRaycastWeaponBase.super.on_disabled(self, ...)
 	self:gadget_off()
-	self:_set_parts_enabled(false)
+	self:set_parts_enabled(false)
 end
 
 function NewRaycastWeaponBase:fire_mode()
@@ -915,26 +889,6 @@ function NewRaycastWeaponBase:toggle_gadget()
 
 		return true
 	end
-
-	return false
-
-	if not self._enabled then
-		return
-	end
-
-	self._gadget_on = self._gadget_on or 0
-	local gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("gadget", self._factory_id, self._blueprint)
-
-	if gadgets then
-		self._gadget_on = ((self._gadget_on or 0) + 1) % (#gadgets + 1)
-		local gadget = nil
-
-		for _, i in ipairs(gadgets) do
-			gadget = self._parts[i]
-
-			gadget.unit:base():set_state(self._gadget_on == i, self._sound_fire)
-		end
-	end
 end
 
 function NewRaycastWeaponBase:gadget_update()
@@ -977,8 +931,6 @@ function NewRaycastWeaponBase:check_stats()
 	local base_stats = self:weapon_tweak_data().stats
 
 	if not base_stats then
-		print("no stats")
-
 		return
 	end
 
@@ -1517,12 +1469,42 @@ function NewRaycastWeaponBase:set_timer(timer, ...)
 
 	if self._assembly_complete then
 		for id, data in pairs(self._parts) do
-			if not alive(data.unit) then
-				Application:error("[NewRaycastWeaponBase:set_timer] Missing unit in weapon parts!", "weapon id", self._name_id, "part id", id, "part", inspect(data), "parts", inspect(self._parts), "blueprint", inspect(self._blueprint), "assembly_complete", self._assembly_complete, "self", inspect(self))
-			end
-
 			data.unit:set_timer(timer)
 			data.unit:set_animation_timer(timer)
+		end
+	end
+end
+
+function NewRaycastWeaponBase:run_ads_sequence(steelsight_state)
+	if not self:has_scope() then
+		return
+	end
+
+	local seq = steelsight_state and "state_ads_entered" or "state_ads_exited"
+	local delay = tweak_data.player.TRANSITION_DURATION
+
+	if steelsight_state then
+		delay = delay * 0.665
+	else
+		delay = delay * 0.33499999999999996
+	end
+
+	local tid = "NewRaycastWeaponBase.run_ads_sequence"
+
+	managers.queued_tasks:unqueue(tid)
+	managers.queued_tasks:queue(tid, self.play_weapon_sequence, self, seq, delay)
+end
+
+function NewRaycastWeaponBase:play_weapon_sequence(seq)
+	if self._unit:damage() then
+		self._unit:damage():has_then_run_sequence_simple(seq)
+	end
+
+	if self._assembly_complete then
+		for id, data in pairs(self._parts) do
+			if data.unit:damage() then
+				data.unit:damage():has_then_run_sequence_simple(seq)
+			end
 		end
 	end
 end
@@ -1531,12 +1513,18 @@ function NewRaycastWeaponBase:destroy(unit)
 	NewRaycastWeaponBase.super.destroy(self, unit)
 
 	if self._parts_texture_switches then
-		for part_id, texture_ids in pairs(self._parts_texture_switches) do
-			TextureCache:unretrieve(texture_ids)
+		Application:debug("[NewRaycastWeaponBase:destroy] Destroying", inspect(self._parts_texture_switches))
+
+		for part_id, texture_data in pairs(self._parts_texture_switches) do
+			for _, texture_id in pairs(texture_data) do
+				TextureCache:unretrieve(Idstring(texture_id))
+			end
 		end
 	end
 
 	if self._textures then
+		Application:debug("[NewRaycastWeaponBase:destroy] Destroying", inspect(self._textures))
+
 		for tex_id, texture_data in pairs(self._textures) do
 			if not texture_data.applied then
 				texture_data.applied = true

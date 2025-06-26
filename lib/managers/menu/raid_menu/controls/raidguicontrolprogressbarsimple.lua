@@ -42,9 +42,9 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 	local foreground_panel_params = {
-		y = 0,
-		x = 0,
 		name = "foreground_panel",
+		x = 0,
+		y = 0,
 		w = self._background:w(),
 		h = self._object:h(),
 		layer = self._object:layer() + 10

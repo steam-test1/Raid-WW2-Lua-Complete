@@ -86,8 +86,8 @@ function IngameWaitingForRespawnState:_setup_sound_listener()
 
 	self._listener_activation_id = managers.listener:activate_set("main", "spectator_camera")
 	self._sound_check_object = managers.sound_environment:add_check_object({
-		active = true,
 		primary = true,
+		active = true,
 		object = self._camera_object
 	})
 end
@@ -185,7 +185,7 @@ function IngameWaitingForRespawnState:update(t, dt)
 		managers.hud:hide_stats_screen()
 	end
 
-	local ai_trade_time = managers.trade:get_auto_assault_ai_trade_time()
+	local ai_trade_time = nil
 
 	if not ai_trade_time and self._ai_trade_respawn_gui_enabled then
 		managers.hud:set_custody_timer_visibility(false)
@@ -220,9 +220,6 @@ function IngameWaitingForRespawnState:update(t, dt)
 
 		if self._respawn_delay <= 0 then
 			self._respawn_delay = nil
-
-			managers.hud:set_custody_negotiating_visible(false)
-			managers.hud:set_custody_trade_delay_visible(false)
 		else
 			managers.hud:set_custody_trade_delay(self._respawn_delay)
 		end
@@ -407,14 +404,14 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.player:force_drop_carry()
 	managers.hud:hide_stats_screen()
 	managers.hud:set_player_health({
+		total = 100,
 		current = 0,
-		no_hint = true,
-		total = 100
+		no_hint = true
 	})
 	managers.hud:set_player_armor({
+		total = 100,
 		current = 0,
-		no_hint = true,
-		total = 100
+		no_hint = true
 	})
 	managers.hud:set_player_condition("mugshot_in_custody", managers.localization:text("debug_mugshot_in_custody"))
 	managers.overlay_effect:play_effect(tweak_data.overlay_effects.fade_in)
@@ -458,21 +455,12 @@ function IngameWaitingForRespawnState:at_enter()
 
 	if Network:is_server() then
 		local respawn_delay = managers.trade:respawn_delay_by_name(managers.criminals:local_character_name())
-		local hostages_killed = managers.trade:hostages_killed_by_name(managers.criminals:local_character_name())
 
-		self:trade_death(respawn_delay, hostages_killed)
-	end
-
-	if Global.game_settings.single_player and not managers.groupai:state():is_ai_trade_possible() then
-		managers.hud:set_custody_negotiating_visible(false)
-		managers.hud:set_custody_trade_delay_visible(false)
+		self:trade_death(respawn_delay)
 	end
 end
 
 function IngameWaitingForRespawnState:_hide_hud_panels()
-	managers.hud:set_custody_can_be_trade_visible(false)
-	managers.hud:set_custody_negotiating_visible(false)
-	managers.hud:set_custody_trade_delay_visible(false)
 	managers.hud:hide_prompt("hud_reload_prompt")
 	managers.hud:hide_prompt("hud_no_ammo_prompt")
 	managers.hud:remove_interact()
@@ -620,31 +608,11 @@ function IngameWaitingForRespawnState:currently_spectated_unit()
 	end
 end
 
-function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
-	managers.hud:set_custody_can_be_trade_visible(false)
-
+function IngameWaitingForRespawnState:trade_death(respawn_delay)
 	self._respawn_delay = managers.trade:respawn_delay_by_name(managers.criminals:local_character_name())
-	self._hostages_killed = hostages_killed
 
 	if self._respawn_delay > 0 then
-		managers.hud:set_custody_trade_delay_visible(true)
-		managers.hud:set_custody_civilians_killed(self._hostages_killed)
 		managers.hud:set_custody_trade_delay(self._respawn_delay)
-		managers.hud:set_custody_negotiating_visible(true)
-	end
-
-	local is_ai_trade_possible = managers.groupai:state():is_ai_trade_possible()
-
-	if (not Global.game_settings.single_player or is_ai_trade_possible) and managers.groupai:state():bain_state() then
-		if managers.groupai:state():get_assault_mode() and not is_ai_trade_possible then
-			-- Nothing
-		elseif is_ai_trade_possible then
-			-- Nothing
-		elseif hostages_killed == 0 then
-			-- Nothing
-		elseif hostages_killed < 3 then
-			-- Nothing
-		end
 	end
 end
 
@@ -653,8 +621,6 @@ function IngameWaitingForRespawnState:finish_trade()
 end
 
 function IngameWaitingForRespawnState:begin_trade()
-	managers.hud:set_custody_can_be_trade_visible(true)
-
 	local crims = {}
 
 	for k, d in pairs(managers.groupai:state():all_char_criminals()) do
@@ -672,5 +638,4 @@ function IngameWaitingForRespawnState:begin_trade()
 end
 
 function IngameWaitingForRespawnState:cancel_trade()
-	managers.hud:set_custody_can_be_trade_visible(false)
 end

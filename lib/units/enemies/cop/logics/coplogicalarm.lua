@@ -44,7 +44,11 @@ function CopLogicAlarm.enter(data, new_logic_name, enter_params)
 	})
 
 	my_data.next_action_delay_t = data.t + math.lerp(1, 3, math.random())
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+	end
 
 	if data.objective and (data.objective.nav_seg or data.objective.type == "follow") and not data.objective.in_place then
 		debug_pause_unit(data.unit, "[CopLogicAlarm.enter] wrong logic2", data.unit, "objective", inspect(data.objective))
@@ -312,7 +316,6 @@ function CopLogicAlarm._get_priority_attention(data, attention_objects, reaction
 
 	for u_key, attention_data in pairs(attention_objects) do
 		local att_unit = attention_data.unit
-		local crim_record = attention_data.criminal_record
 
 		if not attention_data.identified then
 			-- Nothing
@@ -345,6 +348,7 @@ function CopLogicAlarm._get_priority_attention(data, attention_objects, reaction
 					best_target_priority_slot = 7
 					best_target_priority = distance
 				else
+					local crim_record = attention_data.criminal_record
 					local alert_dt = attention_data.alert_t and data.t - attention_data.alert_t or 10000
 					local dmg_dt = attention_data.dmg_t and data.t - attention_data.dmg_t or 10000
 					local status = crim_record and crim_record.status
@@ -550,8 +554,6 @@ function CopLogicAlarm._mark_call_in_event(data, my_data, attention_obj)
 			my_data.call_in_event = managers.enemy:get_corpse_unit_data_from_key(attention_obj.unit:key()).is_civilian and "dead_civ" or "dead_cop"
 		elseif attention_obj.unit:in_slot(managers.slot:get_mask("enemies")) then
 			my_data.call_in_event = "w_hot"
-		elseif unit_brain and unit_brain.is_hostage and unit_brain:is_hostage() then
-			my_data.call_in_event = managers.enemy:is_civilian(attention_obj.unit) and "hostage_civ" or "hostage_cop"
 		elseif unit_base and unit_base.is_drill then
 			my_data.call_in_event = "drill"
 		elseif unit_base and unit_base.sentry_gun then
@@ -581,27 +583,4 @@ end
 
 function CopLogicAlarm.on_police_call_success(data)
 	data.internal_data.called_the_police = true
-end
-
-function CopLogicAlarm._say_call_the_police(data, my_data)
-	local blame_list = {
-		civilian = "saw_civilian",
-		body_bag = "saw_bag",
-		dead_civ = "saw_body",
-		criminal = "spotted_player",
-		sentry_gun = "saw_sentry_gun",
-		drill = "saw_drill",
-		hostage_cop = "saw_hostage_cop",
-		hostage_civ = "saw_hostage_civ",
-		w_hot = "spotted_player",
-		trip_mine = "saw_trip_mine",
-		dead_cop = "saw_body"
-	}
-	local event = blame_list[my_data.call_in_event] or "spotted_player"
-
-	if event == "spotted_player" then
-		managers.groupai:state():chk_say_enemy_chatter(data.unit, data.unit:position(), "spotted_player")
-	else
-		data.unit:sound():say(event, true)
-	end
 end

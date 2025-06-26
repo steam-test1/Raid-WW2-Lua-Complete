@@ -814,7 +814,9 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 
 	if layer == "ai" or layer == "all" then
 		if self._definition.ai_nav_graphs and not nav_graph_loaded then
-			self:_load_ai_nav_graphs(self._definition.ai_nav_graphs, offset)
+			local path = self:world_dir() .. self._definition.ai_nav_graphs.file
+
+			self:_load_ai_nav_graphs(path, offset)
 			Application:cleanup_thread_garbage()
 		end
 
@@ -990,19 +992,25 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 end
 
 function WorldDefinition:destroy()
-	self.destroyed = true
+	for _, unit in ipairs(self._spawned_units) do
+		if alive(unit) then
+			unit:set_slot(0)
+		end
+	end
 
 	managers.sound_environment:destroy_world_sounds(self._world_id)
 	managers.environment_area:remove_all_areas_for_world(self._world_id)
 	managers.worldcamera:destroy_world_cameras(self._world_id)
 	managers.environment_effects:kill_world_mission_effects(self._world_id)
+
+	self.destroyed = true
 end
 
 function WorldDefinition:_load_level_settings(data, offset)
 end
 
-function WorldDefinition:_load_ai_nav_graphs(data, offset)
-	local path = self:world_dir() .. data.file
+function WorldDefinition:_load_ai_nav_graphs(path, offset)
+	Application:debug("[WorldDefinition] _load_ai_nav_graphs: Loading nav data file '" .. path .. ".nav_data'. ")
 
 	if not DB:has("nav_data", path) then
 		Application:error("The specified nav data file '" .. path .. ".nav_data' was not found for this level! ", path, "Navigation graph will not be loaded!")
@@ -1012,11 +1020,11 @@ function WorldDefinition:_load_ai_nav_graphs(data, offset)
 
 	self:_measure_lap_time("_load_ai_nav_graphs")
 
-	local values = self:_serialize_to_script("nav_data", path)
+	local nav_data = self:_serialize_to_script("nav_data", path)
 
 	self:_measure_lap_time("_load_ai_nav_graphs PARSE")
 	Application:check_termination()
-	managers.navigation:set_load_data(values, self._world_id, self._translation and self._translation.position, self._translation and mrotation.yaw(self._translation.rotation))
+	managers.navigation:set_load_data(nav_data, self._world_id, self._translation and self._translation.position, self._translation and mrotation.yaw(self._translation.rotation), nil)
 	managers.navigation:register_cover_units(self._world_id)
 	self:_measure_lap_time("_load_ai_nav_graphs LOAD")
 end
@@ -1540,7 +1548,6 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 
 	self:_setup_lights(unit, data)
 	self:_setup_variations(unit, data)
-	self:_setup_editable_gui(unit, data)
 	self:add_trigger_sequence(unit, data.triggers)
 	self:_set_only_visible_in_editor(unit, data, world_in_world)
 	self:_setup_cutscene_actor(unit, data)
@@ -1549,13 +1556,17 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 	self:_setup_disable_on_ai_graph(unit, data)
 	self:_add_to_portal(unit, data)
 	self:_setup_projection_light(unit, data)
-	self:_setup_ladder(unit, data)
-	self:_setup_zipline(unit, data)
 	self:_project_assign_unit_data(unit, data)
 
-	for _, ext in pairs(unit:extensions_infos()) do
-		if ext.on_load_complete then
-			ext:on_load_complete()
+	for _, extension in pairs(unit:extensions_infos()) do
+		if extension.setup_load then
+			extension:setup_load(data)
+		end
+	end
+
+	for _, extension in pairs(unit:extensions_infos()) do
+		if extension.on_load_complete then
+			extension:on_load_complete()
 		end
 	end
 end
@@ -1657,68 +1668,6 @@ function WorldDefinition:_setup_variations(unit, data)
 		unit:set_material_config(Idstring(unit:unit_data().material), true, function ()
 		end)
 	end
-end
-
-function WorldDefinition:_setup_editable_gui(unit, data)
-	if not data.editable_gui then
-		return
-	end
-
-	if not unit:editable_gui() then
-		Application:error("Unit has editable gui data saved but no editable gui extesnion. No text will be loaded. (probably cause the unit should no longer have editable text)")
-
-		return
-	end
-
-	unit:editable_gui():set_text(data.editable_gui.text)
-	unit:editable_gui():set_font_color(data.editable_gui.font_color)
-	unit:editable_gui():set_font_size(data.editable_gui.font_size)
-	unit:editable_gui():set_font(data.editable_gui.font)
-	unit:editable_gui():set_align(data.editable_gui.align)
-	unit:editable_gui():set_vertical(data.editable_gui.vertical)
-	unit:editable_gui():set_blend_mode(data.editable_gui.blend_mode)
-	unit:editable_gui():set_render_template(data.editable_gui.render_template)
-	unit:editable_gui():set_wrap(data.editable_gui.wrap)
-	unit:editable_gui():set_word_wrap(data.editable_gui.word_wrap)
-	unit:editable_gui():set_alpha(data.editable_gui.alpha)
-	unit:editable_gui():set_shape(data.editable_gui.shape)
-
-	if not Application:editor() then
-		unit:editable_gui():lock_gui()
-	end
-end
-
-function WorldDefinition:_setup_ladder(unit, data)
-	if not data.ladder then
-		return
-	end
-
-	if not unit:ladder() then
-		Application:error("Unit has ladder data saved but no ladder extension. No ladder data will be loaded.")
-
-		return
-	end
-
-	unit:ladder():set_width(data.ladder.width)
-	unit:ladder():set_height(data.ladder.height)
-end
-
-function WorldDefinition:_setup_zipline(unit, data)
-	if not data.zipline then
-		return
-	end
-
-	if not unit:zipline() then
-		Application:error("Unit has zipline data saved but no zipline extension. No zipline data will be loaded.")
-
-		return
-	end
-
-	unit:zipline():set_end_pos(data.zipline.end_pos)
-	unit:zipline():set_speed(data.zipline.speed)
-	unit:zipline():set_slack(data.zipline.slack)
-	unit:zipline():set_usage_type(data.zipline.usage_type)
-	unit:zipline():set_ai_ignores_bag(data.zipline.ai_ignores_bag)
 end
 
 function WorldDefinition:external_set_only_visible_in_editor(unit)
@@ -1950,7 +1899,7 @@ function WorldDefinition:register_spawned_unit(unit)
 	table.insert(self._spawned_units, unit)
 end
 
-function WorldDefinition:cleanup_spawned_units(unit)
+function WorldDefinition:cleanup_spawned_units()
 	local new_spawned_units = {}
 
 	for _, unit in ipairs(self._spawned_units) do

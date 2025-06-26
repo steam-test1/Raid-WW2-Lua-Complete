@@ -31,9 +31,9 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	}
 	self._sideline = self._object:rect(sideline_params)
 	self._description = self._object:text({
-		y = 0,
 		vertical = "center",
 		align = "left",
+		y = 0,
 		x = RaidGUIControlButtonToggle.SIDELINE_W + RaidGUIControlButtonToggle.TEXT_PADDING,
 		w = self._object:w() - RaidGUIControlButtonToggle.SIDELINE_W - RaidGUIControlButtonToggle.TEXT_PADDING * 2,
 		h = self._object:h(),
@@ -51,10 +51,10 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	}
 	self._checkbox_panel = self._object:panel(checkbox_panel_params)
 	local checkbox_border_params = {
-		y = 0,
-		x = 0,
 		valign = "scale",
 		halign = "scale",
+		y = 0,
+		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture_rect,
 		w = RaidGUIControlButtonToggle.W,
@@ -78,7 +78,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self._value = self._params.value or false
 	self._play_mouse_over_sound = true
 	self._on_click_callback = params.on_click_callback
-	self._visible = self._params.visible
+	self._visible = self._params.visible or true
 
 	self:_render_images()
 end
@@ -164,15 +164,11 @@ function RaidGUIControlButtonToggle:set_value_and_render(value)
 end
 
 function RaidGUIControlButtonToggle:_render_images()
-	if self._visible == false then
-		self:hide()
-
+	if not self._visible then
 		return
-	elseif self._value then
-		self._check:set_visible(true)
-	else
-		self._check:set_visible(false)
 	end
+
+	self._check:set_visible(self._value)
 end
 
 function RaidGUIControlButtonToggle:show()
@@ -183,34 +179,27 @@ function RaidGUIControlButtonToggle:hide()
 	self._object:hide()
 end
 
-function RaidGUIControlButtonToggle:set_visible(flag)
-	self._visible = flag
+function RaidGUIControlButtonToggle:set_visible(visible)
+	self._visible = visible
 
+	self._object:set_visible(visible)
 	self:_render_images()
 end
 
 function RaidGUIControlButtonToggle:confirm_pressed()
-	if not self._enabled then
-		return
+	if not self._enabled or not self._selected then
+		return false
 	end
 
-	if self._selected then
-		if self._value then
-			self._value = false
-		else
-			self._value = true
-		end
+	self._value = not self._value
 
-		self:_render_images()
+	self:_render_images()
 
-		if self._on_click_callback then
-			self:_on_click_callback(self, self._value)
-		end
-
-		return true
+	if self._on_click_callback then
+		self:_on_click_callback(self, self._value)
 	end
 
-	return false
+	return true
 end
 
 function RaidGUIControlButtonToggle:set_enabled(enabled)

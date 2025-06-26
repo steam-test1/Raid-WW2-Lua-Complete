@@ -26,9 +26,9 @@ end
 function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 	self._class_icon = self._object:bitmap({
+		x = 0,
 		y = 0,
 		name = "class_icon",
-		x = 0,
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect,
 		layer = self._selector:layer() + 1
@@ -37,10 +37,10 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._class_icon:hide()
 
 	self._player_name = self._object:label({
-		y = 0,
 		name = "player_name",
-		text = "PLAYER NAME 1",
+		y = 0,
 		x = 80,
+		text = "PLAYER NAME 1",
 		vertical = "center",
 		align = "left",
 		h = 64,
@@ -54,10 +54,10 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_name:hide()
 
 	self._player_class_nation = self._object:label({
-		y = 32,
 		name = "player_class_nation",
-		text = "INFILTRATOR  |  GERMAN",
+		y = 32,
 		x = 80,
+		text = "INFILTRATOR  |  GERMAN",
 		vertical = "center",
 		align = "left",
 		h = 64,
@@ -71,9 +71,9 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._player_class_nation:hide()
 
 	self._host_icon = self._object:bitmap({
+		x = 416,
 		y = 16,
 		name = "host_icon",
-		x = 416,
 		texture = tweak_data.gui.icons.player_panel_host_indicator.texture,
 		texture_rect = tweak_data.gui.icons.player_panel_host_indicator.texture_rect,
 		layer = self._selector:layer() + 1
@@ -82,10 +82,10 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	self._host_icon:hide()
 
 	self._player_level = self._object:label({
-		y = 0,
 		name = "player_level",
-		text = "17",
+		y = 0,
 		x = 450,
+		text = "17",
 		vertical = "center",
 		align = "right",
 		h = 64,
@@ -122,7 +122,12 @@ function RaidGUIControlServerPlayerDescription:set_data(data)
 		self._class_icon:set_center_x(32)
 		self._class_icon:set_center_y(48)
 		self._class_icon:show()
-		self._player_name:set_text(utf8.to_upper(name))
+
+		if managers.user:get_setting("capitalize_names") then
+			name = utf8.to_upper(name)
+		end
+
+		self._player_name:set_text(name)
 		self._player_name:show()
 
 		if class and tweak_data.skilltree.classes[class] and nationality then

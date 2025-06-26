@@ -1,5 +1,5 @@
 PlayerCamera = PlayerCamera or class()
-PlayerCamera.IDS_NOTHING = Idstring("")
+PlayerCamera.IDS_NOTHING = IDS_EMPTY
 
 function PlayerCamera:init(unit)
 	self._unit = unit
@@ -11,6 +11,9 @@ function PlayerCamera:init(unit)
 	self._camera_object:set_near_range(managers.viewport.CAMERA_NEAR_RANGE)
 	self._camera_object:set_far_range(managers.viewport.CAMERA_FAR_RANGE)
 	self._camera_object:set_fov(75)
+
+	self._network_tweak = tweak_data.network.camera
+
 	self:spawn_camera_unit()
 	self:_setup_sound_listener()
 
@@ -20,17 +23,16 @@ function PlayerCamera:init(unit)
 	}
 	self._last_sync_t = 0
 
-	self:setup_viewport(managers.player:viewport_config())
+	self:setup_viewport()
 end
 
-function PlayerCamera:setup_viewport(data)
+function PlayerCamera:setup_viewport()
 	if self._vp then
 		self._vp:destroy()
 	end
 
-	local dimensions = data.dimensions
 	local name = "player" .. tostring(self._id)
-	local vp = managers.viewport:new_vp(dimensions.x, dimensions.y, dimensions.w, dimensions.h, name)
+	local vp = managers.viewport:new_vp(0, 0, 1, 1, name)
 	self._director = vp:director()
 	self._shaker = self._director:shaker()
 
@@ -66,20 +68,21 @@ function PlayerCamera:_set_dimensions()
 end
 
 function PlayerCamera:spawn_camera_unit()
-	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	self._camera_unit = World:spawn_unit(Idstring("units/vanilla/characters/players/players_default_fps/players_default_fps"), self._m_cam_pos, self._m_cam_rot)
 	self._machine = self._camera_unit:anim_state_machine()
 
 	self._unit:link(self._camera_unit)
-	self._camera_unit:base():set_parent_unit(self._unit)
-	self._camera_unit:base():reset_properties()
-	self._camera_unit:base():set_stance_instant("standard")
-	managers.controller:add_hotswap_callback("player_camera", callback(self, self, "controller_hotswap_triggered"))
+
+	self._camera_unit_base = self._camera_unit:base()
+
+	self._camera_unit_base:set_parent_unit(self._unit)
+	self._camera_unit_base:reset_properties()
+	self._camera_unit_base:set_stance_instant("standard")
+	managers.controller:add_hotswap_callback("player_camera", callback(self, self, "controller_hotswap_triggered"), 2)
 end
 
 function PlayerCamera:controller_hotswap_triggered()
-	self._unit:base():_setup_controller()
-	self._camera_unit:base():set_parent_unit(self._unit)
+	self._camera_unit_base:set_parent_unit(self._unit)
 end
 
 function PlayerCamera:camera_unit()
@@ -91,31 +94,31 @@ function PlayerCamera:anim_state_machine()
 end
 
 function PlayerCamera:play_redirect(redirect_name, speed, offset_time)
-	local result = self._camera_unit:base():play_redirect(redirect_name, speed, offset_time)
+	local result = self._camera_unit_base:play_redirect(redirect_name, speed, offset_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
 function PlayerCamera:play_use_redirect(redirect_name, speed, offset_time)
-	local result = self._camera_unit:base():play_use_redirect(redirect_name, speed, offset_time)
+	local result = self._camera_unit_base:play_use_redirect(redirect_name, speed, offset_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
 function PlayerCamera:play_redirect_timeblend(state, redirect_name, offset_time, t)
-	local result = self._camera_unit:base():play_redirect_timeblend(state, redirect_name, offset_time, t)
+	local result = self._camera_unit_base:play_redirect_timeblend(state, redirect_name, offset_time, t)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
 function PlayerCamera:play_state(state_name, at_time)
-	local result = self._camera_unit:base():play_state(state_name, at_time)
+	local result = self._camera_unit_base:play_state(state_name, at_time)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
 
 function PlayerCamera:play_raw(name, params)
-	local result = self._camera_unit:base():play_raw(name, params)
+	local result = self._camera_unit_base:play_raw(name, params)
 
 	return result ~= PlayerCamera.IDS_NOTHING and result
 end
@@ -227,32 +230,25 @@ function PlayerCamera:set_rotation(rot)
 
 	local t = TimerManager:game():time()
 	local sync_dt = t - self._last_sync_t
-	local sync_yaw = rot:yaw()
-	sync_yaw = sync_yaw % 360
 
-	if sync_yaw < 0 then
-		sync_yaw = 360 - sync_yaw
+	if sync_dt < self._network_tweak.wait_delta_t then
+		return
 	end
 
-	sync_yaw = math.floor(255 * sync_yaw / 360)
+	local sync_yaw = (360 + rot:yaw()) % 360
+	sync_yaw = sync_yaw * 0.70833333333
 	local sync_pitch = math.clamp(rot:pitch(), -85, 85) + 85
 	sync_pitch = math.floor(127 * sync_pitch / 170)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
+	local update_network = self._network_tweak.sync_delta_t < sync_dt and angle_delta > 0
+	update_network = update_network or self._network_tweak.angle_delta < angle_delta
 
-	if tweak_data.network then
-		if sync_dt < tweak_data.network.camera.network_wait_delta_t then
-			return
-		end
+	if update_network then
+		self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
 
-		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
-
-		if update_network then
-			self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
-
-			self._sync_dir.yaw = sync_yaw
-			self._sync_dir.pitch = sync_pitch
-			self._last_sync_t = t
-		end
+		self._sync_dir.yaw = sync_yaw
+		self._sync_dir.pitch = sync_pitch
+		self._last_sync_t = t
 	end
 end
 

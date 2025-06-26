@@ -3,6 +3,7 @@ core:import("CoreEngineAccess")
 core:import("CoreEditorSave")
 core:import("CoreEditorUtils")
 core:import("CoreEditorWidgets")
+core:import("CoreUndoableCommand")
 core:import("CoreEvent")
 core:import("CoreClass")
 core:import("CoreCode")
@@ -56,6 +57,10 @@ end
 
 function Layer:created_units_pairs()
 	return self._created_units_pairs
+end
+
+function Layer:unit_by_id(unit_id)
+	return self._created_units_pairs[unit_id]
 end
 
 function Layer:selected_units()
@@ -248,23 +253,43 @@ function Layer:_update_widget_affect_object(t, dt)
 				if self._move_widget:enabled() then
 					local result_pos = self._move_widget:calculate(self:widget_affect_object(), widget_rot, widget_pos, widget_screen_pos)
 
-					self:use_widget_position(result_pos)
+					if self._previous_pos ~= result_pos then
+						self:use_widget_position(result_pos)
+
+						self._previous_pos = result_pos
+					end
 				end
 
 				if self._rotate_widget:enabled() then
 					local result_rot = self._rotate_widget:calculate(self:widget_affect_object(), widget_rot, widget_pos, widget_screen_pos)
 
-					self:use_widget_rotation(result_rot)
+					if self._previous_rot ~= result_rot then
+						self:use_widget_rotation(result_rot)
+
+						self._previous_rot = result_rot
+					end
 				end
 			end
 
 			if self._move_widget:enabled() then
+				if not self._using_widget and self._previous_pos then
+					self:use_widget_position(self._previous_pos)
+
+					self._previous_pos = nil
+				end
+
 				self._move_widget:set_position(widget_pos)
 				self._move_widget:set_rotation(widget_rot)
 				self._move_widget:update(t, dt)
 			end
 
 			if self._rotate_widget:enabled() then
+				if not self._using_widget and self._previous_rot then
+					self:use_widget_rotation(self._previous_rot)
+
+					self._previous_rot = nil
+				end
+
 				self._rotate_widget:set_position(widget_pos)
 				self._rotate_widget:set_rotation(widget_rot)
 				self._rotate_widget:update(t, dt)
@@ -381,27 +406,7 @@ function Layer:authorised_unit_type(unit)
 end
 
 function Layer:draw_grid(t, dt)
-	if not managers.editor:layer_draw_grid() then
-		return
-	end
-
-	local rot = Rotation(0, 0, 0)
-
-	if alive(self._selected_unit) and self:local_rot() then
-		rot = self._selected_unit:rotation()
-	end
-
-	for i = -5, 5 do
-		local from_x = self._current_pos + rot:x() * i * self:grid_size() - rot:y() * 6 * self:grid_size()
-		local to_x = self._current_pos + rot:x() * i * self:grid_size() + rot:y() * 6 * self:grid_size()
-
-		Application:draw_line(from_x, to_x, 0, 0.5, 0)
-
-		local from_y = self._current_pos + rot:y() * i * self:grid_size() - rot:x() * 6 * self:grid_size()
-		local to_y = self._current_pos + rot:y() * i * self:grid_size() + rot:x() * 6 * self:grid_size()
-
-		Application:draw_line(from_y, to_y, 0, 0.5, 0)
-	end
+	managers.editor:draw_grid(self._selected_unit)
 end
 
 function Layer:update_always(t, dt)
@@ -734,6 +739,7 @@ function Layer:update_unit_settings()
 	end
 
 	self:set_reference_unit(self._selected_unit)
+	managers.editor:refresh_list_flow()
 end
 
 function Layer:activate()
@@ -760,13 +766,20 @@ function Layer:build_panel()
 end
 
 function Layer:widget_rot()
-	local widget_rot = Rotation()
+	local rot = Rotation()
+	local coor_sys = managers.editor:coordinate_system()
 
-	if self:local_rot() then
-		widget_rot = self:widget_affect_object():rotation()
+	if coor_sys == "Local" then
+		rot = self:widget_affect_object():rotation()
+	elseif coor_sys == "Anchor" then
+		rot = Rotation()
+	elseif coor_sys == "Camera" then
+		rot = managers.editor:camera():rotation()
+	else
+		rot = Rotation()
 	end
 
-	return widget_rot
+	return rot
 end
 
 function Layer:click_widget()
@@ -860,19 +873,7 @@ function Layer:prepare_replace(names, rules)
 				local continent = unit:unit_data().continent
 
 				if not rules.only_current_continent or not continent or managers.editor:current_continent() == continent then
-					local unit_params = {
-						name = unit:name(),
-						continent = continent,
-						position = unit:position(),
-						rotation = unit:rotation(),
-						groups = unit:unit_data().editor_groups
-					}
-
-					if unit == self._selected_unit then
-						unit_params.reference_unit = true
-					elseif table.contains(self._selected_units, unit) then
-						unit_params.selected = true
-					end
+					local unit_params = self:prepare_replace_params(unit)
 
 					table.insert(data, unit_params)
 					table.insert(units, unit)
@@ -888,35 +889,78 @@ function Layer:prepare_replace(names, rules)
 	return data
 end
 
+function Layer:prepare_replace_params(unit)
+	if not alive(unit) then
+		return
+	end
+
+	local unit_data = unit:unit_data()
+	local params = {
+		name = unit:name(),
+		position = unit:position(),
+		rotation = unit:rotation(),
+		unit_id = unit_data.unit_id,
+		name_id = unit_data.name_id,
+		unit_data = {}
+	}
+	local ignored_keys = {
+		name_id = true,
+		package = true,
+		local_pos = true,
+		continent = true,
+		editor_groups = true,
+		local_rot = true,
+		unit_id = true
+	}
+
+	for k, v in pairs(unit_data) do
+		if not ignored_keys[k] then
+			params.unit_data[k] = v
+		end
+	end
+
+	if unit_data.continent then
+		params.continent = unit_data.continent:name()
+	end
+
+	if unit_data.editor_groups then
+		params.groups = {}
+
+		for _, group in ipairs(unit_data.editor_groups) do
+			local group_name = group:name()
+
+			table.insert(params.groups, group_name)
+		end
+	end
+
+	if unit == self._selected_unit then
+		params.reference_unit = true
+	elseif table.contains(self._selected_units, unit) then
+		params.selected = true
+	end
+
+	return params
+end
+
 function Layer:recreate_units(name, data)
+	local created_units = {}
 	local units_to_select = {}
 	local reference_unit = nil
 	self._continent_locked_picked = true
 
 	for _, params in ipairs(data) do
-		local unit_name = (name or params.name):id()
-		local continent = params.continent
-		local pos = params.position
-		local rot = params.rotation
-		local new_unit = self:do_spawn_unit(unit_name, pos, rot)
-
-		if continent and new_unit:unit_data().continent ~= continent then
-			managers.editor:change_continent_for_unit(new_unit, continent)
-		end
-
-		if params.groups then
-			for _, group in ipairs(params.groups) do
-				group:add_unit(new_unit)
-			end
-		end
+		local new_unit = self:_recreate_unit(name, params)
 
 		if params.reference_unit then
 			reference_unit = new_unit
 		elseif params.selected then
 			table.insert(units_to_select, new_unit)
 		end
+
+		table.insert(created_units, new_unit)
 	end
 
+	self._selecting_many_units = true
 	self._continent_locked_picked = false
 
 	self:set_select_unit(nil)
@@ -930,6 +974,51 @@ function Layer:recreate_units(name, data)
 	end
 
 	self._replacing_units = false
+	self._selecting_many_units = false
+
+	return created_units
+end
+
+function Layer:_recreate_unit(name, params)
+	local unit_data = params.unit_data
+	local new_unit = self:do_spawn_unit((name or params.name):id(), params.position, params.rotation, params.continent, params.unit_id, true)
+	local new_unit_data = new_unit:unit_data()
+
+	for k, v in pairs(unit_data) do
+		new_unit_data[k] = v
+	end
+
+	if new_unit_data.name_id ~= params.name_id then
+		self:set_name_id(new_unit, params.name_id)
+	end
+
+	if params.continent then
+		local continent = continent_name and managers.editor:continent(params.continent) or managers.editor:current_continent()
+
+		if not new_unit_data.continent or new_unit_data.continent:name() ~= params.continent then
+			managers.editor:change_continent_for_unit(new_unit, continent)
+		end
+	end
+
+	if params.groups then
+		for _, group_name in ipairs(params.groups) do
+			local group = managers.editor:groups():group(group_name)
+
+			if group then
+				group:add_unit(new_unit)
+			else
+				local units = {
+					new_unit
+				}
+
+				managers.editor:create_group(group_name, new_unit, units)
+			end
+		end
+	end
+
+	self:clone_edited_values(new_unit, new_unit)
+
+	return new_unit
 end
 
 function Layer:replace_unit(name, all)
@@ -1087,12 +1176,12 @@ function Layer:select_release()
 
 		self._selecting_many_units = false
 
-		self:check_referens_exists()
+		self:check_reference_exists()
 		managers.editor:selected_units(self._selected_units)
 		self:update_unit_settings()
-	end
 
-	self._drag_units = nil
+		self._drag_units = nil
+	end
 end
 
 function Layer:add_highlighted_unit(unit, config)
@@ -1135,9 +1224,10 @@ function Layer:set_selected_units(units)
 	Profiler:stop(id)
 	Profiler:counter_time("call_set_select_unit")
 	managers.editor:selected_units(self._selected_units)
-	self:update_unit_settings()
 
 	self._selecting_many_units = false
+
+	self:update_unit_settings()
 end
 
 function Layer:select_group(group)
@@ -1233,16 +1323,22 @@ function Layer:set_select_unit(unit)
 		return
 	end
 
+	local command = nil
+
+	if not self._selecting_many_units then
+		command = CoreUndoableCommand.SelectUnit:new(self)
+	end
+
 	if self:alt() then
 		self:remove_select_unit(unit)
-	elseif self:shift() then
-		if table.contains(self._selected_units, unit) then
-			self:set_reference_unit(unit)
-			self:recalc_all_locals()
-		else
+	elseif self:shift() and not self._selecting_many_units then
+		if not table.contains(self._selected_units, unit) then
 			self:set_reference_unit(self._selected_unit or unit)
 			self:add_select_unit(unit)
 		end
+
+		self:set_reference_unit(unit)
+		self:recalc_all_locals()
 	elseif (self:ctrl() or self._selecting_many_units or self._replacing_units) and #self._selected_units > 0 then
 		self:add_select_unit(unit)
 	else
@@ -1253,13 +1349,15 @@ function Layer:set_select_unit(unit)
 	end
 
 	if not self._selecting_many_units then
-		self:check_referens_exists()
+		self:check_reference_exists()
 	end
 
 	if not self._selecting_many_units then
 		managers.editor:on_selected_unit(unit)
 		managers.editor:selected_units(self._selected_units)
 		self:update_unit_settings()
+		command:execute()
+		managers.editor:add_undoable_command(command)
 	end
 end
 
@@ -1286,7 +1384,7 @@ function Layer:remove_select_unit(unit)
 	end
 end
 
-function Layer:check_referens_exists()
+function Layer:check_reference_exists()
 	if #self._selected_units > 0 then
 		if not table.contains(self._selected_units, self._selected_unit) then
 			self:set_reference_unit(self._selected_units[1])
@@ -1339,19 +1437,20 @@ function Layer:selected_unit()
 	return self._selected_unit
 end
 
-function Layer:create_unit(name, pos, rot, to_continent_name)
+function Layer:create_unit(name, pos, rot, continent_name, unit_id)
 	local unit = CoreUnit.safe_spawn_unit(name, pos, rot)
 
 	if self:uses_continents() then
-		local continent = to_continent_name and managers.editor:continent(to_continent_name) or managers.editor:current_continent()
+		local continent = continent_name and managers.editor:continent(continent_name) or managers.editor:current_continent()
 
 		if continent then
 			continent:add_unit(unit)
 		end
 	end
 
+	self._owner:get_unit_id(unit, unit_id)
+
 	unit:unit_data().world_pos = pos
-	unit:unit_data().unit_id = self._owner:get_unit_id(unit)
 	unit:unit_data().name_id = self:get_name_id(unit)
 
 	managers.editor:spawned_unit(unit)
@@ -1360,28 +1459,29 @@ function Layer:create_unit(name, pos, rot, to_continent_name)
 	return unit
 end
 
-function Layer:do_spawn_unit(name, pos, rot, to_continent_name)
-	local continent = to_continent_name and managers.editor:continent(to_continent_name) or managers.editor:current_continent()
+function Layer:do_spawn_unit(name, pos, rot, continent_name, unit_id, not_undoable)
+	if name:s() == "" then
+		return
+	end
+
+	local continent = continent_name and managers.editor:continent(continent_name) or managers.editor:current_continent()
 
 	if continent:value("locked") and not self._continent_locked_picked then
-		managers.editor:output_warning("Can't create units in continent " .. managers.editor:current_continent():name() .. " because it is locked!")
+		managers.editor:output_warning("Can't create units in continent " .. continent:name() .. " because it is locked!")
 
 		return
 	end
 
-	if name:s() ~= "" then
-		pos = pos or self._current_pos
-		rot = rot or Rotation(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
-		local unit = self:create_unit(name, pos, rot, to_continent_name)
+	pos = pos or self._current_pos
+	rot = rot or Rotation(math.X, math.Y, math.UP)
+	local command = CoreUndoableCommand.SpawnUnit:new(self)
+	local unit = command:execute(name, pos, rot, continent_name, unit_id)
 
-		table.insert(self._created_units, unit)
-
-		self._created_units_pairs[unit:unit_data().unit_id] = unit
-
-		self:set_select_unit(unit)
-
-		return unit
+	if not not_undoable then
+		managers.editor:add_undoable_command(command)
 	end
+
+	return unit
 end
 
 function Layer:remove_unit(unit)
@@ -1399,20 +1499,23 @@ function Layer:remove_unit(unit)
 	World:delete_unit(unit)
 end
 
-function Layer:delete_unit(unit)
-	if self._selected_unit == unit then
-		self:set_reference_unit(nil)
-		self:update_unit_settings()
+function Layer:delete_unit(unit, not_undoable)
+	local command = CoreUndoableCommand.DeleteUnit:new(self)
+
+	command:execute(unit)
+
+	if not not_undoable then
+		managers.editor:add_undoable_command(command)
 	end
-
-	table.delete(self._created_units, unit)
-
-	self._created_units_pairs[unit:unit_data().unit_id] = nil
-
-	self:remove_unit(unit)
 end
 
 function Layer:_on_unit_created(unit)
+end
+
+function Layer:on_unit_deleted(unit)
+	if unit:unit_data().continent then
+		unit:unit_data().continent:remove_unit(unit)
+	end
 end
 
 function Layer:show_replace_units()
@@ -1429,9 +1532,11 @@ function Layer:get_created_unit_by_pattern(patterns)
 	local units = {}
 
 	for _, unit in ipairs(self._created_units) do
-		for _, pattern in ipairs(patterns) do
-			if string.find(unit:name():s(), pattern, 1, true) then
-				table.insert(units, unit)
+		if alive(unit) then
+			for _, pattern in ipairs(patterns) do
+				if string.find(unit:name():s(), pattern, 1, true) then
+					table.insert(units, unit)
+				end
 			end
 		end
 	end
@@ -1459,10 +1564,6 @@ end
 
 function Layer:get_help(text)
 	return text .. "No help Available"
-end
-
-function Layer:undo()
-	cat_debug("editor", "No undo implemented in current layer")
 end
 
 function Layer:clone()
@@ -1499,10 +1600,12 @@ function Layer:on_clone_edited_values()
 end
 
 function Layer:clone_edited_values(unit, source)
-	if unit:name() ~= source:name() then
+	if not alive(unit) or not alive(source) or unit:name() ~= source:name() then
 		return
 	end
 
+	local unit_data = unit:unit_data()
+	local source_data = source:unit_data()
 	local lights = CoreEditorUtils.get_editable_lights(source) or {}
 
 	for _, light in ipairs(lights) do
@@ -1519,7 +1622,7 @@ function Layer:clone_edited_values(unit, source)
 		new_light:set_spot_angle_end(light:spot_angle_end())
 		new_light:set_clipping_values(light:clipping_values())
 
-		local projection_texture = source:unit_data().projection_textures and source:unit_data().projection_textures[light:name():s()]
+		local projection_texture = source_data.projection_textures and source_data.projection_textures[light:name():s()]
 
 		if projection_texture then
 			local is_projection = CoreEditorUtils.is_projection_light(source, light, "projection")
@@ -1528,42 +1631,36 @@ function Layer:clone_edited_values(unit, source)
 			if is_projection and is_spot then
 				new_light:set_projection_texture(Idstring(projection_texture), false, false)
 
-				unit:unit_data().projection_textures = unit:unit_data().projection_textures or {}
-				unit:unit_data().projection_textures[light:name():s()] = projection_texture
+				unit_data.projection_textures = unit_data.projection_textures or {}
+				unit_data.projection_textures[light:name():s()] = projection_texture
 			end
 		end
 	end
 
-	unit:unit_data().mesh_variation = source:unit_data().mesh_variation
+	unit_data.mesh_variation = source_data.mesh_variation
 
-	if unit:unit_data().mesh_variation and unit:unit_data().mesh_variation ~= "default" then
-		managers.sequence:run_sequence_simple2(unit:unit_data().mesh_variation, "change_state", unit)
+	if unit_data.mesh_variation and unit_data.mesh_variation ~= "default" then
+		managers.sequence:run_sequence_simple2(unit_data.mesh_variation, "change_state", unit)
 	end
 
-	unit:unit_data().material = source:unit_data().material
+	unit_data.material = source_data.material
 
-	if unit:unit_data().material and unit:unit_data().material ~= "default" then
-		unit:set_material_config(unit:unit_data().material, true)
+	if unit_data.material and unit_data.material ~= "default" then
+		unit:set_material_config(unit_data.material, true)
 	end
 
-	if unit:editable_gui() then
-		unit:editable_gui():set_text(source:editable_gui():text())
-		unit:editable_gui():set_font_size(source:editable_gui():font_size())
-		unit:editable_gui():set_font_color(source:editable_gui():font_color())
-		unit:editable_gui():set_font(source:editable_gui():font())
-		unit:editable_gui():set_align(source:editable_gui():align())
-		unit:editable_gui():set_vertical(source:editable_gui():vertical())
-		unit:editable_gui():set_blend_mode(source:editable_gui():blend_mode())
-		unit:editable_gui():set_render_template(source:editable_gui():render_template())
-		unit:editable_gui():set_wrap(source:editable_gui():wrap())
-		unit:editable_gui():set_word_wrap(source:editable_gui():word_wrap())
-		unit:editable_gui():set_alpha(source:editable_gui():alpha())
-		unit:editable_gui():set_shape(source:editable_gui():shape())
-	end
+	local unit_ext = unit:extensions_infos()
+	local source_ext = source:extensions_infos()
 
-	if unit:ladder() then
-		unit:ladder():set_width(source:ladder():width())
-		unit:ladder():set_height(source:ladder():height())
+	for extension_name, extension in pairs(unit_ext) do
+		local source_extension = source_ext[extension_name]
+
+		if source_extension and extension.setup_load and source_extension.editor_save then
+			local save = {}
+
+			source_ext[extension_name]:editor_save(save)
+			extension:setup_load(save)
+		end
 	end
 end
 
@@ -1608,15 +1705,22 @@ function Layer:unhide_all()
 end
 
 function Layer:clear()
-	for _, unit in ipairs(self._created_units) do
+	while #self._created_units > 0 do
+		local unit = self._created_units[1]
+
 		if alive(unit) then
+			self._created_units_pairs[unit:unit_data().unit_id] = nil
+
 			self:remove_unit(unit)
 		end
+
+		table.remove(self._created_units, 1)
 	end
 
 	self._move_widget:set_enabled(false)
 	self:set_reference_unit(nil)
 	self:clear_selected_units_table()
+	managers.editor:refresh_list_flow()
 
 	self._created_units = {}
 	self._created_units_pairs = {}

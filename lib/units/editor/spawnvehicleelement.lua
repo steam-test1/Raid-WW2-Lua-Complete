@@ -29,7 +29,3 @@ function SpawnVehicleElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "vehicle", self._vehicle_names, "Select a vehicle from the combobox")
 	self:_add_help_text("The vehicle that will be spawned")
 end
-
-function SpawnVehicleElement:add_to_mission_package()
-	Application:trace("SpawnVehicleElement:add_to_mission_package")
-end

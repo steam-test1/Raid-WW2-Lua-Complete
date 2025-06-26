@@ -6,8 +6,6 @@ function WeaponFactoryManager:init()
 	self:_setup()
 
 	self._tasks = {}
-
-	self:set_use_thq_weapon_parts(managers.user:get_setting("use_thq_weapon_parts"))
 end
 
 function WeaponFactoryManager:update(t, dt)
@@ -63,27 +61,21 @@ function WeaponFactoryManager:_read_factory_data()
 			self._parts_by_weapon[factory_id] = self._parts_by_weapon[factory_id] or {}
 
 			for _, part_id in ipairs(data.uses_parts) do
-				local type = tweak_data.weapon.factory.parts[part_id].type
-				self._parts_by_weapon[factory_id][type] = self._parts_by_weapon[factory_id][type] or {}
+				if tweak_data.weapon.factory.parts[part_id] then
+					local type = tweak_data.weapon.factory.parts[part_id].type
+					self._parts_by_weapon[factory_id][type] = self._parts_by_weapon[factory_id][type] or {}
 
-				table.insert(self._parts_by_weapon[factory_id][type], part_id)
+					table.insert(self._parts_by_weapon[factory_id][type], part_id)
 
-				if not string.match(factory_id, "_npc") and weapon_data[self:get_weapon_id_by_factory_id(factory_id)] then
-					self._part_used_by_weapons[part_id] = self._part_used_by_weapons[part_id] or {}
+					if not string.match(factory_id, "_npc") and weapon_data[self:get_weapon_id_by_factory_id(factory_id)] then
+						self._part_used_by_weapons[part_id] = self._part_used_by_weapons[part_id] or {}
 
-					table.insert(self._part_used_by_weapons[part_id], factory_id)
+						table.insert(self._part_used_by_weapons[part_id], factory_id)
+					end
 				end
 			end
 		end
 	end
-end
-
-function WeaponFactoryManager:set_use_thq_weapon_parts(use_thq_weapon_parts)
-	self._use_thq_weapon_parts = use_thq_weapon_parts
-end
-
-function WeaponFactoryManager:use_thq_weapon_parts()
-	return self._use_thq_weapon_parts
 end
 
 function WeaponFactoryManager:get_weapons_uses_part(part_id)
@@ -128,7 +120,7 @@ function WeaponFactoryManager:get_factory_id_by_weapon_id(weapon_id)
 	local upgrade = managers.upgrades:weapon_upgrade_by_weapon_id(weapon_id)
 
 	if not upgrade then
-		Application:error("[WeaponFactoryManager:get_factory_id_by_weapon_id] Found no upgrade for factory id", weapon_id)
+		Application:stack_dump("[WeaponFactoryManager:get_factory_id_by_weapon_id] Found no upgrade for factory id: '" .. tostring(weapon_id) .. "'!")
 
 		return
 	end
@@ -138,94 +130,6 @@ end
 
 function WeaponFactoryManager:get_default_blueprint_by_factory_id(factory_id)
 	return tweak_data.weapon.factory[factory_id] and tweak_data.weapon.factory[factory_id].default_blueprint or {}
-end
-
-function WeaponFactoryManager:create_limited_blueprints(factory_id)
-	local i_table = self:_indexed_parts(factory_id)
-	local all_parts_used_once = {}
-
-	for j = 1, #i_table do
-		for k = j == 1 and 1 or 2, #i_table[j].parts do
-			local perm = {}
-			local part = i_table[j].parts[k]
-
-			if part ~= "" then
-				table.insert(perm, i_table[j].parts[k])
-			end
-
-			for l = 1, #i_table do
-				if j ~= l then
-					local part = i_table[l].parts[1]
-
-					if part ~= "" then
-						table.insert(perm, i_table[l].parts[1])
-					end
-				end
-			end
-
-			table.insert(all_parts_used_once, perm)
-		end
-	end
-
-	Application:debug("[WeaponFactoryManager:create_limited_blueprints] Limited", #all_parts_used_once)
-
-	return all_parts_used_once
-end
-
-function WeaponFactoryManager:create_blueprints(factory_id)
-	local i_table = self:_indexed_parts(factory_id)
-
-	local function dump(i_category, result, new_combination_in)
-		for i_pryl, pryl_name in ipairs(i_table[i_category].parts) do
-			local new_combination = clone(new_combination_in)
-
-			if pryl_name ~= "" then
-				table.insert(new_combination, pryl_name)
-			end
-
-			if i_category == #i_table then
-				table.insert(result, new_combination)
-			else
-				dump(i_category + 1, result, new_combination)
-			end
-		end
-	end
-
-	local result = {}
-
-	dump(1, result, {})
-	Application:debug("[WeaponFactoryManager:create_blueprints] Combinations", #result)
-
-	return result
-end
-
-function WeaponFactoryManager:_indexed_parts(factory_id)
-	local all_parts = self._parts_by_weapon[factory_id]
-	local optional_types = tweak_data.weapon.factory[factory_id].optional_types or {}
-	local i_table = {}
-	local num_variations = 1
-	local tot_parts = 0
-
-	for type, parts in pairs(all_parts) do
-		if type ~= "foregrip_ext" and type ~= "stock_adapter" and type ~= "sight_special" and type ~= "extra" then
-			parts = clone(parts)
-
-			if table.contains(optional_types, type) then
-				table.insert(parts, "")
-			end
-
-			table.insert(i_table, {
-				i = 1,
-				parts = parts,
-				amount = #parts
-			})
-
-			num_variations = num_variations * #parts
-			tot_parts = tot_parts + #parts
-		end
-	end
-
-	return i_table
 end
 
 function WeaponFactoryManager:preload_blueprint(factory_id, blueprint, third_person, done_cb, only_record)
@@ -411,18 +315,20 @@ function WeaponFactoryManager:assemble_from_blueprint(factory_id, p_unit, bluepr
 	return self:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
 end
 
-function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint)
+function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint, skin_id)
 	local modified_blueprint = {}
-	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(factory_id)
+	local _, skin_data = nil
+
+	if skin_id then
+		skin_data = tweak_data.weapon.weapon_skins[skin_id]
+	else
+		_, skin_data = managers.weapon_inventory:get_applied_weapon_skin(factory_id)
+	end
 
 	for _, v in ipairs(blueprint) do
 		local replacement = skin_data and skin_data.replaces_parts and skin_data.replaces_parts[v]
 
-		if replacement then
-			table.insert(modified_blueprint, replacement)
-		else
-			table.insert(modified_blueprint, v)
-		end
+		table.insert(modified_blueprint, replacement or v)
 	end
 
 	return modified_blueprint
@@ -491,6 +397,10 @@ function WeaponFactoryManager:_get_override_parts(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local overridden = {}
 	local override_override = {}
+
+	if not blueprint then
+		return overridden
+	end
 
 	for _, part_id in ipairs(blueprint) do
 		local part = self:_part_data(part_id, factory_id)
@@ -1235,7 +1145,7 @@ function WeaponFactoryManager:get_stats(factory_id, blueprint)
 	return stats
 end
 
-function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second_sight)
+function WeaponFactoryManager:get_stance_mod(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local assembled_blueprint = self:get_assembled_blueprint(factory_id, blueprint)
 	local forbidden = self:_get_forbidden_parts(factory_id, assembled_blueprint)
@@ -1249,7 +1159,7 @@ function WeaponFactoryManager:get_stance_mod(factory_id, blueprint, using_second
 		if not forbidden[part_id] then
 			part = self:_part_data(part_id, factory_id, override)
 
-			if part.stance_mod and (part.type ~= "sight" and part.type ~= "gadget" or using_second_sight and part.type == "gadget" or not using_second_sight and part.type == "sight") and part.stance_mod[factory_id] then
+			if part.stance_mod and part.stance_mod[factory_id] then
 				local part_translation = part.stance_mod[factory_id].translation
 
 				if part_translation then

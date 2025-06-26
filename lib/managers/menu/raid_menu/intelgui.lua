@@ -25,12 +25,12 @@ end
 
 function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
-		name = "category_tabs",
 		initial_tab_idx = 1,
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 220,
 		y = 80,
+		name = "category_tabs",
 		tab_font_size = tweak_data.gui.font_sizes.small,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
 		parent_control_ref = self,
@@ -51,21 +51,21 @@ end
 
 function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
+		w = 460,
+		y = 192,
 		name = "category_items_list_scrollable_area",
 		scrollbar_width = 10,
 		scroll_step = 19,
-		h = 700,
-		w = 460,
-		y = 192
+		h = 700
 	}
 	self._category_items_list_scrollable_area = self._root_panel:scrollable_area(category_items_list_scrollable_area_params)
 	local category_items_list_params = {
-		name = "category_items_list",
-		on_mouse_over_sound_event = "highlight",
-		loop_items = true,
 		item_h = 62,
 		use_unlocked = false,
 		selection_enabled = true,
+		on_mouse_over_sound_event = "highlight",
+		name = "category_items_list",
+		loop_items = true,
 		w = category_items_list_scrollable_area_params.w,
 		item_font = tweak_data.gui.fonts.lato,
 		item_font_size = tweak_data.gui.font_sizes.size_24,
@@ -154,39 +154,39 @@ end
 
 function IntelGui:_create_category_controls(selected_category)
 	self._bulletins_control = self._root_panel:create_custom_control(RaidGUIControlIntelBulletin, {
-		x = 512,
-		visible = false,
-		h = 752,
 		w = 1120,
-		y = 144
+		h = 752,
+		y = 144,
+		visible = false,
+		x = 512
 	})
 	self._operational_status_control = self._root_panel:create_custom_control(RaidGUIControlIntelOperationalStatus, {
-		x = 512,
-		visible = false,
-		h = 752,
 		w = 1120,
-		y = 144
+		h = 752,
+		y = 144,
+		visible = false,
+		x = 512
 	})
 	self._raid_personel_control = self._root_panel:create_custom_control(RaidGUIControlIntelRaidPersonel, {
-		x = 512,
-		visible = false,
-		h = 768,
 		w = 1088,
-		y = 160
+		h = 768,
+		y = 160,
+		visible = false,
+		x = 512
 	})
 	self._opposite_forces_control = self._root_panel:create_custom_control(RaidGUIControlIntelOppositeForces, {
-		x = 544,
-		visible = false,
-		h = 704,
 		w = 1024,
-		y = 192
+		h = 704,
+		y = 192,
+		visible = false,
+		x = 544
 	})
 	self._control_archive_control = self._root_panel:create_custom_control(RaidGUIControlIntelControlArchive, {
-		x = 544,
-		visible = false,
-		h = 704,
 		w = 1024,
-		y = 192
+		h = 704,
+		y = 192,
+		visible = false,
+		x = 544
 	})
 end
 

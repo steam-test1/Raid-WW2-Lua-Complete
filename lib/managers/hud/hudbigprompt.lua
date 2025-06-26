@@ -52,12 +52,12 @@ end
 
 function HUDBigPrompt:_create_title()
 	self._title = self._object:text({
+		vertical = "center",
 		halign = "scale",
 		valign = "scale",
-		text = "TITLE",
 		align = "center",
+		text = "TITLE",
 		name = "big_prompt_text",
-		vertical = "center",
 		y = self._background:y(),
 		h = self.BACKGROUND_H,
 		font = tweak_data.gui:get_font_path(self.TEXT_FONT, self.TEXT_FONT_DISPLAY_SIZE),
@@ -68,12 +68,12 @@ end
 
 function HUDBigPrompt:_create_description()
 	self._description = self._object:text({
-		halign = "scale",
-		text = "DESCRIPTION",
-		valign = "scale",
-		align = "center",
-		name = "big_prompt_description",
 		vertical = "bottom",
+		halign = "scale",
+		align = "center",
+		valign = "scale",
+		text = "DESCRIPTION",
+		name = "big_prompt_description",
 		w = self._object:w(),
 		h = self._object:h(),
 		font = self.DESCRIPTION_FONT,
@@ -109,10 +109,10 @@ function HUDBigPrompt:_create_flares(color)
 	self._flare_panel:set_center(self._icon:center())
 
 	self._lens_glint = self._flare_panel:bitmap({
-		blend_mode = "add",
-		name = "big_prompt_glint",
 		alpha = 0.65,
+		name = "big_prompt_glint",
 		rotation = 360,
+		blend_mode = "add",
 		color = color,
 		w = self._flare_panel:w(),
 		h = self._flare_panel:h(),

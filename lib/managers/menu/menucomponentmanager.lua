@@ -49,8 +49,6 @@ function MenuComponentManager:init()
 	self._sound_source = SoundDevice:create_source("MenuComponentManager")
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
 	self._request_done_clbk_func = callback(self, self, "_request_done_callback")
-	local is_installing, install_progress = managers.dlc:is_installing()
-	self._is_game_installing = is_installing
 	self._active_components = {
 		raid_menu_mission_selection = {
 			create = callback(self, self, "create_raid_menu_mission_selection_gui"),
@@ -910,6 +908,7 @@ function MenuComponentManager:_create_raid_menu_mission_selection_gui(node, comp
 		end
 
 		final_list.raid_list = self._raid_menu_mission_selection_gui._raid_list
+		final_list.new_operation_list = self._raid_menu_mission_selection_gui._new_operation_list
 	end
 
 	local active_menu = managers.menu:active_menu()
@@ -1369,6 +1368,12 @@ function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
 
 	self._raid_menu_comic_book_gui = ComicBookGui:new(self._ws, self._fullscreen_ws, node, component)
 
+	if self._active_comic_id then
+		self._raid_menu_comic_book_gui:set_comic(self._active_comic_id)
+
+		self._active_comic_id = nil
+	end
+
 	if component then
 		self._active_controls[component] = {}
 		local final_list = self._active_controls[component]
@@ -1385,6 +1390,14 @@ function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
 	end
 
 	return self._raid_menu_comic_book_gui
+end
+
+function MenuComponentManager:set_comic_book_id(id)
+	if self._raid_menu_comic_book_gui then
+		self._raid_menu_comic_book_gui:set_comic(id)
+	else
+		self._active_comic_id = id
+	end
 end
 
 function MenuComponentManager:close_raid_menu_comic_book_gui(node, component)

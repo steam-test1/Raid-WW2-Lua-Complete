@@ -7,9 +7,9 @@ TeamAILogicTravel.damage_clbk = TeamAILogicIdle.damage_clbk
 TeamAILogicTravel.on_cop_neutralized = TeamAILogicIdle.on_cop_neutralized
 TeamAILogicTravel.on_objective_unit_damaged = TeamAILogicIdle.on_objective_unit_damaged
 TeamAILogicTravel.on_alert = TeamAILogicIdle.on_alert
-TeamAILogicTravel.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interacted
+TeamAILogicTravel.on_long_distance_interact = TeamAILogicIdle.on_long_distance_interact
 TeamAILogicTravel.on_new_objective = TeamAILogicIdle.on_new_objective
-TeamAILogicTravel.clbk_heat = TeamAILogicIdle.clbk_heat
+TeamAILogicTravel.clbk_weapons_hot = TeamAILogicIdle.clbk_weapons_hot
 TeamAILogicTravel._upd_pathing = CopLogicTravel._upd_pathing
 TeamAILogicTravel._get_exact_move_pos = CopLogicTravel._get_exact_move_pos
 TeamAILogicTravel.chk_should_turn = CopLogicTravel.chk_should_turn
@@ -17,7 +17,6 @@ TeamAILogicTravel._get_all_paths = CopLogicTravel._get_all_paths
 TeamAILogicTravel._set_verified_paths = CopLogicTravel._set_verified_paths
 TeamAILogicTravel.get_pathing_prio = CopLogicTravel.get_pathing_prio
 TeamAILogicTravel.on_action_completed = CopLogicTravel.on_action_completed
-TeamAILogicTravel.on_intimidated = TeamAILogicIdle.on_intimidated
 
 function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	local my_data = {
@@ -80,8 +79,8 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		local new_action = {
-			type = "idle",
-			body_part = 2
+			body_part = 2,
+			type = "idle"
 		}
 
 		data.unit:brain():action_request(new_action)
@@ -149,26 +148,6 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 	end
 
 	CopLogicAttack._upd_aim(data, my_data)
-
-	if not my_data._intimidate_t or my_data._intimidate_t + 2 < data.t then
-		local civ = TeamAILogicIdle.intimidate_civilians(data, data.unit, true, false)
-
-		if civ then
-			my_data._intimidate_t = data.t
-
-			if not data.attention_obj then
-				CopLogicBase._set_attention_on_unit(data, civ)
-
-				local key = "RemoveAttentionOnUnit" .. tostring(data.key)
-
-				CopLogicBase.queue_task(my_data, key, TeamAILogicTravel._remove_enemy_attention, {
-					data = data,
-					target_key = civ:key()
-				}, data.t + 1.5)
-			end
-		end
-	end
-
 	TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	TeamAILogicIdle._upd_sneak_spotting(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicTravel._upd_enemy_detection, data, data.t + delay)

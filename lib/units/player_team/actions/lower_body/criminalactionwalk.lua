@@ -1,42 +1,42 @@
 CriminalActionWalk = CriminalActionWalk or class(CopActionWalk)
 CriminalActionWalk._anim_block_presets = {
 	block_all = {
+		stand = -1,
+		crouch = -1,
+		walk = -1,
+		action = -1,
+		idle = -1,
+		death = -1,
+		act = -1,
+		heavy_hurt = -1,
 		hurt = -1,
 		light_hurt = -1,
 		turn = -1,
 		shoot = -1,
-		dodge = -1,
+		dodge = -1
+	},
+	block_lower = {
 		stand = -1,
 		crouch = -1,
 		walk = -1,
-		action = -1,
 		idle = -1,
 		death = -1,
 		act = -1,
-		heavy_hurt = -1
-	},
-	block_lower = {
+		heavy_hurt = -1,
 		hurt = -1,
 		light_hurt = -1,
 		turn = -1,
-		dodge = -1,
-		stand = -1,
-		crouch = -1,
-		walk = -1,
-		idle = -1,
-		death = -1,
-		act = -1,
-		heavy_hurt = -1
+		dodge = -1
 	},
 	block_upper = {
-		action = -1,
 		stand = -1,
 		crouch = -1,
-		shoot = -1
+		shoot = -1,
+		action = -1
 	},
 	block_none = {
-		crouch = -1,
-		stand = -1
+		stand = -1,
+		crouch = -1
 	}
 }
 CriminalActionWalk._walk_anim_velocities = HuskPlayerMovement._walk_anim_velocities

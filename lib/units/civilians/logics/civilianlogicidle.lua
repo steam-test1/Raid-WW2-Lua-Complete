@@ -66,12 +66,6 @@ function CivilianLogicIdle.enter(data, new_logic_name, enter_params)
 		CopLogicBase.queue_task(my_data, my_data.outline_detection_task_key, CivilianLogicIdle._upd_outline_detection, data, data.t + 2)
 	end
 
-	if not data.unit:movement():cool() then
-		my_data.registered_as_fleeing = true
-
-		managers.groupai:state():register_fleeing_civilian(data.key, data.unit)
-	end
-
 	if objective and objective.stance then
 		data.unit:movement():set_stance(objective.stance)
 	end
@@ -108,10 +102,6 @@ function CivilianLogicIdle.exit(data, new_logic_name, enter_params)
 
 	CopLogicBase.cancel_delayed_clbks(my_data)
 	CopLogicBase.cancel_queued_tasks(my_data)
-
-	if my_data.registered_as_fleeing then
-		managers.groupai:state():unregister_fleeing_civilian(data.key)
-	end
 end
 
 function CivilianLogicIdle._upd_outline_detection(data)
@@ -168,14 +158,6 @@ function CivilianLogicIdle._enable_outline(data)
 end
 
 function CivilianLogicIdle.on_alert(data, alert_data)
-	if data.is_tied and data.unit:anim_data().stand then
-		if TimerManager:game():time() - data.internal_data.state_enter_t > 3 then
-			data.unit:brain():on_hostage_move_interaction(nil, "stay")
-		end
-
-		return
-	end
-
 	local my_data = data.internal_data
 	local my_dis, alert_delay = nil
 	local my_listen_pos = data.unit:movement():m_head_pos()
@@ -191,7 +173,7 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 
 			if aggressor and aggressor:base() then
 				if not data.brain:interaction_voice() then
-					data.unit:brain():on_intimidated(1, aggressor)
+					data.unit:brain():on_long_distance_interact(1, aggressor)
 				end
 
 				return
@@ -199,7 +181,7 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 		end
 
 		data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, alert_data[5], alert_data))
-		data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
+		data.unit:movement():set_stance("hos")
 	end
 
 	if alert_data[5] then
@@ -247,44 +229,45 @@ function CivilianLogicIdle._delayed_alert_clbk(ignore_this, params)
 	data.call_police_delay_t = data.call_police_delay_t or TimerManager:game():time() + 20 + 10 * math.random()
 
 	data.unit:brain():set_objective({
-		type = "free",
 		is_default = true,
+		type = "free",
 		alert_data = alert_data
 	})
 end
 
-function CivilianLogicIdle.on_intimidated(data, amount, aggressor_unit)
-	data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, aggressor_unit))
-	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
+function CivilianLogicIdle.on_long_distance_interact(data, amount, instigator)
+	Application:info("[CivilianLogicIdle.on_long_distance_interact]", data, amount, instigator)
+	data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, instigator))
+	data.unit:movement():set_stance("hos")
 
-	local att_obj_data, is_new = CopLogicBase.identify_attention_obj_instant(data, aggressor_unit:key())
+	local att_obj_data, is_new = CopLogicBase.identify_attention_obj_instant(data, instigator:key())
 
 	if not data.char_tweak.intimidateable or data.unit:base().unintimidateable or data.unit:anim_data().unintimidateable then
 		return
 	end
 
-	if not CivilianLogicIdle.is_obstructed(data, aggressor_unit) then
+	if not CivilianLogicIdle.is_obstructed(data, instigator) then
 		return
 	end
 
 	data.unit:brain():set_objective({
 		type = "surrender",
 		amount = amount,
-		aggressor_unit = aggressor_unit
+		aggressor_unit = instigator
 	})
 end
 
 function CivilianLogicIdle.damage_clbk(data, damage_info)
 	data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, damage_info.attacker_unit))
-	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
+	data.unit:movement():set_stance("hos")
 
 	if not CivilianLogicIdle.is_obstructed(data, damage_info.attacker_unit) then
 		return
 	end
 
 	data.unit:brain():set_objective({
-		type = "free",
 		is_default = true,
+		type = "free",
 		dmg_info = damage_info
 	})
 end
@@ -303,8 +286,6 @@ function CivilianLogicIdle.on_new_objective(data, old_objective)
 			CopLogicBase._exit_to_state(data.unit, "travel")
 		elseif new_objective.type == "act" then
 			CopLogicBase._exit_to_state(data.unit, "idle")
-		elseif data.is_tied then
-			CopLogicBase._exit_to_state(data.unit, "surrender")
 		elseif new_objective.type == "free" then
 			if data.unit:movement():cool() or not new_objective.is_default then
 				CopLogicBase._exit_to_state(data.unit, "idle")
@@ -316,8 +297,6 @@ function CivilianLogicIdle.on_new_objective(data, old_objective)
 		end
 	elseif data.unit:movement():cool() then
 		CopLogicBase._exit_to_state(data.unit, "idle")
-	elseif data.is_tied then
-		CopLogicBase._exit_to_state(data.unit, "surrender")
 	else
 		CopLogicBase._exit_to_state(data.unit, "flee")
 	end
@@ -451,7 +430,7 @@ function CivilianLogicIdle.clbk_action_timeout(ignore_this, data)
 	end
 end
 
-function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
+function CivilianLogicIdle.is_obstructed(data, instigator)
 	if data.unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().act_idle then
 		return
 	end
@@ -466,7 +445,7 @@ function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
 		return true
 	end
 
-	if aggressor_unit and aggressor_unit:movement() and objective.interrupt_dis and mvector3.distance_sq(data.m_pos, aggressor_unit:movement():m_pos()) < objective.interrupt_dis * objective.interrupt_dis then
+	if instigator and instigator:movement() and objective.interrupt_dis and mvector3.distance_sq(data.m_pos, instigator:movement():m_pos()) < objective.interrupt_dis * objective.interrupt_dis then
 		return true
 	end
 

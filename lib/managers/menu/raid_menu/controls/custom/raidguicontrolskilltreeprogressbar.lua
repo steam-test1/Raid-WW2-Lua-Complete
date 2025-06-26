@@ -87,9 +87,9 @@ function RaidGUIControlSkilltreeProgressBar:_create_background()
 	local texture_left = "skl_level_bg_left"
 	local texture_right = "skl_level_bg_right"
 	local background_params = {
+		name = "background",
 		y = 0,
 		x = 0,
-		name = "background",
 		w = self._background_panel:w(),
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
@@ -194,8 +194,8 @@ function RaidGUIControlSkilltreeProgressBar:_create_level_labels()
 		color = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_COLOR
 	})
 	self._experience_label = self._level_labels_panel:text({
-		align = "center",
 		name = "level_label_xp",
+		align = "center",
 		text = "100 XP UNTIL NEXT LEVEL",
 		h = self._level_labels_panel:h(),
 		font = RaidGUIControlSkilltreeProgressBar.LEVEL_LABELS_FONT,

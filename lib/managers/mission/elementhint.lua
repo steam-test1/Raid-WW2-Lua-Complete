@@ -20,8 +20,8 @@ function ElementHint:on_executed(instigator)
 		local desc_text = managers.localization:exists("hint_" .. self._values.hint_id .. "_desc") and managers.localization:to_upper_text("hint_" .. self._values.hint_id .. "_desc")
 
 		managers.hud:set_big_prompt({
-			id = "shoot_flamer_tank",
 			duration = 5,
+			id = "shoot_flamer_tank",
 			title = hint_text,
 			description = desc_text
 		})

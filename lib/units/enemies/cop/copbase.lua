@@ -186,9 +186,28 @@ function CopBase:get_spawned_gear()
 	return self._gear_data.spawned_gear
 end
 
-function CopBase:default_weapon_name()
+function CopBase:default_weapon_name(slot)
 	local default_weapon_id = self._default_weapon_id
 	local weap_ids = tweak_data.character.weap_ids
+	local loadout = tweak_data.character[self._tweak_table].loadout
+
+	if loadout then
+		if loadout[slot] then
+			return loadout[slot]
+		elseif loadout.primary then
+			return loadout.primary
+		elseif loadout.secondary then
+			return loadout.secondary
+		elseif loadout.equipment then
+			return loadout.equipment
+		elseif loadout.melee then
+			return loadout.melee
+		else
+			Application:warn("[CopBase:default_weapon_name] This unit is unarmed, no valid weapons to give", self._unit)
+		end
+	else
+		Application:warn("[CopWeaponDeprecation] Unit '" .. tostring(self._tweak_table) .. "' does not have loadout! Using unit files old option:", self._default_weapon_id)
+	end
 
 	for i_weap_id, weap_id in ipairs(weap_ids) do
 		if default_weapon_id == weap_id then
@@ -278,22 +297,6 @@ function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 		unit:movement():on_anim_act_clbk(anim_act)
 	elseif unit:unit_data().mission_element then
 		unit:unit_data().mission_element:event(anim_act, unit)
-	end
-end
-
-function CopBase:save(data)
-	if self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_trade" then
-		data.is_hostage_trade = true
-	elseif self._unit:interaction() and self._unit:interaction().tweak_data == "hostage_convert" then
-		data.is_hostage_convert = true
-	end
-end
-
-function CopBase:load(data)
-	if data.is_hostage_trade then
-		CopLogicTrade.hostage_trade(self._unit, true, false)
-	elseif data.is_hostage_convert then
-		self._unit:interaction():set_tweak_data("hostage_convert")
 	end
 end
 

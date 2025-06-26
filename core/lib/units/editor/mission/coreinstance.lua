@@ -114,9 +114,9 @@ end
 
 function InstanceEventUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		ray_type = "body editor",
 		mask = 1,
-		skip_instance_check = true,
-		ray_type = "body editor"
+		skip_instance_check = true
 	})
 
 	if not ray or not ray.unit then
@@ -199,10 +199,10 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 	h_sizer:add(instance_name_ctrlr, 2, 1, "LEFT,ALIGN_CENTER_VERTICAL")
 
 	local events_params = {
-		name_proportions = 0,
 		tooltip = "Select an event from the combobox",
-		sizer_proportions = 2,
+		name_proportions = 0,
 		sorted = true,
+		sizer_proportions = 2,
 		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
@@ -318,6 +318,15 @@ end
 
 CoreInstanceInputEventUnitElement = CoreInstanceInputEventUnitElement or class(InstanceEventUnitElement)
 InstanceInputEventUnitElement = InstanceInputEventUnitElement or class(CoreInstanceInputEventUnitElement)
+InstanceInputEventUnitElement.LINK_VALUES = {
+	{
+		type = "input",
+		layer = "Instances",
+		output = true,
+		table_key = "instance",
+		table_value = "event_list"
+	}
+}
 
 function InstanceInputEventUnitElement:init(...)
 	InstanceInputEventUnitElement.super.init(self, "input", ...)
@@ -325,6 +334,14 @@ end
 
 CoreInstanceOutputEventUnitElement = CoreInstanceOutputEventUnitElement or class(InstanceEventUnitElement)
 InstanceOutputEventUnitElement = InstanceOutputEventUnitElement or class(CoreInstanceOutputEventUnitElement)
+InstanceOutputEventUnitElement.LINK_VALUES = {
+	{
+		type = "output",
+		table_key = "instance",
+		table_value = "event_list",
+		layer = "Instances"
+	}
+}
 
 function InstanceOutputEventUnitElement:init(...)
 	InstanceOutputEventUnitElement.super.init(self, "output", ...)
@@ -333,6 +350,14 @@ end
 CoreInstancePointUnitElement = CoreInstancePointUnitElement or class(MissionElement)
 InstancePointUnitElement = InstancePointUnitElement or class(CoreInstancePointUnitElement)
 InstancePointUnitElement.USES_POINT_ORIENTATION = true
+InstancePointUnitElement.LINK_VALUES = {
+	{
+		type = "spawn_point",
+		output = true,
+		value = "instance",
+		layer = "Instances"
+	}
+}
 
 function InstancePointUnitElement:init(...)
 	InstancePointUnitElement.super.init(self, ...)
@@ -397,9 +422,9 @@ end
 
 function InstancePointUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		ray_type = "body editor",
 		mask = 1,
-		skip_instance_check = true,
-		ray_type = "body editor"
+		skip_instance_check = true
 	})
 
 	if not ray or not ray.unit then
@@ -610,10 +635,10 @@ end
 
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
-		name_proportions = 1,
 		tooltip = "Set a default number variable.",
-		floats = 0,
+		name_proportions = 1,
 		sizer_proportions = 1,
+		floats = 0,
 		ctrlr_proportions = 2,
 		name = data.var_name,
 		panel = panel,
@@ -638,10 +663,10 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local params = {
-		name_proportions = 1,
 		tooltip = "Select an option from the combobox",
-		sizer_proportions = 1,
+		name_proportions = 1,
 		sorted = true,
+		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name = data.var_name,
 		panel = panel,
@@ -707,6 +732,14 @@ end
 
 CoreInstanceSetParamsUnitElement = CoreInstanceSetParamsUnitElement or class(MissionElement)
 InstanceSetParamsUnitElement = InstanceSetParamsUnitElement or class(CoreInstanceSetParamsUnitElement)
+InstanceSetParamsUnitElement.LINK_VALUES = {
+	{
+		type = "params",
+		output = true,
+		value = "instance",
+		layer = "Instances"
+	}
+}
 
 function InstanceSetParamsUnitElement:init(...)
 	InstanceSetParamsUnitElement.super.init(self, ...)
@@ -778,9 +811,9 @@ end
 
 function InstanceSetParamsUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
+		ray_type = "body editor",
 		mask = 1,
-		skip_instance_check = true,
-		ray_type = "body editor"
+		skip_instance_check = true
 	})
 
 	if not ray or not ray.unit then
@@ -951,10 +984,10 @@ end
 
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
-		name_proportions = 1,
 		tooltip = "Set a number variable.",
-		floats = 0,
+		name_proportions = 1,
 		sizer_proportions = 1,
+		floats = 0,
 		ctrlr_proportions = 2,
 		name = data.var_name,
 		panel = panel,
@@ -981,10 +1014,10 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 	sizer:add(horizontal_sizer, 1, 1, "EXPAND,LEFT")
 
 	local combobox_params = {
-		name_proportions = 1,
 		tooltip = "Select an option from the combobox",
-		sizer_proportions = 1,
+		name_proportions = 1,
 		sorted = true,
+		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name = data.var_name,
 		panel = panel,

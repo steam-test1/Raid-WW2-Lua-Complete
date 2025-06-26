@@ -103,13 +103,17 @@ function WeaponInventoryTweakData:init()
 		{
 			weapon_id = "welrod",
 			slot = 6
+		},
+		{
+			weapon_id = "georg",
+			slot = 7
 		}
 	}
 	self.weapon_grenades_index = {
 		{
-			slot = 1,
+			weapon_id = "m24",
 			default = true,
-			weapon_id = "m24"
+			slot = 1
 		},
 		{
 			weapon_id = "concrete",
@@ -138,62 +142,62 @@ function WeaponInventoryTweakData:init()
 	}
 	self.weapon_melee_index = {
 		{
-			slot = 1,
-			redeemed_gold = 5,
-			weapon_id = "m3_knife",
 			droppable = false,
 			default = true,
+			redeemed_gold = 5,
+			weapon_id = "m3_knife",
+			slot = 1,
 			redeemed_xp = 0
 		},
 		{
-			slot = 2,
-			redeemed_gold = 5,
-			weapon_id = "robbins_dudley_trench_push_dagger",
 			droppable = true,
+			weapon_id = "robbins_dudley_trench_push_dagger",
+			redeemed_gold = 5,
+			slot = 2,
 			redeemed_xp = 20
 		},
 		{
-			slot = 3,
-			redeemed_gold = 5,
-			weapon_id = "german_brass_knuckles",
 			droppable = true,
+			weapon_id = "german_brass_knuckles",
+			redeemed_gold = 5,
+			slot = 3,
 			redeemed_xp = 30
 		},
 		{
-			slot = 4,
-			redeemed_gold = 5,
-			weapon_id = "lockwood_brothers_push_dagger",
 			droppable = true,
+			weapon_id = "lockwood_brothers_push_dagger",
+			redeemed_gold = 5,
+			slot = 4,
 			redeemed_xp = 40
 		},
 		{
-			slot = 5,
-			redeemed_gold = 5,
-			weapon_id = "bc41_knuckle_knife",
 			droppable = true,
+			weapon_id = "bc41_knuckle_knife",
+			redeemed_gold = 5,
+			slot = 5,
 			redeemed_xp = 50
 		},
 		{
-			slot = 6,
-			redeemed_gold = 5,
-			weapon_id = "km_dagger",
 			droppable = false,
+			weapon_id = "km_dagger",
+			redeemed_gold = 5,
+			slot = 6,
 			redeemed_xp = 60
 		},
 		{
-			slot = 7,
-			redeemed_gold = 5,
-			weapon_id = "marching_mace",
 			droppable = false,
+			weapon_id = "marching_mace",
+			redeemed_gold = 5,
+			slot = 7,
 			redeemed_xp = 70
 		},
 		{
-			slot = 8,
-			redeemed_gold = 5,
-			weapon_id = "lc14b",
 			droppable = false,
-			redeemed_xp = 80,
-			is_challenge_reward = true
+			weapon_id = "lc14b",
+			redeemed_gold = 5,
+			is_challenge_reward = true,
+			slot = 8,
+			redeemed_xp = 80
 		}
 	}
 end

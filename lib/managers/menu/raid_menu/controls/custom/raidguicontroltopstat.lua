@@ -10,7 +10,6 @@ RaidGUIControlTopStat.STAT_NAME_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlTopStat.STAT_ICON_SIZE = 192
 RaidGUIControlTopStat.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlTopStat.FONT_SIZE = tweak_data.gui.font_sizes.large
-RaidGUIControlTopStat.FONT_KERNING = tweak_data.hud.medium_kern
 
 function RaidGUIControlTopStat:init(parent, params)
 	RaidGUIControlTopStat.super.init(self, parent, params)
@@ -45,13 +44,13 @@ end
 function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
 		align = "center",
-		vertical = "center",
 		alpha = 0,
 		layer = 1,
 		name = "player_name_label",
 		y = 0,
 		x = 0,
 		text = "PLAYER NAME",
+		vertical = "center",
 		w = self._object:w(),
 		h = RaidGUIControlTopStat.PLAYER_NAME_H,
 		color = RaidGUIControlTopStat.PLAYER_NAME_COLOR,
@@ -61,14 +60,14 @@ function RaidGUIControlTopStat:_create_stat_info()
 	self._player_name_label = self._control_panel:label(params_player_name)
 	local params_stat_name = {
 		align = "center",
-		vertical = "top",
-		word_wrap = true,
 		alpha = 0,
 		layer = 3,
 		name = "stat_name_label",
 		x = 0,
 		wrap = true,
 		text = "Most things done well",
+		word_wrap = true,
+		vertical = "top",
 		y = self._object:h() - RaidGUIControlTopStat.STAT_NAME_H,
 		w = RaidGUIControlTopStat.WIDTH,
 		h = RaidGUIControlTopStat.STAT_NAME_H,
@@ -92,14 +91,20 @@ function RaidGUIControlTopStat:_create_icon_panel()
 end
 
 function RaidGUIControlTopStat:set_data(data)
-	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
+	local name = data.player_nickname
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name_label:set_text(name)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local params_stat_icon = {
 		y = 0,
 		x = 0,
-		alpha = 0,
 		name = "stat_icon",
+		alpha = 0,
 		w = data.icon_texture_rect[3],
 		h = data.icon_texture_rect[4],
 		texture = data.icon_texture,

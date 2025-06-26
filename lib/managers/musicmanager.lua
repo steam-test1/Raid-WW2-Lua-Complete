@@ -13,10 +13,7 @@ function MusicManager:init()
 	MusicManager.super.init(self)
 
 	self._current_level_music = nil
-end
-
-function MusicManager:init_globals(...)
-	MusicManager.super.init_globals(self, ...)
+	self._last_played_shuffle_songs = {}
 end
 
 function MusicManager:raid_music_state_change(state_flag)
@@ -32,6 +29,42 @@ function MusicManager:convert_music_state(state_flag)
 	end
 
 	return res
+end
+
+function MusicManager:get_random_event()
+	local tweak_id = table.random(tweak_data.music_shuffle)
+
+	while table.contains(self._last_played_shuffle_songs, tweak_id) do
+		tweak_id = table.random(tweak_data.music_shuffle)
+	end
+
+	table.insert(self._last_played_shuffle_songs, tweak_id)
+
+	if math.min(#tweak_data.music_shuffle, 3) < #self._last_played_shuffle_songs then
+		table.remove(self._last_played_shuffle_songs, 1)
+	end
+
+	local start_event_name = tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
+
+	return start_event_name
+end
+
+function MusicManager:get_default_event()
+	local tweak_id = Global.level_data and Global.level_data.level_id
+	local job = managers.raid_job:current_job()
+
+	if job then
+		if job.job_type == OperationsTweakData.JOB_TYPE_RAID then
+			tweak_id = job.music_id
+		else
+			tweak_id = managers.raid_job:current_operation_event().music_id
+		end
+	end
+
+	local event_name = nil
+	event_name = (tweak_id ~= "random" or self:get_random_event()) and tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
+
+	return event_name
 end
 
 function MusicManager:save_settings(data)
@@ -58,41 +91,4 @@ function MusicManager:load_profile(data)
 	if state then
 		-- Nothing
 	end
-end
-
-function MusicManager:get_random_event()
-	local event_names = {}
-
-	for name, data in pairs(tweak_data.music) do
-		if name ~= "default" and data.include_in_shuffle then
-			table.insert(event_names, name)
-		end
-	end
-
-	local tweak_id = event_names[math.floor(math.rand(#event_names)) + 1]
-	local event_name = tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
-
-	Application:debug("[MusicManager:get_random_event()]", event_name)
-
-	return event_name
-end
-
-function MusicManager:get_default_event()
-	local tweak_id = Global.level_data and Global.level_data.level_id
-	local job = managers.raid_job:current_job()
-
-	if job then
-		if job.job_type == OperationsTweakData.JOB_TYPE_RAID then
-			tweak_id = job.music_id
-		else
-			tweak_id = managers.raid_job:current_operation_event().music_id
-		end
-	end
-
-	local event_name = nil
-	event_name = (tweak_id ~= "random" or self:get_random_event()) and tweak_data.music[tweak_id] and tweak_data.music[tweak_id].start
-
-	Application:debug("[MusicManager:get_default_event()]", event_name)
-
-	return event_name
 end

@@ -83,11 +83,11 @@ end
 
 function InteractionTweakData:_init_shared_sounds()
 	self.LOCKPICK_SOUNDS = {
+		dialog_fail = "player_gen_lockpick_fail",
 		dialog_success = "player_gen_lock_picked",
 		dialog_enter = "player_gen_picking_lock",
 		failed = "lock_fail",
 		success = "success",
-		dialog_fail = "player_gen_lockpick_fail",
 		circles = {
 			{
 				mechanics = "lock_mechanics_a",
@@ -108,23 +108,23 @@ function InteractionTweakData:_init_shared_sounds()
 		}
 	}
 	self.DYNAMITE_SOUNDS = {
+		apply = "lock_a",
+		start = "plant_dynamite_start",
 		dialog_success = "player_gen_fuse_rigged",
 		finish = "plant_dynamite_finish",
 		dialog_enter = "player_gen_rigging_fuse",
 		failed = "lock_fail",
 		success = "success",
-		tick = "lock_mechanics_a",
-		start = "plant_dynamite_start",
-		apply = "lock_a"
+		tick = "lock_mechanics_a"
 	}
 	self.REWIRE_SOUNDS = {
-		dialog_success = "player_gen_lock_picked",
+		dialog_fail = "player_gen_lockpick_fail",
 		apply = "lock_a",
+		dialog_success = "player_gen_lock_picked",
 		dialog_enter = "player_gen_picking_lock",
 		failed = "lock_fail",
 		success = "success",
-		tick = "lock_mechanics_a",
-		dialog_fail = "player_gen_lockpick_fail"
+		tick = "lock_mechanics_a"
 	}
 end
 
@@ -146,7 +146,6 @@ function InteractionTweakData:_init_interactions()
 	self.grenade_crate = {
 		icon = "equipment_ammo_bag",
 		text_id = "hud_interact_grenade_crate_take_grenades",
-		contour = "crate_loot_pickup",
 		blocked_hint_sound = "no_more_grenades",
 		action_text_id = "hud_action_taking_grenades",
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
@@ -158,10 +157,10 @@ function InteractionTweakData:_init_interactions()
 	self.projectile_collect.force_update_position = true
 	self.projectile_collect.start_active = false
 	self.projectile_collect.keep_active = false
+	self.projectile_collect.contour = "deployable"
 	self.grenade_crate_small = {
 		icon = self.grenade_crate.icon,
 		text_id = self.grenade_crate.text_id,
-		contour = self.grenade_crate.contour,
 		blocked_hint = self.grenade_crate.blocked_hint,
 		blocked_hint_sound = self.grenade_crate.blocked_hint_sound,
 		sound_start = self.grenade_crate.sound_start,
@@ -173,7 +172,6 @@ function InteractionTweakData:_init_interactions()
 	self.grenade_crate_big = {
 		icon = self.grenade_crate.icon,
 		text_id = self.grenade_crate.text_id,
-		contour = self.grenade_crate.contour,
 		blocked_hint = self.grenade_crate.blocked_hint,
 		blocked_hint_sound = self.grenade_crate.blocked_hint_sound,
 		sound_start = self.grenade_crate.sound_start,
@@ -216,12 +214,12 @@ function InteractionTweakData:_init_interactions()
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	}
 	self.health_bag = {
-		action_text_id = "hud_action_healing",
-		blocked_hint = "hint_full_health",
-		text_id = "hud_interact_doctor_bag_heal",
+		contour = "deployable",
 		blocked_hint_sound = "no_more_health",
 		icon = "equipment_doctor_bag",
-		contour = "deployable",
+		blocked_hint = "hint_full_health",
+		text_id = "hud_interact_doctor_bag_heal",
+		action_text_id = "hud_action_healing",
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	}
 	self.health_bag_small = clone(self.health_bag)
@@ -274,6 +272,11 @@ function InteractionTweakData:_init_interactions()
 		text_id = "hud_menu_crate_select",
 		interact_distance = 300,
 		sound_done = "paper_shuffle"
+	}
+	self.read_comic = {
+		text_id = "hud_menu_interaction_select_comic_book_menu",
+		sound_done = "paper_shuffle",
+		interact_distance = 300
 	}
 	self.interaction_ball = {
 		icon = "develop",
@@ -588,8 +591,8 @@ function InteractionTweakData:_init_interactions()
 	self.open_crate_2.legend_interact_text_id = "hud_legend_lockpicking_interact"
 	self.open_crate_2.minigame_bypass = {
 		special_equipment = "crowbar",
-		category = "interaction",
-		upgrade = "sapper_lockpick_crate_bypass"
+		upgrade = "sapper_lockpick_crate_bypass",
+		category = "interaction"
 	}
 	self.open_crate_2.timer = self.INTERACT_TIMER_VERY_SHORT
 	self.open_crate_2.minigame_type = self.MINIGAME_PICK_LOCK
@@ -1782,10 +1785,10 @@ function InteractionTweakData:_init_interactions()
 	self.close_container.text_id = "hud_close_container"
 	self.close_container.action_text_id = "hud_action_closing_container"
 	self.press_take_dogtags = {
-		start_active = true,
-		sound_done = "dogtags_pickup",
-		text_id = "hud_int_press_take_dogtags",
 		dot_limit = 0.935,
+		sound_done = "dogtags_pickup",
+		start_active = true,
+		text_id = "hud_int_press_take_dogtags",
 		interact_distance = self.SMALL_OBJECT_INTERACTION_DISTANCE,
 		timer = self.INTERACT_TIMER_INSTA
 	}
@@ -1795,9 +1798,9 @@ function InteractionTweakData:_init_interactions()
 	self.hold_take_dogtags.timer = self.INTERACT_TIMER_VERY_SHORT
 	self.hold_take_dogtags.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_GENERIC
 	self.press_take_loot = {
-		start_active = true,
-		sound_done = "pickup_tools",
 		dot_limit = 0.935,
+		sound_done = "pickup_tools",
+		start_active = true,
 		text_id = "hud_int_press_take_loot",
 		timer = self.INTERACT_TIMER_INSTA
 	}
@@ -2143,53 +2146,6 @@ function InteractionTweakData:_init_interactions()
 		sound_done = "bar_rescue_finished",
 		action_text_id = "hud_action_freeing"
 	}
-	self.hostage_trade = {
-		icon = "interaction_trade",
-		text_id = "debug_interact_trade",
-		start_active = true,
-		timer = 3,
-		requires_upgrade = {
-			upgrade = "hostage_trade",
-			category = "player"
-		},
-		action_text_id = "hud_action_trading",
-		contour_preset = "generic_interactable",
-		contour_preset_selected = "generic_interactable_selected"
-	}
-	self.hostage_move = {
-		icon = "interaction_trade",
-		text_id = "debug_interact_hostage_move",
-		start_active = true,
-		timer = 1,
-		action_text_id = "hud_action_standing_up",
-		no_contour = true,
-		interaction_obj = Idstring("Spine")
-	}
-	self.hostage_stay = {
-		icon = "interaction_trade",
-		text_id = "debug_interact_hostage_stay",
-		start_active = true,
-		timer = 0.4,
-		action_text_id = "hud_action_getting_down",
-		no_contour = true,
-		interaction_obj = Idstring("Spine2")
-	}
-	self.hostage_convert = {
-		icon = "develop",
-		text_id = "hud_int_hostage_convert",
-		blocked_hint = "convert_enemy_failed",
-		timer = 1.5,
-		requires_upgrade = {
-			upgrade = "convert_enemies",
-			category = "player"
-		},
-		upgrade_timer_multiplier = {
-			upgrade = "convert_enemies_interaction_speed_multiplier",
-			category = "player"
-		},
-		action_text_id = "hud_action_converting_hostage",
-		no_contour = true
-	}
 	self.activate_switch = {
 		icon = "develop",
 		text_id = "hud_activate_switch",
@@ -2264,6 +2220,7 @@ function InteractionTweakData:_init_carry()
 		action_text_id = "hud_action_taking_wine_crate",
 		timer = self.INTERACT_TIMER_CARRY,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_CARRY,
+		force_update_position = true,
 		start_active = true,
 		interact_distance = 250
 	}
@@ -2313,6 +2270,7 @@ function InteractionTweakData:_init_carry()
 		timer = self.INTERACT_TIMER_CARRY_PAINTING,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_CARRY,
 		interact_distance = self.CARRY_DROP_INTERACTION_DISTANCE,
+		force_update_position = true,
 		start_active = true,
 		sound_done = "sto_pick_up_painting"
 	}
@@ -2431,6 +2389,7 @@ function InteractionTweakData:_init_carry()
 	}
 	self.take_conspiracy_board_bag = deep_clone(self.take_conspiracy_board)
 	self.take_conspiracy_board_bag.start_active = true
+	self.take_conspiracy_board_bag.force_update_position = true
 	self.eat_candy = {
 		text_id = "hud_interact_eat_candy",
 		interact_distance = self.POWERUP_INTERACTION_DISTANCE
@@ -2670,10 +2629,10 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 0.35,
 		options = {
 			{
-				id = "drop_all",
-				text_id = "hud_carry_drop_all",
-				multiplier = 2,
 				icon = "comm_wheel_follow_me",
+				id = "drop_all",
+				multiplier = 2,
+				text_id = "hud_carry_drop_all",
 				clbk = function ()
 					managers.player:drop_all_carry()
 				end
@@ -2686,25 +2645,25 @@ function InteractionTweakData:_init_comwheels()
 		cooldown = 0.35,
 		options = {
 			{
-				text_id = "hud_airdrop_ammo",
 				icon = "comm_wheel_follow_me",
 				id = "airdrop_ammo",
+				text_id = "hud_airdrop_ammo",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big")
 				end
 			},
 			{
-				text_id = "hud_airdrop_health",
 				icon = "comm_wheel_follow_me",
 				id = "airdrop_health",
+				text_id = "hud_airdrop_health",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/health/pku_ammo_big")
 				end
 			},
 			{
-				text_id = "hud_airdrop_grenades",
 				icon = "comm_wheel_follow_me",
 				id = "airdrop_grenades",
+				text_id = "hud_airdrop_grenades",
 				clbk = function ()
 					managers.airdrop:call_drop("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_big")
 				end
@@ -2875,13 +2834,13 @@ function InteractionTweakData:_init_minigames()
 	self.sii_lockpick_easy_y_direction = deep_clone(self.sii_lockpick_easy)
 	self.sii_lockpick_easy_y_direction.axis = "y"
 	self.sii_lockpick_medium = {
-		action_text_id = "hud_action_sii_lockpicking",
-		legend_exit_text_id = "hud_legend_lockpicking_exit",
-		interact_distance = 200,
 		number_of_circles = 2,
-		text_id = "hud_sii_lockpick",
 		icon = "develop",
 		legend_interact_text_id = "hud_legend_lockpicking_interact",
+		legend_exit_text_id = "hud_legend_lockpicking_exit",
+		interact_distance = 200,
+		text_id = "hud_sii_lockpick",
+		action_text_id = "hud_action_sii_lockpicking",
 		minigame_type = self.MINIGAME_PICK_LOCK,
 		circle_rotation_speed = {
 			220,
@@ -3152,12 +3111,12 @@ function InteractionTweakData:_init_minigames()
 	}
 	self.lockpick_cargo_door.sounds = self.LOCKPICK_SOUNDS
 	self.minigame_lockpicking_base = {
+		number_of_circles = 4,
+		legend_interact_text_id = "hud_legend_lockpicking_interact",
 		legend_exit_text_id = "hud_legend_lockpicking_exit",
 		interact_distance = 220,
-		number_of_circles = 4,
-		action_text_id = "hud_action_lockpicking",
 		text_id = "hud_int_pick_lock",
-		legend_interact_text_id = "hud_legend_lockpicking_interact",
+		action_text_id = "hud_action_lockpicking",
 		minigame_type = self.MINIGAME_PICK_LOCK,
 		circle_rotation_speed = {
 			240,
@@ -3252,12 +3211,12 @@ function InteractionTweakData:_init_minigames()
 	self.rewire_fuse_pane_hard = deep_clone(self.rewire_fuse_pane)
 	self.activate_burners = {
 		sound_done = "el_cable_connected",
+		axis = "y",
 		sound_interupt = "el_cable_connect_stop",
 		sound_start = "el_cable_connect",
-		axis = "y",
 		interact_distance = 200,
-		action_text_id = "hud_action_activate_burners",
 		text_id = "hud_activate_burners",
+		action_text_id = "hud_action_activate_burners",
 		timer = self.INTERACT_TIMER_LONG,
 		upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_REWIRE
 	}

@@ -2,7 +2,7 @@ local UpgradeBrutality = {
 	check_activate = function (self)
 		managers.system_event_listener:remove_listener("brutality_health_regen")
 
-		if managers.player:has_category_upgrade("temporary", "brutality_dismember_critical_hit_chance") then
+		if alive(managers.player:local_player()) and managers.player:has_category_upgrade("temporary", "brutality_dismember_critical_hit_chance") then
 			managers.system_event_listener:add_listener("brutality_health_regen", {
 				CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
 			}, callback(self, self, "_on_enemy_killed"))

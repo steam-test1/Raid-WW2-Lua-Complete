@@ -95,24 +95,10 @@ function TradeManager:is_criminal_in_custody(name)
 	end
 end
 
-function TradeManager:is_trading()
-	return (self._trading_hostage or self._hostage_trade_clbk or self._speaker_snd_event) and #self._criminals_to_respawn > 0
-end
-
 function TradeManager:respawn_delay_by_name(character_name)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == character_name then
 			return crim.respawn_penalty
-		end
-	end
-
-	return 0
-end
-
-function TradeManager:hostages_killed_by_name(character_name)
-	for _, crim in ipairs(self._criminals_to_respawn) do
-		if crim.id == character_name then
-			return crim.hostages_killed
 		end
 	end
 
@@ -168,7 +154,7 @@ function TradeManager:get_criminal_to_trade()
 	end
 end
 
-function TradeManager:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed, from_local)
+function TradeManager:sync_set_trade_death(criminal_name, respawn_penalty, from_local)
 	if not from_local then
 		local crim_data = managers.criminals:character_data_by_name(criminal_name)
 
@@ -177,16 +163,16 @@ function TradeManager:sync_set_trade_death(criminal_name, respawn_penalty, hosta
 		end
 
 		if crim_data.ai then
-			self:on_AI_criminal_death(criminal_name, respawn_penalty, hostages_killed)
+			self:on_AI_criminal_death(criminal_name, respawn_penalty)
 		else
-			self:on_player_criminal_death(criminal_name, respawn_penalty, hostages_killed)
+			self:on_player_criminal_death(criminal_name, respawn_penalty)
 		end
 	end
 
 	self:play_custody_voice(criminal_name)
 
 	if managers.criminals:local_character_name() == criminal_name and not Network:is_server() and game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
-		game_state_machine:current_state():trade_death(respawn_penalty, hostages_killed)
+		game_state_machine:current_state():trade_death(respawn_penalty)
 	end
 end
 
@@ -239,8 +225,8 @@ function TradeManager:play_custody_voice(criminal_name)
 	end
 end
 
-function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hostages_killed, skip_netsend)
-	print("[TradeManager:on_AI_criminal_death]", criminal_name, respawn_penalty, hostages_killed, skip_netsend)
+function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, skip_netsend)
+	print("[TradeManager:on_AI_criminal_death]", criminal_name, respawn_penalty, skip_netsend)
 
 	if not managers.hud then
 		return
@@ -255,24 +241,23 @@ function TradeManager:on_AI_criminal_death(criminal_name, respawn_penalty, hosta
 		managers.hud:on_teammate_died(teammate_panel_id, name_label_id)
 	end
 
-	local crim = {
+	local criminal = {
 		ai = true,
 		id = criminal_name,
-		respawn_penalty = respawn_penalty,
-		hostages_killed = hostages_killed
+		respawn_penalty = respawn_penalty
 	}
 
-	table.insert(self._criminals_to_respawn, crim)
+	table.insert(self._criminals_to_respawn, criminal)
 
 	if Network:is_server() and not skip_netsend then
-		managers.network:session():send_to_peers_synched("set_trade_death", criminal_name, respawn_penalty, hostages_killed)
-		self:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed, true)
+		managers.network:session():send_to_peers_synched("set_trade_death", criminal_name, respawn_penalty)
+		self:sync_set_trade_death(criminal_name, respawn_penalty, true)
 	end
 
-	return crim
+	return criminal
 end
 
-function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, hostages_killed, skip_netsend)
+function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, skip_netsend)
 	for _, crim in ipairs(self._criminals_to_respawn) do
 		if crim.id == criminal_name then
 			Application:debug("[TradeManager:on_player_criminal_death] criminal already dead", criminal_name)
@@ -281,7 +266,7 @@ function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, h
 		end
 	end
 
-	if tweak_data.player.damage.automatic_respawn_time then
+	if respawn_penalty and tweak_data.player.damage.automatic_respawn_time then
 		respawn_penalty = math.min(respawn_penalty, tweak_data.player.damage.automatic_respawn_time)
 	end
 
@@ -300,7 +285,6 @@ function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, h
 		ai = false,
 		id = criminal_name,
 		respawn_penalty = respawn_penalty,
-		hostages_killed = hostages_killed,
 		peer_id = peer_id
 	}
 	local inserted = false
@@ -320,8 +304,8 @@ function TradeManager:on_player_criminal_death(criminal_name, respawn_penalty, h
 	end
 
 	if Network:is_server() and not skip_netsend then
-		managers.network:session():send_to_peers_synched("set_trade_death", criminal_name, respawn_penalty, hostages_killed)
-		self:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed, true)
+		managers.network:session():send_to_peers_synched("set_trade_death", criminal_name, respawn_penalty)
+		self:sync_set_trade_death(criminal_name, respawn_penalty, true)
 	end
 
 	print("[TradeManager:on_player_criminal_death]", criminal_name, ". Respawn queue:")
@@ -350,12 +334,11 @@ function TradeManager:replace_ai_with_player(ai_criminal, player_criminal, new_r
 		self:cancel_trade()
 	end
 
-	local respawn_penalty, hostages_killed = nil
+	local respawn_penalty = nil
 
 	for i, c in ipairs(self._criminals_to_respawn) do
 		if c.id == ai_criminal then
 			respawn_penalty = new_respawn_penalty or c.respawn_penalty
-			hostages_killed = c.hostages_killed
 
 			table.remove(self._criminals_to_respawn, i)
 
@@ -368,7 +351,7 @@ function TradeManager:replace_ai_with_player(ai_criminal, player_criminal, new_r
 			respawn_penalty = 1
 		end
 
-		return self:on_player_criminal_death(player_criminal, respawn_penalty, hostages_killed, true)
+		return self:on_player_criminal_death(player_criminal, respawn_penalty, true)
 	end
 end
 
@@ -379,14 +362,13 @@ function TradeManager:replace_player_with_ai(player_criminal, ai_criminal, new_r
 		self:cancel_trade()
 	end
 
-	local respawn_penalty, hostages_killed = nil
+	local respawn_penalty = nil
 
 	for i, c in ipairs(self._criminals_to_respawn) do
 		if c.id == player_criminal then
 			respawn_penalty = new_respawn_penalty or c.respawn_penalty
-			hostages_killed = c.hostages_killed
 
-			print("replacing player in custody. respawn_penalty", respawn_penalty, ". hostages_killed", hostages_killed)
+			print("replacing player in custody. respawn_penalty", respawn_penalty)
 			table.remove(self._criminals_to_respawn, i)
 
 			break
@@ -401,7 +383,7 @@ function TradeManager:replace_player_with_ai(player_criminal, ai_criminal, new_r
 		print("managers.criminals:nr_AI_criminals()", managers.criminals:nr_AI_criminals())
 
 		if managers.groupai:state():team_ai_enabled() and managers.groupai:state():is_AI_enabled() and managers.criminals:nr_AI_criminals() <= CriminalsManager.MAX_NR_TEAM_AI then
-			return self:on_AI_criminal_death(ai_criminal, respawn_penalty, hostages_killed, true)
+			return self:on_AI_criminal_death(ai_criminal, respawn_penalty, true)
 		end
 	end
 end
@@ -447,7 +429,7 @@ function TradeManager:remove_all_criminals_to_respawn()
 	self._criminals_to_respawn = {}
 end
 
-function TradeManager:_send_finish_trade(criminal, respawn_delay, hostages_killed)
+function TradeManager:_send_finish_trade(criminal, respawn_delay)
 	if criminal.ai == true then
 		return
 	end
@@ -508,75 +490,13 @@ function TradeManager:_send_cancel_trade(criminal)
 end
 
 function TradeManager:cancel_trade()
-	if self._hostage_trade_clbk then
-		managers.enemy:remove_delayed_clbk(self._hostage_trade_clbk)
-
-		self._hostage_trade_clbk = nil
-	end
-
-	self._trading_hostage = nil
 	local criminal = self:get_criminal_to_trade()
 
 	if criminal then
 		self:_send_cancel_trade(criminal)
 	end
 
-	if self._hostage_to_trade then
-		if alive(self._hostage_to_trade.unit) and not self._hostage_to_trade.unit:character_damage():dead() then
-			self._hostage_to_trade.unit:brain():cancel_trade()
-		end
-
-		if self._hostage_to_trade.death_clbk_key then
-			self._hostage_to_trade.unit:character_damage():remove_listener(self._hostage_to_trade.death_clbk_key)
-		end
-
-		if self._hostage_to_trade.destroyed_clbk_key then
-			self._hostage_to_trade.unit:base():remove_destroy_listener(self._hostage_to_trade.destroyed_clbk_key)
-		end
-
-		self._hostage_to_trade = nil
-	end
-
 	managers.groupai:state():check_gameover_conditions()
-end
-
-function TradeManager:get_best_hostage(pos)
-	local civilians = managers.enemy:all_civilians()
-	local trade_dist = tweak_data.group_ai.optimal_trade_distance
-	local optimal_trade_dist = math.random(trade_dist[1], trade_dist[2])
-	optimal_trade_dist = optimal_trade_dist * optimal_trade_dist
-	local best_hostage_d, best_hostage = nil
-
-	for _, h_key in ipairs(managers.groupai:state():all_hostages()) do
-		local civ = civilians[h_key]
-
-		if civ and civ.unit:character_damage():pickup() then
-			civ = nil
-		end
-
-		local hostage = civ or managers.enemy:all_enemies()[h_key]
-
-		if hostage then
-			local d = math.abs(mvector3.distance_sq(hostage.m_pos, pos) - optimal_trade_dist)
-
-			if civ then
-				d = d * 0.5
-			end
-
-			if not best_hostage_d or d < best_hostage_d then
-				best_hostage_d = d
-				best_hostage = hostage
-			end
-		end
-	end
-
-	if not best_hostage then
-		for u_key, unit in pairs(managers.groupai:state():all_converted_enemies()) do
-			best_hostage = managers.enemy:all_enemies()[u_key]
-		end
-	end
-
-	return best_hostage
 end
 
 function TradeManager:clbk_respawn_criminal(respawn_criminal)
@@ -609,7 +529,7 @@ function TradeManager:clbk_respawn_criminal(respawn_criminal)
 	managers.network:session():send_to_peers_synched("set_trade_spawn", respawn_criminal.id)
 
 	if respawn_criminal.ai then
-		managers.groupai:state():spawn_one_teamAI(false, respawn_criminal.id, spawn_on_unit)
+		managers.groupai:state():spawn_one_criminal_ai(false, respawn_criminal.id, spawn_on_unit)
 	end
 end
 
@@ -677,27 +597,6 @@ end
 function TradeManager:sync_set_auto_assault_ai_trade(character_name, time)
 	self._auto_assault_ai_trade_criminal_name = character_name
 	self._auto_assault_ai_trade_t = time
-end
-
-function TradeManager:get_auto_assault_ai_trade_time()
-	if not self._trade_countdown and managers.criminals:local_character_name() == self._auto_assault_ai_trade_criminal_name and managers.groupai:state():is_ai_trade_possible() then
-		return self._auto_assault_ai_trade_t
-	else
-		return nil
-	end
-end
-
-function TradeManager:get_guard_hostage_time()
-	local min_crim = self:get_min_criminal_to_trade()
-	local penalty = min_crim and min_crim.respawn_penalty or 0
-	local guard_time = (self._auto_assault_ai_trade_t or 0) + penalty
-	local automatic_respawn_time = tweak_data.player.damage.automatic_respawn_time
-
-	if automatic_respawn_time then
-		return math.min(automatic_respawn_time, guard_time)
-	else
-		return guard_time
-	end
 end
 
 function TradeManager:on_simulation_ended()

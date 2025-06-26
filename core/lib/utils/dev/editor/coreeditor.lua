@@ -14,6 +14,7 @@ core:import("CoreEngineAccess")
 core:import("CoreInput")
 core:import("CoreEditorUtils")
 core:import("CoreEditorSave")
+core:import("CoreUndoableCommand")
 core:import("CoreUnit")
 require("core/lib/utils/dev/editor/ews_classes/CoreEditorEwsClasses")
 require("core/lib/utils/dev/editor/ews_classes/UnitByName")
@@ -138,6 +139,7 @@ function CoreEditor:init(game_state_machine)
 	self._draw_bodies_on = false
 	self._simulation_debug_areas = false
 	self._simulation_world_setting_path = nil
+	self._command_stack = CoreUndoableCommand.CommandStack:new(self._undo_history)
 	self._hidden_units = {}
 	self._draw_hidden_units = false
 	self._layer_replace_dialogs = {}
@@ -193,8 +195,8 @@ function CoreEditor:_init_listener()
 
 	self._listener_always_enabled = false
 	self._sound_check_object = managers.sound_environment:add_check_object({
-		primary = true,
 		active = true,
+		primary = true,
 		object = self:camera()
 	})
 end
@@ -215,10 +217,10 @@ function CoreEditor:_init_gui()
 	self._gui = self._workspace:panel():gui(Idstring("core/guis/core_editor"))
 
 	self._gui:child("camera"):text({
+		font_size = 20,
 		name = "select_units_amount",
 		text = "",
-		font = "core/fonts/nice_editor_font",
-		font_size = 20
+		font = "core/fonts/nice_editor_font"
 	})
 	self:_align_gui()
 end
@@ -241,7 +243,7 @@ end
 
 function CoreEditor:_init_groups()
 	self._using_groups = false
-	self._debug_draw_groups = false
+	self._debug_draw_groups = true
 	self._groups = CoreEditorGroups:new()
 end
 
@@ -293,12 +295,12 @@ end
 function CoreEditor:_init_configuration_values()
 	self._autosave_time = 5
 	self._autosave_timer = 0
+	self._undo_history = 100
 	self._notes = "Hail to the King!"
 	self._invert_move_shift = false
 	self._always_global_select_unit = false
 	self._use_timestamp = false
 	self._reset_camera_on_new = false
-	self._use_beta_undo = false
 	self._dialogs_stay_on_top = false
 	self._save_edit_setting_values = false
 	self._save_dialog_states = false
@@ -319,7 +321,8 @@ end
 function CoreEditor:_init_layer_values()
 	self._coordinate_systems = {
 		"Local",
-		"World"
+		"World",
+		"Camera"
 	}
 	self._coordinate_system = "Local"
 	self._grid_sizes = {
@@ -564,6 +567,8 @@ function CoreEditor:_parse_controller_file(file, devices)
 				end
 			end
 		end
+	else
+		Application:info("[CoreEditor] No controller file " .. file .. " in DB. No controls changed for devices:", devices)
 	end
 end
 
@@ -606,6 +611,7 @@ function CoreEditor:_init_controller()
 
 	self._bindings = nil
 	self._layer_bindings = nil
+	self._menu_bindings = nil
 
 	ctrl_layer:connect(mouse, Idstring("0"), Idstring("lmb"))
 	ctrl_layer:connect(mouse, Idstring("1"), Idstring("rmb"))
@@ -722,7 +728,7 @@ function CoreEditor:toggle()
 end
 
 function CoreEditor:open()
-	if managers.editor and not self._current then
+	if self and not self._current then
 		self:close()
 
 		self._current = true
@@ -865,7 +871,7 @@ function CoreEditor:run_simulation(with_mission)
 
 		Global.running_simulation = false
 
-		managers.editor:output(CoreEditor._SIM_TXT_STOPPED, nil, Vector3(0, 0, 255))
+		self:output(CoreEditor._SIM_TXT_STOPPED, nil, Vector3(0, 0, 255))
 	else
 		self:_interupt_frustum_freeze()
 
@@ -880,8 +886,8 @@ function CoreEditor:run_simulation(with_mission)
 
 		self:set_in_mixed_input_mode(false)
 		self:toggle()
-		managers.editor:unit_output()
-		managers.editor:has_editables()
+		self:unit_output()
+		self:has_editables()
 		self:_hide_dialogs()
 		self:project_prestart_up(with_mission)
 		self._layers.Instances:on_simulation_started()
@@ -893,7 +899,7 @@ function CoreEditor:run_simulation(with_mission)
 		self._saved_simulation_values.script = mission:current_script()
 
 		if with_mission then
-			managers.editor:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
+			self:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
 
 			local script = mission:simulate_with_current_script() and mission:current_script()
 			local mission_params = {
@@ -903,7 +909,7 @@ function CoreEditor:run_simulation(with_mission)
 
 			managers.mission:parse(mission_params)
 		else
-			managers.editor:output(CoreEditor._SIM_TXT_STARTED_NOSCRIPT, nil, Vector3(0, 0, 255))
+			self:output(CoreEditor._SIM_TXT_STARTED_NOSCRIPT, nil, Vector3(0, 0, 255))
 		end
 
 		self._current_layer:deactivate({
@@ -916,7 +922,7 @@ function CoreEditor:run_simulation(with_mission)
 		self:_simulation_disable_continents()
 		self:project_run_simulation(with_mission)
 		managers.queued_tasks:queue(nil, self._fire_level_loaded_event, self, nil, 0.56, nil)
-		managers.editor:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
+		self:output(CoreEditor._SIM_TXT_STARTED, nil, Vector3(0, 0, 255))
 	end
 end
 
@@ -1009,7 +1015,7 @@ function CoreEditor:stop_simulation()
 	self._stopping_simulation = true
 
 	self._notebook:set_enabled(true)
-	managers.editor:output("--- Ending the Simulation ---", nil, Vector3(0, 0, 255))
+	self:output("--- Ending the Simulation ---", nil, Vector3(0, 0, 255))
 	managers.mission:stop_simulation()
 	managers.worldcamera:stop_simulation()
 	managers.environment_effects:kill_all_mission_effects()
@@ -1322,7 +1328,7 @@ function CoreEditor:unselect_unit(unit)
 
 	if layer then
 		layer:remove_select_unit(unit)
-		layer:check_referens_exists()
+		layer:check_reference_exists()
 	end
 end
 
@@ -1432,12 +1438,26 @@ function CoreEditor:on_selected_unit(unit)
 	for _, callback_func in ipairs(self._selected_unit_callbacks or {}) do
 		callback_func(unit)
 	end
+
+	if self._element_flow and self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit() or unit)
+	end
+end
+
+function CoreEditor:on_selected_instance(instance)
+	if self._element_flow and self._element_flow:visible() then
+		self._element_flow:on_instance_selected(instance)
+	end
 end
 
 function CoreEditor:on_reference_unit(unit)
 	if self._unit_transform then
 		self._unit_transform:set_unit(unit)
 	end
+end
+
+function CoreEditor:select_group(group)
+	self._current_layer:select_group(group)
 end
 
 function CoreEditor:group_created(group)
@@ -2275,9 +2295,19 @@ function CoreEditor:get_world_holder_path()
 	return self._world_holder:get_world_file()
 end
 
+function CoreEditor:add_undoable_command(command)
+	self._command_stack:add_command(command)
+end
+
 function CoreEditor:undo()
-	if self._current_layer and ctrl() then
-		self._current_layer:undo()
+	if not ctrl() then
+		return
+	end
+
+	if shift() then
+		self._command_stack:redo()
+	else
+		self._command_stack:undo()
 	end
 end
 
@@ -2299,12 +2329,12 @@ function CoreEditor:step_id()
 	return self._STEP_ID
 end
 
-function CoreEditor:get_unit_id(unit)
+function CoreEditor:get_unit_id(unit, requested_id)
 	if unit:unit_data().continent then
-		return unit:unit_data().continent:get_unit_id(unit)
+		return unit:unit_data().continent:get_unit_id(unit, requested_id)
 	end
 
-	local i = self._max_id
+	local i = requested_id or self._max_id
 
 	while self._unit_ids[i] do
 		i = i + 1
@@ -2502,11 +2532,11 @@ function CoreEditor:update(time, rel_time)
 			entering_window()
 		end
 
-		if #managers.editor._editor_data.virtual_controller:down_list() == 0 and self._wants_to_leave_window then
+		if #self._editor_data.virtual_controller:down_list() == 0 and self._wants_to_leave_window then
 			self:leave_window()
 		end
 
-		if #managers.editor._editor_data.virtual_controller:pressed_list() > 0 then
+		if #self._editor_data.virtual_controller:pressed_list() > 0 then
 			self._confirm_on_new = true
 		end
 
@@ -2685,6 +2715,7 @@ function CoreEditor:update_ruler(t, dt)
 		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
+	local ruler_lengths = {}
 
 	if #self._ruler_points == 1 then
 		if not ray or not ray.position then
@@ -2694,6 +2725,7 @@ function CoreEditor:update_ruler(t, dt)
 		pos_s = self._ruler_points[1]
 		pos_e = ray.position
 		len = len + (pos_s - pos_e):length()
+		ruler_lengths[1] = len
 
 		Application:draw_sphere(pos_s, 10, 1, 1, 1)
 		Application:draw_line(pos_s, pos_e, 1, 1, 1)
@@ -2701,7 +2733,11 @@ function CoreEditor:update_ruler(t, dt)
 		for i = 1, #self._ruler_points - 1 do
 			pos_s = self._ruler_points[i]
 			pos_e = self._ruler_points[i + 1]
-			len = len + (pos_s - pos_e):length()
+			local line_length = (pos_s - pos_e):length()
+
+			table.insert(ruler_lengths, line_length)
+
+			len = len + line_length
 
 			Application:draw_sphere(pos_s, 10, 1, 1, 1)
 			Application:draw_line(pos_s, pos_e, 1, 1, 1)
@@ -2714,12 +2750,23 @@ function CoreEditor:update_ruler(t, dt)
 			Application:draw_sphere(pos_s, 10, 1, 1, 1)
 			Application:draw_line(pos_s, pos_e, 1, 1, 1)
 
-			len = len + (pos_s - pos_e):length()
+			local line_length = (pos_s - pos_e):length()
+
+			table.insert(ruler_lengths, line_length)
+
+			len = len + line_length
 		end
 	end
 
 	Application:draw_sphere(pos_e, 10, 1, 1, 1)
-	self:set_value_info(string.format("Length: %.2fm / Lines: %s", len / 100, #self._ruler_points - 1))
+
+	local ruler_str = string.format("Length: %.2fm / Lines: %s", len / 100, #self._ruler_points - 1)
+
+	for i, length in ipairs(ruler_lengths) do
+		ruler_str = ruler_str .. string.format("\n %s: %.2fm", i, length / 100)
+	end
+
+	self:set_value_info(ruler_str)
 	self:set_value_info_pos(self:world_to_screen(pos_e))
 end
 
@@ -2818,24 +2865,39 @@ function CoreEditor:current_orientation(offset_move_vec, unit)
 end
 
 function CoreEditor:draw_grid(unit)
-	if not managers.editor:layer_draw_grid() then
+	if not self:layer_draw_grid() then
 		return
 	end
 
-	local rot = Rotation(0, 0, 0)
+	local coor_sys = self:coordinate_system()
+	local rot = nil
 
-	if alive(unit) and self:is_coordinate_system("Local") then
-		rot = unit:rotation()
+	if alive(unit) then
+		if coor_sys == "Local" then
+			rot = unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = unit:rotation()
+		elseif coor_sys == "Camera" then
+			rot = self:camera():rotation()
+		else
+			rot = Rotation()
+		end
+	end
+
+	if not rot then
+		return
 	end
 
 	for i = -5, 5 do
-		local from_x = self._current_pos + rot:x() * i * self:grid_size() - rot:y() * 6 * self:grid_size()
-		local to_x = self._current_pos + rot:x() * i * self:grid_size() + rot:y() * 6 * self:grid_size()
+		local rx = rot:x()
+		local ry = coor_sys == "Camera" and rot:z() or rot:y()
+		local from_x = self._current_pos + rx * i * self:grid_size() - ry * 6 * self:grid_size()
+		local to_x = self._current_pos + rx * i * self:grid_size() + ry * 6 * self:grid_size()
 
 		Application:draw_line(from_x, to_x, 0, 0.5, 0)
 
-		local from_y = self._current_pos + rot:y() * i * self:grid_size() - rot:x() * 6 * self:grid_size()
-		local to_y = self._current_pos + rot:y() * i * self:grid_size() + rot:x() * 6 * self:grid_size()
+		local from_y = self._current_pos + ry * i * self:grid_size() - rx * 6 * self:grid_size()
+		local to_y = self._current_pos + ry * i * self:grid_size() + rx * 6 * self:grid_size()
 
 		Application:draw_line(from_y, to_y, 0, 0.5, 0)
 	end
@@ -3057,6 +3119,10 @@ function CoreEditor:change_layer(notebook)
 end
 
 function CoreEditor:change_layer_name(name)
+	if self._current_layer == self._layers[name] then
+		return
+	end
+
 	self:clear_triggers()
 
 	if self._current_layer then
@@ -3149,11 +3215,11 @@ function CoreEditor:do_save(path, dir, save_continents)
 		return
 	end
 
-	local errors = managers.editor:check_duplicate_names_exist()
+	local errors = self:check_duplicate_names_exist()
 
 	if errors then
-		Application:error("Duplicate names exist in the script, something is incorrect!")
-		managers.editor:show_text_box("ERROR!", errors)
+		Application:error("Duplicate names exist in the world, something is incorrect!")
+		self:show_text_box("ERROR!", errors)
 
 		return
 	end
@@ -3246,11 +3312,12 @@ function CoreEditor:check_duplicate_names_exist()
 
 	Application:debug("[MissionManager:check_duplicate_names_exist]")
 
-	res = "YOUR LEVEL IS NOT SAVED!!!\n\n"
-	res = res .. "Contintnet/Script with duplicate names is found:\n\n"
+	res = "WORLD WILL NOT BE SAVED!\n\n"
+	res = res .. "Continent and/or Mission Script found duplicate names.\n"
+	res = res .. "Please rename the following items to something unique!\n\n"
 	local count_map = {}
 
-	for _, unit in pairs(managers.editor:layers().Mission._created_units) do
+	for _, unit in pairs(self:layers().Mission._created_units) do
 		local name = unit:unit_data().continent._name .. "/" .. unit:unit_data().name_id
 
 		if not count_map[name] then
@@ -3263,16 +3330,16 @@ function CoreEditor:check_duplicate_names_exist()
 		end
 	end
 
-	local cnt = 0
+	local count = 0
 
 	for name, unit_data in pairs(count_map) do
 		if unit_data.count > 1 then
-			cnt = cnt + 1
+			count = count + 1
 			res = res .. name .. "\n"
 			found = true
 		end
 
-		if cnt > 100 then
+		if count > 100 then
 			res = res .. "More elements with same name exists. Fix this ones, and try to resave to get new list..."
 
 			break
@@ -3363,7 +3430,7 @@ function CoreEditor:add_to_sound_package(params)
 end
 
 function CoreEditor:_save_packages(dir)
-	local chunk_name = managers.editor:layer("Level Settings"):get_setting("chunk_name")
+	local chunk_name = self:layer("Level Settings"):get_setting("chunk_name")
 	local is_not_init_chunk = chunk_name ~= "init"
 	local streaming_options = {
 		win32 = {
@@ -3540,7 +3607,7 @@ function CoreEditor:_save_shadow_textures(dir)
 	gui_file:puts("</gui>")
 	SystemFS:close(gui_file)
 	print("managers.database:entry_relative_path( path )", path, managers.database:entry_relative_path(path))
-	managers.editor:add_to_world_package({
+	self:add_to_world_package({
 		category = "guis",
 		path = managers.database:entry_path(path)
 	})
@@ -3576,8 +3643,8 @@ end
 
 function CoreEditor:_save_continent_files(dir)
 	local layer_files = {
-		mission = "mission",
-		mission_scripts = "mission"
+		mission_scripts = "mission",
+		mission = "mission"
 	}
 
 	for continent, data in pairs(self._continent_save_tables) do
@@ -3686,7 +3753,7 @@ end
 
 function CoreEditor:_open_file(path, continent, init, skip_package)
 	if not skip_package then
-		managers.editor:add_to_world_package({
+		self:add_to_world_package({
 			category = "script_data",
 			path = managers.database:entry_relative_path(path),
 			continent = continent,
@@ -3958,6 +4025,7 @@ function CoreEditor:clear_all()
 	self._continents = {}
 
 	self._continents_panel:destroy_all_continents()
+	self._command_stack:clear()
 	self:create_continent("world", {})
 	self:set_simulation_world_setting_path(nil)
 
@@ -3998,10 +4066,18 @@ function CoreEditor:load_continents(world_holder, offset)
 	local continents = world_holder:create_world("world", "continents", offset)
 
 	for name, data in pairs(continents) do
-		local continent = self:create_continent(name, data)
+		self:create_continent(name, data)
 	end
 
 	self:set_continent("world")
+end
+
+function CoreEditor:undo_history()
+	return self._undo_history
+end
+
+function CoreEditor:_on_changed_undo_history()
+	self._command_stack:set_history_size(self._undo_history)
 end
 
 function CoreEditor:invert_move_shift()
@@ -4123,22 +4199,26 @@ function CoreEditor:select_units(units)
 	Profiler:counter_time("select_units")
 end
 
-function CoreEditor:select_group(group)
-	self._current_layer:select_group(group)
+function CoreEditor:center_view_on_point(pos, radius)
+	if pos then
+		local rot = Rotation:look_at(self:camera_position(), pos, Vector3(0, 0, 1))
+		local pos = pos - rot:y() * radius
+
+		self:set_camera(pos, rot)
+	end
 end
 
-function CoreEditor:center_view_on_unit(unit)
+function CoreEditor:center_view_on_unit(unit, padding)
 	if alive(unit) then
-		local rot = Rotation:look_at(managers.editor:camera_position(), unit:position(), Vector3(0, 0, 1))
-		local pos = unit:position() - rot:y() * unit:bounding_sphere_radius() * 2
+		padding = padding or 2
 
-		managers.editor:set_camera(pos, rot)
+		self:center_view_on_point(unit:position(), unit:bounding_sphere_radius() * padding)
 	end
 end
 
 function CoreEditor:look_towards_unit(unit)
 	if alive(unit) then
-		local rot = Rotation:look_at(managers.editor:camera_position(), unit:position(), Vector3(0, 0, 1))
+		local rot = Rotation:look_at(self:camera_position(), unit:position(), Vector3(0, 0, 1))
 
 		self._camera_controller:set_camera_rot(rot)
 	end
@@ -4157,6 +4237,8 @@ function CoreEditor:change_layer_based_on_unit(unit)
 				for i = 0, self._notebook:get_page_count() - 1 do
 					if self._notebook:get_page_text(i) == layer_name then
 						self._notebook:set_page(i)
+
+						break
 					end
 				end
 			end
@@ -4165,37 +4247,49 @@ function CoreEditor:change_layer_based_on_unit(unit)
 end
 
 function CoreEditor:unit_in_layer(unit)
+	if not alive(unit) or not unit:unit_data() then
+		Application:error("[CoreEditor:unit_in_layer] Unit without unit data!", unit)
+
+		return
+	end
+
+	local unit_id = unit:unit_data().unit_id
+
 	for _, layer in pairs(self._layers) do
-		if not unit:unit_data() then
-			Application:error("[CoreEditor:unit_in_layer] Unit without unit data!", unit)
-
-			return
-		end
-
-		if layer:created_units_pairs()[unit:unit_data().unit_id] then
+		if layer:created_units_pairs()[unit_id] then
 			return layer
 		end
 	end
 end
 
 function CoreEditor:unit_in_layer_name(unit)
+	if not alive(unit) or not unit:unit_data() then
+		Application:error("[CoreEditor:unit_in_layer_name] Unit without unit data!", unit)
+
+		return
+	end
+
+	local unit_id = unit:unit_data().unit_id
+
 	for name, layer in pairs(self._layers) do
-		if table.contains(layer:created_units(), unit) then
+		if layer:created_units_pairs()[unit_id] then
 			return name
 		end
 	end
-
-	return nil
 end
 
-function CoreEditor:delete_unit(unit)
-	local unit_in_layer = self:unit_in_layer(unit)
+function CoreEditor:delete_unit(unit, not_undoable)
+	local layer = self:unit_in_layer(unit)
 
-	if unit_in_layer then
-		unit_in_layer:delete_unit(unit)
+	if layer then
+		layer:delete_unit(unit, not_undoable)
 	else
 		Application:error("[CoreEditor:delete_unit] Unit was not in layer, destroying!", unit)
 		unit:set_slot(0)
+	end
+
+	if self._element_flow and self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit())
 	end
 end
 
@@ -4443,7 +4537,7 @@ function CoreEditor:set_ruler_points()
 
 		if #self._ruler_points == 0 then
 			if not ray or not ray.position then
-				managers.editor:output("Cannot activate ruler, raycast didnt hit any bodies.")
+				self:output("Cannot activate ruler, raycast didnt hit any bodies.")
 
 				return
 			end
@@ -4495,10 +4589,6 @@ function CoreEditor:destroy()
 	end
 end
 
-function CoreEditor:use_beta_undo()
-	return self._use_beta_undo
-end
-
 CoreEditorContinent = CoreEditorContinent or class()
 
 function CoreEditorContinent:init(name, values)
@@ -4530,8 +4620,8 @@ function CoreEditorContinent:base_id()
 	return self._values.base_id
 end
 
-function CoreEditorContinent:get_unit_id(unit)
-	local i = self._values.base_id
+function CoreEditorContinent:get_unit_id(unit, requested_id)
+	local i = requested_id or self._values.base_id
 
 	while self._unit_ids[i] do
 		i = i + 1
@@ -4637,6 +4727,6 @@ end
 
 function CoreEditorContinent:delete()
 	for _, unit in ipairs(clone(self._units)) do
-		managers.editor:delete_unit(unit)
+		managers.editor:delete_unit(unit, true)
 	end
 end

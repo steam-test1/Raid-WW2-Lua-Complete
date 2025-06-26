@@ -11,8 +11,6 @@ function VehicleDamage:init(unit)
 	self._listener_holder = EventListenerHolder:new()
 	self._health = VehicleDamage.VEHICLE_DEFAULT_HEALTH
 	self._current_max_health = VehicleDamage.VEHICLE_DEFAULT_HEALTH
-	self._next_allowed_dmg_t = Application:digest_value(-100, true)
-	self._last_received_dmg = 0
 	self._team_police = "law1"
 	self._team_criminal = "criminal1"
 	self._half_damaged_squence_played = false
@@ -58,8 +56,8 @@ end
 function VehicleDamage:damage_mission(dmg)
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "killzone"
+			variant = "killzone",
+			type = "hurt"
 		}
 	}
 	local attack_data = {
@@ -109,8 +107,8 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -123,8 +121,6 @@ function VehicleDamage:damage_bullet(attack_data)
 		return
 	elseif self:is_friendly_fire(attack_data.attacker_unit) then
 		return "friendly_fire"
-	elseif self:_chk_dmg_too_soon(attack_data.damage) then
-		return
 	end
 
 	local result = damage_info.result
@@ -215,15 +211,15 @@ function VehicleDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body,
 
 	if death then
 		result = {
-			type = "death",
-			variant = "bullet"
+			variant = "bullet",
+			type = "death"
 		}
 
 		self:die(attack_data.variant)
 	else
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		}
 
 		self:set_health(self._health - damage)
@@ -250,8 +246,8 @@ function VehicleDamage:damage_explosion(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "explosion"
+			variant = "explosion",
+			type = "hurt"
 		}
 	}
 
@@ -330,8 +326,8 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 		self:die(attack_data.variant)
 
 		local data = {
-			head_shot = false,
 			variant = "explosion",
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -386,8 +382,8 @@ function VehicleDamage:damage_fire(attack_data)
 
 	local damage_info = {
 		result = {
-			type = "hurt",
-			variant = "fire"
+			variant = "fire",
+			type = "hurt"
 		}
 	}
 
@@ -464,8 +460,8 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 		self:die(attack_data.variant)
 
 		local data = {
-			head_shot = false,
 			variant = "fire",
+			head_shot = false,
 			name = self._unit:base()._tweak_table,
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit()
 		}
@@ -523,8 +519,8 @@ function VehicleDamage:damage_collision(attack_data)
 
 		local damage_info = {
 			result = {
-				type = "hurt",
-				variant = "collision"
+				variant = "collision",
+				type = "hurt"
 			}
 		}
 
@@ -647,14 +643,6 @@ function VehicleDamage:die()
 	Application:trace("[VehicleDamage:die]")
 	self:set_health(0)
 	self._unit:vehicle_driving():on_vehicle_death()
-end
-
-function VehicleDamage:_chk_dmg_too_soon(damage)
-	local next_allowed_dmg_t = type(self._next_allowed_dmg_t) == "number" and self._next_allowed_dmg_t or Application:digest_value(self._next_allowed_dmg_t, false)
-
-	if damage <= self._last_received_dmg + 0.01 and managers.player:player_timer():time() < next_allowed_dmg_t then
-		return true
-	end
 end
 
 function VehicleDamage:_hit_direction(col_ray)

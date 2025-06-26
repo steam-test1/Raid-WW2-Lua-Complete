@@ -20,6 +20,3 @@ function SpawnPlayerElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "use_for_teleport", "Use for teleport")
 	self:_add_help_text("The state defines how the player will be spawned/teleported")
 end
-
-function SpawnPlayerElement:add_to_mission_package()
-end

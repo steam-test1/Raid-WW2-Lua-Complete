@@ -420,12 +420,10 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	end
 
 	local filtered_cards = self:_verify_filter_cards(list)
-	local filtered_crafts = self:_verify_filter_crafts(list)
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
 		error = error,
-		cards = filtered_cards,
-		crafts = filtered_crafts
+		cards = filtered_cards
 	})
 end
 
@@ -458,45 +456,6 @@ function NetworkAccountSTEAM:_verify_filter_cards(card_list)
 	if filtered_list then
 		for card_key_name, card_data in pairs(filtered_list) do
 			table.insert(result, card_data)
-		end
-	end
-
-	return result
-end
-
-function NetworkAccountSTEAM:_verify_filter_crafts(items)
-	if not items then
-		return {}
-	end
-
-	local filtered_list = {}
-	local result = {}
-
-	for _, steamdata in pairs(items) do
-		if steamdata.category == "crafting_item" then
-			local craft_tweakdata = tweak_data.challenge_cards.crafting_items[steamdata.entry]
-
-			if craft_tweakdata then
-				local key_name = craft_tweakdata.key_name
-
-				if not filtered_list[key_name] then
-					filtered_list[key_name] = craft_tweakdata
-					filtered_list[key_name].steam_instances = {}
-				end
-
-				local instance_id = steamdata.instance_id or #filtered_list[key_name].steam_instances
-
-				table.insert(filtered_list[key_name].steam_instances, {
-					stack_amount = steamdata.amount or 1,
-					instance_id = tostring(instance_id)
-				})
-			end
-		end
-	end
-
-	if filtered_list then
-		for item_key_name, item_data in pairs(filtered_list) do
-			table.insert(result, item_data)
 		end
 	end
 

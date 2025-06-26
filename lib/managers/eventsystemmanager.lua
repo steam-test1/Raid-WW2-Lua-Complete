@@ -24,6 +24,8 @@ function EventSystemManager:reset()
 	self._daily_event_id = "active_duty"
 
 	self:_check_special_event()
+
+	self._sync_bounty_seed = nil
 end
 
 function EventSystemManager:save_profile_slot(data)
@@ -239,4 +241,31 @@ function EventSystemManager:card_drop_callback(notification_params, error, loot_
 	end
 
 	managers.notification:add_notification(notification_params)
+end
+
+local __SEED_LIMIT = 2000000000
+local __SEED_A = 92836596
+local __SEED_B = 767
+
+function EventSystemManager:bounty_seed(custom_date)
+	if self._sync_bounty_seed and Network:is_client() then
+		return self._sync_bounty_seed % __SEED_LIMIT
+	end
+
+	local date_str = "!%m%d%Y"
+	local date_time = custom_date or os.date(date_str)
+
+	return math.abs(math.floor(tonumber(date_time) * __SEED_A / __SEED_B)) % __SEED_LIMIT
+end
+
+function EventSystemManager:sync_bounty_seed(seed)
+	Application:info("[EventSystemManager:sync_bounty_seed] seed", seed)
+
+	self._sync_bounty_seed = seed and seed ~= -1 and seed % __SEED_LIMIT or nil
+
+	managers.raid_job:generate_bounty_job(self._sync_bounty_seed)
+end
+
+function EventSystemManager:get_sync_bounty_seed()
+	return self._sync_bounty_seed
 end

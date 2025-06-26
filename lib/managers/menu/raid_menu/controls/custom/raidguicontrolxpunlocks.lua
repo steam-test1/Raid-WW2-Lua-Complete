@@ -21,28 +21,28 @@ end
 
 function RaidGUIControlXPSkillSet:_create_panel(parent)
 	local panel_params = {
+		visible = false,
 		name = "skill_set_unlock_panel",
 		halign = "scale",
-		valign = "scale",
-		visible = false
+		valign = "scale"
 	}
 	self._object = parent:panel(panel_params)
 end
 
 function RaidGUIControlXPSkillSet:_create_content_panel()
 	local panel_params = {
+		alpha = 0,
 		name = "content_panel",
 		halign = "scale",
-		valign = "scale",
-		alpha = 0
+		valign = "scale"
 	}
 	self._content_panel = self._object:panel(panel_params)
 end
 
 function RaidGUIControlXPSkillSet:_create_icon_panel()
 	local icon_panel_params = {
-		name = "icon_panel",
 		halign = "scale",
+		name = "icon_panel",
 		valign = "scale"
 	}
 	self._icon_panel = self._content_panel:panel(icon_panel_params)
@@ -50,9 +50,9 @@ end
 
 function RaidGUIControlXPSkillSet:_create_text()
 	local title_text_params = {
-		align = "center",
-		name = "skill_set_unlock_title_text",
 		vertical = "center",
+		name = "skill_set_unlock_title_text",
+		align = "center",
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.TITLE_FONT_SIZE,
@@ -69,9 +69,9 @@ function RaidGUIControlXPSkillSet:_create_text()
 	title:set_center_x(self._content_panel:w() / 2)
 
 	local flavor_text_params = {
-		align = "center",
-		name = "skill_set_unlock_flavor_text",
 		vertical = "center",
+		name = "skill_set_unlock_flavor_text",
+		align = "center",
 		h = RaidGUIControlXPSkillSet.TEXT_H,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.FLAVOR_TEXT_FONT_SIZE,
@@ -126,8 +126,12 @@ function RaidGUIControlXPSkillSet:_create_icons(skills)
 	local icons = {}
 
 	for skill_id, skill in pairs(skills) do
-		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
-		local gui_data = tweak_data.gui:get_full_gui_data(icon)
+		if #icons >= 3 then
+			break
+		end
+
+		local icon_id = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
+		local gui_data = tweak_data.gui:get_full_gui_data(icon_id)
 		local icon = self._icon_panel:bitmap({
 			blend_mode = "add",
 			name = "skill_" .. tostring(skill.name_id) .. "_icon",
@@ -141,29 +145,29 @@ function RaidGUIControlXPSkillSet:_create_icons(skills)
 
 	if #icons == 1 then
 		icons[1]:set_center_x(self._icon_panel:w() / 2)
-		icons[1]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
 	elseif #icons == 2 then
-		icons[1]:set_w(icons[1]:w() * RaidGUIControlXPSkillSet.DOUBLE_ICON_SCALE)
-		icons[1]:set_h(icons[1]:h() * RaidGUIControlXPSkillSet.DOUBLE_ICON_SCALE)
-		icons[1]:set_center_x(self._icon_panel:w() / 2 - RaidGUIControlXPSkillSet.DOUBLE_ICON_DISTANCE / 2)
-		icons[1]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
-		icons[2]:set_w(icons[2]:w() * RaidGUIControlXPSkillSet.DOUBLE_ICON_SCALE)
-		icons[2]:set_h(icons[2]:h() * RaidGUIControlXPSkillSet.DOUBLE_ICON_SCALE)
-		icons[2]:set_center_x(self._icon_panel:w() / 2 + RaidGUIControlXPSkillSet.DOUBLE_ICON_DISTANCE / 2)
-		icons[2]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
+		icons[1]:set_w(icons[1]:w() * self.DOUBLE_ICON_SCALE)
+		icons[1]:set_h(icons[1]:h() * self.DOUBLE_ICON_SCALE)
+		icons[1]:set_center_x(self._icon_panel:w() / 2 - self.DOUBLE_ICON_DISTANCE / 2)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
+		icons[2]:set_w(icons[2]:w() * self.DOUBLE_ICON_SCALE)
+		icons[2]:set_h(icons[2]:h() * self.DOUBLE_ICON_SCALE)
+		icons[2]:set_center_x(self._icon_panel:w() / 2 + self.DOUBLE_ICON_DISTANCE / 2)
+		icons[2]:set_center_y(self.ICON_CENTER_Y)
 	elseif #icons == 3 then
-		icons[1]:set_w(icons[1]:w() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
-		icons[1]:set_h(icons[1]:h() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
-		icons[1]:set_center_x(self._icon_panel:w() / 2 - RaidGUIControlXPSkillSet.TRIPLE_ICON_DISTANCE)
-		icons[1]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
-		icons[2]:set_w(icons[2]:w() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
-		icons[2]:set_h(icons[2]:h() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
+		icons[1]:set_w(icons[1]:w() * self.TRIPLE_ICON_SCALE)
+		icons[1]:set_h(icons[1]:h() * self.TRIPLE_ICON_SCALE)
+		icons[1]:set_center_x(self._icon_panel:w() / 2 - self.TRIPLE_ICON_DISTANCE)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
+		icons[2]:set_w(icons[2]:w() * self.TRIPLE_ICON_SCALE)
+		icons[2]:set_h(icons[2]:h() * self.TRIPLE_ICON_SCALE)
 		icons[2]:set_center_x(self._icon_panel:w() / 2)
-		icons[2]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
-		icons[3]:set_w(icons[3]:w() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
-		icons[3]:set_h(icons[3]:h() * RaidGUIControlXPSkillSet.TRIPLE_ICON_SCALE)
-		icons[3]:set_center_x(self._icon_panel:w() / 2 + RaidGUIControlXPSkillSet.TRIPLE_ICON_DISTANCE)
-		icons[3]:set_center_y(RaidGUIControlXPSkillSet.ICON_CENTER_Y)
+		icons[2]:set_center_y(self.ICON_CENTER_Y)
+		icons[3]:set_w(icons[3]:w() * self.TRIPLE_ICON_SCALE)
+		icons[3]:set_h(icons[3]:h() * self.TRIPLE_ICON_SCALE)
+		icons[3]:set_center_x(self._icon_panel:w() / 2 + self.TRIPLE_ICON_DISTANCE)
+		icons[3]:set_center_y(self.ICON_CENTER_Y)
 	end
 end
 
@@ -225,36 +229,36 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_panel(parent)
 	local panel_params = {
+		visible = false,
 		name = "skill_set_unlock_panel",
 		halign = "scale",
-		valign = "scale",
-		visible = false
+		valign = "scale"
 	}
 	self._object = parent:panel(panel_params)
 end
 
 function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	local weapon_panel_params = {
-		halign = "scale",
-		valign = "scale",
 		name = "weapon_panel",
 		alpha = 0,
+		halign = "scale",
+		valign = "scale",
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2
 	}
 	self._weapon_panel = self._object:panel(weapon_panel_params)
 	local weapon_icon_panel_params = {
-		name = "weapon_icon_panel",
 		halign = "scale",
+		name = "weapon_icon_panel",
 		valign = "scale"
 	}
 	self._weapon_icon_panel = self._weapon_panel:panel(weapon_icon_panel_params)
 	local weapon_name_params = {
-		align = "center",
-		name = "weapon_name",
 		text = "",
 		vertical = "center",
+		name = "weapon_name",
+		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -268,10 +272,10 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	local skill_panel_params = {
-		halign = "scale",
-		valign = "scale",
 		name = "skill_panel",
 		alpha = 0,
+		halign = "scale",
+		valign = "scale",
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		x = self._object:w() / 2,
@@ -279,16 +283,16 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	}
 	self._skill_panel = self._object:panel(skill_panel_params)
 	local skill_icon_panel_params = {
-		name = "skill_icon_panel",
 		halign = "scale",
+		name = "skill_icon_panel",
 		valign = "scale"
 	}
 	self._skill_icon_panel = self._skill_panel:panel(skill_icon_panel_params)
 	local skill_set_title_params = {
-		align = "center",
-		name = "skill_set_title",
 		text = "",
 		vertical = "center",
+		name = "skill_set_title",
+		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
@@ -302,9 +306,9 @@ end
 
 function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	local title_text_params = {
-		align = "center",
-		name = "skill_set_unlock_title_text",
 		vertical = "center",
+		name = "skill_set_unlock_title_text",
+		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.TITLE_FONT_SIZE,
@@ -319,9 +323,9 @@ function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	title:set_center_x(self._object:w() / 2)
 
 	local flavor_text_params = {
-		align = "center",
-		name = "skill_set_unlock_flavor_text",
 		vertical = "center",
+		name = "skill_set_unlock_flavor_text",
+		align = "center",
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.FLAVOR_TEXT_FONT_SIZE,
@@ -370,8 +374,12 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_icons(skills)
 	local icons = {}
 
 	for skill_id, skill in pairs(skills) do
-		local icon = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
-		local gui_data = tweak_data.gui:get_full_gui_data(icon)
+		if #icons >= 3 then
+			break
+		end
+
+		local icon_id = tweak_data.skilltree:get_skill_icon_tiered(skill_id)
+		local gui_data = tweak_data.gui:get_full_gui_data(icon_id)
 		local icon = self._skill_icon_panel:bitmap({
 			blend_mode = "add",
 			name = "skill_" .. tostring(skill.name_id) .. "_icon",
@@ -384,47 +392,46 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_icons(skills)
 	end
 
 	if #icons == 1 then
-		icons[1]:set_w(icons[1]:w() * RaidGUIControlXPDoubleUnlock.SINGLE_ICON_SCALE)
-		icons[1]:set_h(icons[1]:h() * RaidGUIControlXPDoubleUnlock.SINGLE_ICON_SCALE)
+		icons[1]:set_w(icons[1]:w() * self.SINGLE_ICON_SCALE)
+		icons[1]:set_h(icons[1]:h() * self.SINGLE_ICON_SCALE)
 		icons[1]:set_center_x(self._skill_icon_panel:w() / 2)
-		icons[1]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
 	elseif #icons == 2 then
-		icons[1]:set_w(icons[1]:w() * RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_SCALE)
-		icons[1]:set_h(icons[1]:h() * RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_SCALE)
-		icons[1]:set_center_x(self._skill_icon_panel:w() / 2 - RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_DISTANCE / 2)
-		icons[1]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
-		icons[2]:set_w(icons[2]:w() * RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_SCALE)
-		icons[2]:set_h(icons[2]:h() * RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_SCALE)
-		icons[2]:set_center_x(self._skill_icon_panel:w() / 2 + RaidGUIControlXPDoubleUnlock.DOUBLE_ICON_DISTANCE / 2)
-		icons[2]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
+		icons[1]:set_w(icons[1]:w() * self.DOUBLE_ICON_SCALE)
+		icons[1]:set_h(icons[1]:h() * self.DOUBLE_ICON_SCALE)
+		icons[1]:set_center_x(self._skill_icon_panel:w() / 2 - self.DOUBLE_ICON_DISTANCE / 2)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
+		icons[2]:set_w(icons[2]:w() * self.DOUBLE_ICON_SCALE)
+		icons[2]:set_h(icons[2]:h() * self.DOUBLE_ICON_SCALE)
+		icons[2]:set_center_x(self._skill_icon_panel:w() / 2 + self.DOUBLE_ICON_DISTANCE / 2)
+		icons[2]:set_center_y(self.ICON_CENTER_Y)
 	elseif #icons == 3 then
-		icons[1]:set_w(icons[1]:w() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
-		icons[1]:set_h(icons[1]:h() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
-		icons[1]:set_center_x(self._skill_icon_panel:w() / 2 - RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_DISTANCE)
-		icons[1]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
-		icons[2]:set_w(icons[2]:w() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
-		icons[2]:set_h(icons[2]:h() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
+		icons[1]:set_w(icons[1]:w() * self.TRIPLE_ICON_SCALE)
+		icons[1]:set_h(icons[1]:h() * self.TRIPLE_ICON_SCALE)
+		icons[1]:set_center_x(self._skill_icon_panel:w() / 2 - self.TRIPLE_ICON_DISTANCE)
+		icons[1]:set_center_y(self.ICON_CENTER_Y)
+		icons[2]:set_w(icons[2]:w() * self.TRIPLE_ICON_SCALE)
+		icons[2]:set_h(icons[2]:h() * self.TRIPLE_ICON_SCALE)
 		icons[2]:set_center_x(self._skill_icon_panel:w() / 2)
-		icons[2]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
-		icons[3]:set_w(icons[3]:w() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
-		icons[3]:set_h(icons[3]:h() * RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_SCALE)
-		icons[3]:set_center_x(self._skill_icon_panel:w() / 2 + RaidGUIControlXPDoubleUnlock.TRIPLE_ICON_DISTANCE)
-		icons[3]:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
+		icons[2]:set_center_y(self.ICON_CENTER_Y)
+		icons[3]:set_w(icons[3]:w() * self.TRIPLE_ICON_SCALE)
+		icons[3]:set_h(icons[3]:h() * self.TRIPLE_ICON_SCALE)
+		icons[3]:set_center_x(self._skill_icon_panel:w() / 2 + self.TRIPLE_ICON_DISTANCE)
+		icons[3]:set_center_y(self.ICON_CENTER_Y)
 	end
 end
 
 function RaidGUIControlXPDoubleUnlock:_create_weapon_icons(weapon_unlocks)
 	local weapon_skill_unlock = weapon_unlocks.weapons[1]
 	local weapon_tweak_data = tweak_data.weapon[tweak_data.skilltree.skills[weapon_skill_unlock].upgrades[1]]
-	local icon_params = {
+	local gui_data = tweak_data.gui:get_full_gui_data(weapon_tweak_data.gui.icon_large)
+	local icon = self._weapon_icon_panel:bitmap({
 		name = "weapon_icon",
-		texture = tweak_data.gui.icons[weapon_tweak_data.gui.icon_large].texture,
-		texture_rect = tweak_data.gui.icons[weapon_tweak_data.gui.icon_large].texture_rect
-	}
-	local icon = self._weapon_icon_panel:bitmap(icon_params)
+		texture = gui_data.texture,
+		texture_rect = gui_data.texture_rect
+	})
 
-	icon:set_center_x(self._weapon_icon_panel:w() / 2)
-	icon:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
+	icon:set_center(self._weapon_icon_panel:w() / 2, self.ICON_CENTER_Y)
 	self._weapon_name:set_text(self:translate(weapon_tweak_data.name_id, true))
 
 	local _, _, w, _ = self._weapon_name:text_rect()

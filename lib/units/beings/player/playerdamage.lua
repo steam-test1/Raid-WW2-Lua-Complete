@@ -5,7 +5,6 @@ function PlayerDamage:init(unit)
 	self._player_class = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 	self._class_tweak_data = tweak_data.player:get_tweak_data_for_class(self._player_class)
 	self._revives = 0
-	self._bleed_out_health = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT
 	self._god_mode = Global.god_mode
 	self._invulnerable = false
 	self._mission_damage_blockers = {}
@@ -13,7 +12,6 @@ function PlayerDamage:init(unit)
 	self._listener_holder = EventListenerHolder:new()
 	self._dmg_interval = tweak_data.player.damage.MIN_DAMAGE_INTERVAL
 	self._next_allowed_dmg_t = -100
-	self._last_received_dmg = 0
 	self._next_allowed_sup_t = -100
 	self._last_received_sup = 0
 	self._supperssion_data = {}
@@ -310,8 +308,8 @@ function PlayerDamage:_regenerated(downs_regen)
 	if downs_regen and downs_regen > 0 then
 		if self:_change_revives(downs_regen) then
 			managers.hud:set_big_prompt({
-				duration = 3,
 				id = "hint_downs_remaining",
+				duration = 3,
 				title = managers.localization:to_upper_text("hud_hint_down_restored_title"),
 				description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 					DOWNS = self._revives - 1,
@@ -465,21 +463,18 @@ function PlayerDamage:damage_tase(attack_data)
 
 	local cur_state = self._unit:movement():current_state_name()
 
-	if cur_state ~= "tased" and cur_state ~= "fatal" then
+	if cur_state ~= "tased" then
 		self:on_tased(false)
 
 		self._tase_data = attack_data
 
 		managers.player:set_player_state("tased")
-
-		local damage_info = {
+		self:_call_listeners({
 			result = {
-				variant = "tase",
-				type = "hurt"
+				type = "hurt",
+				variant = "tase"
 			}
-		}
-
-		self:_call_listeners(damage_info)
+		})
 
 		if attack_data.attacker_unit and attack_data.attacker_unit:alive() and attack_data.attacker_unit:base()._tweak_table == "taser" then
 			attack_data.attacker_unit:sound():say("post_tasing_taunt")
@@ -579,8 +574,8 @@ end
 function PlayerDamage:damage_bullet(attack_data)
 	local damage_info = {
 		result = {
-			variant = "bullet",
-			type = "hurt"
+			type = "hurt",
+			variant = "bullet"
 		},
 		attacker_unit = attack_data.attacker_unit
 	}
@@ -601,7 +596,6 @@ function PlayerDamage:damage_bullet(attack_data)
 		self:_hit_unit(attack_data)
 
 		self._next_allowed_dmg_t = managers.player:player_timer():time() + self._dmg_interval
-		self._last_received_dmg = attack_data.damage
 
 		return
 	end
@@ -618,11 +612,9 @@ function PlayerDamage:damage_bullet(attack_data)
 		self:_call_listeners(damage_info)
 
 		return
-	elseif self:incapacitated() then
-		return
 	elseif self:is_friendly_fire(attack_data.attacker_unit) then
 		return
-	elseif self:_chk_dmg_too_soon(attack_data.damage) then
+	elseif self:_chk_dmg_too_soon() then
 		return
 	elseif self._revive_miss and math.random() < self._revive_miss then
 		self:play_whizby(attack_data.col_ray.position, attack_data.is_turret)
@@ -676,7 +668,6 @@ function PlayerDamage:damage_bullet(attack_data)
 
 	health_subtracted = health_subtracted + self:_calc_health_damage(attack_data)
 	self._next_allowed_dmg_t = managers.player:player_timer():time() + self._dmg_interval
-	self._last_received_dmg = health_subtracted
 
 	if health_subtracted > 0 then
 		self:_send_damage_drama(attack_data, health_subtracted)
@@ -754,8 +745,8 @@ end
 function PlayerDamage:damage_killzone(attack_data)
 	local damage_info = {
 		result = {
-			variant = "killzone",
-			type = "hurt"
+			type = "hurt",
+			variant = "killzone"
 		}
 	}
 
@@ -765,7 +756,7 @@ function PlayerDamage:damage_killzone(attack_data)
 		return
 	end
 
-	if self:incapacitated() or self._bleed_out then
+	if self._bleed_out then
 		return
 	end
 
@@ -792,16 +783,14 @@ end
 function PlayerDamage:damage_fall(data)
 	local damage_info = {
 		result = {
-			variant = "fall",
-			type = "hurt"
+			type = "hurt",
+			variant = "fall"
 		}
 	}
 
 	if self._god_mode or self._invulnerable or self._mission_damage_blockers.invulnerable then
 		self:_call_listeners(damage_info)
 
-		return
-	elseif self:incapacitated() then
 		return
 	elseif self._mission_damage_blockers.damage_fall_disabled then
 		return
@@ -814,7 +803,7 @@ function PlayerDamage:damage_fall(data)
 	end
 
 	local fall_damage_state = nil
-	local fatal_limit = self._class_tweak_data.damage.FALL_DAMAGE_FATAL_HEIGHT
+	local fatal_limit = self._class_tweak_data.damage.FALL_DAMAGE_BLEEDOUT_HEIGHT
 	local death_limit = self._class_tweak_data.damage.FALL_DAMAGE_DEATH_HEIGHT
 	local fatal_fall = false
 	local deadly_fall = false
@@ -913,16 +902,14 @@ end
 function PlayerDamage:damage_explosion(attack_data)
 	local damage_info = {
 		result = {
-			variant = "explosion",
-			type = "hurt"
+			type = "hurt",
+			variant = "explosion"
 		}
 	}
 
 	if self._god_mode or self._invulnerable or self._mission_damage_blockers.invulnerable then
 		self:_call_listeners(damage_info)
 
-		return
-	elseif self:incapacitated() then
 		return
 	end
 
@@ -953,8 +940,8 @@ end
 function PlayerDamage:damage_fire(attack_data)
 	local damage_info = {
 		result = {
-			variant = "fire",
-			type = "hurt"
+			type = "hurt",
+			variant = "fire"
 		}
 	}
 
@@ -964,7 +951,7 @@ function PlayerDamage:damage_fire(attack_data)
 		return
 	end
 
-	if self:incapacitated() or self._bleed_out then
+	if self._bleed_out then
 		return
 	end
 
@@ -1052,10 +1039,10 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				local max_lives = self:get_max_revives()
 
 				managers.hud:set_big_prompt({
+					id = "hint_downed",
 					background = "backgrounds_detected_msg",
 					duration = 4,
 					priority = true,
-					id = "hint_downed",
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,
@@ -1076,8 +1063,6 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 			if not alive(self._critical_state_heart_loop_instance) then
 				self._critical_state_heart_loop_instance = self._unit:sound():play("critical_state_heart_loop")
 			end
-
-			self._bleed_out_health = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT
 
 			self:on_downed()
 		end
@@ -1210,22 +1195,8 @@ function PlayerDamage:unpause_downed_timer(peer_id)
 	end
 end
 
-function PlayerDamage:update_incapacitated(t, dt)
-	return self:update_downed(t, dt)
-end
-
-function PlayerDamage:on_incapacitated()
-	self:on_downed()
-
-	self._incapacitated = true
-end
-
 function PlayerDamage:bleed_out()
 	return self._bleed_out
-end
-
-function PlayerDamage:incapacitated()
-	return self._incapacitated
 end
 
 function PlayerDamage:_hit_direction(col_ray)
@@ -1293,7 +1264,6 @@ function PlayerDamage:revive(helped_self)
 	end
 
 	self._bleed_out = false
-	self._incapacitated = nil
 	self._downed_timer = nil
 	self._downed_start_time = nil
 	self._bleedout_timer = nil
@@ -1315,11 +1285,11 @@ function PlayerDamage:revive(helped_self)
 end
 
 function PlayerDamage:need_revive()
-	return self._bleed_out or self._incapacitated
+	return self._bleed_out
 end
 
 function PlayerDamage:is_downed()
-	return self._bleed_out or self._incapacitated
+	return self._bleed_out
 end
 
 function PlayerDamage:dead()
@@ -1351,11 +1321,6 @@ end
 
 function PlayerDamage:set_invulnerable(state)
 	self._invulnerable = state
-end
-
-function PlayerDamage:set_danger_level(danger_level)
-	self._danger_level = self._danger_level ~= danger_level and danger_level or nil
-	self._focus_delay_mul = danger_level and tweak_data.danger_zones[self._danger_level] or 1
 end
 
 function PlayerDamage:focus_delay_mul()
@@ -1449,27 +1414,7 @@ function PlayerDamage:remove_listener(key)
 	CopDamage.remove_listener(self, key)
 end
 
-function PlayerDamage:on_fatal_state_enter()
-	local dmg_info = {
-		result = {
-			type = "death"
-		}
-	}
-
-	self:_call_listeners(dmg_info)
-end
-
-function PlayerDamage:on_incapacitated_state_enter()
-	local dmg_info = {
-		result = {
-			type = "death"
-		}
-	}
-
-	self:_call_listeners(dmg_info)
-end
-
-function PlayerDamage:_chk_dmg_too_soon(damage)
+function PlayerDamage:_chk_dmg_too_soon()
 	if managers.player:player_timer():time() < self._next_allowed_dmg_t then
 		return true
 	end
@@ -1599,51 +1544,6 @@ function PlayerDamage:reset_suppression()
 	self._supperssion_data.decay_start_t = nil
 end
 
-function PlayerDamage:on_flashbanged(sound_eff_mul)
-	if self._downed_timer then
-		return
-	end
-
-	self:_start_tinnitus(sound_eff_mul)
-end
-
-function PlayerDamage:_start_tinnitus(sound_eff_mul)
-	local tinnitus_sound_enabled = managers.user:get_setting("tinnitus_sound_enabled")
-
-	if not tinnitus_sound_enabled then
-		return
-	end
-
-	if self._tinnitus_data then
-		if sound_eff_mul < self._tinnitus_data.intensity then
-			return
-		end
-
-		self._tinnitus_data.intensity = sound_eff_mul
-		self._tinnitus_data.duration = 4 + sound_eff_mul * math.lerp(8, 12, math.random())
-		self._tinnitus_data.end_t = managers.player:player_timer():time() + self._tinnitus_data.duration
-
-		if self._tinnitus_data.snd_event then
-			self._tinnitus_data.snd_event:stop()
-		end
-
-		SoundDevice:set_rtpc("downed_state_progression", math.max(self._downed_progression or 0, self._tinnitus_data.intensity * 100))
-
-		self._tinnitus_data.snd_event = self._unit:sound():play("tinnitus_beep")
-	else
-		local duration = 4 + sound_eff_mul * math.lerp(8, 12, math.random())
-
-		SoundDevice:set_rtpc("downed_state_progression", math.max(self._downed_progression or 0, sound_eff_mul * 100))
-
-		self._tinnitus_data = {
-			intensity = sound_eff_mul,
-			duration = duration,
-			end_t = managers.player:player_timer():time() + duration,
-			snd_event = self._unit:sound():play("tinnitus_beep")
-		}
-	end
-end
-
 function PlayerDamage:_stop_tinnitus()
 	if not self._tinnitus_data then
 		return
@@ -1664,7 +1564,13 @@ end
 
 function PlayerDamage:get_max_revives()
 	local add_lives = managers.player:upgrade_value("player", "revenant_additional_life", 0)
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_MODIFY_LIVES) then
+		add_lives = add_lives + managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_MODIFY_LIVES)
+	end
+
 	local max_lives = self._class_tweak_data.damage.BASE_LIVES + add_lives
+	max_lives = math.max(max_lives, 0)
 
 	return max_lives
 end

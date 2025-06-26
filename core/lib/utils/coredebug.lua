@@ -215,9 +215,9 @@ function compile_and_reload()
 
 	assert(IS_WIN32, "You can only compile on win32 platforms!")
 	Application:data_compile({
+		preprocessor_definitions = "preprocessor_definitions",
 		verbose = false,
 		target_db_name = "all",
-		preprocessor_definitions = "preprocessor_definitions",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = root_path() .. "//assets",
 		target_db_root = Application:base_path() .. "assets"

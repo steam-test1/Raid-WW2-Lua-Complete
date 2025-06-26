@@ -294,7 +294,7 @@ function PlayerDriving:_update_hud(t, dt)
 		self._respawn_hint_shown = false
 	end
 
-	if managers.user:get_setting("hud_crosshairs") then
+	if self._ext_movement.setting_hud_crosshairs then
 		if self:is_player_shooting_allowed() then
 			managers.hud:update_crosshair_offset(t, dt)
 			self:_update_crosshair_offset()
@@ -615,9 +615,9 @@ function PlayerDriving:cb_leave()
 	if exit_position == nil then
 		print("[DRIVING] PlayerDriving: Could not found valid exit position, aborting exit.")
 		managers.notification:add_notification({
-			duration = 3,
 			id = "hint_cant_exit_vehicle",
 			shelf_life = 5,
+			duration = 3,
 			text = managers.localization:text("hint_cant_exit_vehicle")
 		})
 

@@ -2,7 +2,6 @@ require("lib/managers/group_ai_states/GroupAIStateBase")
 require("lib/managers/group_ai_states/GroupAIStateEmpty")
 require("lib/managers/group_ai_states/GroupAIStateBesiege")
 require("lib/managers/group_ai_states/GroupAIStateRaid")
-require("lib/managers/group_ai_states/GroupAIStateStreet")
 require("lib/managers/group_ai_states/GroupAIStateZone")
 
 GroupAIManager = GroupAIManager or class()
@@ -28,8 +27,6 @@ function GroupAIManager:set_state(name, world_id)
 	else
 		if name == "empty" then
 			self._state = GroupAIStateEmpty:new()
-		elseif name == "street" then
-			self._state = GroupAIStateStreet:new()
 		elseif name == "besiege" then
 			self._state = GroupAIStateBesiege:new()
 		elseif name == "raid" then
@@ -53,8 +50,6 @@ function GroupAIManager:set_current_state(name, world_id)
 
 	if name == "empty" then
 		new_state = GroupAIStateEmpty
-	elseif name == "street" then
-		new_state = GroupAIStateStreet
 	elseif name == "besiege" then
 		new_state = GroupAIStateBesiege
 	elseif name == "raid" then
@@ -98,7 +93,6 @@ function GroupAIManager:state_names()
 	return {
 		"empty",
 		"besiege",
-		"street",
 		"raid",
 		"zone"
 	}

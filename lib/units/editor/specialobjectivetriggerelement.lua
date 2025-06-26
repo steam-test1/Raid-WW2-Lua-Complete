@@ -1,4 +1,10 @@
 SpecialObjectiveTriggerUnitElement = SpecialObjectiveTriggerUnitElement or class(MissionElement)
+SpecialObjectiveTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_value = "elements"
+	}
+}
 
 function SpecialObjectiveTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
@@ -36,9 +42,9 @@ function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
-				r = 0,
 				b = 0,
 				g = 0.75,
+				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})

@@ -5,13 +5,16 @@ DramaExt = DramaExt or class()
 function DramaExt:init(unit)
 	self._unit = unit
 	self._cue = nil
+	self._history = nil
 end
 
 function DramaExt:name()
 	return self.character_name
 end
 
-function DramaExt:play_sound(sound, sound_source)
+function DramaExt:play_sound(dialog, params)
+	local sound = dialog.sound
+	local sound_source = dialog.sound_source
 	self._cue = self._cue or {}
 	self._cue.sound = sound
 	self._cue.sound_source = sound_source
@@ -19,8 +22,9 @@ function DramaExt:play_sound(sound, sound_source)
 
 	if not self._cue.event then
 		Application:error("[DramaExt:play_sound] Wasn't able to play sound event " .. sound)
-		Application:stack_dump()
 		self:sound_callback(nil, "end_of_event", self._unit, sound_source, nil, nil, nil)
+
+		return
 	end
 end
 
@@ -45,21 +49,23 @@ function DramaExt:_do_show_subtitle()
 end
 
 function DramaExt:stop_cue()
-	if self._cue then
-		if self._cue.string_id then
-			managers.subtitle:clear_subtitle()
-			managers.subtitle:set_visible(false)
-			managers.subtitle:set_enabled(false)
-		end
-
-		if alive(self._cue.event) then
-			self._cue.event:stop()
-		elseif self._cue.sound then
-			self._unit:sound_source(self._cue.sound_source):stop()
-		end
-
-		self._cue = nil
+	if not self._cue then
+		return
 	end
+
+	if self._cue.string_id then
+		managers.subtitle:clear_subtitle()
+		managers.subtitle:set_visible(false)
+		managers.subtitle:set_enabled(false)
+	end
+
+	if alive(self._cue.event) then
+		self._cue.event:stop()
+	elseif self._cue.sound then
+		self._unit:sound_source(self._cue.sound_source):stop()
+	end
+
+	self._cue = nil
 end
 
 function DramaExt:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)

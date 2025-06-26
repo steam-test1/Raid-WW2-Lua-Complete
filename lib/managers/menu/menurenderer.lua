@@ -1,10 +1,8 @@
 core:import("CoreMenuRenderer")
+core:import("CoreSerialize")
 require("lib/managers/menu/MenuNodeGui")
 require("lib/managers/menu/raid_menu/MenuNodeGuiRaid")
 require("lib/managers/menu/renderers/MenuNodeBaseGui")
-require("lib/managers/menu/renderers/MenuNodeTableGui")
-require("lib/managers/menu/renderers/MenuNodeButtonLayoutGui")
-require("lib/managers/menu/renderers/MenuNodeHiddenGui")
 
 MenuRenderer = MenuRenderer or class(CoreMenuRenderer.Renderer)
 
@@ -20,10 +18,10 @@ function MenuRenderer:show_node(node)
 	end
 
 	local parameters = {
+		align = "left",
 		marker_alpha = 1,
 		row_item_blend_mode = "normal",
 		to_upper = true,
-		align = "left",
 		font = tweak_data.menu.pd2_medium_font,
 		row_item_color = tweak_data.menu.default_font_row_item_color,
 		row_item_hightlight_color = tweak_data.menu.default_hightlight_row_item_color,
@@ -257,44 +255,4 @@ function MenuRenderer:special_btn_pressed(...)
 	end
 
 	return managers.menu_component:special_btn_pressed(...)
-end
-
-function MenuRenderer:ws_test()
-	if alive(self._test_safe) then
-		Overlay:gui():destroy_workspace(self._test_safe)
-	end
-
-	if alive(self._test_full) then
-		Overlay:gui():destroy_workspace(self._test_full)
-	end
-
-	self._test_safe = Overlay:gui():create_screen_workspace()
-
-	managers.gui_data:layout_workspace(self._test_safe)
-
-	self._test_full = Overlay:gui():create_screen_workspace()
-
-	managers.gui_data:layout_fullscreen_workspace(self._test_full)
-
-	local x = 150
-	local y = 200
-	local fx, fy = managers.gui_data:safe_to_full(x, y)
-	local safe = self._test_safe:panel():rect({
-		layer = 0,
-		w = 48,
-		h = 48,
-		orientation = "vertical",
-		x = x,
-		y = y,
-		color = Color.green
-	})
-	local full = self._test_full:panel():rect({
-		layer = 0,
-		w = 48,
-		h = 48,
-		orientation = "vertical",
-		x = fx,
-		y = fy,
-		color = Color.red
-	})
 end

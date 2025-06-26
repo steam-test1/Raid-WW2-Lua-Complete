@@ -27,6 +27,7 @@ function OperationsTweakData:init()
 	self:_init_operations()
 	self:_init_progression_data()
 	self:_init_consumable_missions_data()
+	self:_init_bounty_data()
 end
 
 function OperationsTweakData:_init_regions()
@@ -40,6 +41,7 @@ end
 function OperationsTweakData:_init_progression_data()
 	self.progression = {
 		initially_unlocked_difficulty = TweakData.DIFFICULTY_3,
+		bounty_locked_below_difficulty = TweakData.DIFFICULTY_3,
 		unlock_cycles = 6,
 		regular_unlock_cycle_duration = 420,
 		final_unlock_cycle_duration = 1000,
@@ -84,6 +86,33 @@ function OperationsTweakData:_init_consumable_missions_data()
 		},
 		spawn_chance_modifier_increase = 0.1
 	}
+end
+
+function OperationsTweakData:_init_bounty_data()
+	self.bounty_data = {
+		job_potential = {
+			oper_flamable_castle = true,
+			oper_flamable_bridge = true,
+			clear_skies_gold_rush = true,
+			clear_skies_radio_defense = true,
+			clear_skies_flakturm = true,
+			forest_bunker = true,
+			kelly = true,
+			silo = true,
+			gold_rush = true,
+			flakturm = true,
+			ger_bridge = true,
+			train_yard = true,
+			radio_defense = true,
+			settlement = true,
+			spies_test = true,
+			convoy = true,
+			bunker_test = true,
+			tnd = true,
+			hunters = true
+		}
+	}
+	self.bounty_data.possible_jobs = table.map_keys(self.bounty_data.job_potential)
 end
 
 function OperationsTweakData:_init_loading_screens()
@@ -194,18 +223,18 @@ function OperationsTweakData:_init_loading_screens()
 	}
 end
 
-function OperationsTweakData:get_camp_goto_objective_id(level_id)
-	level_id = tostring(level_id)
-	local lvl_data = self.missions[level_id]
+function OperationsTweakData:get_camp_goto_objective_id(job_id)
+	job_id = tostring(job_id)
+	local job_data = self.missions[job_id]
 
-	if lvl_data then
-		if lvl_data.camp_objective_id then
-			return lvl_data.camp_objective_id
+	if job_data then
+		if job_data.camp_objective_id then
+			return job_data.camp_objective_id
 		else
-			return "obj_camp_goto_raid_" .. level_id
+			return "obj_camp_goto_raid_" .. job_id
 		end
 	else
-		Application:warn("[OperationsTweakData:get_camp_goto_objective_id] lvl_data was nil, level_id", level_id)
+		Application:warn("[OperationsTweakData:get_camp_goto_objective_id] job_data was nil, job_id", job_id)
 
 		return "obj_camp_goto_raid"
 	end
@@ -342,6 +371,12 @@ function OperationsTweakData:_init_raids()
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_flakturm",
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		progression_groups = {
 			OperationsTweakData.PROGRESSION_GROUP_INITIAL,
@@ -420,6 +455,9 @@ function OperationsTweakData:_init_raids()
 		progression_groups = {
 			OperationsTweakData.PROGRESSION_GROUP_STANDARD
 		},
+		forbids_random = {
+			"clear_skies_gold_rush"
+		},
 		icon_menu_big = "xp_events_missions_raid_bank",
 		icon_menu = "missions_raid_bank_menu",
 		icon_hud = "mission_raid_railyard",
@@ -467,6 +505,12 @@ function OperationsTweakData:_init_raids()
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 5000,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		dogtags = self.dogtag_types.large,
 		trophy = {
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard",
@@ -527,6 +571,12 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		music_id = "radio_defense",
 		xp = 4500,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		start_in_stealth = true,
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		dogtags = self.dogtag_types.medium,
@@ -659,6 +709,12 @@ function OperationsTweakData:_init_raids()
 		music_id = "castle",
 		stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE,
 		xp = 5000,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		dogtags = self.dogtag_types.large,
 		trophy = {
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle",
@@ -895,6 +951,12 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE,
 		xp = 2500,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		dogtags = self.dogtag_types.medium,
 		trophy = {
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters",
@@ -1011,6 +1073,12 @@ function OperationsTweakData:_init_raids()
 		region = "germany",
 		stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE,
 		xp = 3000,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		dogtags = self.dogtag_types.medium,
 		trophy = {
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies",
@@ -1121,7 +1189,17 @@ function OperationsTweakData:_init_raids()
 			unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo",
 			position = "snap_17"
 		},
+		greed_items = {
+			min = 750,
+			max = 950
+		},
 		xp = 5500,
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
 		mission_flag = "level_raid_silo",
 		job_type = OperationsTweakData.JOB_TYPE_RAID,
@@ -1269,19 +1347,19 @@ function OperationsTweakData:_init_raids()
 		}
 	}
 	self.missions.forest_bunker = {
+		icon_hud = "missions_forest_bunker",
 		icon_menu = "missions_forest_bunker",
 		xp = 4400,
 		region = "germany",
 		music_id = "random",
-		mission_flag = "level_raid_forest_bunker",
 		audio_briefing_id = "mrs_white_fb_briefing_long",
-		briefing_id = "forest_bunker_briefing",
-		name_id = "forest_bunker",
 		icon_menu_big = "xp_events_missions_forest_bunker",
+		briefing_id = "forest_bunker_briefing",
+		level_id = "forest_bunker",
+		mission_flag = "level_raid_forest_bunker",
+		name_id = "forest_bunker",
 		start_in_stealth = true,
 		short_audio_briefing_id = "mrs_white_fb_briefing_short",
-		icon_hud = "missions_forest_bunker",
-		level_id = "forest_bunker",
 		dogtags = self.dogtag_types.medium,
 		greed_items = {
 			min = 1200,
@@ -1325,7 +1403,10 @@ end
 function OperationsTweakData:_init_operations()
 	self._operations_index = {
 		"clear_skies",
-		"oper_flamable"
+		"oper_flamable",
+		"random_short",
+		"random_medium",
+		"random_long"
 	}
 	self.missions.clear_skies = {
 		name_id = "menu_ger_oper_01_hl",
@@ -1340,8 +1421,9 @@ function OperationsTweakData:_init_operations()
 			position = "snap_05"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
-		icon_menu = "missions_operation_clear_skies_menu",
-		icon_hud = "missions_operation_clear_skies",
+		icon_menu = "op_clear_skies_lq",
+		icon_hud = "op_clear_skies_hd",
+		allow_free_play = true,
 		events = {},
 		loading = {
 			text = "menu_ger_oper_01",
@@ -1377,46 +1459,34 @@ function OperationsTweakData:_init_operations()
 				description_id = "clear_skies_mission_photo_6_description",
 				title_id = "clear_skies_mission_photo_6_title",
 				photo = "intel_clear_skies_06"
+			},
+			{
+				description_id = "clear_skies_mission_photo_7_description",
+				title_id = "clear_skies_mission_photo_7_title",
+				photo = "intel_clear_skies_07"
+			},
+			{
+				description_id = "clear_skies_mission_photo_8_description",
+				title_id = "clear_skies_mission_photo_8_title",
+				photo = "intel_clear_skies_08"
 			}
 		}
 	}
-	self.missions.clear_skies.events.mini_raid_1 = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
-		music_id = "random",
+	self.missions.clear_skies_mini_raid_1_park = {
+		icon_menu = "missions_operation_clear_skies_menu_1",
 		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_01",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_01_event_1_name",
-		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
-		level_id = "zone_germany",
-		loading = {
-			text = "menu_ger_oper_01_event_1_loading_text",
-			image = "raid_loading_clear_skies_01"
-		},
-		excluded_continents = {
-			"operation1mission2",
-			"operation1mission3",
-			"operation2mission1",
-			"operation2mission2"
-		}
-	}
-	self.missions.clear_skies.events.mini_raid_1_park = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
 		music_id = "random",
-		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_01",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_01_event_1_name",
-		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		audio_briefing_id = "mrs_white_cs_op_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_1",
 		level_id = "zone_germany_park",
+		mission_flag = "level_operation_01_mission_01",
+		name_id = "menu_ger_oper_01_event_1_name",
+		mission_id = "clear_skies_mini_raid_1_park",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
+		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_1_loading_text",
 			image = "raid_loading_clear_skies_01"
@@ -1426,21 +1496,41 @@ function OperationsTweakData:_init_operations()
 			"operation1mission3",
 			"operation2mission1",
 			"operation2mission2"
+		},
+		forbids_random = {
+			"clear_skies_mini_raid_1_destroyed",
+			"clear_skies_mini_raid_1_roundabout"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_1_description",
+				title_id = "clear_skies_mission_photo_1_title",
+				photo = "intel_clear_skies_01"
+			}
 		}
 	}
-	self.missions.clear_skies.events.mini_raid_1_destroyed = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
-		music_id = "random",
+	self.missions.clear_skies.events.mini_raid_1_park = self.missions.clear_skies_mini_raid_1_park
+	self.missions.clear_skies_mini_raid_1_destroyed = {
+		icon_menu = "missions_operation_clear_skies_menu_1",
 		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_01",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_01_event_1_name",
-		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_cs_op_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_1",
 		level_id = "zone_germany_destroyed",
+		mission_flag = "level_operation_01_mission_01",
+		name_id = "menu_ger_oper_01_event_1_name",
+		mission_id = "clear_skies_mini_raid_1_destroyed",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
+		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_1_loading_text",
 			image = "raid_loading_clear_skies_01"
@@ -1450,21 +1540,41 @@ function OperationsTweakData:_init_operations()
 			"operation1mission3",
 			"operation2mission1",
 			"operation2mission2"
+		},
+		forbids_random = {
+			"clear_skies_mini_raid_1_park",
+			"clear_skies_mini_raid_1_roundabout"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_1_description",
+				title_id = "clear_skies_mission_photo_1_title",
+				photo = "intel_clear_skies_01"
+			}
 		}
 	}
-	self.missions.clear_skies.events.mini_raid_1_roundabout = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
-		music_id = "random",
+	self.missions.clear_skies.events.mini_raid_1_destroyed = self.missions.clear_skies_mini_raid_1_destroyed
+	self.missions.clear_skies_mini_raid_1_roundabout = {
+		icon_menu = "missions_operation_clear_skies_menu_1",
 		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_01",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_01_event_1_name",
-		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_cs_op_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_1",
 		level_id = "zone_germany_roundabout",
+		mission_flag = "level_operation_01_mission_01",
+		name_id = "menu_ger_oper_01_event_1_name",
+		mission_id = "clear_skies_mini_raid_1_roundabout",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_01",
+		progress_text_id = "menu_ger_oper_01_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_1_loading_text",
 			image = "raid_loading_clear_skies_01"
@@ -1475,89 +1585,82 @@ function OperationsTweakData:_init_operations()
 			"operation2mission1",
 			"operation2mission2",
 			"raid_brnvct"
+		},
+		forbids_random = {
+			"clear_skies_mini_raid_1_park",
+			"clear_skies_mini_raid_1_destroyed"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_1_description",
+				title_id = "clear_skies_mission_photo_1_title",
+				photo = "intel_clear_skies_01"
+			}
 		}
 	}
-	self.missions.clear_skies.events.gold_rush = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_02",
-		music_id = "reichsbank",
+	self.missions.clear_skies.events.mini_raid_1_roundabout = self.missions.clear_skies_mini_raid_1_roundabout
+	self.missions.clear_skies_gold_rush = {
+		icon_menu = "missions_operation_clear_skies_menu_2",
+		mission_id = "clear_skies_gold_rush",
 		xp = 3200,
-		dogtags = self.dogtag_types.medium,
-		start_in_stealth = true,
-		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_02",
-		checkpoint = true,
-		icon_menu = "missions_raid_bank_menu",
-		icon_hud = "missions_raid_bank",
-		name_id = "menu_ger_oper_01_event_2_name",
-		progress_title_id = "menu_ger_oper_01_event_2_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_2_progress_text",
+		music_id = "reichsbank",
+		audio_briefing_id = "mrs_white_bank_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_2",
 		level_id = "gold_rush",
+		mission_flag = "level_operation_01_mission_02",
+		name_id = "menu_ger_oper_01_event_2_name",
+		start_in_stealth = true,
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_02",
+		progress_text_id = "menu_ger_oper_01_event_2_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_2_progress_title",
+		dogtags = self.dogtag_types.medium,
+		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_2_loading_text",
 			image = "raid_loading_clear_skies_02"
-		}
-	}
-	self.missions.clear_skies.events.mini_raid_2 = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_03",
-		music_id = "random",
-		xp = 2600,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_03",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_2_menu",
-		icon_hud = "missions_mini_raid_2",
-		level_id = "zone_germany",
-		name_id = "menu_ger_oper_01_event_3_name",
-		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
-		loading = {
-			text = "menu_ger_oper_01_event_3_loading_text",
-			image = "raid_loading_clear_skies_03"
 		},
-		excluded_continents = {
-			"operation1mission1",
-			"operation1mission3",
-			"operation2mission1",
-			"operation2mission2"
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_2_description",
+				title_id = "clear_skies_mission_photo_2_title",
+				photo = "intel_clear_skies_02"
+			},
+			{
+				description_id = "clear_skies_mission_photo_3_description",
+				title_id = "clear_skies_mission_photo_3_title",
+				photo = "intel_clear_skies_03"
+			}
 		}
 	}
-	self.missions.clear_skies.events.mini_raid_2_park = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_03",
-		music_id = "random",
+	self.missions.clear_skies.events.gold_rush = self.missions.clear_skies_gold_rush
+	self.missions.clear_skies_mini_raid_2_park = {
+		icon_menu = "missions_operation_clear_skies_menu_3",
 		xp = 2600,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_03",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_2_menu",
-		icon_hud = "missions_mini_raid_2",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_cs_op_mr2_briefing_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_3",
 		level_id = "zone_germany_park",
-		name_id = "menu_ger_oper_01_event_3_name",
-		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
-		loading = {
-			text = "menu_ger_oper_01_event_3_loading_text",
-			image = "raid_loading_clear_skies_03"
-		},
-		excluded_continents = {
-			"operation1mission1",
-			"operation1mission3",
-			"operation2mission1",
-			"operation2mission2"
-		}
-	}
-	self.missions.clear_skies.events.mini_raid_2_destroyed = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_03",
-		music_id = "random",
-		xp = 2600,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
 		mission_flag = "level_operation_01_mission_03",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_2_menu",
-		icon_hud = "missions_mini_raid_2",
-		level_id = "zone_germany_destroyed",
 		name_id = "menu_ger_oper_01_event_3_name",
-		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
+		mission_id = "clear_skies_mini_raid_2_park",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_03",
 		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_3_loading_text",
 			image = "raid_loading_clear_skies_03"
@@ -1567,97 +1670,184 @@ function OperationsTweakData:_init_operations()
 			"operation1mission3",
 			"operation2mission1",
 			"operation2mission2"
+		},
+		forbids_random = {
+			"clear_skies_mini_raid_2_destroyed"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_4_description",
+				title_id = "clear_skies_mission_photo_4_title",
+				photo = "intel_clear_skies_04"
+			}
 		}
 	}
-	self.missions.clear_skies.events.radio_defense = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_04",
-		music_id = "radio_defense",
+	self.missions.clear_skies.events.mini_raid_2_park = self.missions.clear_skies_mini_raid_2_park
+	self.missions.clear_skies_mini_raid_2_destroyed = {
+		icon_menu = "missions_operation_clear_skies_menu_3",
+		xp = 2600,
+		music_id = "random",
+		audio_briefing_id = "mrs_white_cs_op_mr2_briefing_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_3",
+		level_id = "zone_germany_destroyed",
+		mission_flag = "level_operation_01_mission_03",
+		name_id = "menu_ger_oper_01_event_3_name",
+		mission_id = "clear_skies_mini_raid_2_destroyed",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_03",
+		progress_text_id = "menu_ger_oper_01_event_3_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_3_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
+		loading = {
+			text = "menu_ger_oper_01_event_3_loading_text",
+			image = "raid_loading_clear_skies_03"
+		},
+		excluded_continents = {
+			"operation1mission1",
+			"operation1mission3",
+			"operation2mission1",
+			"operation2mission2"
+		},
+		forbids_random = {
+			"clear_skies_mini_raid_2_park"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_4_description",
+				title_id = "clear_skies_mission_photo_4_title",
+				photo = "intel_clear_skies_04"
+			}
+		}
+	}
+	self.missions.clear_skies.events.mini_raid_2_destroyed = self.missions.clear_skies_mini_raid_2_destroyed
+	self.missions.clear_skies_radio_defense = {
+		icon_menu = "missions_operation_clear_skies_menu_4",
+		mission_id = "clear_skies_radio_defense",
 		xp = 3200,
-		dogtags = self.dogtag_types.medium,
-		start_in_stealth = true,
-		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_04",
-		checkpoint = true,
-		icon_menu = "missions_raid_radio_menu",
-		icon_hud = "missions_raid_radio",
+		music_id = "radio_defense",
+		audio_briefing_id = "mrs_white_radio_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_4",
 		level_id = "radio_defense",
+		mission_flag = "level_operation_01_mission_04",
 		name_id = "menu_ger_oper_01_event_4_name",
-		progress_title_id = "menu_ger_oper_01_event_4_progress_title",
+		start_in_stealth = true,
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_04",
 		progress_text_id = "menu_ger_oper_01_event_4_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_4_progress_title",
+		dogtags = self.dogtag_types.medium,
+		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_4_loading_text",
 			image = "raid_loading_clear_skies_04"
-		}
-	}
-	self.missions.clear_skies.events.mini_raid_3 = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_05",
-		music_id = "random",
-		xp = 2800,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_05",
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_3_menu",
-		icon_hud = "missions_mini_raid_3",
-		level_id = "zone_germany",
-		name_id = "menu_ger_oper_01_event_5_name",
-		progress_title_id = "menu_ger_oper_01_event_5_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_5_progress_text",
-		loading = {
-			text = "menu_ger_oper_01_event_5_loading_text",
-			image = "loading_clear_skies_01"
 		},
-		excluded_continents = {
-			"operation1mission1",
-			"operation1mission2",
-			"operation2mission1",
-			"operation2mission2"
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_5_description",
+				title_id = "clear_skies_mission_photo_5_title",
+				photo = "intel_clear_skies_05"
+			},
+			{
+				description_id = "clear_skies_mission_photo_6_description",
+				title_id = "clear_skies_mission_photo_6_title",
+				photo = "intel_clear_skies_06"
+			}
 		}
 	}
-	self.missions.clear_skies.events.railyard = {
-		camp_objective_id = "obj_camp_goto_oper_clear_sky_05",
-		music_id = "train_yard",
+	self.missions.clear_skies.events.radio_defense = self.missions.clear_skies_radio_defense
+	self.missions.clear_skies_railyard = {
+		icon_menu = "missions_operation_clear_skies_menu_5",
 		xp = 1500,
+		music_id = "train_yard",
+		audio_briefing_id = "mrs_white_trainyard_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_5",
+		level_id = "train_yard",
+		mission_flag = "level_operation_01_mission_06",
+		name_id = "menu_ger_oper_01_event_6_name",
+		mission_id = "clear_skies_railyard",
+		camp_objective_id = "obj_camp_goto_oper_clear_sky_05",
+		progress_text_id = "menu_ger_oper_01_event_6_progress_text",
+		progress_title_id = "menu_ger_oper_01_event_6_progress_title",
 		dogtags = {
 			min = 6,
 			diff_bonus = 1,
 			max = 10
 		},
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		mission_flag = "level_operation_01_mission_06",
-		checkpoint = true,
-		icon_menu = "mission_raid_railyard_menu",
-		icon_hud = "mission_raid_railyard",
-		level_id = "train_yard",
-		name_id = "menu_ger_oper_01_event_6_name",
-		progress_title_id = "menu_ger_oper_01_event_6_progress_title",
-		progress_text_id = "menu_ger_oper_01_event_6_progress_text",
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_6_loading_text",
 			image = "raid_loading_clear_skies_05"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_7_description",
+				title_id = "clear_skies_mission_photo_7_title",
+				photo = "intel_clear_skies_07"
+			}
 		}
 	}
-	self.missions.clear_skies.events.flakturm = {
+	self.missions.clear_skies.events.railyard = self.missions.clear_skies_railyard
+	self.missions.clear_skies_flakturm = {
 		camp_objective_id = "obj_camp_goto_oper_clear_sky_06",
-		level_id = "flakturm",
-		music_id = "flakturm",
-		start_in_stealth = true,
+		icon_menu = "missions_operation_clear_skies_menu_6",
+		mission_id = "clear_skies_flakturm",
 		xp = 3600,
-		dogtags = self.dogtag_types.large,
-		icon_menu = "missions_raid_flaktower_menu",
-		icon_hud = "miissions_raid_flaktower",
-		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		music_id = "flakturm",
+		audio_briefing_id = "mrs_white_flakturm_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_clear_skies_6",
+		level_id = "flakturm",
 		mission_flag = "level_operation_01_mission_07",
 		name_id = "menu_ger_oper_01_event_7_name",
-		progress_title_id = "menu_ger_oper_01_event_7_progress_title",
+		start_in_stealth = true,
 		progress_text_id = "menu_ger_oper_01_event_7_progress_text",
-		excluded_continents = {
-			"world"
-		},
+		progress_title_id = "menu_ger_oper_01_event_7_progress_title",
+		dogtags = self.dogtag_types.large,
+		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_01_event_7_loading_text",
 			image = "raid_loading_clear_skies_06"
+		},
+		excluded_continents = {
+			"world"
+		},
+		forbids_random = {
+			"flakturm"
+		},
+		photos = {
+			{
+				description_id = "clear_skies_mission_photo_8_description",
+				title_id = "clear_skies_mission_photo_8_title",
+				photo = "intel_clear_skies_08"
+			}
 		}
 	}
+	self.missions.clear_skies.events.flakturm = self.missions.clear_skies_flakturm
 	self.missions.clear_skies.events_index_template = {
 		{
 			"mini_raid_1_park",
@@ -1694,8 +1884,9 @@ function OperationsTweakData:_init_operations()
 			position = "snap_18"
 		},
 		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
-		icon_menu = "missions_operation_rhinegold_menu",
-		icon_hud = "missions_operation_rhinegold",
+		icon_menu = "op_rhinegold_lq",
+		icon_hud = "op_rhinegold_hd",
+		allow_free_play = true,
 		events = {},
 		loading = {
 			text = "menu_ger_oper_rhinegold",
@@ -1729,19 +1920,21 @@ function OperationsTweakData:_init_operations()
 			}
 		}
 	}
-	self.missions.oper_flamable.events.mini_raid_1_park = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
-		music_id = "random",
+	self.missions.oper_flamable_mini_raid_1_park = {
+		icon_menu = "missions_operation_rhinegold_menu_1",
 		xp = 2400,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_02_event_1_name",
-		mission_flag = "level_operation_02_mission_01",
-		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_or_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_1",
 		level_id = "zone_germany_park",
+		mission_flag = "level_operation_02_mission_01",
+		name_id = "menu_ger_oper_02_event_1_name",
+		mission_id = "oper_flamable_mini_raid_1_park",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
+		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_1_loading_text",
 			image = "loading_rhinegold_01"
@@ -1751,21 +1944,41 @@ function OperationsTweakData:_init_operations()
 			"operation1mission2",
 			"operation1mission3",
 			"operation2mission2"
+		},
+		forbids_random = {
+			"oper_flamable_mini_raid_1_destroyed",
+			"oper_flamable_mini_raid_1_roundabout"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_1_description",
+				title_id = "rhinegold_mission_photo_1_title",
+				photo = "intel_rhinegold_01"
+			}
 		}
 	}
-	self.missions.oper_flamable.events.mini_raid_1_destroyed = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
-		music_id = "random",
+	self.missions.oper_flamable.events.mini_raid_1_park = self.missions.oper_flamable_mini_raid_1_park
+	self.missions.oper_flamable_mini_raid_1_destroyed = {
+		icon_menu = "missions_operation_rhinegold_menu_1",
 		xp = 2400,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_02_event_1_name",
-		mission_flag = "level_operation_02_mission_01",
-		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_or_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_1",
 		level_id = "zone_germany_destroyed",
+		mission_flag = "level_operation_02_mission_01",
+		name_id = "menu_ger_oper_02_event_1_name",
+		mission_id = "oper_flamable_mini_raid_1_destroyed",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
+		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_1_loading_text",
 			image = "loading_rhinegold_01"
@@ -1775,21 +1988,41 @@ function OperationsTweakData:_init_operations()
 			"operation1mission2",
 			"operation1mission3",
 			"operation2mission2"
+		},
+		forbids_random = {
+			"oper_flamable_mini_raid_1_park",
+			"oper_flamable_mini_raid_1_roundabout"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_1_description",
+				title_id = "rhinegold_mission_photo_1_title",
+				photo = "intel_rhinegold_01"
+			}
 		}
 	}
-	self.missions.oper_flamable.events.mini_raid_1_roundabout = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
-		music_id = "random",
+	self.missions.oper_flamable.events.mini_raid_1_destroyed = self.missions.oper_flamable_mini_raid_1_destroyed
+	self.missions.oper_flamable_mini_raid_1_roundabout = {
+		icon_menu = "missions_operation_rhinegold_menu_1",
 		xp = 2400,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_1_menu",
-		icon_hud = "missions_mini_raid_1",
-		name_id = "menu_ger_oper_02_event_1_name",
-		mission_flag = "level_operation_02_mission_01",
-		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_or_mr1_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_1",
 		level_id = "zone_germany_roundabout",
+		mission_flag = "level_operation_02_mission_01",
+		name_id = "menu_ger_oper_02_event_1_name",
+		mission_id = "oper_flamable_mini_raid_1_roundabout",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_01",
+		progress_text_id = "menu_ger_oper_rhinegold_event_1_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_1_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_1_loading_text",
 			image = "loading_rhinegold_01"
@@ -1800,45 +2033,41 @@ function OperationsTweakData:_init_operations()
 			"operation1mission3",
 			"operation2mission2",
 			"raid_brnvct"
+		},
+		forbids_random = {
+			"oper_flamable_mini_raid_1_park",
+			"oper_flamable_mini_raid_1_destroyed"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_1_description",
+				title_id = "rhinegold_mission_photo_1_title",
+				photo = "intel_rhinegold_01"
+			}
 		}
 	}
-	self.missions.oper_flamable.events.mini_raid_2_destroyed = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_02",
-		music_id = "random",
+	self.missions.oper_flamable.events.mini_raid_1_roundabout = self.missions.oper_flamable_mini_raid_1_roundabout
+	self.missions.oper_flamable_mini_raid_2_destroyed = {
+		icon_menu = "missions_operation_rhinegold_menu_2",
 		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_2_menu",
-		icon_hud = "missions_mini_raid_2",
-		name_id = "menu_ger_oper_02_event_2_name",
-		mission_flag = "level_operation_02_mission_02",
+		music_id = "random",
+		audio_briefing_id = "mrs_white_or_mr2_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_2",
 		level_id = "zone_germany_destroyed_fuel",
-		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_2_progress_text",
-		loading = {
-			text = "menu_ger_oper_rhinegold_event_2_loading_text",
-			image = "loading_rhinegold_02"
-		},
-		excluded_continents = {
-			"operation1mission1",
-			"operation1mission2",
-			"operation1mission3",
-			"operation2mission1"
-		}
-	}
-	self.missions.oper_flamable.events.mini_raid_2_roundabout = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_02",
-		music_id = "random",
-		xp = 2200,
-		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_mini_raid_2_menu",
-		icon_hud = "missions_mini_raid_2",
-		name_id = "menu_ger_oper_02_event_2_name",
 		mission_flag = "level_operation_02_mission_02",
-		level_id = "zone_germany_roundabout_fuel",
-		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
+		name_id = "menu_ger_oper_02_event_2_name",
+		mission_id = "oper_flamable_mini_raid_2_destroyed",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_02",
 		progress_text_id = "menu_ger_oper_rhinegold_event_2_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_2_loading_text",
 			image = "loading_rhinegold_02"
@@ -1848,46 +2077,158 @@ function OperationsTweakData:_init_operations()
 			"operation1mission2",
 			"operation1mission3",
 			"operation2mission1"
+		},
+		forbids_random = {
+			"oper_flamable_mini_raid_2_roundabout"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_2_description",
+				title_id = "rhinegold_mission_photo_2_title",
+				photo = "intel_rhinegold_02"
+			},
+			{
+				description_id = "rhinegold_mission_photo_3_description",
+				title_id = "rhinegold_mission_photo_3_title",
+				photo = "intel_rhinegold_03"
+			},
+			{
+				description_id = "rhinegold_mission_photo_4_description",
+				title_id = "rhinegold_mission_photo_4_title",
+				photo = "intel_rhinegold_04"
+			}
 		}
 	}
-	self.missions.oper_flamable.events.bridge = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_03",
-		music_id = "ger_bridge",
+	self.missions.oper_flamable.events.mini_raid_2_destroyed = self.missions.oper_flamable_mini_raid_2_destroyed
+	self.missions.oper_flamable_mini_raid_2_roundabout = {
+		icon_menu = "missions_operation_rhinegold_menu_2",
+		xp = 2200,
+		music_id = "random",
+		audio_briefing_id = "mrs_white_or_mr2_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_2",
+		level_id = "zone_germany_roundabout_fuel",
+		mission_flag = "level_operation_02_mission_02",
+		name_id = "menu_ger_oper_02_event_2_name",
+		mission_id = "oper_flamable_mini_raid_2_roundabout",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_02",
+		progress_text_id = "menu_ger_oper_rhinegold_event_2_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_2_progress_title",
+		mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
+		loading = {
+			text = "menu_ger_oper_rhinegold_event_2_loading_text",
+			image = "loading_rhinegold_02"
+		},
+		excluded_continents = {
+			"operation1mission1",
+			"operation1mission2",
+			"operation1mission3",
+			"operation2mission1"
+		},
+		forbids_random = {
+			"oper_flamable_mini_raid_2_destroyed"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_2_description",
+				title_id = "rhinegold_mission_photo_2_title",
+				photo = "intel_rhinegold_02"
+			},
+			{
+				description_id = "rhinegold_mission_photo_3_description",
+				title_id = "rhinegold_mission_photo_3_title",
+				photo = "intel_rhinegold_03"
+			},
+			{
+				description_id = "rhinegold_mission_photo_4_description",
+				title_id = "rhinegold_mission_photo_4_title",
+				photo = "intel_rhinegold_04"
+			}
+		}
+	}
+	self.missions.oper_flamable.events.mini_raid_2_roundabout = self.missions.oper_flamable_mini_raid_2_roundabout
+	self.missions.oper_flamable_bridge = {
+		icon_menu = "missions_operation_rhinegold_menu_3",
 		xp = 2400,
+		music_id = "ger_bridge",
+		audio_briefing_id = "mrs_white_bridge_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_3",
+		level_id = "ger_bridge",
+		mission_flag = "level_operation_02_mission_03",
+		name_id = "menu_ger_oper_02_event_3_name",
+		mission_id = "oper_flamable_bridge",
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_03",
+		progress_text_id = "menu_ger_oper_rhinegold_event_3_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_3_progress_title",
 		dogtags = self.dogtag_types.medium,
 		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		checkpoint = true,
-		icon_menu = "missions_raid_bridge_menu",
-		icon_hud = "missions_raid_bridge",
-		name_id = "menu_ger_oper_02_event_3_name",
-		mission_flag = "level_operation_02_mission_03",
-		progress_title_id = "menu_ger_oper_rhinegold_event_3_progress_title",
-		progress_text_id = "menu_ger_oper_rhinegold_event_3_progress_text",
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_3_loading_text",
 			image = "loading_rhinegold_03"
 		},
-		level_id = "ger_bridge_operation"
+		forbids_random = {
+			"ger_bridge"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		},
+		photos = {
+			{
+				description_id = "rhinegold_mission_photo_5_description",
+				title_id = "rhinegold_mission_photo_5_title",
+				photo = "intel_rhinegold_05"
+			}
+		}
 	}
-	self.missions.oper_flamable.events.castle = {
-		camp_objective_id = "obj_camp_goto_oper_rhinegold_04",
-		music_id = "castle",
+	self.missions.oper_flamable.events.bridge = self.missions.oper_flamable_bridge
+	self.missions.oper_flamable_castle = {
+		icon_menu = "missions_operation_rhinegold_menu_4",
+		mission_id = "oper_flamable_castle",
 		xp = 4000,
-		dogtags = self.dogtag_types.large,
-		icon_menu = "missions_raid_castle_menu",
-		icon_hud = "missions_raid_castle",
-		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
-		start_in_stealth = true,
-		name_id = "menu_ger_oper_02_event_4_name",
+		music_id = "castle",
+		audio_briefing_id = "mrs_white_castle_op_brief_long",
+		icon_menu_big = "xp_events_missions_operation_rhinegold_4",
+		level_id = "settlement",
 		mission_flag = "level_operation_02_mission_04",
-		progress_title_id = "menu_ger_oper_rhinegold_event_4_progress_title",
+		name_id = "menu_ger_oper_02_event_4_name",
+		start_in_stealth = true,
+		camp_objective_id = "obj_camp_goto_oper_rhinegold_04",
 		progress_text_id = "menu_ger_oper_rhinegold_event_4_progress_text",
+		progress_title_id = "menu_ger_oper_rhinegold_event_4_progress_title",
+		dogtags = self.dogtag_types.large,
+		mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED,
+		job_type = OperationsTweakData.JOB_TYPE_RAID,
 		loading = {
 			text = "menu_ger_oper_rhinegold_event_4_loading_text",
 			image = "loading_rhinegold_04"
 		},
-		level_id = "settlement"
+		forbids_random = {
+			"settlement"
+		},
+		bounty_filters = {
+			forbid_buffs = {
+				BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+				BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED
+			}
+		}
 	}
+	self.missions.oper_flamable.events.castle = self.missions.oper_flamable_castle
 	self.missions.oper_flamable.events_index_template = {
 		{
 			"mini_raid_1_park",
@@ -1905,6 +2246,191 @@ function OperationsTweakData:_init_operations()
 			"castle"
 		}
 	}
+
+	local function events_from_template(data)
+		local events = {}
+
+		for _, template in ipairs(data) do
+			for _, job_id in ipairs(template) do
+				local job_data = self.missions[job_id]
+
+				if job_data then
+					events[job_id] = deep_clone(job_data)
+					events[job_id].mission_id = job_id
+				end
+			end
+		end
+
+		return events
+	end
+
+	local random_events_intel = {
+		"spies_test",
+		"spies_test",
+		"bunker_test",
+		"bunker_test",
+		"hunters",
+		"hunters",
+		"settlement",
+		"settlement",
+		"radio_defense",
+		"convoy",
+		"convoy",
+		"clear_skies_gold_rush",
+		"clear_skies_gold_rush",
+		"clear_skies_mini_raid_1_park",
+		"clear_skies_mini_raid_1_destroyed",
+		"clear_skies_mini_raid_1_roundabout",
+		"oper_flamable_mini_raid_1_park",
+		"oper_flamable_mini_raid_1_destroyed",
+		"oper_flamable_mini_raid_1_roundabout"
+	}
+	local random_events_padding = {
+		"radio_defense",
+		"clear_skies_radio_defense",
+		"clear_skies_gold_rush",
+		"settlement",
+		"tnd",
+		"hunters",
+		"convoy",
+		"oper_flamable_bridge",
+		"clear_skies_mini_raid_2_park",
+		"clear_skies_mini_raid_2_destroyed",
+		"spies_test",
+		"bunker_test"
+	}
+	local random_events_reward = {
+		"forest_gumpy",
+		"fury_railway",
+		"sto",
+		"gold_rush",
+		"kelly",
+		"ger_bridge"
+	}
+	local random_events_finale = {
+		"forest_bunker",
+		"train_yard",
+		"silo",
+		"flakturm",
+		"clear_skies_flakturm",
+		"settlement",
+		"oper_flamable_castle"
+	}
+	self.missions.random_short = {
+		icon_hud = "op_random_short_hd",
+		icon_menu = "op_random_short_lq",
+		xp = 500,
+		region = "germany",
+		camp_objective_id = "obj_camp_goto_op_random_short",
+		briefing_id = "menu_ger_op_random_short_desc",
+		name_id = "menu_ger_op_random_short_hl",
+		job_type = OperationsTweakData.JOB_TYPE_OPERATION,
+		photos = {
+			{
+				description_id = "random_mission_photo_1_description",
+				title_id = "random_mission_photo_1_title",
+				photo = "intel_random_operation_01"
+			},
+			{
+				description_id = "random_mission_photo_2_description",
+				title_id = "random_mission_photo_2_title",
+				photo = "intel_random_operation_02"
+			}
+		},
+		loading = {
+			text = "menu_ger_oper_rhinegold",
+			image = "loading_rhinegold_00"
+		},
+		events_index_template = {
+			random_events_padding,
+			random_events_finale
+		}
+	}
+	self.missions.random_short.events = events_from_template(self.missions.random_short.events_index_template)
+	self.missions.random_medium = deep_clone(self.missions.random_short)
+	self.missions.random_medium.name_id = "menu_ger_op_random_medium_hl"
+	self.missions.random_medium.briefing_id = "menu_ger_op_random_medium_desc"
+	self.missions.random_medium.camp_objective_id = "obj_camp_goto_op_random_medium"
+	self.missions.random_medium.xp = 1800
+	self.missions.random_medium.icon_hud = "op_random_medium_hd"
+	self.missions.random_medium.icon_menu = "op_random_medium_lq"
+	self.missions.random_medium.photos = {
+		{
+			description_id = "random_mission_photo_1_description",
+			title_id = "random_mission_photo_1_title",
+			photo = "intel_random_operation_01"
+		},
+		{
+			description_id = "random_mission_photo_1_description",
+			title_id = "random_mission_photo_1_title",
+			photo = "intel_random_operation_01"
+		},
+		{
+			description_id = "random_mission_photo_3_description",
+			title_id = "random_mission_photo_3_title",
+			photo = "intel_random_operation_03"
+		},
+		{
+			description_id = "random_mission_photo_2_description",
+			title_id = "random_mission_photo_2_title",
+			photo = "intel_random_operation_02"
+		}
+	}
+	self.missions.random_medium.events_index_template = {
+		random_events_intel,
+		random_events_padding,
+		random_events_reward,
+		random_events_finale
+	}
+	self.missions.random_medium.events = events_from_template(self.missions.random_medium.events_index_template)
+	self.missions.random_long = deep_clone(self.missions.random_short)
+	self.missions.random_long.name_id = "menu_ger_op_random_long_hl"
+	self.missions.random_long.briefing_id = "menu_ger_op_random_long_desc"
+	self.missions.random_long.camp_objective_id = "obj_camp_goto_op_random_long"
+	self.missions.random_long.xp = 3000
+	self.missions.random_long.icon_hud = "op_random_long_hd"
+	self.missions.random_long.icon_menu = "op_random_long_lq"
+	self.missions.random_long.photos = {
+		{
+			description_id = "random_mission_photo_1_description",
+			title_id = "random_mission_photo_1_title",
+			photo = "intel_random_operation_01"
+		},
+		{
+			description_id = "random_mission_photo_1_description",
+			title_id = "random_mission_photo_1_title",
+			photo = "intel_random_operation_01"
+		},
+		{
+			description_id = "random_mission_photo_3_description",
+			title_id = "random_mission_photo_3_title",
+			photo = "intel_random_operation_03"
+		},
+		{
+			description_id = "random_mission_photo_1_description",
+			title_id = "random_mission_photo_1_title",
+			photo = "intel_random_operation_01"
+		},
+		{
+			description_id = "random_mission_photo_3_description",
+			title_id = "random_mission_photo_3_title",
+			photo = "intel_random_operation_03"
+		},
+		{
+			description_id = "random_mission_photo_2_description",
+			title_id = "random_mission_photo_2_title",
+			photo = "intel_random_operation_02"
+		}
+	}
+	self.missions.random_long.events_index_template = {
+		random_events_intel,
+		random_events_padding,
+		random_events_reward,
+		random_events_padding,
+		random_events_reward,
+		random_events_finale
+	}
+	self.missions.random_long.events = events_from_template(self.missions.random_long.events_index_template)
 end
 
 function OperationsTweakData:get_all_loading_screens()
@@ -1988,11 +2514,31 @@ function OperationsTweakData:randomize_operation(operation_id, operation_data)
 	operation_data = operation_data or self.missions[operation_id]
 	local template = operation_data.events_index_template
 	local calculated_index = {}
+	local already_picked = {}
 
 	for _, value in ipairs(template) do
-		local index = math.floor(math.rand(#value)) + 1
+		local picked = false
 
-		table.insert(calculated_index, value[index])
+		while not picked do
+			local index = math.floor(math.rand(#value)) + 1
+			local mission_id = value[index]
+
+			if not already_picked[mission_id] then
+				already_picked[mission_id] = true
+
+				table.insert(calculated_index, mission_id)
+
+				local mission_data = operation_data.events[mission_id]
+
+				if mission_data and mission_data.forbids_random then
+					for _, forbid_id in ipairs(mission_data.forbids_random) do
+						already_picked[forbid_id] = true
+					end
+				end
+
+				picked = true
+			end
+		end
 	end
 
 	operation_data.events_index = calculated_index
@@ -2089,13 +2635,12 @@ end
 
 function OperationsTweakData:get_all_mission_flags()
 	local mission_flags = {}
-	local all_raids = self:get_raids_index()
 
-	for i, v in ipairs(all_raids) do
-		local mf = self.missions[v].mission_flag
+	for _, mission in pairs(self.missions) do
+		local flag = mission.mission_flag
 
-		if mf then
-			table.insert(mission_flags, mf)
+		if flag and not table.contains(mission_flags, flag) then
+			table.insert(mission_flags, flag)
 		end
 	end
 

@@ -18,59 +18,26 @@ local UpgradeCacheBasket = require("lib/managers/upgrades/UpgradeCacheBasket")
 function PlayerManager:init()
 	self._coroutine_mgr = CoroutineManager:new()
 	self._temporary_properties = TemporaryPropertyManager:new()
-	self._player_name = Idstring("units/multiplayer/mp_fps_mover/mp_fps_mover")
 	self._players = {}
 	self._nr_players = Global.nr_players or 1
 	self._last_id = 1
-	self._viewport_configs = {
-		{}
-	}
-	self._viewport_configs[1][1] = {
-		dimensions = {
-			h = 1,
-			w = 1,
-			y = 0,
-			x = 0
-		}
-	}
-	self._viewport_configs[2] = {
-		{
-			dimensions = {
-				h = 0.5,
-				w = 1,
-				y = 0,
-				x = 0
-			}
-		},
-		{
-			dimensions = {
-				h = 0.5,
-				w = 1,
-				y = 0.5,
-				x = 0
-			}
-		}
-	}
 	self._view_disabled = false
 
 	self:_setup_rules()
 
-	self._local_player_minions = 0
 	self._player_states = {
-		turret = "ingame_standard",
-		bleed_out = "ingame_bleed_out",
-		parachuting = "ingame_parachuting",
 		standard = "ingame_standard",
-		freefall = "ingame_freefall",
+		turret = "ingame_standard",
 		foxhole = "ingame_standard",
+		parachuting = "ingame_parachuting",
+		freefall = "ingame_freefall",
 		driving = "ingame_driving",
 		bipod = "ingame_standard",
 		carry_corpse = "ingame_standard",
 		carry = "ingame_standard",
-		incapacitated = "ingame_incapacitated",
 		tased = "ingame_electrified",
-		charging = "ingame_standard",
-		fatal = "ingame_fatal"
+		bleed_out = "ingame_bleed_out",
+		charging = "ingame_standard"
 	}
 	self._DEFAULT_STATE = "standard"
 	self._current_state = self._DEFAULT_STATE
@@ -80,7 +47,6 @@ function PlayerManager:init()
 	self._current_sync_state = self._DEFAULT_STATE
 	local ids_player = Idstring("player")
 	self._player_timer = TimerManager:timer(ids_player) or TimerManager:make_timer(ids_player, TimerManager:pausable())
-	self._hostage_close_to_local_t = 0
 
 	self:_setup()
 end
@@ -176,7 +142,7 @@ function PlayerManager:reset()
 	self:_setup_rules()
 
 	if alive(player) then
-		self:_setup_upgrades()
+		self:setup_upgrades()
 		self:aquire_default_upgrades()
 	end
 end
@@ -184,7 +150,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		mvector3 = nil,
+		upgrade_value = nil,
 		selections = {},
 		specials = {}
 	}
@@ -200,7 +166,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		mvector3 = nil,
+		upgrade_value = nil,
 		selections = {},
 		specials = {}
 	}
@@ -257,7 +223,7 @@ function PlayerManager:_setup()
 	self._global = Global.player_manager
 end
 
-function PlayerManager:_setup_upgrades()
+function PlayerManager:setup_upgrades()
 	UpgradeAnatomist:check_activate()
 	UpgradePickpocket:check_activate()
 	UpgradeBrutality:check_activate()
@@ -543,7 +509,7 @@ function PlayerManager:_internal_load()
 		amount = math.min(amount, self:get_max_grenades())
 	})
 	self:refill_grenades()
-	self:_setup_upgrades()
+	self:setup_upgrades()
 
 	local wheel_params = tweak_data.interaction:get_interaction("com_wheel")
 
@@ -687,26 +653,6 @@ function PlayerManager:player_id(unit)
 	return id
 end
 
-function PlayerManager:viewport_config()
-	local configs = self._viewport_configs[self._last_id]
-
-	if configs then
-		return configs[1]
-	end
-end
-
-function PlayerManager:setup_viewports()
-	local configs = self._viewport_configs[self._last_id]
-
-	if configs then
-		for k, player in ipairs(self._players) do
-			-- Nothing
-		end
-	else
-		Application:error("Unsupported number of players: " .. tostring(self._last_id))
-	end
-end
-
 function PlayerManager:player_states()
 	local ret = {}
 
@@ -732,7 +678,7 @@ end
 function PlayerManager:set_player_state(state, state_data)
 	state = state or self._current_state
 
-	if state == "bleed_out" or state == "fatal" then
+	if state == "bleed_out" then
 		managers.hud:hide_carry_wheel(true)
 	end
 
@@ -783,20 +729,9 @@ function PlayerManager:set_player_state(state, state_data)
 	self:_change_player_state()
 end
 
-function PlayerManager:spawn_players(position, rotation, state)
-	for var = 1, self._nr_players do
-		self._last_id = var
-	end
-
-	self:spawned_player(self._last_id, safe_spawn_unit(self:player_unit_name(), position, rotation))
-
-	return self._players[1]
-end
-
 function PlayerManager:spawned_player(id, unit)
 	self._players[id] = unit
 
-	self:setup_viewports()
 	self:_internal_load()
 	self:_change_player_state()
 end
@@ -825,10 +760,6 @@ end
 
 function PlayerManager:players()
 	return self._players
-end
-
-function PlayerManager:player_unit_name()
-	return self._player_name
 end
 
 function PlayerManager:player_unit(id)
@@ -951,10 +882,6 @@ function PlayerManager:on_killshot(killed_unit, variant)
 		return
 	end
 
-	if CopDamage.is_civilian(killed_unit:base()._tweak_table) then
-		return
-	end
-
 	local t = Application:time()
 
 	if self._on_killshot_t and t < self._on_killshot_t then
@@ -1031,7 +958,7 @@ function PlayerManager:on_upgrades_changed()
 	if alive(player) then
 		local current_state = player:movement():current_state()
 
-		self:_setup_upgrades()
+		self:setup_upgrades()
 		player:character_damage():setup_upgrades()
 		current_state:setup_upgrades()
 		managers.warcry:setup_upgrades()
@@ -1927,16 +1854,6 @@ function PlayerManager:set_synced_deployable_equipment(peer, deployable, amount)
 				icon = icon,
 				amount = amount
 			})
-		end
-	end
-
-	local local_peer_id = managers.network:session():local_peer():id()
-
-	if peer_id ~= local_peer_id then
-		local unit = peer:unit()
-
-		if alive(unit) then
-			unit:movement():set_visual_deployable_equipment(deployable, amount)
 		end
 	end
 end
@@ -3380,12 +3297,20 @@ function PlayerManager:get_max_grenades(grenade_id)
 end
 
 function PlayerManager:got_max_grenades()
+	if not managers.network:session() then
+		return 0
+	end
+
 	local peer_id = managers.network:session():local_peer():id()
 
 	return self:get_max_grenades_by_peer_id(peer_id) <= self:get_grenade_amount(peer_id)
 end
 
 function PlayerManager:has_grenade(peer_id)
+	if not managers.network:session() then
+		return 0
+	end
+
 	peer_id = peer_id or managers.network:session():local_peer():id()
 	local synced_grenade = self:get_synced_grenades(peer_id)
 
@@ -3530,9 +3455,9 @@ function PlayerManager:_update_carry_wheel()
 
 	while carry_max >= i do
 		local option = {
-			disabled = true,
-			text_id = "",
 			icon = "comm_wheel_no",
+			text_id = "",
+			disabled = true,
 			id = "carry_" .. i
 		}
 
@@ -3577,7 +3502,7 @@ end
 function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 	Application:debug("[PlayerManager:drop_carry]", carry_id, "- Zipline Unit:", zipline_unit)
 
-	if self:carry_blocked_by_cooldown() or self:current_state() == "bleed_out" or self:current_state() == "fatal" then
+	if self:carry_blocked_by_cooldown() or self:current_state() == "bleed_out" then
 		Application:warn("[PlayerManager:drop_carry] In a state that prevents dropping!", self:current_state(), "cooldown", self:carry_blocked_by_cooldown())
 
 		return
@@ -3611,8 +3536,8 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 	if carry_needs_headroom and not player:movement():current_state():_can_stand() then
 		managers.notification:add_notification({
 			shelf_life = 5,
-			duration = 2,
 			id = "cant_throw_body",
+			duration = 2,
 			text = managers.localization:text("cant_throw_body")
 		})
 
@@ -3933,26 +3858,6 @@ function PlayerManager:local_can_carry(carry_id)
 	return true
 end
 
-function PlayerManager:count_up_player_minions()
-	self._local_player_minions = math.min(self._local_player_minions + 1, self:upgrade_value("player", "convert_enemies_max_minions", 0))
-end
-
-function PlayerManager:count_down_player_minions()
-	self._local_player_minions = math.max(self._local_player_minions - 1, 0)
-end
-
-function PlayerManager:reset_minions()
-	self._local_player_minions = 0
-end
-
-function PlayerManager:num_local_minions()
-	return self._local_player_minions
-end
-
-function PlayerManager:chk_minion_limit_reached()
-	return self:upgrade_value("player", "convert_enemies_max_minions", 0) <= self._local_player_minions
-end
-
 function PlayerManager:change_player_look(new_look)
 	self._player_mesh_suffix = new_look
 
@@ -3969,8 +3874,8 @@ function PlayerManager:add_weapon_ammo_gain(name_id, amount)
 	if Application:production_build() then
 		self._debug_weapon_ammo_gains = self._debug_weapon_ammo_gains or {}
 		self._debug_weapon_ammo_gains[name_id] = self._debug_weapon_ammo_gains[name_id] or {
-			index = 0,
-			total = 0
+			total = 0,
+			index = 0
 		}
 		self._debug_weapon_ammo_gains[name_id].total = self._debug_weapon_ammo_gains[name_id].total + amount
 		self._debug_weapon_ammo_gains[name_id].index = self._debug_weapon_ammo_gains[name_id].index + 1
@@ -4263,7 +4168,7 @@ function PlayerManager:server_move_to_next_seat(vehicle, peer_id, player, seat_n
 
 	if seat ~= nil then
 		if seat.previous_occupant then
-			managers.network:session():send_to_peers_synched("sync_vehicle_player_swithc_seat", "next_seat", vehicle, peer_id, player, seat.name, previous_seat.name, seat.previous_occupant)
+			managers.network:session():send_to_peers_synched("sync_vehicle_player_switch_seat", "next_seat", vehicle, peer_id, player, seat.name, previous_seat.name, seat.previous_occupant)
 		else
 			managers.network:session():send_to_peers_synched("sync_vehicle_player", "next_seat", vehicle, peer_id, player, seat.name, previous_seat.name)
 		end
@@ -4437,12 +4342,11 @@ function PlayerManager:kill()
 		return
 	end
 
-	managers.player:force_drop_carry()
+	self:force_drop_carry()
 	managers.vehicle:remove_player_from_all_vehicles(player)
 	managers.statistics:downed({
 		death = true
 	})
-	IngameFatalState.on_local_player_dead()
 	managers.warcry:deactivate_warcry(true)
 	game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 	player:character_damage():set_invulnerable(true)
@@ -4452,6 +4356,7 @@ function PlayerManager:kill()
 	player:base():_unregister()
 	player:base():set_slot(player, 0)
 	World:delete_unit(player)
+	self:setup_upgrades()
 end
 
 function PlayerManager:get_death_location_rotation()
@@ -4483,15 +4388,10 @@ function PlayerManager:debug_goto_custody()
 		managers.player:set_player_state("bleed_out")
 	end
 
-	if managers.player:current_state() ~= "fatal" then
-		managers.player:set_player_state("fatal")
-	end
-
 	managers.player:force_drop_carry()
 	managers.statistics:downed({
 		death = true
 	})
-	IngameFatalState.on_local_player_dead()
 	game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 	player:character_damage():set_invulnerable(true)
 	player:character_damage():set_health(0)

@@ -1,6 +1,13 @@
 CharacterSequenceElement = SequenceCharacterElement or class(MissionElement)
 CharacterSequenceElement.SAVE_UNIT_POSITION = false
 CharacterSequenceElement.SAVE_UNIT_ROTATION = false
+CharacterSequenceElement.LINK_VALUES = {
+	{
+		output = true,
+		type = "operator",
+		table_value = "elements"
+	}
+}
 
 function CharacterSequenceElement:init(unit)
 	CharacterSequenceElement.super.init(self, unit)
@@ -48,9 +55,9 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0,
 				g = 0.75,
 				r = 0,
+				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})

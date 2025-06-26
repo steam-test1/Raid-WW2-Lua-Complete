@@ -1,6 +1,6 @@
 NetworkMatchMaking = NetworkMatchMaking or class()
 NetworkMatchMaking.OPEN_SLOTS = 4
-NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_24_03"
+NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_25_00"
 NetworkMatchMaking.RETRY_CONNECT_COUNT = 15
 
 function NetworkMatchMaking:init()

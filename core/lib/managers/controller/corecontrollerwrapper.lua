@@ -16,7 +16,9 @@ function ControllerWrapper:init(manager, id, name, controller_map, default_contr
 	self._debug = debug
 
 	if not skip_virtual_controller then
-		self._virtual_controller = Input:create_virtual_controller("ctrl_" .. tostring(self._id))
+		self._virtual_controller = Input:create_virtual_controller(name .. " " .. tostring(self._id))
+
+		self._virtual_controller:set_enabled(false)
 	end
 
 	self._custom_virtual_connect_func_map = custom_virtual_connect_func_map or {}
@@ -499,6 +501,10 @@ function ControllerWrapper:get_controller(controller_id)
 	return self._controller_map[controller_id or self._default_controller_id]
 end
 
+function ControllerWrapper:get_virtual_controller()
+	return self._virtual_controller
+end
+
 function ControllerWrapper:connection_exist(connection_name)
 	return self._connection_map[connection_name] ~= nil
 end
@@ -523,8 +529,6 @@ function ControllerWrapper:_really_activate()
 	ControllerWrapper.super._really_activate(self)
 
 	if not self._enabled then
-		cat_print("controller_manager", "[ControllerManager] Enabled controller \"" .. tostring(self._name) .. "\".")
-
 		if self._virtual_controller then
 			self._virtual_controller:set_enabled(true)
 		end
@@ -543,8 +547,6 @@ function ControllerWrapper:_really_deactivate()
 	ControllerWrapper.super._really_deactivate(self)
 
 	if self._enabled then
-		cat_print("controller_manager", "[ControllerManager] Disabled controller \"" .. tostring(self._name) .. "\".")
-
 		self._enabled = false
 
 		self:clear_triggers(true)

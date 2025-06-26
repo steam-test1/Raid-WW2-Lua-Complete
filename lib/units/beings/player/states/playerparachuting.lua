@@ -200,3 +200,8 @@ function PlayerParachuting:_pitch_up()
 
 	self._camera_unit:base():animate_pitch(t, nil, self._tweak_data.camera.target_pitch, 1.7)
 end
+
+function PlayerParachuting:set_class_tweak_data(class)
+	self._player_class = class
+	self._tweak_data = tweak_data.player.parachute
+end

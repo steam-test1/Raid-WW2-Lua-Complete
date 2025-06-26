@@ -87,8 +87,8 @@ function MissionJoinGui:_layout_filters()
 		description = self:translate("menu_mission_join_filters_friends_only", true),
 		on_click_callback = callback(self, self, "on_click_friends_only_button"),
 		on_menu_move = {
-			up = "mission_filter_stepper",
-			down = "in_camp_servers_only"
+			down = "in_camp_servers_only",
+			up = "mission_filter_stepper"
 		}
 	})
 	self._in_camp_servers_only = self._filters_panel:toggle_button({
@@ -102,8 +102,8 @@ function MissionJoinGui:_layout_filters()
 		description = self:translate("menu_mission_join_filters_in_camp_servers_only", true),
 		on_click_callback = callback(self, self, "on_click_camp_only_button"),
 		on_menu_move = {
-			up = "friends_only_button",
-			down = "distance_filter_stepper"
+			down = "distance_filter_stepper",
+			up = "friends_only_button"
 		}
 	})
 	self._distance_filter_stepper = self._filters_panel:stepper({
@@ -115,14 +115,14 @@ function MissionJoinGui:_layout_filters()
 		button_h = self.FILTER_BUTTON_H,
 		stepper_w = self.FILTER_STEPPER_W,
 		font_size = self.FILTER_FONT_SIZE,
-		color = tweak_data.menu.raid_red,
-		arrow_color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		description = self:translate("menu_mission_join_filters_distance_filter", true),
 		data_source_callback = callback(self, self, "data_source_distance_filter_stepper"),
 		on_item_selected_callback = callback(self, self, "on_click_distance_filter"),
 		on_menu_move = {
-			up = "in_camp_servers_only",
-			down = "difficulty_filter_stepper"
+			down = "difficulty_filter_stepper",
+			up = "in_camp_servers_only"
 		}
 	})
 	self._difficulty_filter_stepper = self._filters_panel:stepper({
@@ -134,14 +134,14 @@ function MissionJoinGui:_layout_filters()
 		button_h = self.FILTER_BUTTON_H,
 		stepper_w = self.FILTER_STEPPER_W,
 		font_size = self.FILTER_FONT_SIZE,
-		color = tweak_data.menu.raid_red,
-		arrow_color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		description = self:translate("menu_mission_join_filters_difficulty_filter", true),
 		data_source_callback = callback(self, self, "data_source_difficulty_filter_stepper"),
 		on_item_selected_callback = callback(self, self, "on_click_difficuty_filter"),
 		on_menu_move = {
-			up = "distance_filter_stepper",
-			down = "mission_filter_stepper"
+			down = "mission_filter_stepper",
+			up = "distance_filter_stepper"
 		}
 	})
 	self._mission_filter_stepper = self._filters_panel:stepper({
@@ -153,22 +153,22 @@ function MissionJoinGui:_layout_filters()
 		button_h = self.FILTER_BUTTON_H,
 		stepper_w = self.FILTER_STEPPER_W,
 		font_size = self.FILTER_FONT_SIZE,
-		color = tweak_data.menu.raid_red,
-		arrow_color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		description = self:translate("menu_mission_join_filters_mission_filter", true),
 		data_source_callback = callback(self, self, "data_source_mission_filter_stepper"),
 		on_menu_move = {
-			up = "difficulty_filter_stepper",
-			down = "friends_only_button"
+			down = "friends_only_button",
+			up = "difficulty_filter_stepper"
 		}
 	})
 end
 
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
-		vertical = "top",
 		h = 69,
 		w = 320,
+		vertical = "top",
 		name = "servers_title_label",
 		text = utf8.to_upper(managers.localization:text("menu_mission_join_server_list_title")),
 		color = tweak_data.gui.colors.raid_red,
@@ -215,11 +215,11 @@ function MissionJoinGui:_layout_server_list_table()
 			},
 			columns = {
 				{
+					vertical = "center",
 					align = "left",
+					w = 480,
 					header_padding = 32,
 					padding = 32,
-					vertical = "center",
-					w = 480,
 					header_text = self:translate("menu_mission_join_server_list_columns_mission_type", true),
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
 					cell_class = RaidGUIControlTableCell,
@@ -228,11 +228,11 @@ function MissionJoinGui:_layout_server_list_table()
 					highlight_color = tweak_data.gui.colors.raid_white
 				},
 				{
+					vertical = "center",
 					align = "left",
+					w = 224,
 					header_padding = 0,
 					padding = 0,
-					vertical = "center",
-					w = 224,
 					header_text = self:translate("menu_mission_join_server_list_columns_difficulty", true),
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
 					cell_class = RaidGUIControlTableCell,
@@ -241,11 +241,11 @@ function MissionJoinGui:_layout_server_list_table()
 					highlight_color = tweak_data.gui.colors.raid_white
 				},
 				{
+					vertical = "center",
 					align = "left",
+					w = 352,
 					header_padding = 0,
 					padding = 0,
-					vertical = "center",
-					w = 352,
 					header_text = self:translate("menu_mission_join_server_list_columns_host_name", true),
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
 					cell_class = RaidGUIControlTableCell,
@@ -254,11 +254,11 @@ function MissionJoinGui:_layout_server_list_table()
 					highlight_color = tweak_data.gui.colors.raid_white
 				},
 				{
+					vertical = "center",
 					align = "left",
+					w = 144,
 					header_padding = 0,
 					padding = 0,
-					vertical = "center",
-					w = 144,
 					header_text = self:translate("menu_mission_join_server_list_columns_players", true),
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
 					cell_class = RaidGUIControlTableCell,
@@ -295,27 +295,27 @@ function MissionJoinGui:_layout_game_description()
 		texture_rect = desc_mission_icon.texture_rect
 	})
 	self._desc_mission_name = self._game_description_panel:label({
-		align = "left",
+		h = 96,
 		text = "FLAKTURM",
 		visible = false,
-		vertical = "center",
-		h = 96,
+		align = "left",
 		w = 400,
 		y = 0,
 		x = 80,
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.menu_list,
 		color = tweak_data.gui.colors.raid_red
 	})
 	self._desc_mission_name_small = self._game_description_panel:label({
-		align = "left",
+		h = 32,
 		text = "FLAKTURM",
 		visible = false,
-		vertical = "center",
-		h = 32,
+		align = "left",
 		w = 400,
 		y = 0,
 		x = 80,
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_red
@@ -329,14 +329,14 @@ function MissionJoinGui:_layout_game_description()
 	self._server_difficulty_indicator:set_x(80)
 
 	self._desc_xp_amount = self._game_description_panel:label({
-		align = "right",
+		h = 32,
 		text = "1000 XP",
 		visible = false,
-		vertical = "center",
-		h = 32,
+		align = "right",
 		w = 240,
 		y = 96,
 		x = 240,
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey
@@ -390,13 +390,13 @@ function MissionJoinGui:_layout_game_description()
 		texture_rect = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_rect
 	})
 	self._desc_challenge_card_name = self._desc_challenge_card_panel:label({
-		align = "left",
 		text = "SWITCH HITLER",
-		vertical = "center",
+		align = "left",
 		h = 64,
 		w = 384,
 		y = 0,
 		x = 0,
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		color = tweak_data.gui.colors.raid_dirty_white
@@ -411,22 +411,22 @@ function MissionJoinGui:_layout_game_description()
 		texture_rect = desc_challenge_card_rarity_icon.texture_rect
 	})
 	self._desc_challenge_card_xp = self._desc_challenge_card_panel:label({
-		align = "right",
 		text = "X1.5",
-		vertical = "center",
+		align = "right",
 		h = 64,
 		w = 64,
 		y = 0,
 		x = 416,
+		vertical = "center",
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
 	self._desc_challenge_card_name_on_card = self._desc_challenge_card_panel:label({
+		wrap = true,
 		align = "center",
 		text = "SWITCH HITLER",
 		vertical = "center",
-		wrap = true,
 		w = self.desc_challenge_card_icon:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
 		h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.TITLE_H,
 		x = self.desc_challenge_card_icon:x() + self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.TITLE_PADDING,
@@ -463,10 +463,10 @@ function MissionJoinGui:_layout_game_description()
 	}
 	self._desc_challenge_card_type_icon_on_card = self._desc_challenge_card_panel:image(params_card_type)
 	self._desc_challenge_card_xp_on_card = self._desc_challenge_card_panel:label({
-		align = "center",
 		text = "X1.5",
-		vertical = "center",
+		align = "center",
 		x = 0,
+		vertical = "center",
 		y = self.desc_challenge_card_icon:y() + self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.XP_BONUS_Y,
 		w = self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.XP_BONUS_W,
 		h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.XP_BONUS_H,
@@ -475,27 +475,27 @@ function MissionJoinGui:_layout_game_description()
 		color = tweak_data.gui.colors.raid_dirty_white
 	})
 	self._desc_challenge_card_bonus = self._desc_challenge_card_panel:label({
-		w = 352,
-		align = "left",
-		text = "+ shooting your secondary weapon fills up your primary ammo",
-		vertical = "top",
-		h = 64,
 		wrap = true,
+		align = "left",
 		y = 64,
+		h = 64,
+		w = 352,
+		text = "+ shooting your secondary weapon fills up your primary ammo",
 		x = 128,
+		vertical = "top",
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.raid_grey_effects
 	})
 	self._desc_challenge_card_malus = self._desc_challenge_card_panel:label({
-		w = 352,
-		align = "left",
-		text = "- shooting your primary weapon consumes both primary and secondary ammo",
-		vertical = "top",
-		h = 64,
 		wrap = true,
+		align = "left",
 		y = 128,
+		h = 64,
+		w = 352,
+		text = "- shooting your primary weapon consumes both primary and secondary ammo",
 		x = 128,
+		vertical = "top",
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,
 		color = tweak_data.gui.colors.raid_grey_effects
@@ -514,39 +514,39 @@ function MissionJoinGui:_layout_footer_buttons()
 	})
 	self._apply_filters_button = self._footer_buttons_panel:short_secondary_button({
 		align = "center",
-		vertical = "center",
 		h = 28,
 		w = 128,
 		x = 1280,
+		vertical = "center",
 		name = "apply_filters_button",
 		color = Color.black,
 		highlight_color = Color.white,
 		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
 		text = self:translate("menu_mission_join_filters_apply", true),
-		texture_color = tweak_data.menu.raid_red,
-		texture_highlight_color = tweak_data.menu.raid_red
+		texture_color = tweak_data.gui.colors.raid_red,
+		texture_highlight_color = tweak_data.gui.colors.raid_red
 	})
 	self._show_filters_button = self._footer_buttons_panel:short_tertiary_button({
 		align = "center",
-		vertical = "center",
 		h = 28,
 		w = 128,
 		x = 1536,
+		vertical = "center",
 		name = "show_filters_button",
 		text = self:translate("menu_mission_join_filters_show", true),
 		on_click_callback = callback(self, self, "on_click_show_filters_button"),
 		color = Color.black,
 		highlight_color = Color.white,
-		texture_color = tweak_data.menu.raid_red,
-		texture_highlight_color = tweak_data.menu.raid_red
+		texture_color = tweak_data.gui.colors.raid_red,
+		texture_highlight_color = tweak_data.gui.colors.raid_red
 	})
 	self._online_users_count = self._footer_buttons_panel:label({
-		x = 960,
 		align = "left",
-		text = "",
-		vertical = "center",
 		h = 64,
 		w = 320,
+		text = "",
+		x = 960,
+		vertical = "center",
 		name = "online_users_count",
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -645,6 +645,12 @@ function MissionJoinGui:data_source_servers_table()
 			}
 		end
 
+		local host_name = value.host_name
+
+		if managers.user:get_setting("capitalize_names") then
+			host_name = utf8.to_upper(host_name)
+		end
+
 		table.insert(missions, {
 			mission_data,
 			{
@@ -653,7 +659,7 @@ function MissionJoinGui:data_source_servers_table()
 				info = value.difficulty
 			},
 			{
-				text = utf8.to_upper(value.host_name),
+				text = host_name,
 				value = value.room_id,
 				info = value.host_name
 			},
@@ -965,10 +971,16 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	local card_key_name = data.challenge_card
+	local card_split = string.split(data.challenge_card, ",")
+	local card_key_name = card_split[1]
 	local card_data = nil
 
-	if card_key_name ~= "empty" then
+	if card_key_name == "bounty_card" then
+		local seed = card_split[2]
+		card_data = managers.challenge_cards:generate_bounty_card(seed)
+
+		math.randomseed()
+	elseif card_key_name ~= "empty" then
 		card_data = tweak_data.challenge_cards.cards[card_key_name]
 	end
 
@@ -989,7 +1001,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_xp:set_w(w1)
 		self._desc_challenge_card_xp:set_right(self._game_description_panel:w())
 
-		local desc_challenge_card_rarity_icon = tweak_data.gui.icons[card_data.rarity]
+		local desc_challenge_card_rarity_icon = tweak_data.challenge_cards.rarity_definition[card_data.rarity].texture_gui
 
 		if desc_challenge_card_rarity_icon then
 			self._desc_challenge_card_rarity_icon:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
@@ -1000,6 +1012,7 @@ function MissionJoinGui:_set_game_description_data(data)
 
 		if not card_data.title_in_texture then
 			self._desc_challenge_card_name_on_card:set_text(self:translate(card_data.name, true))
+			self._desc_challenge_card_name_on_card:set_color(card_data.text_color or RaidGUIControlCardBase.TITLE_COLOR)
 		else
 			self._desc_challenge_card_name_on_card:set_text("")
 		end
@@ -1013,10 +1026,11 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_xp_on_card:set_w(w1)
 		self._desc_challenge_card_xp_on_card:set_h(h1)
 		self._desc_challenge_card_xp_on_card:set_center_x(self.desc_challenge_card_icon:w() / 2)
+		self._desc_challenge_card_xp_on_card:set_color(card_data.text_color or RaidGUIControlCardBase.TITLE_COLOR)
 
-		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type]
+		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type].texture_gui
 
-		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture_path)
+		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture)
 		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect or tweak_data.challenge_cards.challenge_card_texture_rect)
 
 		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card_key_name)
@@ -1084,24 +1098,22 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 		end
 
 		for i, room in ipairs(room_list) do
-			local name_str = tostring(room.owner_name)
+			local host_name = tostring(room.owner_name)
 			local attributes_numbers = attribute_list[i].numbers
 
 			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
 				dead_list[room.room_id] = nil
-				local host_name = name_str
+				local job_id = attributes_numbers[14]
+				local job_name = ""
 				local level_id = attributes_numbers[1]
-				local name_id = ""
 				local level_name = ""
 				local difficulty_id = attributes_numbers[2]
 				local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
-				local job_id = attributes_numbers[14]
-				local job_name = ""
 				local kick_option = attributes_numbers[8]
 				local job_plan = attributes_numbers[10]
-				local state_string_id = tweak_data:index_to_server_state(attributes_numbers[4])
-				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
 				local state = attributes_numbers[4]
+				local state_string_id = tweak_data:index_to_server_state(state)
+				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
 				local num_plrs = attributes_numbers[5]
 				local challenge_card = attributes_numbers[12]
 				local players_info = attributes_numbers[13]
@@ -1137,40 +1149,54 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 					local operation_data = tweak_data.operations.missions[job_id]
 
 					if operation_data and operation_data.events and operation_data.events[level_id] then
-						level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
-						job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
-					else
-						level_name = "N/A"
-						job_name = "N/A"
-
-						Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+						level_name = self:translate(operation_data.events[level_id].name_id)
+						job_name = self:translate(operation_data.name_id)
 					end
 				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
-					local mission_data = tweak_data.operations.missions[level_id]
+					local mission_data = tweak_data.operations.missions[job_id]
 					level_name = ""
 
 					if mission_data and mission_data.name_id then
-						level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+						level_name = self:translate(mission_data.name_id)
 					end
 
 					job_name = self:translate("menu_mission_selected_mission_type_raid")
 				end
 
-				local is_friend = false
+				local relation = Steam:friend_relationship(room.owner_id)
+				local is_friend = relation == "friend"
 
-				if is_win32 then
-					for _, friend in ipairs(Steam:friends()) do
-						if friend:id() == room.owner_id then
-							is_friend = true
+				if level_name == "" or job_name == "" then
+					dead_list[room.room_id] = true
+				else
+					local job_data = {
+						room_id = room.room_id,
+						id = room.room_id,
+						level_id = level_id,
+						difficulty = difficulty,
+						difficulty_id = difficulty_id,
+						num_plrs = num_plrs,
+						host_name = host_name,
+						state_name = state_name,
+						state = state,
+						level_name = level_name,
+						job_id = job_id,
+						is_friend = is_friend,
+						kick_option = kick_option,
+						job_plan = job_plan,
+						custom_text = room.custom_text,
+						challenge_card = challenge_card,
+						players_info = players_info,
+						progress = progress,
+						mission_type = mission_type,
+						job_name = job_name,
+						players_info_1 = players_info_1,
+						players_info_2 = players_info_2,
+						players_info_3 = players_info_3,
+						players_info_4 = players_info_4,
+						xuid = room.xuid
+					}
 
-							break
-						end
-					end
-				end
-
-				name_id = name_id or "unknown"
-
-				if name_id then
 					if not self._active_server_jobs[room.room_id] then
 						if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
 							self._active_server_jobs[room.room_id] = {
@@ -1178,62 +1204,10 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 								alive_time = 0
 							}
 
-							self:add_gui_job({
-								room_id = room.room_id,
-								id = room.room_id,
-								level_id = level_id,
-								difficulty = difficulty,
-								difficulty_id = difficulty_id,
-								num_plrs = num_plrs,
-								host_name = host_name,
-								state_name = state_name,
-								state = state,
-								level_name = level_name,
-								job_id = job_id,
-								is_friend = is_friend,
-								kick_option = kick_option,
-								job_plan = job_plan,
-								custom_text = room.custom_text,
-								challenge_card = challenge_card,
-								players_info = players_info,
-								progress = progress,
-								mission_type = mission_type,
-								job_name = job_name,
-								players_info_1 = players_info_1,
-								players_info_2 = players_info_2,
-								players_info_3 = players_info_3,
-								players_info_4 = players_info_4,
-								xuid = room.xuid
-							})
+							self:add_gui_job(job_data)
 						end
 					else
-						self:update_gui_job({
-							room_id = room.room_id,
-							id = room.room_id,
-							level_id = level_id,
-							difficulty = difficulty,
-							difficulty_id = difficulty_id,
-							num_plrs = num_plrs,
-							host_name = host_name,
-							state_name = state_name,
-							state = state,
-							level_name = level_name,
-							job_id = job_id,
-							is_friend = is_friend,
-							kick_option = kick_option,
-							job_plan = job_plan,
-							custom_text = room.custom_text,
-							challenge_card = challenge_card,
-							players_info = players_info,
-							progress = progress,
-							mission_type = mission_type,
-							job_name = job_name,
-							players_info_1 = players_info_1,
-							players_info_2 = players_info_2,
-							players_info_3 = players_info_3,
-							players_info_4 = players_info_4,
-							xuid = room.xuid
-						})
+						self:update_gui_job(job_data)
 					end
 				end
 			end

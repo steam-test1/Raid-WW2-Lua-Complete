@@ -66,9 +66,9 @@ function ElementEscort:start_escort_path(unit)
 			end
 
 			unit:brain():set_objective({
-				type = "escort",
 				haste = "walk",
 				path_style = "coarse",
+				type = "escort",
 				path_data = {
 					points = points
 				},

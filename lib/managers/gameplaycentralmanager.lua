@@ -1,6 +1,5 @@
 local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
-local empty_idstr = Idstring("")
 local idstr_concrete = Idstring("concrete")
 local idstr_blood_spatter = Idstring("blood_spatter")
 local idstr_no_material = Idstring("no_material")
@@ -18,35 +17,23 @@ function GamePlayCentralManager:init()
 	self._bullet_hits = {}
 	self._play_effects = {}
 	self._play_sounds = {}
-	self._footsteps = {}
 	self._queue_fire_raycast = {}
-	self._projectile_trails = {}
-	self._spawned_warcry_units = {}
-	self._spawned_projectiles = {}
-	self._spawned_pickups = {}
+
+	if Application:editor() then
+		self._spawned_warcry_units = {}
+		self._spawned_projectiles = {}
+		self._spawned_pickups = {}
+		self._dropped_weapons = {}
+	end
+
 	self._bullet_hits_max_frame = 0
 	self._effect_manager = World:effect_manager()
 	self._slotmask_flesh = managers.slot:get_mask("flesh")
 	self._slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 	self._slotmask_physics_push = managers.slot:get_mask("bullet_physics_push")
-	self._slotmask_footstep = managers.slot:get_mask("footstep")
 	self._slotmask_bullet_impact_targets = managers.slot:get_mask("bullet_impact_targets")
 
 	self:_init_impact_sources()
-
-	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
-	self._flashlights_on = lvl_tweak_data and lvl_tweak_data.flashlights_on
-	self._dropped_weapons = {
-		index = 1,
-		units = {}
-	}
-	self._flashlights_on_player_on = false
-
-	if lvl_tweak_data and lvl_tweak_data.environment_effects then
-		for _, effect in ipairs(lvl_tweak_data.environment_effects) do
-			managers.environment_effects:use(effect)
-		end
-	end
 
 	self._mission_disabled_units = {}
 	self._mission_destroyed_units = {}
@@ -54,17 +41,6 @@ function GamePlayCentralManager:init()
 		running = false,
 		start_time = 0
 	}
-end
-
-function GamePlayCentralManager:setup_effects(level_id)
-	local lvl_id = level_id or Global.level_data and Global.level_data.level_id
-	local lvl_tweak_data = Global.level_data and tweak_data.levels[lvl_id]
-
-	if lvl_tweak_data and lvl_tweak_data.environment_effects then
-		for _, effect in ipairs(lvl_tweak_data.environment_effects) do
-			managers.environment_effects:use(effect)
-		end
-	end
 end
 
 function GamePlayCentralManager:restart_portal_effects()
@@ -97,106 +73,16 @@ function GamePlayCentralManager:_get_impact_source()
 	return source
 end
 
-function GamePlayCentralManager:test_current_weapon_cycle(limited, manual)
-	local unit = managers.player:player_unit()
-	local weapon = unit:inventory():equipped_unit()
-	local blueprints = limited and managers.weapon_factory:create_limited_blueprints(weapon:base()._factory_id) or managers.weapon_factory:create_blueprints(weapon:base()._factory_id)
-
-	self:test_weapon_cycle(weapon, blueprints, manual)
-end
-
-function GamePlayCentralManager:test_weapon_cycle(weapon, blueprints, manual)
-	self._test_weapon = weapon
-	self._test_weapon_force_gadget = not manual
-	self._blueprints = blueprints
-	self._blueprint_random = not manual
-	self._blueprint_i = 1
-	self._blueprint_t = not manual and Application:time() or nil
-	self._pause_weapon_cycle = false
-end
-
-function GamePlayCentralManager:toggle_pause_weapon_cycle()
-	self._pause_weapon_cycle = not self._pause_weapon_cycle
-end
-
-function GamePlayCentralManager:next_weapon()
-	if alive(self._test_weapon) then
-		local blueprint = self._blueprint_random and self._blueprints[math.random(#self._blueprints)] or self._blueprints[self._blueprint_i]
-
-		self._test_weapon:base():change_blueprint(blueprint)
-
-		if self._test_weapon_force_gadget then
-			self._test_weapon:base():gadget_on()
-		end
-
-		self._blueprint_i = self._blueprint_i + 1
-
-		if self._blueprint_i > #self._blueprints then
-			self._blueprint_i = 1
-		end
-
-		if managers.player:player_unit() then
-			managers.player:player_unit():inventory():_send_equipped_weapon()
-		end
-	end
-end
-
-function GamePlayCentralManager:stop_test_weapon_cycle()
-	self._test_weapon = nil
-end
-
 function GamePlayCentralManager:update(t, dt)
-	if alive(self._test_weapon) and self._blueprint_t and self._blueprint_t < t then
-		self._blueprint_t = Application:time() + 0.1
-
-		if not self._pause_weapon_cycle then
-			self:next_weapon()
-		end
-	end
-
-	if #self._dropped_weapons.units > 0 then
-		local data = self._dropped_weapons.units[self._dropped_weapons.index]
-		local unit = data.unit
-		data.t = data.t + t - data.last_t
-		data.last_t = t
-		local alive = alive(unit)
-
-		if not alive then
-			table.remove(self._dropped_weapons.units, self._dropped_weapons.index)
-		elseif data.state == "wait" then
-			if data.t > 4 then
-				data.flashlight_data.light:set_enable(false)
-				data.flashlight_data.effect:kill_effect()
-
-				data.state = "off"
-				data.t = 0
-			end
-		elseif data.state == "off" then
-			if data.t > 0.2 then
-				data.flashlight_data.light:set_enable(true)
-				data.flashlight_data.effect:activate()
-
-				data.state = "on"
-				data.t = 0
-			end
-		elseif data.state == "on" and data.t > 0.1 then
-			data.flashlight_data.light:set_enable(false)
-			data.flashlight_data.effect:kill_effect()
-			table.remove(self._dropped_weapons.units, self._dropped_weapons.index)
-		end
-
-		self._dropped_weapons.index = self._dropped_weapons.index + 1
-		self._dropped_weapons.index = self._dropped_weapons.index <= #self._dropped_weapons.units and self._dropped_weapons.index or 1
-	end
-
 	if self._job_timer.running then
-		managers.hud:feed_session_time(Application:time() - self._job_timer.start_time + self._job_timer.offset_time)
+		local heist_time = t - self._job_timer.start_time
 
-		if Network:is_server() and self._job_timer.next_sync < Application:time() then
-			self._job_timer.next_sync = Application:time() + 9
-			local heist_time = Application:time() - self._job_timer.start_time
+		managers.hud:feed_session_time(heist_time + self._job_timer.offset_time)
 
-			for peer_id, peer in pairs(managers.network:session():peers()) do
+		if Network:is_server() and self._job_timer.next_sync < t then
+			self._job_timer.next_sync = t + 9
+
+			for _, peer in pairs(managers.network:session():peers()) do
 				local sync_time = math.min(100000, heist_time + Network:qos(peer:rpc()).ping / 1000)
 
 				peer:send_queued_sync("sync_job_time", sync_time)
@@ -211,26 +97,12 @@ function GamePlayCentralManager:end_update(t, dt)
 	self:_flush_bullet_hits()
 	self:_flush_play_effects()
 	self:_flush_play_sounds()
-	self:_flush_footsteps()
 	self:_flush_queue_fire_raycast()
 end
 
 function GamePlayCentralManager:play_impact_sound_and_effects(params)
 	if params and not table.empty(params) then
 		table.insert(self._bullet_hits, params)
-	end
-end
-
-function GamePlayCentralManager:request_play_footstep(unit, m_pos)
-	if self._camera_pos then
-		local dis = mvector3.distance_sq(self._camera_pos, m_pos)
-
-		if dis < 250000 and #self._footsteps < 3 then
-			table.insert(self._footsteps, {
-				unit = unit,
-				dis = dis
-			})
-		end
 	end
 end
 
@@ -293,14 +165,6 @@ function GamePlayCentralManager:play_impact_flesh(params)
 		if splatter_ray then
 			World:project_decal(idstr_blood_spatter, splatter_ray.position, splatter_ray.ray, splatter_ray.unit, nil, splatter_ray.normal)
 		end
-
-		if managers.player:player_unit() and mvector3.distance_sq(col_ray.position, managers.player:player_unit():movement():m_head_pos()) < 40000 then
-			self._effect_manager:spawn({
-				effect = idstr_blood_screen,
-				position = Vector3(),
-				rotation = Rotation()
-			})
-		end
 	end
 end
 
@@ -318,14 +182,6 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 		position = from,
 		normal = dir
 	})
-
-	if managers.player:player_unit() and mvector3.distance_sq(splatter_from, managers.player:player_unit():movement():m_head_pos()) < 40000 then
-		self._effect_manager:spawn({
-			effect = idstr_blood_screen,
-			position = Vector3(),
-			rotation = Rotation()
-		})
-	end
 
 	local sound_source = self:_get_impact_source()
 
@@ -386,7 +242,7 @@ function GamePlayCentralManager:spawn_warcry_unit(params)
 	local unit = World:spawn_unit(tweak.unit, mvec_1, params.rotation)
 
 	if Application:editor() then
-		table.insert(self._spawned_pickups, unit)
+		table.insert(self._spawned_warcry_units, unit)
 	else
 		managers.worldcollection:register_spawned_unit(unit, mvec_1, params.world_id)
 	end
@@ -406,6 +262,14 @@ function GamePlayCentralManager:add_spawned_projectiles(unit, world_id)
 	end
 
 	return unit
+end
+
+function GamePlayCentralManager:add_dropped_weapon(unit)
+	if Application:editor() then
+		table.insert(self._dropped_weapons, unit)
+	else
+		managers.worldcollection:register_spawned_unit(unit, unit:position())
+	end
 end
 
 function GamePlayCentralManager:_flush_bullet_hits()
@@ -466,7 +330,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	mvector3.add(decal_ray_from, hit_pos)
 
 	local material_name, pos, norm = World:pick_decal_material(col_ray.unit, decal_ray_from, decal_ray_to, slot_mask)
-	material_name = material_name ~= empty_idstr and material_name
+	material_name = material_name ~= IDS_EMPTY and material_name
 	local effect = params.effect
 	local effects = {}
 
@@ -480,7 +344,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 			redir_name, pos, norm = World:pick_decal_effect(decal, col_ray.unit, decal_ray_from, decal_ray_to, slot_mask)
 		end
 
-		if redir_name == empty_idstr then
+		if redir_name == IDS_EMPTY then
 			redir_name = idstr_fallback
 		end
 
@@ -578,114 +442,7 @@ function GamePlayCentralManager:_play_sound(params)
 	local result = sound_source:post_event(params.event)
 end
 
-function GamePlayCentralManager:_flush_footsteps()
-	local footstep = table.remove(self._footsteps, 1)
-
-	if footstep and alive(footstep.unit) then
-		local sound_switch_name = nil
-
-		if footstep.dis < 2000 then
-			local ext_movement = footstep.unit:movement()
-			local decal_ray_from = tmp_vec1
-			local decal_ray_to = tmp_vec2
-
-			mvector3.set(decal_ray_from, ext_movement:m_head_pos())
-			mvector3.set(decal_ray_to, math.UP)
-			mvector3.multiply(decal_ray_to, -250)
-			mvector3.add(decal_ray_to, decal_ray_from)
-
-			local material_name, pos, norm = nil
-			local ground_ray = ext_movement:ground_ray()
-
-			if ground_ray and ground_ray.unit then
-				material_name, pos, norm = World:pick_decal_material(ground_ray.unit, decal_ray_from, decal_ray_to, self._slotmask_footstep)
-			else
-				material_name, pos, norm = World:pick_decal_material(decal_ray_from, decal_ray_to, self._slotmask_footstep)
-			end
-
-			material_name = material_name ~= empty_idstr and material_name
-
-			if material_name then
-				sound_switch_name = material_name
-			else
-				sound_switch_name = idstr_no_material
-			end
-		else
-			sound_switch_name = idstr_concrete
-		end
-
-		local sound_source = footstep.unit:sound_source()
-
-		sound_source:set_switch("materials", self:material_name(sound_switch_name))
-
-		local event = footstep.unit:movement():get_footstep_event()
-
-		sound_source:post_event(event)
-	end
-end
-
-function GamePlayCentralManager:weapon_dropped(weapon)
-	local flashlight_data = weapon:base():flashlight_data()
-
-	if not flashlight_data then
-		return
-	end
-
-	flashlight_data.dropped = true
-
-	if not weapon:base():has_flashlight_on() then
-		return
-	end
-
-	weapon:set_flashlight_light_lod_enabled(true)
-	table.insert(self._dropped_weapons.units, {
-		t = 0,
-		state = "wait",
-		unit = weapon,
-		flashlight_data = flashlight_data,
-		last_t = Application:time()
-	})
-end
-
-function GamePlayCentralManager:set_flashlights_on(flashlights_on)
-	if self._flashlights_on == flashlights_on then
-		return
-	end
-
-	self._flashlights_on = flashlights_on
-	local weapons = World:find_units_quick("all", 13)
-
-	for _, weapon in ipairs(weapons) do
-		if weapon:base().flashlight_state_changed then
-			weapon:base():flashlight_state_changed()
-		end
-	end
-end
-
-function GamePlayCentralManager:flashlights_on()
-	return self._flashlights_on
-end
-
-function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
-	if self._flashlights_on_player_on == flashlights_on_player_on then
-		return
-	end
-
-	self._flashlights_on_player_on = flashlights_on_player_on
-	local player_unit = managers.player:player_unit()
-
-	if player_unit and alive(player_unit:camera():camera_unit()) then
-		player_unit:camera():camera_unit():base():check_flashlight_enabled()
-	end
-end
-
-function GamePlayCentralManager:flashlights_on_player_on()
-	return self._flashlights_on_player_on
-end
-
 function GamePlayCentralManager:on_simulation_ended()
-	self:set_flashlights_on(false)
-	self:set_flashlights_on_player_on(false)
 	self:stop_job_timer()
 
 	self._mission_disabled_units = {}
@@ -706,6 +463,7 @@ function GamePlayCentralManager:on_simulation_ended()
 	_clean_me(self._spawned_pickups)
 	_clean_me(self._spawned_projectiles)
 	_clean_me(self._spawned_warcry_units)
+	_clean_me(self._dropped_weapons)
 end
 
 function GamePlayCentralManager:mission_disable_unit(unit, destroy)
@@ -948,14 +706,8 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance)
 	end
 end
 
-function GamePlayCentralManager:announcer_say(event)
-	Application:warn("[GamePlayCentralManager:announcer_say] This is being removed!")
-end
-
 function GamePlayCentralManager:save(data)
 	local state = {
-		flashlights_on = self._flashlights_on,
-		flashlights_on_player_on = self._flashlights_on_player_on,
 		job_timer = Application:time() - self._job_timer.start_time,
 		job_timer_running = self._job_timer.running,
 		mission_disabled_units = self._mission_disabled_units,
@@ -966,9 +718,6 @@ end
 
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
-
-	self:set_flashlights_on(state.flashlights_on)
-	self:set_flashlights_on_player_on(state.flashlights_on_player_on)
 
 	if state.mission_disabled_units then
 		self._mission_disabled_units = state.mission_disabled_units
@@ -1007,69 +756,4 @@ function GamePlayCentralManager:on_level_transition()
 	self._mission_destroyed_units = {}
 	self._bullet_hits = {}
 	self._queue_fire_raycast = {}
-	self._projectile_trails = {}
-	self._spawned_pickups = {}
-end
-
-function GamePlayCentralManager:debug_weapon()
-	managers.debug:set_enabled(true)
-	managers.debug:set_systems_enabled(true, {
-		"gui"
-	})
-
-	local gui = managers.debug._system_list.gui
-	local tweak_data = tweak_data.weapon.stats
-
-	gui:clear()
-
-	local function add_func()
-		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
-			return ""
-		end
-
-		local unit = managers.player:player_unit()
-		local weapon = unit:inventory():equipped_unit()
-		local blueprint = weapon:base()._blueprint
-		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
-
-		local function add_line(text, s)
-			return text .. s .. "\n"
-		end
-
-		local text = ""
-		text = add_line(text, weapon:base()._name_id)
-		local base_stats = weapon:base():weapon_tweak_data().stats
-		local stats = base_stats and deep_clone(base_stats) or {}
-
-		for part_id, part in pairs(parts_stats) do
-			for stat_id, stat in pairs(part) do
-				if not stats[stat_id] then
-					stats[stat_id] = 0
-				end
-
-				stats[stat_id] = math.clamp(stats[stat_id] + stat, 1, #tweak_data[stat_id])
-			end
-		end
-
-		for stat_id, stat in pairs(stats) do
-			if stat_id ~= "damage" then
-				text = add_line(text, "         " .. stat_id .. " " .. stat)
-			end
-		end
-
-		for part_id, part in pairs(parts_stats) do
-			text = add_line(text, part_id)
-
-			for stat_id, stat in pairs(part) do
-				if stat_id ~= "damage" then
-					text = add_line(text, "         " .. stat_id .. " " .. stat)
-				end
-			end
-		end
-
-		return text
-	end
-
-	gui:set_func(1, add_func)
-	gui:set_color(1, 1, 1, 1)
 end

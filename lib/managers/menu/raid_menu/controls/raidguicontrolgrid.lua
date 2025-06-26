@@ -23,8 +23,8 @@ function RaidGUIControlGrid:init(parent, params)
 	end
 
 	self._grid_panel = self._panel:panel({
-		y = 0,
 		x = 0,
+		y = 0,
 		w = self._grid_control_width
 	})
 	self._object = self._grid_panel
@@ -56,8 +56,6 @@ function RaidGUIControlGrid:_get_data()
 	self._grid_panel:set_y(0)
 
 	local grid_data = self._data_source_callback()
-
-	Application:trace("[RaidGUIControlGrid:_get_data] grid_data ", inspect(grid_data))
 
 	if not grid_data or #grid_data == 0 then
 		self._total_items = 0

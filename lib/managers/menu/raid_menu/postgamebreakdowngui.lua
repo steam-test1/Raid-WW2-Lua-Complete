@@ -109,10 +109,10 @@ function PostGameBreakdownGui:_layout()
 	self._stats_breakdown:hide()
 
 	local top_stats_small_panel_params = {
-		valign = "top",
 		name = "top_stats_small_panel",
 		alpha = 0,
 		halign = "right",
+		valign = "top",
 		y = PostGameBreakdownGui.TOP_STATS_SMALL_Y,
 		w = PostGameBreakdownGui.TOP_STATS_SMALL_W,
 		h = PostGameBreakdownGui.TOP_STATS_SMALL_H
@@ -136,9 +136,9 @@ function PostGameBreakdownGui:_layout()
 	self._top_stats_small[3]:set_bottom(self._top_stats_small_panel:h())
 
 	local progress_bar_params = {
+		bar_w = 62450,
 		name = "progress_bar",
 		horizontal_padding = 64,
-		bar_w = 62450,
 		y = PostGameBreakdownGui.PROGRESS_BAR_Y,
 		w = self._root_panel:w(),
 		initial_progress = self:_get_progress(self.initial_xp),
@@ -155,12 +155,12 @@ function PostGameBreakdownGui:_layout()
 	end
 
 	local total_xp_params = {
+		name = "total_xp",
 		value = "0",
 		align = "center",
+		value_align = "center",
 		layer = 1,
 		x = 0,
-		name = "total_xp",
-		value_align = "center",
 		y = PostGameBreakdownGui.TOTAL_XP_Y,
 		w = self._root_panel:w(),
 		h = PostGameBreakdownGui.TOTAL_XP_H,
@@ -202,10 +202,10 @@ end
 
 function PostGameBreakdownGui:_layout_central_display()
 	local central_display_panel_params = {
-		valign = "top",
 		name = "central_display_params",
 		alpha = 0,
 		halign = "center",
+		valign = "top",
 		w = PostGameBreakdownGui.CENTRAL_DISPLAY_W,
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_H
 	}
@@ -216,9 +216,9 @@ end
 
 function PostGameBreakdownGui:_layout_generic_win_display()
 	self._generic_win_panel = self._central_display_panel:panel({
-		valign = "scale",
 		name = "generic_win_panel",
 		halign = "scale",
+		valign = "scale",
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h(),
 		visible = self.state_success
@@ -235,8 +235,8 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	local is_player_max_level = managers.experience:reached_level_cap()
 	local title = self._generic_win_panel:text({
 		vertical = "center",
-		align = "center",
 		name = "generic_win_title_text",
+		align = "center",
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
 		font_size = PostGameBreakdownGui.CENTRAL_DISPLAY_TITLE_FONT_SIZE,
@@ -252,9 +252,9 @@ function PostGameBreakdownGui:_layout_generic_win_display()
 	title:set_center_x(self._generic_win_panel:w() / 2)
 
 	local flavor_text = self._generic_win_panel:text({
-		align = "center",
 		vertical = "center",
 		name = "generic_win_flavor_text",
+		align = "center",
 		text = self:translate("menu_keep_it_up", true),
 		h = PostGameBreakdownGui.CENTRAL_DISPLAY_TEXT_H,
 		font = PostGameBreakdownGui.FONT,
@@ -271,9 +271,9 @@ end
 
 function PostGameBreakdownGui:_layout_fail_display()
 	self._fail_panel = self._central_display_panel:panel({
-		valign = "scale",
 		name = "fail_display_panel",
 		halign = "scale",
+		valign = "scale",
 		w = self._central_display_panel:w(),
 		h = self._central_display_panel:h(),
 		visible = not self.state_success

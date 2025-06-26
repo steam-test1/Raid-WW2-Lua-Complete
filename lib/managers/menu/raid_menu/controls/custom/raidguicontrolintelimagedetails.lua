@@ -28,17 +28,17 @@ end
 
 function RaidGUIControlIntelImageDetails:_create_details()
 	local intel_image_panel_params = {
+		h = 309,
 		y = 0,
 		x = 0,
 		name = "intel_image_panel",
-		h = 309,
 		w = self._object:w(),
 		layer = self._object:layer() + 1
 	}
 	self._image_panel = self._object:panel(intel_image_panel_params)
 	local intel_image_background_params = {
-		name = "intel_image_background",
 		texture = "ui/main_menu/textures/mission_paper_background",
+		name = "intel_image_background",
 		texture_rect = {
 			1063,
 			5,
@@ -54,8 +54,8 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image_background:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_image_params = {
-		name = "intel_image",
 		texture = "ui/loading_screens/loading_trainyard",
+		name = "intel_image",
 		texture_rect = {
 			256,
 			0,

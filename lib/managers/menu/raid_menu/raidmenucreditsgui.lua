@@ -92,13 +92,13 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
-				wrap = true,
-				x = 0,
-				layer = 3,
-				vertical = "top",
 				halign = "left",
 				align = "center",
 				word_wrap = true,
+				wrap = true,
+				layer = 3,
+				x = 0,
+				vertical = "top",
 				text = data.text,
 				y = ypos,
 				w = text_width,
@@ -368,6 +368,13 @@ function RaidMenuCreditsGui:close(...)
 	self._credits_panel:stop(self._credits_panel_thread)
 	Overlay:gui():destroy_workspace(self._fullscreen_ws)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
+
 	RaidMenuCreditsGui.super.close(self, ...)
 	managers.music:post_event(MusicManager.MENU_MUSIC)
 end

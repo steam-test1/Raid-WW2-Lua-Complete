@@ -1,5 +1,8 @@
 core:import("CoreEngineAccess")
 
+local n = "\n"
+local t = "\t"
+
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")
 	local lower_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -44,11 +47,17 @@ function CoreEditor:build_info_frame(parent)
 	self._unit_info:set_font_face("Courier New")
 	self._unit_info:set_tool_tip("Generic unit information")
 
+	self._unit_world_info = EWS:TextCtrl(self._unit_info_notebook, "World unit info", "", "TE_MULTILINE,TE_RICH2,TE_DONTWRAP,TE_READONLY")
+
+	self._unit_world_info:set_font_face("Courier New")
+	self._unit_world_info:set_tool_tip("World unit information")
+
 	self._gfx_unit_info = EWS:TextCtrl(self._unit_info_notebook, "Gfx unit info", "", "TE_MULTILINE,TE_RICH2,TE_DONTWRAP,TE_READONLY")
 
 	self._gfx_unit_info:set_font_face("Courier New")
 	self._gfx_unit_info:set_tool_tip("Gfx unit information")
-	self._unit_info_notebook:add_page(self._unit_info, "Generic", true)
+	self._unit_info_notebook:add_page(self._unit_info, "Generic", false)
+	self._unit_info_notebook:add_page(self._unit_world_info, "World", true)
 	self._unit_info_notebook:add_page(self._gfx_unit_info, "Gfx", false)
 
 	local unit_info_panel = EWS:Panel(self._info_frame, "", "")
@@ -222,14 +231,10 @@ end
 
 function CoreEditor:unit_output(unit)
 	if alive(unit) then
-		local n = "\n"
-		local t = "\t"
 		local text = "ID / Name:" .. t .. tostring(unit:unit_data().unit_id) .. " / " .. unit:name():s() .. n
 		text = text .. "NameID:" .. t .. unit:unit_data().name_id .. n
 		text = text .. "Type / Slot:" .. t .. unit:type():s() .. " / " .. unit:slot() .. n
-		text = text .. "Portaled:" .. t .. t .. tostring(managers.portal:unit_in_any_unit_group(unit)) .. n
 		text = text .. "Mass:" .. t .. t .. unit:mass() .. n
-		text = text .. "Author:" .. t .. t .. unit:author():s() .. n
 		text = text .. "Damage types:" .. t .. t .. managers.sequence:editor_info(unit:name()) .. n
 		text = text .. "Geometry memory:" .. t .. unit:geometry_memory_use() .. n
 		text = text .. "Unit filename:" .. t .. unit:unit_filename() .. n
@@ -242,6 +247,7 @@ function CoreEditor:unit_output(unit)
 			text = text .. t .. name .. n
 		end
 
+		text = text .. "Author:" .. t .. t .. unit:author():s() .. n
 		text = text .. "Last export from:" .. t .. unit:last_export_source() .. n
 		local models_text = ""
 		models_text = models_text .. "Models:" .. t .. unit:nr_models() .. n
@@ -269,6 +275,7 @@ function CoreEditor:unit_output(unit)
 
 		self._unit_info:set_value(text)
 		self._gfx_unit_info:set_value(models_text)
+		self._unit_world_info:set_value(self:_get_worlds_text(unit))
 
 		for _, btn in ipairs(self._open_unit_file_buttons) do
 			self._unit_info_toolbar:set_tool_enabled(btn, true)
@@ -276,11 +283,41 @@ function CoreEditor:unit_output(unit)
 	else
 		self._unit_info:set_value("")
 		self._gfx_unit_info:set_value("")
+		self._unit_world_info:set_value("")
 
 		for _, btn in ipairs(self._open_unit_file_buttons) do
 			self._unit_info_toolbar:set_tool_enabled(btn, false)
 		end
 	end
+end
+
+function CoreEditor:_get_worlds_text(unit)
+	local txt = ""
+	txt = txt .. "ID:" .. t .. t .. tostring(unit:unit_data().unit_id) .. n
+	txt = txt .. "NameID:" .. t .. unit:unit_data().name_id .. n
+	txt = txt .. "File path:" .. t .. unit:name():s() .. n
+
+	if unit:unit_data().editor_groups then
+		txt = txt .. "Groups:" .. n
+
+		for _, group in ipairs(unit:unit_data().editor_groups) do
+			txt = txt .. t .. group:name() .. n
+		end
+	end
+
+	if managers.portal:unit_in_any_unit_group(unit) then
+		txt = txt .. "Portals:" .. n
+	else
+		txt = txt .. "⚠ Portals:" .. t .. "Not included in portals!" .. n
+	end
+
+	local portal_layers = managers.portal:unit_included_in_unit_groups(unit)
+
+	for _, name in ipairs(portal_layers) do
+		txt = txt .. t .. name .. n
+	end
+
+	return txt
 end
 
 function CoreEditor:_unit_materials(unit)

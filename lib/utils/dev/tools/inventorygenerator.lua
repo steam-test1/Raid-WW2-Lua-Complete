@@ -311,6 +311,7 @@ function InventoryGenerator._create_steam_itemdef_gameplay(json, item, defid_dat
 	json:puts("\t\"type\": \"playtimegenerator\",")
 
 	if item.drop_window and item.drop_window > 0 then
+		json:puts("\t\"use_drop_window\": true,")
 		json:puts("\t\"drop_window\": \"" .. item.drop_window .. "\",")
 	end
 

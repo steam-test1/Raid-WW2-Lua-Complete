@@ -39,7 +39,6 @@ function QueuedTasksManager:queue(id, callback, task_self, data, delay, verifica
 		task_self = task_self,
 		data = data,
 		execute_time = self._t + delay,
-		verification_callback = verification_callback,
 		persistant = persistant
 	}
 
@@ -130,10 +129,6 @@ function QueuedTasksManager:when(id)
 end
 
 function QueuedTasksManager:_execute_queued_task(task)
-	if task.verification_callback then
-		task.verification_callback(task.id)
-	end
-
 	if task.task_self.alive and alive(task.task_self) or not task.task_self.alive then
 		task.callback(task.task_self, task.data)
 	else

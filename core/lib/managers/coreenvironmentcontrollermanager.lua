@@ -183,74 +183,52 @@ function CoreEnvironmentControllerManager:hit_feedback_down()
 	self._hit_some = math.min(self._hit_some + self._hit_amount, 1)
 end
 
-function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, height, delete_after_fadeout)
-	if id then
-		local blurzone = self._blurzones[id]
-
-		Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Check exists:", id, not not blurzone)
-
-		blurzone = blurzone or {
-			update = nil,
-			check = nil,
-			delete_after_fadeout = false,
-			height = 0,
-			radius = 0,
-			opacity = 0,
-			mode = -1
-		}
-
-		if mode > 0 then
-			blurzone.mode = mode
-			blurzone.pos = pos
-			blurzone.radius = radius
-			blurzone.height = height
-			blurzone.delete_after_fadeout = delete_after_fadeout
-
-			if mode == 2 then
-				blurzone.opacity = 2
-				blurzone.mode = 1
-				blurzone.update = self.blurzone_flash_in_line_of_sight
-			elseif mode == 3 then
-				blurzone.opacity = 2
-				blurzone.mode = 1
-				blurzone.update = self.blurzone_flash_in
-			else
-				blurzone.opacity = 0
-				blurzone.update = self.blurzone_fade_in
-			end
-
-			if height > 0 then
-				blurzone.check = self.blurzone_check_cylinder
-			else
-				blurzone.check = self.blurzone_check_sphere
-			end
-		elseif blurzone.mode and blurzone.mode > 0 then
-			blurzone.mode = mode
-			blurzone.pos = blurzone.pos or pos
-			blurzone.radius = blurzone.radius or radius
-			blurzone.height = blurzone.height or height
-			blurzone.opacity = 1
-			blurzone.update = self.blurzone_fade_out
-
-			if blurzone.height and blurzone.height > 0 then
-				blurzone.check = self.blurzone_check_cylinder
-			else
-				blurzone.check = self.blurzone_check_sphere
-			end
-		end
-
-		self._blurzones[id] = blurzone
-
-		Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Updated:", id, inspect(blurzone))
-	else
+function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, height)
+	if not id then
 		Application:warn("[CoreEnvironmentControllerManager:set_blurzone] Blurzone ID was bad:", id)
+
+		return
 	end
+
+	local blurzone = self._blurzones[id] or {}
+	blurzone.mode = mode
+	blurzone.pos = pos
+	blurzone.radius = radius
+	blurzone.height = height
+
+	if mode == 1 then
+		blurzone.opacity = 0
+		blurzone.update = self.blurzone_fade_in
+	elseif mode == 2 then
+		blurzone.opacity = 2
+		blurzone.mode = 1
+		blurzone.update = self.blurzone_flash_in_line_of_sight
+	elseif mode == 3 then
+		blurzone.opacity = 2
+		blurzone.mode = 1
+		blurzone.update = self.blurzone_flash_in
+	else
+		blurzone.opacity = 1
+		blurzone.update = self.blurzone_fade_out
+	end
+
+	if height > 0 then
+		blurzone.check = self.blurzone_check_cylinder
+	else
+		blurzone.check = self.blurzone_check_sphere
+	end
+
+	self._blurzones[id] = blurzone
+
+	Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Updated:", id, inspect(blurzone))
 end
 
-function CoreEnvironmentControllerManager:set_all_blurzones(mode)
-	for id, blurzone in pairs(self._blurzones) do
-		self:set_blurzone(id, mode)
-	end
+function CoreEnvironmentControllerManager:clear_blurzone(id)
+	self._blurzones[id] = nil
+end
+
+function CoreEnvironmentControllerManager:clear_all_blurzones()
+	self._blurzones = {}
 end
 
 function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
@@ -263,8 +241,8 @@ function CoreEnvironmentControllerManager:_blurzones_update(t, dt, camera_pos)
 			if result < blur_zone_val then
 				result = blur_zone_val
 			end
-		elseif blurzone.delete_after_fadeout then
-			self._blurzones[id] = nil
+		else
+			self:clear_blurzone(id)
 		end
 	end
 
@@ -565,7 +543,11 @@ function CoreEnvironmentControllerManager:set_colorblind_mode(setting)
 	if vp then
 		local cb_correction = vp:vp():get_post_processor_effect("World", Idstring("colorblind_correction_post"))
 
-		cb_correction:set_visibility(setting ~= "off")
+		if cb_correction then
+			cb_correction:set_visibility(setting ~= "off")
+		else
+			Application:error("[CoreEnvironmentControllerManager] missing processor effect!")
+		end
 	end
 
 	if type(setting) == "string" then

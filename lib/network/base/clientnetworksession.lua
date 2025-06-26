@@ -46,7 +46,7 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	self._last_join_request_t = self._first_join_request_t
 end
 
-function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_character, level_index, difficulty_index, state_index, server_character, user_id, mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, xuid, auth_ticket, sender)
+function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_character, job_id, difficulty_index, state_index, server_character, user_id, mission, xuid, auth_ticket, sender)
 	print("[ClientNetworkSession:on_join_request_reply] ", self._server_peer and self._server_peer:user_id(), user_id, sender:ip_at_index(0), sender:protocol_at_index(0))
 
 	if not self._server_peer or not self._cb_find_game then
@@ -73,7 +73,6 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 				self._server_protocol = "TCP_IP"
 			end
 
-			print("self._server_protocol", self._server_protocol)
 			self._server_peer:set_rpc(sender)
 			self._server_peer:set_ip_verified(true)
 			Network:set_client(sender)
@@ -91,7 +90,6 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 	if reply == 1 then
 		self._host_sanity_send_t = TimerManager:wall():time() + self.HOST_SANITY_CHECK_INTERVAL
-		Global.game_settings.level_id = tweak_data.levels:get_level_id_from_index(level_index)
 
 		tweak_data:set_difficulty(tweak_data:index_to_difficulty(difficulty_index))
 
@@ -99,6 +97,7 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 		self._server_peer:set_character(server_character)
 		self._server_peer:set_xuid(xuid)
+		self._server_peer:set_id(1)
 
 		if IS_XB1 then
 			local xnaddr = managers.network.matchmake:external_address(self._server_peer:rpc())
@@ -112,7 +111,6 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 		self:register_local_peer(my_peer_id)
 		self._local_peer:set_character(my_character)
 		self._local_peer:set_class(managers.skilltree:get_character_profile_class())
-		self._server_peer:set_id(1)
 
 		if not self._server_peer:begin_ticket_session(auth_ticket) then
 			self:remove_peer(self._server_peer, 1)
@@ -129,45 +127,36 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 		self._server_peer:set_synched_soft(state_index ~= 1)
 		self:_chk_send_proactive_outfit_loaded()
 
-		local data = {
+		local load_data = {
 			instant = true
 		}
 
-		if job_id_index ~= 0 then
-			Application:debug("[[ClientNetworkSession:on_join_request_reply]] Mission:", mission, job_id_index, job_stage)
+		if job_id ~= "" then
+			Application:debug("[[ClientNetworkSession:on_join_request_reply]] Mission:", mission, job_id)
 
-			Global.game_settings.world_setting = nil
-			local job_id = nil
-
-			if job_stage == 0 then
-				job_id = tweak_data.operations:get_raid_name_from_index(job_id_index)
-			else
-				job_id = tweak_data.operations:get_operation_name_from_index(job_id_index)
-			end
-
-			local mission = tweak_data.operations:mission_data(job_id)
-			data.background = mission.loading.image
-			data.loading_text = mission.loading.text
-			data.mission = mission
-			mission.job_type = OperationsTweakData.JOB_TYPE_RAID
+			local mission_data = tweak_data.operations:mission_data(job_id)
+			load_data.background = mission_data.loading.image
+			load_data.loading_text = mission_data.loading.text
+			load_data.mission = mission_data
+			mission_data.job_type = OperationsTweakData.JOB_TYPE_RAID
 
 			self._server_peer:verify_job(job_id)
 			managers.raid_job:load_level_tweak_packages(job_id)
 			managers.raid_job:on_mission_started()
 		else
-			managers.raid_job:load_level_tweak_packages(RaidJobManager.CAMP_ID)
+			local mission_data = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
+			load_data.background = mission_data.loading.image
+			load_data.loading_text = mission_data.loading.text
+			load_data.mission = mission_data
 
-			mission = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
-			data.background = tweak_data.operations.missions[RaidJobManager.CAMP_ID].loading.image
-			data.loading_text = tweak_data.operations.missions[RaidJobManager.CAMP_ID].loading.text
-			data.mission = mission
+			managers.raid_job:load_level_tweak_packages(RaidJobManager.CAMP_ID)
 		end
 
-		Global.dropin_loading_screen = data
+		Global.dropin_loading_screen = load_data
 
-		managers.menu:show_loading_screen(data)
+		managers.menu:show_loading_screen(load_data)
 		Application:debug("[ClientNetworkSession:on_join_request_reply] Shown loading screen!", inspect(managers.menu._loading_screen))
-		cb(state_index == 1 and "JOINED_LOBBY" or "JOINED_GAME", level_index, difficulty_index, state_index)
+		cb(state_index == 1 and "JOINED_LOBBY" or "JOINED_GAME", state_index)
 	elseif reply == 2 then
 		self:remove_peer(self._server_peer, 1)
 		cb("KICKED")
@@ -300,8 +289,8 @@ function ClientNetworkSession:load_lobby(...)
 	self:_load_lobby(...)
 end
 
-function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
-	print("ClientNetworkSession:peer_handshake", name, peer_id, peer_user_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
+function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lobby, loading, synched, character, xuid, xnaddr)
+	print("ClientNetworkSession:peer_handshake", name, peer_id, peer_user_id, in_lobby, loading, synched, character, xuid, xnaddr)
 
 	if self._peers[peer_id] then
 		print("ALREADY HAD PEER returns here")

@@ -49,6 +49,10 @@ function ElementPlayerStateTrigger:init(...)
 	ElementPlayerStateTrigger.super.init(self, ...)
 end
 
+function ElementPlayerStateTrigger:destroy()
+	managers.player:remove_listener(self:_unique_string_id())
+end
+
 function ElementPlayerStateTrigger:on_script_activated()
 	managers.player:add_listener(self:_unique_string_id(), {
 		self._values.state

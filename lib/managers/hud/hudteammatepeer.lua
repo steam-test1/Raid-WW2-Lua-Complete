@@ -53,8 +53,8 @@ HUDTeammatePeer.STATES = {
 		}
 	},
 	{
-		id = "interaction",
-		control = "interaction_meter_panel"
+		control = "interaction_meter_panel",
+		id = "interaction"
 	},
 	{
 		id = "carry",
@@ -64,20 +64,20 @@ HUDTeammatePeer.STATES = {
 		}
 	},
 	{
-		id = "special_interaction",
-		control = "special_interaction_icon"
+		control = "special_interaction_icon",
+		id = "special_interaction"
 	},
 	{
-		id = "mounted_weapon",
-		control = "mounted_weapon_icon"
+		control = "mounted_weapon_icon",
+		id = "mounted_weapon"
 	},
 	{
-		id = "warcry",
-		control = "warcry_icon"
+		control = "warcry_icon",
+		id = "warcry"
 	},
 	{
-		id = "normal",
-		control = "nationality_icon"
+		control = "nationality_icon",
+		id = "normal"
 	}
 }
 HUDTeammatePeer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
@@ -169,10 +169,10 @@ function HUDTeammatePeer:_create_warcry_bar()
 	warcry_background:set_center_y(warcry_panel:h() / 2)
 
 	local warcry_bar_params = {
-		name = "warcry_bar",
-		halign = "center",
 		valign = "center",
+		halign = "center",
 		render_template = "VertexColorTexturedRadial",
+		name = "warcry_bar",
 		texture = tweak_data.gui.icons[HUDTeammatePeer.WARCRY_BAR_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammatePeer.WARCRY_BAR_ICON),
@@ -294,11 +294,11 @@ function HUDTeammatePeer:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		name = "timer_bar",
-		halign = "center",
 		layer = 2,
 		valign = "center",
+		halign = "center",
 		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
 		texture = tweak_data.gui.icons[HUDTeammatePeer.TIMER_BAR_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammatePeer.TIMER_BAR_ICON),
@@ -314,20 +314,17 @@ function HUDTeammatePeer:_create_timer()
 	self._timer_bar:set_center_x(self._timer_panel:w() / 2)
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
-	local timer_text_params = {
-		layer = 3,
-		name = "timer_text",
-		y = 0,
-		x = 0,
+	self._timer_text = self._timer_panel:text({
 		text = "37",
 		vertical = "center",
 		align = "center",
+		layer = 3,
+		name = "timer_text",
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDTeammatePeer.TIMER_FONT],
 		font_size = HUDTeammatePeer.TIMER_FONT_SIZE
-	}
-	self._timer_text = self._timer_panel:text(timer_text_params)
+	})
 	local _, _, _, h = self._timer_text:text_rect()
 
 	self._timer_text:set_h(h)
@@ -357,11 +354,11 @@ function HUDTeammatePeer:_create_interaction_meter()
 	interaction_meter_background:set_center_y(self._interaction_meter_panel:h() / 2)
 
 	local interaction_meter_params = {
-		name = "interaction_meter",
-		halign = "scale",
 		layer = 2,
 		valign = "scale",
+		halign = "scale",
 		render_template = "VertexColorTexturedRadial",
+		name = "interaction_meter",
 		texture = tweak_data.gui.icons[HUDTeammatePeer.INTERACTION_METER_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammatePeer.INTERACTION_METER_FILL),
@@ -460,12 +457,12 @@ end
 
 function HUDTeammatePeer:_create_player_name()
 	local player_name_params = {
-		name = "player_name",
-		y = -2,
-		x = 0,
 		text = "",
 		vertical = "center",
 		align = "left",
+		y = -2,
+		x = 0,
+		name = "player_name",
 		w = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W - HUDTeammatePeer.CHAT_PANEL_W,
 		h = HUDTeammatePeer.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDTeammatePeer.PLAYER_NAME_FONT],
@@ -476,10 +473,10 @@ end
 
 function HUDTeammatePeer:_create_player_level()
 	local player_level_params = {
-		name = "player_level",
 		text = "",
 		vertical = "center",
 		align = "right",
+		name = "player_level",
 		x = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W,
 		y = HUDTeammatePeer.PLAYER_LEVEL_Y,
 		w = HUDTeammatePeer.PLAYER_LEVEL_W,
@@ -544,6 +541,16 @@ end
 
 function HUDTeammatePeer:padding_down()
 	return HUDTeammatePeer.PADDING_DOWN
+end
+
+function HUDTeammatePeer:refresh()
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
 end
 
 function HUDTeammatePeer:reset_state()
@@ -647,7 +654,13 @@ function HUDTeammatePeer:set_warcry_ready(value)
 end
 
 function HUDTeammatePeer:set_name(name)
-	self._player_name:set_text(utf8.to_upper(name))
+	self._name = name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
 
 	local name_w = select(3, self._player_name:text_rect())
 	local chat_x = math.min(name_w, self._player_name:w())

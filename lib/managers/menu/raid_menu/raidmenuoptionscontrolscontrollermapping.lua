@@ -15,28 +15,28 @@ function RaidMenuOptionsControlsControllerMapping:_layout()
 	RaidMenuOptionsControlsControllerMapping.super._layout(self)
 
 	self._controller_image = self._root_panel:bitmap({
+		y = 0,
 		x = 0,
 		name = "controller_image",
 		texture = "ui/main_menu/textures/controller",
 		h = 600,
-		w = 1200,
-		y = 0
+		w = 1200
 	})
 
 	self._controller_image:set_center_x(self._root_panel:w() / 2)
 	self._controller_image:set_center_y(self._root_panel:h() / 2)
 
 	self._panel_on_foot = self._root_panel:panel({
+		y = 0,
 		x = 0,
 		visible = true,
-		name = "panel_on_foot",
-		y = 0
+		name = "panel_on_foot"
 	})
 	self._panel_in_vehicle = self._root_panel:panel({
+		y = 0,
 		x = 0,
 		visible = false,
-		name = "panel_on_foot",
-		y = 0
+		name = "panel_on_foot"
 	})
 
 	if IS_PS4 then

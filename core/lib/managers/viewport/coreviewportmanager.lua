@@ -19,7 +19,6 @@ function ViewportManager:init(aspect_ratio)
 	self._resolution_changed_event_handler = CoreEvent.CallbackEventHandler:new()
 	self._env_manager = CoreEnvironmentManager.EnvironmentManager:new()
 	self._allow_fvp_env_update = true
-	Global.render_debug.render_sky = true
 	self._current_camera_position = Vector3()
 
 	if Application:editor() then

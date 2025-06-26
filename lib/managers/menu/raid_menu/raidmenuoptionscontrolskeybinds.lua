@@ -217,8 +217,8 @@ RaidMenuOptionsControlsKeybinds.CONTROLS_INFO = {
 		type = "communication"
 	},
 	continue = {
-		text_id = "menu_button_continue",
-		category = "normal"
+		category = "normal",
+		text_id = "menu_button_continue"
 	},
 	drive = {
 		category = "vehicle",
@@ -262,8 +262,8 @@ RaidMenuOptionsControlsKeybinds.CONTROLS_INFO = {
 	},
 	vehicle_shooting_stance = {
 		category = "vehicle",
-		type = "usage",
 		text_id = "menu_button_vehicle_shooting_stance",
+		type = "usage",
 		block = {
 			"normal"
 		}
@@ -296,9 +296,9 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 	RaidMenuOptionsControlsKeybinds.super._layout(self)
 
 	self._keybind_panel = self._root_panel:panel({
+		name = "keybind_panel",
 		y = 0,
-		x = 0,
-		name = "keybind_panel"
+		x = 0
 	})
 	self._rarity_filters_tabs = self._root_panel:tabs({
 		initial_tab_idx = 1,
@@ -312,21 +312,21 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{
-				callback_param = "normal",
 				name = "tab_on_foot",
+				callback_param = "normal",
 				text = self:translate("menu_options_binding_type_on_foot", true)
 			},
 			{
-				callback_param = "vehicle",
 				name = "tab_in_vehicle",
+				callback_param = "vehicle",
 				text = self:translate("menu_options_binding_type_in_vehicle", true)
 			}
 		}
 	})
 	local default_controls_keybinds_params = {
-		x = 1472,
 		name = "default_controls_keybinds",
 		y = 832,
+		x = 1472,
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		layer = RaidGuiBase.FOREGROUND_LAYER
@@ -359,26 +359,13 @@ function RaidMenuOptionsControlsKeybinds:_on_escape_callback()
 end
 
 function RaidMenuOptionsControlsKeybinds:close()
-	self:_save_controls_keybinds_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	managers.raid_menu:register_on_escape_callback(nil)
 	RaidMenuOptionsControlsKeybinds.super.close(self)
 end
 
-function RaidMenuOptionsControlsKeybinds:_save_controls_keybinds_values()
-end
-
 function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 	self._keybind_controls_table = {}
-	local default_controller_type = managers.controller:get_default_wrapper_type()
-
-	if default_controller_type ~= "pc" then
-		return
-	end
-
 	self._keybinds = {}
 	local keybind_types = {
 		"movement",
@@ -421,7 +408,8 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 				h = MenuManager.MENU_ITEM_HEIGHT,
 				text = utf8.to_upper(keybind_params.button),
 				ws = self._ws,
-				keybind_params = keybind_params
+				keybind_params = keybind_params,
+				on_menu_move = {}
 			})
 
 			table.insert(self._keybind_controls_table, keybind_control)
@@ -459,7 +447,6 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				local btn_connection = connection._btn_connections[btn_name]
 
 				if btn_connection then
-					local name_id = name
 					local params = {
 						localize = "false",
 						name = btn_name,

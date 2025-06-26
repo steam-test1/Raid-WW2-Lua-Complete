@@ -1,6 +1,5 @@
 VoteManager = VoteManager or class()
 VoteManager.VOTE_EVENT = {
-	stopped = 3,
 	respond = 2,
 	reports = 1,
 	server_kick_option = 13,
@@ -12,13 +11,14 @@ VoteManager.VOTE_EVENT = {
 	request_restart = 7,
 	instant_kick = 6,
 	process_kick = 5,
-	request_kick = 4
+	request_kick = 4,
+	stopped = 3
 }
 VoteManager.VOTES = {
-	yes = 1,
 	none = -1,
 	cancel = 3,
-	no = 2
+	no = 2,
+	yes = 1
 }
 VoteManager.REASON = {
 	invalid_character = 10,
@@ -327,6 +327,7 @@ end
 function VoteManager:_restart_counter(callback_type)
 	if not self._stopped then
 		Application:set_pause(false)
+		managers.groupai:state():set_allow_dropin(false)
 
 		self._callback_type = callback_type
 		self._callback_counter = TimerManager:wall():time() + tweak_data.voting.restart_delay
@@ -522,43 +523,22 @@ function VoteManager:update(t, dt)
 		if self._callback_counter < current_time then
 			managers.game_play_central:set_restarting(true)
 
-			if managers.network:session():chk_all_peers_spawned() then
-				self._restart_t = self._restart_t or Application:time() + 3
-			else
-				local t = Application:time()
-
-				if not self._next_hint_t or self._next_hint_t < t then
-					self._next_hint_t = t + 6
-
-					managers.notification:add_notification({
-						id = "waiting_for_player_dropin",
-						shelf_life = 5,
-						duration = 2,
-						text = managers.localization:text("hud_waiting_for_player_dropin")
-					})
-				end
-
-				return
-			end
-
-			if self._restart_t <= Application:time() then
-				if Network:is_server() and self._callback_type == "restart" then
-					self._callback_type = nil
-
-					managers.game_play_central:restart_the_game()
-				end
-
-				if Network:is_server() and self._callback_type == "restart_mission" then
-					self._callback_type = nil
-
-					managers.game_play_central:restart_the_mission()
-				end
-
+			if Network:is_server() and self._callback_type == "restart" then
 				self._callback_type = nil
-				self._callback_counter = nil
-				self._callback_counter_print = nil
-				self._restart_t = nil
+
+				managers.game_play_central:restart_the_game()
 			end
+
+			if Network:is_server() and self._callback_type == "restart_mission" then
+				self._callback_type = nil
+
+				managers.game_play_central:restart_the_mission()
+			end
+
+			self._callback_type = nil
+			self._callback_counter = nil
+			self._callback_counter_print = nil
+			self._restart_t = nil
 		end
 	end
 end

@@ -1829,12 +1829,18 @@ function UnitTransformDialog:update_offset_position(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if alive(self._unit) then
-		local local_rot = managers.editor:is_coordinate_system("Local")
 		local pos = self._unit:position()
-		local rot = Rotation()
+		local rot = nil
+		local coor_sys = managers.editor:coordinate_system()
 
-		if local_rot then
+		if coor_sys == "Local" then
 			rot = self._unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = Rotation()
+		elseif coor_sys == "Camera" then
+			rot = managers.editor:camera():rotation()
+		else
+			rot = Rotation()
 		end
 
 		value = value * 100
@@ -1916,15 +1922,21 @@ function UnitTransformDialog:update_offset_rotation(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if alive(self._unit) then
-		local local_rot = managers.editor:is_coordinate_system("Local")
-		local rot = Rotation()
-		local rot_axis = rot[data.coor](rot)
-		local u_rot = self._unit:rotation()
+		local rot = nil
+		local coor_sys = managers.editor:coordinate_system()
 
-		if local_rot then
-			rot_axis = u_rot[data.coor](u_rot)
+		if coor_sys == "Local" then
+			rot = self._unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = Rotation()
+		elseif coor_sys == "Camera" then
+			rot = managers.editor:camera():rotation()
+		else
+			rot = Rotation()
 		end
 
+		local rot_axis = rot[data.coor](rot)
+		local u_rot = self._unit:rotation()
 		rot = Rotation(rot_axis, value)
 
 		managers.editor:set_selected_units_rotation(rot)
@@ -2116,12 +2128,18 @@ function ScaleTransformTypeIn:update_offset(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if alive(self._unit) then
-		local local_rot = managers.editor:is_coordinate_system("Local")
 		local pos = self._unit:position()
-		local rot = Rotation()
+		local rot = nil
+		local coor_sys = managers.editor:coordinate_system()
 
-		if local_rot then
+		if coor_sys == "Local" then
 			rot = self._unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = Rotation()
+		elseif coor_sys == "Camera" then
+			rot = managers.editor:camera():rotation()
+		else
+			rot = Rotation()
 		end
 
 		value = value * 100

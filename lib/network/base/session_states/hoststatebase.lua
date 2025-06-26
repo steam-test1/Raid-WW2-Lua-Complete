@@ -25,7 +25,7 @@ function HostStateBase:_send_request_denied(sender, reason, my_user_id)
 
 	local xuid = IS_XB1 and managers.network.account:player_id() or ""
 
-	sender:join_request_reply(reason, 0, "", 1, 1, 0, "", my_user_id, "", 0, 0, 0, 0, xuid, 0)
+	sender:join_request_reply(reason, 0, "", "", 1, 0, "", my_user_id, "", xuid, 0)
 end
 
 function HostStateBase:_has_peer_left_PSN(peer_name)
@@ -35,7 +35,7 @@ function HostStateBase:_is_in_server_state()
 	return managers.network:session() and Network:is_server()
 end
 
-function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, mask_set, xuid, xnaddr)
+function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, xuid, xnaddr)
 	local new_peer_user_id = IS_PC and new_peer:user_id() or ""
 	local new_peer_id = new_peer:id()
 
@@ -43,7 +43,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 		if old_pid ~= new_peer_id then
 			if old_peer:handshakes()[new_peer_id] == nil then
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] introducing", new_peer_id, "to", old_pid)
-				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:in_lobby(), loading, false, character, mask_set, xuid, xnaddr)
+				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:in_lobby(), loading, false, character, xuid, xnaddr)
 				old_peer:set_handshake_status(new_peer_id, "asked")
 			else
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] peer already had handshake", new_peer_id, "to", old_pid)
@@ -133,7 +133,7 @@ function HostStateBase:on_peer_finished_loading(data, peer)
 	print("[HostStateBase:on_peer_finished_loading]", inspect(peer))
 
 	if not next(peer:handshakes()) then
-		self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
+		self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), peer:xuid(), peer:xnaddr())
 		self:_introduce_old_peers_to_new_peer(data, peer)
 	end
 end

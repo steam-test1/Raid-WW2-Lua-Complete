@@ -59,6 +59,7 @@ function VehicleDrivingExt:init(unit)
 
 	self._unit:set_extension_update_enabled(Idstring("vehicle_driving"), true)
 
+	self._level_bounds_z = managers.raid_job:current_level_bounds_z()
 	self._vehicle = self._unit:vehicle()
 
 	if self._vehicle == nil then
@@ -72,9 +73,10 @@ function VehicleDrivingExt:init(unit)
 	end
 
 	self._drop_time_delay = nil
-	self._last_synced_position = Vector3(0, 0, 0)
+	self._last_synced_position = Vector3()
 	self._shooting_stance_allowed = true
 	self._slotmask_world = managers.slot:get_mask("world_geometry")
+	self._network_tweak = tweak_data.network.driving
 	self._position_counter = 0
 	self._position_dt = 0
 	self._positions = {}
@@ -950,9 +952,9 @@ function VehicleDrivingExt:enable_map_waypoint()
 	end
 
 	self._map_waypoint_data = {
-		show_on_screen = false,
 		waypoint_origin = "waypoint_extension",
 		waypoint_type = "unit_waypoint",
+		show_on_screen = false,
 		icon = self._waypoint_hud_icon,
 		map_icon = self._waypoint_map_icon,
 		unit = self._unit,
@@ -992,10 +994,10 @@ function VehicleDrivingExt:enable_hud_waypoint()
 	end
 
 	self._hud_waypoint_data = {
-		waypoint_origin = "waypoint_extension",
 		waypoint_type = "unit_waypoint",
 		show_on_screen = true,
 		distance = true,
+		waypoint_origin = "waypoint_extension",
 		icon = self._waypoint_hud_icon,
 		unit = self._unit,
 		position_offset_z = self.hud_label_offset,
@@ -1169,8 +1171,8 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			position = nil,
-			skip_idle_check = true
+			skip_idle_check = true,
+			position = nil
 		})
 	end
 
@@ -1738,9 +1740,8 @@ function VehicleDrivingExt:set_input(accelerate, steer, brake, handbrake, gear_u
 		local distance = mvector3.distance(self._last_synced_position, pos)
 		local t = TimerManager:game():time()
 		local sync_dt = t - self._last_sync_t
-		local tdnd = tweak_data.network.driving
 
-		if tdnd.network_wait_distance < distance and tdnd.network_wait_delta_t < sync_dt then
+		if self._network_tweak.wait_distance < distance and self._network_tweak.wait_delta_t < sync_dt then
 			managers.network:session():send_to_peers_synched("sync_vehicle_state", self._unit, self._vehicle:position(), self._vehicle:rotation(), self._vehicle:velocity())
 
 			self._last_synced_position = pos
@@ -1896,7 +1897,7 @@ end
 function VehicleDrivingExt:_detect_invalid_positions(t, dt)
 	local respawn = false
 
-	if self._vehicle:position().z < PlayerMovement.OUT_OF_WORLD_Z then
+	if self._vehicle:position().z < self._level_bounds_z then
 		self:respawn_vehicle()
 
 		return
@@ -2279,42 +2280,44 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 
 	local haste = "walk"
 
-	if managers.groupai:state()._police_called then
+	if managers.groupai:state():is_police_called() then
 		haste = "run"
 	end
 
 	local ride_objective = {
 		destroy_clbk_key = false,
-		type = "act",
 		pose = "stand",
+		type = "act",
+		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING,
 		haste = haste,
 		nav_seg = align_nav_seg,
 		area = align_area,
 		pos = align_pos,
 		rot = align_rot,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
+		complete_clbk = callback(self, self, "on_drive_SO_completed", seat),
+		action_start_clbk = callback(self, self, "on_drive_SO_started", seat),
 		action = {
+			body_part = 1,
 			type = "act",
 			needs_full_blend = true,
 			align_sync = false,
-			body_part = 1,
 			variant = team_ai_animation,
 			blocks = {
 				hurt = -1,
 				walk = -1,
-				action = -1,
 				heavy_hurt = -1,
-				act = 1
+				act = 1,
+				action = -1
 			}
-		},
-		objective_type = VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING
+		}
 	}
 	local SO_descriptor = {
+		base_chance = 1,
+		usage_amount = 1,
+		AI_group = "friendlies",
 		interval = 0,
 		chance_inc = 0,
-		base_chance = 1,
-		AI_group = "friendlies",
-		usage_amount = 1,
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
 		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),
@@ -2332,11 +2335,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 end
 
 function VehicleDrivingExt:clbk_drive_SO_verification(candidate_unit)
-	if candidate_unit:movement():cool() then
-		return false
-	end
-
-	return true
+	return not candidate_unit:movement():cool()
 end
 
 function VehicleDrivingExt:on_drive_SO_administered(seat, unit)
@@ -2360,11 +2359,6 @@ function VehicleDrivingExt:on_drive_SO_started(seat, unit)
 end
 
 function VehicleDrivingExt:on_drive_SO_completed(seat, unit)
-	if not alive(self._unit) then
-		return
-	end
-
-	self:_place_ai_on_seat(seat, unit)
 end
 
 function VehicleDrivingExt:on_drive_SO_failed(seat, unit)

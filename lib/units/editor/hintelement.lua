@@ -14,7 +14,7 @@ end
 function HintUnitElement:_set_text(hint_id)
 	local text = "none"
 
-	if hint_id ~= "none" then
+	if not hint_id or hint_id ~= "none" then
 		text = managers.localization:text("hint_" .. hint_id)
 
 		if managers.localization:exists("hint_" .. hint_id .. "_desc") then
@@ -51,6 +51,6 @@ function HintUnitElement:_build_panel(panel, panel_sizer)
 	self._text = EWS:StaticText(panel, "", "", "")
 
 	text_sizer:add(self._text, 2, 2, "RIGHT,TOP,EXPAND")
-	self:_set_text()
+	self:_set_text(self._hed.hint_id)
 	panel_sizer:add(text_sizer, 1, 0, "EXPAND")
 end

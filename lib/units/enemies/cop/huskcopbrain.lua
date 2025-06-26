@@ -1,7 +1,7 @@
 HuskCopBrain = HuskCopBrain or class()
 HuskCopBrain._NET_EVENTS = {
-	weapon_laser_on = 1,
-	weapon_laser_off = 2
+	weapon_laser_off = 2,
+	weapon_laser_on = 1
 }
 
 function HuskCopBrain:init(unit)
@@ -13,12 +13,12 @@ function HuskCopBrain:post_init()
 	local alert_listen_filter = managers.groupai:state():get_unit_type_filter("criminal")
 
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, {
-		vo_intimidate = true,
-		vo_cbt = true,
-		bullet = true,
 		footstep = true,
 		explosion = true,
-		aggression = true
+		aggression = true,
+		vo_intimidate = true,
+		vo_cbt = true,
+		bullet = true
 	}, self._unit:movement():m_head_pos())
 
 	self._last_alert_t = 0
@@ -33,10 +33,10 @@ function HuskCopBrain:interaction_voice()
 	return self._interaction_voice
 end
 
-function HuskCopBrain:on_intimidated(amount, aggressor_unit)
+function HuskCopBrain:on_long_distance_interact(amount, instigator)
 	amount = math.clamp(math.ceil(amount * 10), 0, 10)
 
-	self._unit:network():send_to_host("long_dis_interaction", amount, aggressor_unit)
+	self._unit:network():send_to_host("long_distance_interaction", amount, instigator)
 
 	return self._interaction_voice
 end
@@ -50,12 +50,6 @@ function HuskCopBrain:clbk_death(my_unit, damage_info)
 
 	if self._unit:inventory():equipped_unit() then
 		self._unit:inventory():equipped_unit():base():set_laser_enabled(false)
-	end
-
-	if self._following_hostage_contour_id then
-		self._unit:contour():remove_by_id(self._following_hostage_contour_id)
-
-		self._following_hostage_contour_id = nil
 	end
 end
 
@@ -71,22 +65,6 @@ function HuskCopBrain:load(load_data)
 	if my_load_data.weapon_laser_on then
 		self:sync_net_event(self._NET_EVENTS.weapon_laser_on)
 	end
-
-	if my_load_data.trade_flee_contour then
-		self._unit:contour():add("hostage_trade", nil, nil)
-	end
-
-	if my_load_data.following_hostage_contour then
-		self._unit:contour():add("friendly", nil, nil)
-	end
-end
-
-function HuskCopBrain:on_tied(aggressor_unit)
-	self._unit:network():send_to_host("unit_tied", aggressor_unit)
-end
-
-function HuskCopBrain:on_trade(trading_unit)
-	self._unit:network():send_to_host("unit_traded", trading_unit)
 end
 
 function HuskCopBrain:on_cool_state_changed(state)
@@ -111,12 +89,6 @@ function HuskCopBrain:on_alert(alert_data)
 	self._unit:network():send_to_host("alert", alert_data[5])
 
 	self._last_alert_t = TimerManager:game():time()
-end
-
-function HuskCopBrain:on_long_dis_interacted(amount, aggressor_unit)
-	amount = math.clamp(math.ceil(amount * 10), 0, 10)
-
-	self._unit:network():send_to_host("long_dis_interaction", amount, aggressor_unit)
 end
 
 function HuskCopBrain:on_team_set(team_data)

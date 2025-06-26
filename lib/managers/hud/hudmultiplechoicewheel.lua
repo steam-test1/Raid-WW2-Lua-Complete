@@ -83,9 +83,9 @@ function HUDMultipleChoiceWheel:_create_background()
 	background_circle:set_center_y(self._object:h() / 2)
 
 	local selection_arc_params = {
+		name = "selection_arc",
 		render_template = "VertexColorTexturedRadial",
 		visible = false,
-		name = "selection_arc",
 		texture = tweak_data.gui.icons[HUDMultipleChoiceWheel.CIRCLE_IMAGE].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDMultipleChoiceWheel.CIRCLE_IMAGE),
@@ -150,6 +150,8 @@ function HUDMultipleChoiceWheel:show()
 
 		self._is_active = true
 	end
+
+	self._controller = managers.controller:get_default_controller()
 
 	self:_create_options()
 	self:_fade_in_options()
@@ -361,10 +363,10 @@ end
 function HUDMultipleChoiceWheel:_create_option_text(index, parent)
 	local option_text_params = {
 		layer = 5,
-		halign = "left",
-		valign = "top",
 		vertical = "center",
 		align = "center",
+		halign = "left",
+		valign = "top",
 		name = "text_" .. tostring(self._option_data[index].id),
 		font = HUDMultipleChoiceWheel.TEXT_FONT,
 		font_size = HUDMultipleChoiceWheel.TEXT_FONT_SIZE,

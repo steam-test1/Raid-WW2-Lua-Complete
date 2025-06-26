@@ -9,11 +9,11 @@ function HUDSuspicion:init(hud, sound_source)
 	end
 
 	self._suspicion_panel = self._hud_panel:panel({
+		layer = 1,
 		valign = "center",
 		y = 0,
 		name = "suspicion_panel",
-		visible = false,
-		layer = 1
+		visible = false
 	})
 
 	self._suspicion_panel:set_size(256, 256)
@@ -21,14 +21,14 @@ function HUDSuspicion:init(hud, sound_source)
 
 	local scale = 1
 	local ring = self._suspicion_panel:bitmap({
+		alpha = 0.55,
+		texture = "ui/icons/hud_circle",
+		w = 256,
+		blend_mode = "add",
 		valign = "center",
 		h = 256,
 		name = "ring",
-		visible = true,
-		w = 256,
-		texture = "ui/icons/hud_circle",
-		alpha = 0.55,
-		blend_mode = "add"
+		visible = true
 	})
 
 	ring:set_size(ring:w() * scale, ring:h() * scale)

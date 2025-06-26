@@ -35,9 +35,9 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 	local mode_params = {
 		ctrlr_proportions = 2,
 		name_proportions = 1,
-		max = 2,
-		min = 0,
-		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
+		max = 3,
+		min = 1,
+		tooltip = "Set the mode, 1 is normal, 2 is colored, 3 is flash on enter",
 		floats = 0,
 		name = "Mode:",
 		panel = panel,

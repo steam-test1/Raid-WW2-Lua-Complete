@@ -1,12 +1,21 @@
 NavObstacleElement = NavObstacleElement or class(MissionElement)
+NavObstacleElement.LINK_VALUES = {
+	{
+		type = "obstacle",
+		table_value = "obstacle_list",
+		layer = "Statics",
+		output = true,
+		table_key = "unit_id"
+	}
+}
 
 function NavObstacleElement:init(unit)
 	NavObstacleElement.super.init(self, unit)
 
 	self._guis = {}
 	self._obstacle_units = {}
-	self._hed.obstacle_list = {}
 	self._all_object_names = {}
+	self._hed.obstacle_list = {}
 	self._hed.operation = "add"
 
 	table.insert(self._save_values, "obstacle_list")
@@ -91,8 +100,8 @@ end
 
 function NavObstacleElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = self:_select_unit_mask()
 	})
 
@@ -103,8 +112,8 @@ end
 
 function NavObstacleElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		sample = true,
+		ray_type = "body editor",
 		mask = self:_select_unit_mask()
 	})
 
@@ -195,12 +204,12 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
+		name = "Object:",
 		sorted = true,
 		sizer_proportions = 1,
 		ctrlr_proportions = 2,
 		name_proportions = 1,
 		tooltip = "Select an object from the combobox",
-		name = "Object:",
 		panel = panel,
 		sizer = h_sizer,
 		options = all_object_names,

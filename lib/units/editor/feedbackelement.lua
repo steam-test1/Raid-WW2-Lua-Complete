@@ -73,8 +73,8 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "range", {
-		min = -1,
-		floats = 0
+		floats = 0,
+		min = -1
 	}, "The range the effect should be felt. 0 means that it will be felt everywhere")
 
 	local camera_shaker_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Camera shake")
@@ -88,24 +88,24 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 		"breathing"
 	}, "Select a camera shake effect", "effect")
 	self:_build_value_number(panel, camera_shaker_sizer, "camera_shake_amplitude", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Amplitude basically decides the strenght of the shake", "amplitude")
 	self:_build_value_number(panel, camera_shaker_sizer, "camera_shake_frequency", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Changes the frequency of the shake", "frequency")
 	self:_build_value_number(panel, camera_shaker_sizer, "camera_shake_attack", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to reach maximum shake", "attack")
 	self:_build_value_number(panel, camera_shaker_sizer, "camera_shake_sustain", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to sustain maximum shake", "sustain")
 	self:_build_value_number(panel, camera_shaker_sizer, "camera_shake_decay", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to decay from maximum shake to zero", "decay")
 
 	local rumble_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Rumble")
@@ -113,20 +113,20 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(rumble_sizer, 0, 0, "EXPAND")
 	self:_build_value_checkbox(panel, rumble_sizer, "use_rumble", "Use rumble")
 	self:_build_value_number(panel, rumble_sizer, "rumble_peak", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "A value to determine the strength of the rumble", "peak")
 	self:_build_value_number(panel, rumble_sizer, "rumble_attack", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to reach maximum rumble", "attack")
 	self:_build_value_number(panel, rumble_sizer, "rumble_sustain", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to sustain maximum rumble", "sustain")
 	self:_build_value_number(panel, rumble_sizer, "rumble_release", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Time to decay from maximum rumble to zero", "release")
 
 	local above_camera_effect_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Above camera effect")
@@ -136,9 +136,9 @@ function FeedbackUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, self:_effect_options()), "Select and above camera effect", "effect")
 	self:_build_value_number(panel, above_camera_effect_sizer, "above_camera_effect_distance", {
+		max = 1,
 		min = 0,
-		floats = 2,
-		max = 1
+		floats = 2
 	}, "A filter value to use with the range. A value of 1 means that the effect will be played whenever inside the range, a lower value means you need to be closer to the position.", "distance filter")
 end
 

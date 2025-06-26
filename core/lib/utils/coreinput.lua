@@ -1,16 +1,25 @@
 core:module("CoreInput")
 core:import("CoreClass")
 
+local IDS_SHIFT_L = Idstring("left shift")
+local IDS_SHIFT_R = Idstring("right shift")
+
 function shift()
-	return Input:keyboard():down(Idstring("left shift")) or Input:keyboard():down(Idstring("right shift"))
+	return Input:keyboard():down(IDS_SHIFT_L) or Input:keyboard():down(IDS_SHIFT_R)
 end
+
+local IDS_CTRL_L = Idstring("left ctrl")
+local IDS_CTRL_R = Idstring("right ctrl")
 
 function ctrl()
-	return Input:keyboard():down(Idstring("left ctrl")) or Input:keyboard():down(Idstring("right ctrl"))
+	return Input:keyboard():down(IDS_CTRL_L) or Input:keyboard():down(IDS_CTRL_R)
 end
 
+local IDS_ALT_L = Idstring("left alt")
+local IDS_ALT_R = Idstring("right alt")
+
 function alt()
-	return Input:keyboard():down(Idstring("left alt"))
+	return Input:keyboard():down(IDS_ALT_L)
 end
 
 RepKey = RepKey or CoreClass.class()

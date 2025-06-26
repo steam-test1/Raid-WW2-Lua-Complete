@@ -74,21 +74,13 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		return
 	end
 
-	if managers.dlc:is_installing() then
-		Global.boot_invite = nil
-
-		managers.menu:show_game_is_installing()
-
-		return
-	end
-
 	if not invitation.is_same_user then
 		print("INACTIVE USER RECIEVED INVITE")
 
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			comparision_type = nil
+			levels = nil
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -129,14 +121,6 @@ function NetworkMatchMakingXBL:join_boot_invite()
 		managers.menu:show_game_is_full()
 
 		Global.boot_invite[tostring(managers.user:get_platform_id())] = nil
-
-		return
-	end
-
-	if managers.dlc:is_installing() then
-		Global.boot_invite = nil
-
-		managers.menu:show_game_is_installing()
 
 		return
 	end
@@ -868,9 +852,9 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 		end
 	})
 
-	local function joined_game(res, level_index, difficulty_index, state_index)
+	local function joined_game(res, state_index)
 		managers.system_menu:close("waiting_for_server_response")
-		print("[NetworkMatchMakingXBL:clbk_join_session_result:joined_game] res", res, "level_index", level_index, "difficulty_index", difficulty_index, "state_index", state_index)
+		print("[NetworkMatchMakingXBL:clbk_join_session_result:joined_game] res", res, "state_index", state_index)
 
 		local matchmake = managers.network.matchmake
 
@@ -884,9 +868,6 @@ function NetworkMatchMakingXBL:clbk_join_session_result(status)
 			if managers.groupai then
 				managers.groupai:kill_all_AI()
 			end
-
-			local level_id = tweak_data.levels:get_level_id_from_index(level_index)
-			Global.game_settings.level_id = level_id
 
 			if self._session then
 				print("[NetworkMatchMakingXBL:new session]", self._session:id())
@@ -1339,10 +1320,10 @@ function NetworkMatchMakingXBL:set_challenge_card_info()
 	local active_card = managers.challenge_cards:get_active_card()
 
 	if self._lobby_attributes then
-		if active_card then
-			self._lobby_attributes.challenge_card_id = active_card.key_name
-		else
-			self._lobby_attributes.challenge_card_id = "nocards"
+		self._lobby_attributes.challenge_card_id = active_card and active_card.key_name or "nocards"
+
+		if active_card and active_card.seed then
+			self._lobby_attributes.challenge_card_id = self._lobby_attributes.challenge_card_id .. "," .. active_card.seed
 		end
 
 		self.lobby_handler:set_lobby_data(self._lobby_attributes)

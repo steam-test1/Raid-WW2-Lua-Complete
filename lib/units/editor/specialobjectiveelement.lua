@@ -49,6 +49,23 @@ SpecialObjectiveUnitElement.PRESETS = {
 		"tank"
 	}
 }
+SpecialObjectiveUnitElement.LINK_VALUES = {
+	{
+		type = "followup",
+		table_value = "followup_elements",
+		output = true
+	},
+	{
+		table_value = "spawn_instigator_ids",
+		type = "instigator"
+	},
+	{
+		type = "turret",
+		layer = "Statics",
+		value = "turret_id",
+		output = true
+	}
+}
 
 function SpecialObjectiveUnitElement:init(unit)
 	SpecialObjectiveUnitElement.super.init(self, unit)
@@ -174,8 +191,6 @@ function SpecialObjectiveUnitElement:stop_test_element()
 	end
 
 	self._enemies = {}
-
-	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 end
 
 function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
@@ -207,9 +222,9 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 			if draw then
 				self:_draw_link({
+					b = 0.75,
 					g = 0,
 					r = 0,
-					b = 0.75,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -223,9 +238,9 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 		if draw and unit and self._unit then
 			self:_draw_link({
+				b = 0.75,
 				g = 0,
 				r = 0,
-				b = 0.75,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -307,9 +322,9 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
+					b = 0,
 					g = 0.75,
 					r = 0,
-					b = 0,
 					from_unit = self._unit,
 					to_unit = unit
 				})
@@ -327,8 +342,8 @@ end
 
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -344,8 +359,8 @@ end
 
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
@@ -365,8 +380,8 @@ end
 
 function SpecialObjectiveUnitElement:_turret_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body",
-		mask = 1
+		mask = 1,
+		ray_type = "body"
 	})
 
 	if not ray or not ray.unit then
@@ -550,10 +565,10 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		tooltip = "Select a preset.",
-		sorted = true,
 		name_proportions = 1,
+		tooltip = "Select a preset.",
 		ctrlr_proportions = 2,
+		sorted = true,
 		name = "Preset:",
 		panel = panel,
 		sizer = opt_sizer,

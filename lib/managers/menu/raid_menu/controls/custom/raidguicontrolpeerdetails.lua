@@ -41,12 +41,12 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_name()
 	local profile_name_params = {
-		text = "PROFILE NAME",
-		vertical = "center",
-		name = "profile_name",
 		align = "left",
+		text = "PROFILE NAME",
 		h = 32,
 		y = 0,
+		vertical = "center",
+		name = "profile_name",
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X - RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -68,12 +68,12 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	self._class_icon:set_center_y(self._object:h() / 2)
 
 	local nationality_params = {
-		text = "GERMAN",
-		vertical = "center",
-		name = "nationality",
 		align = "left",
+		text = "GERMAN",
 		h = 32,
 		y = 0,
+		vertical = "center",
+		name = "nationality",
 		x = RaidGUIControlPeerDetails.NAME_X,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X,
 		font = RaidGUIControlPeerDetails.FONT,
@@ -85,11 +85,11 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 	self._nationality:set_bottom(self._object:h())
 
 	local level_text_params = {
+		align = "center",
+		h = 32,
 		text = "10",
 		vertical = "center",
 		name = "level_text",
-		align = "center",
-		h = 32,
 		w = RaidGUIControlPeerDetails.LEVEL_W,
 		font = RaidGUIControlPeerDetails.FONT,
 		font_size = tweak_data.gui.font_sizes.size_24,
@@ -101,7 +101,11 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 end
 
 function RaidGUIControlPeerDetails:set_profile_name(name)
-	self._profile_name:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._profile_name:set_text(name)
 end
 
 function RaidGUIControlPeerDetails:set_class(character_class)

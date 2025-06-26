@@ -121,9 +121,9 @@ function EventCompleteState:init(game_state_machine, setup)
 	self._controller = nil
 	self._continue_block_timer = 0
 	self._awarded_rewards = {
-		loot = false,
 		greed_gold = false,
-		xp = false
+		xp = false,
+		loot = false
 	}
 end
 
@@ -245,6 +245,18 @@ function EventCompleteState:at_enter(old_state, params)
 				managers.network.matchmake:set_job_info_by_current_job()
 			end
 		end
+
+		if self:is_success() and self:job_data().bounty then
+			if Network:is_server() then
+				managers.raid_job:set_bounty_completed_seed(self:job_data().seed)
+			else
+				local seed = managers.event_system:get_sync_bounty_seed()
+
+				if seed then
+					managers.raid_job:set_bounty_completed_seed(seed)
+				end
+			end
+		end
 	end
 
 	managers.menu_component:post_event("menu_volume_set")
@@ -307,9 +319,9 @@ function EventCompleteState:_calculate_extra_loot_secured()
 
 	if extra_loot_value > 0 then
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
-			icon = "rewards_extra_loot",
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
+			icon = "rewards_extra_loot",
 			acquired = extra_loot_count,
 			acquired_value = extra_loot_value
 		}
@@ -330,8 +342,8 @@ function EventCompleteState:on_loot_data_ready()
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
-		icon = "rewards_dog_tags",
 		title = "menu_loot_screen_dog_tags",
+		icon = "rewards_dog_tags",
 		acquired = self.loot_acquired,
 		total = self.loot_spawned,
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
@@ -646,8 +658,8 @@ function EventCompleteState:on_top_stats_ready()
 			end
 
 			local top_stats_loot_data = {
-				icon = "rewards_top_stats",
 				title = "menu_loot_screen_top_stats",
+				icon = "rewards_top_stats",
 				acquired = #self.player_top_stats,
 				total = #self.special_honors,
 				acquired_value = acquired_value,
@@ -663,7 +675,6 @@ function EventCompleteState:on_top_stats_ready()
 		acquired_value = acquired_value + tweak_data.statistics.top_stats[stat.id].loot_value
 	end
 
-	local is_in_operation = self._job_type == OperationsTweakData.JOB_TYPE_OPERATION
 	self.stats_ready = true
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS and managers.menu_component._raid_menu_special_honors_gui then
@@ -966,6 +977,13 @@ function EventCompleteState:_continue()
 			if success then
 				self._active_screen = EventCompleteState.SCREEN_ACTIVE_LOOT
 			end
+		elseif self:is_success() and managers.greed:acquired_gold_in_mission() then
+			self._active_screen = EventCompleteState.SCREEN_ACTIVE_GREED_LOOT
+			local success = managers.raid_menu:open_menu("raid_menu_greed_loot_screen", false)
+
+			managers.greed:award_gold_picked_up_in_mission()
+
+			self._awarded_rewards.greed_gold = true
 		else
 			local base_xp = self:calculate_xp()
 
@@ -1021,6 +1039,12 @@ end
 
 function EventCompleteState:_clear_controller()
 	managers.controller:remove_hotswap_callback("event_complete_state")
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
 
 	if not self._controller then
 		return
@@ -1085,6 +1109,8 @@ function EventCompleteState:set_statistics_values()
 	end
 
 	local used_challenge_card = self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty"
+
+	Application:info("[EventCompleteState] set_statistics_values: used_challenge_card", used_challenge_card)
 
 	if self:is_success() and used_challenge_card then
 		managers.statistics:complete_job_with_card(self._job_type, self._active_challenge_card)

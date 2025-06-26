@@ -30,7 +30,7 @@ function RaidMenuOptionsVideo:_layout_video()
 	local start_y = 320
 	local default_width = 512
 	local previous_panel = nil
-	local on_controller = managers.controller:is_controller_present()
+	local on_controller = managers.controller:is_using_controller()
 	previous_panel = {
 		name = "btn_advanced_options",
 		x = start_x,
@@ -38,8 +38,8 @@ function RaidMenuOptionsVideo:_layout_video()
 		text = managers.localization:to_upper_text("menu_options_video_advanced_button"),
 		on_click_callback = callback(self, self, "on_click_options_video_advanced_button"),
 		on_menu_move = {
-			down = "stepper_menu_resolution",
-			up = "default_video"
+			up = "default_video",
+			down = "stepper_menu_resolution"
 		}
 	}
 	self._btn_advanced_options = self._root_panel:long_tertiary_button(previous_panel)
@@ -114,8 +114,8 @@ function RaidMenuOptionsVideo:_layout_video()
 	}
 	self._stepper_menu_window_mode = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		value_format = "%02d%%",
 		name = "effect_quality",
+		value_format = "%02d%%",
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		description = managers.localization:to_upper_text("menu_options_video_effect_quality"),
@@ -127,9 +127,9 @@ function RaidMenuOptionsVideo:_layout_video()
 	}
 	self._progress_bar_menu_effect_quality = self._root_panel:slider(previous_panel)
 	previous_panel = {
-		value_format = "%02d%%",
 		value = 0,
 		name = "progress_bar_menu_brightness",
+		value_format = "%02d%%",
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		description = managers.localization:to_upper_text("menu_options_video_brightness"),
@@ -172,8 +172,8 @@ function RaidMenuOptionsVideo:_layout_video()
 	}
 	self._toggle_menu_camera_accel = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		value_format = "%02d%%",
 		name = "camera_shake",
+		value_format = "%02d%%",
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 		description = managers.localization:to_upper_text("menu_options_video_camera_shake"),
@@ -199,9 +199,9 @@ function RaidMenuOptionsVideo:_layout_video()
 	}
 	self._progress_bar_menu_fov_adjustment = self._root_panel:slider(previous_panel)
 	local default_video_settings_button = {
-		y = 832,
 		x = 1472,
 		name = "default_video",
+		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
 		on_click_callback = callback(self, self, "on_click_default_video"),
@@ -254,8 +254,8 @@ function RaidMenuOptionsVideo:data_source_stepper_menu_window_mode()
 		info = managers.localization:to_upper_text("menu_windowed")
 	})
 	table.insert(result, {
-		selected = true,
 		value = "WINDOWED_FULLSCREEN",
+		selected = true,
 		text = managers.localization:to_upper_text("menu_windowed_fullscreen"),
 		info = managers.localization:to_upper_text("menu_windowed_fullscreen")
 	})
@@ -470,7 +470,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 end
 
 function RaidMenuOptionsVideo:_callback_default_video()
-	managers.user:reset_video_setting_map()
+	managers.user:reset_setting_map("video")
 	self:_load_video_values()
 	managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
@@ -508,35 +508,12 @@ end
 function RaidMenuOptionsVideo:_setup_control_visibility()
 	local is_fullscreen = self._stepper_menu_window_mode:get_value() == "FULLSCREEN"
 	local is_borderless = self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN"
-	local on_controller = managers.controller:is_controller_present()
 
 	for _, control in ipairs(self._fullscreen_only_controls) do
 		control:set_enabled(is_fullscreen)
 	end
 
 	self._stepper_menu_resolution:set_enabled(not is_borderless)
-	self._button_apply_video_resolution:set_enabled(not is_borderless)
-
-	if not is_fullscreen and not is_borderless then
-		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
-		self._stepper_menu_resolution._on_menu_move.down = on_controller and "stepper_menu_refresh_rate" or "apply_resolution"
-		self._button_apply_video_resolution._on_menu_move.down = "window_mode"
-		self._stepper_menu_window_mode._on_menu_move.up = "apply_resolution"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "use_headbob"
-		self._toggle_menu_headbob._on_menu_move.up = "effect_quality"
-	elseif is_borderless then
-		self._btn_advanced_options._on_menu_move.down = "window_mode"
-		self._stepper_menu_window_mode._on_menu_move.up = "btn_advanced_options"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "use_headbob"
-		self._toggle_menu_headbob._on_menu_move.up = "effect_quality"
-	else
-		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
-		self._stepper_menu_resolution._on_menu_move.down = on_controller and "stepper_menu_refresh_rate" or "apply_resolution"
-		self._button_apply_video_resolution._on_menu_move.down = "stepper_menu_refresh_rate"
-		self._stepper_menu_window_mode._on_menu_move.up = "stepper_menu_refresh_rate"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "progress_bar_menu_brightness"
-		self._toggle_menu_headbob._on_menu_move.up = "progress_bar_menu_brightness"
-	end
 end
 
 function RaidMenuOptionsVideo:_load_video_values()

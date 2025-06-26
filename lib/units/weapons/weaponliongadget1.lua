@@ -243,23 +243,6 @@ function WeaponLionGadget1:check_state()
 	if self._is_npc then
 		return false
 	end
-
-	local bipod_deployable = self:_is_deployable()
-	self._deployed = false
-
-	if not self._is_npc then
-		if managers.player:current_state() ~= "bipod" and bipod_deployable then
-			self._previous_state = managers.player:current_state()
-
-			managers.player:set_player_state("bipod")
-
-			self._deployed = true
-		elseif managers.player:current_state() == "bipod" then
-			self:_unmount()
-		end
-	end
-
-	self._unit:set_extension_update_enabled(Idstring("base"), self._deployed)
 end
 
 function WeaponLionGadget1:destroy(unit)

@@ -21,6 +21,7 @@ function ControllerManager:init(path, default_settings_path)
 		}
 	end
 
+	self._global = Global.controller_manager
 	self._skip_controller_map = {}
 
 	if not IS_PC then
@@ -114,8 +115,8 @@ function ControllerManager:dispatch_hotswap_callbacks()
 end
 
 function ControllerManager:setup_default_controller_list()
-	if Global.controller_manager.default_wrapper_index then
-		local controller_index_list = self._wrapper_to_controller_list[Global.controller_manager.default_wrapper_index]
+	if self._global.default_wrapper_index then
+		local controller_index_list = self._wrapper_to_controller_list[self._global.default_wrapper_index]
 		self._default_controller_list = {}
 		self._controller_device_id = false
 
@@ -210,7 +211,7 @@ function ControllerManager:check_connect_change()
 
 				if controller:connected() and controller:type() == "xb1_controller" and controller:user_xuid() == current_user then
 					print("[ControllerManager:check_connect_change] re-acquired controller", controller, i_controller)
-					print("[ControllerManager:check_connect_change] Global.controller_manager.default_controller_connected", Global.controller_manager.default_controller_connected)
+					print("[ControllerManager:check_connect_change] self._global.default_controller_connected", self._global.default_controller_connected)
 
 					replacement_xb1_ctrl = controller
 					replacement_xb1_ctrl_index = i_controller
@@ -227,11 +228,11 @@ function ControllerManager:check_connect_change()
 			end
 		end
 
-		if not Global.controller_manager.default_controller_connected ~= not connected then
+		if not self._global.default_controller_connected ~= not connected then
 			self:default_controller_connect_change(connected)
-			print("[ControllerManager:check_connect_change] setting Global.controller_manager.default_controller_connected", Global.controller_manager.default_controller_connected, "->", connected)
+			print("[ControllerManager:check_connect_change] setting self._global.default_controller_connected", self._global.default_controller_connected, "->", connected)
 
-			Global.controller_manager.default_controller_connected = connected
+			self._global.default_controller_connected = connected
 		end
 	end
 end
@@ -282,11 +283,11 @@ function ControllerManager:create_controller(name, index, debug, prio)
 
 		controller_wrapper = CoreControllerWrapperDebug.ControllerWrapperDebug:new(wrapper_list, self, self._next_controller_wrapper_id, name, default_wrapper, CoreControllerWrapperSettings.ControllerWrapperSettings:new(CoreControllerWrapperDebug.ControllerWrapperDebug.TYPE, nil, nil, nil))
 	else
-		index = index or Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
+		index = index or self._global.default_wrapper_index or self:get_preferred_default_wrapper_index()
 		local wrapper_class = self._wrapper_class_map[index]
 
 		if not wrapper_class then
-			error("Tried to create a controller with non-existing index \"" .. tostring(index) .. "\" (default index: " .. tostring(Global.controller_manager.default_wrapper_index) .. ", name: \"" .. tostring(name) .. "\").")
+			error("Tried to create a controller with non-existing index \"" .. tostring(index) .. "\" (default index: " .. tostring(self._global.default_wrapper_index) .. ", name: \"" .. tostring(name) .. "\").")
 		end
 
 		local controller_index = self._wrapper_to_controller_list[index][1]
@@ -332,7 +333,7 @@ function ControllerManager:get_preferred_default_wrapper_index()
 end
 
 function ControllerManager:get_default_wrapper_type()
-	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
+	local index = self._global.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map[index]
 
 	return wrapper_class.TYPE
@@ -414,15 +415,15 @@ function ControllerManager:remove_default_wrapper_index_change_callback(id)
 end
 
 function ControllerManager:set_default_wrapper_index(default_wrapper_index)
-	if Global.controller_manager.default_wrapper_index ~= default_wrapper_index then
+	if self._global.default_wrapper_index ~= default_wrapper_index then
 		local controller_index_list = default_wrapper_index and self._wrapper_to_controller_list[default_wrapper_index]
 
 		if not default_wrapper_index or controller_index_list then
-			cat_print("controller_manager", "[ControllerManager] Changed default controller index from " .. tostring(Global.controller_manager.default_wrapper_index) .. " to " .. tostring(default_wrapper_index) .. ".")
+			cat_print("controller_manager", "[ControllerManager] Changed default controller index from " .. tostring(self._global.default_wrapper_index) .. " to " .. tostring(default_wrapper_index) .. ".")
 
-			Global.controller_manager.default_wrapper_index = default_wrapper_index
+			self._global.default_wrapper_index = default_wrapper_index
 
-			if not Global.controller_manager.default_wrapper_index then
+			if not self._global.default_wrapper_index then
 				self:_close_controller_changed_dialog()
 			end
 
@@ -444,7 +445,7 @@ function ControllerManager:set_default_wrapper_index(default_wrapper_index)
 end
 
 function ControllerManager:get_default_wrapper_index()
-	return Global.controller_manager.default_wrapper_index
+	return self._global.default_wrapper_index
 end
 
 function ControllerManager:controller_wrapper_destroy_callback(controller_wrapper)
@@ -579,8 +580,17 @@ function ControllerManager:set_clean_default_setup(full_setup)
 	end
 end
 
-function ControllerManager:get_clean_default_setup()
-	return self._clean_default_setup
+function ControllerManager:get_clean_default_setup(index)
+	index = index or self._global.default_wrapper_index or self:get_preferred_default_wrapper_index()
+	local wrapper_class = self._wrapper_class_map[index]
+
+	if not wrapper_class then
+		error("Tried to create a controller with non-existing index \"" .. tostring(index) .. "\" (default index: " .. tostring(self._global.default_wrapper_index) .. ", name: \"" .. tostring(name) .. "\").")
+
+		return
+	end
+
+	return self._clean_default_setup[wrapper_class.TYPE]
 end
 
 function ControllerManager:save_settings(path)
@@ -642,7 +652,7 @@ function ControllerManager:change_default_wrapper_mode(mode)
 		return
 	end
 
-	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
+	local index = self._global.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map[index]
 
 	if not wrapper_class or not wrapper_class.change_mode then
@@ -659,7 +669,7 @@ function ControllerManager:get_default_wrapper_mode()
 end
 
 function ControllerManager:get_default_controller()
-	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
+	local index = self._global.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local controller_index = self._wrapper_to_controller_list[index] and self._wrapper_to_controller_list[index][1]
 
 	return controller_index and Input:controller(controller_index)

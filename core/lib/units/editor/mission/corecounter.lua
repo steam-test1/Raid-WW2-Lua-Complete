@@ -3,8 +3,8 @@ CoreCounterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterUnitElement.SAVE_UNIT_ROTATION = false
 CoreCounterUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "number",
-		value = "counter_target"
+		value = "counter_target",
+		type = "number"
 	}
 }
 CounterUnitElement = CounterUnitElement or class(CoreCounterUnitElement)
@@ -198,8 +198,15 @@ CoreCounterOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterOperatorUnitElement.SAVE_UNIT_ROTATION = false
 CoreCounterOperatorUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "number",
-		value = "amount"
+		value = "amount",
+		type = "number"
+	}
+}
+CoreCounterOperatorUnitElement.LINK_VALUES = {
+	{
+		type = "operator",
+		table_value = "elements",
+		output = true
 	}
 }
 CounterOperatorUnitElement = CounterOperatorUnitElement or class(CoreCounterOperatorUnitElement)
@@ -237,11 +244,6 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 			})
 		end
 	end
-end
-
-function CoreCounterOperatorUnitElement:get_links_to_unit(...)
-	CoreCounterOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
 function CoreCounterOperatorUnitElement:update_editing()
@@ -303,6 +305,12 @@ end
 CoreCounterTriggerUnitElement = CoreCounterTriggerUnitElement or class(MissionElement)
 CoreCounterTriggerUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterTriggerUnitElement.SAVE_UNIT_ROTATION = false
+CoreCounterTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_value = "elements"
+	}
+}
 CounterTriggerUnitElement = CounterTriggerUnitElement or class(CoreCounterTriggerUnitElement)
 
 function CounterTriggerUnitElement:init(...)
@@ -338,11 +346,6 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 			})
 		end
 	end
-end
-
-function CoreCounterTriggerUnitElement:get_links_to_unit(...)
-	CoreCounterTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function CoreCounterTriggerUnitElement:update_editing()
@@ -404,6 +407,13 @@ end
 CoreCounterFilterUnitElement = CoreCounterFilterUnitElement or class(MissionElement)
 CoreCounterFilterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterFilterUnitElement.SAVE_UNIT_ROTATION = false
+CoreCounterFilterUnitElement.LINK_VALUES = {
+	{
+		type = "filter",
+		table_value = "elements",
+		output = true
+	}
+}
 CounterFilterUnitElement = CounterFilterUnitElement or class(CoreCounterFilterUnitElement)
 
 function CounterFilterUnitElement:init(...)
@@ -441,11 +451,6 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 			})
 		end
 	end
-end
-
-function CoreCounterFilterUnitElement:get_links_to_unit(...)
-	CoreCounterFilterUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "filter", ...)
 end
 
 function CoreCounterFilterUnitElement:update_editing()

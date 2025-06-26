@@ -2,9 +2,7 @@ require("lib/units/beings/player/states/PlayerMovementState")
 require("lib/units/beings/player/states/PlayerEmpty")
 require("lib/units/beings/player/states/PlayerStandard")
 require("lib/units/beings/player/states/PlayerBleedOut")
-require("lib/units/beings/player/states/PlayerFatal")
 require("lib/units/beings/player/states/PlayerTased")
-require("lib/units/beings/player/states/PlayerIncapacitated")
 require("lib/units/beings/player/states/PlayerCarry")
 require("lib/units/beings/player/states/PlayerCarryCorpse")
 require("lib/units/beings/player/states/PlayerBipod")
@@ -20,9 +18,7 @@ PlayerMovement._STATES = {
 	empty = PlayerEmpty,
 	standard = PlayerStandard,
 	bleed_out = PlayerBleedOut,
-	fatal = PlayerFatal,
 	tased = PlayerTased,
-	incapacitated = PlayerIncapacitated,
 	carry = PlayerCarry,
 	carry_corpse = PlayerCarryCorpse,
 	bipod = PlayerBipod,
@@ -33,12 +29,12 @@ PlayerMovement._STATES = {
 	foxhole = PlayerFoxhole,
 	charging = PlayerCharging
 }
-PlayerMovement.OUT_OF_WORLD_Z = -4000
 
 function PlayerMovement:init(unit)
 	self._unit = unit
 	self._player_class = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
 	self._class_tweak_data = tweak_data.player:get_tweak_data_for_class(self._player_class)
+	self._level_bounds_z = managers.raid_job:current_level_bounds_z()
 
 	unit:set_timer(managers.player:player_timer())
 	unit:set_animation_timer(managers.player:player_timer())
@@ -59,9 +55,9 @@ function PlayerMovement:init(unit)
 	self._m_com = math.lerp(self._m_pos, self._m_stand_pos, 0.5)
 	self._kill_overlay_t = managers.player:player_timer():time() + 5
 	self._state_data = {
-		in_air = false,
 		ducking = false,
-		m_stand_pos = nil
+		other_players_in_foxhole = nil,
+		in_air = false
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false
@@ -73,11 +69,11 @@ function PlayerMovement:init(unit)
 	managers.hud:reset_player_state()
 
 	self._underdog_skill_data = {
-		max_dis_sq = 3240000,
 		nr_enemies = 2,
 		chk_t = 6,
 		chk_interval_inactive = 1,
 		chk_interval_active = 6,
+		max_dis_sq = 3240000,
 		has_dmg_dampener = managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered") or managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered_strong"),
 		has_dmg_mul = managers.player:has_category_upgrade("temporary", "dmg_multiplier_outnumbered")
 	}
@@ -110,6 +106,9 @@ function PlayerMovement:post_init()
 	}, callback(self, self, "inventory_clbk_listener"))
 
 	self._states = {}
+
+	self:_setup_settings()
+
 	self._attention_handler = CharacterAttentionObject:new(self._unit, true)
 	self._enemy_weapons_hot_listen_id = "PlayerMovement" .. tostring(self._unit:key())
 
@@ -122,6 +121,85 @@ function PlayerMovement:post_init()
 	end
 
 	self._check_other_players_in_foxhole = true
+end
+
+function PlayerMovement:_setup_settings()
+	self._hold_to_run_changed_clbk = callback(self, self, "setting_hold_to_run_changed")
+	self._hold_to_duck_changed_clbk = callback(self, self, "setting_hold_to_duck_changed")
+	self._hold_to_steelsight_changed_clbk = callback(self, self, "setting_hold_to_steelsight_changed")
+	self._hold_to_wheel_changed_clbk = callback(self, self, "setting_hold_to_wheel_changed")
+	self._use_headbob_changed_clbk = callback(self, self, "setting_use_headbob_changed")
+	self._use_camera_accel_changed_clbk = callback(self, self, "setting_use_camera_accel_changed")
+	self._fov_multiplier_changed_clbk = callback(self, self, "setting_fov_multiplier_changed")
+	self._hud_crosshairs_changed_clbk = callback(self, self, "setting_hud_crosshairs_changed")
+	self._weapon_autofire_changed_clbk = callback(self, self, "setting_weapon_autofire_changed")
+
+	managers.user:add_setting_changed_callback("hold_to_run", self._hold_to_run_changed_clbk)
+	managers.user:add_setting_changed_callback("hold_to_duck", self._hold_to_duck_changed_clbk)
+	managers.user:add_setting_changed_callback("hold_to_steelsight", self._hold_to_steelsight_changed_clbk)
+	managers.user:add_setting_changed_callback("hold_to_wheel", self._hold_to_wheel_changed_clbk)
+	managers.user:add_setting_changed_callback("use_headbob", self._use_headbob_changed_clbk)
+	managers.user:add_setting_changed_callback("use_camera_accel", self._use_camera_accel_changed_clbk)
+	managers.user:add_setting_changed_callback("fov_multiplier", self._fov_multiplier_changed_clbk)
+	managers.user:add_setting_changed_callback("hud_crosshairs", self._hud_crosshairs_changed_clbk)
+	managers.user:add_setting_changed_callback("weapon_autofire", self._weapon_autofire_changed_clbk)
+	self:setting_hold_to_run_changed(nil, nil, managers.user:get_setting("hold_to_run"))
+	self:setting_hold_to_duck_changed(nil, nil, managers.user:get_setting("hold_to_duck"))
+	self:setting_hold_to_steelsight_changed(nil, nil, managers.user:get_setting("hold_to_steelsight"))
+	self:setting_hold_to_wheel_changed(nil, nil, managers.user:get_setting("hold_to_wheel"))
+	self:setting_use_headbob_changed(nil, nil, managers.user:get_setting("use_headbob"))
+	self:setting_use_camera_accel_changed(nil, nil, managers.user:get_setting("use_camera_accel"))
+	self:setting_fov_multiplier_changed(nil, nil, managers.user:get_setting("fov_multiplier"))
+	self:setting_hud_crosshairs_changed(nil, nil, managers.user:get_setting("hud_crosshairs"))
+	self:setting_weapon_autofire_changed(nil, nil, managers.user:get_setting("weapon_autofire"))
+end
+
+function PlayerMovement:_clear_settings()
+	managers.user:remove_setting_changed_callback("hold_to_run", self._hold_to_run_changed_clbk)
+	managers.user:remove_setting_changed_callback("hold_to_duck", self._hold_to_duck_changed_clbk)
+	managers.user:remove_setting_changed_callback("hold_to_steelsight", self._hold_to_steelsight_changed_clbk)
+	managers.user:remove_setting_changed_callback("hold_to_wheel", self._hold_to_wheel_changed_clbk)
+	managers.user:remove_setting_changed_callback("use_headbob", self._use_headbob_changed_clbk)
+	managers.user:remove_setting_changed_callback("use_camera_accel", self._use_camera_accel_changed_clbk)
+	managers.user:remove_setting_changed_callback("fov_multiplier", self._fov_multiplier_changed_clbk)
+	managers.user:remove_setting_changed_callback("hud_crosshairs", self._hud_crosshairs_changed_clbk)
+	managers.user:remove_setting_changed_callback("weapon_autofire", self._weapon_autofire_changed_clbk)
+end
+
+function PlayerMovement:setting_hold_to_run_changed(setting_name, default_value, value)
+	self.setting_hold_to_run = value
+end
+
+function PlayerMovement:setting_hold_to_duck_changed(setting_name, default_value, value)
+	self.setting_hold_to_duck = value
+end
+
+function PlayerMovement:setting_hold_to_steelsight_changed(setting_name, default_value, value)
+	self.setting_hold_to_steelsight = value
+end
+
+function PlayerMovement:setting_hold_to_wheel_changed(setting_name, default_value, value)
+	self.setting_hold_to_wheel = value
+end
+
+function PlayerMovement:setting_use_headbob_changed(setting_name, default_value, value)
+	self.setting_use_headbob = value
+end
+
+function PlayerMovement:setting_use_camera_accel_changed(setting_name, default_value, value)
+	self.setting_use_camera_accel = value
+end
+
+function PlayerMovement:setting_fov_multiplier_changed(setting_name, default_value, value)
+	self.setting_fov_multiplier = value
+end
+
+function PlayerMovement:setting_hud_crosshairs_changed(setting_name, default_value, value)
+	self.setting_hud_crosshairs = value
+end
+
+function PlayerMovement:setting_weapon_autofire_changed(setting_name, default_value, value)
+	self.setting_weapon_autofire = value
 end
 
 function PlayerMovement:attention_handler()
@@ -138,8 +216,11 @@ end
 
 function PlayerMovement:warp_to(pos, rot)
 	self:set_m_pos(pos)
-	mrotation.set_zero(self:m_head_rot())
-	mrotation.multiply(self:m_head_rot(), rot)
+
+	local head_rot = self:m_head_rot()
+
+	mrotation.set_zero(head_rot)
+	mrotation.multiply(head_rot, rot)
 	self._unit:warp_to(rot, pos)
 	self._unit:network():send("sync_warp_position", pos, rot)
 end
@@ -329,7 +410,7 @@ function PlayerMovement:get_object(object_name)
 end
 
 function PlayerMovement:downed()
-	return self._current_state_name == "bleed_out" or self._current_state_name == "fatal" or self._current_state_name == "incapacitated"
+	return self._current_state_name == "bleed_out"
 end
 
 function PlayerMovement:current_state()
@@ -344,7 +425,7 @@ function PlayerMovement:_check_out_of_world(t)
 	if self._next_check_out_of_world_t < t then
 		self._next_check_out_of_world_t = t + 1
 
-		if mvector3.z(self._m_pos) < PlayerMovement.OUT_OF_WORLD_Z then
+		if mvector3.z(self._m_pos) < self._level_bounds_z then
 			managers.player:on_out_of_world()
 
 			return true
@@ -357,13 +438,13 @@ end
 function PlayerMovement:play_redirect(redirect_name, at_time)
 	local result = self._unit:play_redirect(Idstring(redirect_name), at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 function PlayerMovement:play_state(state_name, at_time)
 	local result = self._unit:play_state(Idstring(state_name), at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 function PlayerMovement:chk_action_forbidden(action_type)
@@ -609,7 +690,7 @@ function PlayerMovement:_calc_suspicion_ratio_and_sync(observer_unit, status)
 		local peer = managers.network:session():peer_by_unit(self._unit)
 
 		if peer then
-			managers.network:session():send_to_peers_synched("suspicion", peer:id(), suspicion_sync)
+			managers.network:session():send_to_peers_synched("sync_suspicion", peer:id(), suspicion_sync)
 		end
 	end
 end
@@ -643,7 +724,7 @@ function PlayerMovement:clbk_enemy_weapons_hot()
 		local peer = managers.network:session():peer_by_unit(self._unit)
 
 		if peer then
-			managers.network:session():send_to_peers_synched("suspicion", peer:id(), 0)
+			managers.network:session():send_to_peers_synched("sync_suspicion", peer:id(), 0)
 		end
 	end
 
@@ -882,6 +963,8 @@ function PlayerMovement:pre_destroy(unit)
 
 		self._enemy_weapons_hot_listen_id = nil
 	end
+
+	self:_clear_settings()
 end
 
 function PlayerMovement:destroy(unit)

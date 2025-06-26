@@ -24,10 +24,6 @@ function MenuInput:init(logic, ...)
 	self._move_axis_limit = 0.5
 	self._controller_mouse_active_counter = 0
 	self._item_input_action_map[ItemColumn.TYPE] = callback(self, self, "input_item")
-	self._item_input_action_map[ItemServerColumn.TYPE] = callback(self, self, "input_item")
-	self._item_input_action_map[MenuItemLevel.TYPE] = callback(self, self, "input_item")
-	self._item_input_action_map[MenuItemMultiChoice.TYPE] = callback(self, self, "input_multi_choice")
-	self._item_input_action_map[MenuItemCustomizeController.TYPE] = callback(self, self, "input_customize_controller")
 	self._item_input_action_map[MenuItemDivider.TYPE] = callback(self, self, "input_item")
 	self._item_input_action_map[MenuItemInput.TYPE] = callback(self, self, "input_item")
 	self._callback_map = {
@@ -250,9 +246,6 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	managers.mouse_pointer:set_pointer_image("arrow")
 end
 
-function MenuInput:input_multi_choice(item, controller, mouse_click)
-end
-
 function MenuInput:input_expand(item, controller, mouse_click)
 	if controller:get_input_pressed("confirm") or mouse_click then
 		item:toggle()
@@ -263,20 +256,6 @@ end
 function MenuInput:input_chat(item, controller, mouse_click)
 	if not controller:get_input_pressed("confirm") and mouse_click then
 		-- Nothing
-	end
-end
-
-function MenuInput:input_customize_controller(item, controller, mouse_click)
-	if controller:get_input_pressed("confirm") or mouse_click then
-		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
-
-		if node_gui and node_gui._listening_to_input then
-			return
-		end
-
-		local node_gui = managers.menu:active_menu().renderer:active_node_gui()
-
-		node_gui:activate_customize_controller(item)
 	end
 end
 
@@ -388,20 +367,6 @@ function MenuInput:mouse_released(o, button, x, y)
 								row_item = row_item
 							}
 						end
-					elseif row_item.type == "kitslot" then
-						local item = self._logic:selected_item()
-
-						if row_item.arrow_right:inside(x, y) then
-							item:next()
-							self._logic:trigger_item(true, item)
-						elseif row_item.arrow_left:inside(x, y) then
-							item:previous()
-							self._logic:trigger_item(true, item)
-						elseif not row_item.choice_panel:inside(x, y) then
-							self._item_input_action_map[item.TYPE](item, self._controller, true)
-
-							return node_gui.mouse_pressed and node_gui:mouse_pressed(button, x, y)
-						end
 					elseif row_item.type == "multi_choice" then
 						local item = row_item.item
 
@@ -421,12 +386,6 @@ function MenuInput:mouse_released(o, button, x, y)
 							elseif item:next() then
 								self._logic:trigger_item(true, item)
 							end
-						end
-					elseif row_item.type == "chat" then
-						local item = self._logic:selected_item()
-
-						if row_item.chat_input:inside(x, y) then
-							row_item.chat_input:script().set_focus(true)
 						end
 					else
 						local item = self._logic:selected_item()

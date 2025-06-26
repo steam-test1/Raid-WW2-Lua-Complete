@@ -32,7 +32,7 @@ function RaidGUIControlListItemSaveSlots:init(parent, params, data)
 	self:_layout_icon(params, data)
 	self:_layout_raid_name(params, data)
 
-	if data.empty then
+	if data.empty or data.free_play then
 		self:_layout_difficulty_locked()
 	else
 		self:_layout_difficulty()
@@ -66,9 +66,9 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_background(params)
 	local background_params = {
+		x = 0,
 		visible = false,
 		y = 1,
-		x = 0,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = self._object:h() - 2,
@@ -79,10 +79,10 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 	local marker_params = {
+		x = 0,
 		visible = false,
 		w = 3,
 		y = 1,
-		x = 0,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
 		color = self._selected_color
@@ -91,13 +91,14 @@ function RaidGUIControlListItemSaveSlots:_layout_highlight_marker()
 end
 
 function RaidGUIControlListItemSaveSlots:_layout_icon(params, data)
+	local icon_color = data.free_play and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
 	local icon_params = {
 		name = "list_item_icon_" .. self._name,
 		x = RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		y = (RaidGUIControlListItemSaveSlots.HEIGHT - data.icon.texture_rect[4]) / 2,
 		texture = data.icon.texture,
 		texture_rect = data.icon.texture_rect,
-		color = tweak_data.gui.colors.raid_dirty_white
+		color = icon_color
 	}
 	self._item_icon = self._object:image(icon_params)
 
@@ -107,8 +108,8 @@ end
 
 function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 	local raid_name_params = {
-		y = 0,
 		vertical = "center",
+		y = 0,
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 		w = params.w,

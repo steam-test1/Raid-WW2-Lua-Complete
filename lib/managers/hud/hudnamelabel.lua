@@ -73,17 +73,22 @@ function HUDNameLabel:_create_panel(hud)
 end
 
 function HUDNameLabel:_create_name()
-	local name_params = {
-		name = "character_name",
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._character_name = self._object:text({
 		align = "center",
+		name = "character_name",
 		vertical = "center",
 		w = self._object:w(),
-		h = HUDNameLabel.PLAYER_NAME_H,
-		font = HUDNameLabel.PLAYER_NAME_FONT,
-		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
-		text = utf8.to_upper(self._name)
-	}
-	self._character_name = self._object:text(name_params)
+		h = self.PLAYER_NAME_H,
+		font = self.PLAYER_NAME_FONT,
+		font_size = self.PLAYER_NAME_FONT_SIZE,
+		text = name
+	})
 
 	self._character_name:set_center_x(self._object:w() / 2)
 	self._character_name:set_center_y(self._object:h() / 2)
@@ -107,10 +112,10 @@ end
 function HUDNameLabel:_create_special_interaction_icon()
 	local gui_icon = tweak_data.gui:get_full_gui_data(HUDNameLabel.LOCKPICK_ICON)
 	self._special_interaction_icon = self._object:bitmap({
-		valign = "center",
 		alpha = 0,
-		name = "special_interaction_icon",
 		halign = "center",
+		valign = "center",
+		name = "special_interaction_icon",
 		texture = gui_icon.texture,
 		texture_rect = gui_icon.texture_rect
 	})
@@ -120,10 +125,10 @@ end
 
 function HUDNameLabel:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
-		valign = "center",
 		alpha = 0,
-		name = "mounted_weapon_icon",
 		halign = "center",
+		valign = "center",
+		name = "mounted_weapon_icon",
 		texture = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.MOUNTED_WEAPON_ICON].texture_rect
 	}
@@ -135,16 +140,16 @@ end
 
 function HUDNameLabel:_create_timer()
 	local timer_panel_params = {
-		alpha = 0,
 		name = "timer_panel",
-		layer = 5
+		layer = 5,
+		alpha = 0
 	}
 	self._timer_panel = self._object:panel(timer_panel_params)
 	local timer_background_params = {
+		layer = 1,
+		halign = "center",
 		valign = "center",
 		name = "timer_background",
-		halign = "center",
-		layer = 1,
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNameLabel.TIMER_BG_ICON].texture_rect
 	}
@@ -154,11 +159,11 @@ function HUDNameLabel:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		name = "timer_bar",
+		render_template = "VertexColorTexturedRadial",
 		layer = 2,
 		halign = "center",
 		valign = "center",
-		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
 		texture = tweak_data.gui.icons[HUDNameLabel.TIMER_BAR_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDNameLabel.TIMER_BAR_ICON),
@@ -175,13 +180,13 @@ function HUDNameLabel:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
-		vertical = "center",
-		name = "timer_text",
 		align = "center",
-		layer = 3,
-		y = 0,
-		x = 0,
 		text = "37",
+		x = 0,
+		layer = 3,
+		name = "timer_text",
+		vertical = "center",
+		y = 0,
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDNameLabel.TIMER_FONT],
@@ -196,10 +201,10 @@ end
 
 function HUDNameLabel:_create_interaction_progress_bar()
 	local interaction_panel_params = {
-		name = "interaction_panel",
 		alpha = 0,
 		halign = "center",
 		valign = "top",
+		name = "interaction_panel",
 		w = HUDNameLabel.INTERACTION_PANEL_W,
 		h = HUDNameLabel.INTERACTION_PANEL_H
 	}
@@ -221,9 +226,9 @@ function HUDNameLabel:_create_interaction_progress_bar()
 	interaction_progress_background:set_center_y(self._interaction_panel:h() / 2)
 
 	local interaction_progress_fill_params = {
-		position_z = 0,
-		name = "interaction_progress_fill",
 		render_template = "VertexColorTexturedRadial",
+		name = "interaction_progress_fill",
+		position_z = 0,
 		texture = tweak_data.gui.icons[HUDNameLabel.PROGRESS_BAR_ICON_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDNameLabel.PROGRESS_BAR_ICON_FILL),
@@ -340,6 +345,16 @@ function HUDNameLabel:complete_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_progress_fill:stop()
 	self._interaction_progress_fill:animate(callback(self, self, "_animate_complete_interact"))
+end
+
+function HUDNameLabel:refresh()
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._character_name:set_text(name)
 end
 
 function HUDNameLabel:_add_active_state(state_id)

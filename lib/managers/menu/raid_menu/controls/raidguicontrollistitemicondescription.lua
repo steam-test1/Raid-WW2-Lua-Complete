@@ -79,8 +79,8 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_title()
 	local title_params = {
-		y = 0,
 		vertical = "center",
+		y = 0,
 		name = "list_item_title_" .. tostring(self._name),
 		x = self._icon:x() + self._icon:w() + RaidGUIControlListItemIconDescription.ICON_PADDING_RIGHT,
 		w = self._params.w,

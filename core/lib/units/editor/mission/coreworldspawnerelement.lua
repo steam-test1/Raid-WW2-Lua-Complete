@@ -19,21 +19,23 @@ function CoreWorldEventUnitElement:selected()
 end
 
 function CoreWorldEventUnitElement:update_selected(t, dt)
+	local script_name = self._unit:mission_element_data().script
+
 	for _, data in ipairs(self._hed.event_list) do
-		self:_draw_world_link(t, dt, data.world_name)
+		self:_draw_world_link(t, dt, data.world_name, script_name)
 	end
 end
 
 function CoreWorldEventUnitElement:update_editing(t, dt)
 end
 
-function CoreWorldEventUnitElement:_draw_world_link(t, dt, world_name)
+function CoreWorldEventUnitElement:_draw_world_link(t, dt, world_name, script_name)
 	local r, g, b = self:get_link_color()
 
 	if self._type == "input" then
-		Application:draw_arrow(self._unit:position(), managers.worldcollection:get_world_position(world_name), r, g, b, 0.2)
+		Application:draw_arrow(self._unit:position(), managers.worldcollection:get_world_position(world_name, script_name), r, g, b, 0.2)
 	else
-		Application:draw_arrow(managers.worldcollection:get_world_position(world_name), self._unit:position(), r, g, b, 0.2)
+		Application:draw_arrow(managers.worldcollection:get_world_position(world_name, script_name), self._unit:position(), r, g, b, 0.2)
 	end
 end
 
@@ -83,11 +85,9 @@ function CoreWorldEventUnitElement:on_world_deleted(name)
 end
 
 function CoreWorldEventUnitElement:_get_events(world_name)
-	if self._type == "input" then
-		return managers.worldcollection:get_mission_elements_from_script(world_name, "ElementWorldInput")
-	else
-		return managers.worldcollection:get_mission_elements_from_script(world_name, "ElementWorldOutput")
-	end
+	local id = self._type == "input" and "ElementWorldInput" or "ElementWorldOutput"
+
+	return managers.worldcollection:get_mission_elements_from_script(world_name, id)
 end
 
 function CoreWorldEventUnitElement:_set_world_by_raycast()
@@ -99,7 +99,7 @@ function CoreWorldEventUnitElement:_set_world_by_raycast()
 end
 
 function CoreWorldEventUnitElement:_add_world_by_name(world_name)
-	local world = managers.worldcollection:world_names()[world_name].world
+	local world = managers.worldcollection:world_names()[self._unit:mission_element_data().script][world_name].world
 	local events = self:_get_events(world)
 	local event_list_data = {
 		world_name = world_name,
@@ -198,8 +198,10 @@ function CoreWorldEventUnitElement:_on_gui_select_world_list()
 	local settings = {
 		list_style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
 	}
-	local names = managers.worldcollection:world_name_ids()
-	local dialog = SelectNameModal:new("Select worlds", names, settings)
+	local script_name = self._unit:mission_element_data().script
+	local names = managers.worldcollection:world_name_ids(script_name)
+	local title = "Select " .. script_name .. "'s worlds"
+	local dialog = SelectNameModal:new(title, names, settings)
 
 	if dialog:cancelled() then
 		return
@@ -223,7 +225,7 @@ function CoreWorldEventUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(btn_toolbar, 0, 1, "EXPAND,LEFT")
 
 	for _, data in pairs(clone(self._hed.event_list)) do
-		local world = managers.worldcollection:world_names()[data.world_name].world
+		local world = managers.worldcollection:world_names()[self._unit:mission_element_data().script][data.world_name].world
 		local events = self:_get_events(world)
 
 		self:_add_world_gui(data.world_name, events, data)
@@ -321,7 +323,7 @@ function CoreWorldSpawnerElement:_build_panel(panel, panel_sizer)
 	local worlds = self:_get_worlds()
 
 	self:_build_value_combobox(panel, panel_sizer, "world", worlds, "Select a world from the combobox")
-	self:_add_help_text("The world that will be loaded")
+	self:_add_help_text("Please select a world to be loaded from the combobox above!\nOn execution or operation type \"spawn\" this point will spawn the selected world at its position.")
 end
 
 function CoreWorldSpawnerElement:_get_worlds()
@@ -347,9 +349,11 @@ end
 
 function CoreWorldSpawnerElement:post_init()
 	CoreWorldSpawnerElement.super.post_init(self)
-	managers.worldcollection:register_editor_position(self._unit:unit_data().name_id, self._unit:position())
+	managers.worldcollection:register_editor_position(self._unit:unit_data().name_id, self._unit:mission_element_data().script, self._unit:position())
 	self:_change_world()
 end
+
+local IDS_RP_WORLDS = Idstring("rp_worlds")
 
 function CoreWorldSpawnerElement:_change_world()
 	self:_delete_low_poly_unit()
@@ -358,17 +362,16 @@ function CoreWorldSpawnerElement:_change_world()
 
 	if world_meta_data then
 		if world_meta_data.low_poly and world_meta_data.low_poly ~= "" then
-			local ids_rp_worlds = Idstring("rp_worlds")
 			self._low_poly_unit = CoreUnit.safe_spawn_unit(world_meta_data.low_poly, self._unit:position(), self._unit:rotation())
 
-			self._unit:link(ids_rp_worlds, self._low_poly_unit)
+			self._unit:link(IDS_RP_WORLDS, self._low_poly_unit)
 		end
 
-		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id, self._hed.world)
+		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id, self._unit:mission_element_data().script, self._hed.world)
 	else
 		self._hed.world = nil
 
-		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id)
+		managers.worldcollection:register_editor_name(self._unit:unit_data().name_id, self._unit:mission_element_data().script, nil)
 	end
 end
 
@@ -404,6 +407,8 @@ end
 function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 	Application:debug("[CoreWorldSpawnerElement:on_name_changed]", old_name, new_name)
 
+	local mission_element_data = self._unit:mission_element_data()
+	local script_name = mission_element_data.script
 	local mission_units = managers.editor:layer("Mission"):get_created_unit_by_pattern({
 		"func_world_input_event",
 		"func_world_output_event",
@@ -413,19 +418,20 @@ function CoreWorldSpawnerElement:on_name_changed(old_name, new_name)
 
 	for _, mission_unit in ipairs(mission_units) do
 		if mission_unit:mission_element().on_world_changed_name then
-			mission_unit:mission_element():on_world_changed_name(old_name, new_name)
-		elseif mission_unit:mission_element_data().world == old_name then
+			mission_unit:mission_element():on_world_changed_name(script_name, old_name, new_name)
+		elseif mission_element_data.world == old_name then
 			self._hed.world = new_name
 		end
 	end
 
-	managers.worldcollection:on_editor_changed_name(old_name, new_name)
+	managers.worldcollection:on_editor_changed_name(script_name, old_name, new_name)
 end
 
 function CoreWorldSpawnerElement:on_world_deleted()
 	Application:debug("[CoreWorldSpawnerElement:on_world_deleted()]")
 
 	local editor_name = self._unit:unit_data().name_id
+	local script_name = self._unit:unit_data().script
 	local mission_units = managers.editor:layer("Mission"):get_created_unit_by_pattern({
 		"func_world_input_event",
 		"func_world_output_event",
@@ -438,5 +444,5 @@ function CoreWorldSpawnerElement:on_world_deleted()
 		end
 	end
 
-	managers.worldcollection:unregister_editor_name(editor_name)
+	managers.worldcollection:unregister_editor_name(editor_name, script_name)
 end

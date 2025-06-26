@@ -51,12 +51,12 @@ end
 
 function HUDToastNotification:_create_title()
 	self._title = self._object:text({
+		valign = "center",
+		name = "text",
+		halign = "center",
 		vertical = "center",
 		align = "center",
 		text = "OBJECTIVE ACTIVATED",
-		name = "text",
-		valign = "center",
-		halign = "center",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
 		font_size = HUDToastNotification.TITLE_FONT_SIZE,
 		color = HUDToastNotification.TITLE_COLOR,
@@ -70,12 +70,12 @@ end
 
 function HUDToastNotification:_create_text()
 	self._text = self._object:text({
+		valign = "center",
+		name = "text",
+		halign = "center",
 		vertical = "center",
 		align = "center",
 		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
-		name = "text",
-		valign = "center",
-		halign = "center",
 		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
 		font_size = HUDToastNotification.TEXT_FONT_SIZE,
 		color = HUDToastNotification.TEXT_COLOR,
@@ -99,8 +99,8 @@ function HUDToastNotification:_create_icon()
 	self._icon_panel:set_center(self._object:w() / 2, self._object:h() / 2)
 
 	self._icon = self._icon_panel:bitmap({
-		name = "icon",
 		rotation = 360,
+		name = "icon",
 		color = HUDToastNotification.ICON_COLOR
 	})
 	local blur = self._icon_panel:bitmap({

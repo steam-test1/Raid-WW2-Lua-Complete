@@ -3,8 +3,16 @@ CoreTimerUnitElement.SAVE_UNIT_POSITION = false
 CoreTimerUnitElement.SAVE_UNIT_ROTATION = false
 CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "timer",
-		type = "number"
+		type = "number",
+		value = "timer"
+	}
+}
+CoreTimerUnitElement.LINK_VALUES = {
+	{
+		type = "guis",
+		output = true,
+		layer = "Statics",
+		table_value = "digital_gui_unit_ids"
 	}
 }
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
@@ -110,8 +118,8 @@ end
 
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -122,8 +130,8 @@ end
 
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -179,8 +187,8 @@ function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 		remove_result = callback(self, self, "_remove_unit")
 	})
 	self:_build_value_number(panel, panel_sizer, "timer", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Specifies how long time (in seconds) to wait before execute")
 	self:_add_help_text("Creates a timer element. When the timer runs out, execute will be run. The timer element can be operated on using the logic_timer_operator")
 end
@@ -194,6 +202,13 @@ function CoreTimerUnitElement:unregister_debug_output_unit()
 end
 
 CoreTimerOperatorUnitElement = CoreTimerOperatorUnitElement or class(MissionElement)
+CoreTimerOperatorUnitElement.LINK_VALUES = {
+	{
+		type = "operator",
+		output = true,
+		table_value = "elements"
+	}
+}
 TimerOperatorUnitElement = TimerOperatorUnitElement or class(CoreTimerOperatorUnitElement)
 
 function TimerOperatorUnitElement:init(...)
@@ -231,18 +246,13 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
-function CoreTimerOperatorUnitElement:get_links_to_unit(...)
-	CoreTimerOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
 function CoreTimerOperatorUnitElement:update_editing()
 end
 
 function CoreTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("core/units/mission_elements/logic_timer/logic_timer") or ray.unit:name() == Idstring("core/units/mission_elements/logic_timer_hud/logic_timer_hud")) then
@@ -290,13 +300,19 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 		"hide_hud_timer"
 	}, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "time", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Amount of time to add, subtract or set to the timers.")
 	self:_add_help_text("This element can modify logic_timer element. Select timers to modify using insert and clicking on the elements.")
 end
 
 CoreTimerTriggerUnitElement = CoreTimerTriggerUnitElement or class(MissionElement)
+CoreTimerTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_value = "elements"
+	}
+}
 TimerTriggerUnitElement = TimerTriggerUnitElement or class(CoreTimerTriggerUnitElement)
 
 function TimerTriggerUnitElement:init(...)
@@ -332,18 +348,13 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
-function CoreTimerTriggerUnitElement:get_links_to_unit(...)
-	CoreTimerTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
 function CoreTimerTriggerUnitElement:update_editing()
 end
 
 function CoreTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("core/units/mission_elements/logic_timer/logic_timer") or ray.unit:name() == Idstring("core/units/mission_elements/logic_timer_hud/logic_timer_hud")) then
@@ -381,8 +392,8 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 	self:_build_value_number(panel, panel_sizer, "time", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Specify how much time should be left on the timer to trigger.")
 	self:_add_help_text("This element is a trigger to logic_timer element.")
 end

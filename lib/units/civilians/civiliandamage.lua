@@ -20,10 +20,6 @@ function CivilianDamage:die(variant)
 		end
 	end
 
-	if alive(managers.interaction:active_unit()) then
-		managers.interaction:active_unit():interaction():selected()
-	end
-
 	variant = variant or "bullet"
 	self._health = 0
 	self._health_ratio = 0
@@ -59,7 +55,7 @@ function CivilianDamage:print(...)
 end
 
 function CivilianDamage:_unregister_from_enemy_manager(damage_info)
-	managers.enemy:on_civilian_died(self._unit, damage_info)
+	managers.enemy:unregister_civilian(self._unit, damage_info)
 end
 
 function CivilianDamage:damage_bullet(attack_data)

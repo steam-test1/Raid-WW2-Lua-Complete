@@ -1,4 +1,14 @@
 EscortUnitElement = EscortUnitElement or class(MissionElement)
+EscortUnitElement.LINK_VALUES = {
+	{
+		table_value = "spawn_elements"
+	},
+	{
+		layer = "next",
+		output = true,
+		table_value = "next_points"
+	}
+}
 
 function EscortUnitElement:init(unit)
 	EscortUnitElement.super.init(self, unit)
@@ -27,8 +37,8 @@ end
 function EscortUnitElement:_raycast_get_type()
 	local unit_type, unit, id = nil
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit then
@@ -80,9 +90,9 @@ function EscortUnitElement:test_element()
 
 	test_unit:anim_data().panic = true
 	local action = {
+		clamp_to_graph = true,
 		type = "act",
 		body_part = 1,
-		clamp_to_graph = true,
 		variant = self._hed.break_so
 	}
 

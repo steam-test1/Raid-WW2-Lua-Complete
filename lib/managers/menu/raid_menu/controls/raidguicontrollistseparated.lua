@@ -1,7 +1,10 @@
-RaidGUIControlListSeparated = RaidGUIControlListSeparated or class(RaidGUIControlList)
+RaidGUIControlListSeparated = RaidGUIControlListSeparated or class(RaidGUIControlSingleSelectList)
 RaidGUIControlListSeparated.SEPARATOR_HEIGHT = 1
 RaidGUIControlListSeparated.SEPARATOR_UNSELECTED_COLOR = tweak_data.gui.colors.raid_dirty_white
 RaidGUIControlListSeparated.SEPARATOR_SELECTED_COLOR = tweak_data.gui.colors.raid_red
+RaidGUIControlListSeparated.SEPARATOR_LEFT = "list_separator_left"
+RaidGUIControlListSeparated.SEPARATOR_CENTER = "list_separator_center"
+RaidGUIControlListSeparated.SEPARATOR_RIGHT = "list_separator_right"
 
 function RaidGUIControlListSeparated:init(parent, params)
 	params.separator_height = params.separator_height or RaidGUIControlListSeparated.SEPARATOR_HEIGHT
@@ -10,11 +13,14 @@ function RaidGUIControlListSeparated:init(parent, params)
 	self._special_action_callback = params.special_action_callback
 	self._selected_callback = params.selected_callback
 	self._unselected_callback = params.unselected_callback
-	self._mouse_enter_callback = callback(self, self, "on_mouse_enter")
-	self._mouse_exit_callback = callback(self, self, "on_mouse_exit")
 	self._separator_items = {}
 
 	RaidGUIControlListSeparated.super.init(self, parent, params)
+end
+
+function RaidGUIControlListSeparated:refresh_data()
+	self._object:stop()
+	RaidGUIControlListSeparated.super.refresh_data(self)
 end
 
 function RaidGUIControlListSeparated:_delete_items()
@@ -24,9 +30,6 @@ function RaidGUIControlListSeparated:_delete_items()
 end
 
 function RaidGUIControlListSeparated:_create_item(item_class, item_params, item_data)
-	item_params.on_mouse_enter_callback = self._mouse_enter_callback
-	item_params.on_mouse_exit_callback = self._mouse_exit_callback
-
 	if self._special_action_callback then
 		item_params.special_action_callback = self._special_action_callback
 	end
@@ -45,15 +48,12 @@ function RaidGUIControlListSeparated:_create_item(item_class, item_params, item_
 end
 
 function RaidGUIControlListSeparated:_create_separator(parent_item)
-	local texture_left = "list_separator_left"
-	local texture_right = "list_separator_right"
-	local texture_center = "list_separator_center"
 	local separator = self._object:three_cut_bitmap({
 		y = parent_item and parent_item:bottom(),
 		h = self._list_params.separator_height,
-		left = texture_left,
-		center = texture_center,
-		right = texture_right,
+		left = self.SEPARATOR_LEFT,
+		center = self.SEPARATOR_CENTER,
+		right = self.SEPARATOR_RIGHT,
 		color = self.SEPARATOR_UNSELECTED_COLOR
 	})
 
@@ -83,7 +83,7 @@ function RaidGUIControlListSeparated:set_selected(value, dont_trigger_selected_c
 				item:unselect()
 
 				if idx == self._selected_item_idx then
-					item:highlight_on()
+					item:highlight_off()
 				end
 			end
 		end
@@ -91,6 +91,8 @@ function RaidGUIControlListSeparated:set_selected(value, dont_trigger_selected_c
 		if self._unselected_callback then
 			self._unselected_callback()
 		end
+
+		self._highlighted_item_idx = nil
 	end
 end
 
@@ -103,9 +105,7 @@ function RaidGUIControlListSeparated:_select_item(item, dont_trigger_selected_ca
 end
 
 function RaidGUIControlListSeparated:on_mouse_enter(button, data)
-	if self._selected_item and self._selected_item ~= button then
-		self._selected_item:unselect()
-	end
+	RaidGUIControlListSeparated.super.on_mouse_enter(self, button, data)
 
 	local index = data.key
 

@@ -1,26 +1,35 @@
 CarryData = CarryData or class()
+local mvec1 = Vector3()
+local ids_mat_effect = Idstring("mat_effect")
+local ids_uv0_offset = Idstring("uv0_offset")
+local ids_uv0_speed = Idstring("uv0_speed")
 CarryData.EVENT_IDS = {
 	will_explode = 1,
 	explode = 2
+}
+CarryData.IDS_CARRY_DATA = Idstring("carry_data")
+CarryData.EXPLOSION_SETTINGS = {
+	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
+	curve_pow = 3,
+	damage = 40,
+	player_damage = 20,
+	range = 1000
+}
+CarryData.EXPLOSION_CUSTOM_PARAMS = {
+	camera_shake_mul = 4,
+	effect = CarryData.EXPLOSION_SETTINGS.effect
 }
 
 function CarryData:init(unit)
 	self._unit = unit
 	self._value = 0
 	self._grab_body = self.grab_body
+	self._level_bounds_z = managers.raid_job:current_level_bounds_z()
 
-	if self._disable_update then
-		Application:debug("CarryData:init disabled!")
-		self._unit:set_extension_update_enabled(Idstring("carry_data"), false)
-	end
-
+	self._unit:set_extension_update_enabled(self.IDS_CARRY_DATA, false)
 	self:_randomize_glow_effect()
 	managers.occlusion:remove_occlusion(self._unit)
 end
-
-local ids_mat_effect = Idstring("mat_effect")
-local ids_uv0_offset = Idstring("uv0_offset")
-local ids_uv0_speed = Idstring("uv0_speed")
 
 function CarryData:_randomize_glow_effect()
 	local material = self._unit:material(ids_mat_effect)
@@ -37,7 +46,7 @@ function CarryData:_randomize_glow_effect()
 end
 
 function CarryData:_set_tweakdata_vis()
-	local show_objects = tweak_data.carry[self._carry_id].show_objects
+	local show_objects = tweak_data.carry[self:carry_id()].show_objects
 
 	if show_objects then
 		for k, v in pairs(show_objects) do
@@ -122,7 +131,21 @@ function CarryData:can_explode()
 		return false
 	end
 
-	return tweak_data.carry[self._carry_id].can_explode
+	return tweak_data.carry[self:carry_id()].can_explode
+end
+
+function CarryData:can_out_of_world_respawn()
+	if self._disarmed then
+		return false
+	end
+
+	local carry_tweak_data = tweak_data.carry[self:carry_id()]
+
+	if carry_tweak_data.is_corpse and not carry_tweak_data.ignore_corpse_cleanup then
+		return false
+	end
+
+	return true
 end
 
 function CarryData:start_explosion()
@@ -139,6 +162,10 @@ function CarryData:start_explosion()
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "carry_data", CarryData.EVENT_IDS.will_explode)
 
 	self._explode_t = Application:time() + 1 + math.rand(3)
+
+	if Network:is_server() then
+		self._unit:set_extension_update_enabled(self.IDS_CARRY_DATA, true)
+	end
 end
 
 function CarryData:_start_explosion()
@@ -155,19 +182,6 @@ function CarryData:bullet_hit()
 		self:_explode()
 	end
 end
-
-CarryData.EXPLOSION_SETTINGS = {
-	damage = 40,
-	player_damage = 20,
-	range = 1000,
-	effect = "effects/vanilla/explosions/exp_bag_explosion_001",
-	curve_pow = 3
-}
-CarryData.EXPLOSION_CUSTOM_PARAMS = {
-	camera_shake_mul = 4,
-	effect = CarryData.EXPLOSION_SETTINGS.effect
-}
-local mvec1 = Vector3()
 
 function CarryData:_explode()
 	managers.mission:call_global_event("loot_exploded")
@@ -247,29 +261,33 @@ function CarryData:clbk_out_of_world()
 		self._register_out_of_world_dynamic_clbk_id = nil
 
 		return
-	elseif self._unit:position().z < PlayerMovement.OUT_OF_WORLD_Z then
-		self._bodies_to_revert = {}
-		local bodies = self._unit:num_bodies()
+	elseif self._unit:position().z < self._level_bounds_z then
+		if self:can_out_of_world_respawn() then
+			self._bodies_to_revert = {}
+			local bodies = self._unit:num_bodies()
 
-		for i_body = 0, bodies - 1 do
-			local body = self._unit:body(i_body)
+			for i_body = 0, bodies - 1 do
+				local body = self._unit:body(i_body)
 
-			if body:enabled() and body:dynamic() then
-				table.insert(self._bodies_to_revert, body)
-				body:set_keyframed()
+				if body:enabled() and body:dynamic() then
+					table.insert(self._bodies_to_revert, body)
+					body:set_keyframed()
+				end
 			end
+
+			local tracker = managers.navigation:create_nav_tracker(self._unit:position(), false)
+
+			self._unit:set_position(tracker:field_position())
+			managers.navigation:destroy_nav_tracker(tracker)
+
+			self._register_out_of_world_dynamic_clbk_id = "BagOutOfWorldDynamic" .. tostring(self._unit:key())
+
+			managers.enemy:add_delayed_clbk(self._register_out_of_world_dynamic_clbk_id, callback(self, self, "clbk_out_of_world"), TimerManager:game():time() + 0.2)
+
+			self._register_out_of_world_clbk_id = nil
+		else
+			self._unit:set_slot(0)
 		end
-
-		local tracker = managers.navigation:create_nav_tracker(self._unit:position(), false)
-
-		self._unit:set_position(tracker:field_position())
-		managers.navigation:destroy_nav_tracker(tracker)
-
-		self._register_out_of_world_dynamic_clbk_id = "BagOutOfWorldDynamic" .. tostring(self._unit:key())
-
-		managers.enemy:add_delayed_clbk(self._register_out_of_world_dynamic_clbk_id, callback(self, self, "clbk_out_of_world"), TimerManager:game():time() + 0.2)
-
-		self._register_out_of_world_clbk_id = nil
 
 		return
 	end
@@ -290,7 +308,7 @@ function CarryData:set_carry_id(carry_id)
 end
 
 function CarryData:carry_tweak_data()
-	return tweak_data.carry[self._carry_id]
+	return tweak_data.carry[self:carry_id()]
 end
 
 function CarryData:clbk_register_steal_SO(carry_id)
@@ -364,7 +382,7 @@ function CarryData:_chk_register_steal_SO()
 		return
 	end
 
-	local tweak_info = tweak_data.carry[self._carry_id]
+	local tweak_info = tweak_data.carry[self:carry_id()]
 	local AI_carry = tweak_info.AI_carry
 
 	if not AI_carry then
@@ -410,41 +428,41 @@ function CarryData:_chk_register_steal_SO()
 	end
 
 	local drop_objective = {
+		haste = "walk",
+		interrupt_dis = 700,
+		pose = "crouch",
 		type = "act",
 		interrupt_health = 0.9,
-		interrupt_dis = 700,
-		haste = "walk",
 		action_duration = 2,
-		pose = "crouch",
 		nav_seg = drop_nav_seg,
 		pos = drop_pos,
 		area = drop_area,
 		fail_clbk = callback(self, self, "on_secure_SO_failed"),
 		complete_clbk = callback(self, self, "on_secure_SO_completed"),
 		action = {
-			body_part = 1,
 			type = "act",
-			variant = "untie",
-			align_sync = true
+			body_part = 1,
+			align_sync = true,
+			variant = "untie"
 		}
 	}
 	local pickup_objective = {
+		haste = "run",
+		interrupt_dis = 700,
+		pose = "crouch",
 		destroy_clbk_key = false,
 		type = "act",
 		interrupt_health = 0.9,
-		interrupt_dis = 700,
-		haste = "run",
-		pose = "crouch",
 		nav_seg = pickup_nav_seg,
 		area = pickup_area,
 		pos = pickup_pos,
 		fail_clbk = callback(self, self, "on_pickup_SO_failed"),
 		complete_clbk = callback(self, self, "on_pickup_SO_completed"),
 		action = {
-			body_part = 1,
 			type = "act",
-			variant = "untie",
-			align_sync = true
+			body_part = 1,
+			align_sync = true,
+			variant = "untie"
 		},
 		action_duration = math.lerp(1, 2.5, math.random()),
 		followup_objective = drop_objective
@@ -703,7 +721,7 @@ end
 
 function CarryData:save(data)
 	local state = {
-		carry_id = self._carry_id,
+		carry_id = self:carry_id(),
 		value = self._value
 	}
 

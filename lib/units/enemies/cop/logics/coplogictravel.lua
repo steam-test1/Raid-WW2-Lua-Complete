@@ -149,12 +149,17 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 		})
 	end
 
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+		my_data.weapon_range_max = data.char_tweak.weapon[usage].max_range
+		my_data.additional_weapon_stats = data.char_tweak.weapon[usage].additional_weapon_stats
+	end
+
 	my_data.attitude = data.objective.attitude or "avoid"
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
-	my_data.weapon_range_max = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].max_range
-	my_data.additional_weapon_stats = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].additional_weapon_stats
-	my_data.path_safely = data.team.foes[tweak_data.levels:get_default_team_ID("player")]
 	my_data.path_ahead = data.objective.path_ahead or false
+	my_data.path_safely = data.team.foes[tweak_data.levels:get_default_team_ID("player")]
 
 	data.unit:brain():set_update_enabled_state(false)
 
@@ -194,12 +199,6 @@ function CopLogicTravel.queued_update(data)
 		return
 	end
 
-	if not delay then
-		debug_pause_unit(data.unit, "[CopLogicTravel] No delay", inspect(data))
-
-		delay = 1
-	end
-
 	CopLogicTravel.queue_update(data, data.internal_data, delay)
 end
 
@@ -212,7 +211,13 @@ function CopLogicTravel.upd_advance(data)
 
 	if my_data.has_old_action then
 		CopLogicAttack._upd_stop_old_action(data, my_data)
-	elseif my_data.warp_pos then
+
+		if my_data.has_old_action then
+			return
+		end
+	end
+
+	if my_data.warp_pos then
 		data.unit:movement():set_position(objective.pos)
 
 		if objective.rot then
@@ -751,22 +756,14 @@ function CopLogicTravel._investigate_coarse_path_verify_clbk(shait, nav_seg)
 	return managers.groupai:state():is_nav_seg_safe(nav_seg)
 end
 
-function CopLogicTravel.on_intimidated(data, amount, aggressor_unit)
-	local surrender = CopLogicBase.on_intimidated(data, amount, aggressor_unit)
-
-	if surrender and data.objective then
-		data.objective_failed_clbk(data.unit, data.objective)
-	end
-end
-
 function CopLogicTravel._chk_request_action_walk_to_advance_pos(data, my_data, speed, end_rot, no_strafe, end_pose)
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		CopLogicAttack._adjust_path_start_pos(data, my_data.advance_path)
 
 		local path = my_data.advance_path
 		local new_action_data = {
-			body_part = 2,
 			type = "walk",
+			body_part = 2,
 			nav_path = path,
 			variant = speed or "run",
 			end_rot = end_rot,
@@ -797,29 +794,28 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 			occupation = {
 				type = "defend",
 				seg = objective.nav_seg,
-				cover = objective.cover,
-				radius = objective.radius
+				radius = objective.radius,
+				cover = objective.cover
 			}
 		elseif objective.pos then
 			occupation = {
 				type = "defend",
 				seg = objective.nav_seg,
-				pos = objective.pos,
-				radius = objective.radius
+				radius = objective.radius,
+				pos = objective.pos
 			}
 		else
 			local near_pos = objective.follow_unit and objective.follow_unit:movement():nav_tracker():field_position()
 			local cover = CopLogicTravel._find_cover(data, objective.nav_seg, near_pos)
 
 			if cover then
-				local cover_entry = {
-					cover
-				}
 				occupation = {
 					type = "defend",
 					seg = objective.nav_seg,
-					cover = cover_entry,
-					radius = objective.radius
+					radius = objective.radius,
+					cover = {
+						cover
+					}
 				}
 			else
 				local nav_seg = managers.navigation._nav_segments[objective.nav_seg]
@@ -829,8 +825,8 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 					occupation = {
 						type = "defend",
 						seg = objective.nav_seg,
-						pos = near_pos,
-						radius = objective.radius
+						radius = objective.radius,
+						pos = near_pos
 					}
 				else
 					debug_pause("[CopLogicTravel._determine_destination_occupation] Can't find nav_seg for the objective!?", inspect(objective), inspect(managers.navigation._nav_segments))
@@ -870,12 +866,11 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 		local cover = managers.navigation:find_cover_in_nav_seg_3(dest_area.nav_segs, nil, follow_pos, threat_pos)
 
 		if cover then
-			local cover_entry = {
-				cover
-			}
 			occupation = {
 				type = "defend",
-				cover = cover_entry
+				cover = {
+					cover
+				}
 			}
 		else
 			local max_dist = nil
@@ -923,7 +918,7 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 			revive_u_pos = ray_params.trace[1]
 		end
 
-		local rand_side_mul = math.random() > 0.5 and 1 or -1
+		local rand_side_mul = math.rand_bool() and 1 or -1
 		local revive_pos = mvector3.copy(revive_u_right)
 
 		mvector3.multiply(revive_pos, rand_side_mul * stand_dis)
@@ -939,14 +934,13 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 			mvector3.add(opposite_pos, revive_u_pos)
 
 			ray_params.pos_to = opposite_pos
-			local old_trace = ray_params.trace[1]
 			local opposite_ray_res = managers.navigation:raycast(ray_params)
 
 			if opposite_ray_res then
 				if mvector3.distance(revive_pos, revive_u_pos) < mvector3.distance(ray_params.trace[1], revive_u_pos) then
 					revive_pos = ray_params.trace[1]
 				else
-					revive_pos = old_trace
+					revive_pos = ray_params.trace[1]
 				end
 			else
 				revive_pos = ray_params.trace[1]
@@ -1697,7 +1691,7 @@ function CopLogicTravel._chk_begin_advance(data, my_data)
 		end_pose = "crouch"
 	end
 
-	if data.unit:brain().is_flamer then
+	if data.char_tweak.never_strafe then
 		no_strafe = true
 	end
 

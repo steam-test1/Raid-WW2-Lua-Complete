@@ -1,8 +1,8 @@
 NavLinkUnitElement = NavLinkUnitElement or class(MissionElement)
 NavLinkUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		type = "special_objective_action",
-		value = "so_action"
+		value = "so_action",
+		type = "special_objective_action"
 	}
 }
 NavLinkUnitElement._AI_SO_types = {
@@ -44,6 +44,13 @@ NavLinkUnitElement.PRESETS = {
 	heavies = {
 		"shield",
 		"tank"
+	}
+}
+NavLinkUnitElement.LINK_VALUES = {
+	{
+		table_value = "followup_elements",
+		output = true,
+		type = "followup"
 	}
 }
 
@@ -160,8 +167,6 @@ function NavLinkUnitElement:stop_test_element()
 	end
 
 	if self._start_test_t then
-		print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
-
 		self._start_test_t = nil
 	end
 
@@ -352,6 +357,12 @@ function NavLinkUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
+function NavLinkUnitElement:aim_unit(pos)
+	if pos then
+		self._hed.search_position = pos
+	end
+end
+
 function NavLinkUnitElement:selected()
 	NavLinkUnitElement.super.selected(self)
 end
@@ -435,11 +446,11 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		name = "Preset:",
-		tooltip = "Select a preset.",
-		ctrlr_proportions = 2,
 		sorted = true,
 		name_proportions = 1,
+		ctrlr_proportions = 2,
+		name = "Preset:",
+		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
 		options = {
@@ -502,8 +513,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, ElementSpecialObjective._ATTITUDES), "Select combat attitude.")
 	self:_build_value_number(panel, panel_sizer, "interval", {
-		min = -1,
-		floats = 2
+		floats = 2,
+		min = -1
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 
 	local test_units = table.list_add(SpawnCivilianUnitElement._options, managers.enemy:enemy_units())

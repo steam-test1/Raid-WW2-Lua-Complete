@@ -547,14 +547,9 @@ function NodeGui:update(t, dt)
 			self._item_panel_y.current = math.lerp(self.item_panel:center_y(), self._item_panel_y.target, dt * 10)
 
 			self.item_panel:set_center_y(self._item_panel_y.current)
-			self:_set_topic_position()
 		end
-	elseif scrolled then
-		if self._item_panel_y and self._item_panel_y.target and self.item_panel:center_y() ~= self._item_panel_y.target then
-			self._item_panel_y.current = math.lerp(self.item_panel:center_y(), self._item_panel_y.target, dt * 10)
-		end
-
-		self:_set_topic_position()
+	elseif scrolled and self._item_panel_y and self._item_panel_y.target and self.item_panel:center_y() ~= self._item_panel_y.target then
+		self._item_panel_y.current = math.lerp(self.item_panel:center_y(), self._item_panel_y.target, dt * 10)
 	end
 end
 
@@ -578,9 +573,6 @@ function NodeGui:_set_icon_position(row_item)
 		row_item.icon:set_center_y(row_item.gui_panel:center_y())
 		row_item.icon:set_color(row_item.gui_panel:color())
 	end
-end
-
-function NodeGui:_set_topic_position()
 end
 
 function NodeGui:_item_panel_height()
@@ -713,12 +705,7 @@ function NodeGui:_setup_size()
 
 			break
 		end
-
-		self:_setup_item_size(row_item)
 	end
-end
-
-function NodeGui:_setup_item_size(row_item)
 end
 
 function NodeGui:mouse_pressed(button, x, y)

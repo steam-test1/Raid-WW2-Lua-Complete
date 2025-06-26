@@ -58,10 +58,10 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	self._ip_verified = false
 	self._is_drop_in = false
 	self._dlcs = {
-		dlc1 = false,
 		dlc4 = false,
 		dlc3 = false,
-		dlc2 = false
+		dlc2 = false,
+		dlc1 = false
 	}
 
 	self:chk_enable_queue()
@@ -83,8 +83,8 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	end
 
 	self._profile = {
-		outfit_string = "",
-		editor = nil
+		msg = nil,
+		outfit_string = ""
 	}
 	self._handshakes = {}
 	self._streaming_status = 0
@@ -1420,7 +1420,7 @@ function NetworkPeer:_reload_outfit()
 	new_outfit_assets.unit.primary_w = {
 		name = ids_primary_u_name
 	}
-	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
+	local use_fps_parts = is_local_peer
 	local primary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.primary.factory_id, complete_outfit.primary.blueprint, not use_fps_parts, function ()
 	end, true)
 
@@ -1435,7 +1435,7 @@ function NetworkPeer:_reload_outfit()
 	new_outfit_assets.unit.secondary_w = {
 		name = ids_secondary_u_name
 	}
-	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
+	local use_fps_parts = is_local_peer
 	local secondary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.secondary.factory_id, complete_outfit.secondary.blueprint, not use_fps_parts, function ()
 	end, true)
 
@@ -1641,23 +1641,17 @@ function NetworkPeer:sync_lobby_data(peer)
 
 	local level = managers.experience:current_level()
 	local character = self:character()
-	local mask_set = "remove"
 	local progress = managers.upgrades:progress()
 	local menu_state = managers.menu:get_peer_state(self:id())
 	local menu_state_index = tweak_data:menu_sync_state_to_index(menu_state)
 
 	cat_print("multiplayer_base", "NetworkPeer:sync_lobby_data to", peer:id(), " : ", self:id(), level)
-	peer:send_after_load("lobby_info", level, character, mask_set)
+	peer:send_after_load("lobby_info", level, character)
 	peer:send_after_load("sync_profile", level, self._class)
 	managers.network:session():check_send_outfit()
 
 	if menu_state_index then
 		peer:send_after_load("set_menu_sync_state_index", menu_state_index)
-	end
-
-	if Network:is_server() then
-		peer:send_after_load("lobby_sync_update_level_id", tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id))
-		peer:send_after_load("lobby_sync_update_difficulty", Global.game_settings.difficulty)
 	end
 end
 
@@ -1717,16 +1711,15 @@ function NetworkPeer:_spawn_unit_on_dropin()
 	end
 
 	local character_name = self:character()
-	local member_downed, member_dead, health, used_deployable, hostages_killed, respawn_penalty, old_plr_entry = self:_get_old_entry()
+	local member_downed, member_dead, health, used_deployable, respawn_penalty, old_plr_entry = self:_get_old_entry()
 
 	if old_plr_entry then
 		old_plr_entry.member_downed = nil
 		old_plr_entry.member_dead = nil
-		old_plr_entry.hostages_killed = nil
 		old_plr_entry.respawn_penalty = nil
 	end
 
-	local trade_entry, old_unit = managers.groupai:state():remove_one_teamAI(character_name, member_downed or member_dead)
+	local trade_entry, old_unit = managers.groupai:state():remove_one_criminal_ai(character_name, member_downed or member_dead)
 
 	if trade_entry and member_dead then
 		trade_entry.peer_id = self._id
@@ -1736,7 +1729,7 @@ function NetworkPeer:_spawn_unit_on_dropin()
 	local ai_is_downed = false
 
 	if alive(old_unit) then
-		ai_is_downed = old_unit:character_damage():bleed_out() or old_unit:character_damage():fatal() or old_unit:character_damage():need_revive() or old_unit:character_damage():dead()
+		ai_is_downed = old_unit:character_damage():bleed_out() or old_unit:character_damage():need_revive() or old_unit:character_damage():dead()
 
 		World:delete_unit(old_unit)
 	end
@@ -1761,7 +1754,6 @@ function NetworkPeer:_spawn_unit_on_dropin()
 		managers.criminals:sync_teamai_to_peer(self)
 	end
 
-	managers.groupai:state():set_dropin_hostages_killed(unit, hostages_killed, respawn_penalty)
 	self:set_used_deployable(used_deployable)
 
 	if is_local_peer then
@@ -1839,21 +1831,20 @@ end
 function NetworkPeer:_get_old_entry(null_old_entry_elements)
 	local peer_ident = IS_PC and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
-	local member_downed = nil
+	local member_downed, member_dead = nil
 	local health = 1
 	local used_deployable = false
-	local member_dead, hostages_killed, respawn_penalty = nil
+	local respawn_penalty = nil
 
 	if old_plr_entry and Application:time() < old_plr_entry.t + 180 then
 		member_downed = old_plr_entry.member_downed
 		health = old_plr_entry.health
 		used_deployable = old_plr_entry.used_deployable
 		member_dead = old_plr_entry.member_dead
-		hostages_killed = old_plr_entry.hostages_killed
 		respawn_penalty = old_plr_entry.respawn_penalty
 	end
 
-	return member_downed, member_dead, health, used_deployable, hostages_killed, respawn_penalty, old_plr_entry
+	return member_downed, member_dead, health, used_deployable, respawn_penalty, old_plr_entry
 end
 
 function NetworkPeer:spawn_unit_called()

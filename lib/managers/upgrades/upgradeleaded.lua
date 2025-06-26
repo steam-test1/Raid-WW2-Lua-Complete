@@ -2,7 +2,7 @@ local UpgradeLeaded = {
 	check_activate = function (self)
 		managers.system_event_listener:remove_listener("leaded_sponge_damage")
 
-		if managers.player:has_category_upgrade("player", "leaded_ammo_sponge") then
+		if alive(managers.player:local_player()) and managers.player:has_category_upgrade("player", "leaded_ammo_sponge") then
 			managers.system_event_listener:add_listener("leaded_sponge_damage", {
 				CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGE_TAKEN
 			}, callback(self, self, "_on_damage_taken"))

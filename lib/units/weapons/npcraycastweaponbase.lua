@@ -20,7 +20,6 @@ function NPCRaycastWeaponBase:init(unit)
 	self:_create_use_setups()
 
 	self._setup = {}
-	self._digest_values = false
 
 	self:set_ammo_max(tweak_data.weapon[self._name_id].AMMO_MAX)
 	self:set_ammo_total(self:get_ammo_max())
@@ -56,7 +55,6 @@ function NPCRaycastWeaponBase:init(unit)
 		position = Vector3(),
 		normal = Vector3()
 	}
-	self._flashlight_light_lod_enabled = true
 
 	if false and self._multivoice then
 		if not NPCRaycastWeaponBase._next_i_voice[self._name_id] then
@@ -72,17 +70,6 @@ function NPCRaycastWeaponBase:init(unit)
 		end
 	else
 		self._voice = "a"
-	end
-
-	if self._unit:get_object(Idstring("ls_flashlight")) then
-		self._flashlight_data = {
-			light = self._unit:get_object(Idstring("ls_flashlight")),
-			effect = self._unit:effect_spawner(Idstring("flashlight"))
-		}
-
-		self._flashlight_data.light:set_far_range(400)
-		self._flashlight_data.light:set_spot_angle_end(25)
-		self._flashlight_data.light:set_multiplier(2)
 	end
 
 	if tweak_data.weapon[self._name_id].has_suppressor then
@@ -115,7 +102,6 @@ function NPCRaycastWeaponBase:setup(setup_data)
 	self._character_slotmask = managers.slot:get_mask("raycastable_characters")
 	self._hit_player = setup_data.hit_player and true or false
 	self._setup = setup_data
-	self._setup.user_sound_variant = 1
 end
 
 function NPCRaycastWeaponBase:start_autofire(nr_shots)
@@ -337,70 +323,6 @@ function NPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 
 	if col_ray then
 		World:effect_manager():set_remaining_lifetime(trail, math.clamp((col_ray.distance - 600) / 10000, 0, col_ray.distance))
-	end
-end
-
-function NPCRaycastWeaponBase:has_flashlight_on()
-	return self._flashlight_data and self._flashlight_data.on and true or false
-end
-
-function NPCRaycastWeaponBase:flashlight_data()
-	return self._flashlight_data
-end
-
-function NPCRaycastWeaponBase:flashlight_state_changed()
-	if not self._flashlight_data then
-		return
-	end
-
-	if not self._flashlight_data.enabled or self._flashlight_data.dropped then
-		return
-	end
-
-	if managers.game_play_central:flashlights_on() then
-		self._flashlight_data.light:set_enable(self._flashlight_light_lod_enabled)
-		self._flashlight_data.effect:activate()
-
-		self._flashlight_data.on = true
-	else
-		self._flashlight_data.light:set_enable(false)
-		self._flashlight_data.effect:kill_effect()
-
-		self._flashlight_data.on = false
-	end
-end
-
-function NPCRaycastWeaponBase:set_flashlight_enabled(enabled)
-	if not self._flashlight_data then
-		return
-	end
-
-	self._flashlight_data.enabled = enabled
-
-	if managers.game_play_central:flashlights_on() and enabled then
-		self._flashlight_data.light:set_enable(self._flashlight_light_lod_enabled)
-		self._flashlight_data.effect:activate()
-
-		self._flashlight_data.on = true
-	else
-		self._flashlight_data.light:set_enable(false)
-		self._flashlight_data.effect:kill_effect()
-
-		self._flashlight_data.on = false
-	end
-end
-
-function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
-	if not self._flashlight_data then
-		return
-	end
-
-	self._flashlight_light_lod_enabled = enabled
-
-	if self._flashlight_data.on and enabled then
-		self._flashlight_data.light:set_enable(true)
-	else
-		self._flashlight_data.light:set_enable(false)
 	end
 end
 

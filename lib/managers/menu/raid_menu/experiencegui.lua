@@ -31,8 +31,8 @@ function ExperienceGui:_layout()
 	local menu_shift = 140
 	local left_padding = 8
 	self._menu_left_side = self._object:panel({
-		layer = 1,
 		name = "menu_left_side",
+		layer = 1,
 		y = left_padding,
 		h = self._object:h() - left_padding * 2,
 		w = center - menu_shift
@@ -134,8 +134,8 @@ function ExperienceGui:_layout_equipped_upgrades()
 			end
 
 			local grid_item = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillTiny, {
-				layer = 1,
 				y = 4,
+				layer = 1,
 				name = "equippped_slot_" .. slot_type_str .. i,
 				x = x,
 				w = block_size,
@@ -254,8 +254,8 @@ function ExperienceGui:_layout_equipable_upgrades()
 	})
 	local item_size = 90
 	local equippable_upgrades_scrollable_area_params = {
-		scrollbar_offset = 8,
 		name = "equippable_upgrades_scrollable_area_params",
+		scrollbar_offset = 8,
 		y = y,
 		w = self._menu_left_side:w(),
 		h = h,
@@ -298,8 +298,8 @@ function ExperienceGui:_layout_skill_profile()
 	local x, y, w, h = self._equipable_upgrades_background:shape()
 	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
 		name = "skill_profiles_list",
-		visible = false,
 		selection_enabled = false,
+		visible = false,
 		loop_items = true,
 		x = x + x_padding,
 		y = y + y_padding,
@@ -396,6 +396,7 @@ function ExperienceGui:_skill_profile_renamed_callback(profile_index, button, bu
 
 	self._skill_profiles_list:refresh_data()
 	self._skill_profiles_list:select_item_by_index(profile_index)
+	self:_layout_subtitle_text()
 end
 
 function ExperienceGui:on_item_clicked_upgrade(data)
@@ -571,12 +572,12 @@ function ExperienceGui:data_source_stats()
 	local t = {}
 
 	table.insert(t, {
-		text_id = "character_stats_health_label",
-		name = "health"
+		name = "health",
+		text_id = "character_stats_health_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_stamina_label",
-		name = "stamina"
+		name = "stamina",
+		text_id = "character_stats_stamina_label"
 	})
 	table.insert(t, {
 		text_id = "character_stats_stamina_regen_label",
@@ -589,12 +590,12 @@ function ExperienceGui:data_source_stats()
 		format_value = "%.2gs"
 	})
 	table.insert(t, {
-		text_id = "character_stats_speed_walk_label",
-		name = "speed_walk"
+		name = "speed_walk",
+		text_id = "character_stats_speed_walk_label"
 	})
 	table.insert(t, {
-		text_id = "character_stats_speed_run_label",
-		name = "speed_run"
+		name = "speed_run",
+		text_id = "character_stats_speed_run_label"
 	})
 	table.insert(t, {
 		text_id = "character_stats_crit_chance_label",
@@ -602,8 +603,8 @@ function ExperienceGui:data_source_stats()
 		format_value = "%s%%"
 	})
 	table.insert(t, {
-		text_id = "character_stats_carry_limit_label",
-		name = "carry_limit"
+		name = "carry_limit",
+		text_id = "character_stats_carry_limit_label"
 	})
 
 	return t

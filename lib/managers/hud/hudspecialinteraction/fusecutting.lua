@@ -59,11 +59,11 @@ end
 
 function HUDSpecialInteractionFuseCutting:_create_fuse_timer()
 	self._interact_text = self._object:text({
-		align = "center",
+		name = "_interact_text",
 		valign = "center",
 		h = 60,
 		w = 240,
-		name = "_interact_text",
+		align = "center",
 		text = "--:--",
 		layer = self._bg_plate:layer() + 2,
 		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
@@ -91,8 +91,8 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 
 	for i = 1, max_cuts do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			blend_mode = "add",
 			position_z = 0,
+			blend_mode = "add",
 			image = tweak_data.gui.icons.interact_fuse_thread.texture,
 			color = HUDSpecialInteractionFuseCutting.STATE_DEFAULT_COLOR,
 			rotation = HUDSpecialInteractionFuseCutting.ENDING_ANGLE,

@@ -1,84 +1,84 @@
 DialogManager = DialogManager or class()
 DialogManager.MAX_CASE_PLAYER_NUM = 4
 DialogManager.MRS_WHITE = {
+	char = "MRS_WHITE",
 	unit = nil,
-	sound_switch = "mrs_white",
-	char = "MRS_WHITE"
+	sound_switch = "mrs_white"
 }
 DialogManager.NIGHT_WITCH = {
+	char = "NIGHT_WITCH",
 	unit = nil,
-	sound_switch = "night_whitch",
-	char = "NIGHT_WITCH"
+	sound_switch = "night_whitch"
 }
 DialogManager.FRANZ = {
+	char = "FRANZ",
 	unit = nil,
-	sound_switch = "franz",
-	char = "FRANZ"
+	sound_switch = "franz"
 }
 DialogManager.BOAT_DRIVER_BRIDGE = {
+	char = "BOAT_DRIVER_BRIDGE",
 	unit = nil,
-	sound_switch = "boat_driver_bridge",
-	char = "BOAT_DRIVER_BRIDGE"
+	sound_switch = "boat_driver_bridge"
 }
 DialogManager.TRUCK_DRIVER_BRIDGE = {
+	char = "TRUCK_DRIVER_BRIDGE",
 	unit = nil,
-	sound_switch = "truck_driver_bridge",
-	char = "TRUCK_DRIVER_BRIDGE"
+	sound_switch = "truck_driver_bridge"
 }
 DialogManager.RESIST_PILOT_BANK = {
+	char = "RESIST_PILOT_BANK",
 	unit = nil,
-	sound_switch = "resist_pilot_bank",
-	char = "RESIST_PILOT_BANK"
+	sound_switch = "resist_pilot_bank"
 }
 DialogManager.TRAIN_ENGINEER = {
+	char = "TRAIN_ENGINEER",
 	unit = nil,
-	sound_switch = "train_engineer",
-	char = "TRAIN_ENGINEER"
+	sound_switch = "train_engineer"
 }
 DialogManager.CASTLE_TRUCK_DRIVER = {
+	char = "CASTLE_TRUCK_DRIVER",
 	unit = nil,
-	sound_switch = "castle_truck_driver",
-	char = "CASTLE_TRUCK_DRIVER"
+	sound_switch = "castle_truck_driver"
 }
 DialogManager.MINIRAID2_TRUCK_DRIVER = {
+	char = "MINIRAID2_TRUCK_DRIVER",
 	unit = nil,
-	sound_switch = "miniraid2_truck_driver",
-	char = "MINIRAID2_TRUCK_DRIVER"
+	sound_switch = "miniraid2_truck_driver"
 }
 DialogManager.BANK_TRUCK_DRIVER = {
+	char = "BANK_TRUCK_DRIVER",
 	unit = nil,
-	sound_switch = "bank_truck_driver",
-	char = "BANK_TRUCK_DRIVER"
+	sound_switch = "bank_truck_driver"
 }
 DialogManager.DR_REINHARDT = {
+	char = "DR_REINHARDT",
 	unit = nil,
-	sound_switch = "dr_reinhardt",
-	char = "DR_REINHARDT"
+	sound_switch = "dr_reinhardt"
 }
 DialogManager.TANK_GENERAL = {
+	char = "TANK_GENERAL",
 	unit = nil,
-	sound_switch = "tank_general",
-	char = "TANK_GENERAL"
+	sound_switch = "tank_general"
 }
 DialogManager.RUSSIAN_GENERAL = {
+	char = "RUSSIAN_GENERAL",
 	unit = nil,
-	sound_switch = "russian_general",
-	char = "RUSSIAN_GENERAL"
+	sound_switch = "russian_general"
 }
 DialogManager.RUSSIAN_GENERAL2 = {
+	char = "RUSSIAN_GENERAL2",
 	unit = nil,
-	sound_switch = "russian_general2",
-	char = "RUSSIAN_GENERAL2"
+	sound_switch = "russian_general2"
 }
 DialogManager.MALE_SPY = {
+	char = "MALE_SPY",
 	unit = nil,
-	sound_switch = "male_spy",
-	char = "MALE_SPY"
+	sound_switch = "male_spy"
 }
 DialogManager.FEMALE_SPY = {
+	char = "FEMALE_SPY",
 	unit = nil,
-	sound_switch = "female_spy",
-	char = "FEMALE_SPY"
+	sound_switch = "female_spy"
 }
 DialogManager.CHARS = {
 	DialogManager.MRS_WHITE,
@@ -260,71 +260,54 @@ function DialogManager:queue_dialog(id, params, test)
 	if self._current_dialog and self._current_dialog.id == id or self._next_dialog and self._next_dialog.id == id then
 		Application:warn("[DialogManager:queue_dialog] Dialog already playing, skipping", id)
 
-		return
+		return false
 	end
 
-	local chance = self._dialog_list[id].chance
+	local dialog = self._dialog_list[id]
+	local chance = dialog.chance
 
 	if chance < 1 then
-		local rand = math.rand(1)
+		local rand = math.random()
 
 		if chance < rand then
-			return
+			return false
 		end
 	end
 
 	if Network:is_server() then
 		self:do_queue_dialog(id, params, test)
 	else
-		local instigator = self:_calc_instigator_string(params)
+		local instigator = self:_get_character_string(params.instigator)
 
 		managers.network:session():send_to_host("sync_queue_dialog", id, instigator or "nil")
 	end
 end
 
-function DialogManager:_calc_instigator_string(params)
-	local instigator = nil
-
-	if params.instigator then
-		if type(params.instigator) == "string" then
-			if params.instigator ~= "nil" then
-				instigator = params.instigator
-			end
-		else
-			instigator = managers.criminals:character_name_by_unit(params.instigator)
-		end
-	end
-
-	return instigator
-end
-
-function DialogManager:_calc_character_string(character)
-	if not character then
+function DialogManager:_get_character_string(character)
+	if not character or character == "nil" then
 		return
 	end
 
-	if type(character) == "string" then
-		if character ~= "nil" then
-			return character
-		end
-	else
+	if type(character) == "userdata" then
 		return managers.criminals:character_name_by_unit(character)
 	end
+
+	return character
 end
 
 function DialogManager:_get_dialog_characters(params)
 	local characters = {}
 
 	if params.char_a or params.instigator then
-		characters.A = self:_calc_character_string(params.char_a or params.instigator)
+		characters.A = self:_get_character_string(params.char_a or params.instigator)
 	end
 
 	if params.char_b then
-		characters.B = self:_calc_character_string(params.char_b)
+		characters.B = self:_get_character_string(params.char_b)
 	end
 
 	if params.char_c then
-		characters.C = self:_calc_character_string(params.char_c)
+		characters.C = self:_get_character_string(params.char_c)
 	end
 
 	return characters
@@ -343,7 +326,7 @@ function DialogManager:paused()
 end
 
 function DialogManager:do_queue_dialog(id, params, test)
-	local instigator = self:_calc_instigator_string(params)
+	local instigator = self:_get_character_string(params.instigator)
 
 	if Network:is_server() then
 		local send = instigator or "nil"
@@ -578,7 +561,7 @@ function DialogManager:_play_dialog(data)
 				managers.player:stop_all_speaking_except_dialog()
 			end
 
-			unit:drama():play_sound(line_data.sound, dialog.sound_source)
+			unit:drama():play_sound(line_data)
 		end
 	else
 		if dialog.string_id then
@@ -598,7 +581,7 @@ function DialogManager:_play_dialog(data)
 				managers.player:stop_all_speaking_except_dialog()
 			end
 
-			unit:drama():play_sound(dialog.sound, dialog.sound_source)
+			unit:drama():play_sound(dialog)
 		end
 	end
 end
@@ -645,6 +628,8 @@ function DialogManager:_load_dialog_data(name)
 				string_id = node.string_id,
 				priority = node.priority and tonumber(node.priority) or tweak_data.dialog.DEFAULT_PRIORITY,
 				chance = node.chance and tonumber(node.chance) or 1,
+				cooldown = node.cooldown and tonumber(node.cooldown),
+				once = node.once and node.once,
 				file_name = file_name
 			}
 

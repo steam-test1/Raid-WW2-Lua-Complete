@@ -63,14 +63,20 @@ function CoreEditorGroups:group_name()
 end
 
 function CoreEditorGroups:new_group_name()
-	local s = "Group0"
+	local s = "Group_0"
+	local selected_unit = managers.editor:selected_unit()
+
+	if alive(selected_unit) then
+		s = "Group_" .. selected_unit:unit_data().name_id .. "_0"
+	end
+
 	local i = 1
 
 	while self._groups[s .. i] do
 		i = i + 1
 
 		if i > 9 then
-			s = "Group"
+			s = "Group_"
 		end
 	end
 
@@ -189,12 +195,12 @@ function CoreEditorGroups:load_group_file(path)
 			local rot, new_unit = nil
 
 			if unit:name() == "ref_unit" then
-				reference = layer:do_spawn_unit(unit:parameter("name"), pos)
+				reference = layer:do_spawn_unit(unit:parameter("name"), pos, nil, nil, nil, true)
 				new_unit = reference
 			else
 				local pos = pos + math.string_to_vector(unit:parameter("local_pos"))
 				local rot = math.string_to_rotation(unit:parameter("local_rot"))
-				new_unit = layer:do_spawn_unit(unit:parameter("name"), pos, rot)
+				new_unit = layer:do_spawn_unit(unit:parameter("name"), pos, rot, nil, nil, true)
 			end
 
 			for setting in unit:children() do
@@ -282,6 +288,11 @@ function CoreEditorGroup:init(name, reference, units)
 	self._reference = reference
 	self._units = {}
 	self._continent = managers.editor:current_continent()
+	self._group_color = {
+		1,
+		0.32,
+		0.28
+	}
 
 	for _, unit in ipairs(units) do
 		self:add_unit(unit)
@@ -441,29 +452,34 @@ function CoreEditorGroup:save_editable_gui(file, t, unit, data_table)
 		local word_wrap = unit:editable_gui():word_wrap()
 		local alpha = unit:editable_gui():alpha()
 		local shape = unit:editable_gui():shape()
+		local save_txt = t .. "<editable_gui text=\"" .. text .. "\" font_size=\"" .. font_size .. "\" font_color=\"" .. math.vector_to_string(font_color) .. "\" font=\"" .. font .. "\" align=\"" .. align .. "\" vertical=\"" .. vertical .. "\" blend_mode=\"" .. blend_mode .. "\" render_template=\"" .. render_template .. "\" wrap=\"" .. tostring(wrap) .. "\" word_wrap=\"" .. tostring(word_wrap) .. "\" alpha=\"" .. alpha .. "\" shape=\"" .. string.format("%s %s %s %s", unpack(shape)) .. "\"/>"
 
-		file:puts(t .. "<editable_gui text=\"" .. text .. "\" font_size=\"" .. font_size .. "\" font_color=\"" .. math.vector_to_string(font_color) .. "\" font=\"" .. font .. "\" align=\"" .. align .. "\" vertical=\"" .. vertical .. "\" blend_mode=\"" .. blend_mode .. "\" render_template=\"" .. render_template .. "\" wrap=\"" .. tostring(wrap) .. "\" word_wrap=\"" .. tostring(word_wrap) .. "\" alpha=\"" .. alpha .. "\" shape=\"" .. string.format("%s %s %s %s", unpack(shape)) .. "\"/>")
+		file:puts(save_txt)
 	end
 end
 
 function CoreEditorGroup:draw(t, dt)
-	local i = 0.25
-
 	if managers.editor:using_groups() then
 		if self._continent ~= managers.editor:current_continent() then
 			return
 		end
-
-		i = 0.65
 	elseif not managers.editor:debug_draw_groups() then
 		return
 	end
 
 	for _, unit in ipairs(self._units) do
-		Application:draw(unit, 1 * i, 1 * i, 1 * i)
-	end
+		if alive(unit) then
+			local r, g, b = unpack(self._group_color)
 
-	Application:draw(self._reference, 0, 1 * i, 0)
+			if unit == self._reference then
+				r = r / 2
+				g = g * 2
+				b = b / 2
+			end
+
+			Application:draw(unit, r, g, b)
+		end
+	end
 end
 
 GroupPresetsDialog = GroupPresetsDialog or class(CoreEditorEwsDialog)

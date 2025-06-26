@@ -240,14 +240,19 @@ end
 function ColorgradeFeeder:apply(handler, viewport, scene)
 	if self._source ~= Idstring("") and self._target ~= Idstring("") then
 		local post_processor = viewport:get_post_processor_effect(scene, ids_post_cg, ids_cg)
-		local modifier = post_processor:modifier(ids_cg_modifier)
 
-		if modifier then
-			local material = modifier:material()
+		if post_processor then
+			local modifier = post_processor:modifier(ids_cg_modifier)
 
-			Application:set_material_texture(material, ids_cg_LUT1, self._source, ids_normal, 0)
-			Application:set_material_texture(material, ids_cg_LUT2, self._target, ids_normal, 0)
-			managers.environment_controller:set_lut_lerp_value(self._current)
+			if modifier then
+				local material = modifier:material()
+
+				Application:set_material_texture(material, ids_cg_LUT1, self._source, ids_normal, 0)
+				Application:set_material_texture(material, ids_cg_LUT2, self._target, ids_normal, 0)
+				managers.environment_controller:set_lut_lerp_value(self._current)
+			end
+		else
+			Application:error("[ColorgradeFeeder] Post effect may not exist", scene, ids_post_cg, ids_cg)
 		end
 	end
 end
@@ -676,7 +681,9 @@ function PostBloomIntensityFeeder:apply(handler, viewport, scene)
 	local has_bloom = self._current > 1e-05
 	local bloom_prepare_effect = viewport:get_post_processor_effect(scene, ids_post_bloom_prepare, ids_bloom_prepare_effect)
 
-	bloom_prepare_effect:set_visibility(has_bloom)
+	if bloom_prepare_effect then
+		bloom_prepare_effect:set_visibility(has_bloom)
+	end
 
 	if has_bloom then
 		if not is_editor then
@@ -747,10 +754,16 @@ PostLFDownsampleBiasFeeder.FILTER_CATEGORY = "Sun"
 
 function PostLFDownsampleBiasFeeder:apply(handler, viewport, scene)
 	local lens_flare_post = viewport:get_post_processor_effect(scene, ids_post_lens_flare, ids_lens_flare_effect)
+
+	if lens_flare_post then
+		lens_flare_post:set_visibility(self._current < 1)
+	end
+
 	local lens_flare_apply_post = viewport:get_post_processor_effect(scene, ids_post_lens_flare_apply, ids_lens_flare_apply_effect)
 
-	lens_flare_post:set_visibility(self._current < 1)
-	lens_flare_apply_post:set_visibility(self._current < 1)
+	if lens_flare_apply_post then
+		lens_flare_apply_post:set_visibility(self._current < 1)
+	end
 
 	local save_current = self._current
 	self._current = Vector3(self._current, self._current, self._current)

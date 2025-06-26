@@ -7,7 +7,7 @@ HuskServerSyncedCivilianDamage._RESULT_NAME_TABLE = {
 }
 
 function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_offset_height, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -50,7 +50,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 end
 
 function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -93,7 +93,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 end
 
 function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -136,7 +136,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 end
 
 function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacker_unit, hit_offset_height, result_index)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -181,7 +181,7 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 end
 
 function HuskServerSyncedCivilianDamage:damage_bullet(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -201,7 +201,7 @@ function HuskServerSyncedCivilianDamage:damage_bullet(attack_data)
 end
 
 function HuskServerSyncedCivilianDamage:damage_explosion(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -218,7 +218,7 @@ function HuskServerSyncedCivilianDamage:damage_explosion(attack_data)
 end
 
 function HuskServerSyncedCivilianDamage:damage_fire(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 
@@ -237,7 +237,7 @@ function HuskServerSyncedCivilianDamage:damage_fire(attack_data)
 end
 
 function HuskServerSyncedCivilianDamage:damage_melee(attack_data)
-	if self._dead or self._fatal then
+	if self._dead then
 		return
 	end
 

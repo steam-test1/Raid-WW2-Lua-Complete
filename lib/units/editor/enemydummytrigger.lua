@@ -1,4 +1,10 @@
 EnemyDummyTriggerUnitElement = EnemyDummyTriggerUnitElement or class(MissionElement)
+EnemyDummyTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
+}
 
 function EnemyDummyTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
@@ -29,18 +35,13 @@ function EnemyDummyTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
-function EnemyDummyTriggerUnitElement:get_links_to_unit(...)
-	EnemyDummyTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
 function EnemyDummyTriggerUnitElement:update_editing()
 end
 
 function EnemyDummyTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and self:_correct_unit(ray.unit:name():s()) then
@@ -106,7 +107,6 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 		"spawn",
 		"panic",
 		"weapons_hot",
-		"tied",
 		"anim_act_01",
 		"anim_act_02",
 		"anim_act_03",

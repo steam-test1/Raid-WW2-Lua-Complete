@@ -27,10 +27,13 @@ function FlamerLogicAttack.enter(data, new_logic_name, enter_params)
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.vision = data.char_tweak.vision.combat
-	local weapon_usage = data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
-	my_data.weapon_range = data.char_tweak.weapon[weapon_usage].range
-	my_data.weapon_range_max = data.char_tweak.weapon[weapon_usage].max_range
-	my_data.additional_weapon_stats = data.char_tweak.weapon[weapon_usage].additional_weapon_stats
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+		my_data.weapon_range_max = data.char_tweak.weapon[usage].max_range
+		my_data.additional_weapon_stats = data.char_tweak.weapon[usage].additional_weapon_stats
+	end
 
 	if data.char_tweak.throwable then
 		my_data.throw_projectile_chance = data.char_tweak.throwable.throw_chance or 0.1
@@ -362,9 +365,9 @@ end
 function FlamerLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
+			type = "walk",
 			no_strafe = false,
 			body_part = 2,
-			type = "walk",
 			nav_path = my_data.chase_path,
 			variant = speed or "run",
 			end_rot = end_rot

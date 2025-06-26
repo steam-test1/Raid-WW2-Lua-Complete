@@ -27,7 +27,7 @@ function SoundLayer:load(world_holder, offset)
 	CoreEws.change_combobox_value(self._default_occasional, managers.sound_environment:default_occasional())
 
 	for _, area in ipairs(managers.sound_environment:areas()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._environment_unit, area:position(), area:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._environment_unit, area:position(), area:rotation(), nil, nil, true)
 
 		if area:name() then
 			self:set_name_id(unit, area:name())
@@ -39,7 +39,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._emitter_unit, emitter:position(), emitter:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() then
 			self:set_name_id(unit, emitter:name())
@@ -51,7 +51,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:area_emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._area_emitter_unit, emitter:position(), emitter:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._area_emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() and emitter:name() ~= "" then
 			self:set_name_id(unit, emitter:name())
@@ -254,9 +254,9 @@ function SoundLayer:build_panel(notebook)
 	local default_emitter_path = managers.sound_environment:game_default_emitter_path()
 	local emitter_paths = managers.sound_environment:emitter_paths()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		name = "Categories",
+		ctrlr_proportions = 3,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
 		options = #emitter_paths > 0 and emitter_paths or {
@@ -269,9 +269,9 @@ function SoundLayer:build_panel(notebook)
 	})
 	self._emitter_path_combobox = combobox_params
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
+		name = "Events",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Events",
 		sorted = true,
 		panel = self._sound_panel,
 		sizer = self._sound_emitter_sizer,
@@ -301,10 +301,10 @@ end
 
 function SoundLayer:_build_defaults(sizer)
 	self._default_environment = {
-		name_proportions = 1,
+		name = "Environment:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Environment:",
+		name_proportions = 1,
 		tooltip = "Select default environment from the combobox",
 		sorted = true,
 		panel = self._sound_panel,
@@ -319,10 +319,10 @@ function SoundLayer:_build_defaults(sizer)
 	local no_ambiences_availible = #managers.sound_environment:ambience_events() == 0
 	local error_text = "- No ambience soundbanks in project -"
 	self._default_ambience = {
-		name_proportions = 1,
+		name = "Ambience:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Ambience:",
+		name_proportions = 1,
 		tooltip = "Select default ambience from the combobox",
 		sorted = true,
 		panel = self._sound_panel,
@@ -340,10 +340,10 @@ function SoundLayer:_build_defaults(sizer)
 	local no_occasionals_availible = #managers.sound_environment:occasional_events() == 0
 	local error_text = "- No occasional soundbanks in project -"
 	self._default_occasional = {
-		name_proportions = 1,
+		name = "Occasional:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Occasional:",
+		name_proportions = 1,
 		tooltip = "Select default occasional from the combobox",
 		sorted = true,
 		panel = self._sound_panel,
@@ -370,13 +370,13 @@ function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
 	self._priority_params = {
 		max = 9,
+		min = 1,
+		name = "Priority:",
+		name_proportions = 1,
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
 		value = 9,
-		min = 1,
-		name = "Priority:",
 		tooltip = "DISABLED",
-		name_proportions = 1,
 		floats = 0,
 		panel = self._sound_panel,
 		sizer = sound_environment_sizer
@@ -388,10 +388,10 @@ function SoundLayer:_build_environment()
 
 	local environment_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._effect_params = {
-		name_proportions = 1,
+		name = "Effect:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Effect:",
+		name_proportions = 1,
 		tooltip = "Select an environment effect from the combobox",
 		sorted = true,
 		panel = self._sound_panel,
@@ -412,10 +412,10 @@ function SoundLayer:_build_environment()
 
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._ambience_params = {
-		name_proportions = 1,
+		name = "Ambience:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Ambience:",
+		name_proportions = 1,
 		tooltip = "Select an ambience from the combobox",
 		sorted = true,
 		panel = self._sound_panel,
@@ -436,10 +436,10 @@ function SoundLayer:_build_environment()
 
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
 	self._occasional_params = {
-		name_proportions = 1,
+		name = "Occasional:",
 		ctrlr_proportions = 3,
 		sizer_proportions = 1,
-		name = "Occasional:",
+		name_proportions = 1,
 		tooltip = "Select an occasional from the combobox",
 		sorted = true,
 		panel = self._sound_panel,

@@ -252,7 +252,9 @@ function Easing.sine_pulse(t, duration)
 
 	if t <= 0 then
 		return 0
-	elseif t > 0 and t <= duration then
+	end
+
+	if t > 0 and t <= duration then
 		return math.sin(t / duration * 2 * 180 - 90) + 1
 	end
 
@@ -262,7 +264,9 @@ end
 function Easing.sine_step(t)
 	if t <= 0 then
 		return 0
-	elseif t > 0 and t <= 1 then
+	end
+
+	if t > 0 and t <= 1 then
 		return math.sin(t * 180 - 90) + 1
 	end
 

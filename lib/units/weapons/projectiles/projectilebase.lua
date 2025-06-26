@@ -54,6 +54,10 @@ function ProjectileBase:get_thrower_peer_id()
 	return self._thrower_peer_id or nil
 end
 
+function ProjectileBase:is_thrower_peer_id(peer_id)
+	return self._thrower_peer_id == peer_id
+end
+
 function ProjectileBase:set_parent_projectile_id(parent_projectile_id)
 	self._parent_projectile_id = parent_projectile_id
 end
@@ -258,7 +262,8 @@ end
 
 function ProjectileBase:save(data)
 	local state = {
-		timer = self._timer
+		timer = self._timer,
+		thrower_peer_id = self._thrower_peer_id
 	}
 	data.ProjectileBase = state
 end
@@ -266,6 +271,10 @@ end
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 	self._timer = state.timer
+
+	if state.thrower_peer_id then
+		self:set_thrower_peer_id(state.thrower_peer_id)
+	end
 end
 
 function ProjectileBase:destroy()

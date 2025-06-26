@@ -9,7 +9,7 @@ function UpgradeBigGame:check_activate()
 
 	managers.system_event_listener:remove_listener("big_game_special_health_regen")
 
-	if managers.player:has_category_upgrade("temporary", "big_game_special_health_regen") then
+	if alive(managers.player:local_player()) and managers.player:has_category_upgrade("temporary", "big_game_special_health_regen") then
 		managers.system_event_listener:add_listener("big_game_special_health_regen", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY
 		}, callback(self, self, "_on_enemy_killed"))

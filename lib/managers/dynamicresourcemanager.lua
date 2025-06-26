@@ -4,7 +4,7 @@ DynamicResourceManager.STREAMING_PROFILE_INGAME = "ingame"
 DynamicResourceManager.STREAMING_PROFILE_LOADING = "loading"
 DynamicResourceManager.STREAMING_PROFILES = {
 	[DynamicResourceManager.STREAMING_PROFILE_INGAME] = {
-		chunk_size = 1048576,
+		chunk_size = 2097152,
 		sleep_time = 5
 	},
 	[DynamicResourceManager.STREAMING_PROFILE_LOADING] = {
@@ -26,13 +26,12 @@ function DynamicResourceManager:init()
 
 	self._dyn_resources = Global.dyn_resource_manager_data.dyn_resources
 	self._streaming_settings = Global.dyn_resource_manager_data.streaming_settings
-	self._to_unload = nil
 	self._listener_holder = EventListenerHolder:new()
+	self._to_unload = nil
 end
 
 function DynamicResourceManager:post_init()
 	self:_set_file_streamer_settings(self:file_streamer_settings())
-	self:preload_units()
 end
 
 function DynamicResourceManager:update()
@@ -268,7 +267,4 @@ end
 
 function DynamicResourceManager:remove_listener(key)
 	self._listener_holder:remove(key)
-end
-
-function DynamicResourceManager:preload_units()
 end

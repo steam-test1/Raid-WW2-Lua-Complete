@@ -103,6 +103,8 @@ function ElementWorldInputEvent:on_executed(instigator)
 				for _, element in ipairs(input_elements) do
 					element:on_executed(instigator)
 				end
+			else
+				Application:warn("[ElementWorldInputEvent:on_executed] Cannot not get input_elements for world:", event_list_data.world_name, event_list_data.event, "(The world may not be spawned yet)")
 			end
 		end
 	end
@@ -215,6 +217,7 @@ function ElementWorldPoint:_destroy_world()
 	managers.worldcollection:register_world_despawn(self._world_id, self._editor_name)
 
 	self._world_id = nil
+	self._counted_continents = 0
 end
 
 function ElementWorldPoint:_create_world(data)

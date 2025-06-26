@@ -20,10 +20,10 @@ function RaidGUIControlNationalityDescription:_layout()
 	local padding = 16
 	local padded_width = self._object:w() - padding * 2
 	local object_bg_params = {
+		y = 0,
 		layer = -1,
 		x = -4,
 		name = "object_bg",
-		y = 0,
 		w = self._object:w() + 8,
 		h = self._object:h(),
 		texture = tweak_data.gui.icons.paper_reward_large.texture,
@@ -31,10 +31,10 @@ function RaidGUIControlNationalityDescription:_layout()
 	}
 	self._object_bg = self._object:image(object_bg_params)
 	local object_bg_params2 = {
-		layer = -2,
 		x = -4,
 		name = "object_bg",
 		y = 0,
+		layer = -2,
 		w = self._object:w() + 8,
 		h = self._object:h(),
 		texture = tweak_data.gui.icons.paper_reward_large.texture,
@@ -45,10 +45,10 @@ function RaidGUIControlNationalityDescription:_layout()
 	self._object_bg2 = self._object:image(object_bg_params2)
 	local tex_rect = tweak_data.gui.icons.character_creation_nationality_british.texture_rect
 	self._nation_icon = self._object:image({
-		align = "center",
 		x = 8,
 		name = "nation_icon",
 		y = 24,
+		align = "center",
 		w = tex_rect[3],
 		h = tex_rect[4],
 		texture = tweak_data.gui.icons.character_creation_nationality_british.texture,
@@ -57,11 +57,11 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._character_name_label = self._object:label({
-		x = 0,
-		align = "center",
 		name = "character_name_label",
 		h = 42,
 		w = 224,
+		x = 0,
+		align = "center",
 		y = self._nation_icon:bottom() - 8,
 		text = utf8.to_upper("CHARNAME"),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -70,11 +70,11 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._backstory_label = self._object:label({
-		align = "center",
 		wrap = true,
 		vertical = "top",
 		name = "backstory_label",
 		h = 128,
+		align = "center",
 		x = padding,
 		w = padded_width,
 		y = self._character_name_label:bottom() + 32,
@@ -85,9 +85,9 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._prefered_nationality_label = self._object:label({
-		align = "center",
 		name = "preferred_nationality",
 		h = 32,
+		align = "center",
 		x = padding,
 		w = padded_width,
 		y = RaidGUIControlNationalityDescription.PREFERRED_NATIONALITY_LABEL_DEFAULT_Y,
@@ -98,11 +98,11 @@ function RaidGUIControlNationalityDescription:_layout()
 		color = tweak_data.gui.colors.raid_black
 	})
 	self._disclaimer_label = self._object:label({
-		align = "center",
 		wrap = true,
 		vertical = "top",
 		name = "preferred_nationality_disclaimer",
 		h = 320,
+		align = "center",
 		x = padding,
 		w = padded_width,
 		y = self._prefered_nationality_label:bottom() + 32,

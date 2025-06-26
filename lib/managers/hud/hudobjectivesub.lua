@@ -47,13 +47,13 @@ end
 
 function HUDObjectiveSub:_create_objective_text()
 	local objective_text_params = {
-		align = "right",
-		halign = "right",
-		valign = "center",
 		vertical = "center",
+		align = "right",
 		name = "objective_text",
 		y = 0,
 		x = 0,
+		halign = "right",
+		valign = "center",
 		font = HUDObjectiveSub.OBJECTIVE_TEXT_FONT,
 		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
 		text = utf8.to_upper(self._objective.text)
@@ -106,10 +106,10 @@ function HUDObjectiveSub:_create_amount()
 	self._amount_progress_fill:set_center_y(self._amount_panel:h() / 2)
 
 	local current_amount_text_params = {
+		vertical = "center",
 		align = "center",
 		name = "current_amount_text",
 		text = "00",
-		vertical = "center",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
@@ -122,10 +122,10 @@ function HUDObjectiveSub:_create_amount()
 	self._current_amount_text:set_center_y(self._amount_panel:h() / 2)
 
 	local slash_params = {
+		vertical = "center",
 		align = "center",
 		name = "slash",
 		text = "/",
-		vertical = "center",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
@@ -138,10 +138,10 @@ function HUDObjectiveSub:_create_amount()
 	slash:set_center_y(self._amount_panel:h() / 2)
 
 	local total_amount_text_params = {
+		vertical = "center",
 		align = "center",
 		name = "total_amount_text",
 		text = "00",
-		vertical = "center",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE
 	}
@@ -190,8 +190,8 @@ function HUDObjectiveSub:_create_checkbox()
 	checkbox_unchecked:set_center_y(self._checkbox_panel:h() / 2)
 
 	local checkbox_checked_params = {
-		name = "checkbox_checked",
 		visible = false,
+		name = "checkbox_checked",
 		texture = tweak_data.gui.icons[HUDObjectiveSub.CHECKBOX_CHECKED_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveSub.CHECKBOX_CHECKED_ICON].texture_rect
 	}

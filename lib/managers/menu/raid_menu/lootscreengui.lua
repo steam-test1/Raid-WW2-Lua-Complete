@@ -131,8 +131,8 @@ end
 
 function LootScreenGui:_create_flares()
 	local flare_panel_params = {
-		layer = 1,
-		name = "loot_screen_flare_panel"
+		name = "loot_screen_flare_panel",
+		layer = 1
 	}
 	self._flare_panel = self._fullscreen_panel:panel(flare_panel_params)
 	local lens_glint_params = {
@@ -194,10 +194,10 @@ end
 function LootScreenGui:_layout_profile_name()
 	local x, y, w, h = self._node.components.raid_menu_header:get_screen_name_rect()
 	local profile_name_label_params = {
-		w = 400,
+		name = "loot_screen_profile_name_label",
 		y = 0,
 		h = 64,
-		name = "loot_screen_profile_name_label",
+		w = 400,
 		x = x + w + LootScreenGui.PROFILE_NAME_PADDING_LEFT,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.PROFILE_NAME_FONT_SIZE,
@@ -213,15 +213,15 @@ end
 
 function LootScreenGui:_layout_loot_breakdown_items()
 	local persistent_panel_params = {
-		layer = 10,
-		name = "loot_screen_persistent_panel"
+		name = "loot_screen_persistent_panel",
+		layer = 10
 	}
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
 	local v = not managers.challenge_cards.forced_loot_card
 	local loot_data_panel_params = {
 		y = 51,
-		h = 426,
 		name = "loot_screen_loot_data_panel",
+		h = 426,
 		visible = v
 	}
 	self._loot_data_panel = self._persistent_panel:panel(loot_data_panel_params)
@@ -259,9 +259,9 @@ end
 
 function LootScreenGui:_layout_loot_crates()
 	local loot_crate_panel_params = {
+		name = "loot_Screen_loot_crate_panel",
 		alpha = 1,
-		layer = 5,
-		name = "loot_Screen_loot_crate_panel"
+		layer = 5
 	}
 	self._loot_crate_panel = self._root_panel:panel(loot_crate_panel_params)
 	self._crate_images = {}
@@ -283,10 +283,10 @@ function LootScreenGui:_layout_loot_crates()
 		end
 	else
 		local card_params = {
+			name = "player_loot_card",
 			x = 64,
 			item_w = 496,
-			item_h = 671,
-			name = "player_loot_card"
+			item_h = 671
 		}
 		local card_control = self._loot_crate_panel:create_custom_control(RaidGUIControlCardBase, card_params)
 
@@ -306,27 +306,27 @@ end
 function LootScreenGui:_layout_first_screen()
 	local first_screen_panel_params = {
 		alpha = 0,
+		name = "first_screen_panel",
 		y = 0,
 		x = 0,
-		name = "first_screen_panel",
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
 	self._first_screen_panel = self._root_panel:panel(first_screen_panel_params)
 	self._brackets = self:_get_loot_point_data()
 	local loot_progress_bar_params = {
-		total_points = 1100,
 		name = "loot_progress_bar",
+		total_points = 1100,
 		x = LootScreenGui.LOOT_PROGRESS_BAR_X,
 		y = LootScreenGui.LOOT_PROGRESS_BAR_Y,
 		brackets = self._brackets
 	}
 	self._loot_progress_bar = self._first_screen_panel:create_custom_control(RaidGUIControlLootProgressBar, loot_progress_bar_params)
 	local total_loot_params = {
+		name = "total_loot",
 		text = "0000",
 		vertical = "center",
 		align = "center",
-		name = "total_loot",
 		x = self._first_screen_panel:w() / 2,
 		y = self._loot_progress_bar:y() + self._loot_progress_bar:h() + LootScreenGui.LOOT_PROGRESS_BAR_PADDING_DOWN,
 		w = LootScreenGui.TOTAL_LOOT_W,
@@ -337,9 +337,9 @@ function LootScreenGui:_layout_first_screen()
 	}
 	self._total_loot_label = self._first_screen_panel:text(total_loot_params)
 	local total_loot_description_params = {
+		name = "total_loot",
 		vertical = "center",
 		align = "center",
-		name = "total_loot",
 		x = self._first_screen_panel:w() / 2,
 		y = self._total_loot_label:y() + self._total_loot_label:h(),
 		w = LootScreenGui.TOTAL_LOOT_W,
@@ -351,8 +351,8 @@ function LootScreenGui:_layout_first_screen()
 	}
 	local total_loot_description = self._first_screen_panel:text(total_loot_description_params)
 	local acquired_loot_params = {
-		vertical = "center",
 		text = "0000",
+		vertical = "center",
 		align = "center",
 		name = "acquired_loot",
 		y = self._total_loot_label:y(),
@@ -383,12 +383,12 @@ function LootScreenGui:_layout_first_screen()
 	acquired_loot_description:set_right(self._first_screen_panel:w() / 2)
 
 	local bracket_unlocked_title_params = {
-		w = 400,
 		alpha = 0,
+		name = "bracket_unlocked_title",
+		w = 400,
 		vertical = "top",
 		align = "left",
 		x = 0,
-		name = "bracket_unlocked_title",
 		y = LootScreenGui.BRACKET_UNLOCKED_TITLE_Y,
 		h = LootScreenGui.BRACKET_UNLOCKED_TITLE_H,
 		font = LootScreenGui.FONT,
@@ -398,13 +398,13 @@ function LootScreenGui:_layout_first_screen()
 	}
 	self._bracket_unlocked_title = self._first_screen_panel:text(bracket_unlocked_title_params)
 	local bracket_unlocked_label_params = {
-		w = 100,
 		alpha = 0,
+		name = "bracket_unlocked_label",
+		w = 100,
 		text = "",
 		vertical = "center",
 		align = "center",
 		x = 0,
-		name = "bracket_unlocked_label",
 		y = self._bracket_unlocked_title:y() + self._bracket_unlocked_title:h(),
 		h = LootScreenGui.BRACKET_UNLOCKED_LABEL_H,
 		font = LootScreenGui.FONT,
@@ -417,16 +417,16 @@ end
 function LootScreenGui:_layout_second_screen()
 	local second_screen_panel_params = {
 		y = 0,
-		x = 0,
 		name = "second_screen_panel",
+		x = 0,
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	}
 	self._second_screen_panel = self._root_panel:panel(second_screen_panel_params)
 	self._local_loot_panel = self._second_screen_panel:panel({
 		visible = false,
-		layer = 10,
 		name = "local_loot_panel",
+		layer = 10,
 		x = LootScreenGui.LOCAL_LOOT_X,
 		y = LootScreenGui.LOCAL_LOOT_Y,
 		w = LootScreenGui.LOCAL_LOOT_W,
@@ -434,73 +434,13 @@ function LootScreenGui:_layout_second_screen()
 	})
 	self._peer_loot_panel = self._second_screen_panel:panel({
 		visible = false,
-		alpha = 0,
 		name = "peer_loot_panel",
+		alpha = 0,
 		x = LootScreenGui.PEER_LOOT_PANEL_X,
 		y = LootScreenGui.PEER_LOOT_PANEL_Y,
 		w = LootScreenGui.PEER_LOOT_PANEL_W,
 		h = LootScreenGui.PEER_LOOT_PANEL_H
 	})
-	local customization_reward_params = {
-		visible = false,
-		y = 0,
-		x = 0,
-		name = "customization_reward",
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		redeem_customization_callback = callback(self, self, "redeem_customization_xp")
-	}
-	self._customization_details = self._local_loot_panel:create_custom_control(RaidGUIControlCharacterCustomizationDetails, customization_reward_params)
-	local customization = tweak_data.character_customization.customizations.russian_default_head
-
-	self._customization_details:set_customization(customization)
-
-	local card_pack_reward_params = {
-		name = "card_pack_reward",
-		y = 0,
-		x = 0,
-		layer = 15,
-		visible = false,
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H
-	}
-	self._card_pack_reward = self._local_loot_panel:create_custom_control(RaidGUIControlRewardCardPack, card_pack_reward_params)
-	local xp_reward_params = {
-		name = "xp_reward",
-		y = 0,
-		x = 0,
-		visible = false,
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H
-	}
-	self._xp_reward = self._local_loot_panel:create_custom_control(RaidGUIControlXPRewardDetails, xp_reward_params)
-	local weapon_point_reward_params = {
-		name = "weapon_point_reward",
-		y = 0,
-		x = 0,
-		visible = false,
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H
-	}
-	self._weapon_point_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponPointRewardDetails, weapon_point_reward_params)
-	local melee_weapon_reward_params = {
-		name = "melee_weapon_reward",
-		y = 0,
-		x = 0,
-		visible = false,
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H
-	}
-	self._melee_weapon_reward = self._local_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponRewardDetails, melee_weapon_reward_params)
-	local gold_bar_reward_params = {
-		name = "gold_bar_reward",
-		y = 0,
-		x = 0,
-		visible = false,
-		w = LootScreenGui.LOCAL_LOOT_W,
-		h = LootScreenGui.LOCAL_LOOT_H
-	}
-	self._gold_bar_reward = self._local_loot_panel:create_custom_control(RaidGUIControlGoldBarRewardDetails, gold_bar_reward_params)
 end
 
 function LootScreenGui:_get_loot_point_data()
@@ -525,10 +465,6 @@ function LootScreenGui:_get_loot_point_data()
 	return tree
 end
 
-function LootScreenGui:data_source_branching_progress_bar()
-	return self:_get_loot_point_data()
-end
-
 function LootScreenGui:set_local_loot_drop(loot_drop)
 	self.local_player_loot_drop = loot_drop
 end
@@ -538,36 +474,119 @@ function LootScreenGui:_show_local_loot_display()
 
 	Application:trace("[LootScreenGui:_show_local_loot_display] drop ", inspect(drop))
 
-	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
-		self._card_pack_reward:set_cards(managers.challenge_cards:get_temp_steam_loot())
-		self._card_pack_reward:show()
-
-		if not managers.raid_menu:is_pc_controller() then
-			self._card_pack_reward:set_selected(true)
-			self:bind_controller_inputs_card_rewards()
-		end
-	elseif drop.reward_type == LootDropTweakData.REWARD_XP then
-		self._xp_reward:set_xp_reward(drop.awarded_xp)
-		self._xp_reward:show()
-	elseif drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
-		self._customization_details:set_customization(drop.character_customization)
-		self._customization_details:show()
-
-		if drop.duplicate then
-			self._customization_details:set_duplicate()
-		end
-	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
-		self._weapon_point_reward:show()
-	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
-		self._melee_weapon_reward:set_melee_weapon(drop.weapon_id)
-		self._melee_weapon_reward:show()
+	if drop.reward_type == LootDropTweakData.REWARD_XP then
+		self:_layout_reward_xp(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
-		self._gold_bar_reward:set_gold_bar_reward(drop.awarded_gold_bars)
-		self._gold_bar_reward:show()
-	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
-		self._melee_weapon_reward:set_melee_weapon(drop.weapon_id)
-		self._melee_weapon_reward:show()
+		self:_layout_reward_gold(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
+		self:_layout_reward_weapon_point(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
+		self:_layout_reward_card_pack(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
+		self:_layout_reward_customization(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_SKIN then
+		self:_layout_reward_weapon_skin(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON or drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		self:_layout_reward_melee_weapon(drop)
 	end
+end
+
+function LootScreenGui:_layout_reward_gold(drop)
+	self._gold_bar_reward = self._local_loot_panel:create_custom_control(RaidGUIControlGoldBarRewardDetails, {
+		name = "gold_bar_reward",
+		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
+		h = LootScreenGui.LOCAL_LOOT_H
+	})
+
+	self._gold_bar_reward:set_gold_bar_reward(drop.awarded_gold_bars)
+	self._gold_bar_reward:show()
+end
+
+function LootScreenGui:_layout_reward_xp(drop)
+	self._xp_reward = self._local_loot_panel:create_custom_control(RaidGUIControlXPRewardDetails, {
+		name = "xp_reward",
+		visible = false,
+		w = self.LOCAL_LOOT_W,
+		h = self.LOCAL_LOOT_H
+	})
+
+	self._xp_reward:set_xp_reward(drop.awarded_xp)
+	self._xp_reward:show()
+end
+
+function LootScreenGui:_layout_reward_weapon_point(drop)
+	self._weapon_point_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponPointRewardDetails, {
+		name = "weapon_point_reward",
+		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
+		h = LootScreenGui.LOCAL_LOOT_H
+	})
+
+	self._weapon_point_reward:show()
+end
+
+function LootScreenGui:_layout_reward_card_pack(drop)
+	self._card_pack_reward = self._local_loot_panel:create_custom_control(RaidGUIControlRewardCardPack, {
+		visible = false,
+		layer = 15,
+		name = "card_pack_reward",
+		w = self.LOCAL_LOOT_W,
+		h = self.LOCAL_LOOT_H
+	})
+
+	self._card_pack_reward:set_cards(managers.challenge_cards:get_temp_steam_loot())
+	self._card_pack_reward:set_selected(true)
+	self._card_pack_reward:show()
+	self:bind_controller_inputs_card_rewards()
+end
+
+function LootScreenGui:_layout_reward_customization(drop)
+	self._customization_details = self._local_loot_panel:create_custom_control(RaidGUIControlCharacterCustomizationDetails, {
+		visible = false,
+		name = "loot_screen_customization_reward",
+		w = self.LOCAL_LOOT_W,
+		h = self.LOCAL_LOOT_H,
+		redeem_customization_callback = callback(self, self, "redeem_customization_xp")
+	})
+
+	self._customization_details:set_customization(drop.character_customization)
+	self._customization_details:show()
+
+	if drop.duplicate then
+		self._customization_details:set_duplicate()
+	end
+end
+
+function LootScreenGui:_layout_reward_weapon_skin(drop)
+	local skin_data = tweak_data.weapon.weapon_skins[drop.skin_id]
+	local weapon_data = tweak_data.weapon[skin_data.weapon_id]
+	local description = skin_data.weapon_desc_id and self:translate(skin_data.weapon_desc_id, false) or ""
+	self._weapon_skin_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponSkinRewardDetails, {
+		name = "weapon_skin_reward",
+		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
+		h = LootScreenGui.LOCAL_LOOT_H,
+		reward_image = tweak_data.gui:get_full_gui_data(skin_data.icon_large),
+		title = self:translate(skin_data.name_id, true),
+		item_title = self:translate(weapon_data.name_id, true),
+		item_desc = description,
+		rarity = skin_data.rarity
+	})
+
+	self._weapon_skin_reward:show()
+end
+
+function LootScreenGui:_layout_reward_melee_weapon(drop)
+	self._melee_weapon_reward = self._local_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponRewardDetails, {
+		name = "melee_weapon_reward",
+		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
+		h = LootScreenGui.LOCAL_LOOT_H
+	})
+
+	self._melee_weapon_reward:set_melee_weapon(drop.weapon_id)
+	self._melee_weapon_reward:show()
 end
 
 function LootScreenGui:refresh_peers_loot_display()
@@ -629,7 +648,7 @@ function LootScreenGui:close()
 	Overlay:gui():destroy_workspace(self._full_workspace)
 	LootScreenGui.super.close(self)
 
-	if not managers.raid_menu:is_pc_controller() then
+	if self._card_pack_reward and not managers.raid_menu:is_pc_controller() then
 		self._card_pack_reward:set_selected(false)
 	end
 end
@@ -637,11 +656,11 @@ end
 function LootScreenGui:on_loot_dropped_for_peer(drop)
 	local slot = nil
 
-	for i_slot, peer_slot in ipairs(self._peer_slots) do
+	for _, peer_slot in ipairs(self._peer_slots) do
 		if peer_slot.peer_id == drop.peer_id then
 			slot = peer_slot
 
-			return
+			break
 		end
 	end
 
@@ -656,7 +675,6 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	end
 
 	local peer_loot_params = {
-		x = 0,
 		text = "",
 		visible = true,
 		name = "peer_reward_" .. slot.peer_id,
@@ -674,6 +692,9 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 		slot.control = self._peer_loot_panel:create_custom_control(RaidGUIControlCharacterCustomizationPeerLoot, peer_loot_params)
 
 		slot.control:set_customization(drop.character_customization)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_SKIN then
+		peer_loot_params.weapon_skin = drop.weapon_skin
+		slot.control = self._peer_loot_panel:create_custom_control(RaidGUIControlWeaponSkinPeerLoot, peer_loot_params)
 	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
 		slot.control = self._peer_loot_panel:create_custom_control(RaidGUIControlWeaponPointPeerLoot, peer_loot_params)
 	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
@@ -700,7 +721,11 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 		player_name = "ERROR: no peer id for player"
 	end
 
-	slot.control:set_player_name(utf8.to_upper(player_name))
+	if managers.user:get_setting("capitalize_names") then
+		player_name = utf8.to_upper(player_name)
+	end
+
+	slot.control:set_player_name(player_name)
 
 	if self.peer_loot_shown then
 		local drop = self.local_player_loot_drop
@@ -1131,7 +1156,7 @@ function LootScreenGui:move_left()
 		return false
 	end
 
-	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
+	if self._card_pack_reward then
 		self._card_pack_reward:move_left()
 		self:bind_controller_inputs_card_rewards()
 	end
@@ -1146,7 +1171,7 @@ function LootScreenGui:move_right()
 		return false
 	end
 
-	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
+	if self._card_pack_reward then
 		self._card_pack_reward:move_right()
 		self:bind_controller_inputs_card_rewards()
 	end
@@ -1155,6 +1180,14 @@ function LootScreenGui:move_right()
 end
 
 function LootScreenGui:confirm_pressed()
+	local drop = self.local_player_loot_drop
+
+	if not drop or not self._card_pack_reward then
+		self:_continue_button_on_click()
+
+		return false
+	end
+
 	local selected_card_idx = self._card_pack_reward:selected_item_idx()
 
 	if selected_card_idx == nil then
@@ -1234,7 +1267,13 @@ function LootScreenGui:_check_gamercard_prompts(bindings, legend)
 			table.insert(bindings, keybind)
 
 			local translated_text = managers.localization:get_default_macros()[LootScreenGui.GAMERCARD_BUTTONS[i][2]]
-			translated_text = translated_text .. utf8.to_upper(self._peer_slots[i].peer_name)
+			local name = self._peer_slots[i].peer_name
+
+			if managers.user:get_setting("capitalize_names") then
+				name = utf8.to_upper(name)
+			end
+
+			translated_text = translated_text .. name
 
 			table.insert(legend.controller, {
 				translated_text = translated_text

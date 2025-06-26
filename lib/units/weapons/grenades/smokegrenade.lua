@@ -43,8 +43,8 @@ function SmokeGrenade:_play_sound_and_effects()
 
 	local parent = self._unit:orientation_object()
 	self._smoke_effect = World:effect_manager():spawn({
-		effect = tweak_data.common_effects.smoke_grenade,
-		parent = parent
+		parent = parent,
+		effect = tweak_data.common_effects.smoke_grenade
 	})
 	self._smoke_timer = 10
 end

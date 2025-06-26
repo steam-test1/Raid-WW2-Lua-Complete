@@ -71,16 +71,16 @@ function CorePlayEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "on_instigator", "Play at the instigators position")
 	self:_build_value_combobox(panel, panel_sizer, "effect", self:_effect_options(), "Select and effect from the combobox")
 	self:_build_value_number(panel, panel_sizer, "base_time", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "This is the minimum time to wait before spawning next effect")
 	self:_build_value_number(panel, panel_sizer, "random_time", {
-		floats = 2,
-		min = 0
+		min = 0,
+		floats = 2
 	}, "Random time is added to minimum time to give the time between effect spawns")
 	self:_build_value_number(panel, panel_sizer, "max_amount", {
-		floats = 0,
-		min = 0
+		min = 0,
+		floats = 0
 	}, "Maximum amount of spawns when repeating effects (0 = unlimited)")
 
 	local help = {
@@ -108,6 +108,13 @@ function CorePlayEffectUnitElement:add_to_mission_package()
 end
 
 CoreStopEffectUnitElement = CoreStopEffectUnitElement or class(MissionElement)
+CoreStopEffectUnitElement.LINK_VALUES = {
+	{
+		type = "operator",
+		output = true,
+		table_value = "elements"
+	}
+}
 StopEffectUnitElement = StopEffectUnitElement or class(CoreStopEffectUnitElement)
 
 function StopEffectUnitElement:init(...)
@@ -133,19 +140,14 @@ function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				b = 0,
 				g = 0,
 				r = 0.75,
+				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
 		end
 	end
-end
-
-function CoreStopEffectUnitElement:get_links_to_unit(...)
-	CoreStopEffectUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
 function CoreStopEffectUnitElement:update_editing()

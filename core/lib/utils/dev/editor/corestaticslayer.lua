@@ -23,6 +23,7 @@ function StaticsLayer:add_btns_to_toolbar(...)
 	StaticsLayer.super.add_btns_to_toolbar(self, ...)
 	self._btn_toolbar:add_tool("MOVE_TO_CONTINENT", "Move to continent", CoreEws.image_path("toolbar\\copy_folder_16x16.png"), "Move to continent")
 	self._btn_toolbar:connect("MOVE_TO_CONTINENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_move_to_continent"), nil)
+	self._btn_toolbar:add_separator()
 end
 
 function StaticsLayer:_on_gui_move_to_continent()
@@ -58,4 +59,8 @@ function StaticsLayer:set_enabled(enabled)
 	end
 
 	return false
+end
+
+function StaticsLayer:get_layer_name()
+	return "Statics"
 end

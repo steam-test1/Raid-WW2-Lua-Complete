@@ -400,12 +400,17 @@ function RaidExperienceManager:_set_total(value)
 end
 
 function RaidExperienceManager:experience_string(xp)
+	if not xp then
+		return "0"
+	end
+
 	local total = tostring(math.round(math.abs(xp)))
 	local reverse = string.reverse(total)
 	local s = ""
 
 	for i = 1, string.len(reverse) do
-		s = s .. string.sub(reverse, i, i) .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and RaidExperienceManager.THOUSAND_SEPARATOR or "")
+		s = s .. string.sub(reverse, i, i)
+		s = s .. (math.mod(i, 3) == 0 and i ~= string.len(reverse) and self.THOUSAND_SEPARATOR or "")
 	end
 
 	return string.reverse(s)

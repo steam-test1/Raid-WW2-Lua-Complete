@@ -169,31 +169,18 @@ function StatisticsTweakData:statistics_specializations()
 end
 
 function StatisticsTweakData:statistics_table()
-	local level_list = {
-		"flakturm",
-		"forest_gumpy",
-		"train_yard",
-		"radio_defense",
-		"ger_bridge",
-		"hunters",
-		"spies_test",
-		"convoy",
-		"tnd",
-		"sto",
-		"bunker_test",
-		"gold_rush",
-		"settlement",
-		"tutorial",
-		"ger_bridge_operation",
-		"fury_railway",
-		"silo",
-		"kelly",
-		"forest_bunker"
-	}
-	local job_list = {
-		"clear_skies",
-		"oper_flamable"
-	}
+	local level_list = {}
+
+	if tweak_data.operations then
+		level_list = tweak_data.operations:get_raids_index()
+	end
+
+	local job_list = {}
+
+	if tweak_data.operations then
+		job_list = tweak_data.operations:get_operations_index()
+	end
+
 	local mask_list = {
 		"character_locked"
 	}
@@ -222,7 +209,8 @@ function StatisticsTweakData:statistics_table()
 		"lee_enfield",
 		"browning",
 		"welrod",
-		"shotty"
+		"shotty",
+		"georg"
 	}
 	local melee_list = {
 		"weapon",

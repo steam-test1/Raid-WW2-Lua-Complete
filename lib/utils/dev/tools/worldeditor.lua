@@ -33,8 +33,6 @@ require("lib/units/editor/EnableUnitElement")
 require("lib/units/editor/SmokeGrenadeElement")
 require("lib/units/editor/SetOutlineElement")
 require("lib/units/editor/ExplosionDamageElement")
-require("lib/units/editor/BlackscreenElement")
-require("lib/units/editor/BlackscreenVariantElement")
 require("lib/units/editor/AIAttentionElement")
 require("lib/units/editor/AIAreaElement")
 require("lib/units/editor/CarryElement")
@@ -194,7 +192,6 @@ function WorldEditor:project_run_simulation(with_mission)
 
 	local level_id = self:layer("Level Settings"):get_setting("simulation_level_id")
 
-	managers.game_play_central:setup_effects(level_id)
 	managers.game_play_central:start_job_timer()
 end
 
@@ -215,7 +212,7 @@ function WorldEditor:project_stop_simulation()
 	managers.player:soft_reset()
 	managers.vehicle:on_simulation_ended()
 	managers.statistics:stop_session()
-	managers.environment_controller:set_all_blurzones(0)
+	managers.environment_controller:clear_all_blurzones()
 	managers.music:stop()
 	managers.game_play_central:on_simulation_ended()
 	managers.criminals:on_simulation_ended()
@@ -230,6 +227,7 @@ function WorldEditor:project_stop_simulation()
 	managers.airdrop:on_simulation_ended()
 	managers.queued_tasks:on_simulation_ended()
 	managers.drop_loot:on_simulation_ended()
+	managers.greed:on_simulation_ended()
 	managers.raid_job:on_simulation_ended()
 	managers.notification:on_simulation_ended()
 	managers.lootdrop:on_simulation_ended()
@@ -245,7 +243,7 @@ function WorldEditor:project_clear_units()
 		local layer = self:unit_in_layer(unit)
 
 		if layer then
-			layer:delete_unit(unit)
+			layer:delete_unit(unit, true)
 		else
 			World:delete_unit(unit)
 		end

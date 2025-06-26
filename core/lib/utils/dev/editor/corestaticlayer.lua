@@ -4,7 +4,20 @@ core:import("CoreEditorUtils")
 core:import("CoreInput")
 core:import("CoreEws")
 core:import("CoreTable")
+core:import("CoreUndoableCommand")
 
+local IDS_MOVE_FWD = Idstring("move_forward")
+local IDS_MOVE_BWD = Idstring("move_back")
+local IDS_MOVE_L = Idstring("move_left")
+local IDS_MOVE_R = Idstring("move_right")
+local IDS_MOVE_UP = Idstring("move_up")
+local IDS_MOVE_DWN = Idstring("move_down")
+local IDS_ROLL_L = Idstring("roll_left")
+local IDS_ROLL_R = Idstring("roll_right")
+local IDS_PITCH_L = Idstring("pitch_left")
+local IDS_PITCH_R = Idstring("pitch_right")
+local IDS_YAW_FWD = Idstring("yaw_backward")
+local IDS_YAW_BWD = Idstring("yaw_forward")
 StaticLayer = StaticLayer or class(CoreLayer.Layer)
 
 function StaticLayer:init(owner, save_name, units_vector, slot_mask)
@@ -14,6 +27,8 @@ function StaticLayer:init(owner, save_name, units_vector, slot_mask)
 	self._unit_name = ""
 	self._current_pos = Vector3(0, 0, 0)
 	self._offset_move_vec = Vector3(0, 0, 0)
+	self._spawning_unit = nil
+	self._point_units_at_current = nil
 	self._move_unit_rep = CoreInput.RepKey:new({
 		"move_forward",
 		"move_back",
@@ -45,7 +60,6 @@ function StaticLayer:move_to_continent(name)
 	managers.editor:freeze_gui_lists()
 
 	for _, unit in ipairs(delete_units) do
-		print("delete_unit", unit)
 		self:delete_unit(unit)
 	end
 
@@ -53,24 +67,33 @@ function StaticLayer:move_to_continent(name)
 	managers.editor:thaw_gui_lists()
 end
 
-function StaticLayer:clone(to_continent)
+function StaticLayer:clone(continent_name)
+	local continent = continent_name and managers.editor:continent(continent_name) or managers.editor:current_continent()
+
+	if continent:value("locked") then
+		managers.editor:output_warning("Can't create units in continent " .. continent:name() .. " because it is locked!")
+
+		return
+	end
+
 	managers.editor:freeze_gui_lists()
 
 	if self._selected_unit and not self:condition() then
 		local clone_units = self._selected_units
+		self._selected_units = {}
 
 		if managers.editor:using_groups() then
 			self._clone_create_group = true
 		end
 
-		self._selected_units = {}
+		local command = CoreUndoableCommand.CloneUnit:new(self)
 
-		for _, unit in ipairs(clone_units) do
-			local pos = unit:position()
-			local rot = unit:rotation()
-			self._unit_name = unit:name():s()
-			local old_unit = unit
-			local new_unit = self:do_spawn_unit(self._unit_name, pos, rot, to_continent)
+		for _, old_unit in ipairs(clone_units) do
+			local name = old_unit:name():s()
+			local pos = old_unit:position()
+			local rot = old_unit:rotation()
+			local reference = old_unit == self._selected_unit
+			local new_unit = command:execute(name, pos, rot, continent_name)
 
 			self:remove_name_id(new_unit)
 
@@ -81,6 +104,7 @@ function StaticLayer:clone(to_continent)
 		end
 
 		self:update_unit_settings()
+		managers.editor:add_undoable_command(command)
 	end
 
 	managers.editor:thaw_gui_lists()
@@ -88,14 +112,16 @@ function StaticLayer:clone(to_continent)
 end
 
 function StaticLayer:spawn_unit_release()
-	self._point_unit_at_current = nil
+	self._spawning_unit = nil
 end
 
 function StaticLayer:spawn_unit()
 	if not self._grab and not self:condition() then
 		self:do_spawn_unit(self._unit_name)
 
-		self._point_unit_at_current = true
+		if not self:alt() then
+			self._spawning_unit = true
+		end
 	end
 end
 
@@ -131,45 +157,34 @@ function StaticLayer:use_grab_info()
 	if self._grab then
 		self._grab = false
 
-		self:set_unit_positions(self._grab_info:position())
-		self:set_unit_rotations(self._grab_info:rotation() * self._selected_unit:rotation():inverse())
+		if self._move_command then
+			self._move_command:undo()
+
+			self._move_command = nil
+		end
+
+		if self._rotate_command then
+			self._rotate_command:undo()
+
+			self._rotate_command = nil
+		end
 	end
 end
 
-function StaticLayer:set_unit_positions(pos)
+function StaticLayer:set_unit_positions(pos, cancelled)
 	if not self._grab then
 		managers.editor:set_grid_altitude(pos.z)
 	end
 
-	if managers.editor:use_beta_undo() then
-		if not self._undo_last_move_t or TimerManager:now() - self._undo_last_move_t > 1 then
-			self._undo_last_move_pos = {}
+	self._move_command = self._move_command or CoreUndoableCommand.MoveUnit:new(self)
 
-			for _, unit in ipairs(self._selected_units) do
-				self._undo_last_move_pos[#self._undo_last_move_pos + 1] = {
-					unit = unit,
-					pos = unit:position(),
-					rot = unit:rotation()
-				}
-			end
-		end
+	self._move_command:execute(pos)
 
-		self._undo_last_move_t = TimerManager:now()
+	if not self._grab and not cancelled then
+		managers.editor:add_undoable_command(self._move_command)
+
+		self._move_command = nil
 	end
-
-	local reference = self._selected_unit
-
-	for _, unit in ipairs(self._selected_units) do
-		if unit ~= reference then
-			self:set_unit_position(unit, pos, reference:rotation())
-		end
-	end
-
-	reference:set_position(pos)
-
-	reference:unit_data().world_pos = pos
-
-	self:_on_unit_moved(reference, pos)
 end
 
 function StaticLayer:set_unit_position(unit, pos, rot)
@@ -183,42 +198,23 @@ function StaticLayer:set_unit_position(unit, pos, rot)
 	unit:set_moving()
 end
 
-function StaticLayer:set_unit_rotations(rot)
-	if managers.editor:use_beta_undo() then
-		if not self._undo_last_move_t or TimerManager:now() - self._undo_last_move_t > 1 then
-			self._undo_last_move_pos = {}
+function StaticLayer:set_unit_rotations(rot, cancelled)
+	self._rotate_command = self._rotate_command or CoreUndoableCommand.RotateUnit:new(self)
 
-			for _, unit in ipairs(self._selected_units) do
-				self._undo_last_move_pos[#self._undo_last_move_pos + 1] = {
-					unit = unit,
-					pos = unit:position(),
-					rot = unit:rotation()
-				}
-			end
-		end
+	self._rotate_command:execute(rot)
 
-		self._undo_last_move_t = TimerManager:now()
-	end
+	if not self._grab and not cancelled then
+		managers.editor:add_undoable_command(self._rotate_command)
 
-	local reference = self._selected_unit
-	local rot = rot * reference:rotation()
-
-	reference:set_rotation(rot)
-	self:_on_unit_rotated(reference, rot)
-
-	for _, unit in ipairs(self._selected_units) do
-		if unit ~= reference then
-			self:set_unit_position(unit, reference:position(), rot)
-			self:set_unit_rotation(unit, rot)
-		end
+		self._rotate_command = nil
 	end
 end
 
 function StaticLayer:set_unit_rotation(unit, rot)
-	local rot = rot * unit:unit_data().local_rot
+	local new_rot = rot * unit:unit_data().local_rot
 
-	unit:set_rotation(rot)
-	self:_on_unit_rotated(unit, rot)
+	unit:set_rotation(new_rot)
+	self:_on_unit_rotated(unit, new_rot)
 end
 
 function StaticLayer:_on_unit_moved(unit, pos)
@@ -258,26 +254,24 @@ function StaticLayer:rotate_unit(btn, pressed)
 	if self:alt() then
 		self._point_units_at_current = true
 	elseif self._selected_unit and not self:condition() then
-		local rot_axis = nil
+		local rot_axis, ref_rot = nil
 		local snap_axis = self:snap_rotation_axis()
+		local step = self:snap_rotation()
+		local coor_sys = managers.editor:coordinate_system()
 
-		if self:local_rot() then
-			if snap_axis == "x" then
-				rot_axis = self._selected_unit:rotation():x()
-			elseif snap_axis == "y" then
-				rot_axis = self._selected_unit:rotation():y()
-			elseif snap_axis == "z" then
-				rot_axis = self._selected_unit:rotation():z()
-			end
-		elseif snap_axis == "x" then
-			rot_axis = Vector3(1, 0, 0)
-		elseif snap_axis == "y" then
-			rot_axis = Vector3(0, 1, 0)
-		elseif snap_axis == "z" then
-			rot_axis = Vector3(0, 0, 1)
+		if coor_sys == "Local" then
+			ref_rot = self._selected_unit:rotation()
+		elseif coor_sys == "Camera" then
+			ref_rot = managers.editor:camera():rotation()
 		end
 
-		local step = self:snap_rotation()
+		if snap_axis == "x" then
+			rot_axis = ref_rot and ref_rot:x() or math.X
+		elseif snap_axis == "y" then
+			rot_axis = ref_rot and ref_rot:y() or math.Y
+		elseif snap_axis == "z" then
+			rot_axis = ref_rot and ref_rot:z() or math.Z
+		end
 
 		if self:shift() then
 			step = -step
@@ -318,7 +312,14 @@ function StaticLayer:set_select_unit(unit)
 end
 
 function StaticLayer:release_unit()
+	if not self._grab then
+		return
+	end
+
 	self._grab = false
+
+	self:set_unit_positions(self._current_pos)
+
 	self._offset_move_vec = Vector3(0, 0, 0)
 
 	if self._selected_unit then
@@ -330,11 +331,12 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:freeze_gui_lists()
 
 	if self._selected_unit and not self:condition() then
+		local command = CoreUndoableCommand.DeleteUnit:new(self)
 		local to_delete = CoreTable.clone(self._selected_units)
 
 		for _, unit in ipairs(to_delete) do
 			if table.contains(self._created_units, unit) then
-				self:delete_unit(unit)
+				command:execute(unit)
 			else
 				local unit_in_layer_name = managers.editor:unit_in_layer_name(unit)
 
@@ -342,10 +344,12 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to " .. tostring(unit_in_layer_name) .. " and cannot be deleted from here.")
 				else
 					managers.editor:output_warning("" .. tostring(unit:unit_data().name_id) .. " belongs to nothing and will be deleted")
-					self:delete_unit(unit)
+					command:execute(unit)
 				end
 			end
 		end
+
+		managers.editor:add_undoable_command(command)
 	end
 
 	managers.editor:thaw_gui_lists()
@@ -423,8 +427,8 @@ function StaticLayer:update(t, dt)
 end
 
 function StaticLayer:_update_point_at()
-	if self._point_unit_at_current then
-		self:update_aim_unit(self._selected_unit)
+	if self._spawning_unit and self:alt() then
+		self:update_aim_unit(self._selected_units[#self._selected_units])
 	elseif self._point_units_at_current then
 		if self:alt() then
 			for _, unit in ipairs(self._selected_units) do
@@ -486,21 +490,27 @@ function StaticLayer:update_move_triggers(t, dt)
 		return
 	end
 
-	local mov_vec = nil
-	local u_rot = self._selected_unit:rotation()
+	local coor_sys = managers.editor:coordinate_system()
+	local ref_rot, mov_vec = nil
 
-	if self._ctrl:down(Idstring("move_forward")) then
-		mov_vec = self:local_rot() and u_rot:y() or Vector3(0, 1, 0)
-	elseif self._ctrl:down(Idstring("move_back")) then
-		mov_vec = self:local_rot() and u_rot:y() * -1 or Vector3(0, 1, 0) * -1
-	elseif self._ctrl:down(Idstring("move_left")) then
-		mov_vec = self:local_rot() and u_rot:x() * -1 or Vector3(1, 0, 0) * -1
-	elseif self._ctrl:down(Idstring("move_right")) then
-		mov_vec = self:local_rot() and u_rot:x() or Vector3(1, 0, 0)
-	elseif self._ctrl:down(Idstring("move_up")) then
-		mov_vec = self:local_rot() and u_rot:z() or Vector3(0, 0, 1)
-	elseif self._ctrl:down(Idstring("move_down")) then
-		mov_vec = self:local_rot() and u_rot:z() * -1 or Vector3(0, 0, 1) * -1
+	if coor_sys == "Local" then
+		ref_rot = self._selected_unit:rotation()
+	elseif coor_sys == "Camera" then
+		ref_rot = managers.editor:camera():rotation()
+	end
+
+	if self._ctrl:down(IDS_MOVE_FWD) then
+		mov_vec = ref_rot and ref_rot:y() or math.Y
+	elseif self._ctrl:down(IDS_MOVE_BWD) then
+		mov_vec = ref_rot and -ref_rot:y() or -math.Y
+	elseif self._ctrl:down(IDS_MOVE_R) then
+		mov_vec = ref_rot and ref_rot:x() or math.X
+	elseif self._ctrl:down(IDS_MOVE_L) then
+		mov_vec = ref_rot and -ref_rot:x() or -math.X
+	elseif self._ctrl:down(IDS_MOVE_UP) then
+		mov_vec = ref_rot and ref_rot:z() or math.Z
+	elseif self._ctrl:down(IDS_MOVE_DWN) then
+		mov_vec = ref_rot and -ref_rot:z() or -math.Z
 	end
 
 	if mov_vec then
@@ -519,21 +529,27 @@ function StaticLayer:update_rotate_triggers(t, dt)
 		rot_speed = rot_speed / 2
 	end
 
-	local rot_axis = nil
-	local u_rot = self._selected_unit:rotation()
+	local coor_sys = managers.editor:coordinate_system()
+	local ref_rot, rot_axis = nil
 
-	if self._ctrl:down(Idstring("roll_left")) then
-		rot_axis = self:local_rot() and u_rot:z() or Vector3(0, 0, 1)
-	elseif self._ctrl:down(Idstring("roll_right")) then
-		rot_axis = (self:local_rot() and u_rot:z() or Vector3(0, 0, 1)) * -1
-	elseif self._ctrl:down(Idstring("pitch_right")) then
-		rot_axis = self:local_rot() and u_rot:y() or Vector3(0, 1, 0)
-	elseif self._ctrl:down(Idstring("pitch_left")) then
-		rot_axis = (self:local_rot() and u_rot:y() or Vector3(0, 1, 0)) * -1
-	elseif self._ctrl:down(Idstring("yaw_backward")) then
-		rot_axis = self:local_rot() and u_rot:x() or Vector3(1, 0, 0)
-	elseif self._ctrl:down(Idstring("yaw_forward")) then
-		rot_axis = (self:local_rot() and u_rot:x() or Vector3(1, 0, 0)) * -1
+	if coor_sys == "Local" then
+		ref_rot = self._selected_unit:rotation()
+	elseif coor_sys == "Camera" then
+		ref_rot = managers.editor:camera():rotation()
+	end
+
+	if self._ctrl:down(IDS_ROLL_L) then
+		rot_axis = ref_rot and ref_rot:z() or math.Z
+	elseif self._ctrl:down(IDS_ROLL_R) then
+		rot_axis = ref_rot and -ref_rot:z() or -math.Z
+	elseif self._ctrl:down(IDS_PITCH_R) then
+		rot_axis = ref_rot and ref_rot:y() or math.Y
+	elseif self._ctrl:down(IDS_PITCH_L) then
+		rot_axis = ref_rot and -ref_rot:y() or -math.Y
+	elseif self._ctrl:down(IDS_YAW_FWD) then
+		rot_axis = ref_rot and ref_rot:x() or math.X
+	elseif self._ctrl:down(IDS_YAW_BWD) then
+		rot_axis = ref_rot and -ref_rot:x() or -math.X
 	end
 
 	if rot_axis then
@@ -615,73 +631,49 @@ end
 
 function StaticLayer:get_help(text)
 	local t = "\t"
+	local tt = "\t\t"
 	local n = "\n"
-	text = text .. "Create unit:        Right mouse button" .. n
-	text = text .. t .. "+Alt;   Create without selections" .. n
-	text = text .. t .. "+Ctrl;  Create keeping selections" .. n
-	text = text .. t .. "+Shift; Create keeping selections" .. n
-	text = text .. "Select unit:        Left mouse button" .. n
-	text = text .. t .. "+Alt;   Deselect only" .. n
-	text = text .. t .. "+Ctrl;  Add to selections" .. n
-	text = text .. t .. "+Shift; Select as focused" .. n
-	text = text .. "Snap rotate:        Middle mouse button or [F] key" .. n
-	text = text .. t .. "+Alt;   Point at cursor" .. n
-	text = text .. t .. "+Ctrl;  Rotate by 1 degree" .. n
-	text = text .. t .. "+Shift; Reverse rotation" .. n
-	text = text .. "Move unit:          Thumb mouse button (keep pressed to drag)" .. n
-	text = text .. t .. "+Shift; Position at cursor" .. n
-	text = text .. "Remove unit:        Delete" .. n
-	text = text .. "Align with unit:    Point and press P" .. n
-	text = text .. "Sample unit:        Point and press B" .. n
-	text = text .. "Replace unit:       Press R" .. n
-	text = text .. "Clone unit:         Ctrl + V" .. n
-	text = text .. "Toggle local/world: Numpad 0" .. n
-	text = text .. "Rotate around X:    Numpad 8 and 2" .. n
-	text = text .. "Rotate around Y:    Numpad 1 and 3" .. n
-	text = text .. "Rotate around Z:    Numpad 4 and 6" .. n
+	text = text .. "Create unit:" .. t .. "Right mouse button" .. n
+	text = text .. tt .. "+Alt;   Create without selections" .. n
+	text = text .. tt .. "+Ctrl;  Create keeping selections" .. n
+	text = text .. tt .. "+Shift; Create keeping selections" .. n
+	text = text .. tt .. "While holding down create unit press Alt to aim the unit in a direction" .. n
+	text = text .. n
+	text = text .. "Select unit:" .. t .. "Left mouse button" .. n
+	text = text .. tt .. "+Alt;   Deselect only" .. n
+	text = text .. tt .. "+Ctrl;  Add to selections" .. n
+	text = text .. tt .. "+Shift; Select as focused" .. n
+	text = text .. n
+	text = text .. "Snap rotate:" .. t .. "Middle mouse button or [F] key" .. n
+	text = text .. tt .. "+Alt;   Point at cursor" .. n
+	text = text .. tt .. "+Ctrl;  Rotate by 1 degree" .. n
+	text = text .. tt .. "+Shift; Reverse rotation" .. n
+	text = text .. n
+	text = text .. "Move unit:" .. t .. "Thumb mouse button (keep pressed to drag)" .. n
+	text = text .. tt .. "+Shift; Position at cursor" .. n
+	text = text .. n
+	text = text .. "Remove unit:" .. t .. "Delete" .. n
+	text = text .. "Align with unit:" .. t .. "Point and press P" .. n
+	text = text .. "Sample unit:" .. t .. "Point and press B" .. n
+	text = text .. "Replace unit:" .. t .. "Press R" .. n
+	text = text .. "Clone unit:" .. t .. "Ctrl + V" .. n
+	text = text .. n
+	text = text .. "Toggle reference coordinate mode:" .. t .. "Numpad 0" .. n
+	text = text .. n
+	text = text .. "Rotate around X:" .. t .. "Numpad 8 and 2" .. n
+	text = text .. "Rotate around Y:" .. t .. "Numpad 1 and 3" .. n
+	text = text .. "Rotate around Z:" .. t .. "Numpad 4 and 6" .. n
+	text = text .. n
 	text = text .. "Clone values:       Point and press [M] key to clone values to all selected" .. n
-	text = text .. t .. "+Shift; Instead clone values from focused to pointed" .. n
+	text = text .. tt .. "+Shift; Instead clone values from focused to pointed" .. n
+	text = text .. n
 	text = text .. "Reset rotation:     Numpad-Enter (reset but keeps Z-axis rotations)" .. n
-	text = text .. t .. "+Shift; Reset all axis" .. n
-	text = text .. "Hide / Unide:       Ctrl+J will hide the selected units, CTRL+SHIFT+J will unide all hidden units" .. n
+	text = text .. tt .. "+Shift; Reset all axis" .. n
+	text = text .. n
+	text = text .. "Hide / Unide:" .. t .. "Ctrl + J to hide selected units" .. n
+	text = text .. "Unhide All:" .. t .. "Ctrl + Shift + J to unide all hidden units" .. n
 
 	return text
-end
-
-function StaticLayer:undo()
-	if not managers.editor:use_beta_undo() then
-		return
-	end
-
-	if self._undo_last_move_pos then
-		self._redo_last_move_pos = {}
-
-		for _, pos_info in ipairs(self._undo_last_move_pos) do
-			local unit = pos_info.unit
-
-			if alive(unit) then
-				local new_pos = pos_info.pos
-				local new_rot = pos_info.rot
-				self._redo_last_move_pos[#self._redo_last_move_pos + 1] = {
-					unit = unit,
-					pos = unit:position(),
-					rot = unit:rotation()
-				}
-
-				unit:set_position(new_pos)
-
-				unit:unit_data().world_pos = new_pos
-
-				self:_on_unit_moved(unit, new_pos)
-				unit:set_moving()
-				unit:set_rotation(new_rot)
-				self:_on_unit_rotated(unit, new_rot)
-			end
-		end
-
-		self._undo_last_move_pos = self._redo_last_move_pos
-		self._redo_last_move_pos = nil
-	end
 end
 
 function StaticLayer:deactivate()

@@ -5,7 +5,11 @@ HUDTeammateAI.DEFAULT_H = 46
 HUDTeammateAI.LEFT_PANEL_W = 56
 HUDTeammateAI.RIGHT_PANEL_X = 62
 HUDTeammateAI.PLAYER_NAME_FONT = "din_compressed_outlined_22"
+HUDTeammateAI.PLAYER_NAME_H = 30
 HUDTeammateAI.PLAYER_NAME_FONT_SIZE = 22
+HUDTeammateAI.PLAYER_HEALTH_H = 10
+HUDTeammateAI.PLAYER_HEALTH_BG_ICON = "backgrounds_health_bg"
+HUDTeammateAI.PLAYER_HEALTH_COLORS = tweak_data.gui.colors.player_health_colors
 HUDTeammateAI.INTERACTION_METER_BG = "player_panel_ai_downed_and_objective_countdown_bg"
 HUDTeammateAI.INTERACTION_METER_FILL = "teammate_interact_fill_large"
 HUDTeammateAI.TIMER_BG = "player_panel_ai_downed_and_objective_countdown_bg"
@@ -16,24 +20,24 @@ HUDTeammateAI.MOUNTED_WEAPON_ICON = "player_panel_status_mounted_weapon"
 HUDTeammateAI.DEAD_ICON = "player_panel_status_dead_ai"
 HUDTeammateAI.STATES = {
 	{
-		control = "dead_icon",
-		id = "dead"
+		id = "dead",
+		control = "dead_icon"
 	},
 	{
-		control = "timer_panel",
-		id = "downed"
+		id = "downed",
+		control = "timer_panel"
 	},
 	{
-		control = "interaction_meter_panel",
-		id = "interaction"
+		id = "interaction",
+		control = "interaction_meter_panel"
 	},
 	{
-		control = "mounted_weapon_icon",
-		id = "mounted_weapon"
+		id = "mounted_weapon",
+		control = "mounted_weapon_icon"
 	},
 	{
-		control = "nationality_icon",
-		id = "normal"
+		id = "normal",
+		control = "nationality_icon"
 	}
 }
 
@@ -54,6 +58,7 @@ function HUDTeammateAI:init(i, teammates_panel, params)
 	self:_create_timer()
 	self:_create_right_panel()
 	self:_create_player_name()
+	self:_create_player_health()
 end
 
 function HUDTeammateAI:_create_panel(teammates_panel)
@@ -95,8 +100,8 @@ function HUDTeammateAI:_create_nationality_icon()
 	local nationality = "german"
 	local nationality_icon = "player_panel_nationality_" .. tostring(nationality)
 	local nationality_icon_params = {
-		name = "nationality_icon",
 		valign = "center",
+		name = "nationality_icon",
 		halign = "center",
 		texture = tweak_data.gui.icons[nationality_icon].texture,
 		texture_rect = tweak_data.gui.icons[nationality_icon].texture_rect
@@ -109,17 +114,17 @@ end
 
 function HUDTeammateAI:_create_interaction_meter()
 	local interaction_meter_panel_params = {
-		layer = 4,
-		name = "interaction_meter_panel",
 		valign = "center",
+		layer = 4,
 		alpha = 0,
+		name = "interaction_meter_panel",
 		halign = "left"
 	}
 	self._interaction_meter_panel = self._status_panel:panel(interaction_meter_panel_params)
 	local interaction_meter_background_params = {
+		valign = "scale",
 		layer = 1,
 		name = "interaction_meter_background",
-		valign = "scale",
 		halign = "scale",
 		texture = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_BG].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_BG].texture_rect
@@ -131,11 +136,11 @@ function HUDTeammateAI:_create_interaction_meter()
 
 	local interaction_meter_params = {
 		render_template = "VertexColorTexturedRadial",
-		name = "interaction_meter",
-		position_z = 0,
 		layer = 2,
 		valign = "scale",
+		position_z = 0,
 		halign = "scale",
+		name = "interaction_meter",
 		texture = tweak_data.gui.icons[HUDTeammateAI.INTERACTION_METER_FILL].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.INTERACTION_METER_FILL),
@@ -155,19 +160,19 @@ end
 
 function HUDTeammateAI:_create_timer()
 	local timer_panel_params = {
-		x = 0,
 		name = "timer_panel",
 		layer = 5,
-		valign = "center",
+		x = 0,
 		alpha = 0,
-		halign = "left",
-		y = 0
+		valign = "center",
+		y = 0,
+		halign = "left"
 	}
 	self._timer_panel = self._status_panel:panel(timer_panel_params)
 	local timer_background_params = {
+		valign = "scale",
 		layer = 1,
 		name = "timer_background",
-		valign = "scale",
 		halign = "scale",
 		texture = tweak_data.gui.icons[HUDTeammateAI.TIMER_BG].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.TIMER_BG].texture_rect
@@ -178,11 +183,11 @@ function HUDTeammateAI:_create_timer()
 	timer_background:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_bar_params = {
-		render_template = "VertexColorTexturedRadial",
-		name = "timer_bar",
 		layer = 2,
 		valign = "scale",
 		halign = "scale",
+		render_template = "VertexColorTexturedRadial",
+		name = "timer_bar",
 		texture = tweak_data.gui.icons[HUDTeammateAI.TIMER_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDTeammateAI.TIMER_ICON),
@@ -199,13 +204,13 @@ function HUDTeammateAI:_create_timer()
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
 	local timer_text_params = {
+		x = 0,
+		layer = 3,
+		y = 0,
 		text = "23",
 		vertical = "center",
 		align = "center",
 		name = "timer_text",
-		x = 0,
-		layer = 3,
-		y = 0,
 		w = self._timer_panel:w(),
 		h = self._timer_panel:h(),
 		font = tweak_data.gui.fonts[HUDTeammateAI.TIMER_FONT],
@@ -215,14 +220,14 @@ function HUDTeammateAI:_create_timer()
 	local _, _, _, h = self._timer_text:text_rect()
 
 	self._timer_text:set_h(h)
-	self._timer_text:set_center_y(self._timer_panel:h() / 2 - 2)
+	self._timer_text:set_center_y(self._timer_panel:h() / 2)
 end
 
 function HUDTeammateAI:_create_dead_icon()
 	local dead_icon_params = {
+		valign = "center",
 		alpha = 0,
 		name = "dead_icon",
-		valign = "center",
 		halign = "center",
 		texture = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.DEAD_ICON].texture_rect
@@ -235,9 +240,9 @@ end
 
 function HUDTeammateAI:_create_mounted_weapon_icon()
 	local mounted_weapon_icon_params = {
+		valign = "center",
 		alpha = 0,
 		name = "mounted_weapon_icon",
-		valign = "center",
 		halign = "center",
 		texture = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammateAI.MOUNTED_WEAPON_ICON].texture_rect
@@ -260,24 +265,49 @@ function HUDTeammateAI:_create_right_panel()
 end
 
 function HUDTeammateAI:_create_player_name()
-	local player_name_params = {
-		text = "TEST",
+	self._player_name = self._right_panel:text({
+		y = -2,
+		text = "",
 		vertical = "center",
 		align = "left",
 		name = "player_name",
-		x = 0,
-		y = 0,
 		w = self._right_panel:w(),
-		h = self._right_panel:h(),
+		h = self.PLAYER_NAME_H,
 		font = tweak_data.gui.fonts[HUDTeammateAI.PLAYER_NAME_FONT],
 		font_size = HUDTeammateAI.PLAYER_NAME_FONT_SIZE
-	}
-	self._player_name = self._right_panel:text(player_name_params)
-	local _, _, _, h = self._player_name:text_rect()
+	})
+end
 
-	self._player_name:set_h(h)
-	self._player_name:set_center_y(self._right_panel:h() / 2 - 2)
-	self._player_name:set_y(math.ceil(self._player_name:y() - 0.5))
+function HUDTeammateAI:_create_player_health()
+	local health_panel = self._right_panel:panel({
+		name = "health_panel",
+		y = self._right_panel:h() / 2 + 5,
+		w = self._right_panel:w(),
+		h = self.PLAYER_HEALTH_H
+	})
+	local gui_data = tweak_data.gui:get_full_gui_data(self.PLAYER_HEALTH_BG_ICON)
+	local health_background = health_panel:bitmap({
+		valign = "center",
+		name = "health_background",
+		halign = "center",
+		texture = gui_data.texture,
+		texture_rect = gui_data.texture_rect
+	})
+
+	health_background:set_center_y(health_panel:h() / 2)
+
+	self._health_bar = health_panel:rect({
+		x = 1,
+		name = "health_bar",
+		w = health_background:w() - 2,
+		h = health_background:h() - 2,
+		color = tweak_data.gui.colors.progress_75,
+		layer = health_background:layer() + 1
+	})
+
+	self._health_bar:set_center_y(health_panel:h() / 2)
+
+	self._full_health_bar_w = self._health_bar:w()
 end
 
 function HUDTeammateAI:padding_down()
@@ -289,14 +319,13 @@ function HUDTeammateAI:is_ai()
 end
 
 function HUDTeammateAI:set_name(name)
-	self._player_name:set_text(utf8.to_upper(name))
+	self._name = name
 
-	local _, _, _, h = self._player_name:text_rect()
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
 
-	self._player_name:set_h(h)
-	self._player_name:set_center_y(self._right_panel:h() / 2 - 2)
-	self._player_name:set_center_y(self._right_panel:h() / 2 - 2)
-	self._player_name:set_y(math.ceil(self._player_name:y() - 0.5))
+	self._player_name:set_text(name)
 end
 
 function HUDTeammateAI:set_nationality(nationality)
@@ -306,6 +335,13 @@ function HUDTeammateAI:set_nationality(nationality)
 	self._nationality_icon:set_texture_rect(unpack(tweak_data.gui.icons[nationality_icon].texture_rect))
 	self._nationality_icon:set_center_x(self._left_panel:w() / 2)
 	self._nationality_icon:set_center_y(self._left_panel:h() / 2)
+end
+
+function HUDTeammateAI:set_health(data)
+	local health_percentage = math.clamp(data.current / data.total, 0, 1)
+
+	self._health_bar:set_w(health_percentage * self._full_health_bar_w)
+	self._health_bar:set_color(GuiTweakData.get_color_for_percentage(self.PLAYER_HEALTH_COLORS, health_percentage))
 end
 
 function HUDTeammateAI:show_turret_icon()
@@ -340,7 +376,21 @@ function HUDTeammateAI:set_condition(icon_data, text)
 	self._state = icon_data
 end
 
+function HUDTeammateAI:refresh()
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
+end
+
 function HUDTeammateAI:reset_state()
+	self:set_health({
+		total = 1,
+		current = 1
+	})
 	self._status_panel:child(self._displayed_state.control):set_alpha(0)
 
 	self._displayed_state = self._states[#self._states]

@@ -58,22 +58,6 @@ function GenericDLCManager:achievement_locked_content()
 	return self._achievement_locked_content
 end
 
-function GenericDLCManager:is_mask_achievement_locked(mask_id)
-	return self._achievement_locked_content.masks and self._achievement_locked_content.masks[mask_id]
-end
-
-function GenericDLCManager:is_material_achievement_locked(material_id)
-	return self._achievement_locked_content.materials and self._achievement_locked_content.materials[material_id]
-end
-
-function GenericDLCManager:is_texture_achievement_locked(texture_id)
-	return self._achievement_locked_content.textures and self._achievement_locked_content.textures[texture_id]
-end
-
-function GenericDLCManager:is_weapon_mod_achievement_locked(weapon_mod_id)
-	return self._achievement_locked_content.weapon_mods and self._achievement_locked_content.weapon_mods[weapon_mod_id]
-end
-
 function GenericDLCManager:on_tweak_data_reloaded()
 	self:setup()
 end
@@ -180,7 +164,7 @@ end
 function GenericDLCManager:on_signin_complete()
 end
 
-function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
+function GenericDLCManager:are_all_dlcs_unlocked(list_of_dlcs)
 	for _, dlc in ipairs(list_of_dlcs) do
 		if not self:is_dlc_unlocked(dlc) then
 			return false
@@ -188,6 +172,16 @@ function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
 	end
 
 	return true
+end
+
+function GenericDLCManager:is_any_dlc_unlocked(list_of_dlcs)
+	for _, dlc in ipairs(list_of_dlcs) do
+		if self:is_dlc_unlocked(dlc) then
+			return true
+		end
+	end
+
+	return false
 end
 
 function GenericDLCManager:is_dlc_unlocked(dlc)
@@ -223,17 +217,6 @@ end
 
 function GenericDLCManager:is_trial()
 	return not self:has_full_game()
-end
-
-function GenericDLCManager:is_installing()
-	if not DB:is_bundled() or IS_PC then
-		return false, 1
-	end
-
-	local install_progress = Application:installer():get_progress()
-	local is_installing = install_progress < 1
-
-	return is_installing, install_progress
 end
 
 function GenericDLCManager:dlcs_string()
@@ -468,14 +451,14 @@ function XB1DLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					is_default = true,
 					index = 0,
+					is_default = true,
 					verified = true
 				},
 				preorder = {
-					is_default = false,
 					index = 1,
-					product_id = "123456"
+					product_id = "123456",
+					is_default = false
 				}
 			}
 		}
@@ -534,26 +517,26 @@ function WINDLCManager:init()
 		Global.dlc_manager = {
 			all_dlc_data = {
 				full_game = {
-					verified = true,
 					no_install = true,
 					external = true,
+					verified = true,
 					app_id = tostring(self:get_app_id())
 				},
 				preorder = {
-					app_id = "707070",
-					no_install = true
+					no_install = true,
+					app_id = "707070"
 				},
 				special_edition = {
-					app_id = "707080",
-					no_install = true
+					no_install = true,
+					app_id = "707080"
 				},
 				raid_community = {
-					source_id = "103582791460014708",
-					no_install = true
+					no_install = true,
+					source_id = "103582791460014708"
 				},
 				official_soundtrack = {
-					app_id = "720860",
-					no_install = true
+					no_install = true,
+					app_id = "720860"
 				}
 			}
 		}

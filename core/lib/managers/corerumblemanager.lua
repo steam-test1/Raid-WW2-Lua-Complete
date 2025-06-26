@@ -45,16 +45,18 @@ function RumbleManager:stop(rumble_id)
 end
 
 function RumbleManager:register_controller(controller, pos_callback)
-	if self._rumbling_controller_types[controller.TYPE] then
-		local ctrl = controller:get_controller()
-		local key = ctrl:key()
-		self._registered_controllers[key] = ctrl
-		self._registered_controller_count[key] = (self._registered_controller_count[key] or 0) + 1
-		self._registered_controller_pos_callback_list[key] = self._registered_controller_pos_callback_list[key] or {}
-		self._registered_controller_pos_callback_list[key][pos_callback] = true
-
-		return true
+	if not self._rumbling_controller_types[controller.TYPE] then
+		return
 	end
+
+	local ctrl = controller:get_controller()
+	local key = ctrl:key()
+	self._registered_controllers[key] = ctrl
+	self._registered_controller_count[key] = (self._registered_controller_count[key] or 0) + 1
+	self._registered_controller_pos_callback_list[key] = self._registered_controller_pos_callback_list[key] or {}
+	self._registered_controller_pos_callback_list[key][pos_callback] = true
+
+	return true
 end
 
 function RumbleManager:unregister_controller(controller, pos_callback)

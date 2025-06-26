@@ -8,7 +8,7 @@ BuffCandyPickup.EFFECT_PARAMS = {
 	effect = "units/upd_candy/effects/candy_drop_vanish",
 	sound_event = "candy_vanish",
 	idstr_decal = Idstring("explosion_round"),
-	idstr_effect = Idstring("")
+	idstr_effect = IDS_EMPTY
 }
 
 function BuffCandyPickup:init(unit)

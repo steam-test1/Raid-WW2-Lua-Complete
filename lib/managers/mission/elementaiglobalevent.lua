@@ -39,6 +39,8 @@ function ElementAiGlobalEvent:init(...)
 	ElementAiGlobalEvent.super.init(self, ...)
 
 	if self._values.event then
+		Application:warn("[ElementAiGlobalEvent] Values 'event' exists and is the old format! Edit element and save level!", self._id, self._values.event)
+
 		self._values.wave_mode = self._values.event
 		self._values.event = nil
 	end
@@ -70,20 +72,12 @@ function ElementAiGlobalEvent:on_executed(instigator)
 	end
 
 	if AI_event and AI_event ~= "none" then
-		if AI_event == "police_called" then
+		if AI_event == "police_called" or AI_event == "gangsters_called" then
 			managers.groupai:state():on_police_called(managers.groupai:state().analyse_giveaway(blame, instigator, {
 				"vo_cbt"
 			}))
-		elseif AI_event == "police_weapons_hot" then
+		elseif AI_event == "police_weapons_hot" or AI_event == "gangster_weapons_hot" then
 			managers.groupai:state():on_police_weapons_hot(managers.groupai:state().analyse_giveaway(blame, instigator, {
-				"vo_cbt"
-			}))
-		elseif AI_event == "gangsters_called" then
-			managers.groupai:state():on_gangsters_called(managers.groupai:state().analyse_giveaway(blame, instigator, {
-				"vo_cbt"
-			}))
-		elseif AI_event == "gangster_weapons_hot" then
-			managers.groupai:state():on_gangster_weapons_hot(managers.groupai:state().analyse_giveaway(blame, instigator, {
 				"vo_cbt"
 			}))
 		end

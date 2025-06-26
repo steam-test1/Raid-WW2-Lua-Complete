@@ -49,11 +49,11 @@ function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	local name_label_params = {
 		wrap = true,
 		vertical = "center",
+		text = "UNKNOWN",
 		align = "left",
 		h = 24,
 		y = 0,
 		x = 0,
-		text = "UNKNOWN",
 		name = self._params.name .. "_name_label",
 		w = self._object:w(),
 		font = tweak_data.gui.fonts.din_compressed,
@@ -82,8 +82,8 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 	end
 
 	local skill_params = {
-		text = "",
 		line_enabled = true,
+		text = "",
 		x = RaidGUIControlWeaponSkillRow.BUTTON_START_X,
 		y = RaidGUIControlWeaponSkillRow.BUTTON_Y,
 		h = RaidGUIControlWeaponSkillRow.BUTTON_HEIGHT,

@@ -113,10 +113,14 @@ function PlayerBase:_setup_controller()
 
 	managers.rumble:register_controller(self._controller, self._rumble_pos_callback)
 	managers.controller:set_ingame_mode("main")
-	managers.controller:add_hotswap_callback("player_base", callback(self, self, "controller_hotswap_triggered"))
+	managers.controller:add_hotswap_callback("player_base", callback(self, self, "controller_hotswap_triggered"), 1)
 end
 
 function PlayerBase:controller_hotswap_triggered()
+	if self._controller then
+		managers.rumble:unregister_controller(self._controller, self._rumble_pos_callback)
+	end
+
 	self._controller = managers.controller:create_controller("player_" .. tostring(self._id), nil, false)
 
 	managers.rumble:register_controller(self._controller, self._rumble_pos_callback)

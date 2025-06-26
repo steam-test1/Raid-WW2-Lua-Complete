@@ -171,3 +171,8 @@ function PlayerFreefall:_pitch_down()
 
 	self._camera_unit:base():animate_pitch(t, nil, self._tweak_data.camera.target_pitch, 1.7)
 end
+
+function PlayerFreefall:set_class_tweak_data(class)
+	self._player_class = class
+	self._tweak_data = tweak_data.player.freefall
+end

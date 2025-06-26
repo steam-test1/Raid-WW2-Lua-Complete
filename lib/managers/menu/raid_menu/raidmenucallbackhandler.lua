@@ -52,21 +52,20 @@ function RaidMenuCallbackHandler:menu_options_on_click_network()
 end
 
 function RaidMenuCallbackHandler:menu_options_on_click_default()
-	local params = {
+	managers.menu:show_option_dialog({
 		title = managers.localization:text("dialog_reset_all_options_title"),
 		message = managers.localization:text("dialog_reset_all_options_message"),
 		callback = function ()
-			managers.user:reset_controls_setting_map()
+			managers.user:reset_setting_map("controls")
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod("normal", RaidMenuOptionsControlsKeybinds.CONTROLS_INFO)
-			managers.user:reset_video_setting_map()
+			managers.user:reset_setting_map("video")
 			managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
 			local resolution = Vector3(tweak_data.gui.base_resolution.x, tweak_data.gui.base_resolution.y, tweak_data.gui.base_resolution.z)
 
 			managers.menu:active_menu().callback_handler:set_resolution_default_raid_no_dialog(resolution)
-			managers.menu:active_menu().callback_handler:_refresh_brightness()
-			managers.user:reset_advanced_video_setting_map()
+			managers.user:reset_setting_map("video_advanced")
 
 			RenderSettings.texture_quality_default = "high"
 			RenderSettings.shadow_quality_default = "high"
@@ -75,17 +74,15 @@ function RaidMenuCallbackHandler:menu_options_on_click_default()
 
 			managers.menu:active_menu().callback_handler:apply_and_save_render_settings()
 			managers.menu:active_menu().callback_handler:_refresh_brightness()
-			managers.user:reset_sound_setting_map()
+			managers.user:reset_setting_map("sound")
 			managers.menu:active_menu().callback_handler:_reset_mainmusic()
-			managers.user:reset_network_setting_map()
+			managers.user:reset_setting_map("network")
 
 			Global.savefile_manager.setting_changed = true
 
 			managers.savefile:save_setting(true)
 		end
-	}
-
-	managers.menu:show_option_dialog(params)
+	})
 end
 
 function RaidMenuCallbackHandler:menu_options_on_click_reset_progress()
@@ -403,42 +400,47 @@ function RaidMenuCallbackHandler:resume_game_raid()
 	managers.raid_menu:on_escape()
 end
 
-function RaidMenuCallbackHandler:edit_game_settings()
-	managers.menu:open_node("edit_game_settings")
-end
-
 function RaidMenuCallbackHandler:restart_mission(item)
 	if not managers.vote:available() or managers.vote:is_restarting() then
 		return
 	end
 
+	if not managers.network:session():chk_all_peers_spawned() then
+		managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_mp_restart_mission_fail_message")
+
+		return
+	end
+
+	local is_solo = Global.game_settings.single_player or (managers.network:session() and managers.network:session():count_all_peers() or 1) == 1
+	local restart_text = managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_mission_host_message"
+	local restart_callback = is_solo and self.singleplayer_restart_mission_yes or self.restart_mission_yes
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_restart_mission_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_mission_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart_mission()
-			else
-				managers.vote:restart_mission_auto()
-			end
-
-			managers.raid_menu:on_escape()
-		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
-	dialog_data.button_list = {
-		yes_button,
-		no_button
+		text = managers.localization:text(restart_text),
+		button_list = {
+			{
+				text = managers.localization:text("dialog_yes"),
+				callback_func = restart_callback
+			},
+			{
+				cancel_button = true,
+				text = managers.localization:text("dialog_no"),
+				class = RaidGUIControlButtonShortSecondary
+			}
+		}
 	}
 
 	managers.system_menu:show(dialog_data)
+end
+
+function RaidMenuCallbackHandler:restart_mission_yes(item)
+	if managers.vote:option_vote_restart() then
+		managers.vote:restart_mission()
+	else
+		managers.vote:restart_mission_auto()
+	end
+
+	managers.raid_menu:on_escape()
 end
 
 function RaidMenuCallbackHandler:restart_to_camp_client(item)
@@ -471,53 +473,62 @@ function RaidMenuCallbackHandler:restart_to_camp(item)
 		return
 	end
 
+	if not managers.network:session():chk_all_peers_spawned() then
+		managers.menu:show_ok_only_dialog("dialog_warning_title", "dialog_mp_restart_camp_fail_message")
+
+		return
+	end
+
+	local is_solo = Global.game_settings.single_player or (managers.network:session() and managers.network:session():count_all_peers() or 1) == 1
+	local camp_text = managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message"
+	local camp_callback = is_solo and self.singleplayer_restart_to_camp_yes or self.restart_to_camp_yes
 	local dialog_data = {
 		title = managers.localization:text("dialog_mp_restart_level_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart()
-			else
-				managers.vote:restart_auto()
-			end
-
-			managers.raid_menu:on_escape()
-		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		class = RaidGUIControlButtonShortSecondary,
-		cancel_button = true
-	}
-	dialog_data.button_list = {
-		yes_button,
-		no_button
+		text = managers.localization:text(camp_text),
+		button_list = {
+			{
+				text = managers.localization:text("dialog_yes"),
+				callback_func = camp_callback
+			},
+			{
+				cancel_button = true,
+				text = managers.localization:text("dialog_no"),
+				class = RaidGUIControlButtonShortSecondary
+			}
+		}
 	}
 
 	managers.system_menu:show(dialog_data)
 end
 
+function RaidMenuCallbackHandler:restart_to_camp_yes(item)
+	if managers.vote:option_vote_restart() then
+		managers.vote:restart()
+	else
+		managers.vote:restart_auto()
+	end
+
+	managers.raid_menu:on_escape()
+end
+
 function RaidMenuCallbackHandler:singleplayer_restart_mission(item)
 	managers.menu:show_restart_mission_dialog({
-		yes_func = RaidMenuCallbackHandler.singleplayer_restart_restart_mission_yes
+		yes_func = RaidMenuCallbackHandler.singleplayer_restart_mission_yes
 	})
 end
 
-function RaidMenuCallbackHandler:singleplayer_restart_restart_mission_yes(item)
+function RaidMenuCallbackHandler:singleplayer_restart_mission_yes(item)
 	Application:set_pause(false)
 	managers.game_play_central:restart_the_mission()
 end
 
 function RaidMenuCallbackHandler:singleplayer_restart_game_to_camp(item)
 	managers.menu:show_return_to_camp_dialog({
-		yes_func = RaidMenuCallbackHandler.singleplayer_restart_game_to_camp_yes
+		yes_func = RaidMenuCallbackHandler.singleplayer_restart_to_camp_yes
 	})
 end
 
-function RaidMenuCallbackHandler:singleplayer_restart_game_to_camp_yes(item)
+function RaidMenuCallbackHandler:singleplayer_restart_to_camp_yes(item)
 	Application:set_pause(false)
 	managers.game_play_central:restart_the_game()
 end
@@ -695,8 +706,8 @@ function MenuCallbackHandler:set_camera_zoom_sensitivity_y_raid(value)
 	managers.user:set_setting("camera_zoom_sensitivity_y", value)
 end
 
-function MenuCallbackHandler:toggle_zoom_sensitivity_raid(value)
-	managers.user:set_setting("enable_camera_zoom_sensitivity", value)
+function MenuCallbackHandler:toggle_camera_sensitivity_separate_raid(value)
+	managers.user:set_setting("camera_sensitivity_separate", value)
 end
 
 function MenuCallbackHandler:invert_camera_vertically_raid(value)
@@ -713,6 +724,14 @@ end
 
 function MenuCallbackHandler:hold_to_duck_raid(value)
 	managers.user:set_setting("hold_to_duck", value)
+end
+
+function MenuCallbackHandler:hold_to_wheel_raid(value)
+	managers.user:set_setting("hold_to_wheel", value)
+end
+
+function MenuCallbackHandler:weapon_autofire_raid(value)
+	managers.user:set_setting("weapon_autofire", value)
 end
 
 function MenuCallbackHandler:toggle_rumble(value)
@@ -916,7 +935,7 @@ function MenuCallbackHandler:set_fullscreen_default_raid_no_dialog()
 end
 
 function MenuCallbackHandler:toggle_subtitle_raid(value)
-	managers.user:set_setting("subtitle", value)
+	managers.user:set_setting("subtitles", value)
 end
 
 function MenuCallbackHandler:set_hit_indicator_raid(value)
@@ -957,6 +976,10 @@ end
 
 function MenuCallbackHandler:toggle_skip_cinematics_raid(value)
 	managers.user:set_setting("skip_cinematics", value)
+end
+
+function MenuCallbackHandler:toggle_capitalize_names_raid(value)
+	managers.user:set_setting("capitalize_names", value)
 end
 
 function MenuCallbackHandler:toggle_warcry_ready_indicator_raid(value)
@@ -1059,91 +1082,6 @@ function MenuCallbackHandler:choice_fps_cap_raid(value)
 	managers.user:set_setting("fps_cap", value)
 end
 
-function MenuCallbackHandler:choice_max_streaming_chunk_raid(value)
-	managers.user:set_setting("max_streaming_chunk", value)
-end
-
 function MenuCallbackHandler:choice_choose_cb_mode_raid(value)
 	managers.user:set_setting("colorblind_setting", value)
-end
-
-function MenuCallbackHandler:set_default_options_raid(node_component)
-	local params = {
-		text = managers.localization:text("dialog_default_options_message"),
-		callback = function ()
-			managers.user:reset_setting_map()
-			self:_reset_mainmusic()
-			node_component:_load_controls_values()
-			node_component:_load_video_values()
-			node_component:_load_advanced_video_values()
-			node_component:_load_sound_values()
-			node_component:_load_network_values()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_control_options_raid(node_component)
-	local params = {
-		text = managers.localization:text("dialog_default_controls_options_message"),
-		callback = function ()
-			managers.user:reset_controls_setting_map()
-			node_component:_load_controls_values()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_keybinds_raid(node_component)
-	local params = {
-		text = managers.localization:text("dialog_use_default_keys_message"),
-		callback = function ()
-			managers.controller:load_settings("settings/controller_settings")
-			managers.controller:clear_user_mod("normal", RaidMenuOptionsControlsKeybinds.CONTROLS_INFO)
-			node_component:refresh_keybinds()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_video_options_raid(node_component, callback_function)
-	local params = {
-		text = managers.localization:text("dialog_default_video_options_message"),
-		callback = function ()
-			managers.user:reset_video_setting_map()
-			node_component:_load_video_values()
-			node_component:_load_advanced_video_values()
-			callback_function()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_sound_options_raid(node_component)
-	local params = {
-		text = managers.localization:text("dialog_default_sound_options_message"),
-		callback = function ()
-			managers.user:reset_sound_setting_map()
-			self:_reset_mainmusic()
-			node_component:_load_sound_values()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_network_options_raid(node_component)
-	local params = {
-		text = managers.localization:text("dialog_default_network_options_message"),
-		callback = function ()
-			managers.user:reset_network_setting_map()
-			node_component:_load_network_values()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
 end

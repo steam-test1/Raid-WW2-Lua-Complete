@@ -174,8 +174,8 @@ end
 
 function HUDMapWaypointPoint:_create_panel(panel)
 	local panel_params = {
-		halign = "center",
 		visible = false,
+		halign = "center",
 		valign = "center",
 		name = "map_waypoint_point_" .. tostring(self._id),
 		w = HUDMapWaypointPoint.W,

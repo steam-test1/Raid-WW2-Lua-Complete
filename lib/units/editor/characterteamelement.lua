@@ -1,6 +1,13 @@
 CharacterTeamElement = CharacterTeamElement or class(MissionElement)
 CharacterTeamElement.SAVE_UNIT_POSITION = false
 CharacterTeamElement.SAVE_UNIT_ROTATION = false
+CharacterTeamElement.LINK_VALUES = {
+	{
+		output = true,
+		type = "operator",
+		table_value = "elements"
+	}
+}
 
 function CharacterTeamElement:init(unit)
 	MissionElement.init(self, unit)
@@ -101,12 +108,12 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
 	local team_params = {
-		sorted = true,
-		name_proportions = 1,
 		ctrlr_proportions = 2,
+		sorted = true,
+		name = "Team:",
+		name_proportions = 1,
 		tooltip = "Select wanted team for the character.",
 		default = "",
-		name = "Team:",
 		panel = panel,
 		sizer = panel_sizer,
 		options = tweak_data.levels:get_team_names_indexed(),

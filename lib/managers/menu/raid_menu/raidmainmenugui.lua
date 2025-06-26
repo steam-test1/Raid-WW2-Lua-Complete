@@ -9,6 +9,7 @@ function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 
 	if RaidMenuCallbackHandler:is_in_main_menu() then
 		managers.raid_menu:show_background_video()
+		managers.raid_job:generate_bounty_job()
 	else
 		managers.raid_menu:show_background()
 	end
@@ -80,19 +81,15 @@ end
 
 function RaidMainMenuGui:_layout_title_logo()
 	self._title_label = self._root_panel:text({
-		x = 0,
-		text = "",
 		h = 64,
-		y = 0,
+		text = "",
 		w = self._root_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_56
 	})
 	self._title_icon = self._root_panel:bitmap({
-		x = 0,
 		h = 64,
 		w = 64,
-		y = 0,
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect
 	})
@@ -115,9 +112,9 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 
 	self._raid_logo_small = self._root_panel:image({
-		x = 0,
 		name = "raid_logo_small",
-		y = 0,
+		h = 242,
+		w = 400,
 		texture = logo_texture,
 		texture_rect = logo_texture_rect
 	})
@@ -174,8 +171,8 @@ function RaidMainMenuGui:_layout_list_menu()
 		x = 0,
 		h = 972,
 		vertical_spacing = 2,
-		selection_enabled = true,
 		loop_items = true,
+		selection_enabled = true,
 		name = "list_menu",
 		w = 480,
 		y = 144,
@@ -209,11 +206,11 @@ function RaidMainMenuGui:_layout_version_id()
 	end
 
 	local item_params = {
-		h = 100,
-		vertical = "bottom",
-		alpha = 0.33,
 		name = "version_id",
+		alpha = 0.33,
+		h = 100,
 		w = 600,
+		vertical = "bottom",
 		y = self._root_panel:h() - 100,
 		text = text
 	}
@@ -225,9 +222,9 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		self._widget_panel:clear()
 	else
 		local widget_panel_params = {
-			halign = "right",
-			valign = "top",
 			name = "widget_panel",
+			valign = "top",
+			halign = "right",
 			y = RaidMainMenuGui.WIDGET_PANEL_Y,
 			w = RaidMainMenuGui.WIDGET_PANEL_W,
 			h = RaidMainMenuGui.WIDGET_PANEL_H
@@ -241,8 +238,8 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 		local label_panel_params = {
 			h = 64,
 			name = "widget_label_panel",
-			halign = "scale",
-			visible = false
+			visible = false,
+			halign = "scale"
 		}
 		self._widget_label_panel = self._widget_panel:get_engine_panel():panel(label_panel_params)
 
@@ -264,13 +261,13 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 	}
 	local widget_title = self._widget_label_panel:text(widget_title_params)
 	local widget_action_title_params = {
-		text = "",
-		align = "right",
 		name = "widget_action_title",
 		vertical = "center",
+		align = "right",
 		halign = "right",
 		h = 64,
 		w = 150,
+		text = "",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.extra_small),
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		color = tweak_data.gui.colors.raid_grey_effects
@@ -410,10 +407,10 @@ function RaidMainMenuGui:_list_menu_data_source()
 	local vertical_spacing = 36
 	local list_items = {
 		{
-			icon = "menu_item_tutorial",
-			callback = "raid_play_tutorial",
 			item_font_size = 60,
+			callback = "raid_play_tutorial",
 			item_h = 72,
+			icon = "menu_item_tutorial",
 			text = managers.localization:to_upper_text("menu_tutorial_hl"),
 			vertical_spacing = vertical_spacing,
 			availability_flags = {
@@ -421,10 +418,10 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_online",
-			callback = "raid_play_online",
 			item_font_size = 60,
+			callback = "raid_play_online",
 			item_h = 72,
+			icon = "menu_item_online",
 			text = managers.localization:to_upper_text("menu_play"),
 			availability_flags = {
 				RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
@@ -463,6 +460,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 			icon = "menu_item_restart",
 			text = managers.localization:to_upper_text("menu_restart_mission"),
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
 			}
 		},
@@ -471,6 +469,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 			icon = "menu_item_restart",
 			text = managers.localization:to_upper_text("menu_restart_mission"),
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
 				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
 			}
@@ -480,31 +479,34 @@ function RaidMainMenuGui:_list_menu_data_source()
 			icon = "menu_item_restart",
 			text = managers.localization:to_upper_text("menu_restart_vote"),
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
 				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP
 			}
 		},
 		{
-			icon = "menu_item_camp",
 			callback = "singleplayer_restart_game_to_camp",
+			icon = "menu_item_camp",
 			text = managers.localization:to_upper_text("menu_restart_to_camp"),
 			vertical_spacing = vertical_spacing,
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART
 			}
 		},
 		{
-			icon = "menu_item_camp",
 			callback = "restart_to_camp",
+			icon = "menu_item_camp",
 			text = managers.localization:to_upper_text("menu_restart_to_camp"),
 			vertical_spacing = vertical_spacing,
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE
 			}
 		},
 		{
-			icon = "menu_item_camp",
 			callback = "restart_to_camp_client",
+			icon = "menu_item_camp",
 			text = managers.localization:to_upper_text("menu_restart_to_camp"),
 			vertical_spacing = vertical_spacing,
 			availability_flags = {
@@ -513,8 +515,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_missions",
 			callback = "on_mission_selection_clicked",
+			icon = "menu_item_missions",
 			text = managers.localization:to_upper_text("menu_mission_selection"),
 			breadcrumb = {
 				delay = 0.2,
@@ -525,8 +527,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_characters",
 			callback = "on_select_character_profile_clicked",
+			icon = "menu_item_characters",
 			text = managers.localization:to_upper_text("menu_character_setup"),
 			breadcrumb = {
 				delay = 0.2,
@@ -537,8 +539,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_weapons",
 			callback = "on_weapon_select_clicked",
+			icon = "menu_item_weapons",
 			text = managers.localization:to_upper_text("menu_header_weapons_screen_name"),
 			breadcrumb = {
 				delay = 0.2,
@@ -549,8 +551,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_skills",
 			callback = "on_select_character_skills_clicked",
+			icon = "menu_item_skills",
 			text = managers.localization:to_upper_text("menu_skills"),
 			vertical_spacing = vertical_spacing,
 			breadcrumb = {
@@ -563,8 +565,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_skills",
 			callback = "on_select_character_skills_clicked",
+			icon = "menu_item_skills",
 			text = managers.localization:to_upper_text("menu_skills"),
 			breadcrumb = {
 				delay = 0.2,
@@ -576,8 +578,8 @@ function RaidMainMenuGui:_list_menu_data_source()
 			}
 		},
 		{
-			icon = "menu_item_cards",
 			callback = "on_select_challenge_cards_view_clicked",
+			icon = "menu_item_cards",
 			text = managers.localization:to_upper_text("menu_challenge_cards"),
 			vertical_spacing = vertical_spacing,
 			breadcrumb = {
@@ -594,13 +596,14 @@ function RaidMainMenuGui:_list_menu_data_source()
 			icon = "menu_item_camp",
 			text = managers.localization:to_upper_text("menu_restart_to_camp"),
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT
 			}
 		},
 		{
-			icon = "menu_item_servers",
 			callback = "on_multiplayer_clicked",
+			icon = "menu_item_servers",
 			text = managers.localization:to_upper_text("menu_servers"),
 			vertical_spacing = vertical_spacing,
 			availability_flags = {

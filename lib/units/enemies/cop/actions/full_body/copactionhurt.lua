@@ -15,83 +15,83 @@ local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
 CopActionHurt = CopActionHurt or class()
 CopActionHurt.running_death_anim_variants = {
-	female = 5,
-	male = 26
+	male = 26,
+	female = 5
 }
 CopActionHurt.death_anim_variants = {
 	normal = {
 		crouching = {
 			fwd = {
-				low = 5,
-				high = 14
+				high = 14,
+				low = 5
 			},
 			bwd = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 5,
-				high = 14
+				high = 14,
+				low = 5
 			},
 			bwd = {
-				low = 2,
-				high = 3
+				high = 3,
+				low = 2
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		}
 	},
 	heavy = {
 		crouching = {
 			fwd = {
-				low = 2,
-				high = 7
+				high = 7,
+				low = 2
 			},
 			bwd = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 2,
-				high = 6
+				high = 6,
+				low = 2
 			},
 			bwd = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 1
+				high = 1,
+				low = 1
 			}
 		}
 	}
@@ -100,76 +100,76 @@ CopActionHurt.death_anim_fe_variants = {
 	normal = {
 		crouching = {
 			fwd = {
-				low = 2,
-				high = 5
+				high = 5,
+				low = 2
 			},
 			bwd = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 2,
-				high = 6
+				high = 6,
+				low = 2
 			},
 			bwd = {
-				low = 0,
-				high = 3
+				high = 3,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 2
+				high = 2,
+				low = 0
 			}
 		}
 	},
 	heavy = {
 		crouching = {
 			fwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			bwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			}
 		},
 		not_crouching = {
 			fwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			bwd = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			l = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			},
 			r = {
-				low = 0,
-				high = 0
+				high = 0,
+				low = 0
 			}
 		}
 	}
@@ -179,54 +179,54 @@ CopActionHurt.hurt_anim_variants = {
 	hurt = {
 		not_crouching = {
 			fwd = {
-				low = 5,
-				high = 13
+				high = 13,
+				low = 5
 			},
 			bwd = {
-				low = 1,
-				high = 2
+				high = 2,
+				low = 1
 			},
 			l = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			},
 			r = {
-				low = 1,
-				high = 3
+				high = 3,
+				low = 1
 			}
 		}
 	},
 	heavy_hurt = {
 		not_crouching = {
 			fwd = {
-				low = 7,
-				high = 18
+				high = 18,
+				low = 7
 			},
 			bwd = {
-				low = 2,
-				high = 3
+				high = 3,
+				low = 2
 			},
 			l = {
-				low = 2,
-				high = 4
+				high = 4,
+				low = 2
 			},
 			r = {
-				low = 2,
-				high = 4
+				high = 4,
+				low = 2
 			}
 		}
 	},
 	expl_hurt = {
+		bwd = 8,
 		l = 7,
 		r = 7,
-		fwd = 8,
-		bwd = 8
+		fwd = 8
 	},
 	fire_hurt = {
+		bwd = 8,
 		l = 7,
 		r = 7,
-		fwd = 8,
-		bwd = 8
+		fwd = 8
 	}
 }
 CopActionHurt.running_hurt_anim_variants = {
@@ -235,16 +235,16 @@ CopActionHurt.running_hurt_anim_variants = {
 ShieldActionHurt = ShieldActionHurt or class(CopActionHurt)
 ShieldActionHurt.hurt_anim_variants = deep_clone(CopActionHurt.hurt_anim_variants)
 ShieldActionHurt.hurt_anim_variants.expl_hurt = {
+	bwd = 2,
 	l = 2,
 	r = 2,
-	fwd = 2,
-	bwd = 2
+	fwd = 2
 }
 ShieldActionHurt.hurt_anim_variants.fire_hurt = {
+	bwd = 2,
 	l = 2,
 	r = 2,
-	fwd = 2,
-	bwd = 2
+	fwd = 2
 }
 CopActionHurt.fire_death_anim_variants_length = {
 	9,
@@ -273,17 +273,7 @@ function CopActionHurt:init(action_desc, common_data)
 	local action_type = action_desc.hurt_type
 	local start_dot_dance_antimation = action_desc.fire_dot_data and action_desc.fire_dot_data.start_dot_dance_antimation
 
-	if action_type == "fatal" then
-		redir_res = self._ext_movement:play_redirect("fatal")
-
-		if not redir_res then
-			debug_pause("[CopActionHurt:init] fatal redirect failed in", self._machine:segment_state(Idstring("base")))
-
-			return
-		end
-
-		managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
-	elseif action_desc.variant == "tase" then
+	if action_desc.variant == "tase" then
 		redir_res = self._ext_movement:play_redirect("tased")
 
 		if not redir_res then
@@ -332,7 +322,7 @@ function CopActionHurt:init(action_desc, common_data)
 	elseif action_type == "taser_tased" then
 		local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 
-		if (char_tweak.can_be_tased == nil or char_tweak.can_be_tased) and self._unit:brain() and self._unit:brain()._current_logic_name ~= "intimidated" then
+		if char_tweak.can_be_tased == nil or char_tweak.can_be_tased then
 			redir_res = self._ext_movement:play_redirect("taser")
 			local variant = math.random(4)
 			local dir_str = nil
@@ -718,7 +708,7 @@ function CopActionHurt:init(action_desc, common_data)
 
 	if not self._unit:base().nick_name then
 		if action_desc.variant == "fire" then
-			if tweak_table ~= "tank" and tweak_table ~= "tank_hw" and tweak_table ~= "shield" and not self._unit:sound():speaking() then
+			if tweak_table ~= "tank" and tweak_table ~= "shield" and not self._unit:sound():speaking() then
 				if action_desc.hurt_type == "fire_hurt" then
 					self._unit:sound():say("burnhurt", true, true)
 				elseif action_desc.hurt_type == "death" then
@@ -748,7 +738,7 @@ function CopActionHurt:init(action_desc, common_data)
 		end
 	end
 
-	if action_type == "death" or action_type == "bleedout" or action_desc.variant == "tased" or action_type == "fatal" then
+	if action_type == "death" or action_type == "bleedout" or action_desc.variant == "tased" then
 		self._floor_normal = self:_get_floor_normal(common_data.pos, common_data.fwd, common_data.right)
 	end
 
@@ -936,17 +926,13 @@ function CopActionHurt:on_exit()
 	end
 
 	if not self._expired and Network:is_server() then
-		if self._hurt_type == "bleedout" or self._hurt_type == "fatal" or self._variant == "tase" then
+		if self._hurt_type == "bleedout" or self._variant == "tase" then
 			self._unit:network():send("action_hurt_end")
 		end
 
-		if self._hurt_type == "bleedout" or self._hurt_type == "fatal" then
+		if self._hurt_type == "bleedout" then
 			self._ext_inventory:equip_selection(2, true)
 		end
-	end
-
-	if self._hurt_type ~= "fatal" and self._variant == "tase" then
-		-- Nothing
 	end
 end
 
@@ -1013,10 +999,10 @@ end
 function CopActionHurt:_upd_tased(t)
 	if not self._tased_time or self._tased_time < t then
 		if self._tased_down_time and t < self._tased_down_time then
-			local redir_res = self._ext_movement:play_redirect("fatal")
+			local redir_res = self._ext_movement:play_redirect("bleedout")
 
 			if not redir_res then
-				debug_pause("[CopActionHurt:init] fatal redirect failed in", self._machine:segment_state(Idstring("base")))
+				debug_pause("[CopActionHurt:init] bleedout redirect failed in", self._machine:segment_state(Idstring("base")))
 			end
 
 			self.update = self._upd_tased_down

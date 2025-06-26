@@ -124,12 +124,6 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 			end
 		end
 	end
-
-	self._crafts = {}
-
-	if params.crafts then
-		self._crafts = params.crafts
-	end
 end
 
 function ChallengeCardsManager:get_cards_count_per_type(card_list)
@@ -190,19 +184,17 @@ function ChallengeCardsManager:_steam_challenge_cards_inventory_loaded(params)
 end
 
 function ChallengeCardsManager:system_pre_start_raid(params)
-	local _peer_still_connecting = false
-
-	Application:trace("Starting raid")
+	local peer_still_connecting = false
 
 	for _, p in pairs(managers.network:session()._peers) do
 		if p._peer_connecting == true and not p._synced then
-			_peer_still_connecting = true
+			peer_still_connecting = true
 
 			break
 		end
 	end
 
-	if _peer_still_connecting == false then
+	if peer_still_connecting == false then
 		managers.raid_menu:close_all_menus()
 		managers.raid_menu:open_menu("ready_up_menu")
 
@@ -253,11 +245,20 @@ function ChallengeCardsManager:set_active_card(card)
 	end
 
 	if Network:is_server() then
-		Application:trace("[ChallengeCardsManager:set_active_card] server only", inspect(card))
+		Application:trace("[ChallengeCardsManager:set_active_card] server only", card and inspect(card) or "NIL")
 
-		local card_key = card.key_name
-		local locked = card.locked_suggestion or true
-		local card_status = card.status or ChallengeCardsManager.CARD_STATUS_ACTIVE
+		local card_key = nil
+		local locked = true
+		local card_status = ChallengeCardsManager.CARD_STATUS_ACTIVE
+
+		if not card then
+			card_key = ChallengeCardsManager.CARD_PASS_KEY_NAME
+			self._active_card = nil
+		else
+			card_key = card.key_name
+			locked = card.locked_suggestion or locked
+			card_status = card.status or card_status
+		end
 
 		managers.network:session():send_to_peers_synched("sync_active_challenge_card", card_key, locked, card_status)
 		managers.network.matchmake:set_challenge_card_info()
@@ -265,11 +266,17 @@ function ChallengeCardsManager:set_active_card(card)
 end
 
 function ChallengeCardsManager:sync_active_challenge_card(card_key, locked, card_status)
-	local card = deep_clone(tweak_data.challenge_cards:get_card_by_key_name(card_key))
-	card.locked_suggestion = locked
-	card.status = card_status
+	Application:info("[ChallengeCardsManager:sync_active_challenge_card] '" .. card_key .. "'", ChallengeCardsManager.CARD_PASS_KEY_NAME, card_key == ChallengeCardsManager.CARD_PASS_KEY_NAME, locked, card_status)
 
-	self:set_active_card(card)
+	if card_key == ChallengeCardsManager.CARD_PASS_KEY_NAME then
+		self:set_active_card(nil)
+	else
+		local card = deep_clone(tweak_data.challenge_cards:get_card_by_key_name(card_key))
+		card.locked_suggestion = locked
+		card.status = card_status
+
+		self:set_active_card(card)
+	end
 end
 
 function ChallengeCardsManager:get_suggested_cards()
@@ -573,8 +580,8 @@ end
 
 function ChallengeCardsManager:card_failed_warning(challenge_card_key, effect_id, peer_id)
 	local notification_data = {
-		duration = 10,
 		priority = 1,
+		duration = 10,
 		id = challenge_card_key,
 		notification_type = HUDNotification.CARD_FAIL,
 		card = challenge_card_key,
@@ -729,4 +736,168 @@ function ChallengeCardsManager:set_dropin_card(card_name)
 	end
 
 	Global.challenge_cards_manager.dropin_card = card_name
+end
+
+function ChallengeCardsManager:generate_bounty_card(seed)
+	if seed == nil then
+		Application:error("[BOUNTY] Cannot generate without seed here!", seed)
+	end
+
+	local card_data = deep_clone(tweak_data.challenge_cards.card_templates.bounty_card)
+
+	math.randomseed(seed)
+
+	card_data.menu_skip = true
+	card_data.steam_skip = true
+	card_data.def_id = nil
+	card_data.card_type = ChallengeCardsTweakData.CARD_TYPE_BOUNTY
+	card_data.status = ChallengeCardsManager.CARD_STATUS_NORMAL
+	card_data.locked_suggestion = true
+	card_data.seed = seed
+
+	self:_generate_bounty_card_effects(card_data)
+
+	card_data.bonus_xp = nil
+	card_data.bonus_xp_multiplier = nil
+	local diff_xp_range = math.clamp(card_data._difficulty, 0.1, 1)
+	card_data.bonus_xp = math.round(3000 * diff_xp_range, 100)
+
+	if diff_xp_range < 0.45 then
+		card_data.loot_drop_group = "bounty_common"
+		card_data.rarity = LootDropTweakData.RARITY_COMMON
+		card_data.texture = "cc_bounty_common_hud"
+	elseif diff_xp_range < 0.8 then
+		card_data.loot_drop_group = "bounty_uncommon"
+		card_data.rarity = LootDropTweakData.RARITY_UNCOMMON
+		card_data.texture = "cc_bounty_uncommon_hud"
+	else
+		card_data.loot_drop_group = "bounty_rare"
+		card_data.rarity = LootDropTweakData.RARITY_RARE
+		card_data.texture = "cc_bounty_rare_hud"
+	end
+
+	if card_data._name ~= "" then
+		card_data.name = card_data._name
+	else
+		card_data.name = table.random(tweak_data.challenge_cards.bounty_data.default_names)
+	end
+
+	return card_data
+end
+
+function ChallengeCardsManager:_generate_bounty_card_effects(card_data)
+	card_data.effects = {}
+	card_data._name = ""
+	card_data._difficulty = 0
+	local bounty_filters = managers.raid_job:bounty_job_data().bounty_filters
+	local effect_forbids = bounty_filters and bounty_filters.forbid_buffs and clone(bounty_filters.forbid_buffs) or {}
+	local effects_library = tweak_data.challenge_cards.bounty_data.effects_library
+	local effects_libkeys = table.map_keys(effects_library)
+	local effect_negative_key = table.random(effects_libkeys)
+	local effect_negative_data = effects_library[effect_negative_key]
+
+	while not effect_negative_data or not effect_negative_data[ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE] do
+		effect_negative_key = table.random(effects_libkeys)
+		effect_negative_data = effects_library[effect_negative_key]
+	end
+
+	local effect_negative_stats = table.random(effect_negative_data[ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE])
+	local effect_negative_desc_params = {}
+
+	if effect_negative_data.forbids then
+		for _, forbid in ipairs(effect_negative_data.forbids) do
+			table.insert(effect_forbids, forbid)
+		end
+	end
+
+	if card_data._name == "" and effect_negative_data.names and effect_negative_data.names[ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE] then
+		local t = effect_negative_data.names[ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE]
+		card_data._name = table.random(t)
+	end
+
+	for i = 1, #effect_negative_stats do
+		table.insert(card_data.effects, {
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			name = effect_negative_key,
+			value = effect_negative_stats[i].value or nil,
+			effect_class = effect_negative_stats[i].effect_class
+		})
+
+		if effect_negative_stats[i].includes then
+			for added_effect, added_effect_data in pairs(effect_negative_stats[i].includes) do
+				table.insert(card_data.effects, {
+					type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+					name = added_effect,
+					value = added_effect_data.value or nil,
+					effect_class = added_effect_data.effect_class
+				})
+			end
+		end
+
+		if #effect_negative_stats[i] then
+			effect_negative_desc_params["EFFECT_VALUE_" .. i] = effect_negative_stats[i].text or nil
+		end
+
+		if effect_negative_stats[i].difficulty then
+			card_data._difficulty = card_data._difficulty + effect_negative_stats[i].difficulty
+		end
+
+		if effect_negative_stats.added_forbids then
+			for _, forbid in ipairs(effect_negative_stats.added_forbids) do
+				table.insert(effect_forbids, forbid)
+			end
+		end
+	end
+
+	card_data.negative_description = {
+		desc_id = effect_negative_data.descriptions[ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE],
+		desc_params = effect_negative_desc_params
+	}
+	local effect_positive_key = table.random(effects_libkeys)
+	local effect_positive_data = effects_library[effect_positive_key]
+
+	while table.contains(effect_forbids, effect_positive_key) or effect_positive_key == effect_negative_key or not effect_positive_data[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE] do
+		effect_positive_key = table.random(effects_libkeys)
+		effect_positive_data = effects_library[effect_positive_key]
+	end
+
+	local effect_positive_stats = table.random(effect_positive_data[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE])
+	local effect_positive_desc_params = {}
+
+	if card_data._name == "" and effect_positive_data.names and effect_positive_data.names[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE] then
+		card_data._name = table.random(effect_positive_data.names[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE])
+	end
+
+	for i = 1, #effect_positive_stats do
+		table.insert(card_data.effects, {
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			name = effect_positive_key,
+			value = effect_positive_stats[i].value,
+			effect_class = effect_positive_stats[i].effect_class
+		})
+
+		if effect_positive_stats[i].includes then
+			for added_effect, added_effect_data in pairs(effect_positive_stats[i].includes) do
+				table.insert(card_data.effects, {
+					type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+					name = added_effect,
+					value = added_effect_data.value or nil,
+					effect_class = added_effect_data.effect_class
+				})
+			end
+		end
+
+		if effect_positive_stats[i].difficulty then
+			card_data._difficulty = card_data._difficulty + effect_positive_stats[i].difficulty
+		end
+
+		if #effect_positive_stats[i] then
+			effect_positive_desc_params["EFFECT_VALUE_" .. i] = effect_positive_stats[i].text or nil
+		end
+	end
+
+	card_data.positive_description = {
+		desc_id = effect_positive_data.descriptions[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE],
+		desc_params = effect_positive_desc_params
+	}
 end

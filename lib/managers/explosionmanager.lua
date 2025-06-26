@@ -7,7 +7,6 @@ ExplosionManager.SPLINTER_VECTOR_TABLE = {
 	Vector3(0, 0, 1):normalized(),
 	Vector3(0, 0, -1):normalized()
 }
-local empty_idstr = Idstring("")
 local idstr_explosion_std = Idstring("explosion_std")
 local tmp_vec3 = Vector3()
 
@@ -450,15 +449,6 @@ function ExplosionManager:player_feedback(position, normal, range, custom_params
 	}
 
 	feedback:play(unpack(params))
-
-	if custom_params and custom_params.sound_muffle_effect then
-		local sound_eff_range = range / 4
-		local sound_eff_mul = math.clamp(1 - distance / (sound_eff_range * sound_eff_range), 0, 1)
-
-		if sound_eff_mul >= 0.3 then
-			player:character_damage():on_flashbanged(sound_eff_mul)
-		end
-	end
 end
 
 local decal_ray_from = Vector3()
@@ -506,7 +496,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 
 	if ray then
 		local material_name, _, _ = World:pick_decal_material(ray.unit, decal_ray_from, decal_ray_to, slotmask_world_geometry)
-		sound_switch_name = material_name ~= empty_idstr and material_name
+		sound_switch_name = material_name ~= IDS_EMPTY and material_name
 	end
 
 	if effect_idstring == tweak_data.common_effects.fire_molotov_grenade and molotov_damage_effect_table ~= nil and #molotov_damage_effect_table <= 1 or effect_idstring ~= tweak_data.common_effects.fire_molotov_grenade then
@@ -538,7 +528,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 		local units = on_unit or World:find_units("intersect", "cylinder", from, to, 100, slotmask_world_geometry)
 		local redir_name = World:project_decal(idstr_decal or idstr_explosion_std, ray.position, ray.ray, on_unit or units, nil, ray.normal)
 
-		if redir_name ~= empty_idstr then
+		if redir_name ~= IDS_EMPTY then
 			World:effect_manager():spawn({
 				effect = redir_name,
 				position = ray.position,
@@ -546,7 +536,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 			})
 		end
 
-		if idstr_effect and idstr_effect ~= empty_idstr then
+		if idstr_effect and idstr_effect ~= IDS_EMPTY then
 			local id = World:effect_manager():spawn({
 				effect = idstr_effect,
 				position = ray.position,

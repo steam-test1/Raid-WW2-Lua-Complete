@@ -41,10 +41,6 @@ function CopLogicTurret.queued_update(data)
 	Application:debug("*** CopLogicTurret.queued_update")
 end
 
-function CopLogicTurret.on_intimidated(data, amount, aggressor_unit)
-	Application:debug("*** CopLogicTurret.on_intimidated")
-end
-
 function CopLogicTurret.death_clbk(data, damage_info)
 	if data.unit:unit_data().turret_weapon then
 		data.unit:unit_data().turret_weapon:on_puppet_death(data, damage_info)

@@ -70,13 +70,13 @@ function HUDCardDetails:_create_bonus()
 	}
 	self._bonus_icon = self._bonus_panel:bitmap(bonus_icon_params)
 	local bonus_text_params = {
-		y = 4,
-		name = "bonus_text",
 		align = "left",
-		valign = "scale",
 		text = "",
 		wrap = true,
 		vertical = "top",
+		y = 4,
+		name = "bonus_text",
+		valign = "scale",
 		x = HUDCardDetails.TEXT_X,
 		w = self._bonus_panel:w() - HUDCardDetails.TEXT_X,
 		h = self._bonus_panel:h() - 4,
@@ -103,13 +103,13 @@ function HUDCardDetails:_create_malus()
 	}
 	self._malus_icon = self._malus_panel:bitmap(malus_icon_params)
 	local malus_text_params = {
-		y = 4,
-		name = "malus_text",
 		align = "left",
-		valign = "scale",
 		text = "",
 		wrap = true,
 		vertical = "top",
+		y = 4,
+		name = "malus_text",
+		valign = "scale",
 		x = HUDCardDetails.TEXT_X,
 		w = self._malus_panel:w() - HUDCardDetails.TEXT_X,
 		h = self._malus_panel:h() - 4,

@@ -46,8 +46,8 @@ function WeaponInventoryManager:setup()
 	self._weapons = {}
 
 	self:_setup_initial_weapons()
-	self:_setup_initial_weapon_skins()
 	self:_setup_weapon_challenges()
+	self:_setup_skins()
 end
 
 function WeaponInventoryManager:_setup_initial_weapons()
@@ -97,24 +97,23 @@ function WeaponInventoryManager:_setup_initial_weapons()
 	end
 end
 
-function WeaponInventoryManager:_setup_initial_weapon_skins()
-	self._weapon_skins = {
-		_applied = {}
-	}
+function WeaponInventoryManager:_setup_skins()
+	self._owned_skins = {}
+	self._applied_skins = {}
 end
 
 function WeaponInventoryManager:_setup_weapon_challenges()
 	for _, skin_data in pairs(tweak_data.weapon.weapon_skins) do
 		if skin_data.challenge then
 			local challenge_tasks = {
-				tweak_data.challenge[skin_data.challenge]
+				tweak_data.challenge[skin_data.challenge.id]
 			}
 			local challenge_data = {
 				unlock = skin_data.name_id
 			}
 
-			if managers.challenge:challenge_exists(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge) then
-				local challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge)
+			if managers.challenge:challenge_exists(skin_data.challenge.category, skin_data.challenge.id) then
+				local challenge = managers.challenge:get_challenge(skin_data.challenge.category, skin_data.challenge.id)
 				local tasks = challenge:tasks()
 
 				challenge:set_data(challenge_data)
@@ -123,7 +122,7 @@ function WeaponInventoryManager:_setup_weapon_challenges()
 					challenge:set_tasks(challenge_tasks)
 				end
 			else
-				managers.challenge:create_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge, challenge_tasks, nil, challenge_data)
+				managers.challenge:create_challenge(skin_data.challenge.category, skin_data.challenge.id, skin_data.challenge, challenge_tasks, nil, challenge_data)
 			end
 		end
 	end
@@ -157,7 +156,9 @@ function WeaponInventoryManager:is_drop_inventory_complete_melee()
 	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
 
 	for _, weapon_data in pairs(all_melee_weapons) do
-		if weapon_data.droppable and not weapon_data.is_challenge_reward and not self:is_melee_weapon_owned(weapon_data.weapon_id) then
+		local valid = weapon_data.droppable and not weapon_data.is_challenge_reward
+
+		if valid and not self:is_melee_weapon_owned(weapon_data.weapon_id) then
 			return false
 		end
 	end
@@ -247,16 +248,23 @@ function WeaponInventoryManager:get_bm_weapon_category_name_by_bm_category_id(bm
 	end
 end
 
-function WeaponInventoryManager:save_account_wide_info(data)
+function WeaponInventoryManager:save_profile_slot(data)
 	local state = {
 		version_account_wide = self.version_account_wide,
 		melee_weapons = self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE],
-		weapon_skins = self._weapon_skins
+		owned_skins = self._owned_skins
 	}
 	data.WeaponInventoryManager = state
 end
 
-function WeaponInventoryManager:load_account_wide_info(data, version_account_wide)
+function WeaponInventoryManager:save(data)
+	local state = {
+		applied_skins = self._applied_skins
+	}
+	data.WeaponInventoryManager = state
+end
+
+function WeaponInventoryManager:load_profile_slot(data)
 	self:setup()
 
 	local state = data.WeaponInventoryManager
@@ -302,7 +310,24 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 		end
 	end
 
-	self._weapon_skins = state.weapon_skins
+	self._owned_skins = state.owned_skins or {}
+
+	for skin_id, gold_price in pairs(self._owned_skins) do
+		if not tweak_data.weapon.weapon_skins[skin_id] then
+			self._owned_skins = nil
+		end
+	end
+end
+
+function WeaponInventoryManager:load(data)
+	local state = data.WeaponInventoryManager
+	self._applied_skins = state and state.applied_skins or {}
+
+	for weapon_id, skin_id in pairs(self._applied_skins) do
+		if not self:is_weapon_skin_owned(skin_id) then
+			self._applied_skins[weapon_id] = nil
+		end
+	end
 end
 
 function WeaponInventoryManager:get_weapon_category_by_weapon_category_id(weapon_category_id)
@@ -408,21 +433,37 @@ function WeaponInventoryManager:is_melee_weapon_owned(weapon_id)
 	return melee_weapon_data and melee_weapon_data.unlocked or false
 end
 
+function WeaponInventoryManager:unlock_skin(skin_id)
+	local skin_data = tweak_data.weapon.weapon_skins[skin_id]
+
+	if not skin_data then
+		return false
+	end
+
+	if skin_data.dlc and (type(skin_data.dlc) == "table" and not managers.dlc:is_any_dlc_unlocked(skin_data.dlc) or not managers.dlc:is_dlc_unlocked(skin_data.dlc)) then
+		return false
+	end
+
+	if skin_data.gold_price and managers.gold_economy:current() < skin_data.gold_price then
+		return false
+	end
+
+	self._owned_skins[skin_id] = skin_data.gold_price or 0
+end
+
 function WeaponInventoryManager:get_owned_weapon_skins()
 	local result = {}
 	local unlocked_items = tweak_data.dlc:get_unlocked_weapon_skins()
 
-	if self._weapon_skins then
-		for skin_id, skin_data in pairs(self._weapon_skins) do
-			local item_tweaks = tweak_data.weapon.weapon_skins[skin_id]
+	for skin_id, skin_data in pairs(self._owned_skins) do
+		local item_tweaks = tweak_data.weapon.weapon_skins[skin_id]
 
-			if not item_tweaks.dlc or unlocked_items[skin_id] then
-				table.insert(result, {
-					skin_id = skin_id,
-					owned = skin_data.owned,
-					unlocked = skin_data.unlocked or unlocked_items[skin_id]
-				})
-			end
+		if not item_tweaks.dlc or unlocked_items[skin_id] then
+			table.insert(result, {
+				owned = true,
+				unlocked = true,
+				skin_id = skin_id
+			})
 		end
 	end
 
@@ -430,29 +471,41 @@ function WeaponInventoryManager:get_owned_weapon_skins()
 end
 
 function WeaponInventoryManager:is_weapon_skin_owned(skin_id)
-	Application:trace("[WeaponInventoryManager:is_weapon_skin_owned]")
+	local skin_data = tweak_data.weapon.weapon_skins[skin_id]
 
-	local item_data = self._weapon_skins[skin_id]
+	if not skin_data then
+		return false
+	end
 
-	return item_data and item_data.unlocked or false
+	if skin_data.dlc then
+		if type(skin_data.dlc) == "table" then
+			return managers.dlc:is_any_dlc_unlocked(skin_data.dlc)
+		else
+			return managers.dlc:is_dlc_unlocked(skin_data.dlc)
+		end
+	elseif self._owned_skins[skin_id] then
+		return true
+	elseif skin_data.challenge then
+		local challenge = managers.challenge:get_challenge(skin_data.challenge.category, skin_data.challenge.id)
+
+		return challenge and challenge:completed()
+	end
 end
 
 function WeaponInventoryManager:set_weapons_skin(weapon_id, skin_id)
 	Application:trace("[WeaponInventoryManager:set_weapons_skin]", weapon_id, skin_id)
 
-	self._weapon_skins = self._weapon_skins or {}
-	self._weapon_skins._applied = self._weapon_skins._applied or {}
-	self._weapon_skins._applied[weapon_id] = skin_id
+	self._applied_skins[weapon_id] = skin_id
 end
 
-function WeaponInventoryManager:get_weapons_skin(weapon_id)
-	if not self._weapon_skins or not self._weapon_skins._applied then
-		Application:trace("[WeaponInventoryManager:get_weapons_skin] FAILED")
+function WeaponInventoryManager:get_applied_weapon_skin(weapon_id)
+	if not self._applied_skins then
+		Application:trace("[WeaponInventoryManager:get_applied_weapon_skin] FAILED")
 
 		return nil
 	end
 
-	local skin_id = self._weapon_skins._applied[weapon_id]
+	local skin_id = self._applied_skins[weapon_id]
 
 	if not skin_id then
 		return
@@ -461,6 +514,47 @@ function WeaponInventoryManager:get_weapons_skin(weapon_id)
 	local skin_data = tweak_data.weapon.weapon_skins[skin_id]
 
 	return skin_id, skin_data
+end
+
+function WeaponInventoryManager:get_weapon_skin_reward_by_rarity(rarity)
+	local collection = {}
+
+	for skin_id, skin_data in pairs(tweak_data.weapon.weapon_skins) do
+		if skin_data.rarity == rarity and skin_data.droppable then
+			local locked = skin_data.dlc or skin_data.challenge
+			local owned = self:is_weapon_skin_owned(skin_id)
+
+			if not locked and not owned then
+				table.insert(collection, skin_id)
+			end
+		end
+	end
+
+	return collection
+end
+
+function WeaponInventoryManager:is_drop_inventory_complete_skins(rarity)
+	for skin_id, skin_data in pairs(tweak_data.weapon.weapon_skins) do
+		if (not rarity or skin_data.rarity == rarity) and skin_data.droppable then
+			local locked = skin_data.dlc or skin_data.challenge
+			local owned = self:is_weapon_skin_owned(skin_id)
+
+			if not locked and not owned then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
+function WeaponInventoryManager:add_weapon_skin_as_drop(drop)
+	self._owned_skins[drop.skin_id] = 0
+
+	managers.breadcrumb:add_breadcrumb(BreadcrumbManager.CATEGORY_WEAPON_SKIN, {
+		drop.weapon_id,
+		drop.skin_id
+	})
 end
 
 function WeaponInventoryManager:get_owned_grenades()
@@ -604,14 +698,14 @@ function WeaponInventoryManager:_get_base_stats(name)
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
 	self._stats_shown = {
 		{
-			name = "magazine",
 			round_value = true,
-			stat_name = "extra_ammo"
+			stat_name = "extra_ammo",
+			name = "magazine"
 		},
 		{
-			name = "totalammo",
 			round_value = true,
-			stat_name = "total_ammo_mod"
+			stat_name = "total_ammo_mod",
+			name = "totalammo"
 		},
 		{
 			name = "fire_rate",
@@ -621,17 +715,17 @@ function WeaponInventoryManager:_get_base_stats(name)
 			name = "damage"
 		},
 		{
+			revert = true,
 			name = "spread",
 			visual_multiplier = 0.5,
 			percent = true,
-			one_minus = true,
-			revert = true
+			one_minus = true
 		},
 		{
-			name = "recoil",
-			offset = true,
 			revert = true,
-			percent = true
+			percent = true,
+			name = "recoil",
+			offset = true
 		},
 		{
 			name = "concealment",
@@ -996,14 +1090,14 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 			range = true
 		},
 		{
+			range = true,
 			name = "damage_effect",
-			multiple_of = "damage",
-			range = true
+			multiple_of = "damage"
 		},
 		{
-			name = "charge_time",
 			inverse = true,
 			num_decimals = 1,
+			name = "charge_time",
 			suffix = managers.localization:text("menu_seconds_suffix_short")
 		},
 		{
@@ -1028,18 +1122,18 @@ function WeaponInventoryManager:_get_melee_weapon_stats(name)
 	for i, stat in ipairs(self._mweapon_stats_shown) do
 		local skip_rounding = stat.num_decimals
 		base_stats[stat.name] = {
-			max_value = 0,
 			value = 0,
+			max_value = 0,
 			min_value = 0
 		}
 		mods_stats[stat.name] = {
-			max_value = 0,
 			value = 0,
+			max_value = 0,
 			min_value = 0
 		}
 		skill_stats[stat.name] = {
-			max_value = 0,
 			value = 0,
+			max_value = 0,
 			min_value = 0
 		}
 

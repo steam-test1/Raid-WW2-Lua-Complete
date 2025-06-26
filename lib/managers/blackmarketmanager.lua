@@ -4,6 +4,14 @@ BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID = "m1911"
 BlackMarketManager.DEFAULT_PRIMARY_FACTORY_ID = "wpn_fps_smg_thompson"
 BlackMarketManager.DEFAULT_SECONDARY_FACTORY_ID = "wpn_fps_pis_m1911"
 BlackMarketManager.OUTFIT_INDEX_MAP = {
+	character_customization_head = 14,
+	warcry_weapon = 13,
+	grenade_cosmetic = 12,
+	grenade = 11,
+	melee_weapon = 10,
+	concealment_modifier = 9,
+	deployable_amount = 8,
+	deployable = 7,
 	secondary_blueprint = 6,
 	secondary = 5,
 	primary_blueprint = 4,
@@ -12,15 +20,7 @@ BlackMarketManager.OUTFIT_INDEX_MAP = {
 	armor = 1,
 	character_customization_nationality = 17,
 	character_customization_lower = 16,
-	character_customization_upper = 15,
-	character_customization_head = 14,
-	warcry_weapon = 13,
-	grenade_cosmetic = 12,
-	grenade = 11,
-	melee_weapon = 10,
-	concealment_modifier = 9,
-	deployable_amount = 8,
-	deployable = 7
+	character_customization_upper = 15
 }
 
 function BlackMarketManager:init()
@@ -29,11 +29,11 @@ end
 
 function BlackMarketManager:_setup()
 	self._defaults = {
+		melee_weapon = "m3_knife",
+		grenade = "m24",
 		character = "american",
 		armor = "level_1",
-		preferred_character = "american",
-		grenade = "m24",
-		melee_weapon = "m3_knife"
+		preferred_character = "american"
 	}
 
 	if not Global.blackmarket_manager then
@@ -65,9 +65,9 @@ function BlackMarketManager:_setup_armors()
 
 	for armor, _ in pairs(tweak_data.blackmarket.armors) do
 		armors[armor] = {
+			owned = false,
 			unlocked = false,
-			equipped = false,
-			owned = false
+			equipped = false
 		}
 	end
 
@@ -83,10 +83,10 @@ function BlackMarketManager:_setup_grenades()
 	for grenade_id, grenade in pairs(tweak_data.projectiles) do
 		if grenade.throwable then
 			grenades[grenade_id] = {
-				unlocked = true,
+				skill_based = false,
 				equipped = false,
 				amount = 0,
-				skill_based = false,
+				unlocked = true,
 				level = 0
 			}
 			local is_default, weapon_level = managers.upgrades:get_value(grenade_id, self._defaults.grenade)
@@ -127,9 +127,9 @@ function BlackMarketManager:_setup_characters()
 
 	for character, _ in pairs(tweak_data.blackmarket.characters) do
 		characters[character] = {
+			owned = true,
 			unlocked = true,
-			equipped = false,
-			owned = true
+			equipped = false
 		}
 	end
 
@@ -166,8 +166,8 @@ function BlackMarketManager:_setup_weapons()
 			local equipped = weapon == managers.player:weapon_in_slot(selection_index)
 			local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon)
 			weapons[weapon] = {
-				unlocked = true,
 				owned = true,
+				unlocked = true,
 				factory_id = factory_id,
 				selection_index = selection_index
 			}
@@ -179,7 +179,7 @@ function BlackMarketManager:_setup_weapons()
 end
 
 function BlackMarketManager:weapon_unlocked(weapon_id)
-	return Global.blackmarket_manager.weapons[weapon_id] and Global.blackmarket_manager.weapons[weapon_id].unlocked or false
+	return self._global.weapons[weapon_id] and self._global.weapons[weapon_id].unlocked or false
 end
 
 function BlackMarketManager:weapon_unlocked_by_crafted(category, slot)
@@ -219,7 +219,7 @@ end
 
 function BlackMarketManager:equipped_character()
 	for character_id, data in pairs(tweak_data.blackmarket.characters) do
-		if Global.blackmarket_manager.characters[character_id].equipped then
+		if self._global.characters[character_id].equipped then
 			return character_id
 		end
 	end
@@ -241,23 +241,23 @@ function BlackMarketManager:equipped_grenade()
 	local grenade = nil
 
 	for grenade_id, data in pairs(tweak_data.projectiles) do
-		grenade = Global.blackmarket_manager.grenades[grenade_id]
+		grenade = self._global.grenades[grenade_id]
 
 		if data.throwable and grenade.equipped and grenade.unlocked then
 			return grenade_id, grenade.amount or 0
 		end
 	end
 
-	return self._defaults.grenade, Global.blackmarket_manager.grenades[self._defaults.grenade].amount
+	return self._defaults.grenade, self._global.grenades[self._defaults.grenade].amount
 end
 
 function BlackMarketManager:equipped_melee_weapon()
 	local melee_weapon = nil
 
 	for melee_weapon_id, data in pairs(tweak_data.blackmarket.melee_weapons) do
-		melee_weapon = Global.blackmarket_manager.melee_weapons[melee_weapon_id]
+		melee_weapon = self._global.melee_weapons[melee_weapon_id]
 
-		if melee_weapon.equipped and melee_weapon.unlocked and (not data.dlc or data.dlc and tweak_data.dlc:is_melee_weapon_unlocked(melee_weapon_id)) then
+		if melee_weapon.equipped and melee_weapon.unlocked and (not data.dlc or managers.dlc:is_dlc_unlocked(data.dlc)) then
 			return melee_weapon_id
 		end
 	end
@@ -276,11 +276,11 @@ function BlackMarketManager:equipped_melee_weapon_damage_info(lerp_value)
 end
 
 function BlackMarketManager:equipped_secondary()
-	if not Global.blackmarket_manager.crafted_items.secondaries then
+	if not self._global.crafted_items.secondaries then
 		return
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.crafted_items.secondaries) do
+	for slot, data in pairs(self._global.crafted_items.secondaries) do
 		if data.equipped then
 			return data
 		end
@@ -288,11 +288,11 @@ function BlackMarketManager:equipped_secondary()
 end
 
 function BlackMarketManager:equipped_primary()
-	if not Global.blackmarket_manager.crafted_items.primaries then
+	if not self._global.crafted_items.primaries then
 		return
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.crafted_items.primaries) do
+	for slot, data in pairs(self._global.crafted_items.primaries) do
 		if data.equipped then
 			return data
 		end
@@ -300,11 +300,11 @@ function BlackMarketManager:equipped_primary()
 end
 
 function BlackMarketManager:equipped_weapon_slot(category)
-	if not Global.blackmarket_manager.crafted_items[category] then
+	if not self._global.crafted_items[category] then
 		return nil
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.crafted_items[category]) do
+	for slot, data in pairs(self._global.crafted_items[category]) do
 		if data.equipped then
 			return slot
 		end
@@ -314,11 +314,11 @@ function BlackMarketManager:equipped_weapon_slot(category)
 end
 
 function BlackMarketManager:equipped_armor_slot()
-	if not Global.blackmarket_manager.armors then
+	if not self._global.armors then
 		return nil
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.armors) do
+	for slot, data in pairs(self._global.armors) do
 		if data.equipped then
 			return slot
 		end
@@ -328,11 +328,11 @@ function BlackMarketManager:equipped_armor_slot()
 end
 
 function BlackMarketManager:equipped_grenade_slot()
-	if not Global.blackmarket_manager.grenades then
+	if not self._global.grenades then
 		return nil
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.grenades) do
+	for slot, data in pairs(self._global.grenades) do
 		if data.equipped then
 			return slot
 		end
@@ -342,11 +342,11 @@ function BlackMarketManager:equipped_grenade_slot()
 end
 
 function BlackMarketManager:equipped_melee_weapon_slot()
-	if not Global.blackmarket_manager.melee_weapons then
+	if not self._global.melee_weapons then
 		return nil
 	end
 
-	for slot, data in pairs(Global.blackmarket_manager.melee_weapons) do
+	for slot, data in pairs(self._global.melee_weapons) do
 		if data.equipped then
 			return slot
 		end
@@ -380,11 +380,11 @@ function BlackMarketManager:equipped_customization()
 end
 
 function BlackMarketManager:equip_weapon(category, slot)
-	if not Global.blackmarket_manager.crafted_items[category] then
+	if not self._global.crafted_items[category] then
 		return false
 	end
 
-	for s, data in pairs(Global.blackmarket_manager.crafted_items[category]) do
+	for s, data in pairs(self._global.crafted_items[category]) do
 		data.equipped = s == slot
 	end
 
@@ -409,7 +409,7 @@ function BlackMarketManager:equip_deployable(deployable_id, loading)
 end
 
 function BlackMarketManager:equip_character(character_id)
-	for s, data in pairs(Global.blackmarket_manager.characters) do
+	for s, data in pairs(self._global.characters) do
 		data.equipped = s == character_id
 	end
 
@@ -418,7 +418,7 @@ function BlackMarketManager:equip_character(character_id)
 end
 
 function BlackMarketManager:equip_armor(armor_id)
-	for s, data in pairs(Global.blackmarket_manager.armors) do
+	for s, data in pairs(self._global.armors) do
 		data.equipped = s == armor_id
 	end
 
@@ -427,7 +427,7 @@ function BlackMarketManager:equip_armor(armor_id)
 end
 
 function BlackMarketManager:equip_grenade(grenade_id)
-	for s, data in pairs(Global.blackmarket_manager.grenades) do
+	for s, data in pairs(self._global.grenades) do
 		data.equipped = s == grenade_id
 	end
 
@@ -436,7 +436,7 @@ function BlackMarketManager:equip_grenade(grenade_id)
 end
 
 function BlackMarketManager:equip_melee_weapon(melee_weapon_id)
-	for s, data in pairs(Global.blackmarket_manager.melee_weapons) do
+	for s, data in pairs(self._global.melee_weapons) do
 		data.equipped = s == melee_weapon_id
 	end
 
@@ -516,7 +516,7 @@ function BlackMarketManager:outfit_string()
 	s = s .. " " .. armor_id .. "-" .. current_armor_id .. "-" .. current_state_armor_id
 
 	for character_id, data in pairs(tweak_data.blackmarket.characters) do
-		if Global.blackmarket_manager.characters[character_id].equipped then
+		if self._global.characters[character_id].equipped then
 			s = s .. " " .. character_id
 		end
 	end
@@ -558,7 +558,7 @@ function BlackMarketManager:outfit_string()
 	s = s .. " " .. tostring(equipped_melee_weapon)
 	local equipped_grenade = self:equipped_grenade()
 	s = s .. " " .. tostring(equipped_grenade)
-	local grenade_skin_id = managers.weapon_inventory:get_weapons_skin(tostring(equipped_grenade))
+	local grenade_skin_id = managers.weapon_inventory:get_applied_weapon_skin(tostring(equipped_grenade))
 	s = s .. " " .. tostring(grenade_skin_id)
 	local warcry = managers.warcry:get_active_warcry()
 	s = s .. " " .. tostring(warcry and warcry:special_unit())
@@ -636,132 +636,6 @@ end
 
 function BlackMarketManager:is_preloading_weapons()
 	return #self._preloading_list > 0
-end
-
-function BlackMarketManager:create_preload_ws()
-	if self._preload_ws then
-		return
-	end
-
-	self._preload_ws = managers.gui_data:create_fullscreen_workspace()
-	local panel = self._preload_ws:panel()
-
-	panel:set_layer(tweak_data.gui.DIALOG_LAYER)
-
-	local new_script = {
-		progress = 1
-	}
-
-	function new_script.step_progress()
-		new_script.set_progress(new_script.progress + 1)
-	end
-
-	function new_script.set_progress(progress)
-		new_script.progress = progress
-		local square_panel = panel:child("square_panel")
-		local progress_rect = panel:child("progress")
-
-		if progress == 0 then
-			progress_rect:hide()
-		end
-
-		for i, child in ipairs(square_panel:children()) do
-			child:set_color(i < progress and Color.white or Color(0.3, 0.3, 0.3))
-
-			if i == progress then
-				progress_rect:set_world_center(child:world_center())
-				progress_rect:show()
-			end
-		end
-	end
-
-	panel:set_script(new_script)
-
-	local square_panel = panel:panel({
-		name = "square_panel",
-		layer = 1
-	})
-	local num_squares = 0
-
-	for i, preload in ipairs(self._preloading_list) do
-		if preload.package or preload.load_me then
-			num_squares = num_squares + 1
-		end
-	end
-
-	local rows = math.max(1, math.ceil(num_squares / 8))
-	local next_row_at = math.ceil(num_squares / rows)
-	local row_index = 0
-	local x = 0
-	local y = 0
-	local last_rect = nil
-	local max_w = 0
-	local max_h = 0
-
-	for i = 1, num_squares do
-		row_index = row_index + 1
-		last_rect = square_panel:rect({
-			h = 15,
-			w = 15,
-			blend_mode = "add",
-			x = x,
-			y = y,
-			color = Color(0.3, 0.3, 0.3)
-		})
-		x = x + 24
-		max_w = math.max(max_w, last_rect:right())
-		max_h = math.max(max_h, last_rect:bottom())
-
-		if row_index == next_row_at then
-			row_index = 0
-			y = y + 24
-			x = 0
-		end
-	end
-
-	square_panel:set_size(max_w, max_h)
-	panel:rect({
-		h = 19,
-		w = 19,
-		layer = 2,
-		name = "progress",
-		blend_mode = "add",
-		color = Color(0.3, 0.3, 0.3)
-	})
-
-	local bg = panel:rect({
-		alpha = 0.8,
-		color = Color.black
-	})
-	local width = square_panel:w() + 19
-	local height = square_panel:h() + 19
-
-	bg:set_size(width, height)
-	bg:set_center(panel:w() / 2, panel:h() / 2)
-	square_panel:set_center(bg:center())
-
-	local box_panel = panel:panel({
-		layer = 2
-	})
-
-	box_panel:set_shape(bg:shape())
-	BoxGuiObject:new(box_panel, {
-		sides = {
-			1,
-			1,
-			1,
-			1
-		}
-	})
-	panel:script().set_progress(1)
-
-	local function fade_in_animation(panel)
-		panel:hide()
-		coroutine.yield()
-		panel:show()
-	end
-
-	panel:animate(fade_in_animation)
 end
 
 function BlackMarketManager:is_weapon_slot_unlocked(category, slot)
@@ -862,10 +736,10 @@ end
 
 function BlackMarketManager:get_weapon_category(category)
 	local weapon_index = {
+		primaries = 2,
 		melees = 4,
 		equipments = 3,
-		secondaries = 1,
-		primaries = 2
+		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -883,10 +757,10 @@ end
 
 function BlackMarketManager:get_weapon_names_category(category)
 	local weapon_index = {
+		primaries = 2,
 		melees = 4,
 		equipments = 3,
-		secondaries = 1,
-		primaries = 2
+		secondaries = 1
 	}
 	local selection_index = weapon_index[category] or 1
 	local t = {}
@@ -1501,140 +1375,6 @@ function BlackMarketManager:get_melee_weapon_data(melee_weapon_id)
 	return tweak_data.blackmarket.melee_weapons[melee_weapon_id]
 end
 
-function BlackMarketManager:set_melee_weapon_favorite(melee_weapon_id, favorite)
-	local weapon_data = self._global.melee_weapons[melee_weapon_id]
-
-	if weapon_data then
-		weapon_data.is_favorite = favorite
-	end
-end
-
-function BlackMarketManager:get_sorted_grenades(hide_locked)
-	local sort_data = {}
-	local xd, yd, x_td, y_td, x_sn, y_sn, x_gv, y_gv = nil
-	local m_tweak_data = tweak_data.projectiles
-	local l_tweak_data = tweak_data.lootdrop.global_values
-
-	for id, d in pairs(Global.blackmarket_manager.grenades) do
-		if not hide_locked or d.unlocked then
-			table.insert(sort_data, {
-				id,
-				d
-			})
-		end
-	end
-
-	table.sort(sort_data, function (x, y)
-		xd = x[2]
-		yd = y[2]
-		x_td = m_tweak_data[x[1]]
-		y_td = m_tweak_data[y[1]]
-
-		if xd.unlocked ~= yd.unlocked then
-			return xd.unlocked
-		end
-
-		x_gv = x_td.global_value or x_td.dlc or "normal"
-		y_gv = y_td.global_value or y_td.dlc or "normal"
-		x_sn = l_tweak_data[x_gv]
-		y_sn = l_tweak_data[y_gv]
-		x_sn = x_sn and x_sn.sort_number or 1
-		y_sn = y_sn and y_sn.sort_number or 1
-
-		if x_sn ~= y_sn then
-			return x_sn < y_sn
-		end
-
-		return x[1] < y[1]
-	end)
-
-	return sort_data
-end
-
-function BlackMarketManager:get_sorted_armors(hide_locked)
-	local sort_data = {}
-
-	for id, d in pairs(Global.blackmarket_manager.armors) do
-		if not hide_locked or d.unlocked then
-			table.insert(sort_data, id)
-		end
-	end
-
-	local armor_level_data = {}
-
-	for level, data in pairs(tweak_data.upgrades.level_tree) do
-		if data.upgrades then
-			for _, upgrade in ipairs(data.upgrades) do
-				local def = tweak_data.upgrades.definitions[upgrade]
-
-				if not def then
-					Application:error("Upgrade listed in level tree, but not defined:   ", upgrade)
-				elseif def.armor_id then
-					armor_level_data[def.armor_id] = level
-				end
-			end
-		end
-	end
-
-	table.sort(sort_data, function (x, y)
-		local x_level = x == "level_1" and 0 or armor_level_data[x] or 100
-		local y_level = y == "level_1" and 0 or armor_level_data[y] or 100
-
-		return x_level < y_level
-	end)
-
-	return sort_data, armor_level_data
-end
-
-function BlackMarketManager:get_sorted_deployables(hide_locked)
-	local sort_data = {}
-
-	for id, d in pairs(tweak_data.blackmarket.deployables) do
-		if not hide_locked or table.contains(managers.player:availible_equipment(1), id) then
-			table.insert(sort_data, {
-				id,
-				d
-			})
-		end
-	end
-
-	table.sort(sort_data, function (x, y)
-		return x[1] < y[1]
-	end)
-
-	return sort_data
-end
-
-function BlackMarketManager:get_hold_crafted_item()
-	return self._hold_crafted_item
-end
-
-function BlackMarketManager:drop_hold_crafted_item()
-	self._hold_crafted_item = nil
-end
-
-function BlackMarketManager:pickup_crafted_item(category, slot)
-	self._hold_crafted_item = {
-		category = category,
-		slot = slot
-	}
-end
-
-function BlackMarketManager:place_crafted_item(category, slot)
-	if not self._hold_crafted_item then
-		return
-	end
-
-	if self._hold_crafted_item.category ~= category then
-		return
-	end
-
-	local tmp = self:get_crafted_category_slot(category, slot)
-	self._global.crafted_items[category][slot] = self:get_crafted_category_slot(self._hold_crafted_item.category, self._hold_crafted_item.slot)
-	self._global.crafted_items[self._hold_crafted_item.category][self._hold_crafted_item.slot] = tmp
-	tmp, self._hold_crafted_item = nil
-end
-
 function BlackMarketManager:on_aquired_armor(upgrade, id, loading)
 	if not self._global.armors[upgrade.armor_id] then
 		Application:error("[BlackMarketManager:on_aquired_armor] Armor do not exist in blackmarket", "armor_id", upgrade.armor_id)
@@ -1851,7 +1591,6 @@ function BlackMarketManager:reset_equipped()
 	self:_setup_grenades()
 	self:_setup_melee_weapons()
 	managers.dlc:give_dlc_package()
-	self:_verify_dlc_items()
 	self:_verify_equipped()
 end
 
@@ -1888,9 +1627,9 @@ function BlackMarketManager:load(data)
 	for armor, _ in pairs(tweak_data.blackmarket.armors) do
 		if not self._global.armors[armor] then
 			self._global.armors[armor] = {
+				owned = false,
 				unlocked = false,
-				equipped = false,
-				owned = false
+				equipped = false
 			}
 		else
 			self._global.armors[armor].equipped = false
@@ -1976,9 +1715,9 @@ function BlackMarketManager:load(data)
 	for character, _ in pairs(tweak_data.blackmarket.characters) do
 		if not self._global.characters[character] then
 			self._global.characters[character] = {
+				owned = true,
 				unlocked = true,
-				equipped = false,
-				owned = true
+				equipped = false
 			}
 		end
 	end
@@ -1993,6 +1732,7 @@ function BlackMarketManager:load(data)
 		self._global.characters[self._defaults.character].equipped = true
 	end
 
+	self:verify_dlc_items()
 	managers.weapon_inventory:add_all_weapons_to_player_inventory()
 
 	if not self._global.unlocked_weapon_slots then
@@ -2006,7 +1746,7 @@ function BlackMarketManager:load(data)
 			list_of_weapons_factory_ids[bm_weapon_data.factory_id] = true
 		else
 			table.remove(self._global.crafted_items.primaries, bm_weapon_index)
-			table.remove(Global.blackmarket_manager.crafted_items.primaries, bm_weapon_index)
+			table.remove(self._global.crafted_items.primaries, bm_weapon_index)
 		end
 	end
 end
@@ -2024,12 +1764,6 @@ end
 
 function BlackMarketManager:verify_dlc_items()
 	self:_cleanup_blackmarket()
-
-	if self._refill_global_values then
-		self._refill_global_values = nil
-	end
-
-	self:_verify_dlc_items()
 	self:_load_done()
 end
 
@@ -2042,10 +1776,6 @@ function BlackMarketManager:_cleanup_blackmarket()
 
 			self._global.crafted_items[category] = {}
 		end
-	end
-
-	local function chk_global_value_func(global_value)
-		return tweak_data.lootdrop.global_values[global_value or "normal"] and true or false
 	end
 
 	local invalid_weapons = {}
@@ -2078,11 +1808,8 @@ function BlackMarketManager:_cleanup_blackmarket()
 				local factory_id = item.factory_id
 				local weapon_id = item.weapon_id
 				local blueprint = item.blueprint
-				local global_values = item.global_values or {}
-				local texture_switches = item.texture_switches
-				local cosmetics = item.cosmetics
 				local index_table = {}
-				local weapon_invalid = not tweak_data.weapon[weapon_id] or not tweak_data.weapon.factory[factory_id] or managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id) ~= factory_id or managers.weapon_factory:get_weapon_id_by_factory_id(factory_id) ~= weapon_id or not chk_global_value_func(tweak_data.weapon[weapon_id].global_value)
+				local weapon_invalid = not tweak_data.weapon[weapon_id] or not tweak_data.weapon.factory[factory_id] or managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id) ~= factory_id or managers.weapon_factory:get_weapon_id_by_factory_id(factory_id) ~= weapon_id
 
 				if weapon_invalid then
 					table.insert(invalid_weapons, slot)
@@ -2094,7 +1821,7 @@ function BlackMarketManager:_cleanup_blackmarket()
 					end
 
 					for i, part_id in ipairs(blueprint) do
-						if not index_table[part_id] or not chk_global_value_func(item.global_values[part_id]) then
+						if not index_table[part_id] then
 							Application:error("BlackMarketManager:_cleanup_blackmarket() Weapon part no longer in uses parts or bad global value", "part_id", part_id, "weapon_id", item.weapon_id, "part_global_value", item.global_values[part_id])
 
 							local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
@@ -2142,121 +1869,13 @@ function BlackMarketManager:_cleanup_blackmarket()
 				end
 			end
 		end
-	end
-end
 
-function BlackMarketManager:_verify_dlc_items()
-	return
+		for _, slot in ipairs(invalid_weapons) do
+			Application:error("BlackMarketManager:_cleanup_blackmarket() Removing invalid weapon", "slot", slot, "inspect", inspect(crafted_category[slot]))
 
-	local equipped_primary = self:equipped_primary()
-	local equipped_secondary = self:equipped_secondary()
-	local equipped_primary_slot = self:equipped_weapon_slot("primaries")
-	local equipped_secondary_slot = self:equipped_weapon_slot("secondaries")
-	local locked_equipped = {
-		secondaries = false,
-		primaries = false
-	}
-	local locked_weapons = {
-		primaries = {},
-		secondaries = {}
-	}
-	local owns_dlc = nil
+			self._global.crafted_items[category][slot] = nil
 
-	for package_id, data in pairs(tweak_data.dlc.descriptions) do
-		if tweak_data.lootdrop.global_values[package_id] then
-			owns_dlc = not tweak_data.lootdrop.global_values[package_id].dlc or managers.dlc:is_dlc_unlocked(package_id) or false
-
-			print("owns_dlc", owns_dlc, "dlc", package_id, "is a dlc", tweak_data.lootdrop.global_values[package_id].dlc, "is free", data.free, "is_dlc_unlocked", managers.dlc:is_dlc_unlocked(package_id))
-
-			if owns_dlc then
-				-- Nothing
-			elseif self._global.global_value_items[package_id] then
-				print("You do not own " .. package_id .. ", will lock all related items.")
-
-				local all_crafted_items = self._global.global_value_items[package_id].crafted_items or {}
-				local primaries = all_crafted_items.primaries or {}
-				local secondaries = all_crafted_items.secondaries or {}
-
-				for slot, parts in pairs(primaries) do
-					locked_weapons.primaries[slot] = true
-					locked_equipped.primaries = locked_equipped.primaries or equipped_primary_slot == slot
-				end
-
-				for slot, parts in pairs(secondaries) do
-					locked_weapons.secondaries[slot] = true
-					locked_equipped.secondaries = locked_equipped.secondaries or equipped_secondary_slot == slot
-				end
-			end
-		end
-	end
-
-	self._global._preferred_character = self._global._preferred_character or self._defaults.preferred_character
-	local character_name = self._global._preferred_character
-	local char_tweak = tweak_data.blackmarket.characters.american[character_name] or tweak_data.blackmarket.characters[character_name]
-
-	if char_tweak.dlc and not managers.dlc:is_dlc_unlocked(char_tweak.dlc) then
-		self._global._preferred_character = self._defaults.preferred_character
-	end
-
-	self:_verify_preferred_characters()
-
-	local player_level = managers.experience:current_level()
-	local unlocked, level, skill_based, weapon_def, weapon_dlc, has_dlc = nil
-
-	for weapon_id, weapon in pairs(Global.blackmarket_manager.weapons) do
-		unlocked = weapon.unlocked
-		level = weapon.level
-		skill_based = weapon.skill_based
-
-		if not unlocked and level <= player_level and not skill_based then
-			weapon_def = tweak_data.upgrades.definitions[weapon_id]
-
-			if weapon_def then
-				weapon_dlc = weapon_def.dlc
-
-				if weapon_dlc then
-					managers.upgrades:aquire(weapon_id, nil, UpgradesManager.AQUIRE_STRINGS[1])
-
-					Global.blackmarket_manager.weapons[weapon_id].unlocked = managers.dlc:is_dlc_unlocked(weapon_dlc) or false
-				else
-					Application:error("[BlackMarketManager] Weapon locked by unknown source: " .. tostring(weapon_id))
-				end
-			else
-				Application:error("[BlackMarketManager] Missing definition for weapon: " .. tostring(weapon_id))
-			end
-		end
-	end
-
-	local found_new_weapon = nil
-
-	for category, locked in pairs(locked_equipped) do
-		if locked then
-			found_new_weapon = false
-
-			for slot, crafted in pairs(self._global.crafted_items[category]) do
-				if not locked_weapons[category][slot] and Global.blackmarket_manager.weapons[crafted.weapon_id].unlocked then
-					found_new_weapon = true
-
-					self:equip_weapon(category, slot)
-
-					break
-				end
-			end
-
-			if not found_new_weapon then
-				local free_slot = self:_get_free_weapon_slot(category) or 1
-				local weapon_id = category == "primaries" and BlackMarketManager.DEFAULT_PRIMARY_WEAPON_ID or BlackMarketManager.DEFAULT_SECONDARY_WEAPON_ID
-				local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
-				local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
-				self._global.crafted_items[category][free_slot] = {
-					equipped = true,
-					weapon_id = weapon_id,
-					factory_id = factory_id,
-					blueprint = blueprint
-				}
-
-				managers.statistics:publish_equipped_to_steam()
-			end
+			self:_verify_equipped_category(category)
 		end
 	end
 end
@@ -2270,28 +1889,10 @@ function BlackMarketManager:_verify_equipped()
 end
 
 function BlackMarketManager:_verify_equipped_category(category)
-	if category == "armors" then
-		local armor_id = self._defaults.armor
-
-		for armor, craft in pairs(Global.blackmarket_manager.armors) do
-			if craft.equipped and craft.unlocked and craft.owned then
-				armor_id = armor
-			end
-		end
-
-		for s, data in pairs(Global.blackmarket_manager.armors) do
-			data.equipped = s == armor_id
-		end
-
-		managers.statistics:publish_equipped_to_steam()
-
-		return
-	end
-
 	if category == "grenades" then
 		local grenade_id = self._defaults.grenade
 
-		for grenade, craft in pairs(Global.blackmarket_manager.grenades) do
+		for grenade, craft in pairs(self._global.grenades) do
 			if craft.equipped and craft.unlocked then
 				grenade_id = grenade
 			end
@@ -2300,7 +1901,7 @@ function BlackMarketManager:_verify_equipped_category(category)
 			craft.amount = (not grenade_data.dlc or managers.dlc:is_dlc_unlocked(grenade_data.dlc)) and managers.player:get_max_grenades(grenade) or 0
 		end
 
-		for s, data in pairs(Global.blackmarket_manager.grenades) do
+		for s, data in pairs(self._global.grenades) do
 			data.equipped = s == grenade_id
 		end
 
@@ -2312,7 +1913,7 @@ function BlackMarketManager:_verify_equipped_category(category)
 	if category == "melee_weapons" then
 		local eqp_melee_weapon_id = self:equipped_melee_weapon()
 
-		for twk_melee_weapon_id, data in pairs(Global.blackmarket_manager.melee_weapons) do
+		for twk_melee_weapon_id, data in pairs(self._global.melee_weapons) do
 			Application:debug("[BlackMarketManager:VerifyMelee] Equipped tgt '" .. eqp_melee_weapon_id .. "', checking '" .. twk_melee_weapon_id .. "'", twk_melee_weapon_id == eqp_melee_weapon_id)
 
 			data.equipped = twk_melee_weapon_id == eqp_melee_weapon_id
@@ -2337,9 +1938,6 @@ function BlackMarketManager:_verify_equipped_category(category)
 		end
 
 		local slot, craft = next(self._global.crafted_items[category])
-
-		print("  Equip", category, slot)
-
 		craft.equipped = true
 
 		return
@@ -2356,7 +1954,6 @@ function BlackMarketManager:_verify_equipped_category(category)
 	end
 
 	if managers.skilltree:has_character_profile_class() then
-		local character_class = managers.skilltree:get_character_profile_class()
 		local equipped = false
 
 		if category == "primaries" then

@@ -6,7 +6,7 @@ function UpgradeToughness:check_activate()
 	managers.system_event_listener:remove_listener("toughness_on_bleedout")
 	managers.system_event_listener:remove_listener("toughness_revived")
 
-	if managers.player:has_category_upgrade("player", "toughness_death_defiant") then
+	if alive(managers.player:local_player()) and managers.player:has_category_upgrade("player", "toughness_death_defiant") then
 		managers.system_event_listener:add_listener("toughness_on_bleedout", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_CHECK_BLEEDOUT
 		}, callback(self, self, "_on_bleedout"))

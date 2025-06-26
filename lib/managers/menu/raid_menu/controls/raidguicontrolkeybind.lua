@@ -29,11 +29,11 @@ function RaidGuiControlKeyBind:init(parent, params)
 	self:_create_keybind_layout()
 
 	self._active_line = self._object:rect({
-		w = 3,
 		y = 0,
 		x = 0,
 		visible = false,
 		h = 32,
+		w = 3,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 	self._params.layer = self._params.layer - 1
@@ -51,11 +51,17 @@ function RaidGuiControlKeyBind:highlight_on()
 	self:_set_background_state("active")
 	self._active_line:show()
 
+	self._selected = true
+
 	if self._play_mouse_over_sound then
 		managers.menu_component:post_event("highlight")
 
 		self._play_mouse_over_sound = false
 	end
+end
+
+function RaidGuiControlKeyBind:select()
+	self._selected = true
 end
 
 function RaidGuiControlKeyBind:highlight_off()
@@ -66,7 +72,12 @@ function RaidGuiControlKeyBind:highlight_off()
 		self._active_line:hide()
 	end
 
+	self._selected = false
 	self._play_mouse_over_sound = true
+end
+
+function RaidGuiControlKeyBind:unselect()
+	self._selected = false
 end
 
 function RaidGuiControlKeyBind:_set_background_state(bg_state)
@@ -96,30 +107,45 @@ function RaidGuiControlKeyBind:on_mouse_released(button)
 end
 
 function RaidGuiControlKeyBind:activate_customize_controller()
-	self._ws:connect_keyboard(Input:keyboard())
-	self._ws:connect_mouse(Input:mouse())
-
 	self._listening_to_input = true
 
-	local function f(o, key)
-		self:_key_press(o, key, "keyboard", nil)
-	end
-
 	self._keybind:set_text("_")
-	self._keybind:key_release(f)
 
-	local function f(o, key)
-		self:_key_press(o, key, "mouse", nil)
+	if managers.controller:is_using_controller() then
+		self._controller = managers.controller:create_controller("key_rebind")
+
+		self._controller:set_enabled(true)
+		print(inspect(self._controller))
+		self._ws:connect_controller(self._controller:get_virtual_controller(), false)
+
+		local function f(o, key)
+			self:_key_press(o, key, "controller", nil)
+		end
+
+		self._keybind:button_press(f)
+	else
+		self._ws:connect_keyboard(Input:keyboard())
+		self._ws:connect_mouse(Input:mouse())
+
+		local function f(o, key)
+			self:_key_press(o, key, "keyboard", nil)
+		end
+
+		self._keybind:key_release(f)
+
+		function f(o, key)
+			self:_key_press(o, key, "mouse", nil)
+		end
+
+		self._keybind:mouse_click(f)
+
+		function f(index, key)
+			self:_key_press(self._keybind, key, "mouse", true)
+		end
+
+		self._mouse_wheel_up_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel up")), f)
+		self._mouse_wheel_down_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel down")), f)
 	end
-
-	self._keybind:mouse_click(f)
-
-	local function f(index, key)
-		self:_key_press(self._keybind, key, "mouse", true)
-	end
-
-	self._mouse_wheel_up_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel up")), f)
-	self._mouse_wheel_down_trigger = Input:mouse():add_trigger(Input:mouse():button_index(Idstring("mouse wheel down")), f)
 end
 
 function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
@@ -252,14 +278,23 @@ function RaidGuiControlKeyBind:_end_customize_controller(o, skip_next_key_press)
 		return
 	end
 
-	self._ws:disconnect_keyboard()
-	self._ws:disconnect_mouse()
-	o:key_press(nil)
-	o:key_release(nil)
-	o:mouse_click(nil)
-	o:mouse_release(nil)
-	Input:mouse():remove_trigger(self._mouse_wheel_up_trigger)
-	Input:mouse():remove_trigger(self._mouse_wheel_down_trigger)
+	if self._controller then
+		self._ws:disconnect_controller(self._controller:get_virtual_controller())
+		o:button_press(nil)
+		self._controller:destroy()
+
+		self._controller = nil
+	else
+		self._ws:disconnect_keyboard()
+		self._ws:disconnect_mouse()
+		o:key_press(nil)
+		o:key_release(nil)
+		o:mouse_click(nil)
+		o:mouse_release(nil)
+		Input:mouse():remove_trigger(self._mouse_wheel_up_trigger)
+		Input:mouse():remove_trigger(self._mouse_wheel_down_trigger)
+	end
+
 	setup:add_end_frame_clbk(function ()
 		self._listening_to_input = false
 
@@ -280,7 +315,8 @@ function RaidGuiControlKeyBind:reload()
 end
 
 function RaidGuiControlKeyBind:confirm_pressed()
-	if self._selected then
+	if self._selected and not self:is_listening_to_input() then
+		print("szia", self._selected)
 		self:on_mouse_released(self)
 
 		return true
@@ -383,11 +419,11 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 	self._keybind:set_w(keybind_width)
 
 	self._active_line = self._object:rect({
-		w = 3,
 		y = 0,
 		x = 0,
 		visible = false,
 		h = 32,
+		w = 3,
 		color = RaidGuiControlKeyBind.ACTIVE_LINE_COLOR
 	})
 

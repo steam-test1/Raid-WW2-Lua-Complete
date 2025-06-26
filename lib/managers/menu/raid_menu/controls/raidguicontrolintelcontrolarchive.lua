@@ -25,9 +25,9 @@ end
 
 function RaidGUIControlIntelControlArchive:_layout()
 	self._bg_image = self._object:bitmap({
-		x = 0,
 		visible = false,
 		y = 0,
+		x = 0,
 		w = tweak_data.gui.icons.intel_table_archive.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_archive.texture_rect[4],
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
@@ -35,27 +35,27 @@ function RaidGUIControlIntelControlArchive:_layout()
 		layer = self._object:layer() + 1
 	})
 	self._image = self._object:bitmap({
-		x = 112,
+		h = 448,
 		visible = false,
 		w = 796,
 		y = 128,
-		h = 448,
+		x = 112,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect
 	})
 	self._play_panel = self._object:panel({
-		x = 0,
 		visible = false,
 		y = 0,
+		x = 0,
 		w = tweak_data.gui.icons.play_icon_outline.texture_rect[3],
 		h = tweak_data.gui.icons.play_icon_outline.texture_rect[4],
 		layer = self._object:layer() + 2
 	})
 	self._play_circle = self._play_panel:bitmap({
-		x = 0,
 		visible = false,
 		y = 0,
+		x = 0,
 		layer = self._object:layer() + 3,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		texture = tweak_data.gui.icons.play_icon_outline.texture,
@@ -156,6 +156,12 @@ function RaidGUIControlIntelControlArchive:close()
 
 		self._safe_panel:child("press_any_key_prompt"):stop()
 		self._safe_panel:remove(self._safe_panel:child("press_any_key_prompt"))
+	end
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
 	end
 end
 

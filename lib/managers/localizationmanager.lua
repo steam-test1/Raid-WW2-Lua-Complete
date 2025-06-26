@@ -11,7 +11,8 @@ end
 function LocalizationManager:init_finalize()
 	local clbk = callback(self, self, "setup_macros")
 
-	managers.user:add_setting_changed_callback("controller_mod", clbk)
+	managers.user:add_setting_changed_callback("keyboard_keybinds", clbk)
+	managers.user:add_setting_changed_callback("controller_keybinds", clbk)
 	managers.controller:add_hotswap_callback("localization_manager", clbk, 0)
 	self:setup_macros()
 end
@@ -185,6 +186,10 @@ function LocalizationManager:check_translation()
 end
 
 function LocalizationManager:check_keybind_translation(binding)
+	if not binding then
+		return
+	end
+
 	self._keybind_translations = {
 		"left ctrl",
 		"right ctrl",

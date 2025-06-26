@@ -50,25 +50,25 @@ function ConnectionNetworkHandler:request_join(peer_name, preferred_character, d
 	managers.network:session():on_join_request_received(peer_name, preferred_character, dlcs, xuid, peer_level, gameversion, join_attempt_identifier, auth_ticket, sender)
 end
 
-function ConnectionNetworkHandler:join_request_reply(reply_id, my_peer_id, my_character, level_index, difficulty_index, state, server_character, user_id, mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, xuid, auth_ticket, sender)
-	print(" 1 ConnectionNetworkHandler:join_request_reply", reply_id, my_peer_id, my_character, level_index, difficulty_index, state, server_character, user_id, mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, xuid, auth_ticket, sender)
+function ConnectionNetworkHandler:join_request_reply(reply_id, my_peer_id, my_character, job_id, difficulty_index, state, server_character, user_id, mission, xuid, auth_ticket, sender)
+	print("[ConnectionNetworkHandler:join_request_reply]", reply_id, my_peer_id, my_character, job_id, difficulty_index, state, server_character, user_id, mission, xuid, auth_ticket, sender)
 
 	if not self._verify_in_client_session() then
 		return
 	end
 
-	managers.network:session():on_join_request_reply(reply_id, my_peer_id, my_character, level_index, difficulty_index, state, server_character, user_id, mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, xuid, auth_ticket, sender)
+	managers.network:session():on_join_request_reply(reply_id, my_peer_id, my_character, job_id, difficulty_index, state, server_character, user_id, mission, xuid, auth_ticket, sender)
 end
 
-function ConnectionNetworkHandler:peer_handshake(name, peer_id, ip, in_lobby, loading, synched, character, slot, mask_set, xuid, xnaddr)
-	print(" 1 ConnectionNetworkHandler:peer_handshake", name, peer_id, ip, in_lobby, loading, synched, character, slot, mask_set, xuid, xnaddr)
+function ConnectionNetworkHandler:peer_handshake(name, peer_id, ip, in_lobby, loading, synched, character, slot, xuid, xnaddr)
+	print(" 1 ConnectionNetworkHandler:peer_handshake", name, peer_id, ip, in_lobby, loading, synched, character, slot, xuid, xnaddr)
 
 	if not self._verify_in_client_session() then
 		return
 	end
 
 	print(" 2 ConnectionNetworkHandler:peer_handshake")
-	managers.network:session():peer_handshake(name, peer_id, ip, in_lobby, loading, synched, character, slot, mask_set, xuid, xnaddr)
+	managers.network:session():peer_handshake(name, peer_id, ip, in_lobby, loading, synched, character, slot, xuid, xnaddr)
 end
 
 function ConnectionNetworkHandler:request_player_name(sender)
@@ -329,24 +329,7 @@ function ConnectionNetworkHandler:sync_selected_raid_objective(obj_id, sender)
 	managers.raid_job:sync_goto_job_objective(obj_id)
 end
 
-function ConnectionNetworkHandler:lobby_sync_update_level_id(level_id_index)
-	local level_id = tweak_data.levels:get_level_id_from_index(level_id_index)
-	local lobby_menu = managers.menu:get_menu("lobby_menu")
-
-	if lobby_menu and lobby_menu.renderer:is_open() then
-		lobby_menu.renderer:sync_update_level_id(level_id)
-	end
-end
-
-function ConnectionNetworkHandler:lobby_sync_update_difficulty(difficulty)
-	local lobby_menu = managers.menu:get_menu("lobby_menu")
-
-	if lobby_menu and lobby_menu.renderer:is_open() then
-		lobby_menu.renderer:sync_update_difficulty(difficulty)
-	end
-end
-
-function ConnectionNetworkHandler:lobby_info(level, character, mask_set, sender)
+function ConnectionNetworkHandler:lobby_info(level, character, sender)
 	local peer = self._verify_sender(sender)
 
 	print("ConnectionNetworkHandler:lobby_info", peer and peer:id(), level)
@@ -404,14 +387,6 @@ function ConnectionNetworkHandler:request_spawn_member(sender)
 	end
 
 	IngameWaitingForRespawnState.request_player_spawn(peer:id())
-end
-
-function ConnectionNetworkHandler:warn_about_civilian_free(i)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_warn_about_civilian_free(i)
 end
 
 function ConnectionNetworkHandler:request_drop_in_pause(peer_id, nickname, state, sender)
@@ -709,8 +684,8 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -738,8 +713,8 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 
 		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
-				hit = true,
 				skip_bullet_count = true,
+				hit = true,
 				weapon_unit = weapon_unit
 			})
 		end
@@ -759,10 +734,10 @@ function ConnectionNetworkHandler:voting_data(type, value, result, sender)
 end
 
 ConnectionNetworkHandler._SYNC_AWARD_ACHIEVEMENT_ALLOWED = {
+	landmines_kill_some = true,
 	ach_decoy_kill_anyone = true,
 	ach_grenade_kill_spotter = true,
-	ach_kill_enemies_with_single_grenade_5 = true,
-	landmines_kill_some = true
+	ach_kill_enemies_with_single_grenade_5 = true
 }
 
 function ConnectionNetworkHandler:sync_award_achievement(achievement_id, sender)
@@ -948,7 +923,11 @@ function ConnectionNetworkHandler:sync_loot_to_peers(loot_type, name, xp, peer_i
 	managers.lootdrop:on_loot_dropped_for_peer(loot_type, name, xp, peer_id)
 end
 
-function ConnectionNetworkHandler:sync_set_selected_job(job_id, difficulty)
+function ConnectionNetworkHandler:sync_set_selected_job(job_id, difficulty, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
 	tweak_data:set_difficulty(difficulty)
 	managers.raid_job:local_set_selected_job(job_id)
 end
@@ -959,6 +938,14 @@ function ConnectionNetworkHandler:sync_current_job(job_id, sender)
 	end
 
 	managers.raid_job:sync_current_job(job_id)
+end
+
+function ConnectionNetworkHandler:sync_bounty_seed(seed, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.event_system:sync_bounty_seed(seed)
 end
 
 function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_leg, picked_up_total, sender)

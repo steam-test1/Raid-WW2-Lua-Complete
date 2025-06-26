@@ -145,13 +145,13 @@ end
 
 function MissionScriptElement:_print_debug_on_executed(instigator)
 	if self:is_debug() then
-		self:_print_debug("Element '" .. self._editor_name .. "' executed.", instigator)
+		self:_print_debug("'" .. self._editor_name .. "' executed.", instigator)
 	end
 end
 
 function MissionScriptElement:_print_debug(debug, instigator)
 	if self:is_debug() then
-		self._mission_script:debug_output(debug)
+		self._mission_script:debug_output("[Element] " .. (debug or "NIL"))
 	end
 end
 

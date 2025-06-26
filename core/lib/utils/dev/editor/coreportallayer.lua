@@ -51,13 +51,13 @@ function PortalLayer:load(world_holder, offset)
 			self._current_portal = self._portal_shapes[name].portal
 
 			for _, data in ipairs(portal.points) do
-				self:do_spawn_unit(self._portal_point_unit, data.position)
+				self:do_spawn_unit(self._portal_point_unit, data.position, nil, nil, true)
 			end
 		end
 
 		for _, group in pairs(managers.portal:unit_groups()) do
 			for _, shape in ipairs(group:shapes()) do
-				local unit = PortalLayer.super.do_spawn_unit(self, self._portal_shape_unit, shape:position(), shape:rotation())
+				local unit = PortalLayer.super.do_spawn_unit(self, self._portal_shape_unit, shape:position(), shape:rotation(), nil, nil, true)
 				unit:unit_data().portal_group_shape = shape
 
 				unit:unit_data().portal_group_shape:set_unit(unit)

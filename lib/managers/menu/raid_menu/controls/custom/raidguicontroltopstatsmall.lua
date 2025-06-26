@@ -38,9 +38,9 @@ end
 
 function RaidGUIControlTopStatSmall:_create_stat_info()
 	local player_name_params = {
-		vertical = "center",
 		text = "PLAYER NAME",
 		layer = 1,
+		vertical = "center",
 		align = "right",
 		y = -3,
 		name = "player_name_label",
@@ -53,12 +53,12 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 	}
 	self._player_name_label = self._object:label(player_name_params)
 	local stat_name_params = {
-		vertical = "center",
-		wrap = true,
-		layer = 3,
-		text = "Most things done well",
 		align = "right",
+		text = "Most things done well",
+		layer = 3,
+		vertical = "center",
 		word_wrap = true,
+		wrap = true,
 		name = "stat_name_label",
 		w = self._object:w(),
 		h = RaidGUIControlTopStatSmall.STAT_NAME_H,
@@ -72,7 +72,13 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 end
 
 function RaidGUIControlTopStatSmall:set_data(data)
-	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
+	local name = data.player_nickname
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name_label:set_text(name)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local icon_params = {

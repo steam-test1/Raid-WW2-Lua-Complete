@@ -29,6 +29,14 @@ function MissionLayer:init(owner)
 	self._name_brush:set_color(Color(1, 1, 1, 1))
 	self._name_brush:set_font(Idstring("core/fonts/nice_editor_font"), 16)
 	self._name_brush:set_render_template(Idstring("OverlayVertexColorTextured"))
+
+	self._selected_brush = Draw:brush()
+
+	self._selected_brush:set_color(Color(0.25, 0, 0, 1))
+
+	self._disabled_brush = Draw:brush()
+
+	self._disabled_brush:set_color(Color(0.15, 1, 0, 0))
 end
 
 function MissionLayer:load(world_holder, offset)
@@ -132,6 +140,14 @@ function MissionLayer:save_mission(params)
 	return scripts
 end
 
+function MissionLayer:update_aim_unit(unit)
+	MissionLayer.super.update_aim_unit(self, unit)
+
+	if alive(unit) and unit:mission_element().aim_unit then
+		unit:mission_element():aim_unit(self._current_pos)
+	end
+end
+
 function MissionLayer:do_spawn_unit(name, pos, rot)
 	if not self:current_script() then
 		managers.editor:output_warning("You need to create a mission script first.")
@@ -146,6 +162,22 @@ function MissionLayer:do_spawn_unit(name, pos, rot)
 	end
 
 	return MissionLayer.super.do_spawn_unit(self, name, pos, rot)
+end
+
+function MissionLayer:prepare_replace_params(unit)
+	local params = MissionLayer.super.prepare_replace_params(self, unit)
+
+	if params then
+		params.mission_element_data = unit:mission_element_data()
+	end
+
+	return params
+end
+
+function MissionLayer:_recreate_unit(name, params)
+	local new_unit = MissionLayer.super._recreate_unit(self, name, params)
+
+	return new_unit
 end
 
 function MissionLayer:_on_unit_created(unit, ...)
@@ -174,15 +206,11 @@ end
 
 function MissionLayer:set_select_unit(unit, ...)
 	if alive(unit) and unit:mission_element_data().script and unit:mission_element_data().script ~= self:current_script() then
-		return
+		self:set_script(unit:mission_element_data().script)
 	end
 
 	if not self:_add_on_executed(unit) then
 		MissionLayer.super.set_select_unit(self, unit, ...)
-	end
-
-	if self._list_flow and self._list_flow:visible() then
-		self._list_flow:on_unit_selected(self._selected_unit)
 	end
 end
 
@@ -216,26 +244,25 @@ function MissionLayer:_add_on_executed(unit)
 	return false
 end
 
-function MissionLayer:delete_unit(del_unit)
+function MissionLayer:delete_unit(...)
 	if not self._editing_mission_element then
-		if del_unit:mission_element() and del_unit:mission_element().on_world_deleted then
-			del_unit:mission_element():on_world_deleted()
-		end
-
-		del_unit:mission_element():delete_unit(self._created_units)
-		del_unit:mission_element():clear()
-		MissionLayer.super.delete_unit(self, del_unit)
-	end
-
-	if self._list_flow then
-		self._list_flow:on_unit_selected(self._selected_unit)
+		MissionLayer.super.delete_unit(self, ...)
 	end
 end
 
-function MissionLayer:refresh_list_flow()
-	if self._list_flow and self._list_flow:visible() then
-		self._list_flow:on_unit_selected(self._selected_unit)
+function MissionLayer:on_unit_deleted(unit)
+	local element = unit:mission_element()
+
+	if element then
+		if element.on_world_deleted then
+			element:on_world_deleted()
+		end
+
+		element:delete_unit(self._created_units)
+		element:clear()
 	end
+
+	MissionLayer.super.on_unit_deleted(self, unit)
 end
 
 function MissionLayer:clone_edited_values(unit, source)
@@ -323,14 +350,6 @@ end
 function MissionLayer:update(time, rel_time)
 	MissionLayer.super.update(self, time, rel_time)
 
-	local update_selected_on_brush = Draw:brush()
-
-	update_selected_on_brush:set_color(Color(0.25, 0, 0, 1))
-
-	local unit_disabled = Draw:brush()
-
-	unit_disabled:set_color(Color(0.15, 1, 0, 0))
-
 	local all_units = self._created_units_pairs
 	local current_continent_locked = managers.editor:continent(self._scripts[self:current_script()].continent):value("locked")
 	local current_script = self:current_script()
@@ -340,51 +359,45 @@ function MissionLayer:update(time, rel_time)
 	local lod_draw_distance = 100000
 	lod_draw_distance = lod_draw_distance * lod_draw_distance
 
-	if not self._selected_unit and self._only_draw_selected_connections then
-		return
-	end
-
 	for _, unit in ipairs(self._created_units) do
 		if unit:mission_element_data().script == current_script and not current_continent_locked or self._show_all_scripts then
 			local distance = mvector3.distance_sq(unit:position(), cam_pos)
-			unit:mission_element()._distance_to_camera = distance
-			local update_selected_on = unit:mission_element():update_selected_on()
+			local element = unit:mission_element()
 
-			if update_selected_on then
-				update_selected_on_brush:unit(unit)
-			end
+			if not self._only_draw_selected_connections or self._selected_unit then
+				element._distance_to_camera = distance
+				local update_selected_on = element:update_selected_on()
 
-			local update_selected = self._update_all or update_selected_on
-			local selected_unit = unit == self._selected_unit
-
-			if update_selected or selected_unit then
-				unit:mission_element():update_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
-			elseif self._override_lod_draw or self._only_draw_selected_connections and alive(self._selected_unit) or distance < lod_draw_distance then
-				unit:mission_element():update_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
-
-				if not self._only_draw_selected_connections or not self._selected_unit then
-					unit:mission_element():draw_links_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+				if update_selected_on then
+					self._selected_brush:unit(unit)
 				end
-			end
 
-			unit:mission_element():draw_links(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+				local update_selected = self._update_all or update_selected_on
+				local selected_unit = unit == self._selected_unit
 
-			if selected_unit then
-				unit:mission_element():draw_links_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit)
+				if update_selected or selected_unit then
+					element:update_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+				elseif self._override_lod_draw or self._only_draw_selected_connections and alive(self._selected_unit) or distance < lod_draw_distance then
+					element:update_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
 
-				if self._editing_mission_element then
-					if unit:mission_element().base_update_editing then
-						unit:mission_element():base_update_editing(time, rel_time, self._current_pos)
+					if not self._only_draw_selected_connections or not self._selected_unit then
+						element:draw_links_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
 					end
+				end
 
-					if unit:mission_element().update_editing then
-						unit:mission_element():update_editing(time, rel_time, self._current_pos)
+				element:draw_links(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+
+				if selected_unit then
+					element:draw_links_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit)
+
+					if self._editing_mission_element and element.update_editing then
+						element:update_editing(time, rel_time, self._current_pos)
 					end
 				end
 			end
 
 			if not unit:mission_element_data().enabled then
-				unit_disabled:unit(unit)
+				self._disabled_brush:unit(unit)
 			end
 
 			if distance < 2250000 then
@@ -395,7 +408,7 @@ function MissionLayer:update(time, rel_time)
 
 				local offset = nil
 
-				if unit:mission_element()._icon_ws then
+				if element._icon_ws then
 					offset = cam_up * unit:bounding_sphere_radius()
 				else
 					offset = Vector3(0, 0, unit:bounding_sphere_radius())
@@ -546,9 +559,9 @@ function MissionLayer:build_panel(notebook)
 	self._element_toolbar:add_check_tool("EDIT_ELEMENT", "Edit Element [insert]", CoreEws.image_path("world_editor\\he_edit_element_16x16.png"), "Edit Element [insert]")
 	self._element_toolbar:set_tool_state("EDIT_ELEMENT", self._editing_mission_element)
 	self._element_toolbar:connect("EDIT_ELEMENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_editing_mission_element",
 		toolbar = "_element_toolbar",
+		value = "_editing_mission_element",
+		links = nil,
 		class = self
 	})
 
@@ -610,9 +623,9 @@ function MissionLayer:_build_scripts()
 	self._scripts_right_toolbar:add_check_tool("SIMULATE_WITH_CURRENT_SCRIPT", "If used, run simulation will start the current script", CoreEws.image_path("world_editor\\script_simulate_with_current_16x16.png"), "If used, run simulation will start the current script")
 	self._scripts_right_toolbar:set_tool_state("SIMULATE_WITH_CURRENT_SCRIPT", self._simulate_with_current_script)
 	self._scripts_right_toolbar:connect("SIMULATE_WITH_CURRENT_SCRIPT", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_simulate_with_current_script",
 		toolbar = "_scripts_right_toolbar",
+		value = "_simulate_with_current_script",
+		links = nil,
 		class = self
 	})
 	self._scripts_right_toolbar:realize()
@@ -626,17 +639,17 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:add_check_tool("DRAW_SELECTED_CONNECTIONS_ONLY", "Only draw selected connections", CoreEws.image_path("world_editor\\layer_hubs_only_draw_selected.png"), "Only draw selected connections")
 	self._btn_toolbar:set_tool_state("DRAW_SELECTED_CONNECTIONS_ONLY", self._only_draw_selected_connections)
 	self._btn_toolbar:connect("DRAW_SELECTED_CONNECTIONS_ONLY", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_only_draw_selected_connections",
 		toolbar = "_btn_toolbar",
+		value = "_only_draw_selected_connections",
+		links = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("UPDATE_SELECTED_ALL", "Draws all element as if they where selected", CoreEws.image_path("world_editor\\layer_hubs_update_selected_all.png"), "Draws all element as if they where selected")
 	self._btn_toolbar:set_tool_state("UPDATE_SELECTED_ALL", self._update_all)
 	self._btn_toolbar:connect("UPDATE_SELECTED_ALL", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_update_all",
 		toolbar = "_btn_toolbar",
+		value = "_update_all",
+		links = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("PERSISTENT_DEBUG", "Turns on screen debug information on/off", CoreEws.image_path("world_editor\\mission_persistent_debug_16x16.png"), "Turns on screen debug information on/off")
@@ -647,36 +660,24 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:add_check_tool("VISUALIZE_FLOW", "Visualize flow", CoreEws.image_path("toolbar\\find_16x16.png"), "Visualize flow")
 	self._btn_toolbar:set_tool_state("VISUALIZE_FLOW", self._visualize_flow)
 	self._btn_toolbar:connect("VISUALIZE_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_visualize_flow",
 		toolbar = "_btn_toolbar",
+		value = "_visualize_flow",
+		links = nil,
 		class = self
 	})
 	self._btn_toolbar:add_check_tool("USE_COLORED_LINKS", "Use colored links", CoreEws.image_path("toolbar\\color_16x16.png"), "Use colored links")
 	self._btn_toolbar:set_tool_state("USE_COLORED_LINKS", self._use_colored_links)
 	self._btn_toolbar:connect("USE_COLORED_LINKS", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		to_unit = nil,
-		value = "_use_colored_links",
 		toolbar = "_btn_toolbar",
+		value = "_use_colored_links",
+		links = nil,
 		class = self
 	})
 	self._btn_toolbar:add_separator()
-	self._btn_toolbar:add_tool("SHOW_LIST_FLOW", "Opens mission flow dialog", CoreEws.image_path("world_editor\\he_timeline_16x16.png"), "Opens mission flow dialog")
-	self._btn_toolbar:connect("SHOW_LIST_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_show_list_flow"), {})
 end
 
 function MissionLayer:toggle_persistent_debug(params)
 	managers.mission:set_persistent_debug_enabled(self._btn_toolbar:tool_state("PERSISTENT_DEBUG"))
-end
-
-function MissionLayer:_show_list_flow()
-	self._list_flow = self._list_flow or _G.MissionElementListFlow:new()
-
-	if not self._list_flow:visible() then
-		self._list_flow:set_visible(true)
-	end
-
-	self._list_flow:on_unit_selected(self._selected_unit)
 end
 
 function MissionLayer:_on_activate_on_parsed()
@@ -947,11 +948,11 @@ function MissionLayer:show_all_scripts(show_all_scripts)
 	return self._show_all_scripts
 end
 
-function MissionLayer:set_iconsize(size)
+function MissionLayer:set_icon_size(size)
 	Global.iconsize = size
 
 	for _, unit in ipairs(self._created_units) do
-		unit:mission_element():set_iconsize(size)
+		unit:mission_element():set_icon_size(size)
 	end
 end
 
@@ -973,10 +974,6 @@ function MissionLayer:clear()
 	MissionLayer.super.clear(self)
 	self:_reset_scripts()
 	self:update_unit_settings()
-
-	if self._list_flow then
-		self._list_flow:on_unit_selected(nil)
-	end
 end
 
 function MissionLayer:simulate_with_current_script()
@@ -996,26 +993,6 @@ function MissionLayer:get_unit_links(to_unit)
 	return links
 end
 
-function MissionLayer:activate(...)
-	MissionLayer.super.activate(self, ...)
-
-	if self._list_flow then
-		self._list_flow:set_visible(self._was_list_flow_visible)
-
-		self._was_list_flow_visible = nil
-	end
-end
-
-function MissionLayer:deactivate(...)
-	MissionLayer.super.deactivate(self, ...)
-
-	if self._list_flow then
-		self._was_list_flow_visible = self._list_flow:visible()
-
-		self._list_flow:set_visible(false)
-	end
-end
-
 function MissionLayer:add_triggers()
 	MissionLayer.super.add_triggers(self)
 
@@ -1023,12 +1000,14 @@ function MissionLayer:add_triggers()
 
 	vc:add_trigger(Idstring("show_element_timeline"), callback(self, self, "show_timeline"))
 
-	local vc = self._editor_data.virtual_controller
-
 	if self._editing_mission_element and self._selected_unit then
 		self._selected_unit:mission_element():base_add_triggers(vc)
 		self._selected_unit:mission_element():add_triggers(vc)
 
 		return
 	end
+end
+
+function MissionLayer:get_layer_name()
+	return "Mission"
 end

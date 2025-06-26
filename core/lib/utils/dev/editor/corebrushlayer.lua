@@ -896,8 +896,8 @@ function BrushLayer:get_brush_stats(filter)
 	local skip_filtering = not filter or not next(filter)
 	local brush_stats = {}
 	local total = {
-		amount = 0,
-		unique = 0
+		unique = 0,
+		amount = 0
 	}
 
 	for _, unit_name in ipairs(MassUnitManager:list()) do

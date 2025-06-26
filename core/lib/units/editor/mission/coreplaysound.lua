@@ -1,4 +1,11 @@
 CorePlaySoundUnitElement = CorePlaySoundUnitElement or class(MissionElement)
+CorePlaySoundUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		output = true,
+		layer = "target"
+	}
+}
 PlaySoundUnitElement = PlaySoundUnitElement or class(CorePlaySoundUnitElement)
 
 function PlaySoundUnitElement:init(...)

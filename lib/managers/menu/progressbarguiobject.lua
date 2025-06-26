@@ -6,28 +6,20 @@ function ProgressBarGuiObject:init(panel, config)
 	self._height = 8
 	self._x = self._panel:w() / 2
 	self._y = self._panel:h() / 2 + 191
-	self._color_red = Color(0.7215686274509804, 0.2235294117647059, 0.1803921568627451)
-	self._color_orange = Color(0.8666666666666667, 0.3607843137254902, 0.13725490196078433)
-	self._color_yellow = Color(0.8666666666666667, 0.6039215686274509, 0.2196078431372549)
-	self._color_green = Color(0.39215686274509803, 0.7372549019607844, 0.2980392156862745)
-	self._is_being_animated = false
 	self._progress_bar_bg = self._panel:bitmap({
-		name = "progress_bar_bg",
 		visible = false,
 		layer = 2,
+		name = "progress_bar_bg",
 		x = self._x - self._width / 2,
 		y = self._y - self._width / 2,
-		texture = tweak_data.gui.icons.interaction_hold_meter_bg.texture,
-		texture_rect = tweak_data.gui.icons.interaction_hold_meter_bg.texture_rect,
 		w = self._width,
-		h = self._height
+		h = self._height,
+		texture = tweak_data.gui.icons.interaction_hold_meter_bg.texture,
+		texture_rect = tweak_data.gui.icons.interaction_hold_meter_bg.texture_rect
 	})
 	self._progress_bar = self._panel:rect({
-		blend_mode = "normal",
-		name = "progress_bar",
-		h = 0,
 		layer = 3,
-		w = 0,
+		name = "progress_bar",
 		x = self._x - self._width / 2,
 		y = self._y - self._height / 2,
 		color = tweak_data.gui.colors.interaction_bar
@@ -39,18 +31,16 @@ function ProgressBarGuiObject:init(panel, config)
 end
 
 function ProgressBarGuiObject:_create_description(description)
-	local description_params = {
-		name = "progress_bar_description",
-		valign = "bottom",
-		align = "center",
+	self._description = self._panel:text({
 		h = 32,
+		align = "center",
 		w = 256,
+		valign = "bottom",
+		name = "progress_bar_description",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24,
-		color = tweak_data.gui.colors.raid_white,
 		text = description
-	}
-	self._description = self._panel:text(description_params)
+	})
 
 	self._description:set_center_x(self._progress_bar_bg:center_x())
 	self._description:set_bottom(self._y - 10)
@@ -66,7 +56,11 @@ function ProgressBarGuiObject:set_progress(current, total)
 	self._progress_bar:set_width(progress * self._width)
 end
 
-function ProgressBarGuiObject:show()
+function ProgressBarGuiObject:show(description)
+	if description then
+		self:_create_description(description)
+	end
+
 	self._progress_bar_bg:animate(callback(self, self, "_animate_interaction_start"), 0.25)
 	self._progress_bar:animate(callback(self, self, "_animate_interaction_start"), 0.25)
 end
@@ -221,20 +215,16 @@ function ProgressBarGuiObject:_animate_interaction_start(progress_bar, duration)
 
 	progress_bar:set_visible(true)
 
-	self._is_being_animated = true
-
 	while t < duration do
 		local dt = coroutine.yield()
 		t = t + dt
-		local current_height = self:_ease_out_quint(t, 0, self._height, duration)
+		local current_height = Easing.quintic_out(t, 0, self._height, duration)
 
 		progress_bar:set_height(current_height)
 		progress_bar:set_y(self._y - current_height / 2)
 	end
 
 	progress_bar:set_height(self._height)
-
-	self._is_being_animated = false
 end
 
 function ProgressBarGuiObject:_animate_interaction_cancel(progress_bar, duration)
@@ -244,7 +234,7 @@ function ProgressBarGuiObject:_animate_interaction_cancel(progress_bar, duration
 	while t < duration do
 		local dt = coroutine.yield()
 		t = t + dt
-		local current_height = self:_ease_in_quint(t, start_height, -start_height, duration)
+		local current_height = Easing.quintic_out(t, start_height, -start_height, duration)
 
 		progress_bar:set_height(current_height)
 		progress_bar:set_y(self._y - current_height / 2)
@@ -261,7 +251,7 @@ function ProgressBarGuiObject:_animate_interaction_complete(progress_bar)
 	while duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
-		local current_width = self:_ease_out_quint(t, self._width, -self._width, duration)
+		local current_width = Easing.quintic_out(t, self._width, -self._width, duration)
 
 		progress_bar:set_width(current_width)
 		progress_bar:set_right(self._x + self._width / 2)
@@ -273,9 +263,8 @@ end
 
 function ProgressBarGuiObject:_animate_interaction_duration(progress_bar, duration)
 	local t = 0
-	self._is_being_animated = true
 
-	while t < duration do
+	while duration > t do
 		local dt = coroutine.yield()
 		t = t + dt
 		local progress = t / duration
@@ -285,19 +274,4 @@ function ProgressBarGuiObject:_animate_interaction_duration(progress_bar, durati
 	end
 
 	progress_bar:set_width(self._width)
-
-	self._is_being_animated = false
-end
-
-function ProgressBarGuiObject:_ease_in_quint(t, starting_value, change, duration)
-	t = t / duration
-
-	return change * t * t * t * t * t + starting_value
-end
-
-function ProgressBarGuiObject:_ease_out_quint(t, starting_value, change, duration)
-	t = t / duration
-	t = t - 1
-
-	return change * (t * t * t * t * t + 1) + starting_value
 end

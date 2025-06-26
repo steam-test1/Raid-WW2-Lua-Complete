@@ -7,9 +7,7 @@ require("lib/managers/CriminalsManager")
 require("lib/units/beings/player/PlayerAnimationData")
 require("lib/units/MenuScriptUnitData")
 require("lib/units/weapons/WeaponGadgetBase")
-require("lib/units/weapons/WeaponFlashLight")
 require("lib/units/weapons/WeaponLaser")
-require("lib/units/weapons/WeaponSecondSight")
 require("lib/units/weapons/WeaponSimpleAnim")
 require("lib/units/weapons/WeaponLionGadget1")
 core:import("SequenceManager")
@@ -23,14 +21,6 @@ function MenuSetup:load_packages()
 
 	if not PackageManager:loaded("packages/start_menu") then
 		PackageManager:load("packages/start_menu")
-	end
-
-	if not PackageManager:loaded("packages/load_level") then
-		PackageManager:load("packages/load_level")
-	end
-
-	if not PackageManager:loaded("packages/load_default") then
-		PackageManager:load("packages/load_default")
 	end
 
 	local prefix = "packages/dlcs/"

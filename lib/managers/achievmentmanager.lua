@@ -4,10 +4,10 @@ AchievmentManager.FILE_EXTENSION = "achievment"
 
 function AchievmentManager:init()
 	self.exp_awards = {
+		c = 5000,
 		b = 1500,
 		a = 500,
-		none = 0,
-		c = 5000
+		none = 0
 	}
 
 	if IS_PC then

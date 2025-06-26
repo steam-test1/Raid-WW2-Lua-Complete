@@ -25,12 +25,6 @@ function CivilianLogicTravel.enter(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 	CivilianLogicEscort._get_objective_path_data(data, my_data)
 
-	if data.is_tied then
-		managers.groupai:state():on_hostage_state(true, data.key, nil, true)
-
-		my_data.is_hostage = true
-	end
-
 	local key_str = tostring(data.key)
 
 	if not data.been_outlined and data.char_tweak.outline_on_discover then
@@ -46,12 +40,6 @@ function CivilianLogicTravel.enter(data, new_logic_name, enter_params)
 	my_data.advance_path_search_id = "CivilianLogicTravel_detailed" .. tostring(data.key)
 	my_data.coarse_path_search_id = "CivilianLogicTravel_coarse" .. tostring(data.key)
 	my_data.vision = data.char_tweak.vision
-
-	if not data.unit:movement():cool() then
-		my_data.registered_as_fleeing = true
-
-		managers.groupai:state():register_fleeing_civilian(data.key, data.unit)
-	end
 
 	if data.objective and data.objective.stance then
 		data.unit:movement():set_stance(data.objective.stance)
@@ -87,18 +75,8 @@ function CivilianLogicTravel.exit(data, new_logic_name, enter_params)
 	CopLogicBase.cancel_delayed_clbks(my_data)
 	CopLogicBase.cancel_queued_tasks(my_data)
 
-	if my_data.registered_as_fleeing then
-		managers.groupai:state():unregister_fleeing_civilian(data.key)
-	end
-
 	if my_data.enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(my_data.enemy_weapons_hot_listen_id)
-	end
-
-	if my_data.is_hostage then
-		managers.groupai:state():on_hostage_state(false, data.key, nil, true)
-
-		my_data.is_hostage = nil
 	end
 
 	if new_logic_name ~= "inactive" then
@@ -129,8 +107,8 @@ function CivilianLogicTravel.update(data)
 
 		local haste = objective and objective.haste or "walk"
 		local new_action_data = {
-			type = "walk",
 			body_part = 2,
+			type = "walk",
 			nav_path = my_data.advance_path,
 			variant = haste,
 			end_rot = end_rot
@@ -193,24 +171,8 @@ function CivilianLogicTravel.update(data)
 	end
 end
 
-function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
-	if not CivilianLogicIdle.is_obstructed(data, aggressor_unit) then
-		return
-	end
-
-	local new_objective = {
-		type = "surrender",
-		amount = amount,
-		aggressor_unit = aggressor_unit
-	}
-	local anim_data = data.unit:anim_data()
-
-	if anim_data.run then
-		new_objective.initial_act = "halt"
-	end
-
-	data.unit:sound():say("a02x_any", true)
-	data.unit:brain():set_objective(new_objective)
+function CivilianLogicTravel.on_long_distance_interact(data, amount, aggressor_unit)
+	Application:info("[CivilianLogicTravel.on_long_distance_interact]", data, amount, aggressor_unit)
 end
 
 function CivilianLogicTravel._determine_exact_destination(data, objective)
@@ -250,5 +212,5 @@ function CivilianLogicTravel.is_available_for_assignment(data, objective)
 		return true
 	end
 
-	return not data.is_tied
+	return true
 end

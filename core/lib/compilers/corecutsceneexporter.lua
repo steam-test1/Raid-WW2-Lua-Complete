@@ -78,8 +78,8 @@ function CoreCutsceneExporter:_problem_map()
 		add_problem("The project contains no data.")
 	else
 		local previous_clip = responder_map({
-			end_time = 0,
 			start_time = 0,
+			end_time = 0,
 			metadata = responder_map({
 				is_valid = true
 			})

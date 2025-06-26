@@ -6,9 +6,9 @@ ChallengeTweakData.TASK_COLLECT_CANDY = "task_collect_candy"
 
 function ChallengeTweakData:init()
 	self.tighter_spread_easy = {
-		target = 25,
 		challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 		challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+		target = 25,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			10,
@@ -34,9 +34,9 @@ function ChallengeTweakData:init()
 		35
 	}
 	self.increase_magazine_easy = {
-		challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
-		target = 175,
 		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+		target = 175,
+		challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 		type = ChallengeTweakData.TASK_COLLECT_AMMO,
 		reminders = {
 			100,
@@ -57,9 +57,9 @@ function ChallengeTweakData:init()
 		250
 	}
 	self.kill_enemies_hipfire_easy = {
-		target = 100,
 		challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 		challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+		target = 100,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			40,
@@ -88,9 +88,9 @@ function ChallengeTweakData:init()
 		200
 	}
 	self.kill_enemies_basic_easy = {
-		challenge_briefing_id = "weapon_skill_generic_kill_briefing",
-		target = 200,
 		challenge_done_text_id = "weapon_skill_generic_kill_completed",
+		target = 200,
+		challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 		reminders = {
 			60,
@@ -224,11 +224,11 @@ function ChallengeTweakData:init()
 		60
 	}
 	self.candy_gold_bar = {
-		challenge_briefing_id = "weapon_inventory_gold_bar_briefing",
+		challenge_icon = "weapon_gre_gold_bar_large",
+		target = 666,
 		challenge_done_text_id = "weapon_inventory_gold_bar_completed",
 		challenge_name_id = "card_trick_or_treat_name_id",
-		target = 666,
-		challenge_icon = "weapon_gre_gold_bar_large",
+		challenge_briefing_id = "weapon_inventory_gold_bar_briefing",
 		type = ChallengeTweakData.TASK_COLLECT_CANDY,
 		reminders = {
 			111,
@@ -237,5 +237,59 @@ function ChallengeTweakData:init()
 			444,
 			555
 		}
+	}
+
+	self:_init_georg()
+end
+
+function ChallengeTweakData:_init_georg()
+	self.georg_kill_enemies_basic_easy = deep_clone(self.kill_enemies_basic_easy)
+	self.georg_kill_enemies_basic_easy.target = 75
+	self.georg_kill_enemies_basic_easy.reminders = {
+		15,
+		30,
+		60
+	}
+	self.georg_kill_enemies_headshot_easy = deep_clone(self.tighter_spread_easy)
+	self.georg_kill_enemies_headshot_easy.target = 40
+	self.georg_kill_enemies_headshot_easy.reminders = {
+		10,
+		20,
+		30
+	}
+	self.georg_kill_enemies_hipfire_easy = deep_clone(self.kill_enemies_hipfire_easy)
+	self.georg_kill_enemies_hipfire_easy.target = 30
+	self.georg_kill_enemies_hipfire_easy.reminders = {
+		10,
+		20
+	}
+	self.georg_kill_enemies_basic_medium = deep_clone(self.kill_enemies_basic_medium)
+	self.georg_kill_enemies_basic_medium.target = 125
+	self.georg_kill_enemies_basic_medium.reminders = {
+		25,
+		50,
+		75,
+		100
+	}
+	self.georg_kill_enemies_headshot_medium = deep_clone(self.tighter_spread_medium)
+	self.georg_kill_enemies_headshot_medium.target = 80
+	self.georg_kill_enemies_headshot_medium.reminders = {
+		20,
+		40,
+		60
+	}
+	self.georg_kill_enemies_hipfire_medium = deep_clone(self.kill_enemies_hipfire_medium)
+	self.georg_kill_enemies_hipfire_medium.target = 60
+	self.georg_kill_enemies_hipfire_medium.reminders = {
+		10,
+		30,
+		50
+	}
+	self.georg_increase_magazine_hard = deep_clone(self.increase_magazine_easy)
+	self.georg_increase_magazine_hard.target = 200
+	self.georg_increase_magazine_hard.reminders = {
+		50,
+		100,
+		150
 	}
 end

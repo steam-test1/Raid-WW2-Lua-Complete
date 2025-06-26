@@ -47,9 +47,9 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 	local params_player_name = {
 		layer = 1,
+		text = "",
 		name = "peer_weapon_point_name_label",
 		align = "left",
-		text = "",
 		x = RaidGUIControlWeaponPointPeerLoot.TEXT_X,
 		y = RaidGUIControlWeaponPointPeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlWeaponPointPeerLoot.TEXT_X,
@@ -81,7 +81,11 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 end
 
 function RaidGUIControlWeaponPointPeerLoot:set_player_name(name)
-	self._name_label:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name_label:set_text(name)
 	self:_layout_text()
 end
 

@@ -116,8 +116,8 @@ function TankCopLogicAttack.update(data)
 
 			if focus_enemy.verified_dis < 800 and unit:anim_data().run then
 				local new_action = {
-					body_part = 2,
-					type = "idle"
+					type = "idle",
+					body_part = 2
 				}
 
 				data.unit:brain():action_request(new_action)
@@ -193,8 +193,8 @@ function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 
 	if my_data.walking_to_chase_pos then
 		local new_action = {
-			body_part = 2,
-			type = "idle"
+			type = "idle",
+			body_part = 2
 		}
 
 		data.unit:brain():action_request(new_action)

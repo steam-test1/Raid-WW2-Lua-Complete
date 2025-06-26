@@ -124,12 +124,12 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._name_label = self._object:label(params_name_label)
 	local params_status_label = {
-		h = 32,
-		align = "left",
-		text = "lol",
 		vertical = "bottom",
 		y = 32,
 		x = 0,
+		h = 32,
+		align = "left",
+		text = "lol",
 		name = self._params.name .. "_status_label",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -138,10 +138,10 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._status_label = self._object:label(params_status_label)
 	local params_desc_label = {
-		h = 100,
 		text = "Unknown skill description. Lorem ipsum glupsum tumsum. Kajaznam kolko ovog stane u tri linije mozda jos malo a mozda i ne.",
 		y = 96,
 		x = 0,
+		h = 100,
 		word_wrap = true,
 		wrap = true,
 		name = self._params.name .. "_desc_label",
@@ -152,14 +152,14 @@ function RaidGUIControlWeaponSkillDesc:_create_labels()
 	}
 	self._desc_label = self._object:label(params_desc_label)
 	local tier_unlocks_at_level_label_params = {
-		align = "left",
-		text = "",
-		h = 58,
 		x = 0,
 		visible = false,
 		layer = 1,
 		name = "cant_equip_explenation_label",
+		align = "left",
+		h = 58,
 		wrap = true,
+		text = "",
 		y = self._desc_label:y(),
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -171,9 +171,9 @@ end
 
 function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	local progress_bar_panel_params = {
+		vertical = "bottom",
 		x = 0,
 		h = 32,
-		vertical = "bottom",
 		name = self._params.name .. "_progress_bar_panel",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W
 	}
@@ -196,10 +196,10 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
+		halign = "scale",
 		y = 0,
 		x = 0,
 		layer = 2,
-		halign = "scale",
 		valign = "scale",
 		name = self._params.name .. "_progress_bar_foreground_panel",
 		w = self._progress_bar_panel:w(),
@@ -217,12 +217,12 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
-		text = "123/456",
-		align = "center",
 		vertical = "center",
 		y = -2,
 		x = 0,
 		layer = 5,
+		align = "center",
+		text = "123/456",
 		name = self._params.name .. "_progress_bar_text",
 		w = self._progress_bar_panel:w(),
 		h = self._progress_bar_panel:h(),

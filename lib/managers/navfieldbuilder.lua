@@ -537,7 +537,11 @@ function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
 	local start_pos_rounded = self:_round_pos_to_grid_center(build_seg.position) + Vector3(self._grid_size * 0.5, self._grid_size * 0.5, 0)
 	local ground_ray = self:_sphere_ray(start_pos_rounded + self._up_vec, start_pos_rounded + self._down_vec, self._gnd_ray_rad)
 
-	self:_analyse_room("x_pos", start_pos_rounded:with_z(ground_ray.position.z))
+	if ground_ray then
+		self:_analyse_room("x_pos", start_pos_rounded:with_z(ground_ray.position.z))
+	else
+		Application:error("[NavFieldBuilder] Complete failure to build segment ID:", build_seg.id)
+	end
 end
 
 function NavFieldBuilder:_commence_nav_field_build()

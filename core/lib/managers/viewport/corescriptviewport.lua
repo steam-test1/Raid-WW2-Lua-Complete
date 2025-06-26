@@ -11,6 +11,9 @@ DEFAULT_NETWORK_PORT = 31254
 DEFAULT_NETWORK_LSPORT = 31255
 NETWORK_SLAVE_RECEIVER = Idstring("scriptviewport_slave")
 NETWORK_MASTER_RECEIVER = Idstring("scriptviewport_master")
+local IDS_SHADOW_MODIFIER = Idstring("shadow_modifier")
+local IDS_SHADOW_PROCESSOR = Idstring("shadow_processor")
+local IDS_SHADOW_RENDERING = Idstring("shadow_rendering")
 
 function _ScriptViewport:init(x, y, width, height, vpm, name)
 	_ScriptViewport.super.init(self, vpm, name)
@@ -154,10 +157,10 @@ end
 function _ScriptViewport:reference_fov()
 	local scene = self._render_params[1]
 	local fov = -1
-	local sh_pro = self._vp:get_post_processor_effect(scene, Idstring("shadow_processor"), Idstring("shadow_rendering"))
+	local ppe_shadow = self._vp:get_post_processor_effect(scene, IDS_SHADOW_PROCESSOR, IDS_SHADOW_RENDERING)
 
-	if sh_pro then
-		local sh_mod = sh_pro:modifier(Idstring("shadow_modifier"))
+	if ppe_shadow then
+		local sh_mod = ppe_shadow:modifier(IDS_SHADOW_MODIFIER)
 
 		if sh_mod then
 			fov = math.deg(sh_mod:reference_fov())
@@ -174,10 +177,10 @@ function _ScriptViewport:push_ref_fov(fov)
 		return false
 	end
 
-	local sh_pro = self._vp:get_post_processor_effect(scene, Idstring("shadow_processor"), Idstring("shadow_rendering"))
+	local sh_pro = self._vp:get_post_processor_effect(scene, IDS_SHADOW_PROCESSOR, IDS_SHADOW_RENDERING)
 
 	if sh_pro then
-		local sh_mod = sh_pro:modifier(Idstring("shadow_modifier"))
+		local sh_mod = sh_pro:modifier(IDS_SHADOW_MODIFIER)
 
 		if sh_mod then
 			table.insert(self._ref_fov_stack, sh_mod:reference_fov())
@@ -192,10 +195,10 @@ end
 
 function _ScriptViewport:pop_ref_fov()
 	local scene = self._render_params[1]
-	local sh_pro = self._vp:get_post_processor_effect(scene, Idstring("shadow_processor"), Idstring("shadow_rendering"))
+	local sh_pro = self._vp:get_post_processor_effect(scene, IDS_SHADOW_PROCESSOR, IDS_SHADOW_RENDERING)
 
 	if sh_pro then
-		local sh_mod = sh_pro:modifier(Idstring("shadow_modifier"))
+		local sh_mod = sh_pro:modifier(IDS_SHADOW_MODIFIER)
 
 		if sh_mod and #self._ref_fov_stack > 0 then
 			local last = self._ref_fov_stack[#self._ref_fov_stack]
@@ -278,9 +281,7 @@ function _ScriptViewport:_update(is_first_viewport, t, dt)
 end
 
 function _ScriptViewport:_render(nr)
-	if Global.render_debug.render_world then
-		Application:render(unpack(self._render_params))
-	end
+	Application:render(unpack(self._render_params))
 end
 
 function _ScriptViewport:_resolution_changed()

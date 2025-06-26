@@ -1,4 +1,14 @@
 EnemyPreferedAddUnitElement = EnemyPreferedAddUnitElement or class(MissionElement)
+EnemyPreferedAddUnitElement.LINK_VALUES = {
+	{
+		table_value = "spawn_group",
+		output = true
+	},
+	{
+		table_value = "spawn_point",
+		output = true
+	}
+}
 EnemyPreferedAddUnitElement.SAVE_UNIT_POSITION = false
 EnemyPreferedAddUnitElement.SAVE_UNIT_ROTATION = false
 
@@ -44,8 +54,8 @@ end
 
 function EnemyPreferedAddUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -107,18 +117,6 @@ function EnemyPreferedAddUnitElement:remove_links(unit)
 
 	_rem_func(self._hed.spawn_points)
 	_rem_func(self._hed.spawn_groups)
-end
-
-function EnemyPreferedAddUnitElement:get_links_to_unit(...)
-	EnemyPreferedAddUnitElement.super.get_links_to_unit(self, ...)
-
-	if self._hed.spawn_groups then
-		self:_get_links_of_type_from_elements(self._hed.spawn_groups, "spawn_group", ...)
-	end
-
-	if self._hed.spawn_points then
-		self:_get_links_of_type_from_elements(self._hed.spawn_points, "spawn_point", ...)
-	end
 end
 
 function EnemyPreferedAddUnitElement:add_triggers(vc)
@@ -198,6 +196,13 @@ function EnemyPreferedAddUnitElement:_build_panel(panel, panel_sizer)
 end
 
 EnemyPreferedRemoveUnitElement = EnemyPreferedRemoveUnitElement or class(MissionElement)
+EnemyPreferedRemoveUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
+}
 EnemyPreferedRemoveUnitElement.SAVE_UNIT_POSITION = false
 EnemyPreferedRemoveUnitElement.SAVE_UNIT_ROTATION = false
 
@@ -233,8 +238,8 @@ end
 
 function EnemyPreferedRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_enemy_prefered_add", 1, true) then
@@ -253,14 +258,6 @@ function EnemyPreferedRemoveUnitElement:remove_links(unit)
 		if id == unit:unit_data().unit_id then
 			table.delete(self._hed.elements, id)
 		end
-	end
-end
-
-function EnemyPreferedRemoveUnitElement:get_links_to_unit(...)
-	EnemyPreferedRemoveUnitElement.super.get_links_to_unit(self, ...)
-
-	if self._hed.elements then
-		self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 	end
 end
 

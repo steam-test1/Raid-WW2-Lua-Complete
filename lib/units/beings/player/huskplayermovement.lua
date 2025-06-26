@@ -21,7 +21,7 @@ HuskPlayerMovement._calc_suspicion_ratio_and_sync = PlayerMovement._calc_suspici
 HuskPlayerMovement.on_suspicion = PlayerMovement.on_suspicion
 HuskPlayerMovement.state_enter_time = PlayerMovement.state_enter_time
 HuskPlayerMovement.SO_access = PlayerMovement.SO_access
-HuskPlayerMovement.rescue_SO_verification = PlayerBleedOut.rescue_SO_verification
+HuskPlayerMovement.on_revive_SO_verification = PlayerBleedOut.on_revive_SO_verification
 HuskPlayerMovement.set_team = PlayerMovement.set_team
 HuskPlayerMovement.team = PlayerMovement.team
 HuskPlayerMovement.sync_net_event = PlayerMovement.sync_net_event
@@ -31,56 +31,56 @@ HuskPlayerMovement._walk_anim_velocities = {
 	stand = {
 		ntl = {
 			walk = {
-				l = 150.36,
 				bwd = 156.4,
 				fwd = 183.48,
-				r = 152.15
+				r = 152.15,
+				l = 150.36
 			},
 			run = {
-				l = 405.06,
 				bwd = 402.62,
 				fwd = 381.35,
-				r = 405.06
+				r = 405.06,
+				l = 405.06
 			}
 		},
 		cbt = {
 			walk = {
-				l = 192.75,
 				bwd = 208.27,
 				fwd = 208.27,
-				r = 192.75
+				r = 192.75,
+				l = 192.75
 			},
 			run = {
-				l = 416.35,
 				bwd = 416.77,
 				fwd = 414.73,
-				r = 411.9
+				r = 411.9,
+				l = 416.35
 			},
 			sprint = {
 				79,
 				35,
 				14,
 				9,
-				l = 488,
 				bwd = 547,
 				fwd = 672,
-				r = 547
+				r = 547,
+				l = 488
 			}
 		}
 	},
 	crouch = {
 		cbt = {
 			walk = {
-				l = 152.14,
 				bwd = 163.74,
 				fwd = 174.45,
-				r = 162.85
+				r = 162.85,
+				l = 152.14
 			},
 			run = {
-				l = 282.93,
 				bwd = 268.68,
 				fwd = 312.25,
-				r = 282.93
+				r = 282.93,
+				l = 282.93
 			}
 		}
 	}
@@ -91,120 +91,120 @@ HuskPlayerMovement._walk_anim_lengths = {
 	stand = {
 		ntl = {
 			walk = {
-				l = 29,
 				bwd = 31,
 				fwd = 31,
-				r = 31
+				r = 31,
+				l = 29
 			},
 			run = {
-				l = 20,
 				bwd = 17,
 				fwd = 26,
-				r = 20
+				r = 20,
+				l = 20
 			}
 		},
 		cbt = {
 			walk = {
-				l = 26,
 				bwd = 26,
 				fwd = 26,
-				r = 26
+				r = 26,
+				l = 26
 			},
 			run = {
-				l = 18,
 				bwd = 18,
 				fwd = 19,
-				r = 20
+				r = 20,
+				l = 18
 			},
 			sprint = {
-				l = 16,
 				bwd = 16,
 				fwd = 16,
-				r = 19
+				r = 19,
+				l = 16
 			},
 			run_start = {
-				l = 27,
 				bwd = 25,
 				fwd = 29,
-				r = 24
+				r = 24,
+				l = 27
 			},
 			run_start_turn = {
-				l = 37,
 				bwd = 26,
-				r = 26
+				r = 26,
+				l = 37
 			},
 			run_stop = {
-				l = 28,
 				bwd = 23,
 				fwd = 29,
-				r = 31
+				r = 31,
+				l = 28
 			}
 		}
 	},
 	crouch = {
 		cbt = {
 			walk = {
-				l = 27,
 				bwd = 31,
 				fwd = 31,
-				r = 28
+				r = 28,
+				l = 27
 			},
 			run = {
-				l = 19,
 				bwd = 20,
 				fwd = 21,
-				r = 19
+				r = 19,
+				l = 19
 			},
 			run_start = {
-				l = 30,
 				bwd = 16,
 				fwd = 31,
-				r = 22
+				r = 22,
+				l = 30
 			},
 			run_start_turn = {
-				l = 21,
 				bwd = 28,
-				r = 21
+				r = 21,
+				l = 21
 			},
 			run_stop = {
-				l = 28,
 				bwd = 25,
 				fwd = 27,
-				r = 26
+				r = 26,
+				l = 28
 			}
 		}
 	},
 	wounded = {
 		cbt = {
 			walk = {
-				l = 29,
 				bwd = 29,
 				fwd = 28,
-				r = 29
+				r = 29,
+				l = 29
 			},
 			run = {
-				l = 19,
 				bwd = 18,
 				fwd = 19,
-				r = 19
+				r = 19,
+				l = 19
 			}
 		}
 	},
 	panic = {
 		ntl = {
 			run = {
-				l = 15,
 				bwd = 15,
 				fwd = 15,
-				r = 16
+				r = 16,
+				l = 15
 			}
 		}
 	}
 }
 
-for pose, stances in pairs(HuskPlayerMovement._walk_anim_lengths) do
-	for stance, speeds in pairs(stances) do
-		for speed, sides in pairs(speeds) do
+for _, stances in pairs(HuskPlayerMovement._walk_anim_lengths) do
+	for _, speeds in pairs(stances) do
+		for _, sides in pairs(speeds) do
 			for side, speed in pairs(sides) do
 				sides[side] = speed * 0.03333
 			end
@@ -228,18 +228,6 @@ HuskPlayerMovement._matching_walk_anims = {
 		l = true
 	}
 }
-HuskPlayerMovement._char_name_to_index = {
-	german = 2,
-	russian = 1,
-	british = 4,
-	american = 3
-}
-HuskPlayerMovement._char_model_names = {
-	german = "g_body",
-	russian = "g_russian",
-	british = "g_spaniard",
-	american = "g_american"
-}
 HuskPlayerMovement._stance_names = {
 	"ntl",
 	"hos",
@@ -262,8 +250,8 @@ function HuskPlayerMovement:init(unit)
 	self._look_ang_vel = 0
 	self._move_data = nil
 	self._last_vel_z = 0
-	self._remote_head_pos = Vector3(0, 0, 0)
-	self._remote_pos = Vector3(0, 0, 0)
+	self._remote_head_pos = Vector3()
+	self._remote_pos = Vector3()
 	self._sync_pos = nil
 	self._sync_fall_dt = 0
 	self._nav_tracker = nil
@@ -366,19 +354,7 @@ function HuskPlayerMovement:set_character_anim_variables()
 		return
 	end
 
-	local mesh_name = (self._char_model_names[char_name] or "") .. (managers.player._player_mesh_suffix or "")
-	local mesh_obj = self._unit:get_object(Idstring(mesh_name))
-
-	if mesh_obj then
-		self._unit:get_object(Idstring(self._plr_mesh_name or self._char_model_names.german)):set_visibility(false)
-		mesh_obj:set_visibility(true)
-
-		self._plr_mesh_name = mesh_name
-	end
-
-	local char_index = 1
-
-	self._machine:set_global("husk" .. tostring(char_index), 1)
+	self._machine:set_global("husk", 1)
 	self:check_visual_equipment()
 	self._unit:contour():update_materials()
 	self._unit:contour():add("teammate", nil, nil)
@@ -392,12 +368,6 @@ end
 
 function HuskPlayerMovement:check_visual_equipment()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
-	local deploy_data = managers.player:get_synced_deployable_equipment(peer_id)
-
-	if deploy_data then
-		self:set_visual_deployable_equipment(deploy_data.deployable, deploy_data.amount)
-	end
-
 	local carry_data = managers.player:get_synced_carry(peer_id)
 
 	if carry_data then
@@ -405,45 +375,26 @@ function HuskPlayerMovement:check_visual_equipment()
 	end
 end
 
-function HuskPlayerMovement:set_visual_deployable_equipment(deployable, amount)
-	local visible = amount > 0
-	local tweak_data = tweak_data.equipments[deployable]
-	local object_name = tweak_data.visual_object
-	local object_name_ids = Idstring(object_name)
-	self._current_visual_deployable_equipment = self._current_visual_deployable_equipment or object_name_ids
-
-	if self._current_visual_deployable_equipment ~= object_name_ids then
-		self._unit:get_object(self._current_visual_deployable_equipment):set_visibility(false)
-
-		self._current_visual_deployable_equipment = object_name_ids
-	end
-end
-
 function HuskPlayerMovement:set_visual_carry(carry_id)
-	if carry_id then
-		if tweak_data.carry[carry_id].visual_unit_name then
-			self:_create_carry_unit(tweak_data.carry[carry_id].visual_unit_name, tweak_data.carry[carry_id].visual_unit_joint_array, tweak_data.carry[carry_id].visual_unit_root_joint)
-
-			return
-		end
-
-		local object_name = tweak_data.carry[carry_id].visual_object or "g_lootbag"
-		self._current_visual_carry_object = self._unit:get_object(Idstring(object_name))
-
-		if not self._current_visual_carry_object then
-			self:_create_carry_unit(tweak_data.carry.default_visual_unit, tweak_data.carry.default_visual_unit_joint_array, tweak_data.carry.default_visual_unit_root_joint)
-
-			return
-		end
-
-		self._current_visual_carry_object:set_visibility(true)
-	elseif alive(self._current_visual_carry_object) then
-		self._current_visual_carry_object:set_visibility(false)
-
-		self._current_visual_carry_object = nil
-	else
+	if not carry_id then
 		self:_destroy_current_carry_unit()
+
+		return
 	end
+
+	local carry_tweak = tweak_data.carry[carry_id]
+
+	if not carry_tweak then
+		return
+	end
+
+	if not carry_tweak.visual_unit_name then
+		self:_create_carry_unit(tweak_data.carry.default_visual_unit, tweak_data.carry.default_visual_unit_joint_array, tweak_data.carry.default_visual_unit_root_joint)
+
+		return
+	end
+
+	self:_create_carry_unit(carry_tweak.visual_unit_name, carry_tweak.visual_unit_joint_array, carry_tweak.visual_unit_root_joint)
 end
 
 function HuskPlayerMovement:_destroy_current_carry_unit()
@@ -463,9 +414,13 @@ function HuskPlayerMovement:_create_carry_unit(unit_name, joint_array, root_join
 
 	if joint_array then
 		for _, o_name in ipairs(joint_array) do
-			self._current_carry_unit:get_object(Idstring(o_name)):link(self._unit:get_object(Idstring(o_name)))
-			self._current_carry_unit:get_object(Idstring(o_name)):set_position(self._unit:get_object(Idstring(o_name)):position())
-			self._current_carry_unit:get_object(Idstring(o_name)):set_rotation(self._unit:get_object(Idstring(o_name)):rotation())
+			local ids_object = Idstring(o_name)
+			local player_align = self._unit:get_object(ids_object)
+			local carry_align = self._current_carry_unit:get_object(ids_object)
+
+			carry_align:link(player_align)
+			carry_align:set_position(player_align:position())
+			carry_align:set_rotation(player_align:rotation())
 		end
 	end
 end
@@ -631,50 +586,79 @@ function HuskPlayerMovement:play_redirect(redirect_name, at_time)
 	end
 
 	local result = self._unit:play_redirect(Idstring(redirect_name), at_time)
-	result = result ~= Idstring("") and result
+	result = result ~= IDS_EMPTY and result
 
-	if result then
-		return result
+	if not result then
+		print("[HuskPlayerMovement:play_redirect] redirect", redirect_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
+		Application:stack_dump()
 	end
 
-	print("[HuskPlayerMovement:play_redirect] redirect", redirect_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
-	Application:stack_dump()
+	return result
 end
 
 function HuskPlayerMovement:play_redirect_idstr(redirect_name, at_time)
-	local result = self._unit:play_redirect(redirect_name, at_time)
-	result = result ~= Idstring("") and result
-
-	if result then
-		return result
+	if not redirect_name then
+		return
 	end
 
-	print("[HuskPlayerMovement:play_redirect_idstr] redirect", redirect_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
-	Application:stack_dump()
+	local result = self._unit:play_redirect(redirect_name, at_time)
+	result = result ~= IDS_EMPTY and result
+
+	if not result then
+		print("[HuskPlayerMovement:play_redirect_idstr] redirect", redirect_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
+		Application:stack_dump()
+	end
+
+	return result
+end
+
+function HuskPlayerMovement:_play_equip_weapon()
+	local redir_res = self:play_redirect("equip")
+
+	if redir_res then
+		local weapon = self._unit:inventory():equipped_unit()
+
+		if weapon then
+			self._unit:inventory():show_equipped_unit()
+
+			local weap_tweak = weapon:base():weapon_tweak_data()
+			local weapon_hold = weap_tweak.hold
+
+			self._machine:set_parameter(redir_res, "to_" .. weapon_hold, 1)
+		end
+	end
 end
 
 function HuskPlayerMovement:play_state(state_name, at_time)
-	local result = self._unit:play_state(Idstring(state_name), at_time)
-	result = result ~= Idstring("") and result
-
-	if result then
-		return result
+	if not state_name then
+		return
 	end
 
-	print("[HuskPlayerMovement:play_state] state", state_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
-	Application:stack_dump()
+	local result = self._unit:play_state(Idstring(state_name), at_time)
+	result = result ~= IDS_EMPTY and result
+
+	if not result then
+		print("[HuskPlayerMovement:play_state] state", state_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
+		Application:stack_dump()
+	end
+
+	return result
 end
 
 function HuskPlayerMovement:play_state_idstr(state_name, at_time)
-	local result = self._unit:play_state(state_name, at_time)
-	result = result ~= Idstring("") and result
-
-	if result then
-		return result
+	if not state_name then
+		return
 	end
 
-	print("[HuskPlayerMovement:play_state_idstr] state", state_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
-	Application:stack_dump()
+	local result = self._unit:play_state(state_name, at_time)
+	result = result ~= IDS_EMPTY and result
+
+	if not result then
+		print("[HuskPlayerMovement:play_state_idstr] state", state_name, "failed in", self._machine:segment_state(self._ids_base), self._machine:segment_state(Idstring("upper_body")))
+		Application:stack_dump()
+	end
+
+	return result
 end
 
 function HuskPlayerMovement:anim_cbk_set_melee_item_state_vars(unit)
@@ -774,27 +758,27 @@ end
 
 function HuskPlayerMovement:_register_revive_SO()
 	local followup_objective = {
-		type = "act",
 		scan = true,
+		type = "act",
 		action = {
 			body_part = 1,
-			type = "act",
 			variant = "crouch",
+			type = "act",
 			blocks = {
+				action = -1,
+				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				walk = -1,
-				action = -1,
-				aim = -1
+				walk = -1
 			}
 		}
 	}
 	local objective = {
-		type = "revive",
-		pose = "stand",
 		scan = true,
+		type = "revive",
 		destroy_clbk_key = false,
 		called = true,
+		pose = "stand",
 		haste = "run",
 		follow_unit = self._unit,
 		nav_seg = self._unit:movement():nav_tracker():nav_segment(),
@@ -808,12 +792,12 @@ function HuskPlayerMovement:_register_revive_SO()
 			variant = "revive",
 			body_part = 1,
 			blocks = {
+				action = -1,
+				light_hurt = -1,
+				aim = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				aim = -1,
-				walk = -1,
-				action = -1,
-				light_hurt = -1
+				walk = -1
 			}
 		}
 	}
@@ -826,7 +810,7 @@ function HuskPlayerMovement:_register_revive_SO()
 		objective = objective,
 		search_pos = self._unit:position(),
 		admin_clbk = callback(self, self, "on_revive_SO_administered"),
-		verification_clbk = callback(HuskPlayerMovement, HuskPlayerMovement, "rescue_SO_verification", self._unit)
+		verification_clbk = callback(HuskPlayerMovement, HuskPlayerMovement, "on_revive_SO_verification", self._unit)
 	}
 	local so_id = "PlayerHusk_revive" .. tostring(self._unit:key())
 	self._revive_SO_id = so_id
@@ -874,20 +858,20 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 	if Network:is_server() then
 		if need_assistance and not self._assist_SO_id then
 			local objective = {
+				scan = true,
 				type = "follow",
 				destroy_clbk_key = false,
 				called = true,
-				scan = true,
 				follow_unit = self._unit,
 				nav_seg = self._unit:movement():nav_tracker():nav_segment()
 			}
 			local so_descriptor = {
-				interval = 6,
-				chance_inc = 0,
-				base_chance = 1,
 				search_dis_sq = 25000000,
 				AI_group = "friendlies",
 				usage_amount = 1,
+				interval = 6,
+				chance_inc = 0,
+				base_chance = 1,
 				objective = objective,
 				search_pos = self._unit:position()
 			}
@@ -930,30 +914,6 @@ end
 
 function HuskPlayerMovement:downed()
 	return self._need_revive or self._need_assistance
-end
-
-function HuskPlayerMovement:_upd_attention_mask_off(dt)
-	if not self._atention_on then
-		self._atention_on = true
-
-		self._machine:force_modifier(self._mask_off_modifier_name)
-	end
-
-	if self._sync_look_dir then
-		local error_angle = self._sync_look_dir:angle(self._look_dir)
-		local rot_speed_rel = math.pow(math.min(error_angle / 90, 1), 0.5)
-		local rot_speed = math.lerp(40, 360, rot_speed_rel)
-		local rot_amount = math.min(rot_speed * dt, error_angle)
-		local error_axis = self._look_dir:cross(self._sync_look_dir)
-		local rot_adj = Rotation(error_axis, rot_amount)
-		self._look_dir = self._look_dir:rotate_with(rot_adj)
-
-		self._mask_off_modifier:set_target_z(self._look_dir)
-
-		if rot_amount == error_angle then
-			self._sync_look_dir = nil
-		end
-	end
 end
 
 function HuskPlayerMovement:_upd_attention_standard(dt)
@@ -1198,67 +1158,67 @@ function HuskPlayerMovement:_upd_attention_driving(dt)
 		return
 	end
 
-	if self._sync_look_dir then
-		if self._atention_on then
-			self._atention_on = false
-
-			if self._ext_anim.reload then
-				self._atention_on = false
-				local blend_out_t = 0.15
-
-				self._machine:set_modifier_blend(self._arm_modifier_name, blend_out_t)
-				self._machine:set_modifier_blend(self._head_modifier_name, blend_out_t)
-				self._machine:set_modifier_blend(self._look_modifier_name, blend_out_t)
-				self._machine:forbid_modifier(self._head_modifier_name)
-				self._machine:forbid_modifier(self._arm_modifier_name)
-				self._machine:forbid_modifier(self._look_modifier_name)
-			end
-		elseif self._ext_anim.reload then
-			if self._sync_look_dir ~= self._look_dir then
-				self._look_dir = mvector3.copy(self._sync_look_dir)
-			end
-
-			return
-		else
-			self._atention_on = true
-
-			if self._vehicle_shooting_stance == PlayerDriving.STANCE_NORMAL and not self._allow_shooting then
-				self._machine:forbid_modifier(self._look_modifier_name)
-				self._machine:force_modifier(self._head_modifier_name)
-				self._machine:forbid_modifier(self._arm_modifier_name)
-			else
-				self._machine:force_modifier(self._look_modifier_name)
-				self._machine:forbid_modifier(self._head_modifier_name)
-				self._machine:forbid_modifier(self._arm_modifier_name)
-			end
-		end
-
-		self:update_sync_look_dir(dt)
-
-		local fwd = self._m_rot:y()
-		local spin = fwd:to_polar_with_reference(self._look_dir, math.UP).spin
-		local anim = self._machine:segment_state(self._ids_base)
-		local max_anim_spin = 120
-		local min_anim_spin = -120
-		local aim_spin = spin
-		local fwd = math.clamp(1 - math.abs(aim_spin) / 45, 0, 1)
-		local bwd = math.clamp(1 - (180 - math.abs(aim_spin)) / 45, 0, 1)
-		local l, r = nil
-
-		if aim_spin > 0 then
-			r = 1 - fwd - bwd
-			l = 0
-		else
-			l = 1 - fwd - bwd
-			r = 0
-		end
-
-		self._machine:set_parameter(anim, "fwd", fwd)
-		self._machine:set_parameter(anim, "l", l)
-		self._machine:set_parameter(anim, "r", r)
-		self._machine:set_parameter(anim, "bwd", bwd)
-		self._machine:set_parameter(anim, "team_ai", 0)
+	if not self._sync_look_dir then
+		return
 	end
+
+	if self._atention_on then
+		self._atention_on = false
+
+		if self._ext_anim.reload then
+			self._atention_on = false
+			local blend_out_t = 0.15
+
+			self._machine:set_modifier_blend(self._arm_modifier_name, blend_out_t)
+			self._machine:set_modifier_blend(self._head_modifier_name, blend_out_t)
+			self._machine:set_modifier_blend(self._look_modifier_name, blend_out_t)
+			self._machine:forbid_modifier(self._head_modifier_name)
+			self._machine:forbid_modifier(self._arm_modifier_name)
+			self._machine:forbid_modifier(self._look_modifier_name)
+		end
+	elseif self._ext_anim.reload then
+		if self._sync_look_dir ~= self._look_dir then
+			self._look_dir = mvector3.copy(self._sync_look_dir)
+		end
+
+		return
+	else
+		self._atention_on = true
+
+		if self._vehicle_shooting_stance == PlayerDriving.STANCE_NORMAL and not self._allow_shooting then
+			self._machine:forbid_modifier(self._look_modifier_name)
+			self._machine:force_modifier(self._head_modifier_name)
+			self._machine:forbid_modifier(self._arm_modifier_name)
+		else
+			self._machine:force_modifier(self._look_modifier_name)
+			self._machine:forbid_modifier(self._head_modifier_name)
+			self._machine:forbid_modifier(self._arm_modifier_name)
+		end
+	end
+
+	self:update_sync_look_dir(dt)
+
+	local fwd = self._m_rot:y()
+	local spin = fwd:to_polar_with_reference(self._look_dir, math.UP).spin
+	local anim = self._machine:segment_state(self._ids_base)
+	local aim_spin = spin
+	fwd = math.clamp(1 - math.abs(aim_spin) / 45, 0, 1)
+	local bwd = math.clamp(1 - (180 - math.abs(aim_spin)) / 45, 0, 1)
+	local l, r = nil
+
+	if aim_spin > 0 then
+		r = 1 - fwd - bwd
+		l = 0
+	else
+		l = 1 - fwd - bwd
+		r = 0
+	end
+
+	self._machine:set_parameter(anim, "fwd", fwd)
+	self._machine:set_parameter(anim, "l", l)
+	self._machine:set_parameter(anim, "r", r)
+	self._machine:set_parameter(anim, "bwd", bwd)
+	self._machine:set_parameter(anim, "team_ai", 0)
 end
 
 function HuskPlayerMovement:update_sync_look_dir(dt)
@@ -1319,14 +1279,6 @@ function HuskPlayerMovement:_upd_sequenced_events(t, dt)
 		self:_start_movement(next_event.path)
 	elseif event_type == "bleedout" then
 		if self:_start_bleedout(next_event) then
-			table.remove(sequenced_events, 1)
-		end
-	elseif event_type == "fatal" then
-		if self:_start_fatal(next_event) then
-			table.remove(sequenced_events, 1)
-		end
-	elseif event_type == "incapacitated" then
-		if self:_start_incapacitated(next_event) then
 			table.remove(sequenced_events, 1)
 		end
 	elseif event_type == "tased" then
@@ -1768,7 +1720,6 @@ end
 
 function HuskPlayerMovement:anim_clbk_exit_vehicle(unit)
 	if not self._change_seat then
-		Application:debug("[ HuskPlayerMovement:anim_clbk_exit_vehicle]")
 		self:on_exit_vehicle()
 	end
 end
@@ -1881,7 +1832,6 @@ function HuskPlayerMovement:_start_movement(path)
 		data.velocity_len = 0
 	end
 
-	local old_pos = path[1]
 	local nr_nodes = #path
 	local path_len = 0
 	local i = 1
@@ -2024,14 +1974,6 @@ function HuskPlayerMovement:_upd_attention_turret(dt)
 end
 
 function HuskPlayerMovement:_upd_move_turret(t, dt)
-	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
-	local husk_turret_data = managers.player:get_turret_data_for_peer(peer_id)
-	local turret_unit = husk_turret_data.turret_unit
-
-	if not alive(turret_unit) then
-		return
-	end
-
 	if self._state == "standard" then
 		self._attention_updator = callback(self, self, "_upd_attention_standard")
 		self._movement_updator = callback(self, self, "_upd_move_standard")
@@ -2041,17 +1983,15 @@ function HuskPlayerMovement:_upd_move_turret(t, dt)
 		return
 	end
 
-	self._unit:set_driving("animation")
-
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local husk_turret_data = managers.player:get_turret_data_for_peer(peer_id)
 	local turret_unit = husk_turret_data.turret_unit
 
-	if not turret_unit or not turret_unit.weapon then
-		Application:error("HuskPlayerMovement:_upd_move_turret: Missing turret unit or weapon for peer ", inspect(peer_id))
-
+	if not alive(turret_unit) or not turret_unit.weapon then
 		return
 	end
+
+	self._unit:set_driving("animation")
 
 	local fire_locator = turret_unit:weapon():_get_fire_locator()
 
@@ -2059,23 +1999,20 @@ function HuskPlayerMovement:_upd_move_turret(t, dt)
 		return
 	end
 
-	local current_position = fire_locator:position()
-	local current_direction = fire_locator:rotation():y()
-
-	mvector3.negate(current_direction)
-	mvector3.multiply(current_direction, 1000)
-
-	local original_position = turret_unit:position()
-	local original_direction = turret_unit:rotation():y()
-
-	mvector3.multiply(original_direction, 1000)
-
-	local deflection = original_direction:angle(current_direction)
-	local deflection_direction = math.sign((original_direction - current_direction):to_polar_with_reference(current_direction, math.UP).spin)
-	local spin_max = turret_unit:movement()._spin_max or deflection
-	local deflection_normalized = math.clamp(math.abs(deflection), 0, math.abs(spin_max)) / math.abs(spin_max)
-
 	if turret_unit:weapon()._puppet_stance and turret_unit:weapon()._puppet_stance == "standing" then
+		local current_direction = fire_locator:rotation():y()
+
+		mvector3.negate(current_direction)
+		mvector3.multiply(current_direction, 1000)
+
+		local original_direction = turret_unit:rotation():y()
+
+		mvector3.multiply(original_direction, 1000)
+
+		local deflection = original_direction:angle(current_direction)
+		local deflection_direction = math.sign((original_direction - current_direction):to_polar_with_reference(current_direction, math.UP).spin)
+		local spin_max = turret_unit:movement()._spin_max or deflection
+		local deflection_normalized = math.clamp(math.abs(deflection), 0, math.abs(spin_max)) / math.abs(spin_max)
 		local redirect_animation = "e_so_mg34_aim_right"
 		local redirect_state = Idstring("std/stand/so/idle/e_so_mg34_aim_right")
 
@@ -2113,20 +2050,7 @@ function HuskPlayerMovement:_start_standard(event_desc)
 	local previous_state = event_desc and event_desc.previous_state
 
 	if previous_state == "parachuting" or previous_state == "freefall" then
-		local redir_res = self:play_redirect("equip")
-
-		if redir_res then
-			local weapon = self._unit:inventory():equipped_unit()
-
-			if weapon then
-				self._unit:inventory():show_equipped_unit()
-
-				local weap_tweak = weapon:base():weapon_tweak_data()
-				local weapon_hold = weap_tweak.husk_hold or weap_tweak.hold
-
-				self._machine:set_parameter(redir_res, "to_" .. weapon_hold, 1)
-			end
-		end
+		self:_play_equip_weapon()
 	end
 
 	if previous_state == "parachuting" or previous_state == "freefall" then
@@ -2281,62 +2205,6 @@ function HuskPlayerMovement:_start_tased(event_desc)
 	end
 
 	self._attention_updator = callback(self, self, "_upd_attention_tased")
-	self._movement_updator = callback(self, self, "_upd_move_downed")
-
-	return true
-end
-
-function HuskPlayerMovement:_start_fatal(event_desc)
-	local redir_res = self:play_redirect("fatal")
-
-	if not redir_res then
-		print("[HuskPlayerMovement:_start_fatal] redirect failed in", self._machine:segment_state(self._ids_base), self._unit)
-
-		return
-	end
-
-	self._unit:set_slot(5)
-	managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
-	managers.groupai:state():on_criminal_neutralized(self._unit)
-	self._unit:interaction():set_tweak_data("revive")
-	self:set_need_revive(true, event_desc.down_time)
-
-	if self._atention_on then
-		self._machine:forbid_modifier(self._look_modifier_name)
-		self._machine:forbid_modifier(self._head_modifier_name)
-		self._machine:forbid_modifier(self._arm_modifier_name)
-		self._machine:forbid_modifier(self._mask_off_modifier_name)
-
-		self._atention_on = false
-	end
-
-	self._attention_updator = false
-	self._movement_updator = callback(self, self, "_upd_move_downed")
-
-	return true
-end
-
-function HuskPlayerMovement:_start_incapacitated(event_desc)
-	local redir_res = self:play_redirect("incapacitated")
-
-	if not redir_res then
-		print("[HuskPlayerMovement:_start_incapacitated] redirect failed in", self._machine:segment_state(self._ids_base), self._unit)
-
-		return
-	end
-
-	self:set_need_revive(true)
-
-	if self._atention_on then
-		self._machine:forbid_modifier(self._look_modifier_name)
-		self._machine:forbid_modifier(self._head_modifier_name)
-		self._machine:forbid_modifier(self._arm_modifier_name)
-		self._machine:forbid_modifier(self._mask_off_modifier_name)
-
-		self._atention_on = false
-	end
-
-	self._attention_updator = false
 	self._movement_updator = callback(self, self, "_upd_move_downed")
 
 	return true
@@ -2651,13 +2519,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		}
 
 		self:_add_sequenced_event(event_desc)
-	elseif state == "fatal" then
-		local event_desc = {
-			type = "fatal",
-			down_time = down_time
-		}
-
-		self:_add_sequenced_event(event_desc)
 	elseif state == "bleed_out" then
 		local event_desc = {
 			type = "bleedout",
@@ -2668,13 +2529,6 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 	elseif state == "tased" then
 		local event_desc = {
 			type = "tased"
-		}
-
-		self:_add_sequenced_event(event_desc)
-	elseif state == "incapacitated" then
-		local event_desc = {
-			type = "fatal",
-			down_time = down_time
 		}
 
 		self:_add_sequenced_event(event_desc)
@@ -2738,42 +2592,42 @@ function HuskPlayerMovement:anim_clbk_footstep(unit)
 	CopMovement.anim_clbk_footstep(self, unit, self._m_pos)
 end
 
-function HuskPlayerMovement:get_footstep_event()
-	return CopMovement.get_footstep_event(self)
-end
-
 function HuskPlayerMovement:ground_ray()
 end
 
 function HuskPlayerMovement:clbk_inventory_event(unit, event)
 	local weapon = self._unit:inventory():equipped_unit()
 
-	if weapon then
-		if weapon:base().set_hand_held then
-			weapon:base():set_hand_held(true)
-		end
-
-		if self._weapon_hold then
-			self._machine:set_global(self._weapon_hold, 0)
-		end
-
-		local weap_tweak = weapon:base():weapon_tweak_data()
-		local weapon_hold = weap_tweak.husk_hold or weap_tweak.hold
-
-		self._machine:set_global(weapon_hold, 1)
-
-		self._weapon_hold = weapon_hold
-
-		if self._weapon_anim_global then
-			self._machine:set_global(self._weapon_anim_global, 0)
-		end
-
-		local weapon_usage = weap_tweak.usage_anim
-
-		self._machine:set_global(weapon_usage, 1)
-
-		self._weapon_anim_global = weapon_usage
+	if not alive(weapon) then
+		return
 	end
+
+	local ext_base = weapon:base()
+
+	if ext_base.set_hand_held then
+		ext_base:set_hand_held(true)
+	end
+
+	if self._weapon_hold then
+		self._machine:set_global(self._weapon_hold, 0)
+	end
+
+	local weap_tweak = ext_base:weapon_tweak_data()
+	local weapon_hold = weap_tweak.husk_hold or weap_tweak.hold
+
+	self._machine:set_global(weapon_hold, 1)
+
+	self._weapon_hold = weapon_hold
+
+	if self._weapon_anim_global then
+		self._machine:set_global(self._weapon_anim_global, 0)
+	end
+
+	local weapon_usage = weap_tweak.usage_anim
+
+	self._machine:set_global(weapon_usage, 1)
+
+	self._weapon_anim_global = weapon_usage
 end
 
 function HuskPlayerMovement:current_state_name()
@@ -2960,37 +2814,7 @@ function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
 end
 
-function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
-	if self._unit:interaction():active() then
-		self._unit:interaction():interact_start(sympathy_civ)
-	end
-
-	if self._revive_rescuer then
-		local rescuer = self._revive_rescuer
-		self._revive_rescuer = nil
-
-		rescuer:brain():set_objective(nil)
-	elseif self._revive_SO_id then
-		managers.groupai:state():remove_special_objective(self._revive_SO_id)
-
-		self._revive_SO_id = nil
-	end
-end
-
-function HuskPlayerMovement:on_civ_revive_failed(sympathy_civ)
-	if self._sympathy_civ then
-		self._sympathy_civ = nil
-	end
-end
-
-function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
-end
-
 function HuskPlayerMovement:sync_stance(stance_code)
-	if stance_code == 1 then
-		Application:debug("[HuskPlayerMovement:sync_stance()]", stance_code)
-	end
-
 	self._stance.owner_stance_code = stance_code
 
 	self:_chk_change_stance()
@@ -3114,12 +2938,6 @@ function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 end
 
 function HuskPlayerMovement:on_exit_zipline()
-	local event_desc = self._sequenced_events[1]
-
-	if alive(event_desc.zipline_unit) then
-		-- Nothing
-	end
-
 	table.remove(self._sequenced_events, 1)
 
 	if self._atention_on then

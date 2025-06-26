@@ -42,18 +42,24 @@ function CoreWorldCollection:first_pass()
 	return self._first_pass
 end
 
-function CoreWorldCollection:unregister_editor_name(editor_name)
-	self._editor_world_names[editor_name] = nil
+function CoreWorldCollection:register_editor_name(editor_name, script_name, world)
+	self._editor_world_names[script_name] = self._editor_world_names[script_name] or {}
+	self._editor_world_names[script_name][editor_name] = self._editor_world_names[script_name][editor_name] or {}
+	self._editor_world_names[script_name][editor_name].world = world
 end
 
-function CoreWorldCollection:register_editor_name(editor_name, world)
-	self._editor_world_names[editor_name] = self._editor_world_names[editor_name] or {}
-	self._editor_world_names[editor_name].world = world
+function CoreWorldCollection:unregister_editor_name(editor_name, script_name)
+	if self._editor_world_names[script_name] then
+		self._editor_world_names[script_name][editor_name] = nil
+	else
+		Application:warn("[CoreWorldCollection:register_editor_name] Cannot Un-Register world spawner:", editor_name, script_name)
+	end
 end
 
-function CoreWorldCollection:register_editor_position(editor_name, position)
-	self._editor_world_names[editor_name] = self._editor_world_names[editor_name] or {}
-	self._editor_world_names[editor_name].position = position
+function CoreWorldCollection:register_editor_position(editor_name, script_name, position)
+	self._editor_world_names[script_name] = self._editor_world_names[script_name] or {}
+	self._editor_world_names[script_name][editor_name] = self._editor_world_names[script_name][editor_name] or {}
+	self._editor_world_names[script_name][editor_name].position = position
 end
 
 function CoreWorldCollection:register_world_spawn(world_id, editor_name, spawn_loot)
@@ -138,9 +144,13 @@ function CoreWorldCollection:unregister_output_element(world_editor_name, event,
 	end
 end
 
-function CoreWorldCollection:get_world_position(editor_name)
-	if self._editor_world_names[editor_name] then
-		return self._editor_world_names[editor_name].position
+function CoreWorldCollection:get_world_position(editor_name, script_name)
+	if self._editor_world_names[script_name] and self._editor_world_names[script_name][editor_name] then
+		return self._editor_world_names[script_name][editor_name].position
+	else
+		Application:stack_dump_error("[CoreWorldCollection:get_world_position] Cannot get editor world name for", editor_name, script_name)
+
+		return Vector3()
 	end
 end
 
@@ -158,10 +168,10 @@ function CoreWorldCollection:get_world_id_from_pos(position)
 	return world_id
 end
 
-function CoreWorldCollection:on_editor_changed_name(old_name, new_name)
-	if self._editor_world_names[old_name] then
-		self._editor_world_names[new_name] = self._editor_world_names[old_name]
-		self._editor_world_names[old_name] = nil
+function CoreWorldCollection:on_editor_changed_name(script_name, old_name, new_name)
+	if self._editor_world_names[script_name] and self._editor_world_names[script_name][old_name] then
+		self._editor_world_names[script_name][new_name] = self._editor_world_names[script_name][old_name]
+		self._editor_world_names[script_name][old_name] = nil
 	end
 end
 
@@ -536,6 +546,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 					elseif not definition.mission_scripts_created then
 						local all_peers_spawned_world = self:_check_all_peers_synced(definition._world_id, CoreWorldCollection.STAGE_LOAD)
 						local texture_loaded = CoreWorldCollection.SKIP_WAITING_TEXTURES or TextureCache:check_textures_loaded()
+						local resources_loaded = managers.dyn_resource:is_ready_to_close()
 
 						if all_peers_spawned_world and texture_loaded then
 							if self._mission_params[definition._world_id] then
@@ -551,7 +562,7 @@ function CoreWorldCollection:update(t, dt, paused_update)
 							definition.mission_scripts_created = true
 
 							break
-						elseif texture_loaded then
+						elseif texture_loaded and resources_loaded then
 							Application:trace("[CoreWorldCollection:update] All peers still not spawned worlds, waiting...")
 							self:sync_loading_status(t)
 						end
@@ -782,12 +793,6 @@ function CoreWorldCollection:destroy_world(id)
 			end
 		end
 
-		for _, unit in ipairs(definition._spawned_units) do
-			if alive(unit) then
-				unit:set_slot(0)
-			end
-		end
-
 		definition:destroy()
 	end
 
@@ -998,8 +1003,8 @@ function CoreWorldCollection:debug_print_stats()
 end
 
 function CoreWorldCollection:get_unit_with_real_id(id)
-	local all_units = World:unit_manager():get_units()
 	local unit = nil
+	local all_units = World:unit_manager():get_units()
 
 	for key, u in pairs(all_units) do
 		if u:id() == id then
@@ -1016,10 +1021,10 @@ function CoreWorldCollection:__get_unit_with_real_id(id)
 	return World:unit_manager():get_unit_by_id(id)
 end
 
-function CoreWorldCollection:world_name_ids()
+function CoreWorldCollection:world_name_ids(script_name)
 	local names = {}
 
-	for key, _ in pairs(self:world_names()) do
+	for key, _ in pairs(self:world_names()[script_name] or {}) do
 		table.insert(names, key)
 	end
 
@@ -1164,6 +1169,16 @@ function CoreWorldCollection:set_alarm_for_world_id(world_id, alarm)
 	else
 		self._world_spawns[world_id] = self._world_spawns[world_id] or {}
 		self._world_spawns[world_id].alarm = alarm
+	end
+end
+
+function CoreWorldCollection:set_alarm_all_worlds(alarm)
+	Application:trace("[CoreWorldCollection:set_alarm_all_worlds]", alarm)
+
+	managers.worlddefinition.alarmed = alarm
+
+	for _, world_data in pairs(self._world_spawns) do
+		world_data.alarm = alarm
 	end
 end
 

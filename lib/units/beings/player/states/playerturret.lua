@@ -144,8 +144,8 @@ function PlayerTurret:exit(state_data, new_state_name)
 	end
 
 	local exit_data = {
-		ducking = false,
 		skip_equip = true,
+		ducking = false,
 		equip_weapon_expire_t = self._equip_weapon_expire_t
 	}
 
@@ -419,7 +419,7 @@ function PlayerTurret:_check_action_steelsight(t, input)
 		return new_action
 	end
 
-	if managers.user:get_setting("hold_to_steelsight") and input.btn_steelsight_release then
+	if self._ext_movement.setting_hold_to_steelsight and input.btn_steelsight_release then
 		self._steelsight_wanted = false
 
 		if self._state_data.in_steelsight then
@@ -444,7 +444,7 @@ end
 
 function PlayerTurret:get_zoom_fov(stance_data)
 	local fov = stance_data and stance_data.FOV or 75
-	local fov_multiplier = managers.user:get_setting("fov_multiplier")
+	local fov_multiplier = self._ext_movement.setting_fov_multiplier
 
 	if self._state_data.in_steelsight then
 		local base = self._turret_unit:weapon()

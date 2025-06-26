@@ -140,10 +140,10 @@ function HUDStatusEffects:_make_status_box(status_data)
 		color = status_color
 	})
 	local background_fill = status_effect_panel:bitmap({
-		render_template = "VertexColorTexturedRadial",
-		layer = 2,
 		alpha = 0.8,
 		name = "status_background_fill",
+		render_template = "VertexColorTexturedRadial",
+		layer = 2,
 		texture = tweak_data.gui.icons.warcry_bar_fill.texture,
 		texture_rect = tweak_data.gui.icons.warcry_bar_fill.texture_rect,
 		w = status_effect_panel:w() * 1.65,
@@ -151,10 +151,10 @@ function HUDStatusEffects:_make_status_box(status_data)
 		color = tweak_data.gui.colors.raid_black
 	})
 	local icon = status_effect_panel:bitmap({
-		layer = 3,
 		halign = "center",
 		valign = "center",
 		name = "icon",
+		layer = 3,
 		w = self.ICON_SIZE,
 		h = self.ICON_SIZE,
 		texture = status_icon.texture,

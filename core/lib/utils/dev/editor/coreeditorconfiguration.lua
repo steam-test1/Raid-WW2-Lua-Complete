@@ -1,7 +1,7 @@
 function CoreEditor:build_configuration()
 	self._config = {}
 	local frame_size_width = 350
-	local frame_size_height = 250
+	local frame_size_height = 350
 	self._configuration = EWS:Dialog(nil, "Configuration", "_configuration", Vector3(-1, -1, 0), Vector3(frame_size_width, frame_size_height), "")
 	local main_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -28,14 +28,6 @@ function CoreEditor:build_configuration()
 	self._config._reset_camera_on_new = reset_camera_on_new
 
 	general_sizer:add(reset_camera_on_new, 0, 0, "EXPAND")
-
-	local use_bet_undo = EWS:CheckBox(page_general, "Use Beta Undo", "")
-
-	use_bet_undo:set_value(self._use_beta_undo)
-
-	self._config._use_beta_undo = use_bet_undo
-
-	general_sizer:add(use_bet_undo, 0, 0, "EXPAND")
 	notebook:add_page(page_general, "General", true)
 
 	local page_backup = EWS:Panel(notebook, "_backup", "")
@@ -100,6 +92,19 @@ function CoreEditor:build_configuration()
 	self._config._save_dialog_states = save_dialog_states
 
 	edit_sizer:add(save_dialog_states, 0, 0, "EXPAND")
+
+	local undo_history_sizer = EWS:StaticBoxSizer(page_edit, "VERTICAL", "Undo History:")
+	local undo_history_spin = EWS:SpinCtrl(page_edit, self._undo_history, "_undo_history", "")
+
+	undo_history_spin:set_range(10, 500)
+
+	self._config._undo_history = {
+		ctrlr = undo_history_spin,
+		callback = callback(self, self, "_on_changed_undo_history")
+	}
+
+	undo_history_sizer:add(undo_history_spin, 0, 0, "ALIGN_RIGHT")
+	edit_sizer:add(undo_history_sizer, 1, 0, "EXPAND")
 	notebook:add_page(page_edit, "Edit", false)
 
 	local page_notes = EWS:Panel(notebook, "_notes", "")

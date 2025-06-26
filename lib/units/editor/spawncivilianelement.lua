@@ -139,8 +139,8 @@ function SpawnCivilianUnitElement:add_to_mission_package()
 
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
-				init = true,
 				category = "script_data",
+				init = true,
 				name = file:s() .. ".sequence_manager",
 				continent = self._unit:unit_data().continent
 			})

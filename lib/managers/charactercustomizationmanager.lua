@@ -531,7 +531,7 @@ function CharacterCustomizationManager:change_criminal_character(peer_id, new_ch
 	end
 
 	if Network:is_server() and Global.game_settings.team_ai then
-		managers.groupai:state():fill_criminal_team_with_AI(nil)
+		managers.groupai:state():fill_criminal_team()
 	end
 end
 

@@ -156,7 +156,7 @@ function PlayerEquipment:throw_projectile()
 	end
 
 	local projectile_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_entry)
-	local cosmetic_id = managers.weapon_inventory:get_weapons_skin(equipped_grenade)
+	local cosmetic_id = managers.weapon_inventory:get_applied_weapon_skin(equipped_grenade)
 
 	if Network:is_server() or projectile_data.client_authoritative then
 		local peer_id = managers.network:session():local_peer():id()
@@ -185,8 +185,8 @@ function PlayerEquipment:throw_grenade()
 	end
 
 	local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
-	local cooking_t = self._cooking_start and Application:time() - self._cooking_start
-	local cosmetic_id = managers.weapon_inventory:get_weapons_skin(equipped_grenade)
+	local cooking_t = self._cooking_start and managers.player:player_timer():time() - self._cooking_start
+	local cosmetic_id = managers.weapon_inventory:get_applied_weapon_skin(equipped_grenade)
 
 	if Network:is_server() or projectile_data.client_authoritative then
 		local peer_id = managers.network:session():local_peer():id()

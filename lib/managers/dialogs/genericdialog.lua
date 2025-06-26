@@ -200,7 +200,7 @@ end
 function GenericDialog:controller_hotswap_triggered()
 	self._controller:add_trigger("confirm", self._confirm_func)
 
-	local is_pc_controller = not managers.controller:is_controller_present()
+	local is_pc_controller = not managers.controller:is_using_controller()
 
 	if is_pc_controller then
 		self._controller:add_trigger("toggle_menu", self._cancel_func)
@@ -274,7 +274,6 @@ function GenericDialog:fade_in()
 end
 
 function GenericDialog:fade_out_close()
-	managers.menu:post_event("prompt_exit")
 	self:fade_out()
 end
 
@@ -293,7 +292,6 @@ function GenericDialog:is_closing()
 end
 
 function GenericDialog:show()
-	managers.menu:post_event("prompt_enter")
 	self._manager:event_dialog_shown(self)
 
 	return true

@@ -209,7 +209,6 @@ function PlayerInventory:add_unit_by_factory_name(factory_name, equip, instant, 
 	local new_unit = World:spawn_unit(ids_unit_name, Vector3(), Rotation())
 
 	new_unit:base():set_factory_data(factory_name)
-	new_unit:base():set_cosmetics_data(cosmetics)
 	new_unit:base():set_texture_switches(texture_switches)
 
 	if blueprint then
@@ -382,10 +381,6 @@ function PlayerInventory:equip_selection(selection_index, instant)
 			managers.hud:set_mugshot_weapon(self._unit:unit_data().mugshot_id, hud_icon_id, equipped_unit_base:weapon_tweak_data().use_data.selection_index)
 		end
 
-		if equipped_unit_base.set_flashlight_enabled then
-			equipped_unit_base:set_flashlight_enabled(true)
-		end
-
 		if not self._unit:brain() then
 			if self._unit == managers.player:local_player() then
 				local wep_td = equipped_unit_base:weapon_tweak_data()
@@ -440,10 +435,6 @@ end
 
 function PlayerInventory:unequip_selection(selection_index, instant)
 	if not selection_index or selection_index == self._equipped_selection then
-		if self:equipped_unit():base().set_flashlight_enabled then
-			self:equipped_unit():base():set_flashlight_enabled(false)
-		end
-
 		selection_index = selection_index or self._equipped_selection
 
 		self:_place_selection(selection_index, false)
@@ -710,7 +701,7 @@ end
 
 function PlayerInventory:set_grenade(grenade)
 	local unit_name = nil
-	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(grenade)
+	local skin_id, skin_data = managers.weapon_inventory:get_applied_weapon_skin(grenade)
 
 	if skin_data and skin_data.replaces_units then
 		unit_name = skin_data.replaces_units.unit_hand

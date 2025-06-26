@@ -660,7 +660,7 @@ end
 
 function HostNetworkSession:_spawn_dropin_player(peer)
 	peer:spawn_unit(0, true)
-	managers.groupai:state():fill_criminal_team_with_AI(true)
+	managers.groupai:state():fill_criminal_team(true)
 end
 
 function HostNetworkSession:chk_server_joinable_state()

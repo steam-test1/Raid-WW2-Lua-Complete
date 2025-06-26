@@ -72,9 +72,7 @@ function OverlayEffectManager:destroy()
 end
 
 function OverlayEffectManager:render()
-	if Global.render_debug.render_overlay then
-		Application:render("Overlay", self._vp_overlay)
-	end
+	Application:render("Overlay", self._vp_overlay)
 end
 
 function OverlayEffectManager:progress_effects(t, dt, paused)
@@ -179,8 +177,8 @@ function OverlayEffectManager:play_effect(data)
 		end
 
 		local text = self._ws:panel():text({
-			valign = "center",
 			vertical = "center",
+			valign = "center",
 			halign = "center",
 			align = "center",
 			text = data.text or "",

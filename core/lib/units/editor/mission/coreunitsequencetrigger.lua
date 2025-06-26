@@ -1,6 +1,14 @@
 CoreUnitSequenceTriggerUnitElement = CoreUnitSequenceTriggerUnitElement or class(MissionElement)
 CoreUnitSequenceTriggerUnitElement.SAVE_UNIT_POSITION = false
 CoreUnitSequenceTriggerUnitElement.SAVE_UNIT_ROTATION = false
+CoreUnitSequenceTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_key = "unit_id",
+		layer = "Statics",
+		table_value = "sequence_list"
+	}
+}
 UnitSequenceTriggerUnitElement = UnitSequenceTriggerUnitElement or class(CoreUnitSequenceTriggerUnitElement)
 
 function UnitSequenceTriggerUnitElement:init(...)
@@ -53,9 +61,9 @@ function CoreUnitSequenceTriggerUnitElement:update_selected()
 			self._sequence_units[id] = nil
 		else
 			local params = {
-				r = 0,
 				b = 1,
 				g = 0,
+				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			}
@@ -85,28 +93,15 @@ function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._sequence_units) do
 		local params = {
-			r = 0,
 			b = 0.5,
 			g = 0,
+			r = 0,
 			from_unit = unit,
 			to_unit = self._unit
 		}
 
 		self:_draw_link(params)
 		Application:draw(unit, 0, 0, 0.5)
-	end
-end
-
-function CoreUnitSequenceTriggerUnitElement:get_links_to_unit(to_unit, links, all_units)
-	CoreUnitSequenceTriggerUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
-
-	if to_unit == self._unit then
-		for id, unit in pairs(self._sequence_units) do
-			table.insert(links.executers, {
-				alternative = "unit",
-				unit = unit
-			})
-		end
 	end
 end
 
@@ -280,13 +275,13 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
 	local sequence_params = {
-		name = "Sequence:",
-		sizer_proportions = 1,
-		ctrlr_proportions = 2,
 		name_proportions = 1,
-		sorted = true,
 		tooltip = "Select a sequence from the combobox",
 		default = "none",
+		name = "Sequence:",
+		sorted = true,
+		sizer_proportions = 1,
+		ctrlr_proportions = 2,
 		panel = panel,
 		sizer = h_sizer,
 		options = sequences,

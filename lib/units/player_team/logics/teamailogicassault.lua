@@ -5,12 +5,11 @@ TeamAILogicAssault._COVER_CHK_INTERVAL = 2
 TeamAILogicAssault.on_cop_neutralized = TeamAILogicIdle.on_cop_neutralized
 TeamAILogicAssault.on_objective_unit_damaged = TeamAILogicIdle.on_objective_unit_damaged
 TeamAILogicAssault.on_alert = TeamAILogicIdle.on_alert
-TeamAILogicAssault.on_intimidated = TeamAILogicIdle.on_intimidated
-TeamAILogicAssault.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interacted
+TeamAILogicAssault.on_long_distance_interact = TeamAILogicIdle.on_long_distance_interact
 TeamAILogicAssault.on_new_objective = TeamAILogicIdle.on_new_objective
 TeamAILogicAssault.on_objective_unit_destroyed = TeamAILogicBase.on_objective_unit_destroyed
 TeamAILogicAssault.is_available_for_assignment = TeamAILogicIdle.is_available_for_assignment
-TeamAILogicAssault.clbk_heat = TeamAILogicIdle.clbk_heat
+TeamAILogicAssault.clbk_weapons_hot = TeamAILogicIdle.clbk_weapons_hot
 
 function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	local my_data = {
@@ -25,8 +24,6 @@ function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.vision = data.char_tweak.vision.combat
 	my_data.cover_chk_t = data.t + TeamAILogicAssault._COVER_CHK_INTERVAL
-	local usage = data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
-	my_data.weapon_range = data.char_tweak.weapon[usage].range
 
 	if old_internal_data then
 		my_data.attention_unit = old_internal_data.attention_unit
@@ -47,7 +44,15 @@ function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	data.unit:movement():set_cool(false)
 	data.unit:movement():set_stance("hos")
 
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	local slot = PlayerInventory.SLOT_2
+	local inventory = data.unit:inventory()
+
+	if inventory:is_selection_available(slot) and inventory:equipped_selection() ~= slot then
+		inventory:equip_selection(slot)
+	end
+
+	local usage = data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+	my_data.weapon_range = data.char_tweak.weapon[usage].range
 end
 
 function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
@@ -86,7 +91,7 @@ function TeamAILogicAssault.update(data)
 	end
 
 	local enemy_visible = focus_enemy.verified
-	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk") or my_data.moving_to_cover or my_data.walking_to_cover_shoot_pos or my_data._turning_to_intimidate
+	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk") or my_data.moving_to_cover or my_data.walking_to_cover_shoot_pos
 	my_data.want_to_take_cover = CopLogicAttack._chk_wants_to_take_cover(data, my_data)
 	local want_to_take_cover = my_data.want_to_take_cover
 	action_taken = action_taken or CopLogicAttack._upd_pose(data, my_data)
@@ -164,31 +169,14 @@ function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 
 	CopLogicAttack._upd_aim(data, my_data)
 
-	if not my_data._intimidate_t or my_data._intimidate_t + 2 < data.t and not my_data._turning_to_intimidate and data.unit:character_damage():health_ratio() > 0.5 then
-		local can_turn = not data.unit:movement():chk_action_forbidden("walk") and new_prio_slot > 3
-		local is_assault = managers.groupai:state():get_assault_mode()
-		local civ = TeamAILogicIdle.find_civilian_to_intimidate(data.unit, can_turn and 180 or 60, is_assault and 800 or 1200)
-
-		if civ and (not is_assault or civ:anim_data().run or civ:anim_data().stand) then
-			my_data._intimidate_t = data.t
-
-			if can_turn and CopLogicAttack._request_action_turn_to_enemy(data, my_data, data.unit:movement():m_pos(), civ:movement():m_pos()) then
-				my_data._turning_to_intimidate = true
-				my_data._primary_intimidation_target = civ
-			else
-				TeamAILogicIdle.intimidate_civilians(data, data.unit, true, false)
-			end
-		end
-	end
-
 	if (not TeamAILogicAssault._mark_special_chk_t or TeamAILogicAssault._mark_special_chk_t + 0.75 < data.t) and (not TeamAILogicAssault._mark_special_t or TeamAILogicAssault._mark_special_t + 6 < data.t) and not my_data.acting and not data.unit:sound():speaking() then
-		local nmy = TeamAILogicAssault.find_enemy_to_mark(data.detected_attention_objects)
+		local enemy = TeamAILogicAssault.find_enemy_to_mark(data.detected_attention_objects)
 		TeamAILogicAssault._mark_special_chk_t = data.t
 
-		if nmy then
+		if enemy then
 			TeamAILogicAssault._mark_special_t = data.t
 
-			TeamAILogicAssault.mark_enemy(data, data.unit, nmy, true, true)
+			TeamAILogicAssault.mark_enemy(data, data.unit, enemy, true, true)
 		end
 	end
 
@@ -220,9 +208,9 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 	if play_action and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
 			type = "act",
+			body_part = 3,
 			variant = "arrest",
-			align_sync = true,
-			body_part = 3
+			align_sync = true
 		}
 
 		if criminal:brain():action_request(new_action) then
@@ -257,14 +245,6 @@ function TeamAILogicAssault.on_action_completed(data, action)
 		my_data.shooting = nil
 	elseif action_type == "turn" then
 		my_data.turning = nil
-
-		if my_data._turning_to_intimidate then
-			my_data._turning_to_intimidate = nil
-
-			TeamAILogicIdle.intimidate_civilians(data, data.unit, true, true, my_data._primary_intimidation_target)
-
-			my_data._primary_intimidation_target = nil
-		end
 	elseif action_type == "hurt" then
 		if action:expired() then
 			CopLogicAttack._upd_aim(data, my_data)
@@ -289,7 +269,7 @@ function TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	local focus_enemy = data.attention_obj
 
 	if focus_enemy and focus_enemy.verified and focus_enemy.is_person and AIAttentionObject.REACT_COMBAT <= focus_enemy.reaction and (my_data.firing or data.unit:character_damage():health_ratio() < 1) and not data.unit:movement():chk_action_forbidden("walk") and not data.unit:sound():speaking() then
-		managers.groupai:state():chk_say_teamAI_combat_chatter(data.unit)
+		managers.groupai:state():chk_say_criminal_ai_combat_chatter(data.unit)
 	end
 end
 

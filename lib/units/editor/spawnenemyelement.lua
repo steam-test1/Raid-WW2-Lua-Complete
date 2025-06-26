@@ -45,12 +45,14 @@ function SpawnEnemyUnitElement:post_init(...)
 	self:_load_pickup()
 
 	if self._hed.enemy and string.find(self._hed.enemy, "units/") then
+		debug_pause("[SpawnEnemyUnitElement]", self._hed.enemy, inspect(self._hed))
+
 		self._hed.enemy = EnemyManager.ENEMIES[self._hed.enemy]
 	end
 end
 
 function SpawnEnemyUnitElement:_get_enemy()
-	local result = EnemyManager.ENEMIES[self._hed.enemy] or self._hed.enemy
+	local result = EnemyManager.ENEMIES[self._hed.enemy] or Idstring(self._hed.enemy)
 
 	return result
 end
@@ -63,7 +65,7 @@ function SpawnEnemyUnitElement:test_element()
 	end
 
 	if self._hed.enemy ~= "none" and managers.groupai:state():is_AI_enabled() then
-		local unit = safe_spawn_unit(Idstring(self:_get_enemy()), self._unit:position(), self._unit:rotation())
+		local unit = safe_spawn_unit(self:_get_enemy(), self._unit:position(), self._unit:rotation())
 
 		if not unit then
 			return

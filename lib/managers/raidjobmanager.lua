@@ -26,6 +26,8 @@ function RaidJobManager:_setup()
 	self._loot_data = {}
 	self._camp = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
 	self._play_tutorial = true
+	self._bounty_completed_seed = nil
+	self._bounty_job_data = nil
 end
 
 function RaidJobManager:set_selected_job(job_id, job_data)
@@ -37,6 +39,8 @@ function RaidJobManager:set_selected_job(job_id, job_data)
 
 	job_id = job_id or job_data.job_id
 	job_data = job_data or tweak_data.operations:mission_data(job_id)
+
+	managers.network:session():send_to_peers_synched("sync_bounty_seed", job_data.seed or -1)
 
 	if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		tweak_data.operations:randomize_operation(job_id, job_data)
@@ -66,24 +70,29 @@ function RaidJobManager:local_set_selected_job(job_id, job_data)
 	self._selected_job = mission_data
 	self._loot_data = {}
 
-	if mission_data.active_card then
-		managers.challenge_cards:set_active_card(mission_data.active_card)
+	if Network:is_server() then
+		managers.challenge_cards:set_active_card(mission_data.active_card or nil)
 	end
 
+	managers.loot:reset()
 	managers.global_state:reset_all_flags()
+
+	local mission_flag = mission_data.current_event_data and mission_data.current_event_data.mission_flag or mission_data.mission_flag
+
+	if mission_flag then
+		managers.global_state:set_flag(mission_flag)
+	end
 
 	if self._selected_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		self:_select_raid()
-		managers.global_state:set_flag(mission_data.mission_flag)
 	elseif self._selected_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		self:_select_operation()
-		managers.global_state:set_flag(mission_data.current_event_data.mission_flag)
 	end
 end
 
 function RaidJobManager:_select_raid()
 	if not self._selected_job.no_dynamic_objective then
-		local job_jective_id = tweak_data.operations:get_camp_goto_objective_id(self._selected_job.level_id)
+		local id = self._selected_job.camp_objective_id or tweak_data.operations:get_camp_goto_objective_id(self._selected_job.level_id)
 		local sub_objs = {
 			"obj_camp_goto"
 		}
@@ -92,7 +101,7 @@ function RaidJobManager:_select_raid()
 			table.insert(sub_objs, "obj_pick_a_card")
 		end
 
-		self:_select_job_dynamic_objectives(job_jective_id, sub_objs)
+		self:_select_job_dynamic_objectives(id, sub_objs)
 	end
 
 	self._current_save_slot = nil
@@ -103,13 +112,15 @@ end
 function RaidJobManager:_select_operation()
 	Application:debug("[RaidJobManager:_select_operation]", inspect(self._selected_job))
 
+	self._current_save_slot = self:get_available_save_slot()
+
+	self:set_current_event(self._selected_job, 1)
+
 	if Network:is_server() then
 		self:_goto_operation_objective()
 	end
 
-	self._current_save_slot = self:get_available_save_slot()
-
-	self:set_current_event(self._selected_job, 1)
+	Application:info("[RaidJobManager:_select_operation]", inspect(self._selected_job.current_event_data))
 	managers.global_state:set_flag(self._selected_job.current_event_data.mission_state)
 
 	self._initial_global_states = managers.global_state:get_all_global_states()
@@ -121,21 +132,11 @@ function RaidJobManager:_goto_operation_objective()
 	end
 
 	local id = nil
+	local job = self._selected_job or self._current_job
 
-	if self._selected_job and self._selected_job.job_id then
-		id = tweak_data.operations:get_camp_goto_objective_id(self._selected_job.job_id)
-
-		Application:debug("[RaidJobManager:_goto_operation_objective] using selected_job job_id", self._selected_job.job_id)
-	elseif self._current_job then
-		if self._current_job.current_event_data and self._current_job.current_event_data.camp_objective_id then
-			id = self._current_job.current_event_data.camp_objective_id
-
-			Application:debug("[RaidJobManager:_goto_operation_objective] using camp_objective_id")
-		else
-			id = tweak_data.operations:get_camp_goto_objective_id(self._current_job.job_id)
-
-			Application:debug("[RaidJobManager:_goto_operation_objective] using current_job job_id")
-		end
+	if job then
+		local job_id = job.current_event_data and job.current_event_data.mission_id or job.job_id
+		id = tweak_data.operations:get_camp_goto_objective_id(job_id)
 	else
 		id = "obj_camp_goto_raid"
 
@@ -221,8 +222,8 @@ function RaidJobManager:start_selected_job()
 	self._previously_completed_job = nil
 
 	managers.statistics:start_session({
-		from_beginning = true,
-		drop_in = false
+		drop_in = false,
+		from_beginning = true
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", true, false)
 	managers.network:session():send_to_peers_synched("sync_current_job", self._current_job.job_id)
@@ -244,6 +245,7 @@ function RaidJobManager:on_mission_started()
 	self.shortterm_memory = {}
 
 	managers.experience:clear_mission_xp()
+	managers.loot:reset()
 end
 
 function RaidJobManager:on_mission_ended()
@@ -332,6 +334,10 @@ end
 
 function RaidJobManager:current_level_id()
 	return self._current_job and self._current_job.level_id
+end
+
+function RaidJobManager:current_level_bounds_z()
+	return self._current_job and self._current_job.level_bounds_z or -4000
 end
 
 function RaidJobManager:current_job_type()
@@ -873,12 +879,6 @@ function RaidJobManager:loot_spawned_in_job()
 	return loot_spawned
 end
 
-function RaidJobManager:is_at_checkpoint()
-	local current_event = self:current_operation_event()
-
-	return current_event and current_event.checkpoint
-end
-
 function RaidJobManager:current_operation_event()
 	if not self._current_job then
 		return nil
@@ -932,8 +932,8 @@ function RaidJobManager:start_event(event_id)
 	managers.global_state:reset_flags_for_job("level_flag")
 	managers.global_state:set_flag(self._current_job.current_event_data.mission_flag)
 	managers.statistics:start_session({
-		from_beginning = false,
-		drop_in = false
+		drop_in = false,
+		from_beginning = false
 	})
 	managers.network:session():send_to_peers_synched("start_statistics_session", false, false)
 	managers.lootdrop:reset_loot_value_counters()
@@ -976,11 +976,14 @@ function RaidJobManager:continue_operation(slot)
 		return
 	end
 
+	managers.loot:reset()
 	managers.global_state:reset_all_flags()
 	managers.global_state:set_global_states(save_slot.global_states)
 
 	self._current_job = save_slot.current_job
 	self._current_job.events_index = save_slot.events_index
+
+	managers.network:session():send_to_peers_synched("sync_bounty_seed", self._current_job.seed or -1)
 
 	if self._current_job.events_index then
 		tweak_data.operations.missions[self._current_job.job_id].events_index = self._current_job.events_index
@@ -1115,12 +1118,17 @@ function RaidJobManager:load_game(data)
 		end
 
 		self._play_tutorial = not state.tutorial_played
+
+		if state.bounty_completed_seed and type(state.bounty_completed_seed) == "string" then
+			self._bounty_completed_seed = tonumber(state.bounty_completed_seed)
+		end
 	end
 end
 
 function RaidJobManager:save_game(data)
 	data.job_manager = {
-		tutorial_played = not self._play_tutorial
+		tutorial_played = not self._play_tutorial,
+		bounty_completed_seed = self._bounty_completed_seed and tostring(self._bounty_completed_seed)
 	}
 
 	if not self._current_job or self._current_job.job_type ~= OperationsTweakData.JOB_TYPE_OPERATION or not self._need_to_save then
@@ -1264,7 +1272,8 @@ function RaidJobManager:sync_save(data)
 		selected_job_id = self._selected_job and self._selected_job.job_id,
 		current_job_id = self._current_job and self._current_job.job_id,
 		current_job_event = self._current_job and self._current_job.current_event,
-		loot_data = self._loot_data
+		loot_data = self._loot_data,
+		is_job_bounty = (self._selected_job or self._current_job) and (self._selected_job or self._current_job).bounty
 	}
 
 	if self._selected_job and self._selected_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
@@ -1284,7 +1293,7 @@ function RaidJobManager:sync_load(data)
 	Application:debug("[RaidJobManager:sync_load]", inspect(state))
 
 	if state.current_job_id then
-		self._current_job = tweak_data.operations:mission_data(state.current_job_id)
+		self._current_job = state.is_job_bounty and self:bounty_job_data() or tweak_data.operations:mission_data(state.current_job_id)
 		self._current_job.job_id = state.current_job_id
 
 		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
@@ -1299,7 +1308,7 @@ function RaidJobManager:sync_load(data)
 	end
 
 	if state.selected_job_id then
-		self._selected_job = tweak_data.operations:mission_data(state.selected_job_id)
+		self._selected_job = state.is_job_bounty and self:bounty_job_data() or tweak_data.operations:mission_data(state.selected_job_id)
 
 		if state.events_index then
 			self._selected_job.events_index = state.events_index
@@ -1382,4 +1391,55 @@ function RaidJobManager:exclude_camp_continent(continent_id)
 	if self._camp and not table.contains(self._camp.excluded_continents, continent_id) then
 		table.insert(self._camp.excluded_continents, continent_id)
 	end
+end
+
+function RaidJobManager:generate_bounty_job(seed)
+	Application:info("[BOUNTY] RaidJobManager generate_bounty_job", seed)
+
+	seed = seed or managers.event_system:bounty_seed()
+
+	math.randomseed(seed)
+
+	local bounty_job_name = table.random(tweak_data.operations.bounty_data.possible_jobs)
+	local base_job_data = tweak_data.operations:mission_data(bounty_job_name)
+	self._bounty_job_data = base_job_data
+	local is_raid = base_job_data.job_type == OperationsTweakData.JOB_TYPE_RAID
+	local is_operation = base_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
+	base_job_data.icon_menu = is_raid and "missions_raid_bounty_menu" or is_operation and "missions_operation_bounty_menu" or base_job_data.icon_menu
+	base_job_data.seed = seed
+	base_job_data.bounty = true
+	base_job_data.bounty_completed = self:is_bounty_completed()
+	base_job_data.dogtags = nil
+	base_job_data.trophy = nil
+	base_job_data.consumable = nil
+	base_job_data.active_card = managers.challenge_cards:generate_bounty_card(seed)
+
+	if base_job_data.greed_items then
+		base_job_data.greed_items.min = base_job_data.greed_items.min * 2
+		base_job_data.greed_items.max = base_job_data.greed_items.max * 2
+	end
+
+	math.randomseed()
+end
+
+function RaidJobManager:bounty_job_data()
+	return self._bounty_job_data
+end
+
+function RaidJobManager:bounty_job_name()
+	return self._bounty_job_data.job_id
+end
+
+function RaidJobManager:bounty_completed_seed()
+	return self._bounty_completed_seed
+end
+
+function RaidJobManager:set_bounty_completed_seed(seed)
+	Application:info("[BOUNTY] set_bounty_complete_flag: Completed seed", seed)
+
+	self._bounty_completed_seed = seed
+end
+
+function RaidJobManager:is_bounty_completed()
+	return managers.event_system:bounty_seed() == self._bounty_completed_seed
 end

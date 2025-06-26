@@ -39,18 +39,18 @@ end
 
 function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	local params_weapon_point_image = {
+		x = 0,
 		y = 0,
 		name = "card_pack_image",
-		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture_rect
 	}
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 	local params_player_name = {
-		align = "left",
-		layer = 1,
 		text = "",
+		layer = 1,
 		name = "peer_card_pack_name_label",
+		align = "left",
 		x = RaidGUIControlPeerRewardCardPack.TEXT_X,
 		y = RaidGUIControlPeerRewardCardPack.NAME_Y,
 		w = self._object:w() - RaidGUIControlPeerRewardCardPack.TEXT_X,
@@ -64,9 +64,9 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	self._name_label:set_h(h)
 
 	local params_card_pack_description = {
-		align = "left",
 		layer = 1,
 		name = "card_pack_description_label",
+		align = "left",
 		text = self:translate(RaidGUIControlPeerRewardCardPack.DESCRIPTION, true),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlPeerRewardCardPack.NAME_PADDING_DOWN,
@@ -82,7 +82,11 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 end
 
 function RaidGUIControlPeerRewardCardPack:set_player_name(name)
-	self._name_label:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name_label:set_text(name)
 	self:_layout_text()
 end
 

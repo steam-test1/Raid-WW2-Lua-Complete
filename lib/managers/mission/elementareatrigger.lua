@@ -45,16 +45,8 @@ function ElementAreaTrigger:project_instigators()
 			table.insert(instigators, v)
 		end
 	elseif self._values.instigator == "enemies" then
-		if managers.groupai:state():police_hostage_count() <= 0 then
-			for _, data in pairs(managers.enemy:all_enemies()) do
-				table.insert(instigators, data.unit)
-			end
-		else
-			for _, data in pairs(managers.enemy:all_enemies()) do
-				if not data.unit:anim_data().surrender then
-					table.insert(instigators, data.unit)
-				end
-			end
+		for _, data in pairs(managers.enemy:all_enemies()) do
+			table.insert(instigators, data.unit)
 		end
 	elseif self._values.instigator == "civilians" then
 		for _, data in pairs(managers.enemy:all_civilians()) do

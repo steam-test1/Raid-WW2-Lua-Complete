@@ -1,6 +1,14 @@
 core:import("CoreShapeManager")
 
 CoreShapeUnitElement = CoreShapeUnitElement or class(MissionElement)
+CoreShapeUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		table_value = "unit_ids",
+		output = true,
+		type = "shape"
+	}
+}
 ShapeUnitElement = ShapeUnitElement or class(CoreShapeUnitElement)
 
 function ShapeUnitElement:init(...)
@@ -256,9 +264,9 @@ function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(unit) then
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
-						r = 0,
 						b = 0.75,
 						g = 0.5,
+						r = 0,
 						from_unit = unit,
 						to_unit = self._unit
 					})
@@ -273,8 +281,8 @@ end
 
 function CoreShapeUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 

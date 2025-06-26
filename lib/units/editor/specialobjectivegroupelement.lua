@@ -1,4 +1,21 @@
 SpecialObjectiveGroupElement = SpecialObjectiveGroupElement or class(MissionElement)
+SpecialObjectiveGroupElement.LINK_VALUES = {
+	{
+		type = "instigator",
+		table_value = "spawn_instigator_ids"
+	},
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup"
+	},
+	{
+		table_key = "id",
+		table_value = "followup_patrol_elements",
+		output = true,
+		type = "followup"
+	}
+}
 
 function SpecialObjectiveGroupElement:init(unit)
 	SpecialObjectiveGroupElement.super.init(self, unit)
@@ -37,9 +54,9 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 					if draw then
 						self:_draw_link({
-							b = 0.75,
 							g = 0,
 							r = 0,
+							b = 0.75,
 							from_unit = self._unit,
 							to_unit = unit
 						})
@@ -63,9 +80,9 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 
 			if draw then
 				self:_draw_link({
-					b = 0.75,
 					g = 0,
 					r = 0,
+					b = 0.75,
 					from_unit = unit,
 					to_unit = self._unit
 				})
@@ -135,8 +152,8 @@ end
 
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -152,8 +169,8 @@ end
 
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if not ray or not ray.unit then

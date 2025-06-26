@@ -1,4 +1,5 @@
 CopActionReload = CopActionReload or class()
+CopActionReload.MODIFIER_NAME = Idstring("action_upper_body_enemy")
 
 function CopActionReload:init(action_desc, common_data)
 	self._unit = common_data.unit
@@ -18,52 +19,50 @@ function CopActionReload:init(action_desc, common_data)
 		end
 	end
 
-	if reload_t or self:_play_reload() then
-		local action_data = {}
-
-		if reload_t then
-			self._reload_t = reload_t
-		else
-			local reload_delay = 3
-			self._reload_t = TimerManager:game():time() + reload_delay
-		end
-
-		local weapon_unit = self._ext_inventory:equipped_unit()
-		self._weapon_unit = weapon_unit
-		self._body_part = action_desc.body_part
-		self._modifier_name = Idstring("action_upper_body_enemy")
-		self._modifier = self._machine:get_modifier(self._modifier_name)
-		self._blocks = {
-			light_hurt = -1
-		}
-
-		if self._attention then
-			self._modifier_on = true
-			local target_pos = nil
-
-			if self._attention.handler then
-				target_pos = self._attention.handler:get_attention_m_pos()
-			elseif self._attention.unit then
-				target_pos = self._attention.unit:movement():m_head_pos()
-			else
-				target_pos = self._attention.pos
-			end
-
-			local shoot_from_pos = common_data.pos + math.UP * 160
-			local target_vec = target_pos - shoot_from_pos
-
-			self._machine:force_modifier(self._modifier_name)
-			self._modifier:set_target_y(target_vec)
-		else
-			self._modifier_on = nil
-		end
-
-		CopActionAct._create_blocks_table(self, action_desc.blocks)
-
-		return true
-	else
+	if not reload_t and not self:_play_reload() then
 		cat_print("george", "[CopActionReload:init] failed in", self._machine:segment_state(Idstring("base")))
+
+		return false
 	end
+
+	if reload_t then
+		self._reload_t = reload_t
+	else
+		local reload_delay = 3
+		self._reload_t = TimerManager:game():time() + reload_delay
+	end
+
+	self._weapon_unit = self._ext_inventory:equipped_unit()
+	self._body_part = action_desc.body_part
+	self._modifier = self._machine:get_modifier(self.MODIFIER_NAME)
+	self._blocks = {
+		light_hurt = -1
+	}
+
+	if self._attention then
+		self._modifier_on = true
+		local target_pos = nil
+
+		if self._attention.handler then
+			target_pos = self._attention.handler:get_attention_m_pos()
+		elseif self._attention.unit then
+			target_pos = self._attention.unit:movement():m_head_pos()
+		else
+			target_pos = self._attention.pos
+		end
+
+		local shoot_from_pos = common_data.pos + math.UP * 160
+		local target_vec = target_pos - shoot_from_pos
+
+		self._machine:force_modifier(self.MODIFIER_NAME)
+		self._modifier:set_target_y(target_vec)
+	else
+		self._modifier_on = nil
+	end
+
+	CopActionAct._create_blocks_table(self, action_desc.blocks)
+
+	return true
 end
 
 function CopActionReload:type()
@@ -103,15 +102,13 @@ function CopActionReload:update(t)
 end
 
 function CopActionReload:_play_reload()
-	managers.voice_over:enemy_reload(self._unit)
-
 	local redir_res = self._ext_movement:play_redirect("reload")
 
 	if not redir_res then
-		cat_print("george", "[CopActionReload:_play_reload] redirect failed in", self._machine:segment_state(Idstring("base")))
-
 		return
 	end
+
+	managers.groupai:state():chk_say_enemy_chatter(self._unit, self._unit:position(), "reload")
 
 	return redir_res
 end
@@ -124,11 +121,11 @@ function CopActionReload:on_attention(attention)
 	if attention then
 		self._modifier_on = true
 
-		self._machine:force_modifier(self._modifier_name)
+		self._machine:force_modifier(self.MODIFIER_NAME)
 	else
 		self._modifier_on = nil
 
-		self._machine:allow_modifier(self._modifier_name)
+		self._machine:allow_modifier(self.MODIFIER_NAME)
 	end
 
 	self._attention = attention
@@ -138,7 +135,7 @@ function CopActionReload:on_exit()
 	if self._modifier_on then
 		self._modifier_on = nil
 
-		self._machine:allow_modifier(self._modifier_name)
+		self._machine:allow_modifier(self.MODIFIER_NAME)
 	end
 end
 

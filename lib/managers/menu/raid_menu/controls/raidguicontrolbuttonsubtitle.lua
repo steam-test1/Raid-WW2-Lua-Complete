@@ -96,10 +96,10 @@ end
 
 function RaidGUIControlButtonSubtitle:_create_selectors()
 	local selector_panel_params = {
-		valign = "scale",
-		name = "selector_panel",
 		halign = "scale",
-		alpha = 0
+		alpha = 0,
+		valign = "scale",
+		name = "selector_panel"
 	}
 	self._selector_panel = self._object:panel(selector_panel_params)
 	local selector_top_left_params = {
@@ -109,9 +109,9 @@ function RaidGUIControlButtonSubtitle:_create_selectors()
 	}
 	local selector_top_left = self._selector_panel:bitmap(selector_top_left_params)
 	local selector_bottom_right_params = {
+		halign = "right",
 		valign = "bottom",
 		name = "selector_bottom_right",
-		halign = "right",
 		texture = tweak_data.gui.icons[RaidGUIControlButtonSubtitle.SELECTOR_BOTTOM_RIGHT].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonSubtitle.SELECTOR_BOTTOM_RIGHT].texture_rect
 	}

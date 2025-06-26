@@ -25,7 +25,7 @@ function NPCFlamethrowerBase:fire_blank(direction, impact)
 	end
 
 	self._check_shooting_expired = {
-		check_t = Application:time() + 0.3
+		check_t = managers.player:player_timer():time() + 0.3
 	}
 
 	self._unit:set_extension_update_enabled(Idstring("base"), true)

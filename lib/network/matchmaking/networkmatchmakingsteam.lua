@@ -484,7 +484,9 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 			local challenge_card = lobby:key_value("challenge_card_id")
 
 			if challenge_card ~= "" and challenge_card ~= "nocards" and challenge_card ~= "value_pending" then
-				managers.challenge_cards:set_dropin_card(challenge_card)
+				local card_split = string.split(challenge_card, ",")
+
+				managers.challenge_cards:set_dropin_card(card_split[1])
 			end
 
 			self:join_server(room_id, true)
@@ -562,14 +564,14 @@ function NetworkMatchMakingSTEAM._handle_chat_message(user, message)
 	managers.chat:receive_message_by_name(ChatManager.GLOBAL, user:name(), s)
 end
 
-function NetworkMatchMakingSTEAM._joined_game(res, level_index, difficulty_index, state_index)
+function NetworkMatchMakingSTEAM._joined_game(res, state_index)
 	local matchmake = managers.network.matchmake
 
 	if res ~= "FAILED_CONNECT" or matchmake._server_connect_retried and NetworkMatchMaking.RETRY_CONNECT_COUNT <= matchmake._server_connect_retried then
 		managers.system_menu:close("waiting_for_server_response")
 	end
 
-	print("[NetworkMatchMakingSTEAM:join_server:joined_game]", res, level_index, difficulty_index, state_index)
+	print("[NetworkMatchMakingSTEAM:join_server:joined_game]", res, state_index)
 
 	if res == "JOINED_LOBBY" then
 		if managers.groupai then
@@ -581,9 +583,6 @@ function NetworkMatchMakingSTEAM._joined_game(res, level_index, difficulty_index
 		if managers.groupai then
 			managers.groupai:kill_all_AI()
 		end
-
-		local level_id = tweak_data.levels:get_level_id_from_index(level_index)
-		Global.game_settings.level_id = level_id
 
 		managers.network:session():local_peer():set_in_lobby(false)
 	elseif res == "KICKED" then
@@ -807,6 +806,8 @@ function NetworkMatchMakingSTEAM:set_num_players(num)
 end
 
 function NetworkMatchMakingSTEAM:set_job_info_by_current_job()
+	Application:trace("NetworkMatchMakingSTEAM:set_job_info_by_current_job")
+
 	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
 
 	if self._lobby_attributes and self.lobby_handler then
@@ -824,10 +825,10 @@ function NetworkMatchMakingSTEAM:set_challenge_card_info()
 	local active_card = managers.challenge_cards:get_active_card()
 
 	if self._lobby_attributes then
-		if active_card then
-			self._lobby_attributes.challenge_card_id = active_card.key_name
-		else
-			self._lobby_attributes.challenge_card_id = "nocards"
+		self._lobby_attributes.challenge_card_id = active_card and active_card.key_name or "nocards"
+
+		if active_card and active_card.seed then
+			self._lobby_attributes.challenge_card_id = self._lobby_attributes.challenge_card_id .. "," .. active_card.seed
 		end
 
 		self.lobby_handler:set_lobby_data(self._lobby_attributes)
@@ -839,18 +840,21 @@ function NetworkMatchMakingSTEAM:get_job_info_by_current_job()
 	local job_id = OperationsTweakData.IN_LOBBY
 	local progress = "-"
 	local server_state_id = 1
-	local mission_type = managers.raid_job:current_job() and managers.raid_job:current_job().job_type or OperationsTweakData.IN_LOBBY
+	local current_job = managers.raid_job:current_job()
+	local mission_type = current_job and current_job.job_type or OperationsTweakData.IN_LOBBY
 
-	if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		progress = managers.raid_job:current_job().current_event .. "/" .. #managers.raid_job:current_job().events_index
-		level_id = managers.raid_job:current_job().events_index[managers.raid_job:current_job().current_event]
-		job_id = managers.raid_job:current_job().job_id
-		server_state_id = 3
-	elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
-		progress = "1/1"
-		level_id = managers.raid_job:current_job().level_id
-		job_id = level_id
-		server_state_id = 3
+	if current_job then
+		if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			progress = current_job.current_event .. "/" .. #current_job.events_index
+			job_id = current_job.job_id
+			level_id = current_job.events_index[current_job.current_event]
+			server_state_id = 3
+		elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
+			progress = "1/1"
+			job_id = current_job.mission_id or current_job.job_id
+			level_id = current_job.level_id
+			server_state_id = 3
+		end
 	end
 
 	return level_id, job_id, progress, mission_type, server_state_id

@@ -20,7 +20,7 @@ function EquipmentUnitElement:_build_panel(panel, panel_sizer)
 		"none"
 	}, table.map_keys(tweak_data.equipments.specials)))
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 1,
-		floats = 0
+		floats = 0,
+		min = 1
 	}, "Specifies how many of this equipment to recieve (only work on those who has a max_amount set in their tweak data).")
 end

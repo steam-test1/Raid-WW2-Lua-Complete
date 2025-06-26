@@ -30,6 +30,13 @@ function MissionUnlockGui:close()
 	managers.controller:remove_hotswap_callback("mission_unlock_gui")
 	Overlay:gui():destroy_workspace(self._fullscreen_ws)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
+
 	MissionUnlockGui.super.close(self)
 end
 
@@ -156,10 +163,10 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	}
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 	local video_panel_background_params = {
-		name = "video_background",
 		halign = "scale",
 		layer = 1,
 		valign = "scale",
+		name = "video_background",
 		color = Color.black
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)

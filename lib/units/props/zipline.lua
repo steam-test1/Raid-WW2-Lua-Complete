@@ -677,3 +677,28 @@ function ZipLine:load(data)
 
 	worlddefinition:use_me(self._unit)
 end
+
+function ZipLine:setup_load(data)
+	if not data.zipline then
+		return
+	end
+
+	self:set_end_pos(data.zipline.end_pos)
+	self:set_speed(data.zipline.speed)
+	self:set_slack(data.zipline.slack)
+	self:set_usage_type(data.zipline.usage_type)
+	self:set_ai_ignores_bag(data.zipline.ai_ignores_bag)
+end
+
+if Application:editor() then
+	function ZipLine:editor_save(data)
+		local state = {
+			end_pos = self:end_pos(),
+			speed = self:speed(),
+			slack = self:slack(),
+			usage_type = self:usage_type(),
+			ai_ignores_bag = self:ai_ignores_bag()
+		}
+		data.zipline = state
+	end
+end

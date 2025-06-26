@@ -1,4 +1,12 @@
 AIAttentionElement = AIAttentionElement or class(MissionElement)
+AIAttentionElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		value = "att_obj_u_id",
+		output = true,
+		type = "operator"
+	}
+}
 
 function AIAttentionElement:init(unit)
 	AIAttentionElement.super.init(self, unit)
@@ -78,9 +86,9 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				r = 0,
 				b = 0.75,
 				g = 0,
-				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -93,9 +101,9 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
+			r = 0,
 			b = 0,
 			g = 0.75,
-			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
 		})
@@ -103,9 +111,9 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
+			r = 0,
 			b = 0.75,
 			g = 0,
-			r = 0,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
 		})
@@ -121,9 +129,9 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
+			r = 0,
 			b = 0,
 			g = 0.75,
-			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
 		})
@@ -131,9 +139,9 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
+			r = 0.75,
 			b = 0,
 			g = 0,
-			r = 0.75,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
 		})
@@ -143,9 +151,9 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 		local unit = all_units[id]
 
 		self:_draw_link({
+			r = 0,
 			b = 0.75,
 			g = 0,
-			r = 0,
 			from_unit = unit,
 			to_unit = self._unit
 		})
@@ -215,8 +223,8 @@ end
 
 function AIAttentionElement:_find_instigator_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if not ray or not ray.unit then

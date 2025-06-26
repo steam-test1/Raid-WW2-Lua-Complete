@@ -399,17 +399,14 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 	local member_downed = alive(member_unit) and member_unit:movement():downed()
 	local member_health = 1
 	local member_dead = managers.trade and managers.trade:is_peer_in_custody(peer_id)
-	local hostages_killed = 0
 	local respawn_penalty = 0
 
 	if member_dead and player_character and managers.trade then
-		hostages_killed = managers.trade:hostages_killed_by_name(player_character)
 		respawn_penalty = managers.trade:respawn_delay_by_name(player_character)
 	elseif alive(member_unit) then
 		local criminal_record = managers.groupai:state():criminal_record(member_unit:key())
 
 		if criminal_record then
-			hostages_killed = criminal_record.hostages_killed
 			respawn_penalty = criminal_record.respawn_penalty
 		end
 	end
@@ -450,14 +447,13 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 				managers.criminals:on_peer_left(peer_id)
 				managers.criminals:remove_character_by_peer_id(peer_id)
 
-				local unit = managers.groupai:state():spawn_one_teamAI(true, player_character)
+				local unit = managers.groupai:state():spawn_one_criminal_ai(true, player_character)
 				self._old_players[peer_ident] = {
 					t = Application:time(),
 					member_downed = member_downed,
 					health = member_health,
 					used_deployable = member_used_deployable,
 					member_dead = member_dead,
-					hostages_killed = hostages_killed,
 					respawn_penalty = respawn_penalty
 				}
 				local trade_entry = managers.trade:replace_player_with_ai(player_character, player_character)
@@ -1451,7 +1447,7 @@ function BaseNetworkSession:spawn_players(is_drop_in)
 		self:set_game_started(true)
 	end
 
-	managers.groupai:state():fill_criminal_team_with_AI(is_drop_in)
+	managers.groupai:state():fill_criminal_team(is_drop_in)
 end
 
 function BaseNetworkSession:_get_next_spawn_point_id()
@@ -1687,17 +1683,21 @@ function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_spe
 	local total_specials_kills = 0
 	local total_head_shots = 0
 	local best_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_special_killer = {
+		peer_id = nil,
 		score = 0
 	}
 	local best_accuracy = {
+		peer_id = nil,
 		score = 0
 	}
 	local group_accuracy = 0
 	local group_downs = 0
 	local most_downs = {
+		peer_id = nil,
 		score = 0
 	}
 

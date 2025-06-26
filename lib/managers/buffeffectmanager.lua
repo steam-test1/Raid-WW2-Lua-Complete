@@ -1,5 +1,6 @@
 require("lib/managers/buff_effect/BuffEffect")
 require("lib/managers/buff_effect/BuffEffectCandy")
+require("lib/managers/buff_effect/BuffEffectTimeSpeed")
 
 BuffEffectManager = BuffEffectManager or class()
 BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE = "enemy_loot_drop_reward_increase"
@@ -13,6 +14,7 @@ BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED = "reload_speed"
 BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE = "enemies_receive_damage"
 BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE = "enemy_does_damage"
 BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER = "set_bleedout_timer"
+BuffEffectManager.EFFECT_MODIFY_LIVES = "effect_modify_lives"
 BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER = "modify_bleedout_timer"
 BuffEffectManager.EFFECT_PLAYER_HEALTH = "player_health"
 BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE = "player_critical_hit_chance"
@@ -60,6 +62,7 @@ BuffEffectManager.EFFECT_LUCKY_DAY = "effect_lucky_day"
 BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY = "effect_player_dooms_day"
 BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS = "effect_player_cannot_ads"
 BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT = "effect_player_cannot_sprint"
+BuffEffectManager.EFFECT_TIME_SPEED = "effect_time_speed"
 BuffEffectManager.EFFECT_TRICK_OR_TREAT = "effect_trick_or_treat"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_SPENT_AMMO = "challenge_card_effect_failed_message_player_spent_all_ammo"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME = "challenge_card_effect_failed_message_player_failed_interaction_mini_game"
@@ -70,7 +73,8 @@ BuffEffectManager.FAIL_EFFECT_MESSAGE_COMPLETE_RAID_WITHIN_TIME = "challenge_car
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY = "challenge_card_effect_failed_message_player_used_warcry"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP = "challenge_card_effect_failed_message_player_emptied_a_clip"
 BuffEffectManager.EFFECT_CLASSES = {
-	BuffEffectCandy = true
+	BuffEffectCandy = true,
+	BuffEffectTimeSpeed = true
 }
 
 function BuffEffectManager:init()

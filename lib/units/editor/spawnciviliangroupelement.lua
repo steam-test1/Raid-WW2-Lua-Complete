@@ -1,4 +1,11 @@
 SpawnCivilianGroupUnitElement = SpawnCivilianGroupUnitElement or class(MissionElement)
+SpawnCivilianGroupUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "spawn_point"
+	}
+}
 
 function SpawnCivilianGroupUnitElement:init(unit)
 	SpawnCivilianGroupUnitElement.super.init(self, unit)
@@ -30,9 +37,9 @@ function SpawnCivilianGroupUnitElement:update_selected(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
-				r = 0,
 				b = 0,
 				g = 0.75,
+				r = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -65,11 +72,6 @@ function SpawnCivilianGroupUnitElement:remove_links(unit)
 	end
 end
 
-function SpawnCivilianGroupUnitElement:get_links_to_unit(...)
-	SpawnCivilianGroupUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
-end
-
 function SpawnCivilianGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
@@ -87,8 +89,8 @@ function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, panel_sizer, "random", "Select spawn points randomly")
 	self:_build_value_checkbox(panel, panel_sizer, "ignore_disabled", "Select if disabled spawn points should be ignored or not")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 0,
-		floats = 0
+		floats = 0,
+		min = 0
 	}, "Specify amount of civilians to spawn from group")
 	self:_build_value_combobox(panel, panel_sizer, "team", table.list_add({
 		"default"

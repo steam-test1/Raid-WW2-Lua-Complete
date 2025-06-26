@@ -1,17 +1,9 @@
 BlackMarketTweakData = BlackMarketTweakData or class()
 
-require("lib/tweak_data/blackmarket/ColorsTweakData")
-require("lib/tweak_data/blackmarket/MaterialsTweakData")
-require("lib/tweak_data/blackmarket/TexturesTweakData")
-require("lib/tweak_data/blackmarket/MasksTweakData")
 require("lib/tweak_data/blackmarket/MeleeWeaponsTweakData")
 require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
 function BlackMarketTweakData:init(tweak_data)
-	self:_init_colors()
-	self:_init_materials()
-	self:_init_textures()
-	self:_init_masks()
 	self:_init_characters()
 	self:_init_cash()
 	self:_init_xp()

@@ -99,8 +99,7 @@ function HuskPlayerInventory:add_unit_by_name(new_unit_name, equip, instant)
 		},
 		expend_ammo = false,
 		autoaim = false,
-		alert_AI = false,
-		user_sound_variant = "1"
+		alert_AI = false
 	}
 
 	new_unit:base():setup(setup_data)
@@ -136,8 +135,7 @@ function HuskPlayerInventory:add_unit_by_factory_blueprint(factory_name, equip, 
 		},
 		expend_ammo = false,
 		autoaim = false,
-		alert_AI = false,
-		user_sound_variant = "1"
+		alert_AI = false
 	}
 
 	new_unit:base():setup(setup_data)

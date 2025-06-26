@@ -80,7 +80,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 	end
 
 	if table.size(data.peers) >= 3 then
-		Application:trace("[HostStateInGame:on_join_request_received] table.size( data.peers )")
+		Application:trace("[HostStateInGame:on_join_request_received] denied, reason: table.size( data.peers )")
 		self:_send_request_denied(sender, 5, my_user_id)
 
 		return
@@ -93,8 +93,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		xnaddr = managers.network.matchmake:external_address(sender)
 	end
 
-	local new_peer_id, new_peer = nil
-	new_peer_id, new_peer = data.session:add_peer(peer_name, nil, false, false, false, nil, character, sender:ip_at_index(0), xuid, xnaddr)
+	local new_peer_id, new_peer = data.session:add_peer(peer_name, nil, false, false, false, nil, character, sender:ip_at_index(0), xuid, xnaddr)
 
 	if not new_peer_id then
 		Application:trace("[HostStateInGame:on_join_request_received] there was no clean peer_id")
@@ -127,26 +126,12 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 		return
 	end
 
-	local ticket = new_peer:create_ticket()
-	local level_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
 	local difficulty_index = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
-	local job_id_index = 0
-	local job_stage = 0
-	local alternative_job_stage = 0
-	local interupt_job_stage_level_index = 0
-
-	if managers.raid_job:has_active_job() then
-		if managers.raid_job:current_job().job_type == OperationsTweakData.JOB_TYPE_RAID then
-			job_id_index = tweak_data.operations:get_index_from_raid_id(managers.raid_job:current_job_id())
-		else
-			job_id_index = tweak_data.operations:get_index_from_operation_id(managers.raid_job:current_job_id())
-			job_stage = managers.raid_job:current_job().current_event
-		end
-	end
-
+	local job_id = managers.raid_job:current_job_id() or ""
 	local server_xuid = IS_XB1 and managers.network.account:player_id() or ""
+	local ticket = new_peer:create_ticket()
 
-	new_peer:send("join_request_reply", 1, new_peer_id, character, level_index, difficulty_index, 2, data.local_peer:character(), my_user_id, Global.game_settings.mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, server_xuid, ticket)
+	new_peer:send("join_request_reply", 1, new_peer_id, character, job_id, difficulty_index, 2, data.local_peer:character(), my_user_id, Global.game_settings.mission, server_xuid, ticket)
 	Application:debug("[HostStateInGame:on_join_request_received]", data.session:load_counter())
 	new_peer:send("set_loading_state", false, data.session:load_counter())
 	managers.worldcollection:send_loaded_packages(new_peer)
@@ -161,7 +146,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, client_prefer
 end
 
 function HostStateInGame:on_peer_finished_loading(data, peer)
-	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
+	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
 
 	if data.game_started then

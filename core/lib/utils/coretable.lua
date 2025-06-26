@@ -89,6 +89,13 @@ function table.sorted_map_iterator(map, key_comparator_func)
 	end
 end
 
+function table.map_remove(v, e)
+	local item = v[e]
+	v[e] = nil
+
+	return item
+end
+
 function table.map_copy(map)
 	local copy = {}
 

@@ -22,10 +22,6 @@ function TeamAIBase:nick_name()
 	return managers.localization:text("menu_" .. name)
 end
 
-function TeamAIBase:default_weapon_name(slot)
-	return tweak_data.character[self._tweak_table].weapon.weapons_of_choice[slot or "primary"]
-end
-
 function TeamAIBase:pre_destroy(unit)
 	self:remove_from_vehicle()
 	self:unregister()

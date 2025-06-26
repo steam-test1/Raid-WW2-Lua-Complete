@@ -1,4 +1,12 @@
 CoreUnitSequenceUnitElement = CoreUnitSequenceUnitElement or class(MissionElement)
+CoreUnitSequenceUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		table_value = "trigger_list",
+		output = true,
+		table_key = "notify_unit_id"
+	}
+}
 UnitSequenceUnitElement = UnitSequenceUnitElement or class(CoreUnitSequenceUnitElement)
 
 function UnitSequenceUnitElement:init(...)
@@ -20,19 +28,6 @@ end
 function CoreUnitSequenceUnitElement:update_selected(...)
 	MissionElement.update_selected(self, ...)
 	self:_draw_trigger_units(0, 1, 1)
-end
-
-function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units)
-	CoreUnitSequenceUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
-
-	if to_unit == self._unit then
-		for _, unit in ipairs(self:_get_sequence_units()) do
-			table.insert(links.on_executed, {
-				alternative = "unit",
-				unit = unit
-			})
-		end
-	end
 end
 
 function CoreUnitSequenceUnitElement:draw_links_unselected(...)
@@ -130,13 +125,13 @@ end
 
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
-		category = "units",
 		name = "core/units/run_sequence_dummy/run_sequence_dummy",
+		category = "units",
 		continent = self._unit:unit_data().continent
 	})
 	managers.editor:add_to_world_package({
-		category = "script_data",
 		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
+		category = "script_data",
 		continent = self._unit:unit_data().continent
 	})
 end

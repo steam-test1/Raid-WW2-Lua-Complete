@@ -53,10 +53,12 @@ function HealthPackPickup:_pickup(unit)
 
 				unit:sound():say(health_pku_tweakdata.player_voice_over, false, true)
 			end
+		end
 
-			if self:get_restores_down() then
-				unit:character_damage():recover_down()
-			end
+		if self:get_restores_down() then
+			unit:character_damage():recover_down()
+
+			picked_up = true
 		end
 
 		if picked_up then

@@ -160,18 +160,6 @@ function MenuCallbackHandler:restart_vote_visible()
 	return self:_restart_level_visible() and managers.vote:option_vote_restart()
 end
 
-function MenuCallbackHandler:abort_mission_visible()
-	if not self:is_not_editor() or not self:is_server() or not self:is_multiplayer() then
-		return false
-	end
-
-	if game_state_machine:current_state_name() == "disconnected" then
-		return false
-	end
-
-	return true
-end
-
 function MenuCallbackHandler:lobby_exist()
 	return managers.network.matchmake.lobby_handler
 end
@@ -214,25 +202,6 @@ end
 
 function MenuCallbackHandler:leave_online_menu()
 	managers.menu:leave_online_menu()
-end
-
-function MenuCallbackHandler:on_account_picker()
-	print("MenuCallbackHandler:on_account_picker()")
-
-	local function confirm_cb()
-		local function f(...)
-			print("result", ...)
-		end
-
-		managers.system_menu:show_select_user({
-			count = 1,
-			callback_func = f
-		})
-	end
-
-	managers.menu:show_account_picker_dialog({
-		yes_func = confirm_cb
-	})
 end
 
 function MenuCallbackHandler:on_menu_option_help()
@@ -421,46 +390,6 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 	end
 
 	func()
-end
-
-function MenuCallbackHandler:toggle_use_thq_weapon_parts(item)
-	managers.user:set_setting("use_thq_weapon_parts", item:value() == "on")
-end
-
-function MenuCallbackHandler:toggle_streaks(item)
-	managers.user:set_setting("video_streaks", item:value() == "on")
-end
-
-function MenuCallbackHandler:toggle_light_adaption(item)
-	managers.user:set_setting("light_adaption", item:value() == "on")
-end
-
-function MenuCallbackHandler:choice_max_streaming_chunk(item)
-	managers.user:set_setting("max_streaming_chunk", item:value())
-end
-
-function MenuCallbackHandler:set_fov_multiplier(item)
-	local fov_multiplier = item:value()
-
-	managers.user:set_setting("fov_multiplier", fov_multiplier)
-
-	if alive(managers.player:player_unit()) then
-		managers.player:player_unit():movement():current_state():update_fov_external()
-	end
-end
-
-function MenuCallbackHandler:set_detail_distance(item)
-	debug_pause("[MenuCallbackHandler:set_detail_distance] DEPRECATED")
-end
-
-function MenuCallbackHandler:set_use_parallax(item)
-	local use_parallax = item:value() == "on"
-
-	managers.user:set_setting("use_parallax", use_parallax)
-end
-
-function MenuCallbackHandler:toggle_headbob(item)
-	managers.user:set_setting("use_headbob", item:value() == "on")
 end
 
 function MenuCallbackHandler:on_stage_success()
@@ -762,16 +691,6 @@ function MenuCallbackHandler:save_progress()
 	managers.savefile:save_progress()
 end
 
-function MenuCallbackHandler:debug_level_jump(item)
-	local param_map = item:parameters()
-
-	managers.network:host_game()
-
-	local level_id = tweak_data.levels:get_level_id_from_world_name(param_map.level)
-
-	managers.network:session():load_level(param_map.level, param_map.mission, param_map.world_setting, param_map.level_class_name, level_id, nil)
-end
-
 function MenuCallbackHandler:save_game(item)
 	if not managers.savefile:is_active() then
 		local param_map = item:parameters()
@@ -832,89 +751,8 @@ function MenuCallbackHandler:always_hide()
 	return false
 end
 
-function MenuCallbackHandler:set_music_volume(item)
-	local volume = item:value()
-	local old_volume = managers.user:get_setting("music_volume")
-
-	managers.user:set_setting("music_volume", volume)
-end
-
-function MenuCallbackHandler:set_sfx_volume(item)
-	local volume = item:value()
-	local old_volume = managers.user:get_setting("sfx_volume")
-
-	managers.user:set_setting("sfx_volume", volume)
-end
-
-function MenuCallbackHandler:set_voice_volume(item)
-	local volume = item:value()
-	local old_volume = managers.user:get_setting("voice_volume")
-
-	managers.user:set_setting("voice_volume", volume)
-end
-
 function MenuCallbackHandler:_refresh_brightness()
 	managers.user:set_setting("brightness", managers.user:get_setting("brightness"), true)
-end
-
-function MenuCallbackHandler:set_brightness(item)
-	local brightness = item:value()
-
-	managers.user:set_setting("brightness", brightness)
-end
-
-function MenuCallbackHandler:set_effect_quality(item)
-	local effect_quality = item:value()
-
-	managers.user:set_setting("effect_quality", effect_quality)
-end
-
-function MenuCallbackHandler:set_camera_sensitivity(item)
-	local value = item:value()
-
-	managers.user:set_setting("camera_sensitivity", value)
-
-	if not managers.user:get_setting("enable_camera_zoom_sensitivity") then
-		local item_other_sens = managers.menu:active_menu().logic:selected_node():item("camera_zoom_sensitivity")
-
-		if item_other_sens and item_other_sens:visible() and math.abs(value - item_other_sens:value()) > 0.001 then
-			item_other_sens:set_value(value)
-			item_other_sens:trigger()
-		end
-	end
-end
-
-function MenuCallbackHandler:set_camera_zoom_sensitivity(item)
-	local value = item:value()
-
-	managers.user:set_setting("camera_zoom_sensitivity", value)
-
-	if not managers.user:get_setting("enable_camera_zoom_sensitivity") then
-		local item_other_sens = managers.menu:active_menu().logic:selected_node():item("camera_sensitivity")
-
-		if item_other_sens and item_other_sens:visible() and math.abs(value - item_other_sens:value()) > 0.001 then
-			item_other_sens:set_value(value)
-			item_other_sens:trigger()
-		end
-	end
-end
-
-function MenuCallbackHandler:toggle_zoom_sensitivity(item)
-	local value = item:value() == "on"
-
-	managers.user:set_setting("enable_camera_zoom_sensitivity", value)
-
-	if value == false then
-		local item_sens = managers.menu:active_menu().logic:selected_node():item("camera_sensitivity")
-		local item_sens_zoom = managers.menu:active_menu().logic:selected_node():item("camera_zoom_sensitivity")
-
-		item_sens_zoom:set_value(item_sens:value())
-		item_sens_zoom:trigger()
-	end
-end
-
-function MenuCallbackHandler:is_current_resolution(item)
-	return item:name() == string.format("%d x %d, %dHz", RenderSettings.resolution.x, RenderSettings.resolution.y, RenderSettings.resolution.z)
 end
 
 function MenuCallbackHandler:end_game()
@@ -972,35 +810,8 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 		managers.groupai:state():set_AI_enabled(false)
 	end
 
-	managers.menu:post_event("menu_exit")
 	managers.menu:close_menu("menu_pause")
 	setup:load_start_menu()
-end
-
-function MenuCallbackHandler:leave_safehouse()
-	local function yes_func()
-		self:_dialog_end_game_yes()
-	end
-
-	managers.menu:show_leave_safehouse_dialog({
-		yes_func = yes_func
-	})
-end
-
-function MenuCallbackHandler:abort_mission()
-	if game_state_machine:current_state_name() == "disconnected" then
-		return
-	end
-
-	local function yes_func()
-		if game_state_machine:current_state_name() ~= "disconnected" then
-			self:load_start_menu_lobby()
-		end
-	end
-
-	managers.menu:show_abort_mission_dialog({
-		yes_func = yes_func
-	})
 end
 
 function MenuCallbackHandler:load_start_menu_lobby()
@@ -1013,67 +824,6 @@ end
 function MenuCallbackHandler:_reset_mainmusic()
 	managers.music:post_event(MusicManager.STOP_ALL_MUSIC)
 	managers.music:post_event(MusicManager.MENU_MUSIC)
-end
-
-function MenuCallbackHandler:set_default_options()
-	local params = {
-		text = managers.localization:text("dialog_default_options_message"),
-		callback = function ()
-			managers.user:reset_setting_map()
-			self:_reset_mainmusic()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_control_options()
-	local params = {
-		text = managers.localization:text("dialog_default_controls_options_message"),
-		callback = function ()
-			managers.user:reset_controls_setting_map()
-			self:refresh_node()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_video_options()
-	local params = {
-		text = managers.localization:text("dialog_default_video_options_message"),
-		callback = function ()
-			managers.user:reset_video_setting_map()
-			self:refresh_node()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_sound_options()
-	local params = {
-		text = managers.localization:text("dialog_default_sound_options_message"),
-		callback = function ()
-			managers.user:reset_sound_setting_map()
-			self:refresh_node()
-			self:_reset_mainmusic()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
-end
-
-function MenuCallbackHandler:set_default_network_options()
-	local params = {
-		text = managers.localization:text("dialog_default_network_options_message"),
-		callback = function ()
-			managers.user:reset_network_setting_map()
-			self:refresh_node()
-		end
-	}
-
-	managers.menu:show_default_option_dialog(params)
 end
 
 function MenuCallbackHandler:resume_game()
@@ -1149,15 +899,10 @@ function MenuCallbackHandler:debug_goto_custody()
 		managers.player:set_player_state("bleed_out")
 	end
 
-	if managers.player:current_state() ~= "fatal" then
-		managers.player:set_player_state("fatal")
-	end
-
 	managers.player:force_drop_carry()
 	managers.statistics:downed({
 		death = true
 	})
-	IngameFatalState.on_local_player_dead()
 	game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
 	player:character_damage():set_invulnerable(true)
 	player:character_damage():set_health(0)

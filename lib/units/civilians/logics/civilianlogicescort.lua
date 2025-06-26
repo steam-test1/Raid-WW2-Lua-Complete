@@ -27,22 +27,11 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 		data.unit:movement():set_cool(false, "escort")
 	end
 
-	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
+	data.unit:movement():set_stance("hos")
 
 	my_data.advance_path_search_id = "CivilianLogicEscort_detailed" .. tostring(data.key)
 	my_data.coarse_path_search_id = "CivilianLogicEscort_coarse" .. tostring(data.key)
 	my_data.vision = data.char_tweak.vision
-
-	if data.unit:anim_data().tied then
-		local action_data = {
-			variant = "panic",
-			body_part = 1,
-			clamp_to_graph = true,
-			type = "act"
-		}
-
-		data.unit:brain():action_request(action_data)
-	end
 
 	if data.char_tweak.outline_on_discover then
 		if not data.been_outlined then
@@ -124,10 +113,10 @@ function CivilianLogicEscort.update(data)
 			my_data.commanded_to_move = nil
 
 			data.unit:movement():action_request({
+				type = "act",
 				variant = "panic",
 				body_part = 1,
-				clamp_to_graph = true,
-				type = "act"
+				clamp_to_graph = true
 			})
 		end
 	elseif not data.char_tweak.immortal then
@@ -185,8 +174,8 @@ function CivilianLogicEscort.update(data)
 
 		if avoidance_ray and alive(avoidance_ray.unit) and avoidance_ray.unit:anim_data().walk then
 			data.unit:movement():action_request({
-				body_part = 1,
-				type = "idle"
+				type = "idle",
+				body_part = 1
 			})
 
 			my_data.last_avoidance_t = data.t
@@ -194,7 +183,8 @@ function CivilianLogicEscort.update(data)
 	end
 end
 
-function CivilianLogicEscort.on_intimidated(data, amount, aggressor_unit)
+function CivilianLogicEscort.on_long_distance_interact(data, amount, aggressor_unit)
+	Application:info("[CivilianLogicEscort.on_long_distance_interact]", data, amount, aggressor_unit)
 end
 
 function CivilianLogicEscort.on_action_completed(data, action)
@@ -368,8 +358,8 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	local objective = data.objective
 	local haste = objective and objective.haste or "walk"
 	local new_action_data = {
-		body_part = 2,
 		type = "walk",
+		body_part = 2,
 		nav_path = my_data.advance_path,
 		variant = haste,
 		end_rot = objective.rot
@@ -387,15 +377,15 @@ end
 
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
+		type = "act",
 		clamp_to_graph = true,
 		variant = "cm_so_escort_get_up_hesitant",
 		body_part = 1,
-		type = "act",
 		blocks = {
-			walk = -1,
-			hurt = -1,
 			action = -1,
-			heavy_hurt = -1
+			heavy_hurt = -1,
+			walk = -1,
+			hurt = -1
 		}
 	}
 	my_data.getting_up = data.unit:movement():action_request(action)

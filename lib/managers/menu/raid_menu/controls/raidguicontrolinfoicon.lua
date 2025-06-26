@@ -27,67 +27,12 @@ function RaidGUIControlInfoIcon:init(parent, params)
 	self:_init_panel()
 
 	if params.icon then
-		local icon_params = {
-			y = 0,
-			x = 0,
-			layer = self._object:layer() + 1,
-			texture = tweak_data.gui.icons[self._params.icon].texture,
-			texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
-			h = params.icon_h or RaidGUIControlInfoIcon.TOP_H,
-			color = params.icon_color or RaidGUIControlInfoIcon.COLOR
-		}
-		self._top = self._object:bitmap(icon_params)
-
-		self._top:set_w(self._top:h() * tweak_data.gui:icon_w(self._params.icon) / tweak_data.gui:icon_h(self._params.icon))
-
-		self._top_w = self._top:w()
-		self._top_h = self._top:h()
-	else
-		local title_params = {
-			y = 0,
-			x = 0,
-			align = "center",
-			vertical = "center",
-			wrap = false,
-			layer = self._object:layer() + 1,
-			font = RaidGUIControlInfoIcon.TEXT_FONT,
-			font_size = params.title_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
-			h = params.title_h or RaidGUIControlInfoIcon.TOP_H,
-			color = params.title_color or RaidGUIControlInfoIcon.COLOR,
-			text = params.title
-		}
-		self._top = self._object:text(title_params)
-		local _, _, w, h = self._top:text_rect()
-
-		self._top:set_w(w)
-		self._top:set_h(h)
-
-		self._top_w = w
-		self._top_h = h
+		self:set_icon(params.icon, params, true)
+	elseif params.title then
+		self:set_title(params.title, params, true)
 	end
 
-	local text_params = {
-		y = 0,
-		x = 0,
-		vertical = "center",
-		align = "center",
-		wrap = false,
-		h = params.text_h or 0,
-		font = RaidGUIControlInfoIcon.TEXT_FONT,
-		font_size = params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
-		text = params.text,
-		color = params.text_color or RaidGUIControlInfoIcon.COLOR,
-		layer = self._object:layer() + 1
-	}
-	self._text = self._object:text(text_params)
-	local _, _, w, h = self._text:text_rect()
-
-	self._text:set_w(w)
-
-	if not params.text_h then
-		self._text:set_h(h)
-	end
-
+	self:set_text(params.text, params, true)
 	self:_fit_size()
 
 	self._align = self._params.align or "left"
@@ -128,35 +73,34 @@ function RaidGUIControlInfoIcon:_fit_size()
 	self._text:set_bottom(self._object:h())
 end
 
-function RaidGUIControlInfoIcon:set_icon(icon, params)
+function RaidGUIControlInfoIcon:set_icon(icon, params, dont_fit)
 	if self._top then
 		self._object:remove(self._top)
 	end
 
-	if not tweak_data.gui.icons[icon] then
-		return
+	local gui_data = tweak_data.gui:get_full_gui_data(icon)
+	self._top = self._object:bitmap({
+		w = params and params.icon_w or self.TOP_W,
+		h = params and params.icon_h or self.TOP_H,
+		texture = gui_data.texture,
+		texture_rect = gui_data.texture_rect,
+		color = params and params.icon_color or Color.white,
+		layer = self._object:layer() + 1
+	})
+
+	if not params or not params.icon_w then
+		self._top:set_w(self._top:h() * tweak_data.gui:icon_w(icon) / tweak_data.gui:icon_h(icon))
 	end
-
-	local icon_params = {
-		y = 0,
-		x = 0,
-		layer = self._object:layer() + 1,
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect,
-		h = params and params.icon_h or RaidGUIControlInfoIcon.TOP_H,
-		color = params and params.color or Color.white
-	}
-	self._top = self._object:bitmap(icon_params)
-
-	self._top:set_w(self._top:h() * tweak_data.gui:icon_w(icon) / tweak_data.gui:icon_h(icon))
 
 	self._top_w = self._top:w()
 	self._top_h = self._top:h()
 
-	self:_fit_size()
+	if not dont_fit then
+		self:_fit_size()
+	end
 end
 
-function RaidGUIControlInfoIcon:set_title(title, params)
+function RaidGUIControlInfoIcon:set_title(title, params, dont_fit)
 	local h = nil
 
 	if self._top then
@@ -176,11 +120,11 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	end
 
 	local title_params = {
+		vertical = "center",
 		y = 0,
 		x = 0,
-		align = "center",
-		vertical = "center",
 		wrap = false,
+		align = "center",
 		layer = self._object:layer() + 1,
 		font = params and params.font or RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.font_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
@@ -197,7 +141,9 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	self._top_w = w
 	self._top_h = h
 
-	self:_fit_size()
+	if not dont_fit then
+		self:_fit_size()
+	end
 
 	if self._align == "left" then
 		self:set_x(x)
@@ -208,7 +154,7 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 	end
 end
 
-function RaidGUIControlInfoIcon:set_text(text, params)
+function RaidGUIControlInfoIcon:set_text(text, params, dont_fit)
 	if self._text then
 		self._object:remove(self._text)
 	end
@@ -223,24 +169,21 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 		x = self._object:right()
 	end
 
-	local text_params = {
-		y = 0,
-		x = 0,
+	self._text = self._object:label({
 		vertical = "center",
-		align = "center",
 		wrap = false,
+		fit_text = true,
+		align = "center",
 		font = RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
 		text = params and params.no_translate and text or self:translate(text, true),
 		color = params and params.color or RaidGUIControlInfoIcon.COLOR,
 		layer = self._object:layer() + 1
-	}
-	self._text = self._object:text(text_params)
-	local _, _, w, h = self._text:text_rect()
+	})
 
-	self._text:set_w(w)
-	self._text:set_h(h)
-	self:_fit_size()
+	if not dont_fit then
+		self:_fit_size()
+	end
 
 	if self._align == "left" then
 		self:set_x(x)

@@ -40,18 +40,18 @@ end
 
 function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 	local params_gold_bar_image = {
+		y = 0,
 		name = "melee_weapon_image",
 		x = 0,
-		y = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGoldBarPeerLoot.REWARD_ICON_SINGLE].texture_rect
 	}
 	self._gold_bar_image = self._object:bitmap(params_gold_bar_image)
 	local params_player_name = {
-		name = "peer_name_label",
-		layer = 1,
 		align = "left",
+		layer = 1,
 		text = "",
+		name = "peer_name_label",
 		x = RaidGUIControlGoldBarPeerLoot.TEXT_X,
 		y = RaidGUIControlGoldBarPeerLoot.NAME_Y,
 		w = self._object:w() - RaidGUIControlGoldBarPeerLoot.TEXT_X,
@@ -65,9 +65,9 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 	self._name_label:set_h(h)
 
 	local params_gold_bar_description = {
-		name = "melee_weapon_description_label",
-		layer = 1,
 		align = "left",
+		layer = 1,
+		name = "melee_weapon_description_label",
 		text = self:translate("gold_bars", true),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlGoldBarPeerLoot.NAME_PADDING_DOWN,
@@ -83,7 +83,11 @@ function RaidGUIControlGoldBarPeerLoot:_create_gold_bar_details()
 end
 
 function RaidGUIControlGoldBarPeerLoot:set_player_name(name)
-	self._name_label:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name_label:set_text(name)
 	self:_layout_text()
 end
 

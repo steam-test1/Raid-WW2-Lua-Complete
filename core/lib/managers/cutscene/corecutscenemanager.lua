@@ -32,7 +32,10 @@ function CoreCutsceneManager:init()
 
 	self._timer = TimerManager:game_animation()
 	self._actor_database = core_or_local("CutsceneActorDatabase")
-	self._input_controller = managers.controller:create_controller()
+	self._input_controller = managers.controller:create_controller("cutscene")
+
+	self._input_controller:set_enabled(false)
+
 	self._gui_workspace = self:_create_gui_workspace()
 	self._video_workspace = self:_create_video_workspace()
 end

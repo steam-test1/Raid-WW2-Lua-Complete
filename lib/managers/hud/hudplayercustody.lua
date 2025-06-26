@@ -21,17 +21,17 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
+		halign = "grow",
 		name = "custody_panel",
-		valign = "grow",
-		halign = "grow"
+		valign = "grow"
 	})
 	local timer_message_params = {
-		align = "center",
-		name = "timer_msg",
 		text = "custodddddy in",
 		h = 40,
 		w = 400,
 		vertical = "center",
+		align = "center",
+		name = "timer_msg",
 		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = tweak_data.gui.font_sizes.size_24
 	}
@@ -46,11 +46,11 @@ function HUDPlayerCustody:init(hud)
 	timer_msg:set_y(28)
 
 	local timer_params = {
-		align = "center",
-		name = "timer",
 		text = "00:00",
 		h = 32,
 		vertical = "bottom",
+		align = "center",
+		name = "timer",
 		w = custody_panel:w(),
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list
@@ -75,7 +75,11 @@ function HUDPlayerCustody:set_spectator_info(unit)
 	if alive(unit) then
 		local nick_name = unit:base():nick_name()
 
-		self._spectator_text:set_text(utf8.to_upper(nick_name))
+		if managers.user:get_setting("capitalize_names") then
+			nick_name = utf8.to_upper(nick_name)
+		end
+
+		self._spectator_text:set_text(nick_name)
 		self._spectator_panel:set_visible(true)
 		self:_refresh_button_prompt()
 	else
@@ -85,9 +89,9 @@ end
 
 function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel = parent:panel({
-		name = "spectator_panel",
 		valign = "bottom",
 		halign = "left",
+		name = "spectator_panel",
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 		h = HUDPlayerCustody.SPECTATOR_PANEL_H
 	})
@@ -103,24 +107,24 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect
 	})
 	self._spectator_text = self._spectator_panel:text({
-		name = "spectator_text",
 		vertical = "center",
 		align = "center",
 		text = "SPECTATING",
 		valign = "center",
 		halign = "center",
+		name = "spectator_text",
 		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
 		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		layer = spectator_background:layer() + 1
 	})
 	self._button_prompt = self._spectator_panel:text({
-		name = "prompt_previous",
 		vertical = "bottom",
 		align = "center",
 		text = "",
 		valign = "center",
 		halign = "center",
+		name = "prompt_previous",
 		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR
@@ -206,19 +210,4 @@ function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 
 		self._last_respawn_type_is_ai_trade = is_ai_trade
 	end
-end
-
-function HUDPlayerCustody:set_civilians_killed(amount)
-end
-
-function HUDPlayerCustody:set_trade_delay(time)
-end
-
-function HUDPlayerCustody:set_trade_delay_visible(visible)
-end
-
-function HUDPlayerCustody:set_negotiating_visible(visible)
-end
-
-function HUDPlayerCustody:set_can_be_trade_visible(visible)
 end

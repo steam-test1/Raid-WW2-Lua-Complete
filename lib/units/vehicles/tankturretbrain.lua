@@ -19,7 +19,6 @@ function TankTurretBrain:update(unit, t, dt)
 		if Network:is_server() then
 			self:_upd_detection(t)
 			self:_select_focus_attention(t)
-			self:_upd_flash_grenade(t)
 			self:_upd_go_idle(t)
 		end
 

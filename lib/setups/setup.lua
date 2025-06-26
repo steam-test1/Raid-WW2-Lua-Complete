@@ -1,6 +1,5 @@
 core:register_module("lib/managers/PlatformManager")
 core:register_module("lib/managers/SystemMenuManager")
-core:register_module("lib/managers/UserManager")
 core:register_module("lib/managers/SequenceManager")
 core:register_module("lib/managers/ControllerManager")
 core:register_module("lib/managers/SlotManager")
@@ -27,6 +26,7 @@ require("lib/utils/Easing")
 require("lib/utils/UIAnimation")
 require("lib/utils/TemporaryPropertyManager")
 require("lib/utils/PlayerSkill")
+require("lib/managers/UserManager")
 require("lib/managers/UpgradesManager")
 require("lib/managers/GoldEconomyManager")
 require("lib/managers/RaidExperienceManager")
@@ -51,26 +51,19 @@ require("lib/managers/WeaponInventoryManager")
 require("lib/managers/WarcryManager")
 core:import("PlatformManager")
 core:import("SystemMenuManager")
-core:import("UserManager")
 core:import("ControllerManager")
 core:import("SlotManager")
 core:import("FreeFlight")
 core:import("CoreGuiDataManager")
 require("lib/managers/ControllerWrapper")
 require("lib/utils/game_state_machine/GameStateMachine")
-require("lib/utils/LightLoadingScreenGuiScript")
 require("lib/managers/LocalizationManager")
 require("lib/managers/MousePointerManager")
 require("lib/managers/VideoManager")
 require("lib/managers/menu/TextBoxGui")
-require("lib/managers/menu/BookBoxGui")
-require("lib/managers/menu/CircleGuiObject")
-require("lib/managers/menu/ArcGuiObject")
 require("lib/managers/menu/ProgressBarGuiObject")
 require("lib/managers/menu/BoxGuiObject")
-require("lib/managers/menu/ImageBoxGui")
-require("lib/managers/menu/SpecializationBoxGui")
-require("lib/managers/menu/MenuBackdropGUI")
+require("lib/managers/menu/CircleGuiObject")
 require("lib/managers/WeaponFactoryManager")
 require("lib/managers/BlackMarketManager")
 require("lib/managers/LootDropManager")
@@ -137,6 +130,7 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlNationalityDescripti
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemIconDescription")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemIcon")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemMenu")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemModern")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemRaids")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemOperations")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemSaveSlots")
@@ -163,12 +157,6 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlTabFilter")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlRotateUnit")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlProgressBar")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlProgressBarSimple")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingProgressBar")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarNode")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarSkilltreeNode")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarPath")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarLootScreenPath")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlBranchingBarSkilltreePath")
 require("lib/managers/menu/raid_menu/controls/RaidGuiControlKeyBind")
 require("lib/managers/menu/raid_menu/controls/RaidGuiControlDifficultyStars")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlGrid")
@@ -189,7 +177,6 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlCardDetails")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlLootCardDetails")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlLootRewardCards")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlLootBreakdownItem")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlCardPeerLoot")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlCard")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlCardBase")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlCardWithSelector")
@@ -207,6 +194,8 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlPeerRewardCardPack")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlMeleeWeaponRewardDetails")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponPointPeerLoot")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponPointRewardDetails")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponSkinRewardDetails")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponSkinPeerLoot")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlXPRewardDetails")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlServerPlayerDescription")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlReadyUpPlayerDescription")
@@ -265,36 +254,6 @@ function Setup:init_category_print()
 		return
 	end
 
-	if not Global.interface_sound then
-		-- Nothing
-	end
-
-	local cat_list = {
-		"dialog_manager",
-		"user_manager",
-		"exec_manager",
-		"savefile_manager",
-		"loading_environment",
-		"player_intel",
-		"player_damage",
-		"player_action",
-		"AI_action",
-		"bt",
-		"dummy_ai",
-		"dummy_block_chance",
-		"johan",
-		"george",
-		"qa",
-		"bob",
-		"jansve",
-		"sound_placeholder",
-		"spam"
-	}
-
-	for _, cat in ipairs(cat_list) do
-		Global.category_print[cat] = false
-	end
-
 	catprint_load()
 end
 
@@ -323,15 +282,15 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		team_ai = true,
+		selected_team_ai = true,
+		permission = "public",
 		is_playing = false,
 		search_appropriate_jobs = true,
 		job_plan = -1,
 		kick_option = 1,
 		drop_in_allowed = true,
 		reputation_permission = 0,
-		team_ai = true,
-		selected_team_ai = true,
-		permission = "public",
 		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		difficulty = Global.DEFAULT_DIFFICULTY
 	}
@@ -345,7 +304,7 @@ function Setup:init_managers(managers)
 	managers.system_menu = SystemMenuManager.SystemMenuManager:new()
 	managers.achievment = AchievmentManager:new()
 	managers.savefile = SavefileManager:new()
-	managers.user = UserManager.UserManager:new()
+	managers.user = UserManager:new()
 	managers.upgrades = UpgradesManager:new()
 	managers.experience = RaidExperienceManager:new()
 	managers.gold_economy = GoldEconomyManager:new()
@@ -386,188 +345,6 @@ function Setup:init_managers(managers)
 	game_state_machine = GameStateMachine:new()
 end
 
-function Setup:start_boot_loading_screen()
-	if not PackageManager:loaded("packages/boot_screen") then
-		PackageManager:load("packages/boot_screen")
-	end
-
-	self:_start_loading_screen()
-end
-
-function Setup:start_loading_screen()
-	self:_start_loading_screen()
-end
-
-function Setup:stop_loading_screen()
-	Application:debug("[Setup:stop_loading_screen()]")
-
-	if Global.is_loading then
-		Application:debug("[LoadingEnvironment] Stop.")
-		self:set_main_thread_loading_screen_visible(false)
-
-		Global.is_loading = nil
-	else
-		Application:stack_dump_error("[LoadingEnvironment] Tried to stop loading screen when it wasn't started.")
-	end
-end
-
-function Setup:_start_loading_screen()
-	Application:debug("[Setup:_start_loading_screen()]")
-	Application:stack_dump()
-
-	if Global.is_loading then
-		Application:stack_dump_error("[LoadingEnvironment] Tried to start loading screen when it was already started.")
-
-		return
-	elseif not SystemInfo:threaded_renderer() then
-		cat_print("loading_environment", "[LoadingEnvironment] Skipped (renderer is not threaded).")
-
-		Global.is_loading = true
-
-		return
-	end
-
-	cat_print("loading_environment", "[LoadingEnvironment] Start.")
-
-	local setup = nil
-
-	if not LoadingEnvironmentScene:loaded() then
-		LoadingEnvironmentScene:load("levels/zone", false)
-	end
-
-	local load_level_data = nil
-
-	if Global.load_level then
-		if not PackageManager:loaded("packages/load_level") then
-			PackageManager:load("packages/load_level")
-		end
-
-		setup = "lib/setups/LevelLoadingSetup"
-		load_level_data = {
-			level_data = Global.level_data,
-			level_tweak_data = tweak_data.levels[Global.level_data.level_id] or {}
-		}
-		load_level_data.level_tweak_data.name = load_level_data.level_tweak_data.name_id and managers.localization:text(load_level_data.level_tweak_data.name_id)
-		load_level_data.gui_tweak_data = tweak_data.load_level
-		load_level_data.menu_tweak_data = tweak_data.menu
-		load_level_data.scale_tweak_data = tweak_data.scale
-		load_level_data.tip_id = tweak_data.tips:get_a_tip()
-		local packages_to_load = load_level_data.level_tweak_data.package
-
-		if packages_to_load then
-			Application:debug("[Setup:_start_loading_screen()] Load coded level packages: #" .. tostring(#packages_to_load))
-
-			for _, v in ipairs(packages_to_load) do
-				PackageManager:load(v)
-			end
-		end
-
-		local coords = tweak_data:get_controller_help_coords()
-		load_level_data.controller_coords = coords and coords[table.random({
-			"normal",
-			"vehicle"
-		})]
-		load_level_data.controller_image = "guis/textures/controller"
-		load_level_data.controller_shapes = {
-			{
-				position = {
-					cy = 0.5,
-					cx = 0.5
-				},
-				texture_rect = {
-					0,
-					0,
-					512,
-					256
-				}
-			}
-		}
-
-		if load_level_data.controller_coords then
-			for id, data in pairs(load_level_data.controller_coords) do
-				data.string = data.localize == false and data.id or managers.localization:to_upper_text(data.id)
-				data.color = (data.id == "menu_button_unassigned" or data.localize == false) and Color(0.5, 0.5, 0.5) or Color.white
-			end
-		end
-
-		local load_data = load_level_data.level_tweak_data.load_data
-		local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
-		local safe_rect = managers.viewport:get_safe_rect()
-		local aspect_ratio = managers.viewport:aspect_ratio()
-		local res = RenderSettings.resolution
-		load_level_data.gui_data = {
-			safe_rect_pixels = safe_rect_pixels,
-			safe_rect = safe_rect,
-			aspect_ratio = aspect_ratio,
-			res = res,
-			workspace_size = {
-				y = 0,
-				x = 0,
-				w = res.x,
-				h = res.y
-			},
-			saferect_size = {
-				x = safe_rect.x,
-				y = safe_rect.y,
-				w = safe_rect.width,
-				h = safe_rect.height
-			},
-			bg_texture = load_data and load_data.image or "ui/loading_screens/loading_flak"
-		}
-	elseif not Global.boot_loading_environment_done then
-		setup = "lib/setups/LightLoadingSetup"
-	else
-		setup = "lib/setups/HeavyLoadingSetup"
-	end
-
-	local data = {
-		res = RenderSettings.resolution,
-		layer = tweak_data.gui.LOADING_SCREEN_LAYER,
-		load_level_data = load_level_data,
-		is_win32 = IS_PC
-	}
-	Global.is_loading = true
-end
-
-function Setup:_setup_loading_environment()
-	local env_map = {
-		deferred = {
-			shadow = {
-				shadow_slice_depths = Vector3(800, 1600, 5500),
-				shadow_slice_overlap = Vector3(150, 300, 400),
-				slice0 = Vector3(0, 800, 0),
-				slice1 = Vector3(650, 1600, 0),
-				slice2 = Vector3(1300, 5500, 0),
-				slice3 = Vector3(5100, 17500, 0)
-			},
-			apply_ambient = {
-				ambient_color_scale = 0.31999999284744,
-				effect_light_scale = 1,
-				ambient_falloff_scale = 0,
-				ambient_scale = 1,
-				ambient_color = Vector3(1, 1, 1),
-				sky_top_color = Vector3(0, 0, 0),
-				sky_bottom_color = Vector3(0, 0, 0)
-			}
-		},
-		shadow_processor = {
-			shadow_modifier = {
-				slice0 = Vector3(0, 800, 0),
-				slice1 = Vector3(650, 1600, 0),
-				slice2 = Vector3(1300, 5500, 0),
-				slice3 = Vector3(5100, 17500, 0),
-				shadow_slice_depths = Vector3(800, 1600, 5500),
-				shadow_slice_overlap = Vector3(150, 300, 400)
-			}
-		}
-	}
-	local dummy_vp = Application:create_world_viewport(0, 0, 1, 1)
-
-	LoadingEnvironment:viewport():set_post_processor_effect("World", Idstring("dof_prepare_post_processor"), Idstring("empty"))
-	LoadingEnvironment:viewport():set_post_processor_effect("World", Idstring("bloom_combine_post_processor"), Idstring("bloom_combine_empty"))
-	Application:destroy_viewport(dummy_vp)
-end
-
 function Setup:init_game()
 	if not Global.initialized then
 		Global.level_data = {}
@@ -575,9 +352,6 @@ function Setup:init_game()
 	end
 
 	self._end_frame_clbks = {}
-	local scene_gui = Overlay:gui()
-	self._main_thread_loading_screen_gui_script = LightLoadingScreenGuiScript:new(scene_gui, RenderSettings.resolution, -1, tweak_data.gui.LOADING_SCREEN_LAYER, IS_PC)
-	self._main_thread_loading_screen_gui_visible = true
 
 	return game_state_machine
 end
@@ -623,10 +397,6 @@ function Setup:update(t, dt)
 	managers.video:update(t, dt)
 	game_state_machine:update(t, dt)
 	managers.challenge_cards:update(t, dt)
-
-	if self._main_thread_loading_screen_gui_visible then
-		self._main_thread_loading_screen_gui_script:update(-1, dt)
-	end
 end
 
 function Setup:paused_update(t, dt)
@@ -678,17 +448,12 @@ function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 	managers.voice_over:on_tweak_data_reloaded()
 	managers.fire:on_tweak_data_reloaded()
+	managers.raid_job:generate_bounty_job()
 end
 
 function Setup:destroy()
 	managers.system_menu:destroy()
 	managers.menu:destroy()
-
-	if self._main_thread_loading_screen_gui_script then
-		self._main_thread_loading_screen_gui_script:destroy()
-
-		self._main_thread_loading_screen_gui_script = nil
-	end
 end
 
 function Setup:load_level(level, mission, world_setting, level_class_name, level_id)
@@ -761,43 +526,35 @@ function Setup:exec(context)
 	managers.music:stop()
 	managers.vote:stop()
 	SoundDevice:stop()
-
-	if not managers.system_menu:is_active() then
-		self:set_main_thread_loading_screen_visible(true)
-	end
-
 	CoreSetup.CoreSetup.exec(self, context)
 end
 
 function Setup:quit()
 	CoreSetup.CoreSetup.quit(self)
-
-	if not managers.system_menu:is_active() then
-		self:set_main_thread_loading_screen_visible(true)
-		self._main_thread_loading_screen_gui_script:set_text("Exiting")
-	end
 end
 
 function Setup:return_to_camp_client()
-	if Network:is_client() then
-		game_state_machine:change_state_by_name("ingame_standard")
-		managers.hud:set_disabled()
-		managers.statistics:stop_session({
-			quit = true
-		})
-		managers.raid_job:deactivate_current_job()
-		managers.raid_job:cleanup()
-		managers.queued_tasks:unqueue_all()
-		managers.lootdrop:reset_loot_value_counters()
-		managers.consumable_missions:on_level_exited(false)
-		managers.greed:on_level_exited(false)
-		managers.network:session():send_to_peers("set_peer_left")
-		managers.network:stop_network()
-		managers.network.matchmake:destroy_game()
-		managers.network.voice_chat:destroy_voice()
-		managers.network:host_game()
-		managers.network:session():load_level(Global.level_data.level, nil, nil, nil, Global.game_settings.level_id)
+	if not Network:is_client() then
+		return
 	end
+
+	game_state_machine:change_state_by_name("ingame_standard")
+	managers.hud:set_disabled()
+	managers.statistics:stop_session({
+		quit = true
+	})
+	managers.raid_job:deactivate_current_job()
+	managers.raid_job:cleanup()
+	managers.queued_tasks:unqueue_all()
+	managers.lootdrop:reset_loot_value_counters()
+	managers.consumable_missions:on_level_exited(false)
+	managers.greed:on_level_exited(false)
+	managers.network:session():send_to_peers("set_peer_left")
+	managers.network:stop_network()
+	managers.network.matchmake:destroy_game()
+	managers.network.voice_chat:destroy_voice()
+	managers.network:host_game()
+	managers.network:session():load_level(Global.level_data.level, nil, nil, nil, Global.game_settings.level_id)
 end
 
 function Setup:quit_to_main_menu()
@@ -830,7 +587,6 @@ function Setup:quit_to_main_menu()
 	if setup.exit_to_main_menu then
 		setup.exit_to_main_menu = false
 
-		managers.menu:post_event("menu_exit")
 		managers.raid_menu:close_all_menus()
 		setup:load_start_menu(true)
 	end
@@ -847,12 +603,6 @@ function Setup:restart()
 end
 
 function Setup:block_exec()
-	if not self._main_thread_loading_screen_gui_visible then
-		self:set_main_thread_loading_screen_visible(true)
-
-		return true
-	end
-
 	local result = false
 
 	if self._packages_to_unload then
@@ -902,15 +652,6 @@ end
 
 function Setup:block_quit()
 	return self:block_exec()
-end
-
-function Setup:set_main_thread_loading_screen_visible(visible)
-	if not self._main_thread_loading_screen_gui_visible ~= not visible then
-		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
-		self._main_thread_loading_screen_gui_script:set_visible(visible, RenderSettings.resolution)
-
-		self._main_thread_loading_screen_gui_visible = visible
-	end
 end
 
 function Setup:set_fps_cap(value)

@@ -5,8 +5,6 @@ ElementNavigationStitcher = ElementNavigationStitcher or class(CoreMissionScript
 
 function ElementNavigationStitcher:init(...)
 	ElementNavigationStitcher.super.init(self, ...)
-
-	local unit = managers.worldcollection:get_unit_with_id(self._id, nil, self._sync_id)
 end
 
 function ElementNavigationStitcher:on_script_activated()
@@ -382,5 +380,6 @@ end
 
 function ElementNavigationStitcher:_queue_stitch()
 	Application:debug("[ElementNavigationStitcher:load] Stitching from queue!")
+	managers.navigation:remove_listener("stitcher" .. self._id)
 	self:stitch(true)
 end

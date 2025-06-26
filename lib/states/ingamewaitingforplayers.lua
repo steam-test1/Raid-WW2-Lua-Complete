@@ -63,21 +63,12 @@ function IngameWaitingForPlayersState:_start()
 		return
 	end
 
-	local variant = managers.groupai:state():blackscreen_variant() or 0
-
-	self:sync_start(variant)
-	managers.network:session():send_to_peers_synched("sync_waiting_for_player_start", variant, Global.music_manager.current_track)
+	self:sync_start()
+	managers.network:session():send_to_peers_synched("sync_waiting_for_player_start")
 end
 
-function IngameWaitingForPlayersState:sync_start(variant, soundtrack)
-	self._briefing_start_t = nil
-	self._blackscreen_started = true
-
+function IngameWaitingForPlayersState:sync_start()
 	self:_start_delay()
-end
-
-function IngameWaitingForPlayersState:blackscreen_started()
-	return self._blackscreen_started or false
 end
 
 function IngameWaitingForPlayersState:_start_delay()
@@ -86,18 +77,6 @@ function IngameWaitingForPlayersState:_start_delay()
 	end
 
 	self._delay_start_t = Application:time() + 1
-end
-
-function IngameWaitingForPlayersState:_audio_done(event_type, label, cookie)
-	self:_create_blackscreen_loading_icon()
-
-	if Network:is_server() then
-		self:_start_delay()
-	end
-end
-
-function IngameWaitingForPlayersState:_briefing_callback(event_type, label, cookie)
-	print("[IngameWaitingForPlayersState]", "event_type", event_type, "label", label, "cookie", cookie)
 end
 
 function IngameWaitingForPlayersState:update(t, dt)
@@ -121,10 +100,6 @@ function IngameWaitingForPlayersState:update(t, dt)
 			Application:debug("[IngameWaitingForPlayersState:update] do_external_end_mission")
 			managers.raid_job:do_external_end_mission()
 		end
-	end
-
-	if self._briefing_start_t and self._briefing_start_t < t then
-		self._briefing_start_t = nil
 	end
 
 	if self._delay_start_t then
@@ -234,7 +209,6 @@ function IngameWaitingForPlayersState:at_enter()
 	self._camera_data = {
 		index = 0
 	}
-	self._briefing_start_t = Application:time() + 2
 
 	if managers.network:session():is_client() and managers.network:session():server_peer() then
 		local local_peer = managers.network:session():local_peer()
@@ -290,8 +264,8 @@ function IngameWaitingForPlayersState:show_intro_video()
 
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
-		name = "press_any_key_prompt",
 		alpha = 0,
+		name = "press_any_key_prompt",
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
@@ -399,7 +373,19 @@ function IngameWaitingForPlayersState:at_exit()
 		self._sound_listener = nil
 	end
 
-	local rich_presence = nil
+	if self._controller then
+		self._controller:destroy()
+
+		self._controller = nil
+	end
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+
+		self._controller_list = nil
+	end
 
 	managers.platform:set_presence("Playing")
 	managers.platform:set_playing(true)

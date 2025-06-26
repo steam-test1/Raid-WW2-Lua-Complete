@@ -190,10 +190,10 @@ function ReadyUpGui:_layout_header()
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
-		h = 32,
+		align = "left",
 		name = "mission_name",
 		vertical = "center",
-		align = "left",
+		h = 32,
 		y = 0,
 		x = mission_info_x,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -273,9 +273,9 @@ end
 function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
-		y = 384,
-		item_h = 224,
 		name = "player_loot_card",
+		item_h = 224,
+		y = 384,
 		x = self._root_panel:w() - 160,
 		item_w = card_w
 	}
@@ -285,8 +285,8 @@ function ReadyUpGui:_layout_card_info()
 
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 	self._empty_card_slot = self._root_panel:bitmap({
-		y = 384,
 		name = "cc_empty_slot",
+		y = 384,
 		x = self._root_panel:w() - 160,
 		w = empty_slot_texture.texture_rect[3],
 		h = empty_slot_texture.texture_rect[4],
@@ -295,9 +295,9 @@ function ReadyUpGui:_layout_card_info()
 	})
 	self._card_not_selected_label = self._root_panel:label({
 		wrap = true,
-		h = 128,
 		name = "card_not_selected_label",
 		align = "center",
+		h = 128,
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
 		w = self._empty_card_slot:w() - 10,
@@ -312,9 +312,9 @@ function ReadyUpGui:_layout_card_info()
 
 	self._positive_card_effect_label = self._root_panel:label({
 		wrap = true,
-		h = 128,
 		name = "positive_card_effect",
 		align = "left",
+		h = 128,
 		w = 352,
 		y = self._card_control:bottom() + 32,
 		text = self:translate("hud_no_challenge_card_text", false),
@@ -327,10 +327,10 @@ function ReadyUpGui:_layout_card_info()
 
 	self._negative_card_effect_label = self._root_panel:label({
 		wrap = true,
-		h = 64,
-		text = "",
 		name = "negative_card_effect",
 		align = "left",
+		text = "",
+		h = 64,
 		w = 352,
 		y = self._card_control:bottom() + 96,
 		font = tweak_data.gui.fonts.lato,
@@ -1151,11 +1151,19 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	end
 
 	if can_leave then
-		table.insert(bindings, {
-			key = Idstring("menu_controller_face_left"),
-			callback = callback(self, self, "_on_leave_lobby_button")
-		})
-		table.insert(controler_legend, "menu_legend_ready_up_leave")
+		if Network:is_server() then
+			table.insert(bindings, {
+				key = Idstring("menu_controller_face_left"),
+				callback = callback(self, self, "_on_leave_ready_up_button")
+			})
+			table.insert(controler_legend, "menu_legend_ready_up_back_out")
+		else
+			table.insert(bindings, {
+				key = Idstring("menu_controller_face_left"),
+				callback = callback(self, self, "_on_leave_lobby_button")
+			})
+			table.insert(controler_legend, "menu_legend_ready_up_leave")
+		end
 	end
 
 	if not self._ready then

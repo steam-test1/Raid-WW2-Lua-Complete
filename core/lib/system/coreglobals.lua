@@ -12,6 +12,7 @@ if not __globals_declared then
 	GLOBAL("IDS_UNIT", Idstring("unit"))
 	GLOBAL("IDS_MATERIAL", Idstring("material"))
 	GLOBAL("IDS_MATERIAL_CONFIG", Idstring("material_config"))
+	GLOBAL("IDS_EMPTY", Idstring(""))
 	GLOBAL("PLATFORM", SystemInfo:platform())
 	GLOBAL_PLATFORM("IS_WIN32", "WIN32")
 	GLOBAL_PLATFORM("IS_XB1", "XB1")

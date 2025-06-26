@@ -834,8 +834,8 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 	if self._valid_effect then
 		Application:data_compile({
 			target_db_name = "all",
-			send_idstrings = false,
 			verbose = false,
+			send_idstrings = false,
 			preprocessor_definitions = "preprocessor_definitions",
 			platform = string.lower(SystemInfo:platform():s()),
 			source_root = managers.database:base_path(),

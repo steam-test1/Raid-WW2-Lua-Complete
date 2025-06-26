@@ -7,9 +7,9 @@ end
 
 function RaidMenuProfileSwitcher:_layout()
 	self._object = self._root_panel:panel({
+		name = "profile_switcher_object_panel",
 		y = 0,
 		x = 0,
-		name = "profile_switcher_object_panel",
 		w = self._root_panel:w(),
 		h = self._root_panel:h()
 	})

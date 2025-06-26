@@ -1,4 +1,12 @@
 EnableUnitUnitElement = EnableUnitUnitElement or class(MissionElement)
+EnableUnitUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		type = "enable",
+		layer = "Statics",
+		table_value = "unit_ids"
+	}
+}
 
 function EnableUnitUnitElement:init(unit)
 	EnableUnitUnitElement.super.init(self, unit)
@@ -43,9 +51,9 @@ function EnableUnitUnitElement:update_selected()
 			self._units[id] = nil
 		else
 			local params = {
-				b = 0,
 				g = 1,
 				r = 0,
+				b = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			}
@@ -79,9 +87,9 @@ function EnableUnitUnitElement:draw_links_unselected(...)
 
 	for id, unit in pairs(self._units) do
 		local params = {
-			b = 0,
 			g = 0.5,
 			r = 0,
+			b = 0,
 			from_unit = self._unit,
 			to_unit = unit
 		}

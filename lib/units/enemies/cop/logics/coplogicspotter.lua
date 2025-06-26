@@ -10,9 +10,6 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	}
 
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
-
-	local objective = data.objective
-
 	data.unit:brain():cancel_all_pathing_searches()
 
 	if data.unit:brain().reset_spotter then
@@ -22,8 +19,6 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	end
 
 	local old_internal_data = data.internal_data
-	my_data.detection = data.char_tweak.detection.recon
-	my_data.vision = data.char_tweak.vision.combat
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -34,8 +29,8 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 	end
@@ -45,6 +40,8 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	my_data.detection_task_key = "CopLogicSpotter._upd_enemy_detection" .. key_str
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSpotter._upd_enemy_detection, data)
+
+	local objective = data.objective
 
 	if objective then
 		my_data.wanted_stance = objective.stance
@@ -62,14 +59,22 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 		cbt = true
 	})
 
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	my_data.detection = data.char_tweak.detection.recon
+	my_data.vision = data.char_tweak.vision.combat
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+	else
+		debug_pause_unit(data.unit, "[CopLogicSpotter] Couldnt find usage")
+	end
 end
 
 function CopLogicSpotter.throw_flare_so(data)
 	local action_desc = {
-		variant = "spotter_cbt_sup_throw_flare",
-		type = "act",
 		body_part = 1,
+		type = "act",
+		variant = "spotter_cbt_sup_throw_flare",
 		blocks = {
 			action = -1,
 			aim = -1,
@@ -458,13 +463,13 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 
 			if data.unit:anim_data().reload then
 				new_action = {
-					body_part = 3,
-					type = "reload"
+					type = "reload",
+					body_part = 3
 				}
 			else
 				new_action = {
-					body_part = 3,
-					type = "idle"
+					type = "idle",
+					body_part = 3
 				}
 			end
 
@@ -480,13 +485,13 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 end
 
 function CopLogicSpotter._request_action_shoot(data, my_data)
-	if my_data.shooting or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
+	if my_data.shooting or data.unit:inventory():equipped_selection() or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
 		return
 	end
 
 	local shoot_action = {
-		body_part = 3,
-		type = "shoot"
+		type = "shoot",
+		body_part = 3
 	}
 
 	if data.unit:brain():action_request(shoot_action) then

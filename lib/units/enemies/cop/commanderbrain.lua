@@ -9,7 +9,7 @@ function CommanderBrain:post_init(unit)
 	CommanderBrain.super.post_init(self, unit)
 
 	if Network:is_server() then
-		managers.enemy:register_commander()
+		managers.enemy:register_commander(self.INTENSITY_INCREASE)
 
 		self._registered = true
 	end

@@ -79,18 +79,18 @@ end
 
 function RaidGUIControlSlider:_create_slider_controls()
 	local sideline_params = {
-		alpha = 0,
 		y = 0,
 		x = 0,
+		alpha = 0,
 		w = RaidGUIControlSlider.SIDELINE_W,
 		h = self._object:h(),
 		color = RaidGUIControlSlider.SIDELINE_COLOR
 	}
 	self._sideline = self._object:rect(sideline_params)
 	local value_label_params = {
-		y = 0,
 		vertical = "center",
 		align = "left",
+		y = 0,
 		x = self._object:w() - RaidGUIControlSlider.VALUE_LABEL_W,
 		w = RaidGUIControlSlider.VALUE_LABEL_W,
 		h = self._object:h(),
@@ -111,9 +111,9 @@ function RaidGUIControlSlider:_create_slider_controls()
 	self._slider:set_y(self._object:h() / 2 - self._slider:h() / 2)
 
 	local description_params = {
-		y = 0,
 		vertical = "center",
 		align = "left",
+		y = 0,
 		x = RaidGUIControlSlider.SIDELINE_W + RaidGUIControlSlider.TEXT_PADDING,
 		w = self._object:w() - RaidGUIControlSlider.SIDELINE_W - RaidGUIControlSlider.VALUE_LABEL_W - RaidGUIControlSlider.TEXT_PADDING * 2,
 		h = self._object:h(),

@@ -8,9 +8,9 @@ function CoreCutsceneOptimizer:init()
 	self.super.init(self)
 
 	self.__compression_enabled = {
+		ps4 = true,
 		win32 = true,
-		xb1 = true,
-		ps4 = true
+		xb1 = true
 	}
 end
 
@@ -209,10 +209,10 @@ end
 function CoreCutsceneOptimizer:_write_animation_blobs(full_animation, dest, part_path_pattern)
 	local animation_blob_names = {}
 	local default_settings = {
-		pack_rotations = false,
-		pack_positions = false,
 		rotation_tolerance = 0.0025,
-		position_tolerance = 0.1
+		position_tolerance = 0.1,
+		pack_rotations = false,
+		pack_positions = false
 	}
 	local per_bone_settings = {}
 	local duration = full_animation:length()

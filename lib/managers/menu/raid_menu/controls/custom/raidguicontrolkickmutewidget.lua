@@ -34,10 +34,10 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	local parent_params = {
-		halign = "scale",
-		visible = false,
 		name = "kick_mute_widget_panel",
+		halign = "scale",
 		valign = "top",
+		visible = false,
 		y = params.y,
 		h = RaidGUIControlKickMuteWidget.HEIGHT
 	}
@@ -47,8 +47,8 @@ end
 function RaidGUIControlKickMuteWidget:_create_highlight_line()
 	local highlight_params = {
 		name = "highlight_line",
-		alpha = 0,
 		halign = "left",
+		alpha = 0,
 		x = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_X,
 		w = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_W,
 		h = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_H,
@@ -61,11 +61,11 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_name_text()
 	local name_params = {
+		vertical = "center",
 		align = "left",
 		halign = "left",
 		text = "WWWWWWWWWWWWWWWW",
 		name = "name",
-		vertical = "center",
 		x = RaidGUIControlKickMuteWidget.NAME_X,
 		w = self._object:w() - RaidGUIControlKickMuteWidget.NAME_X,
 		h = RaidGUIControlKickMuteWidget.NAME_H,
@@ -210,8 +210,13 @@ end
 
 function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._peer = peer
+	local name = peer:name()
 
-	self._name:set_text(utf8.to_upper(peer:name()))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name:set_text(name)
 
 	local _, _, w, _ = self._name:text_rect()
 

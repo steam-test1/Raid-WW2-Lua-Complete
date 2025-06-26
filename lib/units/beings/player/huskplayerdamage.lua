@@ -38,8 +38,8 @@ function HuskPlayerDamage:sync_damage_bullet(attacker_unit, damage, i_body, heig
 		attack_dir = attacker_unit and attacker_unit:movement():m_pos() - self._unit:movement():m_pos() or Vector3(1, 0, 0),
 		pos = mvector3.copy(self._unit:movement():m_head_pos()),
 		result = {
-			type = "hurt",
-			variant = "bullet"
+			variant = "bullet",
+			type = "hurt"
 		}
 	}
 
@@ -60,10 +60,6 @@ end
 
 function HuskPlayerDamage:down_time()
 	return self._last_down_time
-end
-
-function HuskPlayerDamage:incapacitated()
-	return self._unit:movement():current_state_name() == "incapacitated"
 end
 
 function HuskPlayerDamage:set_mission_damage_blockers(type, state)

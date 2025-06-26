@@ -1,4 +1,11 @@
 CoreRopeOperatorUnitElement = CoreRopeOperatorUnitElement or class(MissionElement)
+CoreRopeOperatorUnitElement.LINK_VALUES = {
+	{
+		value = "rope_unit_id",
+		output = true,
+		type = "operator"
+	}
+}
 RopeOperatorUnitElement = RopeOperatorUnitElement or class(CoreRopeOperatorUnitElement)
 RopeOperatorUnitElement.OPERATIONS = {
 	"attach",
@@ -28,9 +35,9 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0,
 				b = 1,
 				g = 0,
+				r = 0,
 				from_unit = self._unit,
 				to_unit = unit
 			})
@@ -38,15 +45,10 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
-function CoreRopeOperatorUnitElement:get_links_to_unit(...)
-	CoreRopeOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.rope_units, "operator", ...)
-end
-
 function CoreRopeOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 
@@ -131,6 +133,12 @@ function CoreRopeOperatorUnitElement:_get_unit(unit_id)
 end
 
 CoreRopeTriggerUnitElement = CoreRopeTriggerUnitElement or class(MissionElement)
+CoreRopeTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_value = "rope_units"
+	}
+}
 RopeTriggerUnitElement = RopeTriggerUnitElement or class(CoreRopeTriggerUnitElement)
 
 function RopeTriggerUnitElement:init(...)
@@ -156,9 +164,9 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				r = 0.85,
 				b = 0.25,
 				g = 0.85,
+				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
 			})
@@ -166,15 +174,10 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
-function CoreRopeTriggerUnitElement:get_links_to_unit(...)
-	CoreRopeTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.rope_units, "trigger", ...)
-end
-
 function CoreRopeTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
-		sample = true,
 		ray_type = "body editor",
+		sample = true,
 		mask = managers.slot:get_mask("all")
 	})
 

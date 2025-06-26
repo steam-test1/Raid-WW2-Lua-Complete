@@ -75,7 +75,9 @@ HUDManager.MINIGAMES = {
 
 function HUDManager:controller_mod_changed()
 	if alive(managers.interaction:active_unit()) then
-		managers.interaction:active_unit():interaction():selected()
+		local player = managers.player:local_player()
+
+		managers.interaction:active_unit():interaction():selected(player)
 	end
 end
 
@@ -292,6 +294,12 @@ end
 
 function HUDManager:refresh_player_panel()
 	self._teammate_panels[HUDManager.PLAYER_PANEL]:refresh()
+end
+
+function HUDManager:refresh_player_panels()
+	for i = 1, #self._teammate_panels do
+		self._teammate_panels[i]:refresh()
+	end
 end
 
 function HUDManager:show_player_panel()
@@ -712,11 +720,11 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
-		y = 200,
+		x = 550,
+		name = "ammo_test",
 		h = 4,
 		w = 100,
-		x = 550,
-		name = "ammo_test"
+		y = 200
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
@@ -738,29 +746,15 @@ end
 
 function HUDManager:_create_hud_chat()
 	local hud_ingame = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-	local hud_respawn = managers.hud:script(IngameWaitingForRespawnState.GUI_SPECTATOR)
 
-	if self._hud_chat_ingame then
-		self._hud_chat_ingame:remove()
+	if self._hud_chat then
+		self._hud_chat:remove()
 	end
 
-	self._hud_chat_ingame = HUDChat:new(self._saferect, hud_ingame.panel, true)
+	self._hud_chat = HUDChat:new(self._saferect, hud_ingame.panel, true)
 
-	self._hud_chat_ingame:set_bottom(hud_ingame.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
-	self._hud_chat_ingame:hide()
-	self._hud_chat_ingame:unregister()
-
-	if self._hud_chat_respawn then
-		self._hud_chat_respawn:remove()
-	end
-
-	self._hud_chat_respawn = HUDChat:new(self._saferect, hud_respawn.panel, true)
-
-	self._hud_chat_respawn:set_bottom(hud_respawn.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
-	self._hud_chat_respawn:hide()
-	self._hud_chat_respawn:unregister()
-
-	self._hud_chat = self._hud_chat_ingame
+	self._hud_chat:set_bottom(hud_ingame.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
+	self._hud_chat:hide()
 end
 
 function HUDManager:mark_cheater(peer_id)
@@ -961,11 +955,11 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
-		valign = "grow",
-		y = 0,
 		x = 0,
 		name = "teammates_panel",
 		halign = "left",
+		valign = "grow",
+		y = 0,
 		w = HUDManager.TEAMMATE_PANEL_W,
 		h = hud.panel:h()
 	}
@@ -1023,8 +1017,8 @@ end
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local weapons_panel_params = {
-		valign = "bottom",
 		name = "weapons_panel",
+		valign = "bottom",
 		halign = "right",
 		w = HUDManager.WEAPONS_PANEL_W,
 		h = HUDManager.WEAPONS_PANEL_H
@@ -1348,19 +1342,21 @@ function HUDManager:remove_progress_timer()
 end
 
 function HUDManager:show_progress_timer_bar(current, total, description)
-	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-	local progress_bar_params = {
-		height = 8,
-		width = 256,
-		name = "progress_timer_progress_bar",
-		x = hud.panel:w() / 2,
-		y = hud.panel:h() / 2,
-		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
-		description = description
-	}
-	self._progress_timer_progress_bar = ProgressBarGuiObject:new(hud.panel, progress_bar_params)
+	if not self._progress_timer_progress_bar then
+		local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+		local progress_bar_params = {
+			name = "progress_timer_progress_bar",
+			height = 8,
+			width = 256,
+			alpha = 0.8,
+			x = hud.panel:w() / 2,
+			y = hud.panel:h() / 2,
+			color = tweak_data.gui.colors.interaction_bar
+		}
+		self._progress_timer_progress_bar = ProgressBarGuiObject:new(hud.panel, progress_bar_params)
+	end
 
-	self._progress_timer_progress_bar:show()
+	self._progress_timer_progress_bar:show(description)
 end
 
 function HUDManager:set_progress_timer_bar_width(current, total)
@@ -1431,8 +1427,8 @@ function HUDManager:on_progression_cycle_completed()
 
 	local notification_params = {
 		duration = 6,
-		id = "progression_cycle_completed",
 		priority = 4,
+		id = "progression_cycle_completed",
 		notification_type = HUDNotification.RAID_UNLOCKED
 	}
 
@@ -1445,8 +1441,8 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 	end
 
 	managers.notification:add_notification({
-		id = "greed_item_picked_up",
 		shelf_life = 8,
+		id = "greed_item_picked_up",
 		notification_type = HUDNotification.GREED_ITEM,
 		initial_progress = old_progress,
 		new_progress = new_progress,
@@ -2010,26 +2006,6 @@ function HUDManager:set_custody_timer_visibility(visible)
 	self._hud_player_custody:set_timer_visibility(visible)
 end
 
-function HUDManager:set_custody_civilians_killed(amount)
-	self._hud_player_custody:set_civilians_killed(amount)
-end
-
-function HUDManager:set_custody_trade_delay(time)
-	self._hud_player_custody:set_trade_delay(time)
-end
-
-function HUDManager:set_custody_trade_delay_visible(visible)
-	self._hud_player_custody:set_trade_delay_visible(visible)
-end
-
-function HUDManager:set_custody_negotiating_visible(visible)
-	self._hud_player_custody:set_negotiating_visible(visible)
-end
-
-function HUDManager:set_custody_can_be_trade_visible(visible)
-	self._hud_player_custody:set_can_be_trade_visible(visible)
-end
-
 function HUDManager:set_custody_pumpkin_challenge()
 	self._hud_player_custody:set_pumpkin_challenge()
 end
@@ -2251,6 +2227,16 @@ function HUDManager:_remove_name_label(id)
 			table.remove(self._hud.name_labels, i)
 
 			break
+		end
+	end
+end
+
+function HUDManager:refresh_name_labels()
+	for i = 1, #self._hud.name_labels do
+		local peer_name_label = self._hud.name_labels[i]
+
+		if peer_name_label and peer_name_label.refresh then
+			peer_name_label:refresh()
 		end
 	end
 end

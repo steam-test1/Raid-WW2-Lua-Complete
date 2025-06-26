@@ -17,10 +17,6 @@ function RaidMenuOptionsSound:_layout()
 end
 
 function RaidMenuOptionsSound:close()
-	self:_save_sound_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	RaidMenuOptionsSound.super.close(self)
 end
@@ -30,71 +26,72 @@ function RaidMenuOptionsSound:_layout_sound()
 	local start_y = 320
 	local default_width = 512
 	local master_params = {
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
 		name = "slider_master",
 		description = utf8.to_upper(managers.localization:text("menu_master_volume")),
 		x = start_x,
 		y = start_y,
 		on_value_change_callback = callback(self, self, "on_value_change_master_volume"),
 		on_menu_move = {
+			up = "tinnitus",
 			down = "slider_music"
 		}
 	}
 	self._progress_bar_menu_master_volume = self._root_panel:slider(master_params)
 	local music_params = {
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
 		name = "slider_music",
 		description = utf8.to_upper(managers.localization:text("menu_music_volume")),
 		x = start_x,
 		y = master_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_music_volume"),
 		on_menu_move = {
-			down = "slider_sfx",
-			up = "slider_master"
+			up = "slider_master",
+			down = "slider_sfx"
 		}
 	}
 	self._progress_bar_menu_music_volume = self._root_panel:slider(music_params)
 	local sfx_params = {
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
 		name = "slider_sfx",
 		description = utf8.to_upper(managers.localization:text("menu_sfx_volume")),
 		x = start_x,
 		y = music_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_sfx_volume"),
 		on_menu_move = {
-			down = "slider_voice_over",
-			up = "slider_music"
+			up = "slider_music",
+			down = "slider_voice_over"
 		}
 	}
 	self._progress_bar_menu_sfx_volume = self._root_panel:slider(sfx_params)
 	local voice_over_params = {
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
 		name = "slider_voice_over",
 		description = utf8.to_upper(managers.localization:text("menu_voice_over_volume")),
 		x = start_x,
 		y = sfx_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_voice_over_volume"),
 		on_menu_move = {
-			down = "slider_voice_chat",
-			up = "slider_sfx"
+			up = "slider_sfx",
+			down = "slider_voice_chat"
 		}
 	}
 	self._progress_bar_menu_voice_over_volume = self._root_panel:slider(voice_over_params)
 	local voice_chat_params = {
-		value_format = "%02d%%",
 		value = 100,
+		value_format = "%02d%%",
 		name = "slider_voice_chat",
 		description = utf8.to_upper(managers.localization:text("menu_voice_volume")),
 		x = start_x,
 		y = voice_over_params.y + RaidGuiBase.PADDING,
 		on_value_change_callback = callback(self, self, "on_value_change_voice_volume"),
 		on_menu_move = {
-			down = "use_voice_chat",
-			up = "slider_voice_over"
+			up = "slider_voice_over",
+			down = "use_voice_chat"
 		}
 	}
 	self._progress_bar_menu_voice_volume = self._root_panel:slider(voice_chat_params)
@@ -106,8 +103,8 @@ function RaidMenuOptionsSound:_layout_sound()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_voice_chat"),
 		on_menu_move = {
-			down = "push_to_talk",
-			up = "slider_voice_chat"
+			up = "slider_voice_chat",
+			down = "push_to_talk"
 		}
 	}
 	self._toggle_menu_voicechat_toggle = self._root_panel:toggle_button(use_voice_chat_params)
@@ -119,8 +116,8 @@ function RaidMenuOptionsSound:_layout_sound()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_push_to_talk"),
 		on_menu_move = {
-			down = "tinnitus",
-			up = "use_voice_chat"
+			up = "use_voice_chat",
+			down = "tinnitus"
 		}
 	}
 	self._toggle_menu_push_to_talk_toggle = self._root_panel:toggle_button(push_to_talk_params)
@@ -132,7 +129,8 @@ function RaidMenuOptionsSound:_layout_sound()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_tinnitus"),
 		on_menu_move = {
-			up = "push_to_talk"
+			up = "push_to_talk",
+			down = "slider_master"
 		}
 	}
 	self._toggle_menu_tinnitus_toggle = self._root_panel:toggle_button(tinnitus_params)
@@ -158,21 +156,6 @@ function RaidMenuOptionsSound:_load_sound_values()
 	self._toggle_menu_voicechat_toggle:set_value_and_render(voice_chat)
 	self._toggle_menu_push_to_talk_toggle:set_value_and_render(push_to_talk)
 	self._toggle_menu_tinnitus_toggle:set_value_and_render(tinnitus_sound_enabled)
-end
-
-function RaidMenuOptionsSound:_save_sound_values()
-	self:on_value_change_master_volume()
-	self:on_value_change_music_volume()
-	self:on_value_change_sfx_volume()
-	self:on_value_change_voice_volume()
-	self:on_value_change_voice_over_volume()
-	self:on_click_voice_chat()
-	self:on_click_push_to_talk()
-	self:on_click_tinnitus()
-
-	Global.savefile_manager.setting_changed = true
-
-	managers.savefile:save_setting(true)
 end
 
 function RaidMenuOptionsSound:on_value_change_master_volume()
@@ -223,12 +206,6 @@ function RaidMenuOptionsSound:on_click_tinnitus()
 	local tinnitus = self._toggle_menu_tinnitus_toggle:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_tinnitus_raid(tinnitus)
-end
-
-function RaidMenuOptionsSound:close()
-	Application:trace("RaidMenuOptionsSound:close()")
-	self:_save_sound_values()
-	RaidMenuOptionsSound.super.close(self)
 end
 
 function RaidMenuOptionsSound:bind_controller_inputs()

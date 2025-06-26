@@ -87,6 +87,26 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	end
 end
 
+function LootBagUnitElement:aim_unit(pos)
+	if pos then
+		mvector3.set(self._hed.spawn_dir, pos)
+		mvector3.subtract(self._hed.spawn_dir, self._unit:position())
+		mvector3.normalize(self._hed.spawn_dir)
+
+		local from = self._unit:position()
+		local to = from + self._hed.spawn_dir * 100000
+		local ray = managers.editor:unit_by_raycast({
+			from = from,
+			to = to,
+			mask = managers.slot:get_mask("statics_layer")
+		})
+
+		if ray and ray.unit then
+			Application:draw_sphere(ray.position, 25, 1, 0, 0)
+		end
+	end
+end
+
 function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -94,8 +114,8 @@ function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 
 	self:_build_value_number(panel, panel_sizer, "push_multiplier", {
-		floats = 1,
-		min = 0
+		min = 0,
+		floats = 1
 	}, "Use this to add a velocity to a physic push on the spawned unit")
 	self:_build_value_combobox(panel, panel_sizer, "carry_id", table.list_add({
 		"none"
@@ -106,6 +126,12 @@ end
 LootBagTriggerUnitElement = LootBagTriggerUnitElement or class(MissionElement)
 LootBagTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootBagTriggerUnitElement.SAVE_UNIT_ROTATION = false
+LootBagTriggerUnitElement.LINK_VALUES = {
+	{
+		type = "trigger",
+		table_value = "elements"
+	}
+}
 
 function LootBagTriggerUnitElement:init(unit)
 	LootBagTriggerUnitElement.super.init(self, unit)
@@ -141,8 +167,8 @@ end
 
 function LootBagTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("units/dev_tools/mission_elements/point_loot_bag/point_loot_bag") then

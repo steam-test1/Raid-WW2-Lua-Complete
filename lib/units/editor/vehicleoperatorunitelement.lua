@@ -23,6 +23,14 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"enable_hud_waypoint",
 	"disable_hud_waypoint"
 }
+VehicleOperatorUnitElement.LINK_VALUES = {
+	{
+		type = "operator",
+		layer = "Statics",
+		table_value = "elements",
+		output = true
+	}
+}
 
 function VehicleOperatorUnitElement:init(unit)
 	VehicleOperatorUnitElement.super.init(self, unit)
@@ -101,8 +109,8 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
-function VehicleOperatorUnitElement:draw_links_selected(...)
-	VehicleOperatorUnitElement.super.draw_links_selected(self, ...)
+function VehicleOperatorUnitElement:draw_links_selected(t, dt, selected_unit, all_units)
+	VehicleOperatorUnitElement.super.draw_links_selected(self, t, dt, selected_unit, all_units)
 
 	for _, id in ipairs(self._hed.elements) do
 		local unit = managers.editor:unit_with_id(id)
@@ -110,11 +118,11 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 			b = 0.5,
 			g = 0,
 			r = 0,
-			from_unit = unit,
-			to_unit = self._unit
+			from_unit = self._unit,
+			to_unit = unit
 		}
 
-		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+		if unit and self._unit and self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link(params)
 			Application:draw(unit, 0.25, 1, 0.25)
 		end
@@ -169,8 +177,8 @@ function VehicleOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "operation", self._actions, "Select an operation for the selected elements")
 	self:_build_value_number(panel, panel_sizer, "damage", {
-		min = 1,
-		floats = 0
+		floats = 0,
+		min = 1
 	}, "Specify the amount of damage.")
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")

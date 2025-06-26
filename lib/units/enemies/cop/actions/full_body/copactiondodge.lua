@@ -108,7 +108,7 @@ function CopActionDodge:need_upd()
 end
 
 function CopActionDodge:chk_block(action_type, t)
-	if action_type == "death" or action_type == "bleedout" or action_type == "fatal" then
+	if action_type == "death" or action_type == "bleedout" then
 		return false
 	end
 

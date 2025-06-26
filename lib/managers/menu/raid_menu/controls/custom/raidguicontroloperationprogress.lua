@@ -19,106 +19,80 @@ function RaidGUIControlOperationProgress:init(parent, params)
 	end
 
 	self._pointer_type = "arrow"
-	self._operation = params.operation
 
-	self:_create_panels()
+	self:_layout()
 end
 
-function RaidGUIControlOperationProgress:_create_panels()
+function RaidGUIControlOperationProgress:_layout()
 	local panel_params = clone(self._params)
 	panel_params.name = panel_params.name .. "_panel"
 	panel_params.layer = self._panel:layer() + 1
 	panel_params.x = self._params.x or 0
 	panel_params.y = self._params.y or 0
-	panel_params.w = self._params.w or RaidGUIControlOperationProgress.DEFAULT_W
-	panel_params.h = self._params.h or RaidGUIControlOperationProgress.DEFAULT_H
+	panel_params.w = self._params.w or self.DEFAULT_W
+	panel_params.h = self._params.h or self.DEFAULT_H
 	self._object = self._panel:panel(panel_params)
 	self._inner_panel = self._object:panel(panel_params)
 end
 
-function RaidGUIControlOperationProgress:_create_progress_report(current_operation_stage)
+function RaidGUIControlOperationProgress:_layout_report(event_data)
 	self._inner_panel:clear()
 	self._inner_panel:set_h(self._object:h())
 
 	self._scrollable = false
-	local y = 0
-	self._progress_parts = {}
-	local i = 1
+	local event_title = self:translate(event_data.progress_title_id or event_data.name_id, true)
+	local event_paragraph = self:translate(event_data.progress_text_id or event_data.briefing_id)
 
-	for _, event_id in pairs(self._event_index) do
-		if current_operation_stage == i then
-			local event = tweak_data.operations.missions[self._operation].events[event_id]
-			local current_part = self:_create_part(i, y, event.progress_title_id, event.progress_text_id)
-
-			table.insert(self._progress_parts, current_part)
-
-			y = y + current_part:h() + RaidGUIControlOperationProgress.PADDING_DOWN
-
-			break
-		end
-
-		i = i + 1
+	if event_data.stealth_description then
+		event_paragraph = event_paragraph .. "\n\n" .. self:translate(event_data.stealth_description)
 	end
 
-	self._inner_panel:set_h(y - RaidGUIControlOperationProgress.PADDING_DOWN)
+	local current_part = self:_create_part(event_title, event_paragraph)
+	local y = current_part:h() + self.PADDING_DOWN
+
+	self._inner_panel:set_h(y - self.PADDING_DOWN)
 	self:_check_scrollability()
 end
 
-function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph_id)
-	local panel_params = {
-		x = 0,
-		name = "part_" .. tostring(i),
-		y = y,
+function RaidGUIControlOperationProgress:_create_part(title_text, paragraph_text)
+	local part_panel = self._inner_panel:panel({
+		name = "part",
 		w = self._inner_panel:w()
-	}
-	local part_panel = self._inner_panel:panel(panel_params)
-	local header_params = {
-		y = 0,
-		x = 0,
+	})
+	local part_header = part_panel:text({
 		name = "header",
-		font = RaidGUIControlOperationProgress.HEADING_FONT,
-		font_size = RaidGUIControlOperationProgress.HEADING_FONT_SIZE,
-		color = RaidGUIControlOperationProgress.HEADING_COLOR,
-		text = self:translate(header_id, true)
-	}
-	local part_header = part_panel:text(header_params)
+		font = self.HEADING_FONT,
+		font_size = self.HEADING_FONT_SIZE,
+		color = self.HEADING_COLOR,
+		text = title_text
+	})
 	local _, _, w, h = part_header:text_rect()
 
-	part_header:set_w(w)
-	part_header:set_h(h)
+	part_header:set_size(w, h)
 	part_header:set_center_y(20)
 
-	local paragraph_params = {
-		y = 48,
-		x = 0,
-		wrap = true,
+	local part_paragraph = part_panel:text({
 		name = "paragraph",
+		y = 48,
+		wrap = true,
 		w = part_panel:w(),
-		font = RaidGUIControlOperationProgress.PARAGRAPH_FONT,
-		font_size = RaidGUIControlOperationProgress.PARAGRAPH_FONT_SIZE,
-		color = RaidGUIControlOperationProgress.PARAGRAPH_COLOR,
-		text = self:translate(paragraph_id)
-	}
-	local part_paragraph = part_panel:text(paragraph_params)
-	local _, _, w, h = part_paragraph:text_rect()
+		font = self.PARAGRAPH_FONT,
+		font_size = self.PARAGRAPH_FONT_SIZE,
+		color = self.PARAGRAPH_COLOR,
+		text = paragraph_text
+	})
+	_, _, w, h = part_paragraph:text_rect()
 
-	part_paragraph:set_w(w)
-	part_paragraph:set_h(h)
+	part_paragraph:set_size(w, h)
 	part_panel:set_h(part_paragraph:y() + part_paragraph:h())
 
 	return part_panel
 end
 
-function RaidGUIControlOperationProgress:set_operation(operation)
-	self._operation = operation
-end
-
-function RaidGUIControlOperationProgress:set_number_drawn(number)
-	self:_create_progress_report(number)
-end
-
-function RaidGUIControlOperationProgress:set_event_index(event_index)
-	self._event_index = event_index
+function RaidGUIControlOperationProgress:set_event(event_data)
+	if event_data then
+		self:_layout_report(event_data)
+	end
 end
 
 function RaidGUIControlOperationProgress:_check_scrollability()

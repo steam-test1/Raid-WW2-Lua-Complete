@@ -91,10 +91,6 @@ function SentryGunMovement:_update_activating(t, dt)
 		end
 
 		self._unit:weapon():update_laser()
-
-		if managers.game_play_central:flashlights_on() and self._lights_on_sequence_name then
-			self._unit:damage():run_sequence_simple(self._lights_on_sequence_name)
-		end
 	end
 end
 
@@ -409,8 +405,8 @@ function SentryGunMovement:is_target_visible()
 		return true
 	end
 
-	local diff_spin = math.abs(self._current_orientation.spin) - self._spin_max
-	local diff_pitch = math.abs(self._current_orientation.pitch) - self._pitch_max
+	local diff_spin = math.abs(self._current_orientation.spin or 0) - self._spin_max
+	local diff_pitch = math.abs(self._current_orientation.pitch or 0) - self._pitch_max
 
 	return diff_spin < 0 and diff_pitch < 0
 end
@@ -567,7 +563,7 @@ function SentryGunMovement:_upd_hacking(t, dt)
 	local is_hacking_active = nil
 
 	if Network:is_server() then
-		is_hacking_active = managers.groupai:state():is_ecm_jammer_active("camera")
+		is_hacking_active = false
 	elseif self._team.id == "hacked_turret" then
 		is_hacking_active = true
 	end
@@ -830,7 +826,7 @@ function SentryGunMovement:set_team(team_data)
 	if Network:is_server() and self._unit:id() ~= -1 then
 		local team_index = tweak_data.levels:get_team_index(team_data.id)
 
-		if team_index <= 256 then
+		if team_index <= 16 then
 			self._ext_network:send("sync_char_team", team_index)
 		else
 			debug_pause_unit(self._unit, "[SentryGunMovement:set_team] team limit reached!", team_data.id)

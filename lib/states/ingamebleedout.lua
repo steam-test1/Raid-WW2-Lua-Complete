@@ -19,13 +19,25 @@ function IngameBleedOutState:update(t, dt)
 		managers.statistics:downed({
 			death = true
 		})
-		IngameFatalState.on_local_player_dead()
 		game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
+		IngameBleedOutState.on_local_player_dead()
 		player:character_damage():set_invulnerable(true)
 		player:character_damage():set_health(0)
 		player:base():_unregister()
 		World:delete_unit(player)
+		managers.player:setup_upgrades()
 	end
+end
+
+function IngameBleedOutState.on_local_player_dead()
+	local player = managers.player:player_unit()
+
+	player:network():send("sync_player_movement_state", "dead", player:character_damage():down_time(), player:id())
+
+	local peer_id = managers.network:session():local_peer():id()
+
+	managers.groupai:state():on_player_criminal_death(peer_id)
+	managers.warcry:deactivate_warcry(true)
 end
 
 function IngameBleedOutState:at_enter()

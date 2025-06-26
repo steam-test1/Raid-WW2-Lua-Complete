@@ -51,8 +51,8 @@ end
 
 function RaidGUIControlWeaponSkills:_create_tier_labels()
 	local tier_panel_params = {
-		name = "tier_label_panel",
-		h = 30
+		h = 30,
+		name = "tier_label_panel"
 	}
 	self._tier_panel = self._object:panel(tier_panel_params)
 	self._tier_labels = {}
@@ -60,8 +60,8 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 	for i = 1, #RaidGUIControlWeaponSkills.ROMAN_NUMERALS do
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
-			align = "center",
 			vertical = "bottom",
+			align = "center",
 			name = "tier_" .. tostring(i) .. "_label",
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_24,
@@ -105,7 +105,7 @@ end
 function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	local weapon_skills = managers.weapon_skills:get_weapon_skills(weapon_id)
 
-	if not weapon_skills then
+	if not weapon_skills or #weapon_skills == 0 then
 		return
 	end
 

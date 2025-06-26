@@ -11,8 +11,8 @@ end
 
 function RaidGUIControlIntelOperationalStatus:_layout()
 	self._bg_image = self._object:bitmap({
-		x = 0,
 		y = 0,
+		x = 0,
 		layer = self._object:layer() + 1,
 		w = tweak_data.gui.icons.intel_table_newspapers.texture_rect[3],
 		h = tweak_data.gui.icons.intel_table_newspapers.texture_rect[4],
@@ -49,21 +49,21 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	self._update_person:set_right(self._object:w() - 128)
 
 	local content_panel_scrollable_area_params = {
-		x = 256,
-		h = 512,
 		name = "content_panel_scrollable_area",
+		h = 512,
 		scroll_step = 19,
-		scrollbar_width = 10,
 		w = 576,
 		y = 208,
+		x = 256,
+		scrollbar_width = 10,
 		layer = self._object:layer() + 2
 	}
 	self.content_panel_scrollable_area = self._object:scrollable_area(content_panel_scrollable_area_params)
 	local content_panel_params = {
-		x = 0,
 		h = 512,
 		w = 572,
 		y = 0,
+		x = 0,
 		layer = self._object:layer() + 2
 	}
 	self._content_panel = self.content_panel_scrollable_area:get_panel():panel(content_panel_params)
@@ -71,12 +71,12 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 	self.content_panel_scrollable_area:setup_scroll_area()
 
 	self._title = self._content_panel:text({
-		wrap = true,
 		y = 0,
 		x = 0,
 		vertical = "center",
 		align = "center",
 		text = "",
+		wrap = true,
 		w = self._content_panel:w(),
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -84,12 +84,12 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._text = self._content_panel:text({
-		wrap = true,
 		y = 0,
 		x = 0,
 		vertical = "top",
 		align = "left",
 		text = "",
+		wrap = true,
 		w = self._content_panel:w(),
 		layer = self._object:layer() + 2,
 		font = tweak_data.gui.fonts.din_compressed,
@@ -97,10 +97,10 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 		color = tweak_data.gui.colors.chat_border
 	})
 	self._title_image = self._content_panel:bitmap({
-		x = 32,
 		h = 288,
 		w = 512,
 		y = 0,
+		x = 32,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_newspapers.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_newspapers.texture_rect

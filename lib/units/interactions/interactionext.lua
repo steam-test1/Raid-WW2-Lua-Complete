@@ -369,8 +369,8 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
-			duration = 2,
 			shelf_life = 5,
+			duration = 2,
 			id = hint_id,
 			text = managers.localization:text(hint_id)
 		})
@@ -432,7 +432,7 @@ function BaseInteractionExt:interact_start(player, locator)
 	if self:_timer_value() then
 		local timer = self:_get_timer()
 
-		if timer ~= 0 then
+		if timer > 0 then
 			self:_post_event(player, "sound_start")
 			self:_at_interact_start(player, timer)
 
@@ -1055,6 +1055,14 @@ end
 HealthPickupInteractionExt = HealthPickupInteractionExt or class(PickupInteractionExt)
 
 function HealthPickupInteractionExt:_interact_blocked(player)
+	if not alive(player) then
+		return true
+	end
+
+	if self._unit:pickup():get_restores_down() and not player:character_damage():is_max_revives() then
+		return false
+	end
+
 	return not player:character_damage():need_healing()
 end
 
@@ -1063,8 +1071,10 @@ function HealthPickupInteractionExt:selected(player)
 		return
 	end
 
-	if alive(player) and not player:character_damage():need_healing() then
-		self._hide_interaction_prompt = true
+	self._hide_interaction_prompt = alive(player) and not player:character_damage():need_healing()
+
+	if self._unit:pickup():get_restores_down() and alive(player) and not player:character_damage():is_max_revives() then
+		self._hide_interaction_prompt = false
 	end
 
 	local return_val = HealthPickupInteractionExt.super.selected(self, player)
@@ -1165,9 +1175,13 @@ function GrenadePickupInteractionExt:unselect()
 end
 
 function GrenadePickupInteractionExt:_interact_blocked(player)
-	if self._unit:base() and self._unit:base().get_thrower_peer_id and self._unit:base():get_thrower_peer_id() and self._unit:base():get_thrower_peer_id() ~= managers.network:session():local_peer():id() then
-		Application:info("[GrenadePickupInteractionExt:_interact_blocked] Not thrower", self._unit:base():get_thrower_peer_id(), managers.network:session():local_peer():id())
+	if not managers.network:session() then
+		return false, nil, nil
+	end
 
+	local local_peer_id = managers.network:session():local_peer():id()
+
+	if self._unit:base() and not self:_is_local_thrower() then
 		return true, nil, nil
 	end
 
@@ -1186,6 +1200,16 @@ function GrenadePickupInteractionExt:_interact_blocked(player)
 	return false, nil, nil
 end
 
+function GrenadePickupInteractionExt:_is_local_thrower()
+	if not managers.network:session() then
+		return false
+	end
+
+	local local_peer_id = managers.network:session():local_peer():id()
+
+	return self._unit:base() and self._unit:base().is_thrower_peer_id and self._unit:base():is_thrower_peer_id(local_peer_id)
+end
+
 function GrenadePickupInteractionExt:interact(player)
 	if not self:can_interact(player) then
 		return
@@ -1194,6 +1218,14 @@ function GrenadePickupInteractionExt:interact(player)
 	GrenadePickupInteractionExt.super.interact(self, player)
 
 	return true
+end
+
+function GrenadePickupInteractionExt:set_contour(color, opacity)
+	if not managers.user:get_setting("throwable_contours") or not self:_is_local_thrower() then
+		opacity = 0
+	end
+
+	GrenadePickupInteractionExt.super.set_contour(self, color, opacity)
 end
 
 DropInteractionExt = DropInteractionExt or class(UseInteractionExt)
@@ -1448,8 +1480,8 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 		local hint = "hint_teammate_downed"
 
 		managers.notification:add_notification({
-			duration = 3,
 			shelf_life = 5,
+			duration = 3,
 			id = hint,
 			text = managers.localization:text(hint, {
 				TEAMMATE = self._unit:base():nick_name(),
@@ -1583,7 +1615,9 @@ function ReviveInteractionExt:load(data)
 
 	ReviveInteractionExt.super.load(self, data)
 
-	self._from_dropin = true
+	if self._active_wp then
+		self._from_dropin = true
+	end
 end
 
 AmmoBagInteractionExt = AmmoBagInteractionExt or class(UseInteractionExt)
@@ -2053,7 +2087,7 @@ function CarryInteractionExt:_collision_callback(tag, unit, body, other_unit, ot
 	for i = 0, self._unit:num_bodies() - 1 do
 		local body = self._unit:body(i)
 
-		body:set_collision_script_tag(Idstring(""))
+		body:set_collision_script_tag(IDS_EMPTY)
 	end
 end
 
@@ -2889,11 +2923,11 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 	managers.consumable_missions:pickup_mission(chosen_consumable)
 
 	local notification_data = {
-		priority = 3,
 		doc_text = "hud_hint_consumable_mission_secured",
-		id = "hud_hint_consumable_mission",
+		priority = 3,
 		doc_icon = "notification_consumable",
 		duration = 4,
+		id = "hud_hint_consumable_mission",
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP
 	}
 

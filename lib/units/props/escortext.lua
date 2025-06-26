@@ -27,10 +27,10 @@ function EscortExt:set_logic()
 		return
 	end
 
-	if not self._unit:brain():objective() or self._unit:brain():objective().type ~= "escort" then
+	if not self._unit:brain():is_objective_type("escort") then
 		self._unit:brain():set_objective({
-			allow_cool = true,
-			type = "escort"
+			type = "escort",
+			allow_cool = true
 		})
 	end
 end
@@ -43,10 +43,10 @@ end
 function EscortExt:_setup_health_bar()
 	self._health_panel = self._ws:panel():panel({})
 	self._health_bar_bg = self._health_panel:bitmap({
-		halign = "center",
-		valign = "center",
 		name = "bg",
 		layer = -1,
+		halign = "center",
+		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture_rect
 	})
@@ -114,15 +114,15 @@ function EscortExt:add_waypoint()
 	self._position = self._unit:position() + self._wp_offset
 	self._rotation = self._unit:rotation()
 	self._waypoint_data = {
-		icon = "waypoint_escort_crouch",
+		map_icon = "waypoint_escort_crouch",
 		show_on_screen = true,
+		icon = "waypoint_escort_crouch",
 		distance = true,
 		blend_mode = "add",
 		radius = 200,
 		present_timer = 0,
 		no_sync = true,
 		waypoint_type = "unit_waypoint",
-		map_icon = "waypoint_escort_crouch",
 		unit = self._unit,
 		position = self._position,
 		rotation = self._rotation,

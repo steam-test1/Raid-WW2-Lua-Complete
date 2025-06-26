@@ -158,6 +158,7 @@ function IngameSpecialInteraction:at_enter(old_state, params)
 	self._old_state = old_state:name()
 
 	managers.hud:remove_interact()
+	managers.hud:set_enabled()
 	player:camera():set_shaker_parameter("headbob", "amplitude", 0)
 
 	self._hud = managers.hud:create_special_interaction(managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT), params)

@@ -21,25 +21,25 @@ CopDamage.WEAPON_TYPE_BULLET = 2
 CopDamage.WEAPON_TYPE_FLAMER = 3
 CopDamage.DEBUG_HP = CopDamage.DEBUG_HP or false
 CopDamage._hurt_severities = {
+	none = false,
+	poison = "poison_hurt",
 	fire = "fire_hurt",
 	explode = "expl_hurt",
 	heavy = "heavy_hurt",
 	moderate = "hurt",
-	light = "light_hurt",
-	none = false,
-	poison = "poison_hurt"
+	light = "light_hurt"
 }
 CopDamage._COMMENT_DEATH_TABLE = {
-	german_og_commander = "enemy_officer_comment_death",
-	german_commander = "enemy_officer_comment_death",
-	german_officer = "enemy_officer_comment_death",
 	german_flamer = "enemy_flamer_comment_death",
 	german_sniper = "enemy_sniper_comment_death",
 	sniper = false,
 	shield = false,
 	taser = false,
 	tank = false,
-	german_spotter = "enemy_spotter_comment_death"
+	german_spotter = "enemy_spotter_comment_death",
+	german_og_commander = "enemy_officer_comment_death",
+	german_commander = "enemy_officer_comment_death",
+	german_officer = "enemy_officer_comment_death"
 }
 CopDamage._impact_bones = {}
 local impact_bones_tmp = {
@@ -282,8 +282,8 @@ function CopDamage:_dismember_part(dismember_part, decal_data, variant)
 		local check_to = self._unit:movement() and self._unit:movement():m_head_pos() or self._unit:position()
 
 		if managers.player:is_player_looking_at(check_to, {
-			distance = 4000,
-			raycheck = true
+			raycheck = true,
+			distance = 4000
 		}) then
 			managers.dialog:queue_dialog("player_gen_grenade_aftermath", {
 				skip_idle_check = true
@@ -365,13 +365,14 @@ function CopDamage:damage_bullet(attack_data)
 	local bodyshot_multiplier = 1
 
 	if is_attacker_player then
-		local percent_dmg = damage / self._HEALTH_INIT
 		local critical_hit, crit_damage = self:roll_critical_hit(damage, attack_data.col_ray)
 
 		if critical_hit then
 			death_event_params.critical_hit = true
 			damage = crit_damage
-		elseif head then
+		end
+
+		if head then
 			death_event_params.headshot = true
 		end
 
@@ -534,10 +535,9 @@ function CopDamage:damage_bullet(attack_data)
 
 	if result.type == "death" then
 		if self:_dismember_condition(attack_data, false) then
-			death_event_params.dismemberment_occured = true
-
 			self:_dismember_body_part(attack_data)
 
+			death_event_params.dismemberment_occured = true
 			dismember_victim = true
 		end
 
@@ -568,7 +568,6 @@ function CopDamage:damage_bullet(attack_data)
 			death_event_params.enemy_marked = self._marked_dmg_mul ~= nil
 
 			self:_comment_death(attack_data.attacker_unit, self._unit:base()._tweak_table)
-			self:_show_death_hint(self._unit:base()._tweak_table)
 
 			local attacker_state = managers.player:current_state()
 			data.attacker_state = attacker_state
@@ -645,12 +644,6 @@ function CopDamage.is_cop(type)
 	return not CopDamage.is_civilian(type) and not CopDamage.is_gangster(type)
 end
 
-function CopDamage:_show_death_hint(type)
-	if CopDamage.is_civilian(type) and not self._unit:base().enemy then
-		-- Nothing
-	end
-end
-
 function CopDamage:ignore_knockdown()
 	return self._ignore_knockdown
 end
@@ -670,7 +663,7 @@ function CopDamage:_AI_comment_death(unit, type)
 end
 
 function CopDamage:damage_fire(attack_data)
-	if self._dead or self._invulnerable or self._unit:brain().is_flamer then
+	if self._dead or self._invulnerable then
 		return
 	end
 
@@ -687,11 +680,13 @@ function CopDamage:damage_fire(attack_data)
 		attacker_unit = attacker_unit:base():thrower_unit()
 	end
 
-	local is_attacker_player = attack_data.attacker_unit == managers.player:player_unit()
-
 	if attack_data.attacker_unit:brain() and attack_data.attacker_unit:brain().is_flamer then
 		local flamer_tweak = tweak_data.character[attack_data.attacker_unit:base()._tweak_table]
 		damage = damage * flamer_tweak.friendly_fire_dmg_mul
+	end
+
+	if self._char_tweak.damage and self._char_tweak.damage.fire_damage_mul then
+		damage = damage * self._char_tweak.damage.fire_damage_mul
 	end
 
 	damage = math.clamp(damage, 0, self._HEALTH_INIT)
@@ -722,6 +717,7 @@ function CopDamage:damage_fire(attack_data)
 	end
 
 	local headshot_multiplier = 1
+	local is_attacker_player = attack_data.attacker_unit == managers.player:player_unit()
 
 	if is_attacker_player then
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE) and head then
@@ -817,7 +813,6 @@ function CopDamage:damage_fire(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end
@@ -954,7 +949,6 @@ function CopDamage:damage_dot(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end
@@ -988,11 +982,6 @@ function CopDamage:damage_explosion(attack_data)
 	local is_civilian = CopDamage.is_civilian(self._unit:base()._tweak_table)
 	local player_unit = managers.player:local_player()
 	local is_attacker_player = attacker_unit == player_unit
-
-	if self._unit:base():char_tweak().DAMAGE_CLAMP_EXPLOSION then
-		damage = math.min(damage, self._unit:base():char_tweak().DAMAGE_CLAMP_EXPLOSION)
-	end
-
 	damage = damage * (self._char_tweak.damage.explosion_damage_mul or 1)
 	damage = damage * (self._marked_dmg_mul or 1)
 	damage = self:_apply_damage_modifier(damage)
@@ -1131,7 +1120,6 @@ function CopDamage:damage_explosion(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY, death_event_params)
 		end
@@ -1317,12 +1305,7 @@ function CopDamage:damage_tase(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
-
-			if CopDamage.is_civilian(self._unit:base()._tweak_table) then
-				-- Nothing
-			end
 		end
 	end
 
@@ -1525,7 +1508,6 @@ function CopDamage:damage_melee(attack_data)
 
 		if is_attacker_player then
 			self:_comment_death(attack_data.attacker_unit, self._unit:base()._tweak_table)
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY, death_event_params)
 		end
@@ -1783,10 +1765,6 @@ function CopDamage:die(attack_data)
 	self:_remove_debug_gui()
 	self._unit:base():set_slot(self._unit, 17)
 
-	if alive(managers.interaction:active_unit()) then
-		managers.interaction:active_unit():interaction():selected()
-	end
-
 	if self._pickup then
 		self:drop_pickup()
 	elseif attack_data.drop_loot == nil or attack_data.drop_loot == true then
@@ -1933,8 +1911,8 @@ function CopDamage:sync_damage_knockdown(attacker_unit, damage_percent, i_body, 
 
 	attack_data.attack_dir = attack_dir
 	local result = {
-		variant = "expl_hurt",
-		type = "expl_hurt"
+		type = "expl_hurt",
+		variant = "expl_hurt"
 	}
 	attack_data.variant = "expl_hurt"
 	attack_data.attacker_unit = attacker_unit
@@ -2114,8 +2092,8 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 
 	if is_kill_shot then
 		local data = {
-			head_shot = false,
 			variant = "explosion",
+			head_shot = false,
 			unit_key = self._unit:key(),
 			name = self._unit:base()._tweak_table,
 			stats_name = self._unit:base()._stats_name,
@@ -2135,7 +2113,6 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 
 			local death_event_params = {
@@ -2296,7 +2273,6 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end
@@ -2831,42 +2807,42 @@ function CopDamage:_create_debug_ws()
 
 	self._ws:set_billboard(self._ws.BILLBOARD_BOTH)
 	self._ws:panel():text({
-		visible = true,
+		name = "health",
+		font = "fonts/font_medium_shadow_mf",
 		render_template = "OverlayVertexColorTextured",
 		y = 0,
-		name = "health",
+		visible = true,
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		font = "fonts/font_medium_shadow_mf",
 		text = "" .. self._health,
 		color = Color.white
 	})
 	self._ws:panel():text({
-		visible = true,
+		text = "",
+		name = "ld",
+		font = "fonts/font_medium_shadow_mf",
 		render_template = "OverlayVertexColorTextured",
 		y = 30,
-		name = "ld",
-		text = "",
+		visible = true,
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		font = "fonts/font_medium_shadow_mf",
 		color = Color.white
 	})
 	self._ws:panel():text({
-		visible = true,
+		text = "",
+		name = "variant",
+		font = "fonts/font_medium_shadow_mf",
 		render_template = "OverlayVertexColorTextured",
 		y = 60,
-		name = "variant",
-		text = "",
+		visible = true,
 		layer = 1,
 		font_size = 30,
 		vertical = "top",
 		align = "left",
-		font = "fonts/font_medium_shadow_mf",
 		color = Color.white
 	})
 	self:_update_debug_ws()
@@ -2909,17 +2885,17 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		if damage_info and damage_info.damage > 0 then
 			local text = self._ws:panel():text({
+				font = "fonts/font_medium_shadow_mf",
+				h = 40,
+				layer = 1,
+				visible = true,
+				y = -20,
+				render_template = "OverlayVertexColorTextured",
 				w = 40,
 				rotation = 360,
-				layer = 1,
-				y = -20,
-				visible = true,
-				render_template = "OverlayVertexColorTextured",
-				h = 40,
 				font_size = 20,
 				vertical = "center",
 				align = "center",
-				font = "fonts/font_medium_shadow_mf",
 				text = string.format("%.2f", damage_info.damage),
 				color = Color.white
 			})
@@ -3104,13 +3080,13 @@ function CopDamage.skill_action_knockdown(unit, hit_position, direction, hurt_ty
 			hurt_type = hurt_type,
 			client_interrupt = client_interrupt,
 			blocks = {
+				hurt = -1,
+				dodge = -1,
+				aim = -1,
 				act = -1,
 				action = -1,
 				walk = -1,
-				idle = -1,
-				hurt = -1,
-				dodge = -1,
-				aim = -1
+				idle = -1
 			}
 		}
 

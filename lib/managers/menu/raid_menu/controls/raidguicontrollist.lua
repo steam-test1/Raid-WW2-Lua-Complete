@@ -533,6 +533,6 @@ RaidGUIControlSingleSelectList = RaidGUIControlSingleSelectList or class(RaidGUI
 
 function RaidGUIControlSingleSelectList:on_mouse_enter(item, data)
 	if self._selected_item and self._selected_item ~= item then
-		self:_select_item(item, true)
+		self:_select_item(item, false)
 	end
 end

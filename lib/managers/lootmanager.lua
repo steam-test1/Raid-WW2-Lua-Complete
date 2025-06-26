@@ -155,9 +155,7 @@ end
 function LootManager:sync_load(data)
 	self._global = data.LootManager
 
-	for _, data in ipairs(self._global.secured) do
-		if data.multiplier and data.multiplier > 2 then
-			data.multiplier = 2
-		end
+	for _, secured in ipairs(self._global.secured) do
+		secured.multiplier = math.min(secured.multiplier, 2)
 	end
 end

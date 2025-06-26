@@ -105,16 +105,16 @@ function CoreEditor:build_menubar()
 	self._edit_menu:append_check_item("TB_SURFACE_MOVE", "Surface Move\t(" .. self:ctrl_binding("surface_move_toggle") .. ")", "Toggle surface move on and off")
 	self._edit_menu:set_checked("TB_SURFACE_MOVE", self._use_surface_move)
 	Global.frame:connect("TB_SURFACE_MOVE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		toolbar = "_toolbar",
 		menu = "_edit_menu",
-		value = "_use_surface_move"
+		value = "_use_surface_move",
+		toolbar = "_toolbar"
 	})
 	self._edit_menu:append_check_item("TB_SNAPPOINTS", "Use Snappoints\t(" .. self:ctrl_binding("use_snappoints_toggle") .. ")", "Toggle use of snappoints on and off")
 	self._edit_menu:set_checked("TB_SNAPPOINTS", self._use_snappoints)
 	Global.frame:connect("TB_SNAPPOINTS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		toolbar = "_toolbar",
 		menu = "_edit_menu",
-		value = "_use_snappoints"
+		value = "_use_snappoints",
+		toolbar = "_toolbar"
 	})
 	self._edit_menu:append_separator()
 
@@ -414,9 +414,9 @@ function CoreEditor:build_menubar()
 	Global.frame:connect("CHECK DUALITY", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_check_duality"), "")
 	Global.frame:connect("TB_MAKE_SCREENSHOT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_make_screenshot"), "")
 	Global.frame:connect("TB_DRAW_OCCLUDERS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "menu_toolbar_toggle"), {
-		toolbar = "_left_upper_toolbar",
 		menu = "_debug_menu",
-		value = "_draw_occluders"
+		value = "_draw_occluders",
+		toolbar = "_left_upper_toolbar"
 	})
 	menu_bar:append(self._debug_menu, "Debug")
 
@@ -680,14 +680,29 @@ function CoreEditor:ungroup()
 end
 
 function CoreEditor:save_group()
+	local err_txt = "Cannot save group file without valid group or grouped unit selected!"
+
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
 
 		if groups and #groups > 0 then
+			err_txt = ""
 			local group = groups[#groups]
 
 			group:save_to_file()
+
+			if #group > 1 then
+				err_txt = "Group saved, but there were multiple groups associated with this unit, check if its the correct group!"
+			end
+		else
+			err_txt = err_txt .. "\n\nThere are no valid groups for this selection."
 		end
+	else
+		err_txt = err_txt .. "\n\nAn alive unit must be selected to continue."
+	end
+
+	if err_txt ~= "" then
+		managers.editor:show_text_box("Error!", err_txt)
 	end
 end
 

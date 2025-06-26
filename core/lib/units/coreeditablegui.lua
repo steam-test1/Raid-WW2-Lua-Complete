@@ -257,3 +257,46 @@ function CoreEditableGui:destroy()
 
 	self._guis = nil
 end
+
+function CoreEditableGui:setup_load(data)
+	if not data.editable_gui then
+		return
+	end
+
+	self:set_text(data.editable_gui.text)
+	self:set_font_color(data.editable_gui.font_color)
+	self:set_font_size(data.editable_gui.font_size)
+	self:set_font(data.editable_gui.font)
+	self:set_align(data.editable_gui.align)
+	self:set_vertical(data.editable_gui.vertical)
+	self:set_blend_mode(data.editable_gui.blend_mode)
+	self:set_render_template(data.editable_gui.render_template)
+	self:set_wrap(data.editable_gui.wrap)
+	self:set_word_wrap(data.editable_gui.word_wrap)
+	self:set_alpha(data.editable_gui.alpha)
+	self:set_shape(data.editable_gui.shape)
+
+	if not Application:editor() then
+		self:lock_gui()
+	end
+end
+
+if Application:editor() then
+	function CoreEditableGui:editor_save(data)
+		local state = {
+			text = self:text(),
+			font_color = self:font_color(),
+			font_size = self:font_size(),
+			font = self:font(),
+			align = self:align(),
+			vertical = self:vertical(),
+			blend_mode = self:blend_mode(),
+			render_template = self:render_template(),
+			wrap = self:wrap(),
+			word_wrap = self:word_wrap(),
+			alpha = self:alpha(),
+			shape = self:shape()
+		}
+		data.editable_gui = state
+	end
+end

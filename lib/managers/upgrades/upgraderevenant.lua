@@ -2,7 +2,7 @@ local UpgradeRevenant = {
 	check_activate = function (self)
 		managers.system_event_listener:remove_listener("player_revive_effects")
 
-		if managers.player:has_category_upgrade("player", "revenant_additional_life") then
+		if alive(managers.player:local_player()) and managers.player:has_category_upgrade("player", "revenant_additional_life") then
 			managers.system_event_listener:add_listener("player_revive_effects", {
 				CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_REVIVED
 			}, callback(self, self, "_on_revived"))

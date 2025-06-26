@@ -17,10 +17,6 @@ function RaidMenuOptionsNetwork:_layout()
 end
 
 function RaidMenuOptionsNetwork:close()
-	self:_save_network_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	RaidMenuOptionsNetwork.super.close(self)
 end
@@ -37,7 +33,8 @@ function RaidMenuOptionsNetwork:_layout_network()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_toggle_packet_throttling"),
 		on_menu_move = {
-			down = "push_to_talk"
+			down = "push_to_talk",
+			up = "use_compression"
 		}
 	}
 	self._toggle_menu_packet_throttling = self._root_panel:toggle_button(packet_throttling_params)
@@ -62,6 +59,7 @@ function RaidMenuOptionsNetwork:_layout_network()
 		w = default_width,
 		on_click_callback = callback(self, self, "on_click_toggle_net_use_compression"),
 		on_menu_move = {
+			down = "packet_throttling_params",
 			up = "push_to_talk"
 		}
 	}
@@ -76,12 +74,6 @@ function RaidMenuOptionsNetwork:_load_network_values()
 	self._toggle_menu_packet_throttling:set_value_and_render(net_packet_throttling)
 	self._toggle_menu_net_forwarding:set_value_and_render(net_forwarding)
 	self._toggle_menu_net_use_compression:set_value_and_render(net_use_compression)
-end
-
-function RaidMenuOptionsNetwork:_save_network_values()
-	self:on_click_toggle_packet_throttling()
-	self:on_click_toggle_net_forwarding()
-	self:on_click_toggle_net_use_compression()
 end
 
 function RaidMenuOptionsNetwork:on_click_toggle_packet_throttling()
@@ -103,7 +95,13 @@ function RaidMenuOptionsNetwork:on_click_toggle_net_use_compression()
 end
 
 function RaidMenuOptionsNetwork:on_click_default_network()
-	managers.menu:active_menu().callback_handler:set_default_network_options_raid(self._node.components.raid_options)
+	managers.menu:show_default_option_dialog({
+		text = managers.localization:text("dialog_default_network_options_message"),
+		callback = function ()
+			managers.user:reset_setting_map("network")
+			self:_load_network_values()
+		end
+	})
 end
 
 function RaidMenuOptionsNetwork:bind_controller_inputs()

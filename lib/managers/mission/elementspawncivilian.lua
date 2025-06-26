@@ -43,17 +43,17 @@ function ElementSpawnCivilian:produce(params)
 
 		if unit:brain() then
 			local action_data = {
-				align_sync = true,
 				type = "act",
 				body_part = 1,
+				align_sync = true,
 				variant = state
 			}
 			local spawn_ai = {
 				init_state = "idle",
 				objective = {
-					interrupt_dis = -1,
 					type = "act",
 					interrupt_health = 1,
+					interrupt_dis = -1,
 					action = action_data
 				}
 			}

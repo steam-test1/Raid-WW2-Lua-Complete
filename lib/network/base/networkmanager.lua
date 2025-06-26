@@ -631,17 +631,6 @@ function NetworkManager:get_matchmake_attributes()
 	local min_lvl = Global.game_settings.reputation_permission or 0
 	local drop_in = Global.game_settings.drop_in_allowed and 1 or 0
 	local level_id, job_id, progress, mission_type, server_state_id = managers.network.matchmake:get_job_info_by_current_job()
-	local level_id_index = 0
-	level_id_index = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
-
-	if not IS_PC then
-		if mission_type == OperationsTweakData.JOB_TYPE_OPERATION then
-			level_id_index = tweak_data.operations:get_raid_index_from_raid_id(job_id, level_id)
-		elseif mission_type == OperationsTweakData.JOB_TYPE_RAID then
-			level_id_index = tweak_data.operations:get_index_from_raid_id(level_id)
-		end
-	end
-
 	local attributes = {
 		numbers = {
 			level_id,

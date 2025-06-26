@@ -64,7 +64,7 @@ function FleePointElement:test_element()
 	self._script = MissionScript:new({
 		elements = {}
 	})
-	self._so_class = ElementFleePoint:new(self._script, t)
+	self._so_class = ElementSpecialObjective:new(self._script, t)
 	self._so_class._values.align_position = nil
 	self._so_class._values.align_rotation = nil
 
@@ -79,6 +79,4 @@ function FleePointElement:stop_test_element()
 	end
 
 	self._enemies = {}
-
-	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 end

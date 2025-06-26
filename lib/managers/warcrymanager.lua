@@ -176,8 +176,8 @@ function WarcryManager:activate_warcry()
 	if not can_activate then
 		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
 		local notification_data = {
-			sound_effect = "generic_fail_sound",
 			shelf_life = 5,
+			sound_effect = "generic_fail_sound",
 			id = self.WARCRY_BLOCKED_TEXT,
 			text = managers.localization:text(blocked_text_id),
 			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION
@@ -363,9 +363,9 @@ function WarcryManager:_on_meter_full(skip_notification)
 			end
 
 			managers.hud:set_big_prompt({
+				background = "backgrounds_warcry_msg",
 				flares = true,
 				id = "warcry_ready",
-				background = "backgrounds_warcry_msg",
 				priority = true,
 				title = prompt_title,
 				description = prompt_desc,

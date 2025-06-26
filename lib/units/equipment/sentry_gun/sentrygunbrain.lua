@@ -35,7 +35,6 @@ function SentryGunBrain:update(unit, t, dt)
 	if Network:is_server() then
 		self:_upd_detection(t)
 		self:_select_focus_attention(t)
-		self:_upd_flash_grenade(t)
 		self:_upd_go_idle(t)
 	end
 
@@ -473,7 +472,7 @@ function SentryGunBrain:_upd_abandon_turret(t, target_is_visible)
 				self._target_unreachable_since = t
 			end
 
-			if self._target_unreachable_since + self._tweak_data.WAIT_FOR_TARGET < Application:time() then
+			if t > self._target_unreachable_since + self._tweak_data.WAIT_FOR_TARGET then
 				self._unit:weapon():deactivate()
 
 				self._target_unreachable_since = nil
@@ -553,8 +552,8 @@ function SentryGunBrain:_upd_fire(t)
 				self._allow_turret_abandon = true
 
 				managers.dialog:queue_dialog("player_gen_mg_under_fire", {
-					skip_idle_check = true,
-					position = nil
+					position = nil,
+					skip_idle_check = true
 				})
 			end
 		end
@@ -562,52 +561,6 @@ function SentryGunBrain:_upd_fire(t)
 		self._unit:weapon():stop_autofire()
 
 		self._firing = false
-	end
-end
-
-function SentryGunBrain:_upd_flash_grenade(t)
-	if not self._tweak_data.FLASH_GRENADE then
-		return
-	end
-
-	if self._ext_movement:repairing() then
-		return
-	end
-
-	if self._next_flash_grenade_chk_t and t < self._next_flash_grenade_chk_t then
-		return
-	end
-
-	local grenade_tweak = self._tweak_data.FLASH_GRENADE
-	local check_t = self._next_flash_grenade_chk_t or t
-	self._next_flash_grenade_chk_t = check_t + math.lerp(grenade_tweak.check_interval[1], grenade_tweak.check_interval[2], math.random())
-
-	if grenade_tweak.chance < math.random() then
-		return
-	end
-
-	local max_range = grenade_tweak.range
-	local m_pos = self._ext_movement:m_head_pos()
-	local ray_to = mvector3.copy(m_pos)
-
-	mvector3.set_z(ray_to, ray_to.z - 500)
-
-	local ground_ray = World:raycast("ray", m_pos, ray_to, "slot_mask", managers.slot:get_mask("statics"))
-
-	if ground_ray then
-		self._grenade_m_pos = mvector3.copy(ground_ray.hit_position)
-
-		mvector3.set_z(self._grenade_m_pos, self._grenade_m_pos.z + 3)
-
-		for u_key, attention_info in pairs(self._detected_attention_objects) do
-			if attention_info.identified and mvector3.distance_sq(self._grenade_m_pos, attention_info.last_verified_pos) < max_range * max_range then
-				managers.groupai:state():detonate_cs_grenade(self._grenade_m_pos, m_pos, grenade_tweak.effect_duration)
-
-				self._next_flash_grenade_chk_t = check_t + math.lerp(grenade_tweak.quiet_time[1], grenade_tweak.quiet_time[2], math.random())
-
-				break
-			end
-		end
 	end
 end
 
@@ -845,9 +798,6 @@ end
 
 function SentryGunBrain:is_tank()
 	return self._turret_type and self._turret_type == SentryGunBrain.TURRET_TYPE_TANK
-end
-
-function SentryGunBrain:on_intimidated(amount, aggressor_unit)
 end
 
 function SentryGunBrain:keep_ai_attached()

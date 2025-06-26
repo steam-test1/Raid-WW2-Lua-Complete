@@ -148,17 +148,17 @@ function ImpactDecoy:clbk_pathing_results(search_id, path)
 			Application:debug("[ImpactDecoy:clbk_pathing_results] Valid path, route is short enough", search.total_length, self._range * 4)
 			self:_abort_all_unfinished_pathing()
 
-			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
-			attention_info.m_pos = search.pos_to
-			attention_info.settings = {
+			self._attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
+			self._attention_info.m_pos = search.pos_to
+			self._attention_info.settings = {
 				reaction = AIAttentionObject.REACT_SUSPICIOUS
 			}
-			attention_info.u_key = 1
+			self._attention_info.u_key = 1
 			local search_data = {
 				unit = self._unit,
 				activated_clbk = callback(self, self, "_guard_picked_up")
 			}
-			self._found_cop = CopLogicBase.register_search_SO(search.cop, attention_info, search.pos_to, search_data)
+			self._found_cop = CopLogicBase.register_search_SO(search.cop, self._attention_info, search.pos_to, search_data)
 		end
 	end
 end
@@ -166,12 +166,16 @@ end
 function ImpactDecoy:_guard_picked_up(guard)
 	Application:debug("[ImpactDecoy:clbk_pathing_results] Guard yoinked coin")
 
-	if Network:is_server() then
-		self._unit:set_slot(0)
-	end
-
 	if guard then
 		managers.voice_over:guard_found_coin(guard)
+
+		if self._attention_info then
+			self._attention_info.found_item = true
+		end
+	end
+
+	if Network:is_server() then
+		self._unit:set_slot(0)
 	end
 end
 

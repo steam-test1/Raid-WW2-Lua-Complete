@@ -4,7 +4,10 @@ ElementBlurZone = ElementBlurZone or class(CoreMissionScriptElement.MissionScrip
 
 function ElementBlurZone:init(...)
 	ElementBlurZone.super.init(self, ...)
-	managers.environment_controller:set_blurzone(self._id, -1)
+end
+
+function ElementBlurZone:destroy()
+	managers.environment_controller:clear_blurzone(self:_get_unique_id())
 end
 
 function ElementBlurZone:client_on_executed(...)
@@ -16,11 +19,14 @@ function ElementBlurZone:on_executed(instigator)
 		return
 	end
 
-	if self._values.mode == 0 then
-		managers.environment_controller:set_blurzone(self._id, self._values.mode)
-	else
-		managers.environment_controller:set_blurzone(self._id, self._values.mode, self._values.position, self._values.radius, self._values.height)
-	end
-
+	managers.environment_controller:set_blurzone(self:_get_unique_id(), self._values.mode, self._values.position, self._values.radius, self._values.height)
 	ElementBlurZone.super.on_executed(self, instigator)
+end
+
+function ElementBlurZone:operation_remove()
+	managers.environment_controller:set_blurzone(self:_get_unique_id(), 0, self._values.position, self._values.radius, self._values.height)
+end
+
+function ElementBlurZone:_get_unique_id()
+	return self._sync_id .. "_" .. self._id
 end

@@ -48,6 +48,7 @@ function PlayerBleedOut:enter(state_data, enter_data)
 
 	if alive(weapon) and weapon:base().on_reload then
 		weapon:base():on_reload()
+		weapon:base():tweak_data_anim_stop("magazine_empty")
 		managers.hud:set_ammo_amount(selection_wanted, weapon:base():ammo_info())
 	end
 
@@ -158,12 +159,7 @@ function PlayerBleedOut:exit(state_data, new_state_name)
 	}
 
 	if Network:is_server() then
-		if new_state_name == "fatal" then
-			exit_data.revive_SO_data = self._revive_SO_data
-			self._revive_SO_data = nil
-		else
-			self:_unregister_revive_SO()
-		end
+		self:_unregister_revive_SO()
 	end
 
 	self._unit:camera():play_shaker("player_bleedout_stand")
@@ -325,18 +321,18 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		scan = true,
 		type = "act",
+		scan = true,
 		action = {
-			variant = "crouch",
 			body_part = 1,
+			variant = "crouch",
 			type = "act",
 			blocks = {
+				hurt = -1,
 				walk = -1,
 				action = -1,
 				aim = -1,
-				heavy_hurt = -1,
-				hurt = -1
+				heavy_hurt = -1
 			}
 		}
 	}
@@ -350,22 +346,22 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		follow_unit = revive_SO_data.unit,
 		nav_seg = revive_SO_data.unit:movement():nav_tracker():nav_segment(),
 		action_duration = tweak_data.interaction[variant].timer,
-		fail_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_failed", revive_SO_data),
-		complete_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_completed", revive_SO_data),
-		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
+		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_revive_SO_started", revive_SO_data),
+		complete_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_revive_SO_completed", revive_SO_data),
+		fail_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_revive_SO_failed", revive_SO_data),
 		followup_objective = followup_objective,
 		action = {
+			align_sync = true,
 			type = "act",
 			body_part = 1,
 			variant = "revive",
-			align_sync = true,
 			blocks = {
+				hurt = -1,
 				walk = -1,
 				heavy_hurt = -1,
 				action = -1,
 				aim = -1,
-				light_hurt = -1,
-				hurt = -1
+				light_hurt = -1
 			}
 		}
 	}
@@ -377,8 +373,8 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 		AI_group = "friendlies",
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),
-		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),
-		verification_clbk = callback(PlayerBleedOut, PlayerBleedOut, "rescue_SO_verification", revive_SO_data.unit)
+		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_revive_SO_administered", revive_SO_data),
+		verification_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_revive_SO_verification", revive_SO_data.unit)
 	}
 	revive_SO_data.variant = variant
 	local so_id = "PlayerBleedOut_revive"
@@ -424,6 +420,35 @@ function PlayerBleedOut:_unregister_revive_SO()
 end
 
 function PlayerBleedOut._register_deathguard_SO(my_unit)
+	local guard_objective = {
+		type = "follow",
+		distance = 600,
+		scan = true,
+		stance = "cbt",
+		interrupt_health = 0.5,
+		interrupt_dis = 700,
+		deathguard = true,
+		follow_unit = my_unit,
+		nav_seg = my_unit:movement():nav_tracker():nav_segment()
+	}
+	local nr_guards = math.random(5, 10)
+	local guard_so_descriptor = {
+		search_dis_sq = 100000000,
+		chance_inc = 0,
+		base_chance = 1,
+		interval = 2,
+		AI_group = "enemies",
+		objective = guard_objective,
+		search_pos = my_unit:position(),
+		usage_amount = nr_guards,
+		verification_clbk = callback(PlayerBleedOut, PlayerBleedOut, "verif_clbk_is_unit_deathguard"),
+		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "clbk_deathguard_administered")
+	}
+	local guard_so_id = "deathguard" .. tostring(my_unit:key())
+
+	managers.groupai:state():add_special_objective(guard_so_id, guard_so_descriptor)
+
+	return guard_so_id
 end
 
 function PlayerBleedOut._unregister_deathguard_SO(so_id)
@@ -468,16 +493,18 @@ function PlayerBleedOut:_update_movement(t, dt)
 	end
 end
 
-function PlayerBleedOut:on_rescue_SO_administered(revive_SO_data, receiver_unit)
+function PlayerBleedOut:on_revive_SO_administered(revive_SO_data, receiver_unit)
 	if revive_SO_data.rescuer then
-		debug_pause("[PlayerBleedOut:on_rescue_SO_administered] Already had a rescuer!!!!", receiver_unit, revive_SO_data.rescuer)
+		debug_pause_unit(receiver_unit, "Already have a rescuer!", receiver_unit)
 	end
 
 	revive_SO_data.rescuer = receiver_unit
 	revive_SO_data.SO_id = nil
 end
 
-function PlayerBleedOut:on_rescue_SO_failed(revive_SO_data, rescuer)
+function PlayerBleedOut:on_revive_SO_failed(revive_SO_data, rescuer)
+	Application:info("[PlayerBleedOut:Rescues] on_revive_SO_failed", revive_SO_data and inspect(revive_SO_data), rescuer)
+
 	if revive_SO_data.rescuer then
 		revive_SO_data.rescuer = nil
 
@@ -485,11 +512,15 @@ function PlayerBleedOut:on_rescue_SO_failed(revive_SO_data, rescuer)
 	end
 end
 
-function PlayerBleedOut:on_rescue_SO_completed(revive_SO_data, rescuer)
+function PlayerBleedOut:on_revive_SO_completed(revive_SO_data, rescuer)
+	Application:info("[PlayerBleedOut:Rescues] on_revive_SO_completed", revive_SO_data and inspect(revive_SO_data), rescuer)
+
 	revive_SO_data.rescuer = nil
 end
 
-function PlayerBleedOut:on_rescue_SO_started(revive_SO_data, rescuer)
+function PlayerBleedOut:on_revive_SO_started(revive_SO_data, rescuer)
+	Application:info("[PlayerBleedOut:Rescues] on_revive_SO_started", revive_SO_data and inspect(revive_SO_data), rescuer)
+
 	for c_key, criminal in pairs(managers.groupai:state():all_AI_criminals()) do
 		if c_key ~= rescuer:key() then
 			local obj = criminal.unit:brain():objective()
@@ -501,47 +532,13 @@ function PlayerBleedOut:on_rescue_SO_started(revive_SO_data, rescuer)
 	end
 end
 
-function PlayerBleedOut.rescue_SO_verification(ignore_this, my_unit, unit)
-	return not unit:movement():cool() and not my_unit:movement():team().foes[unit:movement():team().id]
-end
+function PlayerBleedOut.on_revive_SO_verification(ignore_this, my_unit, unit)
+	Application:info("[PlayerBleedOut:Rescues] on_revive_SO_verification", unit, my_unit:movement():team().foes[unit:movement():team().id])
 
-function PlayerBleedOut:on_civ_revive_completed(revive_SO_data, sympathy_civ)
-end
-
-function PlayerBleedOut:on_civ_revive_started(revive_SO_data, sympathy_civ)
-	if sympathy_civ ~= revive_SO_data.sympathy_civ then
-		debug_pause_unit(sympathy_civ, "[PlayerBleedOut:on_civ_revive_started] idiot thinks he is reviving", sympathy_civ)
-
-		return
-	end
-
-	revive_SO_data.unit:character_damage():pause_downed_timer()
-
-	if revive_SO_data.SO_id then
-		managers.groupai:state():remove_special_objective(revive_SO_data.SO_id)
-
-		revive_SO_data.SO_id = nil
-	elseif revive_SO_data.rescuer then
-		local rescuer = revive_SO_data.rescuer
-		revive_SO_data.rescuer = nil
-
-		if alive(rescuer) then
-			rescuer:brain():set_objective(nil)
-		end
-	end
-end
-
-function PlayerBleedOut:on_civ_revive_failed(revive_SO_data, sympathy_civ)
-	if revive_SO_data.sympathy_civ then
-		if sympathy_civ ~= revive_SO_data.sympathy_civ then
-			debug_pause_unit(sympathy_civ, "[PlayerBleedOut:on_civ_revive_failed] idiot thinks he is reviving", sympathy_civ)
-
-			return
-		end
-
-		revive_SO_data.unit:character_damage():unpause_downed_timer()
-
-		revive_SO_data.sympathy_civ = nil
+	if unit:movement():cool() then
+		return false
+	else
+		return not my_unit:movement():team().foes[unit:movement():team().id]
 	end
 end
 

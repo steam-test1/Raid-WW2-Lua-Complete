@@ -4,10 +4,10 @@ CoreLuaPreprocessor = CoreLuaPreprocessor or class()
 CoreLuaPreprocessor.preprocessors = {}
 CoreLuaPreprocessor.DEBUG = false
 CoreLuaPreprocessor._WHITESPACE_CHARACTERS = {
-	[" "] = true,
-	["\r"] = true,
 	["\n"] = true,
-	["\t"] = true
+	["\t"] = true,
+	[" "] = true,
+	["\r"] = true
 }
 CoreLuaPreprocessor._IF_STATEMENT = "#IF"
 CoreLuaPreprocessor._ELSEIF_STATEMENT = "#ELSE_IF"

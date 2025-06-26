@@ -11,11 +11,7 @@ function FlamerBrain:init(unit)
 
 	self._ukey = "flamer_" .. tostring(self._unit:key())
 
-	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, 0)
-
-	self._old_t = Application:time()
-
-	self._unit:sound_source():post_event("flamer_breathing_start")
+	managers.queued_tasks:queue(self._ukey, self.queued_update, self, nil, 2)
 
 	self.is_flamer = true
 end
@@ -47,20 +43,21 @@ function FlamerBrain:queued_update()
 	end
 
 	if not self._physfix and self._unit:inventory() and self._unit:spawn_manager() then
-		self._physfix = true
+		local weapon = self._unit:inventory():get_weapon()
 
-		for key, part_unit in pairs(self._unit:spawn_manager():get_spawned_units()) do
-			self._unit:inventory():get_weapon():base():add_ignore_unit(part_unit)
+		if alive(weapon) then
+			for _, part_unit in pairs(self._unit:spawn_manager():get_spawned_units()) do
+				weapon:base():add_ignore_unit(part_unit)
+
+				self._physfix = true
+			end
 		end
 	end
 
-	local t = Application:time()
-	local dt = t - self._old_t
-
-	self:_queued_update(t, dt)
+	self:_queued_update()
 end
 
-function FlamerBrain:_queued_update(t, dt)
+function FlamerBrain:_queued_update()
 	if self._current_logic_name == "inactive" then
 		return
 	end
@@ -158,11 +155,6 @@ function FlamerBrain:_hunt(assault_target)
 
 		self:set_objective(objective)
 	end
-end
-
-function FlamerBrain:clbk_death(my_unit, damage_info)
-	FlamerBrain.super.clbk_death(self, my_unit, damage_info)
-	self._unit:sound_source():post_event("flamer_breathing_stop")
 end
 
 function FlamerBrain:pre_destroy(unit)

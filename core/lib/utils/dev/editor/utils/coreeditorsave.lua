@@ -5,9 +5,6 @@ core:import("CoreClass")
 core:import("CoreXml")
 core:import("CoreDebug")
 
-function save_unit(world, level, unit, data)
-end
-
 function save_data_table(unit)
 	local ud = unit:unit_data()
 	local t = {
@@ -25,13 +22,16 @@ function save_data_table(unit)
 		disable_on_ai_graph = ud.disable_on_ai_graph,
 		lights = _light_data_table(unit),
 		triggers = _triggers_data_table(unit),
-		editable_gui = _editable_gui_data_table(unit),
 		projection_light = CoreEditorUtils.has_any_projection_light(unit),
 		projection_lights = ud.projection_lights,
-		projection_textures = ud.projection_textures,
-		ladder = _editable_ladder_table(unit),
-		zipline = _editable_zipline_table(unit)
+		projection_textures = ud.projection_textures
 	}
+
+	for _, extension in pairs(unit:extensions_infos()) do
+		if extension.editor_save then
+			extension:editor_save(t)
+		end
+	end
 
 	return t
 end
@@ -98,58 +98,6 @@ function _triggers_data_table(unit)
 	end
 
 	return #t > 0 and t or nil
-end
-
-function _editable_gui_data_table(unit)
-	local t = nil
-
-	if unit:editable_gui() then
-		t = {
-			text = unit:editable_gui():text(),
-			font_color = unit:editable_gui():font_color(),
-			font_size = unit:editable_gui():font_size(),
-			font = unit:editable_gui():font(),
-			align = unit:editable_gui():align(),
-			vertical = unit:editable_gui():vertical(),
-			blend_mode = unit:editable_gui():blend_mode(),
-			render_template = unit:editable_gui():render_template(),
-			wrap = unit:editable_gui():wrap(),
-			word_wrap = unit:editable_gui():word_wrap(),
-			alpha = unit:editable_gui():alpha(),
-			shape = unit:editable_gui():shape()
-		}
-	end
-
-	return t
-end
-
-function _editable_ladder_table(unit)
-	local t = nil
-
-	if unit:ladder() then
-		t = {
-			width = unit:ladder():width(),
-			height = unit:ladder():height()
-		}
-	end
-
-	return t
-end
-
-function _editable_zipline_table(unit)
-	local t = nil
-
-	if unit:zipline() then
-		t = {
-			end_pos = unit:zipline():end_pos(),
-			speed = unit:zipline():speed(),
-			slack = unit:zipline():slack(),
-			usage_type = unit:zipline():usage_type(),
-			ai_ignores_bag = unit:zipline():ai_ignores_bag()
-		}
-	end
-
-	return t
 end
 
 function save_layout(params)

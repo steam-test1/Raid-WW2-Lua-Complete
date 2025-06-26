@@ -221,9 +221,9 @@ function ColorPickerFields:_on_field_edited(edited_field, event)
 	}, edited_field_label) then
 		local rgb_values = self:_parse_values({
 			Blue = 255,
-			Green = 255,
+			Red = 255,
 			Alpha = 255,
-			Red = 255
+			Green = 255
 		})
 
 		if rgb_values then

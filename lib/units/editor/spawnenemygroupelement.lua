@@ -4,6 +4,13 @@ SpawnEnemyGroupUnitElement.SAVE_UNIT_ROTATION = false
 SpawnEnemyGroupUnitElement.RANDOMS = {
 	"amount"
 }
+SpawnEnemyGroupUnitElement.LINK_VALUES = {
+	{
+		type = "spawn_point",
+		output = true,
+		table_value = "elements"
+	}
+}
 
 function SpawnEnemyGroupUnitElement:init(unit)
 	MissionElement.init(self, unit)
@@ -80,8 +87,8 @@ end
 
 function SpawnEnemyGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		mask = 10,
-		ray_type = "editor"
+		ray_type = "editor",
+		mask = 10
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) then
@@ -101,11 +108,6 @@ function SpawnEnemyGroupUnitElement:remove_links(unit)
 			table.delete(self._hed.elements, id)
 		end
 	end
-end
-
-function SpawnEnemyGroupUnitElement:get_links_to_unit(...)
-	SpawnEnemyGroupUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
 end
 
 function SpawnEnemyGroupUnitElement:add_triggers(vc)

@@ -26,14 +26,12 @@ function VoiceOverManager:update(t, dt)
 		self:disable()
 	end
 
-	self:_update_idle_chatter()
+	self:_update_idle_chatter(t)
 end
 
-function VoiceOverManager:_update_idle_chatter()
-	local current_time = Application:time()
-
+function VoiceOverManager:_update_idle_chatter(t)
 	for unit_key, data in pairs(self._idle_cooldowns) do
-		local elapsed_time = current_time - data.started_at
+		local elapsed_time = t - data.started_at
 
 		if self._idle_timers.cooldown <= elapsed_time then
 			self._idle_cooldowns[unit_key] = nil
@@ -50,14 +48,14 @@ function VoiceOverManager:_update_idle_chatter()
 	end
 
 	for unit_key, data in pairs(self._idle_queue) do
-		local elapsed_time = current_time - data.registered_at
+		local elapsed_time = t - data.registered_at
 
 		if elapsed_time > self._idle_timers.delay + data.time_offset and not self._idle_cooldowns[unit_key] then
 			if alive(data.unit) and not data.unit:character_damage():dead() then
 				self:_play_sound(data.unit, math.rand_bool() and "ste_idle" or "ste_patrol")
 
 				self._idle_cooldowns[unit_key] = {
-					started_at = current_time
+					started_at = t
 				}
 			else
 				self._idle_queue[unit_key] = nil
@@ -80,11 +78,9 @@ function VoiceOverManager:guard_register_idle(source_unit)
 end
 
 function VoiceOverManager:guard_unregister_idle(source_unit)
-	if self._disabled then
-		return
-	end
-
-	self._idle_queue[source_unit:key()] = nil
+	local key = source_unit:key()
+	self._idle_queue[key] = nil
+	self._investigated[key] = nil
 end
 
 function VoiceOverManager:guard_investigate(source_unit)
@@ -92,8 +88,10 @@ function VoiceOverManager:guard_investigate(source_unit)
 		return
 	end
 
-	if not self._investigated[source_unit:key()] then
-		self._investigated[source_unit:key()] = Application:time()
+	local key = source_unit:key()
+
+	if not self._investigated[key] then
+		self._investigated[key] = Application:time()
 
 		self:_play_sound(source_unit, "ste_investigate")
 	else
@@ -130,7 +128,7 @@ function VoiceOverManager:guard_saw_body(source_unit)
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_raisealarm")
+	self:_play_sound(source_unit, "ste_sawbody")
 end
 
 function VoiceOverManager:guard_saw_bag(source_unit)
@@ -138,7 +136,7 @@ function VoiceOverManager:guard_saw_bag(source_unit)
 		return
 	end
 
-	self:_play_sound(source_unit, "ste_raisealarm")
+	self:_play_sound(source_unit, "saw_bag")
 end
 
 function VoiceOverManager:guard_raise_alarm(source_unit)
@@ -161,10 +159,6 @@ function VoiceOverManager:guard_found_coin(source_unit)
 	self:_play_sound(source_unit, "ste_coin_found")
 end
 
-function VoiceOverManager:enemy_reload(source_unit)
-	self:_play_sound(source_unit, "reload", false)
-end
-
 function VoiceOverManager:_play_sound(source_unit, event)
 	if self._disabled then
 		return
@@ -180,21 +174,22 @@ function VoiceOverManager:_play_sound(source_unit, event)
 end
 
 function VoiceOverManager:on_simulation_ended()
-	self:enable()
+	self:_setup()
 end
 
 function VoiceOverManager:on_tweak_data_reloaded()
 	self:_setup()
 end
 
-function VoiceOverManager:disable()
-	Application:debug("[VoiceOverManager] disable")
-
-	self._disabled = true
-end
-
 function VoiceOverManager:enable()
 	Application:debug("[VoiceOverManager] enable")
 
 	self._disabled = false
+end
+
+function VoiceOverManager:disable()
+	Application:debug("[VoiceOverManager] disable")
+
+	self._disabled = true
+	self._investigated = {}
 end

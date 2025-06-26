@@ -304,8 +304,8 @@ function BarrageManager:_waypoint_barrage_add(running_barrage)
 	local color = tweak_data.gui.colors.raid_red
 	local icon = "waypoint_special_air_strike"
 	local data = {
-		waypoint_type = "spotter",
 		distance = false,
+		waypoint_type = "spotter",
 		icon = icon,
 		lifetime = running_barrage.duration + 7,
 		position = running_barrage.center_target + Vector3(0, 0, 65),

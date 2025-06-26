@@ -94,32 +94,32 @@ end
 function MenuInitiatorBase:create_toggle(node, params)
 	local data_node = {
 		{
+			w = 24,
+			y = 0,
+			x = 24,
+			value = "on",
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
 			_meta = "option",
 			s_h = 24,
 			s_w = 24,
 			s_y = 24,
 			s_x = 24,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-			h = 24,
-			w = 24,
-			y = 0,
-			x = 24,
-			value = "on",
-			icon = "ui/main_menu/textures/debug_menu_tickbox"
+			h = 24
 		},
 		{
+			w = 24,
+			y = 0,
+			x = 0,
+			value = "off",
+			icon = "ui/main_menu/textures/debug_menu_tickbox",
 			_meta = "option",
 			s_h = 24,
 			s_w = 24,
 			s_y = 24,
 			s_x = 0,
 			s_icon = "ui/main_menu/textures/debug_menu_tickbox",
-			h = 24,
-			w = 24,
-			y = 0,
-			x = 0,
-			value = "off",
-			icon = "ui/main_menu/textures/debug_menu_tickbox"
+			h = 24
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
@@ -136,27 +136,6 @@ function MenuInitiatorBase:create_item(node, params)
 	local new_item = node:create_item(data_node, params)
 
 	new_item:set_enabled(params.enabled)
-	node:add_item(new_item)
-
-	return new_item
-end
-
-function MenuInitiatorBase:create_multichoice(node, choices, params)
-	if #choices == 0 then
-		return
-	end
-
-	local data_node = {
-		type = "MenuItemMultiChoice"
-	}
-
-	for _, choice in ipairs(choices) do
-		table.insert(data_node, choice)
-	end
-
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(choices[1].value)
 	node:add_item(new_item)
 
 	return new_item

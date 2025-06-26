@@ -16,6 +16,8 @@ end
 
 function AmmoClip:_pickup(unit)
 	if self._picked_up then
+		Application:warn("[AmmoClip] Cannot pickup, already picked up!", unit)
+
 		return
 	end
 
@@ -76,48 +78,46 @@ function AmmoClip:_pickup(unit)
 			end
 		end
 
-		if picked_up then
+		if picked_up and not self._weapon_category and not self._pickup_filter then
 			self._picked_up = true
 
-			if not self._weapon_category and not self._pickup_filter then
-				if managers.player:has_category_upgrade("player", "opportunist_pick_up_ammo_to_health") then
-					local damage_ext = unit:character_damage()
+			if managers.player:has_category_upgrade("player", "opportunist_pick_up_ammo_to_health") then
+				local damage_ext = unit:character_damage()
 
-					if damage_ext and not damage_ext:is_downed() and not damage_ext:dead() and not damage_ext:is_perseverating() then
-						local restore_ratio = managers.player:upgrade_value("player", "opportunist_pick_up_ammo_to_health") - 1
-						local restore_value = all_added_ammmo * restore_ratio
+				if damage_ext and not damage_ext:is_downed() and not damage_ext:dead() and not damage_ext:is_perseverating() then
+					local restore_ratio = managers.player:upgrade_value("player", "opportunist_pick_up_ammo_to_health") - 1
+					local restore_value = all_added_ammmo * restore_ratio
 
-						damage_ext:restore_health(restore_value, true)
-					end
-				end
-
-				if managers.player:has_category_upgrade("player", "opportunist_pick_up_supplies_to_warcry") then
-					local add_warcry_ratio = managers.player:upgrade_value("player", "opportunist_pick_up_supplies_to_warcry") - 1
-					local warcry_fill_amount = math.random() * add_warcry_ratio
-
-					managers.warcry:fill_meter_by_value(warcry_fill_amount)
-				end
-
-				if managers.player:has_category_upgrade("player", "pack_mule_ammo_share_team") then
-					managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "pickup", AmmoClip.EVENT_IDS.mule_share_ammo)
+					damage_ext:restore_health(restore_value, true)
 				end
 			end
 
-			if Network:is_client() then
-				managers.network:session():send_to_host("sync_pickup", self._unit)
+			if managers.player:has_category_upgrade("player", "opportunist_pick_up_supplies_to_warcry") then
+				local add_warcry_ratio = managers.player:upgrade_value("player", "opportunist_pick_up_supplies_to_warcry") - 1
+				local warcry_fill_amount = math.random() * add_warcry_ratio
+
+				managers.warcry:fill_meter_by_value(warcry_fill_amount)
 			end
 
-			if inventory and picked_up then
-				for id, wpn in pairs(inventory:available_selections()) do
-					managers.hud:set_ammo_amount(id, wpn.unit:base():ammo_info())
-				end
+			if managers.player:has_category_upgrade("player", "pack_mule_ammo_share_team") then
+				managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "pickup", AmmoClip.EVENT_IDS.mule_share_ammo)
 			end
-
-			unit:sound():play(self._pickup_event or "pickup_ammo", nil, false)
-			self:consume()
-
-			return true
 		end
+
+		if Network:is_client() then
+			managers.network:session():send_to_host("sync_pickup", self._unit)
+		end
+
+		if inventory and picked_up then
+			for id, wpn in pairs(inventory:available_selections()) do
+				managers.hud:set_ammo_amount(id, wpn.unit:base():ammo_info())
+			end
+		end
+
+		unit:sound():play(self._pickup_event or "pickup_ammo", nil, false)
+		self:consume()
+
+		return true
 	end
 
 	return false

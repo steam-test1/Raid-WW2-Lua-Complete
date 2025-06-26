@@ -9,6 +9,12 @@ ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 		type = "number"
 	}
 }
+ObjectiveUnitElement.LINK_VALUES = {
+	{
+		type = "counter",
+		table_value = "elements"
+	}
+}
 
 function ObjectiveUnitElement:init(unit)
 	ObjectiveUnitElement.super.init(self, unit)
@@ -35,19 +41,14 @@ function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
+				g = 0.85,
 				r = 0.85,
 				b = 0.25,
-				g = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
 			})
 		end
 	end
-end
-
-function ObjectiveUnitElement:get_links_to_unit(...)
-	ObjectiveUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function ObjectiveUnitElement:update_editing()
@@ -144,9 +145,9 @@ function ObjectiveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(self._sub_objective_text, 0, 0, "EXPAND,ALIGN_CENTER")
 	self:_build_value_number(panel, panel_sizer, "amount", {
-		min = 0,
 		floats = 0,
-		max = 100
+		max = 100,
+		min = 0
 	}, "Overrides objective amount counter with this value.")
 
 	local help = {

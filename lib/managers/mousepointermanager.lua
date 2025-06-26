@@ -25,22 +25,22 @@ function MousePointerManager:_setup()
 	local x = 640
 	local y = 360
 	self._mouse = self._ws:panel():panel({
-		name_s = "mouse",
-		h = 23,
 		w = 19,
 		name = "mouse",
+		h = 23,
+		name_s = "mouse",
 		x = x,
 		y = y,
 		layer = tweak_data.gui.MOUSE_LAYER
 	})
 
 	self._mouse:bitmap({
+		x = -7,
 		h = 23,
 		w = 19,
 		name = "pointer",
 		rotation = 360,
 		y = -2,
-		x = -7,
 		texture = "guis/textures/mouse_pointer",
 		texture_rect = {
 			0,
@@ -359,16 +359,13 @@ function MousePointerManager:_mouse_move(o, x, y)
 	end
 end
 
-function MousePointerManager:_modify_mouse_button(button)
-	return button
-end
-
 function MousePointerManager:_mouse_press(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_press then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_press(o, button, x, y)
@@ -376,11 +373,12 @@ function MousePointerManager:_mouse_press(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_release(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_release then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_release(o, button, x, y)
@@ -388,11 +386,12 @@ function MousePointerManager:_mouse_release(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_click(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_click then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_click(o, button, x, y)
@@ -400,11 +399,12 @@ function MousePointerManager:_mouse_click(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_double_click(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_double_click then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_double_click(o, button, x, y)

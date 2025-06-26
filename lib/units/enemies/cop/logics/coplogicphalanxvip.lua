@@ -49,8 +49,8 @@ function CopLogicPhalanxVip.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 
@@ -191,7 +191,6 @@ function CopLogicPhalanxVip.breakup(remote_call)
 			}
 
 			if phalanx_vip:brain():objective() then
-				print("Setting VIP flee objective!")
 				phalanx_vip:brain():set_objective(new_objective)
 				phalanx_vip:sound():say("cpw_a04", true, true)
 			end

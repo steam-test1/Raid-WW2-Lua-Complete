@@ -17,7 +17,6 @@ RaidGUIControlTopStatBig.PLAYER_NAME_H = 64
 RaidGUIControlTopStatBig.PLAYER_NAME_COLOR = tweak_data.gui.colors.raid_white
 RaidGUIControlTopStatBig.PLAYER_NAME_FONT_SIZE = tweak_data.gui.font_sizes.menu_list
 RaidGUIControlTopStatBig.FONT = tweak_data.gui.fonts.din_compressed
-RaidGUIControlTopStatBig.FONT_KERNING = tweak_data.hud.medium_kern
 
 function RaidGUIControlTopStatBig:init(parent, params)
 	RaidGUIControlTopStatBig.super.init(self, parent, params)
@@ -120,7 +119,13 @@ function RaidGUIControlTopStatBig:_create_icon_background()
 end
 
 function RaidGUIControlTopStatBig:set_data(data)
-	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
+	local name = data.player_nickname
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name_label:set_text(name)
 	self._stat_name_label:set_text(self:translate(data.text_id, true))
 
 	local score = data.score

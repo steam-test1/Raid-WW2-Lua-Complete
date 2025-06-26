@@ -83,7 +83,8 @@ function HUDManager:init()
 
 	self._sound_source = SoundDevice:create_source("hud")
 
-	managers.user:add_setting_changed_callback("controller_mod", callback(self, self, "controller_mod_changed"), true)
+	managers.user:add_setting_changed_callback("keyboard_keybinds", callback(self, self, "controller_mod_changed"), true)
+	managers.user:add_setting_changed_callback("controller_keybinds", callback(self, self, "controller_mod_changed"), true)
 	managers.controller:add_hotswap_callback("hud_manager", callback(self, self, "controller_mod_changed"))
 	self:_init_player_hud_values()
 
@@ -307,7 +308,7 @@ function HUDManager:set_enabled()
 	end
 end
 
-function HUDManager:disabled()
+function HUDManager:is_disabled()
 	return self._disabled
 end
 
@@ -362,9 +363,9 @@ end
 function HUDManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		target_db_name = "all",
 		send_idstrings = false,
 		verbose = false,
+		target_db_name = "all",
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
 		target_db_root = Application:base_path() .. "assets",
@@ -459,18 +460,6 @@ function HUDManager:show(name)
 	else
 		Application:error("ERROR! Component " .. tostring(name) .. " isn't loaded!")
 	end
-
-	self._hud_chat:clear()
-	self._hud_chat:unregister()
-
-	if name == PlayerBase.INGAME_HUD_SAFERECT then
-		self._hud_chat = self._hud_chat_ingame
-	elseif name == IngameWaitingForRespawnState.GUI_SPECTATOR then
-		self._hud_chat = self._hud_chat_respawn
-	end
-
-	self._hud_chat:register()
-	self._hud_chat:hide()
 end
 
 function HUDManager:hide(name)
@@ -681,10 +670,10 @@ function HUDManager:update(t, dt)
 					dogTagData[#allDogTags] = {}
 					dogTagData[#allDogTags].unit = v
 					dogTagData[#allDogTags].textlabel = panel:text({
+						font_size = 14,
 						name = "dogtagdebug",
 						layer = 1,
 						text = "0.0",
-						font_size = 14,
 						font = tweak_data.gui.fonts.din_compressed_outlined_20,
 						color = Color(1, 1, 0)
 					})
@@ -1007,11 +996,11 @@ function HUDManager:add_waypoint(id, data)
 
 		if rect_over then
 			bitmap_over = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 0,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 0,
 				name = "bitmap_over" .. id,
 				texture = icon,
 				texture_rect = rect_over
@@ -1019,21 +1008,21 @@ function HUDManager:add_waypoint(id, data)
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
 			searching = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 16,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 16,
 				name = "searching" .. id,
 				texture = searching_icon,
 				texture_rect = searching_rect
 			})
 			aiming = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 16,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 16,
 				name = "aiming" .. id,
 				texture = aiming_icon,
 				texture_rect = aiming_rect
@@ -1044,8 +1033,8 @@ function HUDManager:add_waypoint(id, data)
 		local arrow_texture_rect = tweak_data.gui.icons.map_waypoint_pov_out.texture_rect
 		local arrow = waypoint_panel:bitmap({
 			rotation = 360,
-			layer = 0,
 			visible = false,
+			layer = 0,
 			name = "arrow" .. id,
 			texture = arrow_icon,
 			texture_rect = arrow_texture_rect,
@@ -1058,13 +1047,13 @@ function HUDManager:add_waypoint(id, data)
 
 		if data.distance then
 			distance = waypoint_panel:text({
-				h = 26,
-				text = "",
-				w = 128,
-				vertical = "center",
 				rotation = 360,
 				layer = 0,
+				h = 26,
+				w = 128,
+				vertical = "center",
 				align = "center",
+				text = "",
 				name = "distance" .. id,
 				color = data.color or Color.white,
 				font = tweak_data.gui.fonts.din_compressed_outlined_24,
@@ -1076,13 +1065,13 @@ function HUDManager:add_waypoint(id, data)
 		end
 
 		local timer = data.timer and waypoint_panel:text({
-			vertical = "center",
-			h = 32,
-			w = 32,
 			rotation = 360,
 			layer = 0,
-			font_size = 32,
+			h = 32,
+			w = 32,
+			vertical = "center",
 			align = "center",
+			font_size = 32,
 			name = "timer" .. id,
 			text = (math.round(data.timer) < 10 and "0" or "") .. math.round(data.timer),
 			font = tweak_data.gui.fonts.din_compressed_outlined_32
@@ -1222,8 +1211,6 @@ function HUDManager:_update_waypoints(t, dt)
 			local length = wp_dir:length()
 			show_on_screen = (not data.range_min or data.range_min <= length) and (not data.range_max or length <= data.range_max)
 		end
-
-		self:_upd_suspition_waypoint_state(data, show_on_screen)
 
 		if show_on_screen then
 			if not data.bitmap then
@@ -1615,11 +1602,11 @@ function HUDManager:change_waypoint_icon(id, icon)
 				rect_over[4]
 			}
 			wp_data.bitmap_over = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 0,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 0,
 				name = "bitmap_over" .. id,
 				texture = texture,
 				texture_rect = rect_over
@@ -1627,21 +1614,21 @@ function HUDManager:change_waypoint_icon(id, icon)
 			local aiming_icon, aiming_rect = tweak_data.hud_icons:get_icon_data("wp_aiming")
 			local searching_icon, searching_rect = tweak_data.hud_icons:get_icon_data("wp_investigating")
 			wp_data.searching = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 16,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 16,
 				name = "searching" .. id,
 				texture = searching_icon,
 				texture_rect = searching_rect
 			})
 			wp_data.aiming = waypoint_panel:bitmap({
-				blend_mode = "normal",
-				h = 16,
-				w = 32,
-				layer = 0,
 				rotation = 360,
+				blend_mode = "normal",
+				layer = 0,
+				w = 32,
+				h = 16,
 				name = "aiming" .. id,
 				texture = aiming_icon,
 				texture_rect = aiming_rect
@@ -1855,7 +1842,11 @@ function HUDManager:get_character_name_by_nationality(nationality)
 		name = "rivet"
 	end
 
-	return utf8.to_upper(name)
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	return name
 end
 
 function HUDManager:add_mugshot(data)
@@ -2063,46 +2054,46 @@ function HUDManager:setup_anticipation(total_t)
 
 	if not exists and total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 1,
-			time = 45
+			time = 45,
+			dialog = 1
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 2,
-			time = 30
+			time = 30,
+			dialog = 2
 		})
 	elseif exists and total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 6,
-			time = 30
+			time = 30,
+			dialog = 6
 		})
 	end
 
 	if total_t == 45 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 3,
-			time = 20
+			time = 20,
+			dialog = 3
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 4,
-			time = 10
+			time = 10,
+			dialog = 4
 		})
 	end
 
 	if total_t == 35 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 7,
-			time = 20
+			time = 20,
+			dialog = 7
 		})
 		table.insert(self._anticipation_dialogs, {
-			dialog = 4,
-			time = 10
+			time = 10,
+			dialog = 4
 		})
 	end
 
 	if total_t == 25 then
 		table.insert(self._anticipation_dialogs, {
-			dialog = 8,
-			time = 10
+			time = 10,
+			dialog = 8
 		})
 	end
 end
@@ -2207,26 +2198,6 @@ function HUDManager:_animate_suspition_waypoint_alpha(data, callback, x, y, z)
 		data.searching:animate(callback, data, x + fix, y, z)
 		data.aiming:stop()
 		data.aiming:animate(callback, data, x + fix, y, z)
-	end
-end
-
-function HUDManager:_upd_suspition_waypoint_state(data, show_on_screen)
-	if not show_on_screen then
-		return
-	end
-
-	if data.bitmap_over ~= nil then
-		if data.is_aiming then
-			data.aiming:set_visible(true)
-		else
-			data.aiming:set_visible(false)
-		end
-
-		if data.is_searching then
-			data.searching:set_visible(true)
-		else
-			data.searching:set_visible(false)
-		end
 	end
 end
 
@@ -2405,38 +2376,6 @@ function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)
 	end
 end
 
-function HUDManager:set_aiming_icon(id, status)
-	local data = self._hud.waypoints[id]
-
-	if not data then
-		Application:error("[HUDManager:set_aiming_icon] Attempt to change no existant waypoint:", id)
-
-		return
-	end
-
-	data.is_aiming = status
-
-	if Network:is_server() and managers.network:session() then
-		managers.network:session():send_to_peers("sync_suspicion_icon", data.unit, "aim", status)
-	end
-end
-
-function HUDManager:set_investigate_icon(id, status)
-	local data = self._hud.waypoints[id]
-
-	if not data then
-		Application:error("[HUDManager:set_investigate_icon] Attempt to change no existant waypoint:", id)
-
-		return
-	end
-
-	data.is_searching = status
-
-	if Network:is_server() and managers.network:session() then
-		managers.network:session():send_to_peers("sync_suspicion_icon", data.unit, "investigate", status)
-	end
-end
-
 function HUDManager:set_stealth_meter(id, target_id, progress)
 	local suspicion_indicator = self._hud.suspicion_indicators[id]
 
@@ -2558,21 +2497,21 @@ function HUDManager:debug_show_coordinates()
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.coord = self._debug.panel:text({
 		font_size = 14,
-		layer = 2000,
-		text = "",
 		name = "debug_coord",
 		y = 14,
 		x = 14,
+		layer = 2000,
+		text = "",
 		font = tweak_data.gui.fonts.din_compressed_outlined_18,
 		color = Color.white
 	})
 	self._debug.dogtagCoord = self._debug.panel:text({
 		font_size = 18,
-		layer = 2000,
-		text = "",
 		name = "debug_dogtag",
 		y = 32,
 		x = 14,
+		layer = 2000,
+		text = "",
 		font = tweak_data.gui.fonts.din_compressed_outlined_20,
 		color = Color.white
 	})

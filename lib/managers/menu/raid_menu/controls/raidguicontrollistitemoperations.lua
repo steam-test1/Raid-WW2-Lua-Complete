@@ -73,9 +73,9 @@ end
 
 function RaidGUIControlListItemOperations:_layout_background(params)
 	local background_params = {
+		visible = false,
 		y = 1,
 		x = 0,
-		visible = false,
 		name = "list_item_back_" .. self._name,
 		w = params.w,
 		h = self._object:h() - 2,
@@ -86,10 +86,10 @@ end
 
 function RaidGUIControlListItemOperations:_layout_highlight_marker()
 	local marker_params = {
+		visible = false,
 		w = 3,
 		y = 1,
 		x = 0,
-		visible = false,
 		name = "list_item_highlight_" .. self._name,
 		h = self._object:h() - 2,
 		color = self._selected_color
@@ -114,8 +114,8 @@ end
 
 function RaidGUIControlListItemOperations:_layout_operation_name(params, data)
 	local raid_name_params = {
-		vertical = "center",
 		y = 0,
+		vertical = "center",
 		name = "list_item_label_" .. self._name,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemOperations.ICON_PADDING,
 		w = params.w,

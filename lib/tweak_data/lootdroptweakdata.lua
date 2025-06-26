@@ -4,6 +4,7 @@ LootDropTweakData.REWARD_XP = "xp"
 LootDropTweakData.REWARD_CARD_PACK = "card_pack"
 LootDropTweakData.REWARD_CUSTOMIZATION = "customization"
 LootDropTweakData.REWARD_WEAPON_POINT = "weapon_point"
+LootDropTweakData.REWARD_WEAPON_SKIN = "weapon_skin"
 LootDropTweakData.REWARD_MELEE_WEAPON = "melee_weapon"
 LootDropTweakData.REWARD_GOLD_BARS = "gold_bars"
 LootDropTweakData.REWARD_HALLOWEEN_2017 = "halloween_2017"
@@ -34,12 +35,6 @@ LootDropTweakData.TOTAL_DOGTAGS_DEFAULT = 25
 LootDropTweakData.BRONZE_POINT_REQUIREMENT = 0.1
 LootDropTweakData.SILVER_POINT_REQUIREMENT = 0.5
 LootDropTweakData.GOLD_POINT_REQUIREMENT = 0.8
-LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL = "below_max_level"
-LootDropTweakData.DROP_CONDITION_IS_RAID = "is_raid"
-LootDropTweakData.DROP_CONDITION_IS_OPERATION = "is_operation"
-LootDropTweakData.DROP_CONDITION_WANTS_MELEE = "wants_melee"
-LootDropTweakData.DROP_CONDITION_WANTS_COSMETIC = "wants_cosmetic"
-LootDropTweakData.DROP_CONDITION_CARDS_NOT_REJECTED = "cards_not_rejected"
 LootDropTweakData.POINT_REQUIREMENTS = {
 	LootDropTweakData.BRONZE_POINT_REQUIREMENT,
 	LootDropTweakData.SILVER_POINT_REQUIREMENT,
@@ -55,14 +50,14 @@ LootDropTweakData.RARITY_PRICES = {
 }
 
 function LootDropTweakData:init(tweak_data)
-	self:_payday_init(tweak_data)
 	self:_init_rewards_xp_packs()
-	self:_init_rewards_card_packs(tweak_data)
+	self:_init_rewards_card_packs()
+	self:_init_rewards_melee()
 	self:_init_rewards_customization()
+	self:_init_rewards_weapon_skin()
 	self:_init_rewards_gold_bar()
 	self:_init_categories()
 	self:_init_groups()
-	self:_init_loot_values()
 	self:_init_dog_tag_stats()
 end
 
@@ -100,12 +95,18 @@ function LootDropTweakData:_init_rewards_xp_packs()
 	}
 end
 
-function LootDropTweakData:_init_rewards_card_packs(tweak_data)
+function LootDropTweakData:_init_rewards_card_packs()
 	self.rewards_card_packs = {
 		regular = {
 			reward_type = LootDropTweakData.REWARD_CARD_PACK,
 			pack_type = ChallengeCardsTweakData.PACK_TYPE_REGULAR
 		}
+	}
+end
+
+function LootDropTweakData:_init_rewards_melee()
+	self.rewards_melee = {
+		reward_type = LootDropTweakData.REWARD_MELEE_WEAPON
 	}
 end
 
@@ -126,6 +127,23 @@ function LootDropTweakData:_init_rewards_customization()
 		halloween = {
 			reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 			rarity = LootDropTweakData.RARITY_HALLOWEEN
+		}
+	}
+end
+
+function LootDropTweakData:_init_rewards_weapon_skin()
+	self.rewards_weapon_skin = {
+		common = {
+			reward_type = LootDropTweakData.REWARD_WEAPON_SKIN,
+			rarity = LootDropTweakData.RARITY_COMMON
+		},
+		uncommon = {
+			reward_type = LootDropTweakData.REWARD_WEAPON_SKIN,
+			rarity = LootDropTweakData.RARITY_UNCOMMON
+		},
+		rare = {
+			reward_type = LootDropTweakData.REWARD_WEAPON_SKIN,
+			rarity = LootDropTweakData.RARITY_RARE
 		}
 	}
 end
@@ -171,123 +189,171 @@ function LootDropTweakData:_init_rewards_gold_bar()
 			gold_bars_max = 200,
 			gold_bars_min = 101,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		bounty_common = {
+			gold_bars_max = 15,
+			gold_bars_min = 15,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		bounty_uncommon = {
+			gold_bars_max = 30,
+			gold_bars_min = 30,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
+		},
+		bounty_rare = {
+			gold_bars_max = 50,
+			gold_bars_min = 50,
+			reward_type = LootDropTweakData.REWARD_GOLD_BARS
 		}
 	}
 end
 
 function LootDropTweakData:_init_categories()
 	self.loot_categories = {
-		category_xp_min = {}
-	}
-	self.loot_categories.category_xp_min[1] = {
-		chance = 1,
-		value = self.rewards_xp_packs.tiny
-	}
-	self.loot_categories.category_xp_low = {
-		{
-			chance = 1,
-			value = self.rewards_xp_packs.small
-		}
-	}
-	self.loot_categories.category_xp_mid = {
-		{
-			chance = 1,
-			value = self.rewards_xp_packs.medium
-		}
-	}
-	self.loot_categories.category_xp_high = {
-		{
-			chance = 1,
-			value = self.rewards_xp_packs.large
-		}
-	}
-	self.loot_categories.category_gold_tiny = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.tiny_raid
-		}
-	}
-	self.loot_categories.category_gold_low = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.small_raid
-		}
-	}
-	self.loot_categories.category_gold_mid = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.medium_raid
-		}
-	}
-	self.loot_categories.category_gold_high = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.large_raid
-		}
-	}
-	self.loot_categories.category_gold_tiny_operation = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.tiny_operation
-		}
-	}
-	self.loot_categories.category_gold_low_operation = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.small_operation
-		}
-	}
-	self.loot_categories.category_gold_mid_operation = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.medium_operation
-		}
-	}
-	self.loot_categories.category_gold_high_operation = {
-		{
-			chance = 1,
-			value = self.rewards_gold_bars.large_operation
-		}
-	}
-	self.loot_categories.category_melee = {
-		{
-			chance = 1,
-			value = {
-				reward_type = LootDropTweakData.REWARD_MELEE_WEAPON
-			}
-		}
-	}
-	self.loot_categories.category_cards_pack = {
-		{
-			chance = 1,
-			value = self.rewards_card_packs.regular
-		}
-	}
-	self.loot_categories.category_cosmetics = {
-		{
-			chance = 3,
-			value = self.rewards_customization.common
-		},
-		{
-			chance = 2,
-			value = self.rewards_customization.uncommon
-		},
-		{
-			chance = 1,
-			value = self.rewards_customization.rare
-		}
-	}
-	self.loot_categories.category_halloween_2017 = {
-		{
-			chance = 1,
-			value = {
-				weapon_id = "lc14b",
-				reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017
+		category_xp_min = {
+			{
+				chance = 1,
+				value = self.rewards_xp_packs.tiny
 			}
 		},
-		{
-			chance = 4,
-			value = self.rewards_customization.halloween
+		category_xp_low = {
+			{
+				chance = 1,
+				value = self.rewards_xp_packs.small
+			}
+		},
+		category_xp_mid = {
+			{
+				chance = 1,
+				value = self.rewards_xp_packs.medium
+			}
+		},
+		category_xp_high = {
+			{
+				chance = 1,
+				value = self.rewards_xp_packs.large
+			}
+		},
+		category_gold_tiny = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.tiny_raid
+			}
+		},
+		category_gold_low = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.small_raid
+			}
+		},
+		category_gold_mid = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.medium_raid
+			}
+		},
+		category_gold_high = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.large_raid
+			}
+		},
+		category_gold_tiny_operation = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.tiny_operation
+			}
+		},
+		category_gold_low_operation = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.small_operation
+			}
+		},
+		category_gold_mid_operation = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.medium_operation
+			}
+		},
+		category_gold_high_operation = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.large_operation
+			}
+		},
+		category_gold_bounty_common = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.bounty_common
+			}
+		},
+		category_gold_bounty_uncommon = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.bounty_uncommon
+			}
+		},
+		category_gold_bounty_rare = {
+			{
+				chance = 1,
+				value = self.rewards_gold_bars.bounty_rare
+			}
+		},
+		category_melee = {
+			{
+				chance = 1,
+				value = self.rewards_melee
+			}
+		},
+		category_cards_pack = {
+			{
+				chance = 1,
+				value = self.rewards_card_packs.regular
+			}
+		},
+		category_cosmetics = {
+			{
+				chance = 3,
+				value = self.rewards_customization.common
+			},
+			{
+				chance = 2,
+				value = self.rewards_customization.uncommon
+			},
+			{
+				chance = 1,
+				value = self.rewards_customization.rare
+			}
+		},
+		category_skins = {
+			{
+				chance = 5,
+				value = self.rewards_weapon_skin.common
+			},
+			{
+				chance = 3,
+				value = self.rewards_weapon_skin.uncommon
+			},
+			{
+				chance = 1,
+				value = self.rewards_weapon_skin.rare
+			}
+		},
+		category_halloween_2017 = {
+			{
+				chance = 1,
+				value = {
+					weapon_id = "lc14b",
+					reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017
+				}
+			}
+		},
+		category_halloween_customization = {
+			{
+				chance = 4,
+				value = self.rewards_customization.halloween
+			}
 		}
 	}
 end
@@ -295,6 +361,7 @@ end
 function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
 
+	self:_init_conditions()
 	self:_init_groups_basic()
 	self:_init_groups_bronze()
 	self:_init_groups_silver()
@@ -302,178 +369,321 @@ function LootDropTweakData:_init_groups()
 	self:_init_groups_challenges()
 end
 
+function LootDropTweakData:_init_conditions()
+	self.conditions = {
+		below_max_level = function ()
+			return not managers.experience:reached_level_cap()
+		end,
+		is_raid = function ()
+			if game_state_machine:current_state_name() == "event_complete_screen" then
+				local current_job = game_state_machine:current_state():job_data()
+
+				return current_job.job_type == OperationsTweakData.JOB_TYPE_RAID
+			end
+
+			return true
+		end,
+		is_operation = function ()
+			if game_state_machine:current_state_name() == "event_complete_screen" then
+				local current_job = game_state_machine:current_state():job_data()
+
+				return current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION
+			end
+
+			return false
+		end,
+		wants_cosmetic = function (group_data)
+			return not managers.character_customization:is_customization_collection_complete(group_data.value.rarity)
+		end,
+		wants_weapon_skin = function (group_data)
+			return not managers.weapon_inventory:is_drop_inventory_complete_skins(group_data.value.rarity)
+		end,
+		wants_melee_group = function ()
+			return not managers.weapon_inventory:is_drop_inventory_complete_melee()
+		end,
+		wants_melee_weapon = function (group_data)
+			return not managers.weapon_inventory:is_melee_weapon_owned(group_data.value.weapon_id)
+		end,
+		wants_card = function ()
+			return not managers.raid_menu:is_offline_mode() and not managers.lootdrop:cards_already_rejected()
+		end
+	}
+end
+
 function LootDropTweakData:_init_groups_basic()
 	self.loot_groups.loot_group_basic = {
 		{
-			chance = 2,
+			chance = 1,
 			value = self.loot_categories.category_xp_min,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+				self.conditions.below_max_level
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_gold_tiny,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_RAID
+				self.conditions.is_raid
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_gold_tiny_operation,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_OPERATION
+				self.conditions.is_operation
 			}
-		}
+		},
+		min_loot_value = -1000000,
+		max_loot_value = self.BRONZE_POINT_REQUIREMENT
 	}
 end
 
 function LootDropTweakData:_init_groups_bronze()
 	self.loot_groups.loot_group_bronze = {
 		{
-			chance = 3,
-			value = self.loot_categories.category_xp_low,
+			chance = 2,
+			value = self.loot_categories.category_cards_pack,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
-			}
-		},
-		{
-			chance = 3,
-			value = self.loot_categories.category_gold_low,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_RAID
-			}
-		},
-		{
-			chance = 3,
-			value = self.loot_categories.category_gold_low_operation,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_OPERATION
+				self.conditions.wants_card
 			}
 		},
 		{
 			chance = 1,
-			value = self.loot_categories.category_cards_pack,
+			value = self.loot_categories.category_xp_low,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_CARDS_NOT_REJECTED
+				self.conditions.below_max_level
 			}
-		}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_gold_low,
+			conditions = {
+				self.conditions.is_raid
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_gold_low_operation,
+			conditions = {
+				self.conditions.is_operation
+			}
+		},
+		min_loot_value = LootDropTweakData.BRONZE_POINT_REQUIREMENT,
+		max_loot_value = LootDropTweakData.SILVER_POINT_REQUIREMENT
 	}
 end
 
 function LootDropTweakData:_init_groups_silver()
 	self.loot_groups.loot_group_silver = {
 		{
+			chance = 3,
+			value = self.loot_categories.category_cards_pack,
+			conditions = {
+				self.conditions.wants_card
+			}
+		},
+		{
 			chance = 2,
 			value = self.loot_categories.category_xp_mid,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
+				self.conditions.below_max_level
 			}
 		},
 		{
 			chance = 2,
 			value = self.loot_categories.category_gold_mid,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_RAID
+				self.conditions.is_raid
 			}
 		},
 		{
 			chance = 2,
 			value = self.loot_categories.category_gold_mid_operation,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_OPERATION
-			}
-		},
-		{
-			chance = 1,
-			value = self.loot_categories.category_cards_pack,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_CARDS_NOT_REJECTED
+				self.conditions.is_operation
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_melee,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_WANTS_MELEE
+				self.conditions.wants_melee_group
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_cosmetics,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_WANTS_COSMETIC
+				self.conditions.wants_cosmetic
 			}
-		}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_skins,
+			conditions = {
+				self.conditions.wants_weapon_skin
+			}
+		},
+		min_loot_value = LootDropTweakData.SILVER_POINT_REQUIREMENT,
+		max_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
 	}
 end
 
 function LootDropTweakData:_init_groups_gold()
 	self.loot_groups.loot_group_gold = {
 		{
-			chance = 1,
-			value = self.loot_categories.category_xp_high,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL
-			}
-		},
-		{
-			chance = 1,
-			value = self.loot_categories.category_gold_high,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_RAID
-			}
-		},
-		{
-			chance = 1,
-			value = self.loot_categories.category_gold_high_operation,
-			conditions = {
-				LootDropTweakData.DROP_CONDITION_IS_OPERATION
-			}
-		},
-		{
-			chance = 1,
+			chance = 5,
 			value = self.loot_categories.category_cards_pack,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_CARDS_NOT_REJECTED
+				self.conditions.wants_card
+			}
+		},
+		{
+			chance = 3,
+			value = self.loot_categories.category_gold_high,
+			conditions = {
+				self.conditions.is_raid
+			}
+		},
+		{
+			chance = 3,
+			value = self.loot_categories.category_gold_high_operation,
+			conditions = {
+				self.conditions.is_operation
+			}
+		},
+		{
+			chance = 2,
+			value = self.loot_categories.category_xp_high,
+			conditions = {
+				self.conditions.below_max_level
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_melee,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_WANTS_MELEE
+				self.conditions.wants_melee_group
 			}
 		},
 		{
 			chance = 1,
 			value = self.loot_categories.category_cosmetics,
 			conditions = {
-				LootDropTweakData.DROP_CONDITION_WANTS_COSMETIC
+				self.conditions.wants_cosmetic
 			}
-		}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_skins,
+			conditions = {
+				self.conditions.wants_weapon_skin
+			}
+		},
+		max_loot_value = 1000000,
+		min_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
 	}
 end
 
 function LootDropTweakData:_init_groups_challenges()
 	self.loot_groups.loot_group_halloween_2017 = {
 		{
-			chance = 100,
-			value = self.loot_categories.category_halloween_2017
+			chance = 1,
+			value = self.loot_categories.category_halloween_2017,
+			conditions = {
+				self.conditions.wants_melee_weapon
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_halloween_customization,
+			conditions = {
+				self.conditions.wants_cosmetic
+			}
+		},
+		{
+			chance = 0,
+			value = self.loot_categories.category_gold_bounty_uncommon
 		},
 		challenge_reward = true
 	}
-end
-
-function LootDropTweakData:_init_loot_values()
-	self.loot_groups.loot_group_basic.min_loot_value = -1000000
-	self.loot_groups.loot_group_basic.max_loot_value = LootDropTweakData.BRONZE_POINT_REQUIREMENT
-	self.loot_groups.loot_group_bronze.min_loot_value = LootDropTweakData.BRONZE_POINT_REQUIREMENT
-	self.loot_groups.loot_group_bronze.max_loot_value = LootDropTweakData.SILVER_POINT_REQUIREMENT
-	self.loot_groups.loot_group_silver.min_loot_value = LootDropTweakData.SILVER_POINT_REQUIREMENT
-	self.loot_groups.loot_group_silver.max_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
-	self.loot_groups.loot_group_gold.min_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
-	self.loot_groups.loot_group_gold.max_loot_value = 1000000
+	self.loot_groups.loot_group_bounty_common = {
+		{
+			chance = 10,
+			value = self.loot_categories.category_gold_bounty_common
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_cards_pack,
+			conditions = {
+				self.conditions.wants_card
+			}
+		},
+		challenge_reward = true
+	}
+	self.loot_groups.loot_group_bounty_uncommon = {
+		{
+			chance = 10,
+			value = self.loot_categories.category_gold_bounty_uncommon
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_cards_pack,
+			conditions = {
+				self.conditions.wants_card
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_melee,
+			conditions = {
+				self.conditions.wants_melee_group
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_cosmetics,
+			conditions = {
+				self.conditions.wants_cosmetic
+			}
+		},
+		challenge_reward = true
+	}
+	self.loot_groups.loot_group_bounty_rare = {
+		{
+			chance = 5,
+			value = self.loot_categories.category_gold_bounty_rare
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_cards_pack,
+			conditions = {
+				self.conditions.wants_card
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_melee,
+			conditions = {
+				self.conditions.wants_melee_group
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_cosmetics,
+			conditions = {
+				self.conditions.wants_cosmetic
+			}
+		},
+		{
+			chance = 1,
+			value = self.loot_categories.category_skins,
+			conditions = {
+				self.conditions.wants_weapon_skin
+			}
+		},
+		challenge_reward = true
+	}
 end
 
 function LootDropTweakData:_init_dog_tag_stats()
@@ -482,309 +692,6 @@ function LootDropTweakData:_init_dog_tag_stats()
 	}
 end
 
-function LootDropTweakData:_payday_init(tweak_data)
-	self.PC_STEP = 10
-	self.no_drop = {
-		BASE = 35,
-		HUMAN_STEP_MODIFIER = 10
-	}
-	self.joker_chance = 0
-	self.level_limit = 1
-	self.risk_pc_multiplier = {
-		0,
-		0,
-		0,
-		0
-	}
-	self.risk_infamous_multiplier = {
-		1,
-		2,
-		3,
-		5
-	}
-	self.PC_CHANCE = {
-		0.7,
-		0.7,
-		0.7,
-		0.7,
-		0.9,
-		0.91,
-		0.92,
-		0.93,
-		0.94,
-		0.95
-	}
-	self.STARS = {
-		{
-			pcs = {
-				10,
-				10
-			}
-		},
-		{
-			pcs = {
-				20,
-				20
-			}
-		},
-		{
-			pcs = {
-				30,
-				30
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		},
-		{
-			pcs = {
-				40,
-				40
-			}
-		}
-	}
-	self.STARS_CURVES = {
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-		1,
-		1
-	}
-	self.WEIGHTED_TYPE_CHANCE = {}
-	local min = 10
-	local max = 100
-	local range = {
-		cash = {
-			20,
-			5
-		},
-		weapon_mods = {
-			50,
-			45
-		},
-		colors = {
-			6,
-			11
-		},
-		textures = {
-			7,
-			12
-		},
-		materials = {
-			7,
-			12
-		},
-		masks = {
-			10,
-			15
-		},
-		xp = {
-			8,
-			0
-		}
-	}
-
-	for i = min, max, 10 do
-		local cash = math.lerp(range.cash[1], range.cash[2], i / max)
-		local weapon_mods = math.lerp(range.weapon_mods[1], range.weapon_mods[2], i / max)
-		local colors = math.lerp(range.colors[1], range.colors[2], i / max)
-		local textures = math.lerp(range.textures[1], range.textures[2], i / max)
-		local materials = math.lerp(range.materials[1], range.materials[2], i / max)
-		local masks = math.lerp(range.masks[1], range.masks[2], i / max)
-		local xp = math.lerp(range.xp[1], range.xp[2], i / max)
-		self.WEIGHTED_TYPE_CHANCE[i] = {
-			cash = cash,
-			weapon_mods = weapon_mods,
-			colors = colors,
-			textures = textures,
-			materials = materials,
-			masks = masks,
-			xp = xp
-		}
-	end
-
-	self.DEFAULT_WEIGHT = 1
-	self.got_item_weight_mod = 0.5
-	self.type_weight_mod_funcs = {
-		weapon_mods = function (global_value, category, id)
-			local weapons = managers.weapon_factory:get_weapons_uses_part(id) or {}
-			local primaries = managers.blackmarket:get_crafted_category("primaries") or {}
-			local secondaries = managers.blackmarket:get_crafted_category("secondaries") or {}
-			local crafted_weapons = {}
-
-			for _, weapon in pairs(primaries) do
-				table.insert(crafted_weapons, weapon.factory_id)
-			end
-
-			for _, weapon in pairs(secondaries) do
-				table.insert(crafted_weapons, weapon.factory_id)
-			end
-
-			table.list_union(crafted_weapons)
-
-			for _, factory_id in pairs(weapons) do
-				if table.contains(crafted_weapons, factory_id) then
-					return 2
-				end
-			end
-
-			return 1
-		end
-	}
-	self.global_value_category = {
-		normal = {}
-	}
-	self.global_value_category.normal.name_id = "bm_global_value_normal"
-	self.global_value_category.normal.sort_number = 0
-	self.global_value_category.dlc = {
-		name_id = "bm_menu_dlc",
-		sort_number = 10
-	}
-	self.global_value_category.global_event = {
-		name_id = "bm_menu_global_event",
-		sort_number = 20
-	}
-	self.global_value_category.infamous = {
-		name_id = "bm_global_value_infamous",
-		sort_number = 30
-	}
-	self.global_value_category.collaboration = {
-		name_id = "bm_global_value_collaboration",
-		sort_number = 25
-	}
-	self.global_values = {
-		normal = {}
-	}
-	self.global_values.normal.name_id = "bm_global_value_normal"
-	self.global_values.normal.desc_id = "menu_l_global_value_normal"
-	self.global_values.normal.color = Color.white
-	self.global_values.normal.dlc = false
-	self.global_values.normal.chance = 0.84
-	self.global_values.normal.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "normal")
-	self.global_values.normal.durability_multiplier = 1
-	self.global_values.normal.drops = true
-	self.global_values.normal.track = false
-	self.global_values.normal.sort_number = 0
-	self.global_values.normal.category = "normal"
-	self.global_values.superior = {
-		name_id = "bm_global_value_superior",
-		desc_id = "menu_l_global_value_superior",
-		color = Color.blue,
-		dlc = false,
-		chance = 0.1,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "superior"),
-		durability_multiplier = 1.5,
-		drops = false,
-		track = false,
-		sort_number = 25,
-		category = nil
-	}
-	self.global_values.exceptional = {
-		name_id = "bm_global_value_exceptional",
-		desc_id = "menu_l_global_value_exceptional",
-		color = Color.yellow,
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "exceptional"),
-		durability_multiplier = 2.25,
-		drops = false,
-		track = false,
-		sort_number = 26,
-		category = nil
-	}
-	self.global_values.infamous = {
-		name_id = "bm_global_value_infamous",
-		desc_id = "menu_l_global_value_infamous",
-		color = Color(1, 0.1, 1),
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous"),
-		durability_multiplier = 3,
-		drops = true,
-		track = false,
-		sort_number = 30,
-		category = "infamous"
-	}
-	self.global_values.infamy = {
-		name_id = "bm_global_value_infamous",
-		desc_id = "menu_l_global_value_infamous",
-		color = Color(1, 0.1, 1),
-		dlc = false,
-		chance = 0.05,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous"),
-		durability_multiplier = 3,
-		drops = false,
-		track = false,
-		sort_number = 35,
-		hide_unavailable = true,
-		category = "infamous"
-	}
-	self.global_values.preorder = {
-		name_id = "bm_global_value_preorder",
-		desc_id = "menu_l_global_value_preorder",
-		color = Color(255, 255, 212, 0) / 255,
-		dlc = true,
-		chance = 1,
-		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "preorder"),
-		durability_multiplier = 1,
-		drops = false,
-		track = true,
-		sort_number = -10,
-		hide_unavailable = true
-	}
-	self.global_value_list_index = {
-		"normal"
-	}
-
-	self:_create_global_value_list_map()
-end
-
-function LootDropTweakData:_create_global_value_list_map()
-	self.global_value_list_map = {}
-
-	for i, d in ipairs(self.global_value_list_index) do
-		self.global_value_list_map[d] = i
-	end
-end
-
-function LootDropTweakData:get_gold_from_rarity(rarity)
-	return self.RARITY_PRICES[rarity]
+function LootDropTweakData.get_gold_from_rarity(rarity)
+	return LootDropTweakData.RARITY_PRICES[rarity]
 end

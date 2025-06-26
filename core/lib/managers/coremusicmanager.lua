@@ -114,7 +114,7 @@ function CoreMusicManager:set_volume(volume)
 end
 
 function CoreMusicManager:clbk_game_has_music_control(status)
-	print("[CoreMusicManager:clbk_game_has_music_control]", status)
+	Application:debug("[CoreMusicManager:clbk_game_has_music_control]", status)
 
 	if status then
 		SoundDevice:set_rtpc("option_music_volume", Global.music_manager.volume * 100)

@@ -1,6 +1,26 @@
 core:import("CoreShapeManager")
 
 CoreAreaTriggerUnitElement = CoreAreaTriggerUnitElement or class(MissionElement)
+CoreAreaTriggerUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		table_value = "unit_ids",
+		output = true,
+		type = "shape"
+	},
+	{
+		type = "shape",
+		table_value = "use_shape_element_ids"
+	},
+	{
+		type = "spawn_unit",
+		table_value = "spawn_unit_elements"
+	},
+	{
+		type = "rule",
+		table_value = "rules_element_ids"
+	}
+}
 AreaTriggerUnitElement = AreaTriggerUnitElement or class(CoreAreaTriggerUnitElement)
 
 function AreaTriggerUnitElement:init(...)
@@ -148,8 +168,8 @@ end
 
 function CoreAreaTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
@@ -195,8 +215,8 @@ function CoreAreaTriggerUnitElement:add_element()
 	end
 
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
-		mask = 1
+		mask = 1,
+		ray_type = "body editor"
 	})
 
 	if ray and ray.unit then
@@ -518,6 +538,13 @@ end
 CoreAreaOperatorUnitElement = CoreAreaOperatorUnitElement or class(MissionElement)
 CoreAreaOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreAreaOperatorUnitElement.SAVE_UNIT_ROTATION = false
+CoreAreaOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
+}
 AreaOperatorUnitElement = AreaOperatorUnitElement or class(CoreAreaOperatorUnitElement)
 
 function AreaOperatorUnitElement:init(...)
@@ -576,8 +603,8 @@ end
 
 function CoreAreaOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name():s() == "core/units/mission_elements/trigger_area/trigger_area" then
@@ -614,8 +641,8 @@ function CoreAreaOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, nil, exact_names)
 	CoreAreaTriggerUnitElement.create_values_ctrlrs(self, panel, panel_sizer, {
-		amount = true,
 		instigator = true,
+		amount = true,
 		trigger_type = true
 	})
 	panel_sizer:add(EWS:StaticLine(panel, "", "LI_HORIZONTAL"), 0, 5, "EXPAND,TOP,BOTTOM")

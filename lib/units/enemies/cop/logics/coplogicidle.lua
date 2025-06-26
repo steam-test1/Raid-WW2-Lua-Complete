@@ -51,8 +51,8 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 
 		if old_internal_data.shooting then
 			data.unit:brain():action_request({
-				body_part = 3,
-				type = "idle"
+				type = "idle",
+				body_part = 3
 			})
 		end
 
@@ -81,7 +81,7 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 
 	if objective then
 		if (objective.nav_seg or objective.type == "follow") and not objective.in_place then
-			debug_pause_unit(data.unit, "[CopLogicIdle.enter] wrong logic, shoudln't be in idle", data.unit)
+			debug_pause_unit(data.unit, "[CopLogicIdle.enter] wrong logic, shoudln't be in idle", data.unit, inspect(coplogicidle))
 		end
 
 		my_data.scan = objective.scan
@@ -156,9 +156,12 @@ function CopLogicIdle.queued_update(data)
 
 	if my_data.has_old_action then
 		CopLogicBase._upd_stop_old_action(data, my_data, objective)
-		CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicIdle.queued_update, data, data.t + delay, data.important and true)
 
-		return
+		if my_data.has_old_action then
+			CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicIdle.queued_update, data, data.t + delay, data.important and true)
+
+			return
+		end
 	end
 
 	if data.team and data.team.id == "criminal1" and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
@@ -340,12 +343,10 @@ function CopLogicIdle._upd_scan(data, my_data)
 		local upper_body_action = data.unit:movement()._active_actions[3]
 
 		if not upper_body_action then
-			local idle_action = {
-				body_part = 3,
-				type = "idle"
-			}
-
-			data.unit:movement():action_request(idle_action)
+			data.unit:movement():action_request({
+				type = "idle",
+				body_part = 3
+			})
 		end
 	end
 
@@ -641,6 +642,10 @@ end
 function CopLogicIdle.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
+	end
+
+	if data.unit:movement():chk_action_forbidden("walk") then
+		return false
 	end
 
 	local my_data = data.internal_data
