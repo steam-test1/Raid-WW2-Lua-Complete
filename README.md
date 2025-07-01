@@ -1,7 +1,5 @@
 # RAID-World-War-II-Luajit Complete
 
-This includes the latest decompiler fixes
+# This repository will no longer be updated use the below link which includes all past and future updates
 
-# Line Number Branch
-
-https://github.com/steam-test1/Raid-WW2-Lua-Complete/tree/Line-Numbers
+https://github.com/steam-test1/Raid-WW2-Lua-Dump
